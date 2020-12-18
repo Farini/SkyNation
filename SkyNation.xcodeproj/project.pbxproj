@@ -1,0 +1,792 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8536F2C0258D330300B509D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2BF258D330300B509D2 /* AppDelegate.swift */; };
+		8536F2C2258D330300B509D2 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2C1258D330300B509D2 /* GameViewController.swift */; };
+		8536F2C5258D330300B509D2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8536F2C3258D330300B509D2 /* Main.storyboard */; };
+		8536F2C8258D330300B509D2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8536F2C6258D330300B509D2 /* LaunchScreen.storyboard */; };
+		8536F2D1258D330300B509D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2D0258D330300B509D2 /* AppDelegate.swift */; };
+		8536F2D3258D330300B509D2 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2D2258D330300B509D2 /* GameViewController.swift */; };
+		8536F2D6258D330300B509D2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8536F2D4258D330300B509D2 /* Main.storyboard */; };
+		8536F2D9258D330300B509D2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8536F2D7258D330300B509D2 /* LaunchScreen.storyboard */; };
+		8536F2E2258D330300B509D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2E1258D330300B509D2 /* AppDelegate.swift */; };
+		8536F2E4258D330300B509D2 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2E3258D330300B509D2 /* GameViewController.swift */; };
+		8536F2E7258D330300B509D2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8536F2E5258D330300B509D2 /* Main.storyboard */; };
+		8536F2EA258D330300B509D2 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2B5258D330200B509D2 /* GameController.swift */; };
+		8536F2EB258D330300B509D2 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2B5258D330200B509D2 /* GameController.swift */; };
+		8536F2EC258D330300B509D2 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2B5258D330200B509D2 /* GameController.swift */; };
+		8536F2ED258D330300B509D2 /* Art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 8536F2B6258D330200B509D2 /* Art.scnassets */; };
+		8536F2EE258D330300B509D2 /* Art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 8536F2B6258D330200B509D2 /* Art.scnassets */; };
+		8536F2EF258D330300B509D2 /* Art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 8536F2B6258D330200B509D2 /* Art.scnassets */; };
+		8536F2F0258D330300B509D2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8536F2B7258D330300B509D2 /* Assets.xcassets */; };
+		8536F2F1258D330300B509D2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8536F2B7258D330300B509D2 /* Assets.xcassets */; };
+		8536F2F2258D330300B509D2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8536F2B7258D330300B509D2 /* Assets.xcassets */; };
+		8536F309258D355C00B509D2 /* DataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F308258D355C00B509D2 /* DataTests.swift */; };
+		8536F316258D361100B509D2 /* GameConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F315258D361100B509D2 /* GameConstants.swift */; };
+		8536F317258D361100B509D2 /* GameConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F315258D361100B509D2 /* GameConstants.swift */; };
+		8536F318258D361100B509D2 /* GameConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F315258D361100B509D2 /* GameConstants.swift */; };
+		8536F319258D361100B509D2 /* GameConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F315258D361100B509D2 /* GameConstants.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8536F30B258D355C00B509D2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8536F2B0258D330200B509D2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8536F2DE258D330300B509D2;
+			remoteInfo = "SkyNation macOS";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		8536F2B5258D330200B509D2 /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
+		8536F2B6258D330200B509D2 /* Art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Art.scnassets; sourceTree = "<group>"; };
+		8536F2B7258D330300B509D2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8536F2BC258D330300B509D2 /* SkyNation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SkyNation.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8536F2BF258D330300B509D2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8536F2C1258D330300B509D2 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		8536F2C4258D330300B509D2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		8536F2C7258D330300B509D2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8536F2C9258D330300B509D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8536F2CE258D330300B509D2 /* SkyNation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SkyNation.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8536F2D0258D330300B509D2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8536F2D2258D330300B509D2 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		8536F2D5258D330300B509D2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		8536F2D8258D330300B509D2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8536F2DA258D330300B509D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8536F2DF258D330300B509D2 /* SkyNation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SkyNation.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8536F2E1258D330300B509D2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8536F2E3258D330300B509D2 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		8536F2E6258D330300B509D2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		8536F2E8258D330300B509D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8536F2E9258D330300B509D2 /* SkyNation_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SkyNation_macOS.entitlements; sourceTree = "<group>"; };
+		8536F301258D34D100B509D2 /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
+		8536F306258D355C00B509D2 /* DataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8536F308258D355C00B509D2 /* DataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTests.swift; sourceTree = "<group>"; };
+		8536F30A258D355C00B509D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8536F315258D361100B509D2 /* GameConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameConstants.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8536F2B9258D330300B509D2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8536F2CB258D330300B509D2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8536F2DC258D330300B509D2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8536F303258D355C00B509D2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8536F2AF258D330200B509D2 = {
+			isa = PBXGroup;
+			children = (
+				8536F301258D34D100B509D2 /* Readme.md */,
+				8536F2B4258D330200B509D2 /* SkyNation Shared */,
+				8536F2BE258D330300B509D2 /* SkyNation iOS */,
+				8536F2CF258D330300B509D2 /* SkyNation tvOS */,
+				8536F2E0258D330300B509D2 /* SkyNation macOS */,
+				8536F307258D355C00B509D2 /* DataTests */,
+				8536F2BD258D330300B509D2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8536F2B4258D330200B509D2 /* SkyNation Shared */ = {
+			isa = PBXGroup;
+			children = (
+				8536F314258D35D400B509D2 /* Constants */,
+				8536F2B5258D330200B509D2 /* GameController.swift */,
+				8536F2B6258D330200B509D2 /* Art.scnassets */,
+				8536F2B7258D330300B509D2 /* Assets.xcassets */,
+			);
+			path = "SkyNation Shared";
+			sourceTree = "<group>";
+		};
+		8536F2BD258D330300B509D2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8536F2BC258D330300B509D2 /* SkyNation.app */,
+				8536F2CE258D330300B509D2 /* SkyNation.app */,
+				8536F2DF258D330300B509D2 /* SkyNation.app */,
+				8536F306258D355C00B509D2 /* DataTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8536F2BE258D330300B509D2 /* SkyNation iOS */ = {
+			isa = PBXGroup;
+			children = (
+				8536F2BF258D330300B509D2 /* AppDelegate.swift */,
+				8536F2C1258D330300B509D2 /* GameViewController.swift */,
+				8536F2C3258D330300B509D2 /* Main.storyboard */,
+				8536F2C6258D330300B509D2 /* LaunchScreen.storyboard */,
+				8536F2C9258D330300B509D2 /* Info.plist */,
+			);
+			path = "SkyNation iOS";
+			sourceTree = "<group>";
+		};
+		8536F2CF258D330300B509D2 /* SkyNation tvOS */ = {
+			isa = PBXGroup;
+			children = (
+				8536F2D0258D330300B509D2 /* AppDelegate.swift */,
+				8536F2D2258D330300B509D2 /* GameViewController.swift */,
+				8536F2D4258D330300B509D2 /* Main.storyboard */,
+				8536F2D7258D330300B509D2 /* LaunchScreen.storyboard */,
+				8536F2DA258D330300B509D2 /* Info.plist */,
+			);
+			path = "SkyNation tvOS";
+			sourceTree = "<group>";
+		};
+		8536F2E0258D330300B509D2 /* SkyNation macOS */ = {
+			isa = PBXGroup;
+			children = (
+				8536F2E1258D330300B509D2 /* AppDelegate.swift */,
+				8536F2E3258D330300B509D2 /* GameViewController.swift */,
+				8536F2E5258D330300B509D2 /* Main.storyboard */,
+				8536F2E8258D330300B509D2 /* Info.plist */,
+				8536F2E9258D330300B509D2 /* SkyNation_macOS.entitlements */,
+			);
+			path = "SkyNation macOS";
+			sourceTree = "<group>";
+		};
+		8536F307258D355C00B509D2 /* DataTests */ = {
+			isa = PBXGroup;
+			children = (
+				8536F308258D355C00B509D2 /* DataTests.swift */,
+				8536F30A258D355C00B509D2 /* Info.plist */,
+			);
+			path = DataTests;
+			sourceTree = "<group>";
+		};
+		8536F314258D35D400B509D2 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				8536F315258D361100B509D2 /* GameConstants.swift */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8536F2BB258D330300B509D2 /* SkyNation iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8536F2F5258D330300B509D2 /* Build configuration list for PBXNativeTarget "SkyNation iOS" */;
+			buildPhases = (
+				8536F2B8258D330300B509D2 /* Sources */,
+				8536F2B9258D330300B509D2 /* Frameworks */,
+				8536F2BA258D330300B509D2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "SkyNation iOS";
+			productName = "SkyNation iOS";
+			productReference = 8536F2BC258D330300B509D2 /* SkyNation.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8536F2CD258D330300B509D2 /* SkyNation tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8536F2F8258D330300B509D2 /* Build configuration list for PBXNativeTarget "SkyNation tvOS" */;
+			buildPhases = (
+				8536F2CA258D330300B509D2 /* Sources */,
+				8536F2CB258D330300B509D2 /* Frameworks */,
+				8536F2CC258D330300B509D2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "SkyNation tvOS";
+			productName = "SkyNation tvOS";
+			productReference = 8536F2CE258D330300B509D2 /* SkyNation.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8536F2DE258D330300B509D2 /* SkyNation macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8536F2FB258D330300B509D2 /* Build configuration list for PBXNativeTarget "SkyNation macOS" */;
+			buildPhases = (
+				8536F2DB258D330300B509D2 /* Sources */,
+				8536F2DC258D330300B509D2 /* Frameworks */,
+				8536F2DD258D330300B509D2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "SkyNation macOS";
+			productName = "SkyNation macOS";
+			productReference = 8536F2DF258D330300B509D2 /* SkyNation.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8536F305258D355C00B509D2 /* DataTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8536F30D258D355C00B509D2 /* Build configuration list for PBXNativeTarget "DataTests" */;
+			buildPhases = (
+				8536F302258D355C00B509D2 /* Sources */,
+				8536F303258D355C00B509D2 /* Frameworks */,
+				8536F304258D355C00B509D2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8536F30C258D355C00B509D2 /* PBXTargetDependency */,
+			);
+			name = DataTests;
+			productName = DataTests;
+			productReference = 8536F306258D355C00B509D2 /* DataTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8536F2B0258D330200B509D2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1230;
+				LastUpgradeCheck = 1230;
+				TargetAttributes = {
+					8536F2BB258D330300B509D2 = {
+						CreatedOnToolsVersion = 12.3;
+					};
+					8536F2CD258D330300B509D2 = {
+						CreatedOnToolsVersion = 12.3;
+					};
+					8536F2DE258D330300B509D2 = {
+						CreatedOnToolsVersion = 12.3;
+					};
+					8536F305258D355C00B509D2 = {
+						CreatedOnToolsVersion = 12.3;
+						TestTargetID = 8536F2DE258D330300B509D2;
+					};
+				};
+			};
+			buildConfigurationList = 8536F2B3258D330200B509D2 /* Build configuration list for PBXProject "SkyNation" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 8536F2AF258D330200B509D2;
+			productRefGroup = 8536F2BD258D330300B509D2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8536F2BB258D330300B509D2 /* SkyNation iOS */,
+				8536F2CD258D330300B509D2 /* SkyNation tvOS */,
+				8536F2DE258D330300B509D2 /* SkyNation macOS */,
+				8536F305258D355C00B509D2 /* DataTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8536F2BA258D330300B509D2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8536F2C5258D330300B509D2 /* Main.storyboard in Resources */,
+				8536F2C8258D330300B509D2 /* LaunchScreen.storyboard in Resources */,
+				8536F2F0258D330300B509D2 /* Assets.xcassets in Resources */,
+				8536F2ED258D330300B509D2 /* Art.scnassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8536F2CC258D330300B509D2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8536F2D6258D330300B509D2 /* Main.storyboard in Resources */,
+				8536F2D9258D330300B509D2 /* LaunchScreen.storyboard in Resources */,
+				8536F2F1258D330300B509D2 /* Assets.xcassets in Resources */,
+				8536F2EE258D330300B509D2 /* Art.scnassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8536F2DD258D330300B509D2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8536F2E7258D330300B509D2 /* Main.storyboard in Resources */,
+				8536F2F2258D330300B509D2 /* Assets.xcassets in Resources */,
+				8536F2EF258D330300B509D2 /* Art.scnassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8536F304258D355C00B509D2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8536F2B8258D330300B509D2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8536F2C2258D330300B509D2 /* GameViewController.swift in Sources */,
+				8536F316258D361100B509D2 /* GameConstants.swift in Sources */,
+				8536F2EA258D330300B509D2 /* GameController.swift in Sources */,
+				8536F2C0258D330300B509D2 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8536F2CA258D330300B509D2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8536F2D3258D330300B509D2 /* GameViewController.swift in Sources */,
+				8536F317258D361100B509D2 /* GameConstants.swift in Sources */,
+				8536F2EB258D330300B509D2 /* GameController.swift in Sources */,
+				8536F2D1258D330300B509D2 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8536F2DB258D330300B509D2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8536F2E4258D330300B509D2 /* GameViewController.swift in Sources */,
+				8536F318258D361100B509D2 /* GameConstants.swift in Sources */,
+				8536F2EC258D330300B509D2 /* GameController.swift in Sources */,
+				8536F2E2258D330300B509D2 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8536F302258D355C00B509D2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8536F309258D355C00B509D2 /* DataTests.swift in Sources */,
+				8536F319258D361100B509D2 /* GameConstants.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8536F30C258D355C00B509D2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8536F2DE258D330300B509D2 /* SkyNation macOS */;
+			targetProxy = 8536F30B258D355C00B509D2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		8536F2C3258D330300B509D2 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8536F2C4258D330300B509D2 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		8536F2C6258D330300B509D2 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8536F2C7258D330300B509D2 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		8536F2D4258D330300B509D2 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8536F2D5258D330300B509D2 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		8536F2D7258D330300B509D2 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8536F2D8258D330300B509D2 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		8536F2E5258D330300B509D2 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8536F2E6258D330300B509D2 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		8536F2F3258D330300B509D2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		8536F2F4258D330300B509D2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		8536F2F6258D330300B509D2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FXF7BJD3VH;
+				INFOPLIST_FILE = "SkyNation iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.skynationgame.SkyNation;
+				PRODUCT_NAME = SkyNation;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8536F2F7258D330300B509D2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FXF7BJD3VH;
+				INFOPLIST_FILE = "SkyNation iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.skynationgame.SkyNation;
+				PRODUCT_NAME = SkyNation;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8536F2F9258D330300B509D2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "tvOS App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FXF7BJD3VH;
+				INFOPLIST_FILE = "SkyNation tvOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.skynationgame.SkyNation;
+				PRODUCT_NAME = SkyNation;
+				SDKROOT = appletvos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 14.3;
+			};
+			name = Debug;
+		};
+		8536F2FA258D330300B509D2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "tvOS App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FXF7BJD3VH;
+				INFOPLIST_FILE = "SkyNation tvOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.skynationgame.SkyNation;
+				PRODUCT_NAME = SkyNation;
+				SDKROOT = appletvos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 14.3;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8536F2FC258D330300B509D2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "SkyNation macOS/SkyNation_macOS.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 37;
+				DEVELOPMENT_TEAM = FXF7BJD3VH;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = "SkyNation macOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.skynationgame.SkyNation;
+				PRODUCT_NAME = SkyNation;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		8536F2FD258D330300B509D2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "SkyNation macOS/SkyNation_macOS.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 37;
+				DEVELOPMENT_TEAM = FXF7BJD3VH;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = "SkyNation macOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.skynationgame.SkyNation;
+				PRODUCT_NAME = SkyNation;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		8536F30E258D355C00B509D2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = FXF7BJD3VH;
+				INFOPLIST_FILE = DataTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.skynationgame.DataTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SkyNation.app/Contents/MacOS/SkyNation";
+			};
+			name = Debug;
+		};
+		8536F30F258D355C00B509D2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = FXF7BJD3VH;
+				INFOPLIST_FILE = DataTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.skynationgame.DataTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SkyNation.app/Contents/MacOS/SkyNation";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8536F2B3258D330200B509D2 /* Build configuration list for PBXProject "SkyNation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8536F2F3258D330300B509D2 /* Debug */,
+				8536F2F4258D330300B509D2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8536F2F5258D330300B509D2 /* Build configuration list for PBXNativeTarget "SkyNation iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8536F2F6258D330300B509D2 /* Debug */,
+				8536F2F7258D330300B509D2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8536F2F8258D330300B509D2 /* Build configuration list for PBXNativeTarget "SkyNation tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8536F2F9258D330300B509D2 /* Debug */,
+				8536F2FA258D330300B509D2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8536F2FB258D330300B509D2 /* Build configuration list for PBXNativeTarget "SkyNation macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8536F2FC258D330300B509D2 /* Debug */,
+				8536F2FD258D330300B509D2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8536F30D258D355C00B509D2 /* Build configuration list for PBXNativeTarget "DataTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8536F30E258D355C00B509D2 /* Debug */,
+				8536F30F258D355C00B509D2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8536F2B0258D330200B509D2 /* Project object */;
+}
