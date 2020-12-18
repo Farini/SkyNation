@@ -1,11 +1,7 @@
-//
 //  GameConstants.swift
 //  SkyNation
-//
 //  Created by Carlos Farini on 12/18/20.
-//
 
-//import Foundation
 import SwiftUI
 
 /*
@@ -146,7 +142,7 @@ enum GameSceneType {
     case MarsColony
 }
 
-/*
+
 /// Images used by the game
 struct GameImages {
     
@@ -168,8 +164,16 @@ struct GameImages {
         return Image("Tank")
     }
     
+    static func commonSystemImage(name:String) -> SKNImage? {
+        #if os(macOS)
+        return SKNImage(systemSymbolName: name, accessibilityDescription: name)
+        #else
+        return SKNImage(systemName: name)
+        #endif
+    }
+    
 }
-*/
+
 
 
 #if os(macOS)
