@@ -119,16 +119,19 @@ class LabViewModel: ObservableObject {
         }
         // Add problem message
         if missingSkills.isEmpty {
-            var problematicMessage:String = "Missing ingredients:"
-            problematicMessage += "\nMissing Skills:"
+            print("There are enough skills :)")
+            
+        } else {
+            
+            
+            var problematicMessage:String = "Missing Skills:"
+            // problematicMessage += "\nMissing Skills:"
             for skill in missingSkills {
                 problematicMessage += "\n\(skill.rawValue)"
             }
             self.problems = problematicMessage
             print("There aren't enough skills :(")
             return
-        } else {
-            print("There are enough skills :)")
         }
         
         

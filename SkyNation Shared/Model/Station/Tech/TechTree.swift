@@ -157,6 +157,11 @@ enum TechItems:String, Codable, CaseIterable, Identifiable {
     func skillSet() -> [Skills:Int] {
         switch self {
         case .node2, .node3, .node4: return [:]
+        case .module4, .module5, .module6: return [.Material:1]
+            case .garage: return [.Mechanic:1, .Material:2]
+            case .recipeScrubber: return [.Handy:1]
+            case .recipeWaterFilter: return [.Biologic:1]
+            case .module7, .module8, .module9, .module10: return [.Material:2]
         default: return [.Mechanic:1, .Biologic:1]
         }
     }

@@ -39,6 +39,7 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
         case .Module: return [.Aluminium:35]
         case .Node: return [.Aluminium:15]
         case .tank: return [.Aluminium:8]
+        case .solarPanel: return [.Polimer:1, .SolarCell:2]
         default: return [.Aluminium:15, .Polimer:8, .Copper:4]
         }
     }
@@ -61,6 +62,9 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
     func skillSet() -> [Skills:Int] {
         switch self {
         case .tank: return [:]
+        case .solarPanel: return [.Handy:1]
+        
+                
         default: return [.Mechanic:1, .Biologic:1]
         }
     }

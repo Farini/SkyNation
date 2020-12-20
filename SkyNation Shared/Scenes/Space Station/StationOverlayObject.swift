@@ -267,6 +267,10 @@ class StationOverlay {
     
     func generateNews(string:String, warning:Bool = false) {
         
+        // Center
+        var positionX = scene.size.width / 2
+        
+        
         let label = SKLabelNode(text: "\(warning ? "⚠️ ":"")\(string)")
         
         // Name
@@ -288,6 +292,9 @@ class StationOverlay {
         backNode.fillColor = SCNColor.black.withAlphaComponent(0.7)
         backNode.strokeColor = SCNColor.lightGray
         backNode.addChild(label)
+        
+        positionX -= backSize.width / 2
+        newsPlaceholder.position.x = positionX
         
         newsPlaceholder.addChild(backNode)
         print("Scene paused: \(scene.isPaused)")

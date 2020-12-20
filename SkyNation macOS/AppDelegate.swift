@@ -7,13 +7,11 @@
 
 import Cocoa
 
-@main
+@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-
-
-
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        
+        print("App finished launch")
         if let screen = NSScreen.main {
             let rect = screen.frame
             print("Screen frame: \(rect)")
@@ -35,19 +33,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         return true
     }
+    
+}
 
+
+class MacMenu:NSObject, NSMenuDelegate {
+    
     @IBAction func openFinder(_ sender: NSMenuItem) {
         
-        print("Getting finder")
+        print("Getting finder (From MACMENU)")
         
-        if let documentsPathURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-            print("Doc url: \(documentsPathURL)")
-            // This gives you the URL of the path
-            // print("Documents Path URL:\(documentsPathURL)")
-            NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: documentsPathURL.absoluteString)
-            //        }
-        }else{
-            print("Where is finder ??")
+        if let dataPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            print("opening workspace")
+            NSWorkspace.shared.activateFileViewerSelecting([dataPath])
         }
     }
     
@@ -55,16 +53,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         print("Getting finder")
         
-        if let documentsPathURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
-            print("App Support url: \(documentsPathURL)")
-            // This gives you the URL of the path
-            // print("Documents Path URL:\(documentsPathURL)")
-            NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: documentsPathURL.absoluteString)
-            //        }
-        }else{
-            print("Where is finder ??")
+        if let dataPath = FileManager.default.urls(for: .applicationDirectory, in: .userDomainMask).first {
+            
+            NSWorkspace.shared.activateFileViewerSelecting([dataPath])
         }
     }
-    
 }
 

@@ -87,13 +87,13 @@
                                         <menuItem title="Open Finder" id="VKx-qr-z0w">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="openFinder:" target="Voe-Tx-rLC" id="mz9-6U-MQD"/>
+                                                <action selector="openFinder:" target="fSw-3E-fBJ" id="boh-pQ-Suq"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Open App Support" id="CzB-fp-7gX">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="openAppSupport:" target="Voe-Tx-rLC" id="6jo-1s-iXN"/>
+                                                <action selector="openAppSupport:" target="fSw-3E-fBJ" id="ifj-QF-00r"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
@@ -401,14 +401,15 @@
                         </items>
                     </menu>
                     <connections>
-                        <outlet property="delegate" destination="Voe-Tx-rLC" id="PrD-fu-P6m"/>
+                        <outlet property="delegate" destination="9jQ-uH-EOc" id="1yc-pr-lMO"/>
                     </connections>
                 </application>
-                <customObject id="Voe-Tx-rLC" customClass="AppDelegate"/>
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
+                <customObject id="fSw-3E-fBJ" customClass="MacMenu" customModule="SkyNation" customModuleProvider="target"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <customObject id="9jQ-uH-EOc" customClass="AppDelegate" customModule="SkyNation" customModuleProvider="target"/>
             </objects>
-            <point key="canvasLocation" x="75" y="0.0"/>
+            <point key="canvasLocation" x="17" y="125"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -429,7 +430,7 @@
                 </windowController>
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="74" y="327"/>
+            <point key="canvasLocation" x="-28" y="473"/>
         </scene>
         <!--Game View Controller-->
         <scene sceneID="hIz-AP-VOD">
@@ -448,7 +449,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="74" y="770"/>
+            <point key="canvasLocation" x="86" y="877"/>
         </scene>
     </scenes>
 </document>

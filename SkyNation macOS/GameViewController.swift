@@ -171,6 +171,13 @@ class GameViewController: NSViewController, GameNavDelegate, NSWindowDelegate {
         window.makeKeyAndOrderFront(nil)
     }
     
+    // menu
+    
+//    @IBAction func openfinder(_ sender: NSMenuItem) {
+//        print("Can we open now ???")
+//        
+//    }
+    
 }
 
 class ClosableWindow:NSWindow {
