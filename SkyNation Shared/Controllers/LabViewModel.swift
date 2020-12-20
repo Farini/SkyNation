@@ -134,11 +134,13 @@ class LabViewModel: ObservableObject {
             return
         }
         
-        
+        // Create activity
         let duration = item.getDuration()
         let delta:TimeInterval = Double(duration)
         let activity = LabActivity(time: delta, name: item.rawValue)
         labModule.activity = activity
+        
+        // Save and update view
         LocalDatabase.shared.saveStation(station: station)
         print("Activity created")
         selection = .activity
@@ -204,10 +206,19 @@ class LabViewModel: ObservableObject {
     }
     
     func makeRecipe(recipe:Recipe) {
+        
+        print("Making recipe: \(recipe.rawValue)")
+        
+        // Create Activity
         let duration = recipe.getDuration()
         let delta:TimeInterval = Double(duration)
         let activity = LabActivity(time: delta, name: recipe.rawValue)
         labModule.activity = activity
+        
+        // Save and update view
+        LocalDatabase.shared.saveStation(station: station)
+        print("Activity created")
+        selection = .activity
     }
     
     func collectRecipe(recipe:Recipe, from module:LabModule) -> Bool {

@@ -63,9 +63,10 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
         switch self {
         case .tank: return [:]
         case .solarPanel: return [.Handy:1]
+        case .Electrolizer: return [.Handy:1]
         
                 
-        default: return [.Mechanic:1, .Biologic:1]
+        default: return [.Mechanic:1]
         }
     }
     

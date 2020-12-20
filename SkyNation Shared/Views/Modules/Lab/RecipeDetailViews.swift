@@ -113,6 +113,7 @@ struct RecipeDetailView:View {
                 Button("Make Recipe") {
                     self.labModel.makeRecipe(recipe: recipe)
                 }
+                
                 .padding()
                 .disabled(labModel.recipeDisabled(recipe: recipe))
                 

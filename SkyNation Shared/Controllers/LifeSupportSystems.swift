@@ -333,6 +333,20 @@ class LSSModel:ObservableObject {
         }
     }
     
+    // MARK: - Peripheral Control
+    
+    /// Powering a Peripheral On/Off
+    func powerToggle(peripheral:PeripheralObject) {
+        print("Toggling Power on peripheral: \(peripheral.peripheral.rawValue)")
+        peripheral.powerOn.toggle()
+    }
+    
+    /// Fix a Peripheral Object
+    func fixBroken(peripheral:PeripheralObject) {
+        peripheral.isBroken.toggle()
+        peripheral.lastFixed = Date()
+    }
+    
     // Real Accounting
     func runAccounting() {
         print("Going to run accounting...")

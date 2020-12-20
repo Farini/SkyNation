@@ -112,10 +112,10 @@ struct LifeSupportView: View {
                     case .Resources:
                         // Tanks + Peripherals
                         Group {
-                            //                    Text("⌽ Tanks").font(.headline).foregroundColor(.orange)
-                            // Left View: List of Resources
+                            
                             HStack {
                                 
+                                // Left View: List of Resources
                                 List() {
                                     // Tanks
                                     Section(header: Text("Tanks")) {
@@ -155,6 +155,7 @@ struct LifeSupportView: View {
                                 }
                                 .frame(minWidth:180, maxWidth:220, minHeight:200)
                                 
+                                // Right: Detail View
                                 ScrollView() {
                                     VStack {
                                         if selectedTank != nil {
@@ -175,6 +176,30 @@ struct LifeSupportView: View {
                                                 
                                                 Text("Power: \(selectedPeripheral!.powerOn ? "On":"Off")")
                                                     .foregroundColor(selectedPeripheral!.powerOn ? Color.green:Color.orange)
+                                                
+                                                HStack {
+                                                    Button(action: {
+                                                        lssModel.powerToggle(peripheral: selectedPeripheral!)
+                                                    }, label: {
+                                                        VStack {
+                                                            Image(systemName: "power")
+                                                                .foregroundColor(selectedPeripheral!.powerOn ? Color.orange:Color.blue)
+                                                            Text("Power")
+                                                        }
+                                                    })
+                                                    if selectedPeripheral!.isBroken {
+                                                        Button(action: {
+                                                            lssModel.fixBroken(peripheral: selectedPeripheral!)
+                                                        }, label: {
+                                                            VStack {
+                                                                Image(systemName: "wrench.and.screwdriver.fill")
+                                                                    .foregroundColor(selectedPeripheral!.powerOn ? Color.orange:Color.blue)
+                                                                Text("Fix")
+                                                            }
+                                                        })
+                                                        .padding()
+                                                    }
+                                                }
                                                 
                                                 // Time since fixed
                                                 if let d = selectedPeripheral!.lastFixed?.timeIntervalSince(Date()) {
@@ -200,8 +225,6 @@ struct LifeSupportView: View {
                                     
                                 }
                                 .frame(maxWidth:.infinity, minHeight:200, maxHeight:220)
-                                
-                                
                             }
                             
                         }.padding(3)

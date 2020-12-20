@@ -545,17 +545,17 @@
 		8536F339258D41BA00B509D2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				8536F3CC258D47D000B509D2 /* DropOffView.swift */,
-				8536F3C3258D47D000B509D2 /* EarthRequestView.swift */,
-				8536F3C8258D47D000B509D2 /* Garage */,
 				8536F3CD258D47D000B509D2 /* LifeSupportView.swift */,
+				8536F3C3258D47D000B509D2 /* EarthRequestView.swift */,
+				8536F3BB258D47CF00B509D2 /* PersonControl.swift */,
+				8536F3BC258D47CF00B509D2 /* TrussView.swift */,
+				8536F3CC258D47D000B509D2 /* DropOffView.swift */,
 				8536F4AE258D49C900B509D2 /* TravelersView.swift */,
 				8536F3C4258D47D000B509D2 /* MarsMapView.swift */,
+				8536F3C8258D47D000B509D2 /* Garage */,
 				8536F3B2258D47CF00B509D2 /* Modules */,
-				8536F3BB258D47CF00B509D2 /* PersonControl.swift */,
 				8536F3BD258D47CF00B509D2 /* Subviews */,
 				8536F3C5258D47D000B509D2 /* TestViews */,
-				8536F3BC258D47CF00B509D2 /* TrussView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

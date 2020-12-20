@@ -76,7 +76,7 @@ class Station:Codable {
         print("Energy Generated: \(energyGenerated)")
         
         while energyGenerated > 0 {
-            for battery in truss.getBatteries() {
+            for battery in truss.batteries {
                 let pct = Int((battery.current / battery.capacity) * 100)
                 print("Battery (before charging): \(battery.current) of \(battery.capacity) \(pct)% \(battery.id)")
                 if battery.charge() {

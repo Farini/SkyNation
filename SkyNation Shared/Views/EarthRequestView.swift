@@ -10,11 +10,6 @@ import SwiftUI
 
 struct EarthRequestView: View {
     
-    // Items to order
-//    var chunkedIngredients = Ingredient.allCases.chunked(into: 3)
-//    var chunkedPeople = PeopleMaker.shared.people.chunked(into: 3)
-//    var chunkedTanks = TankType.allCases.chunked(into: 3)
-    
     private var ingredientColumns: [GridItem] = [
         GridItem(.flexible(minimum: 72)),
         GridItem(.flexible(minimum: 72)),
@@ -59,17 +54,15 @@ struct EarthRequestView: View {
             ScrollView {
                 
                 switch controller.orderStatus {
+                    
                     case .Ordering(_):
-                        
                         // What has already picked
                         Group {
-                            
-                            Text("Your Order").font(.title)
+                            Text("Delivery Order").font(.title)
                             if controller.selectedIngredients.isEmpty && controller.selectedTanks.isEmpty && controller.selectedPeople.isEmpty {
-                                Text("Order is empty")
+                                Text("<< Order is empty >>")
                                     .foregroundColor(.gray)
                             }
-                            
                             ForEach(controller.selectedIngredients, id:\.self) { order in
                                 Text(order.rawValue).foregroundColor(.green)
                             }
@@ -79,16 +72,8 @@ struct EarthRequestView: View {
                             ForEach(controller.selectedPeople) { person in
                                 PersonRow(person: person)
                             }
-                            if controller.selectedIngredients.isEmpty && controller.selectedTanks.isEmpty && controller.selectedPeople.isEmpty {
-                                Text("Order is empty")
-                                    .foregroundColor(.gray)
-                            }
-                            
                             Divider()
                         }
-                        
-                        
-                        // Text("Ordering: \(what.rawValue)")
                         Picker(selection: $controller.currentSelectionType, label: Text("")) {
                             ForEach(EarthViewPicker.allCases, id:\.self) { earth in
                                 Text(earth.rawValue)
@@ -145,24 +130,58 @@ struct EarthRequestView: View {
                             .foregroundColor(.orange)
                         
                     case .OrderPlaced:
-                        Text("Order Placed. Wait for delivery now.")
-                            .foregroundColor(.orange)
+                        Group {
+                            Text("Order Placed. Wait for delivery now.")
+                                .foregroundColor(.orange)
+                            
+                        }
+                        
                         
                     case .Delivering:
-                        Text("Delivering")
-                            .foregroundColor(.orange)
+                        Group {
+                            // Head
+                            VStack {
+                                Text("📦 Delivery")
+                                    .font(.largeTitle)
+                                    .foregroundColor(.orange)
+                                Text("Here are the items being delivered")
+                                    .foregroundColor(.gray)
+                            }
+                            .padding([.bottom], 6)
+                            
+                            // Ingredients
+                            LazyVGrid(columns: ingredientColumns, alignment: .center, spacing: 8, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
+                                ForEach(controller.currentOrder!.ingredients) { ingredient in
+                                    IngredientView(ingredient: ingredient.type, hasIngredient: nil, quantity: nil)
+                                        .padding(3)
+                                    //                                            .onTapGesture {
+                                    //                                                controller.order(ingredient: ingredient)
+                                    //                                            }
+                                }
+                            }
+                            if let order:PayloadOrder = controller.currentOrder {
+                                
+//                                ForEach(order.ingredients) { ingredient in
+//                                    Text("Ingredient: \(ingredient.type.rawValue)")
+//                                    IngredientView(ingredient: ingredient.type, hasIngredient: true, quantity: nil)
+//                                }
+                                // Tanks
+                                ForEach(order.tanks) { tank in
+                                    Text("Ingredient: \(tank.type.rawValue)")
+                                }
+                                // People
+                                ForEach(order.people) { person in
+                                    PersonSmallView(person: person)
+                                }
+                            }
+                        }
+                        
                         
                     case .Delivered:
                         Text("Closed")
                             .foregroundColor(.orange)
                 }
-                
-                
-                
                 Divider()
-                
-                
-                
             }
             
             Divider()
@@ -202,7 +221,10 @@ struct EarthRequestView: View {
                                 controller.orderMore()
                             }
                         case .Delivering:
-                            Text("Delivering")
+                            Text("Delivery action")
+                                .font(.headline)
+                                .foregroundColor(.blue)
+                            
                             Button("Reject") {
                                 controller.clearOrder()
                             }
@@ -215,7 +237,7 @@ struct EarthRequestView: View {
                         case .Delivered:
                             Text("Closed")
                     }
-            }
+                }
                 
                 if !controller.errorMessage.isEmpty {
                     Text("* \(controller.errorMessage)")
@@ -225,7 +247,7 @@ struct EarthRequestView: View {
             }
             .padding(.vertical)
         }
-        .frame(height: 400.0)
+        .frame(height: 600)
         
     }
     

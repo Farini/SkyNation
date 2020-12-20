@@ -26,6 +26,9 @@ enum OrderStatus {
 
 class EarthRequestController:ObservableObject {
     
+    /// The limit of items that can go in an Order
+    let orderLimit:Int = GameLogic.earthOrderLimit // = 6
+    
     @Published var selectedIngredients:[Ingredient] = []
     @Published var selectedTanks:[TankType] = []
     @Published var selectedPeople:[Person] = []
@@ -39,10 +42,8 @@ class EarthRequestController:ObservableObject {
     
     // Order
     @Published var currentOrder:PayloadOrder?
-    let orderLimit:Int = GameLogic.earthOrderLimit // = 6
     @Published var orderCost:Double = EarthOrder.basePrice
     @Published var errorMessage:String = ""
-    //    @Published var emptyOrder:Bool
     
     init() {
         

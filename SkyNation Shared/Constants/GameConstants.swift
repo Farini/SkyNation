@@ -146,6 +146,7 @@ enum GameSceneType {
 /// Images used by the game
 struct GameImages {
     
+    /// A SwiftUI Image for a given Skill
     static func imageForSkill(skill:Skills) -> Image {
         switch skill {
             case .Biologic: return Image("SkillBio")
@@ -155,8 +156,9 @@ struct GameImages {
             case .Mechanic: return Image("SkillMechanic")
             case .Medic: return Image("SkillMedic")
             case .SystemOS: return Image("SkillSystems")
+            case .Handy: return Image(systemName: "hand.wave.fill")
             // handy
-            default: return Image(systemName: "questionmark")
+//            default: return Image(systemName: "questionmark")
         }
     }
     

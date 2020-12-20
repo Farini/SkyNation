@@ -124,7 +124,7 @@ enum PeripheralType:String, Codable, CaseIterable {
 }
 
 /// An object that produces, or transforms `Ingredients`
-struct PeripheralObject:Codable, Identifiable {
+class PeripheralObject:Codable, Identifiable {
     
     var id:UUID
     var peripheral:PeripheralType
