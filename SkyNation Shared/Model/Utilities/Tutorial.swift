@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum TutorialSection:String, CaseIterable {
+enum TutorialPage:String, CaseIterable {
     case Welcome
     case HabModules
     case LabModules
@@ -17,15 +17,17 @@ enum TutorialSection:String, CaseIterable {
     
 }
 
-struct TutorialPageItem {
+struct TutorialItem {
     var id:UUID
     var order:Int
     
     var words:String?
     var imageSource:String?
     
+    
 }
 
 struct GameTutorial {
+    
     
 }

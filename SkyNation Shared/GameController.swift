@@ -87,7 +87,17 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     camToggle.toggle()
                 }
                 
+                // Tutorial button
+                if sprite.name == "tutorial" {
+                    print("🎓 HIT TUTORIAL NODE")
+                    self.stationOverlay.showTutorial()
+                    return
+                }
                 
+                if sprite.name == "settings" {
+                    print("⚙️ HIT SETTINGS NODE")
+                    return
+                }
                 
             }
             
@@ -368,7 +378,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         self.cameraNode = cam
         
         // Overlay
-        let stationOverlay = StationOverlay(renderer: sceneRenderer, station: station!, camNode: cam)
+        let stationOverlay = StationOverlay(renderer: renderer, station: station!, camNode: cam)
         sceneRenderer.overlaySKScene = stationOverlay.scene
         self.stationOverlay = stationOverlay
         
@@ -434,6 +444,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
         // Adds the stuff to the scene (builder unlocked items)
         for node:BuildItem in builder.nodes {
+            
             if node.unlocked {
                 // Load node
                 if let nodeObj = node.loadFromScene() {

@@ -178,7 +178,7 @@ class GarageViewModel:ObservableObject {
     func startBuilding(vehicle:SpaceVehicle) {
         station.garage.startBuildingVehicle(vehicle: vehicle)
         self.buildingVehicles.append(vehicle)
-        selectedVehicle = nil
+        selectedVehicle = vehicle
         garageStatus = .idle
         
     }

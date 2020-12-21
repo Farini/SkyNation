@@ -118,24 +118,24 @@ class SerialBuilder:Codable {
         switch item {
             case .node2:
                 nodes[2].unlocked = true
-                let children = nodes[2].children
-                for child in children {
-                    child.unlocked = true
-                }
+//                let children = nodes[2].children
+//                for child in children {
+//                    child.unlocked = true
+//                }
                 let id = nodes[2].id
                 print("Item: \(item) unlocked id \(id.uuidString)")
                 LocalDatabase.shared.saveSerialBuilder(builder: self)
             case .node3:
                 nodes[3].unlocked = true
-                for child in nodes[3].children {
-                    child.unlocked = true
-                }
+//                for child in nodes[3].children {
+//                    child.unlocked = true
+//                }
                 LocalDatabase.shared.saveSerialBuilder(builder: self)
             case .node4:
                 nodes[4].unlocked = true
-                for child in nodes[4].children {
-                    child.unlocked = true
-                }
+//                for child in nodes[4].children {
+//                    child.unlocked = true
+//                }
                 LocalDatabase.shared.saveSerialBuilder(builder: self)
             case .Cuppola:
                 print("Enable Cuppola")

@@ -100,6 +100,7 @@ struct GameFormatters {
         format.minimumFractionDigits = 1
         format.maximumFractionDigits = 2
         format.numberStyle = NumberFormatter.Style.decimal
+        format.hasThousandSeparators = true
         return format
     }()
 }
@@ -168,10 +169,16 @@ struct GameImages {
     
     static func commonSystemImage(name:String) -> SKNImage? {
         #if os(macOS)
-        return SKNImage(systemSymbolName: name, accessibilityDescription: name)
+        guard let im = NSImage(systemSymbolName: name, accessibilityDescription: name) else { return nil }
+        im.isTemplate = true
+        return im as SKNImage
         #else
         return SKNImage(systemName: name)
         #endif
+    }
+    
+    static var currencyImage:SKNImage {
+        return SKNImage(named: "Currency")!
     }
     
 }

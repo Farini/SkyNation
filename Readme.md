@@ -28,7 +28,7 @@ The completion of each **ToDo** item will lead to the earning of **Stars**, whic
 Each **ToDo** item has a difficulty level. As each item is different, and requires some amount of work, a ToDo item should have its difficulty level indicated on the ToDo list, as described below:
 
 > ★ Completed features get a *filled* star.
-> ☆ Features that need work done, are incomplete, or not yet started, get an empty star.
+>> ☆ Features that need work done, are incomplete, or not yet started, get an empty star.
 
 
 ### 📝 Difficulty Levels
@@ -88,15 +88,8 @@ Items being worked on
 
 ## 📝 Doing - Present
 
-- [X] 1/1 SpaceVehicle
-- [X] 1/1 Module -> Skins 
-- [X] 1/1 Human Selection View
 - [X] 1/3 Accounting Problems View
-- [X] 1/1 tComponents on Truss
-- [X] 3/3 Cuppola
 - [X] 1/3 Notify scene when tech is ready (not tested)
-- [X] Make Game work on iPad
-
 - [ ] Scene is showing Serial builder ahead of time. Check isUnlocked vs isResearched
 - [ ] 1/3 Ship Animation (Needs better particle emitter, plus open the shell)
 - [ ] Solar Panel positions
@@ -154,3 +147,10 @@ Grab things from this list as you go along.
 - [X] Earth Animation
 - [X] Airlock + positions
 - [X] 3/3 Implement GarageView like the other Views - Header, List, Right View
+- [X] 1/1 SpaceVehicle
+- [X] 1/1 Module -> Skins 
+- [X] 1/1 Human Selection View
+- [X] 1/1 tComponents on Truss
+- [X] 3/3 Cuppola
+- [X] Make Game work on iPad
+- [X] 1/1 Overlay Improvements

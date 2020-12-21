@@ -32,6 +32,24 @@ class SKNPlayer:Codable, Identifiable {
     var beganGame:Date
     var lastSeen:Date
     
+    init() {
+        self.id = UUID()
+        self.localID = UUID()
+        self.serverID = nil
+        self.guildID = nil
+        self.deliveryTokens = [UUID(), UUID(), UUID()]
+        self.timeTokens = [UUID(), UUID()]
+        self.purchases = []
+        
+        self.name = "Test Player"
+        self.logo = nil
+        self.money = 1000000 // 1 million
+        self.about = "Nothing about"
+        self.experience = 0
+        self.beganGame = Date()
+        self.lastSeen = Date()
+    }
+    
 }
 
 class PlayerPreferences:Codable {

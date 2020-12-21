@@ -11,11 +11,12 @@ import SpriteKit
 import SceneKit
 
 /// The Overlay of the `Station` Scene (Main Scene)
-class StationOverlay {
+class StationOverlay:NSObject, SKSceneDelegate {
     
-    var playerName:String
     var scene:SKScene
     var station:Station
+    
+    var playerName:String
     
     // Placeholders
     var playerCardHolder:SKNode
@@ -26,14 +27,20 @@ class StationOverlay {
     // Cam
     var sceneCamera:SCNNode
     
+    // Viewport
+    var renderer:SCNSceneRenderer
+    
     init(renderer:SCNSceneRenderer, station:Station, camNode:SCNNode) {
         
         let overlay:SKScene = SKScene(fileNamed: "StationOverlay")!
         overlay.size = renderer.currentViewport.size
+        
         self.scene = overlay
+        self.renderer = renderer
         self.sceneCamera = camNode
         
         print("_-_-:: Camera position: \(camNode.position)")
+        print("_-_-:: ViewPort: \(renderer.currentViewport)")
         
         self.playerCardHolder = overlay.childNode(withName: "PlayerCardHolder")!
         self.orbitListHolder = overlay.childNode(withName: "VehiclesHolder")!
@@ -41,66 +48,19 @@ class StationOverlay {
         
         playerName = "Playername"
         self.station = station
-        buildPlayerCard()
+        
+        super.init()
+        
+        self.buildPlayerCard()
+        self.scene.delegate = self
     }
     
     /// Playercard has the name, virtual money, and tokens that belong to the player
     func buildPlayerCard() {
         
-        let playerCard = SKNode()
-        let nameLabel = SKLabelNode(text: "Playername")
+        let player = SKNPlayer()
+        let playerCard = PlayerCardNode(player: player)
         
-        // Name
-        nameLabel.fontName = "Menlo"
-        nameLabel.fontSize = 22
-        nameLabel.fontColor = .white
-        nameLabel.position = CGPoint(x: 6, y: 25)
-        nameLabel.horizontalAlignmentMode = .left
-        nameLabel.verticalAlignmentMode = .center
-        nameLabel.isUserInteractionEnabled = true
-        nameLabel.zPosition = 90
-        
-        // Money
-        let moneyLabel = SKLabelNode(text: "S$: \(station.money)")
-        moneyLabel.fontName = "Menlo"
-        moneyLabel.fontSize = 22
-        moneyLabel.fontColor = .blue
-        moneyLabel.position = CGPoint(x: 6, y: 0)
-        moneyLabel.horizontalAlignmentMode = .left
-        moneyLabel.verticalAlignmentMode = .center
-        moneyLabel.isUserInteractionEnabled = true
-        moneyLabel.zPosition = 90
-        
-        // Tokens
-        let tokenLabel = SKLabelNode(text: "T: 80")
-        tokenLabel.fontName = "Menlo"
-        tokenLabel.fontSize = 22
-        tokenLabel.fontColor = .orange
-        tokenLabel.position = CGPoint(x: 6, y: -25)
-        tokenLabel.horizontalAlignmentMode = .left
-        tokenLabel.verticalAlignmentMode = .center
-        tokenLabel.isUserInteractionEnabled = true
-        tokenLabel.zPosition = 90
-        
-        // Assemble
-        playerCard.addChild(nameLabel)
-        playerCard.addChild(moneyLabel)
-        playerCard.addChild(tokenLabel)
-        var cardSize = playerCard.calculateAccumulatedFrame().size
-        playerCard.position = CGPoint(x: 25, y: -(cardSize.height))
-        
-        // Background
-        cardSize.height += 16
-        cardSize.width += 32
-        let cardRect = CGRect(origin: CGPoint.zero, size: cardSize)
-        let cardBack = SKShapeNode(rect: cardRect, cornerRadius: 8)
-        cardBack.fillColor = SCNColor.black.withAlphaComponent(0.7)
-        cardBack.strokeColor = .red
-        cardBack.zPosition = 81
-        playerCard.addChild(cardBack)
-        
-        // Adjust
-        cardBack.position.y -= cardRect.size.height / 2
         scene.addChild(playerCard)
         
         buildMenu()
@@ -214,9 +174,10 @@ class StationOverlay {
         } else {
             print("Could not add cam")
         }
-//        scene.addChild(lssControl)
+
         scene.addChild(marsLabel)
         scene.addChild(marsMap)
+        
         scene.isPaused = false
     }
     
@@ -250,7 +211,7 @@ class StationOverlay {
         }
     }
     
-    /// Moves the camera to a point in the `x` axis
+    /// Moves the camera in the Scene to a point in the `x` axis
     func moveCamera(x:CGFloat?) {
         // min = 0
         // max = 42
@@ -269,8 +230,6 @@ class StationOverlay {
         
         // Center
         var positionX = scene.size.width / 2
-        
-        
         let label = SKLabelNode(text: "\(warning ? "⚠️ ":"")\(string)")
         
         // Name
@@ -304,9 +263,60 @@ class StationOverlay {
         let sequel = SKAction.sequence([waiter, runner])
         label.run(sequel) {
             print("Finished sequel")
-            self.scene.removeChildren(in: [self.newsPlaceholder])
+//            self.scene.removeChildren(in: [self.newsPlaceholder])
+            backNode.removeFromParent()
         }
     }
+    
+    func showTutorial() {
+        
+        // Center
+        var positionX = scene.size.width / 2
+        let label = SKLabelNode(text: "Tutorial example. This is a tutorial\n But what does a tutorial do?\n That is the question that only the game can answer :)")
+        label.numberOfLines = 0
+        
+        // Name
+        label.fontName = "Menlo"
+        label.fontSize = 22
+        label.fontColor = .white
+        label.horizontalAlignmentMode = .center
+        label.verticalAlignmentMode = .center
+        label.isUserInteractionEnabled = true
+        label.zPosition = 90
+        
+        var backSize = label.calculateAccumulatedFrame().size
+        backSize.width += 20
+        backSize.height += 12
+        
+        // Background
+        let backNode = SKShapeNode(rectOf: backSize, cornerRadius: 8)
+        backNode.position = CGPoint(x: backSize.width / 2 + 6, y: 0)
+        backNode.fillColor = SCNColor.black.withAlphaComponent(0.7)
+        backNode.strokeColor = SCNColor.lightGray
+        backNode.addChild(label)
+        
+        positionX -= backSize.width / 2
+        newsPlaceholder.position.x = positionX
+        
+        newsPlaceholder.addChild(backNode)
+        print("Scene paused: \(scene.isPaused)")
+        
+        let waiter = SKAction.wait(forDuration: 2.25)
+        let runner = SKAction.fadeAlpha(to: 0, duration: 0.75)
+        let sequel = SKAction.sequence([waiter, runner])
+        label.run(sequel) {
+            print("Finished sequel")
+//            self.scene.removeChildren(in: [self.newsPlaceholder])
+            backNode.removeFromParent()
+        }
+        
+    }
+}
+
+extension StationOverlay {
+//    func update(_ currentTime: TimeInterval, for scene: SKScene) {
+//        <#code#>
+//    }
 }
 
 extension SKNImage {

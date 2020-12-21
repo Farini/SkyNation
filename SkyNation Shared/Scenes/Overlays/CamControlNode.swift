@@ -150,6 +150,7 @@ class CamControlNode:SKNode {
         image.isTemplate = true
         let texture = SKTexture(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: [:])!)
         #else
+        
         let texture = SKTexture(cgImage: image.cgImage!)
         
         #endif
