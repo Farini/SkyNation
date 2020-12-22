@@ -323,14 +323,15 @@ class LSSModel:ObservableObject {
     }
     
     func recharge() {
-        for item in station.truss.solarPanels {
-            bloop: for battery in batteries {
-                if battery.charge() == true {
-                    print("Charged from max current \(item.maxCurrent())")
-                    break bloop
-                }
-            }
-        }
+        print("Recharge is being deprecated")
+//        for item in station.truss.solarPanels {
+//            bloop: for battery in batteries {
+//                if battery.charge() == true {
+//                    print("Charged from max current \(item.maxCurrent())")
+//                    break bloop
+//                }
+//            }
+//        }
     }
     
     // MARK: - Peripheral Control

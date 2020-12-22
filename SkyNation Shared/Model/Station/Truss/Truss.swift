@@ -180,10 +180,15 @@ class Truss:Codable {
         self.batteries = [b1, b2]
         
         // Boxes
-        self.extraBoxes = []
+        let peepee = StorageBox(ingType: .wasteLiquid, current: 0)
+        let poopoo = StorageBox(ingType: .wasteSolid, current: 0)
+        self.extraBoxes = [peepee, poopoo]
+        
+        // Air, oxygen and water
+        self.tanks = [Tank(type: .air, full: true), Tank(type: .o2, full: true), Tank(type: .h2o, full: true), Tank(type: .h2o, full: true)]
         
         // Antenna
-        var newAntenna = PeripheralObject(peripheral: .Antenna)
+        let newAntenna = PeripheralObject(peripheral: .Antenna)
         newAntenna.level = 1
         self.antenna = newAntenna
         
@@ -209,10 +214,7 @@ class Truss:Codable {
         let tR4 = TrussComponent(index: 34)
         
         self.tComponents = [tRobot, sp1, sp2, sp3, sp4, sp5, sp6, sp7, sp8, tR1, tR2, tR3, tR4]
-        
-        
-        // Air, oxygen and water
-        self.tanks = [Tank(type: .air, full: true), Tank(type: .o2, full: true), Tank(type: .h2o, full: true), Tank(type: .h2o, full: true)]
+         
     }
 }
 
@@ -467,6 +469,17 @@ class AirComposition:Codable {
         
         return currentQuality
         
+    }
+    
+    /// Calculate if needs oxygen
+    func needsOxygen() -> Int {
+        let pct:Double = Double(o2) / Double(volume)
+        if pct < 0.22 {
+            let needed = (Double(volume) * 0.22) - Double(o2)
+            return Int(needed)
+        } else {
+            return 0
+        }
     }
     
     /// Describes the air, with quality

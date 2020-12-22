@@ -79,8 +79,9 @@ class Station:Codable {
             for battery in truss.batteries {
                 let pct = Int((battery.current / battery.capacity) * 100)
                 print("Battery (before charging): \(battery.current) of \(battery.capacity) \(pct)% \(battery.id)")
-                if battery.charge() {
-                    energyGenerated -= 1
+                let maxCharge = min(battery.maxCharge(), energyGenerated)
+                if battery.charge(amount:maxCharge) {
+                    energyGenerated -= maxCharge
                 }
             }
             // set to 0. Otherwise it won't come out of the loop when batteries are full
@@ -93,10 +94,6 @@ class Station:Codable {
         // + ⛔️ Chances of Breaking
         // ✅ Consume Energy
         print("\n⚙️ [Peripherals] ---")
-        
-//        var powerConsumption = 0
-//        Change energy to include truss.consumeEnergy(amount: <#T##Int#>)
-//        var tempEnergy:Int = truss.batteries.map({ $0.current }).reduce(0, +)
         
         var tempWater:Int = truss.tanks.filter({ $0.type == .h2o }).map({$0.current}).reduce(0, +)
         var tempAir:AirComposition = air    // The air being modified
@@ -132,6 +129,48 @@ class Station:Codable {
                     print("\n ⚠️ Should break peripheral !! \n\n")
 //                    peripheral.isBroken = true
                     problems.append("✋ Broken Peripheral")
+                }
+            } else {
+                continue
+            }
+            
+            switch peripheral.peripheral {
+                case .ScrubberCO2:
+                    if tempAir.co2 > 3 {
+                        tempAir.co2 -= 3
+                    }
+                case .Condensator:
+                    if tempAir.h2o > 2 {
+                        tempAir.h2o -= 2
+                        tempWater += 2
+                    }
+                case .Electrolizer:
+                    // Make electrolisys if air is bad
+                    let conditions = [AirQuality.Lethal, AirQuality.Medium, AirQuality.Bad]
+                    if conditions.contains(tempAir.airQuality()) {
+                        tempWater -= 3
+                        tempAir.o2 += 3
+                        tempAir.h2 += 6
+                    }
+                default:
+                    continue
+            }
+        }
+        
+        // Tanks - Regulate amount of oxygen in air
+        let airConditions = [AirQuality.Lethal, AirQuality.Medium, AirQuality.Bad]
+        if airConditions.contains(tempAir.airQuality()) {
+            // Increase oxygen
+            let oxyTanks = truss.tanks.filter({ $0.type == .o2 })
+            
+            for o2Tank in oxyTanks {
+                let oNeeded = tempAir.needsOxygen()
+                if oNeeded > o2Tank.current {
+                    tempAir.o2 += o2Tank.current
+                    o2Tank.current = 0
+                } else {
+                    o2Tank.current -= oNeeded
+                    tempAir.o2 += oNeeded
                 }
             }
         }
@@ -171,34 +210,11 @@ class Station:Codable {
                 problems.append("💦 Lack of Water")
             }
             
-            // WASTE MANAGEMENT
-            
-            // wasteLiquid (pee)
-            accumulatedUrine += 2
-            
-            // solidWaste (poop)
-            if Bool.random() {
-                accumulatedPoop += 1
-            }
-            
-            
-            
-            
             // consume energy
-            
             if truss.consumeEnergy(amount: 1) == false {
                 person.happiness -= 2
                 problems.append("⚡️ Lack of Energy")
             }
-            
-//            if tempEnergy < 1 {
-//                // (mood) go mad if can't have energy
-//                person.happiness -= 2
-//                problems.append("Lack of Energy")
-//
-//            } else {
-//                tempEnergy -= 2
-//            }
             
             // Consume food
             let bioBoxes = bioModules.flatMap({ $0.boxes })
@@ -229,6 +245,24 @@ class Station:Codable {
             
             // + Mood
             person.randomMood()
+            if unlockedTechItems.contains(.Cuppola) {
+                if Bool.random() && person.happiness < 95 {
+                    person.happiness += 3
+                    if Bool.random() {
+                        person.lifeExpectancy += 1
+                    }
+                }
+            }
+            
+            // WASTE MANAGEMENT
+            
+            // wasteLiquid (pee)
+            accumulatedUrine += 2
+            
+            // solidWaste (poop)
+            if Bool.random() {
+                accumulatedPoop += 1
+            }
             
             if person.healthPhysical < 20 {
                 problems.append("\(person.name) is very sick! 🤮")
@@ -249,6 +283,9 @@ class Station:Codable {
                 var ageExtended:String = "\(person.age)"
                 if ageExtended.last == "1" { ageExtended = "st" } else if ageExtended.last == "2" { ageExtended = "nd" } else if ageExtended.last == "3" { ageExtended = "rd" } else { ageExtended = "th" }
                 problems.append("\(person.name)'s \(person.age)\(ageExtended) birthday!")
+                if person.age > person.lifeExpectancy {
+                    problems.append("\(person.name) is diying of age. Farewell!")
+                }
             }
         }
         
@@ -479,6 +516,7 @@ class Station:Codable {
      custom-built just for you.
      */
     init(builder:SerialBuilder) {
+        
         people = []
         modules = builder.modules
         // Peripherals
@@ -501,7 +539,7 @@ class Station:Codable {
         
         // Scrubbers
         let scrubberActive = PeripheralObject(peripheral: .ScrubberCO2)
-        var scrubberBroken = PeripheralObject(peripheral: .ScrubberCO2)
+        let scrubberBroken = PeripheralObject(peripheral: .ScrubberCO2)
         scrubberBroken.isBroken = true
         peripherals = [scrubberBroken, scrubberActive]
         
@@ -518,7 +556,14 @@ class Station:Codable {
         
         accountingDate = Date()
         unlockedTechItems = [TechItems.rootItem]
-        food = ["BANANA", "BANANA", "BANANA"]
+        
+        // Initial food (10 items)
+        var tmpFood:[String] = []
+        for _ in 0...10 {
+            let dna = PerfectDNAOption.allCases.randomElement()!
+            tmpFood.append(dna.rawValue)
+        }
+        food = tmpFood
         
         self.garage = Garage()
     }

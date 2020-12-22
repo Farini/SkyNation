@@ -326,9 +326,13 @@ class Battery:Codable, Identifiable, Hashable {
         self.current = current
     }
     
-    func charge() -> Bool {
+    func maxCharge() -> Int {
+        return capacity - current
+    }
+    
+    func charge(amount:Int) -> Bool {
         if current == capacity { return false }
-        current += 1
+        current += amount
         return true
     }
     
@@ -404,7 +408,7 @@ struct SolarPanel:Codable {
     
     /// The energy generated
     func maxCurrent() -> Int {
-        return size * 5
+        return size * 20
     }  // output current
     
 }

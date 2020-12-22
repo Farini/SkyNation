@@ -546,10 +546,10 @@
 		8536F338258D41A500B509D2 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				8536F343258D475D00B509D2 /* Ingredients.swift */,
-				8536F34B258D475D00B509D2 /* Peripherals */,
 				8536F35D258D475D00B509D2 /* Player.swift */,
 				8536F34D258D475D00B509D2 /* Recipes.swift */,
+				8536F343258D475D00B509D2 /* Ingredients.swift */,
+				8536F34B258D475D00B509D2 /* Peripherals */,
 				8536F344258D475D00B509D2 /* Staff */,
 				8536F34E258D475D00B509D2 /* Station */,
 				8536F347258D475D00B509D2 /* Utilities */,
@@ -639,8 +639,8 @@
 		8536F352258D475D00B509D2 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				8536F353258D475D00B509D2 /* HabModule.swift */,
 				8536F354258D475D00B509D2 /* SerialBuilder.swift */,
+				8536F353258D475D00B509D2 /* HabModule.swift */,
 				8536F355258D475D00B509D2 /* LabModule.swift */,
 				8536F356258D475D00B509D2 /* BioModule.swift */,
 				8536F357258D475D00B509D2 /* Modules.swift */,

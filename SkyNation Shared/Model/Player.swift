@@ -57,7 +57,7 @@ class PlayerPreferences:Codable {
     // Sounds?
     // Notifications?
     // Graphics?
-    
+    // Tutorials?
 }
 
 /// `Public` information about a `Player`

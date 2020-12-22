@@ -19,10 +19,11 @@ class LocalDatabase {
     
     static let shared = LocalDatabase()
     
-    
+    var player:SKNPlayer?
     var builder:SerialBuilder
     var station:Station?
     var vehicles:[SpaceVehicle] = [] // Vehicles that are travelling
+    
     
     // MARK: - Builder
     static let builderFile = "SerialBuilder.json"
@@ -293,6 +294,12 @@ class LocalDatabase {
     
     init() {
         
+        // Player
+        if let player = LocalDatabase.loadPlayer() {
+            self.player = player
+        }
+        
+        // Builder
         if let builder = LocalDatabase.loadBuilder() {
             print("Loading Builder")
             self.builder = builder
@@ -301,6 +308,7 @@ class LocalDatabase {
             builder = SerialBuilder()
         }
         
+        // Space Station
         if let ss = LocalDatabase.loadStation() {
             print("Loading Station")
             self.station = ss
@@ -309,6 +317,7 @@ class LocalDatabase {
             self.station = Station(builder: builder)
         }
         
+        // Vehicles
         let vehiclesArray = LocalDatabase.loadVehicles()
         self.vehicles = vehiclesArray
         
@@ -329,5 +338,6 @@ extension LocalDatabase {
 //
 //        return station.collectRecipe(recipe: recipe, lab: lab)
 //    }
+    
 }
 

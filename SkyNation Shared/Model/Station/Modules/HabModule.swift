@@ -35,4 +35,9 @@ class HabModule:Codable {
         self.inhabitants = []
         self.skin = "ModuleColor"
     }
+    
+    /// An example for the SwiftUI
+    static var example:HabModule {
+        return HabModule(module: Module(id: UUID(), modex: .mod6))
+    }
 }

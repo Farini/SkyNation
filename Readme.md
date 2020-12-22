@@ -88,50 +88,82 @@ Items being worked on
 
 ## 📝 Doing - Present
 
-- [X] 1/3 Accounting Problems View
+- [X] 3/8 Accounting
+    - [X] Basic Accounting (testable)
+    - [X] Person's happiness (if cuppola, airlock, etc.)
+    - [ ] View Accounting Problems
+    - [ ] Vehicle Accounting View
+    - [ ] Accounting Previews
+    
 - [X] 1/3 Notify scene when tech is ready (not tested)
-- [ ] Scene is showing Serial builder ahead of time. Check isUnlocked vs isResearched
-- [ ] 1/3 Ship Animation (Needs better particle emitter, plus open the shell)
-- [ ] Solar Panel positions
-- [ ] 1/3 Camera options + animations
-- [ ] 1/8 Overlay improvements
-- [ ] Truss Positions View
-- [ ] 1/3 iPad View Presentation
-
-- [ ] 5/13 Basic Views
-    - [ ] Create a general Header View in SwiftUI for all SwiftUI base views
-    - [ ] Charge from building Tech + Recipe
-
-## 📝 To Do - Future
-Grab things from this list as you go along.
-
-- [ ] Improve and use PlayerObject
-- [ ] Vehicle Accounting View
-- [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
-- [ ] Roboarm animation
-- [ ] Earth Revealage
-- [ ] Extra modules (mod7, mod8)
-- [ ] Implement 'Skin' on all Modules
-- [ ] 1/3 Cleanup Original Scene
-- [ ] 3/13 Loading Station Scene
-- [ ] 2/3 Station -> Accounting
-- [ ] Vehicle Accounting
-- [ ] Simplify Builder (Delete orientation, etc.) - Questionable
-- [ ] Add Modules 7 ... 10
-- [ ] 1/13 Basic Data Model
-- [ ] 2/5 TechTree improvements (Tree improved, Add Antenna upgrades, Charge ingredients, electricity, Select Humans, Fix Time)
-- [ ] 1/13 Create Mars Scene
-- [ ] 0/21 Mars Views & Controllers
-- [ ] 0/13 Create Server
-- [ ] 0/3 Create Loading initial screen
+    - [ ] Update Scene
+    - [ ] Show News
+    - [ ] Scene is showing Serial builder ahead of time. Check isUnlocked vs isResearched
+    
 - [ ] 3/13 Main Scenes Overlay
-    - [ ] Player
-    - [ ] Camera Control
-    - [ ] LSS - Air Control
+    - [X] Player
+    - [X] Camera Control
+    - [X] LSS - Air Control
+    - [X] Improve Player View 
     - [ ] Mars
     - [ ] Mars Map
     - [ ] Vehicles Table
     - [ ] News (Centered)
+    - [ ] Put icons inside buttons
+    - [ ] Time Token Icon
+    - [ ] Delivery Token Icon
+    - [ ] Better framing
+    - [ ] Add colors / shaders
+    
+- [ ] 1/3 iPad View Presentation
+    - [ ] Present view on iPad - Decide if ModelViewController, or just View
+    - [ ] View dismissal - like windows
+
+- [ ] 5/13 Basic Views
+    - [X] Ingredients and sufficiency
+    - [ ] Create a general Header View in SwiftUI for all SwiftUI base views
+    - [ ] Improve People Selection View - Add a mark so user knows when they are selected
+    - [ ] Error messages
+
+## 📝 To Do - Future
+Grab things from this list as you go along.
+
+- [ ] Solar Panel positions
+    - [X] Truss View creation
+    - [ ] Control where each solar panel goes
+    - [ ] Update the scene
+
+- [ ] 1/3 Camera options + animations
+    - [X] Slider that controls Scene camera's X axis
+    - [ ] Orthographic / Perspective view control
+    - [ ] Garage View (From behind)
+    - [ ] Front View
+    - [ ] Improve Background HDRI image
+
+- [ ] 8/13 Data Model
+    - [ ] 5/8 TechTree improvements (Tree improved, Add Antenna upgrades, Charge ingredients, electricity, Select Humans, Fix Time)
+        - [X] 22 Items
+        - [ ] Antenna Updates
+        - [ ] Improve and use PlayerObject
+
+- [ ] 3/13 Station Scene
+    - [ ] Loading
+    - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
+    - [ ] Roboarm animation
+    - [ ] Earth Revealage
+    - [ ] Implement 'Skin' on all Modules
+    - [ ] 1/3 Cleanup Original Scene
+    - [ ] Simplify Builder (Delete orientation, etc.) - Questionable
+    - [ ] Add Modules 7 ... 10
+    - [ ] 1/3 Ship Animation (Needs better particle emitter, plus open the shell)
+        - [ ] Particle emitter on all engines
+        - [ ] Animate particle emission correctly
+
+- [ ] 1/13 Create Mars Scene
+- [ ] 0/21 Mars Views & Controllers
+- [ ] 0/13 Create Server
+- [ ] 0/3 Create Loading initial screen
+
 
 ## 📝 Done - Past
 - [X] Project created: "SkyTestSceneKit" - Farini on 7/30/20.
