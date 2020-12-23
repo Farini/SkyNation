@@ -19,6 +19,8 @@ struct BioView: View {
     @State var started:Bool = false
     @State var menuPopover:Bool = false
     @State var dnaChoice:PerfectDNAOption = PerfectDNAOption.banana
+    @State var trimSelection:[String] = []
+    
     var module:BioModule
     
     init(bioMod:BioModule) {
@@ -39,69 +41,70 @@ struct BioView: View {
             
             // Header
             Group {
-                VStack(alignment: .leading, spacing: 2) {
+                
+                HStack(alignment: VerticalAlignment.lastTextBaseline) {
                     
-                    HStack(alignment: VerticalAlignment.lastTextBaseline) {
-                        Button("⚙️") {
-                            print("Menu")
-                            menuPopover = true
-                        }
-                        .popover(isPresented: $menuPopover, content: {
-                            VStack {
-                                Button("Rename Module") {
-                                    print("Menu")
-                                    menuPopover.toggle()
-                                }
-                                Button("Change Skin") {
-                                    print("Menu")
-                                    menuPopover = false
-                                }
-                                Button("Destroy") {
-                                    print("Menu")
-                                    menuPopover = false
-                                }
-                            }
-                            .padding()
-                        })
-                        .gameButton()
-                        
-                        Text("🧬  Biology Module")
-                            .font(.largeTitle)
-                            .padding(6)
-                            .foregroundColor(.red)
-                        HStack {
-                            Text("ID \(module.id)")
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                                .padding([.leading], 6)
-                            Spacer()
-                        }
-                        Spacer()
-                        Text(module.name.isEmpty ? "Unnamed":module.name)
-                            .font(.subheadline)
-                        
+                    Button("⚙️") {
+                        print("Menu")
+                        menuPopover = true
                     }
-                    Divider()
+                    .popover(isPresented: $menuPopover, content: {
+                        VStack {
+                            Button("Rename Module") {
+                                print("Menu")
+                                menuPopover.toggle()
+                            }
+                            Button("Change Skin") {
+                                print("Menu")
+                                menuPopover = false
+                            }
+                            Button("Destroy") {
+                                print("Menu")
+                                menuPopover = false
+                            }
+                        }
+                        .padding()
+                    })
+                    .gameButton()
+                    
+                    Text("🧬  Biology Module")
+                        .font(.largeTitle)
+                        .foregroundColor(.red)
+                    
+                    Text("ID \(module.id)")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .padding([.leading, .trailing], 6)
+                    Spacer()
+                    Text(module.name.isEmpty ? "Unnamed":module.name)
+                        .font(.subheadline)
                 }
-                .padding([.top, .leading, .trailing])
             }
+            .padding([.top, .leading, .trailing])
+
             Divider()
+            
             Group {
+                
                 HStack {
                     
                     // TABLE Bio Boxes
-                    List(module.boxes) { box in
-                        Text(box.perfectDNA.isEmpty ? "Sprout":box.perfectDNA)
-                            .font(.callout)
-                            .foregroundColor(controller.selectedBioBox?.id ?? UUID() == box.id ? Color.orange:Color.white)
-                            .onTapGesture {
-                                controller.didSelect(box: box)
-                                if let dna = PerfectDNAOption(rawValue: box.perfectDNA) {
-                                    self.dnaChoice = dna
-                                }else{
-                                    self.dnaChoice = .banana
-                                }
+                    List() {
+                        Section(header: Text("Bio Boxes")) {
+                            ForEach(module.boxes) { box in
+                                Text(box.perfectDNA.isEmpty ? "Sprout":box.perfectDNA)
+                                    .font(.callout)
+                                    .foregroundColor(controller.selectedBioBox?.id ?? UUID() == box.id ? Color.orange:Color.white)
+                                    .onTapGesture {
+                                        controller.didSelect(box: box)
+                                        if let dna = PerfectDNAOption(rawValue: box.perfectDNA) {
+                                            self.dnaChoice = dna
+                                        }else{
+                                            self.dnaChoice = .banana
+                                        }
+                                    }
                             }
+                        }
                     }
                     .frame(minWidth: 100, idealWidth: 180, maxWidth: 200, alignment: .leading)
                     
@@ -112,108 +115,136 @@ struct BioView: View {
                                 
                                 VStack {
                                     
-                                    Text("Bio Module").font(.headline).padding()
-//                                    Image(systemName: "square.and.pencil")
-                                    Text("Boxes \(module.boxes.count)").foregroundColor(.gray)
-//                                    Text("Make your own food").foregroundColor(.gray)
-                                    Text("Slots Available:\(controller.availableSlots) of \(BioModule.foodLimit)")
-                                    
-                                    Text("⚠️  Do not leave food out of the boxes.")
-                                        .foregroundColor(.orange)
-                                        .padding()
-                                    
                                     Group {
-                                        Text("Generations")
-                                        Text("DNA Size")
-                                        Text("-")
-                                    }.padding(2)
-                                    .foregroundColor(.gray)
+                                        
+                                        Text("Bio Module").font(.headline).padding()
+                                        Text("Boxes \(module.boxes.count)").foregroundColor(.gray)
+                                        Text("Slots Available:\(controller.availableSlots) of \(BioModule.foodLimit)")
+                                        Text("Energy: \(controller.availableEnergy)")
+                                            .foregroundColor(controller.availableEnergy > 100 ? .green:.red)
+                                        
+                                        Text("⚠️  Do not leave food out of the boxes.")
+                                            .foregroundColor(.orange)
+                                            .padding()
+                                        
+                                        Text("Select a box to continue, or build a new one")
+                                    }
                                     
                                     HStack {
                                         Button("New Bio Box") {
                                             controller.startAddingBox()
                                         }
-                                        Button("Collect") {
-                                            print("Collect food from Bio Boxes")
-                                            print("Harvest ??")
+                                        .disabled(model.isRunning)
+                                        
+                                        Button("Destroy") {
+                                            print("Destroy everything?")
                                         }
                                     }
                                     .padding()
-                                    .disabled(model.isRunning)
-                                    
                                 }
                             }
                             
                         case .selected(let bioBox):
                             
                             // Selected BioBox
-                            ScrollView([.vertical, .horizontal], showsIndicators: true) {
+                            HStack {
                                 
-                                HStack {
+                                ScrollView([.vertical], showsIndicators: true) {
+                                
                                     // BioBox
                                     Group {
+                                        
                                         // Control (Action)
                                         VStack {
                                             
-                                            // Picker
-                                            Group {
-                                                Text("DNA Options (select one)").padding()
-                                                Picker(selection: $controller.dnaOption, label: Text("DNA")){
-                                                    ForEach(PerfectDNAOption.allCases, id:\.self) { dna in
-                                                        Text(dna.rawValue)
-                                                    }
-                                                }
-                                                #if os(macOS)
-//                                                .pickerStyle(PopUpButtonPickerStyle())
-                                                #endif
-                                                Divider()
-                                            }
+                                            Text("DNA \(bioBox.perfectDNA)")
+                                                .font(.title)
+                                                .padding()
                                             
-                                            HStack {
-                                                Text("DNA \(bioBox.perfectDNA)").font(.headline).padding()
-                                                Text("Mode  \(bioBox.mode.rawValue)").font(.headline)
-                                            }
+                                            Divider()
                                             
                                             Group {
+                                                
+                                                Text("Mode  \(bioBox.mode.rawValue)")
+                                                    .font(.headline)
+                                                    .foregroundColor(.blue)
+                                                    .padding()
+                                                
+                                                Text("Energy: \(controller.availableEnergy)")
+                                                    .foregroundColor(.green)
+                                                    .padding()
                                                 Text("Generations \(controller.geneticLoops)")
                                                 Text("Score: \(controller.geneticScore) %")
-                                                Text("Population: \(controller.selectedPopulation.count)")
-                                                Text("DNA Perfect: \(bioBox.perfectDNA)")
-                                            }.padding(2)
-                                            .foregroundColor(.gray)
+                                                Text("Population: \(controller.selectedPopulation.count) / \(bioBox.populationLimit)")
+                                                
+                                                Text("🏆 Best fit")
+                                                    .font(.title)
+                                                    .padding(.top, 8)
+                                                
+                                                Text(controller.geneticFitString)
+                                                    .foregroundColor(.orange)
+                                                
+                                                if let error = controller.errorMessage {
+                                                    Text(error)
+                                                        .foregroundColor(.red)
+                                                }
+                                                if let positive = controller.positiveMessage {
+                                                    Text(positive)
+                                                        .foregroundColor(.green)
+                                                }
+                                            }
                                             
-                                            Text("Best fit").font(.callout).padding(Edge.Set(.top), 8)
-                                            
-                                            TextField("Example", text: $controller.geneticFitString)
-                                                .frame(maxWidth: 150, alignment: .leading)
                                             
                                             
-                                            Button(action: {
-                                                controller.loadGeneticCode(box:bioBox)
-//                                                self.start()
-//                                                self.started = true
-                                            }) {
-                                                Text("Run Genetics")
+                                            // Buttons
+                                            HStack {
+                                                
+                                                Button("Grow") {
+                                                    print("Grow population")
+                                                    controller.growPopulation(box:bioBox)
+                                                }
+                                                .disabled(controller.geneticRunning)
+                                                
+                                                Button("Evolve") {
+                                                    controller.loadGeneticCode(box:bioBox)
+                                                }
+                                                .disabled(controller.geneticRunning)
+                                                
+//                                                Button("Trim") {
+//                                                    print("Trim Population")
+//                                                    // ------------
+//                                                    // Continue from here:
+//                                                    // Add @State and array of items selected from the list
+//                                                    // Trim those items of the array
+//                                                    // Also, change the strings to the enum (Data Model)
+//                                                    // Charge Electricity
+//                                                    // ============
+//                                                }
+//                                                .disabled(bioBox.population.count < 2 || controller.geneticRunning)
+                                                
+                                                Button("Cancel") {
+                                                    print("Cancelling Selection")
+                                                    controller.cancelBoxSelection()
+                                                }
+                                                .disabled(controller.geneticRunning)
                                             }
                                             .padding()
-                                            .disabled(controller.geneticRunning)
-                                            
-                                            Text("Population")
-                                            
                                         }
                                         .frame(minWidth: 250, alignment: .top)
-                                        
-                                        Divider()
-                                        
-                                        // Population Display
-                                        List(controller.selectedPopulation, id:\.self) { dna in
-                                            Text(dna)
-                                                .foregroundColor(.gray)
-                                        }
-                                        .frame(maxWidth: 120, alignment: .bottom)
                                     }
-                                    
                                 }
+                                
+                                Divider()
+                                
+                                // Population Display
+                                List(controller.selectedPopulation, id:\.self) { dna in
+                                    Text(dna)
+                                        .foregroundColor(.gray)
+                                        .onTapGesture {
+                                            controller.trimItem(string: dna)
+                                        }
+                                }
+                                .frame(maxWidth: 140)
                                 
                             }
                             
@@ -225,38 +256,13 @@ struct BioView: View {
                     
                 }
             }
-            
         }
         .frame(minWidth: 500, idealWidth: 600, maxWidth: 800, alignment: .top)
     }
     
-    func addBox() {
-        print("Should be adding box. or trying to")
-        // capacity is 4
-        if module.capacity > module.boxes.count {
-            // can add
-        }else{
-            // Can't add
-        }
-    }
-    
-    // DEPRECATE
-    func start() {
-        if let box = controller.selectedBioBox {
-            print("Selected OK")
-            let dna = controller.dnaOption
-            box.perfectDNA = dna.rawValue
-            print("Box has perfect dna: \(dna)")
-            let population = box.population
-            if population.count > 0 {
-                print("Box has some \(population.count) folks here")
-                model.convertTo(box: box)
-                model.main()
-            }
-        }
-    }
 }
 
+/// Building a new Bio Box
 struct BuildingBioBoxView: View {
     
     @ObservedObject var controller:BioModController
@@ -267,34 +273,64 @@ struct BuildingBioBoxView: View {
     let minimumLimit:Int = 5
     
     var body: some View {
+        
         VStack {
-            Text("Building new box")
             
-            // Choose Perfect DNA
-            // Picker
-            Group {
-                Text("DNA Options (select one)").padding()
-                Picker(selection: $chosenDNA, label: Text("DNA")){
-                    ForEach(PerfectDNAOption.allCases, id:\.self) { dna in
-                        Text(dna.rawValue)
+            // Title
+            Text("New Bio Box")
+                .font(.title)
+                .padding()
+            Text("The longer the name, the harder it is to evolve to its DNA")
+                .foregroundColor(.gray)
+            
+            Divider()
+            
+            // ---
+            // Add a picker to select mode (if population hasn't grown yet, we cant move forward)
+            // Allow the user to "trim" population
+            
+            // Add an outter HStack
+            // To the right, insert Timer (So the population can grow, and user may "crop")
+            // ---
+            
+            VStack {
+                // Picker Perfect DNA
+                HStack {
+                    Text("Pick DNA").padding(.leading, 6)
+                    Picker(selection: $chosenDNA, label: Text("")){
+                        ForEach(PerfectDNAOption.allCases, id:\.self) { dna in
+                            Text("\(dna.emoji) | \(dna.rawValue)")
+                        }
                     }
+                    .frame(maxWidth: 250, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    Spacer()
                 }
-//                .pickerStyle(PopUpButtonPickerStyle())
                 
-                Divider()
+                // Box Size
+                HStack {
+                    Text("Pick Size").padding(.leading, 8)
+                    
+                    VStack(alignment: .leading) {
+                        // Choose amount of slots (Slider)
+                        // --------
+                        // Change food limit to the limit of the BioModule minus the amount being used
+                        // --------
+                        ZStack {
+                            Slider(value: $sliderValue, in: 0.0...Double(controller.availableSlots)) { (changed) in
+                                print("Slider changed \(changed)")
+                            }
+                            .frame(maxWidth: 250, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            .padding(4)
+                            
+                            Text("\(Int(sliderValue)) of \(controller.availableSlots)")
+                                .offset(x: 100, y: /*@START_MENU_TOKEN@*/10.0/*@END_MENU_TOKEN@*/)
+                                .foregroundColor(.gray)
+                        }
+                    }
+                    Spacer()
+                }
             }
-            
-            // Choose amount of slots (Slider)
-            // slider max = controller.availableSlots
-            // slider min = 5?
-            
-            Slider(value: $sliderValue, in: 0.0...Double(BioModule.foodLimit)) { (changed) in
-                print("Slider changed?")
-            }
-            .frame(maxWidth: 250, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-            .padding(4)
-            
-            Text("Value \(Int(sliderValue)) of \(BioModule.foodLimit)")
+            .padding()
             
             Divider()
             
@@ -308,9 +344,15 @@ struct BuildingBioBoxView: View {
                 
                 Button("Cancel") {
                     print("Cancel")
-                    controller.selection = .notSelected
+//                    controller.selection = .notSelected
+                    controller.cancelBoxSelection()
+                }
+                
+                Button("Trim") {
+                    print("Trim")
                 }
             }
+            .padding()
         }
     }
     

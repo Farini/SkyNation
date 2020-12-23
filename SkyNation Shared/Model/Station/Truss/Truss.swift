@@ -118,6 +118,7 @@ class Truss:Codable {
     
     // MARK: - Charging
     
+    /// Tries to consume the `energy` passed. `Returns` whether it was successful
     func consumeEnergy(amount:Int) -> Bool {
         var consumption = amount
         let ttl = batteries.map({ $0.current }).reduce(0, +)
@@ -136,6 +137,10 @@ class Truss:Codable {
             }
             return true
         }
+    }
+    
+    func getAvailableEnergy() -> Int {
+        return batteries.map({ $0.current }).reduce(0, +)
     }
     
     func canCharge(ingredients:[Ingredient:Int]) -> Bool {

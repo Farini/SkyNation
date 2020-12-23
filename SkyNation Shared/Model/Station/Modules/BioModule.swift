@@ -10,17 +10,68 @@ import Foundation
 
 /// The uses of a `BioBox`.
 enum BioBoxMode:String, Codable, CaseIterable, Hashable {
-    case grow       // Grows without any concerns for DNA quality
+    /// Grows without any concerns for DNA quality
+    case grow
+    
+    /// Evolving DNA
     case bloom      // Searching and evolving DNA
-    case collect    // Make food
-    case store      // Store food
+    
+    /// DNA found. Multiplying
+    case multiply
 }
 
 /// What plants produces as Food, or Medicine
 enum PerfectDNAOption:String, Codable, CaseIterable, Hashable {
-    case banana = "BANANA"
-    case starch = "STARCH"
-    case strawberry = "STRAWBERRY"
+    
+    case apple = "APPLE"        // 5
+    case banana = "BANANA"      // 6
+    case carrot = "CARROT"
+    case tomato = "TOMATO"
+    case orange = "ORANGE"
+    
+    case coconut = "COCONUT"    // 7
+    case avocado = "AVOCADO"
+    
+    case broccoli = "BROCCOLI"  // 8
+    case blueberry = "BLUEBERRY"    // 9
+    case pineapple = "PINEAPPLE"    // 9
+    case strawberry = "STRAWBERRY"  // 10
+    case watermelon = "WATERMELON"  // 10
+    
+    // air
+    case greenalgae = "GREENALGAE"  // 10
+    
+    // meds
+    case addItAll = "ADD_IT@_ALL"   // 11
+    case ibuprofen = "IBUPROFEN"    // 9
+    case acetaminophen = "ACETAMINOPHEN"    //
+    case aspirin = "ASPIRIN"
+    case vitaminC = "VITAMIN_@C"
+    
+    /// The equivalent emoji
+    var emoji:String {
+        switch self {
+            case .apple: return "🍏"
+            case .banana: return "🍌"
+            case .carrot: return "🥕"
+            case .tomato: return "🍅"
+            case .orange: return "🍊"
+            case .coconut: return "🥥"
+            case .avocado: return "🥑"
+            case .broccoli: return "🥦"
+            case .blueberry: return "🫐"
+            case .pineapple: return "🍍"
+            case .strawberry: return "🍓"
+            case .watermelon: return "🍉"
+            case .greenalgae: return "🌾"
+            case .addItAll: return "💊"
+            case .ibuprofen: return "💊"
+            case .acetaminophen: return "💊"
+            case .aspirin: return "💊"
+            case .vitaminC: return "💊"
+        }
+    }
+    
 }
 
 class BioModule:Codable, Identifiable {
@@ -87,6 +138,30 @@ class BioBox:Codable, Identifiable {
         populationLimit = size
         
         generations = 20 // Initial Generations (More if level up)
+    }
+    
+    /// Searches for the best fit in population
+    func getBestFitDNA() -> String? {
+        
+        guard population.count > 0 else { return nil }
+        
+        let optimal = perfectDNA.asciiArray // The optimal Ascii array
+        var bestFit:Int = Int.max // best fit is backwards. The more, the worse
+        var bestFitString:String?
+        
+        for dna in population {
+            let ascii = dna.asciiArray
+            var fitness = 0
+            for c in 0...ascii.count-1 {
+                fitness += abs(Int(ascii[c]) - Int(optimal[c]))
+            }
+            if fitness < bestFit {
+                bestFitString = dna
+                bestFit = fitness
+            }
+        }
+        
+        return bestFitString
     }
 }
 
