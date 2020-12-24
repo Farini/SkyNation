@@ -53,10 +53,12 @@ struct SkillView: View {
 struct PersonRow: View {
     
     var person:Person
+    var selected:Bool = false
     
     var body: some View {
         VStack {
             HStack {
+                Text(selected ? "●":"○")
                 Image(person.avatar)
                 .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -122,7 +124,6 @@ struct PersonSmallView:View {
                 .padding([.trailing])
         }
         .frame(minWidth: 80, maxWidth: 250, minHeight: 56, maxHeight: 72, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-//            .cornerRadius(4)
     }
 }
 

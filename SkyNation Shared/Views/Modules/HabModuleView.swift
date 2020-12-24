@@ -15,68 +15,136 @@ struct HabModuleView: View {
     @State var selectedPerson:Person?
     
     var body: some View {
+        
         VStack(alignment:.leading) {
             
-            // Top
-            HStack {
-                Button("OPT") {
-                    print("action")
+            // Header
+            HStack (alignment: .center, spacing: nil) {
+                
+                HabModuleHeaderView(module: module)
+                
+                Spacer()
+                
+                // Settings
+                Button(action: {
+                    print("Gear action")
                     habPopoverOn.toggle()
-                }
+                }, label: {
+                    Image(systemName: "ellipsis.circle")
+                        .resizable()
+                        .aspectRatio(contentMode:.fit)
+                        .frame(width:34, height:34)
+                })
+                .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
                 .popover(isPresented: $habPopoverOn, content: {
                     VStack {
-                        Button("Rename Module") {
-                            print("action")
+                        HStack {
+                            Text("Rename")
+                            Spacer()
+                            Image(systemName: "textformat")
+                                .fixedSize()
+                                .scaledToFit()
+                        }
+                        
+                        .onTapGesture {
+                            print("Rename Action")
                             habPopoverOn.toggle()
                         }
-                        Button("Empty Module") {
-                            print("action")
+                        Divider()
+                        HStack {
+                            // Text
+                            Text("Change Skin")
+                            // Spacer
+                            Spacer()
+                            // Image
+                            Image(systemName: "circle.circle")
+                                .fixedSize()
+                                .scaledToFit()
+                        }
+                        .onTapGesture {
+                            print("Reskin Action")
+                            habPopoverOn.toggle()
+                        }
+                        
+                        HStack {
+                            Text("Tutorial")
+                            Spacer()
+                            Image(systemName: "questionmark.diamond")
+                                .fixedSize()
+                                .scaledToFit()
+                        }
+                        
+                        .onTapGesture {
+                            print("Reskin Action")
                             habPopoverOn.toggle()
                         }
                     }
-                })
-                .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
-                Text("Habitation Module")
+                    .frame(width: 150)
                     .font(.headline)
-                    .padding(6)
-                    .foregroundColor(.green)
-                Text("ID: \(module.id)").foregroundColor(.gray).font(.caption)
+                    .foregroundColor(.gray)
+                    .padding(.leading, 6)
+                })
                 
+                // Close
+                Button(action: {
+                    print("Close action")
+                }, label: {
+                    Image(systemName: "xmark.circle")
+                        .resizable()
+                        .aspectRatio(contentMode:.fit)
+                        .frame(width:34, height:34)
+                })
+                .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
+                .padding(.trailing, 6)
             }
             
-            Text("Name: \(module.name)")
-                .foregroundColor(.green)
-                .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
-                
             Divider()
             
             // Left View
             if module.inhabitants.isEmpty {
-                List {
+                // Empty Module
+                HStack {
+                    Spacer()
+                    Image(systemName: "camera.metering.none")
+                        .foregroundColor(.gray)
+                        .font(.largeTitle)
+                        .padding()
                     Text("No one lives here. Call for Dropoff, and hire people.")
                         .foregroundColor(.gray)
                         .font(.subheadline)
+                    Spacer()
                 }
             }else{
                 HStack {
                     // Left List
                     List(module.inhabitants) { person in
-                        PersonRow(person: person).onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
+                        PersonRow(person: person, selected: person == selectedPerson).onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
                             self.selectedPerson = person
                         })
                     }
-                    .frame(minWidth: 180, idealWidth: 200, maxWidth: 250, minHeight: 150, idealHeight: 150, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
+                    .frame(minWidth: 150, maxWidth: 230, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
+                    
+                    Divider()
                     
                     // Right Detail View
                     if selectedPerson == nil {
-                        VStack {
-                            Text("No One selected")
-                            Text("Hab module shelters people")
+                        HStack {
+                            Spacer()
+                            VStack {
+                                Image(systemName: "camera.metering.none")
+                                    .font(.largeTitle)
+                                    .padding()
+                                Text("No One selected")
+                                Text("Hab module shelters people")
+                            }
+                            .foregroundColor(.gray)
+                            Spacer()
                         }.padding()
-                    }else{
+                    } else {
                         // Details go here
-                        PersonDetail(person: selectedPerson!)
-                        
+                        ScrollView {
+                            PersonDetail(person: selectedPerson!)
+                        }
                     }
                     
                     Spacer()
@@ -86,124 +154,54 @@ struct HabModuleView: View {
     }
 }
 
+
+
+struct HabModuleHeaderView: View {
+    
+    var module:HabModule
+    
+    var body: some View {
+        VStack(alignment:.leading) {
+            Group {
+                HStack {
+                    Text("🏠").font(.largeTitle)
+                        .padding(.leading, 6)
+                    Text("Habitation Module")
+                        .font(.largeTitle)
+                        .padding([.leading], 6)
+                        .foregroundColor(.green)
+                }
+                
+                HStack(alignment: .lastTextBaseline) {
+                    Text("ID: \(module.id)")
+                        .foregroundColor(.gray)
+                        .font(.caption)
+                        .padding(.leading, 6)
+                    Text("Name: \(module.name)")
+                        .foregroundColor(.green)
+                        .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+                }
+            }
+        }
+    }
+}
+
 // MARK: - Previews
+
+struct HeaderView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        if let module = LocalDatabase.shared.station?.habModules.first {
+            return HabModuleHeaderView(module: module) //ModuleHeaderView(hab:module)
+        } else {
+            return HabModuleHeaderView(module: HabModule.example)//ModuleHeaderView(hab: HabModule.example)
+        }
+    }
+}
 
 struct HabModuleView_Previews: PreviewProvider {
     static var previews: some View {
         let habModule = LocalDatabase.shared.station?.habModules.first ?? HabModule(module: Module(id: UUID(), modex: .mod0))
         return HabModuleView(module: habModule)
-    }
-}
-
-struct ModuleHeaderView: View {
-    
-    var module:HabModule
-    @State var habPopoverOn:Bool = false
-//    @State var selectedPerson:Person?
-    
-    init(hab module:HabModule) {
-        self.module = module
-//        let name = module.name
-//        let people = module.inhabitants
-    }
-    
-    var body: some View {
-        
-        HStack {
-            VStack(alignment:.leading) {
-                Group {
-                    // Top
-                    HStack {
-                        Text("🏠").font(.largeTitle)
-                            .padding(.leading, 6)
-                        Text("Habitation Module")
-                            .font(.largeTitle)
-                            .padding(6)
-                            .foregroundColor(.green)
-                        
-                        
-                    }
-                    
-                    HStack(alignment: .lastTextBaseline) {
-                        Text("ID: \(module.id)")
-                            .foregroundColor(.gray)
-                            .font(.caption)
-                            .padding(.leading, 6)
-                        Text("Name: \(module.name)")
-                            .foregroundColor(.green)
-                            .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
-                    }
-                    Divider()
-                }
-            }
-            
-            HStack {
-                Button(action: {
-                    print("Close action")
-                }, label: {
-                    Image(systemName: "xmark.circle")
-                        .resizable()
-                        .aspectRatio(contentMode:.fit)
-                        .frame(width:34, height:34)
-//                    Text("Close")
-                })
-                .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
-                .padding(.trailing, 6)
-                
-                // Settings
-                Button(action: {
-                    print("Gear action")
-                    habPopoverOn.toggle()
-                }, label: {
-                    Image(systemName: "gearshape.fill")
-                        .resizable()
-                        .aspectRatio(contentMode:.fit)
-                        .frame(width:34, height:34)
-                    //                    Text("Close")
-                })
-                .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
-                .padding(.trailing, 6)
-//                .contextMenu(ContextMenu(menuItems: {
-//                    Label("Rename", systemImage: "textformat")
-//                    Label("Change Skin", systemImage: "circle.circle")
-//                }))
-//
-                .popover(isPresented: $habPopoverOn, content: {
-                    VStack {
-
-                        Button(action: {
-                            print("rename")
-                        }, label: {
-                            Label("Rename", systemImage: "textformat")
-                        })
-                        .frame(width: 100)
-                        Button(action: {
-                            print("reskin")
-                        }, label: {
-                            Label("Change Skin", systemImage: "circle.circle")
-                        })
-                        .frame(width: 100)
-                    }
-//                    contextMenu(ContextMenu(menuItems: {
-//                        Label("Rename", systemImage: "textformat")
-//                        Label("Change Skin", systemImage: "circle.circle")
-//                    }))
-                })
-            }
-        }
-        
-    }
-}
-
-struct HeaderView_Previews: PreviewProvider {
-    static var previews: some View {
-        
-        if let module = LocalDatabase.shared.station?.habModules.first {
-            return ModuleHeaderView(hab:module)
-        } else {
-            return ModuleHeaderView(hab: HabModule.example)
-        }
-        
-        
     }
 }

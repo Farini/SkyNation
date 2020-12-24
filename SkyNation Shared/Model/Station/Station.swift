@@ -412,13 +412,13 @@ class Station:Codable {
         
         switch recipe {
             // Going to TRUSS
-            case .solarPanel:
+            case .SolarPanel:
             print("Solar")
 //            let panel = SolarPanel()
             truss.addRecipeSolar(panel: SolarPanel())
             
             // Battery
-            case .battery:
+            case .Battery:
             let battery = Battery(capacity: 100, current: 0)
 //            let result = truss.addRecipeBattery(battery: battery)
                 truss.batteries.append(battery)
@@ -426,7 +426,7 @@ class Station:Codable {
 //            print("Added Battery: \(result)")
             return true
             
-            case .storageBox:
+            case .StorageBox:
             print("Another Storage box")
             case .Radiator:
             print("Radiator")
@@ -441,7 +441,7 @@ class Station:Codable {
             case .ScrubberCO2:
             let s = PeripheralObject(peripheral: .ScrubberCO2)
             self.peripherals.append(s)
-            case .condensator:
+            case .Condensator:
             print("Go to LSS")
             let c = PeripheralObject(peripheral: .Condensator)
             self.peripherals.append(c)
@@ -552,7 +552,7 @@ class Station:Codable {
         
         // FIXME: - Add more objects to Truss
         
-        unlockedRecipes = [.condensator, .Electrolizer, .solarPanel, .Radiator, .tank, .battery]
+        unlockedRecipes = [.Condensator, .Electrolizer, .SolarPanel, .Radiator, .tank, .Battery]
         
         accountingDate = Date()
         unlockedTechItems = [TechItems.rootItem]

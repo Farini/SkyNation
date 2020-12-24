@@ -94,11 +94,16 @@ Items being worked on
     - [ ] View Accounting Problems
     - [ ] Vehicle Accounting View
     - [ ] Accounting Previews
+    - [ ] Save Accounting Problems
     
-- [X] 1/3 Notify scene when tech is ready (not tested)
-    - [ ] Update Scene
-    - [ ] Show News
-    - [ ] Scene is showing Serial builder ahead of time. Check isUnlocked vs isResearched
+- [X] 2/13 Scene Improvements
+    - [X] Truss View creation
+        - [ ] Solar Panel positions
+        - [ ] Control where each solar panel goes
+    - [X] 1/3 Notify scene when tech is ready (not working)
+        - [ ] Update Scene
+        - [ ] Show News
+        - [ ] Scene is showing Serial builder ahead of time. Check isUnlocked vs isResearched
     
 - [ ] 3/13 Main Scenes Overlay
     - [X] Player
@@ -114,6 +119,12 @@ Items being worked on
     - [ ] Delivery Token Icon
     - [ ] Better framing
     - [ ] Add colors / shaders
+    - [ ] 1/3 Camera options + animations
+    - [X] Slider that controls Scene camera's X axis
+    - [ ] Orthographic / Perspective view control
+    - [ ] Garage View (From behind)
+    - [ ] Front View
+    - [ ] Improve Background HDRI image
     
 - [ ] 1/3 iPad View Presentation
     - [ ] Present view on iPad - Decide if ModelViewController, or just View
@@ -121,24 +132,12 @@ Items being worked on
 
 - [ ] 5/13 Basic Views
     - [X] Ingredients and sufficiency
-    - [ ] Create a general Header View in SwiftUI for all SwiftUI base views
+    - [X] Create a general Header View in SwiftUI for all SwiftUI base views
     - [ ] Improve People Selection View - Add a mark so user knows when they are selected
     - [ ] Error messages
 
 ## 📝 To Do - Future
 Grab things from this list as you go along.
-
-- [ ] Solar Panel positions
-    - [X] Truss View creation
-    - [ ] Control where each solar panel goes
-    - [ ] Update the scene
-
-- [ ] 1/3 Camera options + animations
-    - [X] Slider that controls Scene camera's X axis
-    - [ ] Orthographic / Perspective view control
-    - [ ] Garage View (From behind)
-    - [ ] Front View
-    - [ ] Improve Background HDRI image
 
 - [ ] 8/13 Data Model
     - [ ] 5/8 TechTree improvements (Tree improved, Add Antenna upgrades, Charge ingredients, electricity, Select Humans, Fix Time)
@@ -158,6 +157,7 @@ Grab things from this list as you go along.
     - [ ] 1/3 Ship Animation (Needs better particle emitter, plus open the shell)
         - [ ] Particle emitter on all engines
         - [ ] Animate particle emission correctly
+        - [ ] Fix Model underneath lid
 
 - [ ] 1/13 Create Mars Scene
 - [ ] 0/21 Mars Views & Controllers

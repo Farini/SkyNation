@@ -224,7 +224,7 @@ class LabViewModel: ObservableObject {
     func collectRecipe(recipe:Recipe, from module:LabModule) -> Bool {
         switch recipe {
             
-            case .battery:
+            case .Battery:
                 print("Collect")
                 // This one is easy. C'mon....
                 let battery = Battery(shopped: false)
@@ -232,7 +232,7 @@ class LabViewModel: ObservableObject {
                 finishActivity(module: module)
                 return true
                 
-            case .solarPanel:
+            case .SolarPanel:
                 print("Collect")
                 let panel = SolarPanel()
                 self.station.truss.solarPanels.append(panel)
@@ -267,7 +267,7 @@ class LabViewModel: ObservableObject {
                 finishActivity(module: module)
                 return true
                 
-            case .condensator:
+            case .Condensator:
                 print("Collect")
                 let peripheral = PeripheralObject(peripheral:.Condensator)
                 self.station.peripherals.append(peripheral)

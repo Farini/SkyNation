@@ -30,62 +30,86 @@ struct LaboratoryView: View {
     var body: some View {
         
         VStack {
-            
             // Header
-            VStack(alignment: .leading, spacing: 4) {
+            HStack (alignment: .center, spacing: nil) {
                 
-                HStack(alignment: VerticalAlignment.lastTextBaseline, spacing: nil) {
-                    
-                    // Menu
-                    Button("⚙️") {
-                        print("action")
-                        popoverLab.toggle()
-                    }
-                    .popover(isPresented: $popoverLab, content: {
-                        VStack {
-                            Button("Rename Module") {
-                                print("action")
-                                popoverLab.toggle()
-                            }
-                            Button("Empty Module") {
-                                print("action")
-                                popoverLab.toggle()
-                            }
+                LabModuleHeaderView(module: controller.labModule)
+                
+                Spacer()
+                
+                // Settings
+                Button(action: {
+                    print("Gear action")
+                    popoverLab.toggle()
+                }, label: {
+                    Image(systemName: "ellipsis.circle")
+                        .resizable()
+                        .aspectRatio(contentMode:.fit)
+                        .frame(width:34, height:34)
+                })
+                .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
+                .popover(isPresented: $popoverLab, content: {
+                    VStack {
+                        HStack {
+                            Text("Rename")
+                            Spacer()
+                            Image(systemName: "textformat")
+                                .fixedSize()
+                                .scaledToFit()
                         }
-                    })
-                    .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
-                    
-                    // Head
-                    Text("🔬 Laboratory Module")
-                        .font(.largeTitle)
-                        .padding(6)
-                        .foregroundColor(.blue)
-                    
-                    Spacer()
-                    
-                    // Name
-                    Text(labModule.name)
-                        .font(.headline)
-                        .padding(.trailing, 10)
-                }
-                
-                HStack {
-                    Text("ID: \(labModule.id)")
-                        .foregroundColor(.gray)
-                        .font(.caption)
-                        .padding(.leading, 10)
-                    Spacer()
-                    if !errorMessage.isEmpty {
-                        Text("* \(errorMessage)")
-                            .foregroundColor(.red)
-                            .font(.callout)
-                            .padding(.trailing, 10)
+                        
+                        .onTapGesture {
+                            print("Rename Action")
+                            popoverLab.toggle()
+                        }
+                        Divider()
+                        HStack {
+                            // Text
+                            Text("Change Skin")
+                            // Spacer
+                            Spacer()
+                            // Image
+                            Image(systemName: "circle.circle")
+                                .fixedSize()
+                                .scaledToFit()
+                        }
+                        .onTapGesture {
+                            print("Reskin Action")
+                            popoverLab.toggle()
+                        }
+                        
+                        HStack {
+                            Text("Tutorial")
+                            Spacer()
+                            Image(systemName: "questionmark.diamond")
+                                .fixedSize()
+                                .scaledToFit()
+                        }
+                        
+                        .onTapGesture {
+                            print("Reskin Action")
+                            popoverLab.toggle()
+                        }
                     }
-                }
+                    .frame(width: 150)
+                    .font(.headline)
+                    .foregroundColor(.gray)
+                    .padding(.leading, 6)
+                })
                 
-                Divider()
+                // Close
+                Button(action: {
+                    print("Close action")
+                }, label: {
+                    Image(systemName: "xmark.circle")
+                        .resizable()
+                        .aspectRatio(contentMode:.fit)
+                        .frame(width:34, height:34)
+                })
+                .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
+                .padding(.trailing, 6)
             }
-            .padding(.top)
+            Divider()
             
             // Main Body
             HStack(alignment: .top, spacing: 0) {
@@ -184,6 +208,35 @@ struct LaboratoryView: View {
         }
         .frame(minWidth: 800, minHeight: 600, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
     }
+}
+
+struct LabModuleHeaderView: View {
+    var module:LabModule
+    var body: some View {
+        VStack(alignment:.leading) {
+            Group {
+                HStack {
+                    Text("🔬 Laboratory Module")
+                        .font(.largeTitle)
+                        .padding([.leading], 6)
+                        .foregroundColor(.blue)
+                    Spacer()
+                }
+                
+                HStack(alignment: .lastTextBaseline) {
+                    Text("ID: \(module.id)")
+                        .foregroundColor(.gray)
+                        .font(.caption)
+                        .padding(.leading, 6)
+                    Text("Name: \(module.name)")
+                        .foregroundColor(.blue)
+                        .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+                    Spacer()
+                }
+            }
+        }
+    }
+    
 }
 
 // MARK: - Previews

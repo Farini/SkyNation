@@ -36,17 +36,43 @@ struct EarthRequestView: View {
             // Header
             Group {
                 HStack(alignment: VerticalAlignment.lastTextBaseline, spacing: /*@START_MENU_TOKEN@*/nil/*@END_MENU_TOKEN@*/) {
-                    Text("🌎 Earth").font(.largeTitle).padding(.leading)
-                    Text("Request ingredients from Earth")
-                        .foregroundColor(.gray)
+                    VStack(alignment:.leading) {
+                        Text("🌎 Earth").font(.largeTitle).padding(.leading)
+                        Text("Request ingredients from Earth")
+                            .foregroundColor(.gray)
+                            .padding(.leading)
+                    }
+                    
                     Spacer()
                     Text("S$: \(GameFormatters.numberFormatter.string(from: NSNumber(value: controller.money))!)")
                         .font(.title)
                         .foregroundColor(.green)
-                        .padding(.trailing)
+                        
+                    
+                    // Tutorial
+                    Button(action: {
+                        print("Tutorial action")
+                    }, label: {
+                        Image(systemName: "questionmark.diamond")
+                            .resizable()
+                            .aspectRatio(contentMode:.fit)
+                            .frame(width:34, height:34)
+                    })
+                    .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
+                    
+                    
+                    // Close
+                    Button(action: {
+                        print("Close action")
+                    }, label: {
+                        Image(systemName: "xmark.circle")
+                            .resizable()
+                            .aspectRatio(contentMode:.fit)
+                            .frame(width:34, height:34)
+                    })
+                    .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
+                    .padding(.trailing, 6)
                 }
-                .padding(.top)
-                
                 Divider()
             }
             
@@ -154,17 +180,16 @@ struct EarthRequestView: View {
                                 ForEach(controller.currentOrder!.ingredients) { ingredient in
                                     IngredientView(ingredient: ingredient.type, hasIngredient: nil, quantity: nil)
                                         .padding(3)
-                                    //                                            .onTapGesture {
-                                    //                                                controller.order(ingredient: ingredient)
-                                    //                                            }
                                 }
                             }
+                            
                             if let order:PayloadOrder = controller.currentOrder {
                                 
-//                                ForEach(order.ingredients) { ingredient in
-//                                    Text("Ingredient: \(ingredient.type.rawValue)")
-//                                    IngredientView(ingredient: ingredient.type, hasIngredient: true, quantity: nil)
-//                                }
+                                // Ingredients
+                                ForEach(order.ingredients) { ingredient in
+                                    Text("Ingredient: \(ingredient.type.rawValue)")
+                                    IngredientView(ingredient: ingredient.type, hasIngredient: true, quantity: nil)
+                                }
                                 // Tanks
                                 ForEach(order.tanks) { tank in
                                     Text("Ingredient: \(tank.type.rawValue)")

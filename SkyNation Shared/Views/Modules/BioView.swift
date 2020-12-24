@@ -40,50 +40,87 @@ struct BioView: View {
         VStack {
             
             // Header
-            Group {
+            HStack (alignment: .center, spacing: nil) {
                 
-                HStack(alignment: VerticalAlignment.lastTextBaseline) {
-                    
-                    Button("⚙️") {
-                        print("Menu")
-                        menuPopover = true
-                    }
-                    .popover(isPresented: $menuPopover, content: {
-                        VStack {
-                            Button("Rename Module") {
-                                print("Menu")
-                                menuPopover.toggle()
-                            }
-                            Button("Change Skin") {
-                                print("Menu")
-                                menuPopover = false
-                            }
-                            Button("Destroy") {
-                                print("Menu")
-                                menuPopover = false
-                            }
+                BioModuleHeaderView(module: module)
+                
+                Spacer()
+                
+                // Settings
+                Button(action: {
+                    print("Gear action")
+                    menuPopover.toggle()
+                }, label: {
+                    Image(systemName: "ellipsis.circle")
+                        .resizable()
+                        .aspectRatio(contentMode:.fit)
+                        .frame(width:34, height:34)
+                })
+                .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
+                .popover(isPresented: $menuPopover, content: {
+                    VStack {
+                        HStack {
+                            Text("Rename")
+                            Spacer()
+                            Image(systemName: "textformat")
+                                .fixedSize()
+                                .scaledToFit()
                         }
-                        .padding()
-                    })
-                    .gameButton()
-                    
-                    Text("🧬  Biology Module")
-                        .font(.largeTitle)
-                        .foregroundColor(.red)
-                    
-                    Text("ID \(module.id)")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                        .padding([.leading, .trailing], 6)
-                    Spacer()
-                    Text(module.name.isEmpty ? "Unnamed":module.name)
-                        .font(.subheadline)
-                }
+                        
+                        .onTapGesture {
+                            print("Rename Action")
+                            menuPopover.toggle()
+                        }
+                        Divider()
+                        HStack {
+                            // Text
+                            Text("Change Skin")
+                            // Spacer
+                            Spacer()
+                            // Image
+                            Image(systemName: "circle.circle")
+                                .fixedSize()
+                                .scaledToFit()
+                        }
+                        .onTapGesture {
+                            print("Reskin Action")
+                            menuPopover.toggle()
+                        }
+                        
+                        HStack {
+                            Text("Tutorial")
+                            Spacer()
+                            Image(systemName: "questionmark.diamond")
+                                .fixedSize()
+                                .scaledToFit()
+                        }
+                        
+                        .onTapGesture {
+                            print("Reskin Action")
+                            menuPopover.toggle()
+                        }
+                    }
+                    .frame(width: 150)
+                    .font(.headline)
+                    .foregroundColor(.gray)
+                    .padding(.leading, 6)
+                })
+                
+                // Close
+                Button(action: {
+                    print("Close action")
+                }, label: {
+                    Image(systemName: "xmark.circle")
+                        .resizable()
+                        .aspectRatio(contentMode:.fit)
+                        .frame(width:34, height:34)
+                })
+                .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
+                .padding(.trailing, 6)
             }
-            .padding([.top, .leading, .trailing])
-
             Divider()
-            
+
+            // Main Body
             Group {
                 
                 HStack {
@@ -259,7 +296,34 @@ struct BioView: View {
         }
         .frame(minWidth: 500, idealWidth: 600, maxWidth: 800, alignment: .top)
     }
+}
+
+struct BioModuleHeaderView: View {
     
+    var module:BioModule
+    
+    var body: some View {
+        VStack(alignment:.leading) {
+            Group {
+                HStack {
+                    Text("🧬 Biology Module")
+                        .font(.largeTitle)
+                        .padding([.leading], 6)
+                        .foregroundColor(.red)
+                }
+                
+                HStack(alignment: .lastTextBaseline) {
+                    Text("ID: \(module.id)")
+                        .foregroundColor(.gray)
+                        .font(.caption)
+                        .padding(.leading, 6)
+                    Text("Name: \(module.name)")
+                        .foregroundColor(.red)
+                        .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+                }
+            }
+        }
+    }
 }
 
 /// Building a new Bio Box

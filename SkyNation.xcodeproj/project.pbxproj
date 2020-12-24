@@ -679,10 +679,10 @@
 		8536F3B4258D47CF00B509D2 /* Lab */ = {
 			isa = PBXGroup;
 			children = (
+				8536F3B8258D47CF00B509D2 /* LaboratoryView.swift */,
 				8536F3B5258D47CF00B509D2 /* TechnologyDetailViews.swift */,
 				8536F3B6258D47CF00B509D2 /* RecipeDetailViews.swift */,
 				8536F3B7258D47CF00B509D2 /* LabActivityView.swift */,
-				8536F3B8258D47CF00B509D2 /* LaboratoryView.swift */,
 			);
 			path = Lab;
 			sourceTree = "<group>";

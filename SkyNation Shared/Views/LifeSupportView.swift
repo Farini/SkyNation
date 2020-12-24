@@ -34,11 +34,43 @@ struct LifeSupportView: View {
             // Header
             VStack {
                 
-                HStack(alignment: VerticalAlignment.lastTextBaseline, spacing: nil) {
-                    Text("♻️ Life Support Systems").font(.largeTitle)
-                    Text("Where life is supported").foregroundColor(.gray)
+                HStack {
+                    
+                    VStack(alignment:.leading) {
+                        Text("♻️ Life Support Systems")
+                            .font(.largeTitle)
+                        Text("Where life is supported")
+                            .foregroundColor(.gray)
+                            .font(.caption)
+                    }
+                    
                     Spacer()
-                    Text("S$:3,456").foregroundColor(.gray)
+                    Text("S$:3,456")
+                        .foregroundColor(.green)
+                    
+                    // Tutorial
+                    Button(action: {
+                        print("Tutorial action")
+                    }, label: {
+                        Image(systemName: "questionmark.diamond")
+                            .resizable()
+                            .aspectRatio(contentMode:.fit)
+                            .frame(width:34, height:34)
+                    })
+                    .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
+                    .padding(.trailing, 6)
+                    
+                    // Close
+                    Button(action: {
+                        print("Close action")
+                    }, label: {
+                        Image(systemName: "xmark.circle")
+                            .resizable()
+                            .aspectRatio(contentMode:.fit)
+                            .frame(width:34, height:34)
+                    })
+                    .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
+                    .padding(.trailing, 6)
                 }
                 
                 Picker("", selection: $airOption) {

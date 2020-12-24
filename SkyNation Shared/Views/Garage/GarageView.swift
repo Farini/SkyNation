@@ -8,28 +8,6 @@
 
 import SwiftUI
 
-// Vehicles (Left View)
-// array of vehicles travelling (LocalDatabase)
-// array of vehicles (Building) from Garage
-
-// Default Right View - Button Start New Vehicle + Garage Data (xp, simulations, etc.)
-
-// Assembly Stages (Right View)
-// 1 - Select Engine, Satellite, and Heatshield
-//      a. Wait until can build
-// 2 - Load Stuff (Order)
-//      a. Add Tanks, Batteries, Antenna, Solar, Payload, Robot, People, etc.
-//      b. Give chance to simulate?
-//      c. Transfer data
-// 3 - Departure (Ready)
-//      a. Set Destination, travel time, etc.
-//      b. Transfer data - delete SpaceVehicle from Station
-//      c. Transfer data - Add SpaceVehicle to "Travelling"
-
-// Travelling Vehicle (Right View)
-//  1 - Show Status
-//  2 - Self-Accounting (dateAccount?)
-
 struct GarageView: View {
     
     @State var popoverGarage:Bool = false
@@ -43,39 +21,94 @@ struct GarageView: View {
         VStack {
             
             // Top - Header
-            VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    
-                    // Menu
-                    Button("⚙️") {
-                        print("action")
-                        popoverGarage.toggle()
-                    }
-                    .popover(isPresented: $popoverGarage, content: {
-                        VStack {
-                            Button("Rename Module") {
-                                print("action")
-                                popoverGarage.toggle()
-                            }
-                            Button("Empty Module") {
-                                print("action")
-                                popoverGarage.toggle()
-                            }
-                        }
-                    })
-                    .padding(.leading, 10)
-                    
-                    // Head
-                    Text("Garage Module")
-                        .font(.headline)
-                        .padding(6)
-                        .foregroundColor(.orange)
-                    
-                    Spacer()
-                }
+            HStack {
                 
-                Divider()
+                VStack(alignment:.leading) {
+                    Text("🚀 Garage Module")
+                        .font(.largeTitle)
+                        .padding([.leading], 6)
+                        .foregroundColor(.orange)
+                    Text("ID: \(UUID().uuidString)")
+                        .foregroundColor(.gray)
+                        .font(.caption)
+                        .padding(.leading, 6)
+                }
+                Spacer()
+                
+                // Settings
+                Button(action: {
+                    print("Gear action")
+                    popoverGarage.toggle()
+                }, label: {
+                    Image(systemName: "ellipsis.circle")
+                        .resizable()
+                        .aspectRatio(contentMode:.fit)
+                        .frame(width:34, height:34)
+                })
+                .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
+                .popover(isPresented: $popoverGarage, content: {
+                    VStack {
+                        HStack {
+                            Text("Rename")
+                            Spacer()
+                            Image(systemName: "textformat")
+                                .fixedSize()
+                                .scaledToFit()
+                        }
+                        
+                        .onTapGesture {
+                            print("Rename Action")
+                            popoverGarage.toggle()
+                        }
+                        Divider()
+                        HStack {
+                            // Text
+                            Text("Change Skin")
+                            // Spacer
+                            Spacer()
+                            // Image
+                            Image(systemName: "circle.circle")
+                                .fixedSize()
+                                .scaledToFit()
+                        }
+                        .onTapGesture {
+                            print("Reskin Action")
+                            popoverGarage.toggle()
+                        }
+                        
+                        HStack {
+                            Text("Tutorial")
+                            Spacer()
+                            Image(systemName: "questionmark.diamond")
+                                .fixedSize()
+                                .scaledToFit()
+                        }
+                        
+                        .onTapGesture {
+                            print("Reskin Action")
+                            popoverGarage.toggle()
+                        }
+                    }
+                    .frame(width: 150)
+                    .font(.headline)
+                    .foregroundColor(.gray)
+                    .padding(.leading, 6)
+                })
+                
+                // Close
+                Button(action: {
+                    print("Close action")
+                }, label: {
+                    Image(systemName: "xmark.circle")
+                        .resizable()
+                        .aspectRatio(contentMode:.fit)
+                        .frame(width:34, height:34)
+                })
+                .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
+                .padding(.trailing, 6)
+                
             }
+            Divider()
             
             // Body
             switch controller.garageStatus {
@@ -121,7 +154,6 @@ struct GarageView: View {
                                 ForEach(controller.travellingVehicles) { vehicle in
                                     Text("Vehicle \(vehicle.engine.rawValue)")
                                         .onTapGesture() {
-//                                            self.didSelectBuilt(vehicle: vehicle)
                                             self.didSelectTravelling(vehicle: vehicle)
                                         }
                                 }
@@ -155,11 +187,10 @@ struct GarageView: View {
                         }
                         .padding()
                     }
-                    
                 }
                 .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: Alignment.leading)
             case .selectedBuilding(let sev):
-                VStack {
+                Group {
                     Text("Building Vehicle")
                         .font(.subheadline)
                         .padding()
@@ -187,14 +218,10 @@ struct GarageView: View {
                 }
                 .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: Alignment.leading)
                 
-                case .selectedTravel( _):
+            case .selectedTravel( _):
                 VStack {
-                    
                     TravellingVehicleView(controller: controller)
-                    
-                    
                 }
-//                .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: Alignment.leading)
             
             // Making a new Vehicle
             case .planning(let stage):
@@ -245,7 +272,6 @@ struct GarageView: View {
                     VehicleBuiltView(controller: self.controller, vehicle: (controller.selectedVehicle ?? self.vehicle) ?? SpaceVehicle(engine: .Hex6))
                 }
                 
-                
             case .simulating:
                 VStack {
                     Text("Simulation View")
@@ -266,8 +292,6 @@ struct GarageView: View {
     func didSelectTravelling(vehicle:SpaceVehicle) {
         controller.didSelectTravelling(vehicle: vehicle)
     }
-    
-    
 }
 
 // MARK: - Vehicles Selected
@@ -323,12 +347,10 @@ struct VehicleBuiltView: View {
                 Button("Build") {
                     print("Building Vehicle")
                     controller.startBuilding(vehicle: controller.selectedVehicle!)
-//                    controller.makeProgress(new: .none)
                 }
                 .padding()
                 Button("Cancel") {
                     print("Cancel")
-//                    controller.makeProgress(new: .none)
                     controller.cancelPlanning()
                 }
                 .padding()

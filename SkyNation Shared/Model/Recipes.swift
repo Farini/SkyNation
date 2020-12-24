@@ -15,14 +15,14 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
     case Node
     
     // [Peripherals]
-    case condensator
+    case Condensator
     case ScrubberCO2
     case Electrolizer
     case Methanizer
     case Radiator
-    case solarPanel
-    case battery
-    case storageBox
+    case SolarPanel
+    case Battery
+    case StorageBox
     case tank
     case Roboarm
     
@@ -39,20 +39,20 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
         case .Module: return [.Aluminium:35]
         case .Node: return [.Aluminium:15]
         case .tank: return [.Aluminium:8]
-        case .solarPanel: return [.Polimer:1, .SolarCell:2]
+        case .SolarPanel: return [.Polimer:1, .SolarCell:2]
         default: return [.Aluminium:15, .Polimer:8, .Copper:4]
         }
     }
     
     var elaborate:String {
         switch self {
-            case .condensator: return "Condensates the water vapor in the air into liquid water."
+            case .Condensator: return "Condensates the water vapor in the air into liquid water."
             case .ScrubberCO2: return "Cleans carbon dioxide from the air."
             case .Electrolizer: return "Makes electrolisys of the water, converting into oxygen + hydrogen"
             case .Methanizer: return "Transforms hydrogen and carbon dioxide into methane."
             case .Radiator: return "Maintains temperature."
-            case .solarPanel: return "Generates power and charges the batteries."
-            case .battery: return "Stores energy"
+            case .SolarPanel: return "Generates power and charges the batteries."
+            case .Battery: return "Stores energy"
             case .BioSolidifier: return "Transforms poop into fertilizer."
             default: return ""
         }
@@ -62,7 +62,7 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
     func skillSet() -> [Skills:Int] {
         switch self {
         case .tank: return [:]
-        case .solarPanel: return [.Handy:1]
+        case .SolarPanel: return [.Handy:1]
         case .Electrolizer: return [.Handy:1]
         
                 
@@ -95,7 +95,7 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
         switch self {
         case .tank:
             if let string = argument as? String, let ttype:TankType = TankType(rawValue: string) {
-                let tank = Tank(type:ttype)
+                let tank:Tank = Tank(type:ttype)
                 return tank
             }
         default: return nil
