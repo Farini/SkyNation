@@ -43,45 +43,51 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
  
  ## Programming
  
- - [ ] ★☆☆☆☆ Module, Hab, Lab, Bio
- - [ ] ★☆☆☆☆ Earth Order
- - [ ] ☆☆☆☆☆ Garage
- - [ ] ☆☆☆☆☆ Accounting System
- - [ ] ☆☆☆☆☆ Truss
- - [ ] ☆☆☆☆☆ Life Support Systems
+ - [ ] ★★★☆☆ Module, Hab, Lab, Bio
+ - [ ] ★★☆☆☆ Earth Order
+ - [ ] ★☆☆☆☆ Garage
+ - [ ] ★☆☆☆☆ Accounting System
+ - [ ] ★☆☆☆☆ Truss
+ - [ ] ★★★☆☆ Life Support Systems
  - [ ] ☆☆☆☆☆ Travels Scene (v 1.1)
  - [ ] ☆☆☆☆☆ Mars Scene
  - [ ] ☆☆☆☆☆ Server - SKNServer?
- - [ ] ☆☆☆☆☆ Player(object) + settings + playability
+ - [ ] ★☆☆☆☆ Player(object) + settings + playability
  
  ## Art Assets
  Each Item gets a grade 1-5 (stars) that rerpresents how complete the item is.
  
  Icons + 2D Overlays
- - [ ] ★★★☆☆ Humans + Skills
- - [ ] ★☆☆☆☆ Tanks, Containers, Ingredients, Peripherals
- - [ ] ★☆☆☆☆ Scenes Overlay (Camera, Vehicles list, etc.)
+ - [ ] ★★★★☆ Humans + Skills
+ - [ ] ★★☆☆☆ Tanks, Containers, Ingredients, Peripherals
+ - [ ] ★★☆☆☆ Scenes Overlay (Camera, Vehicles list, etc.)
  - [ ] ☆☆☆☆☆ Action Icons - Buy, Cancel, Cheat, Tokens, etc.
  - [ ] ☆☆☆☆☆ Icons - App Icon
  
  3D Scenes
- - [ ] ★★☆☆☆ Space Station
- - [ ] ★☆☆☆☆ Delivery Vehicle
+ - [ ] ★★★☆☆ Space Station
+ - [ ] ★★☆☆☆ Delivery Vehicle
  - [ ] ☆☆☆☆☆ Mars Colony
- - [ ] ☆☆☆☆☆ Mars Map 1 - Zoom out (v1.1)
- - [ ] ☆☆☆☆☆ Mars Map 2 - Zoom in (v1.1)
- - [ ] ☆☆☆☆☆ Space Vehicle
+ - [ ] ★☆☆☆☆ Space Vehicle
  - [ ] ☆☆☆☆☆ Sound Effects
  - [ ] ☆☆☆☆☆ Music / Soudtrack
  
  ## Total Completeness
  Example calculation of **fair share**
+ 
  @ File created (with these settings): October 29, 2020 at 3:00 PM
- - [X] Star Count: 5/70 = 7.14%
- - [X] ★ (1 Star) = 1.43%
- - [X] Farini 5/5 = 100%
- - [ ] Difficulty Count: 64
- - [ ] Done Difficulty: 6/64 = 9.37%
+ - Star Count: 5/70 = 7.14%
+ - ★ (1 Star) = 1.43%
+ - Farini 5/5 = 100%
+ - Difficulty Count: 64
+ - Done Difficulty: 6/64 = 9.37%
+ 
+ @ December 24, 2020
+- Star Count: 26/105 = 24.76%
+- ★ (1 Star) = 0.95%
+- Farini 26/26 = 100%
+- Difficulty Count: 152
+- Done Difficulty: 52/152 = 34.21%
 
 #  Backlog
 Items being worked on
@@ -95,6 +101,7 @@ Items being worked on
     - [ ] Vehicle Accounting View
     - [ ] Accounting Previews
     - [ ] Save Accounting Problems
+    - [ ] Accounting Report object
     
 - [X] 2/13 Scene Improvements
     - [X] Truss View creation
@@ -105,22 +112,21 @@ Items being worked on
         - [ ] Show News
         - [ ] Scene is showing Serial builder ahead of time. Check isUnlocked vs isResearched
     
-- [ ] 3/13 Main Scenes Overlay
+- [ ] 5/13 Scene Overlay
     - [X] Player
     - [X] Camera Control
     - [X] LSS - Air Control
     - [X] Improve Player View 
-    - [ ] Mars
-    - [ ] Mars Map
-    - [ ] Vehicles Table
-    - [ ] News (Centered)
+    - [X] Mars
+    - [X] Vehicles Table
+    - [X] Better framing
+    - [X] Slider that controls Scene camera's X axis
+    - [X] News (Centered)
     - [ ] Put icons inside buttons
     - [ ] Time Token Icon
     - [ ] Delivery Token Icon
-    - [ ] Better framing
     - [ ] Add colors / shaders
     - [ ] 1/3 Camera options + animations
-    - [X] Slider that controls Scene camera's X axis
     - [ ] Orthographic / Perspective view control
     - [ ] Garage View (From behind)
     - [ ] Front View

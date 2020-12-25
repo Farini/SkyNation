@@ -101,10 +101,10 @@ class PlayerCardNode:SKNode {
         self.tokenLabel = tokensLbl
         print("posXY tokens: \(posXY)")
         
-        // Settings + tutorial buttons
+        // Settings
         let settingsTexture = SKTexture(image: GameImages.commonSystemImage(name:"gearshape.fill")!.image(with: .white))
         let settingsSprite = SKSpriteNode(texture: settingsTexture, size: CGSize(width: 36, height: 36))
-        settingsSprite.anchorPoint = CGPoint(x: 0.5, y: 0)
+        settingsSprite.anchorPoint = CGPoint.zero
         settingsSprite.name = "settings"
         self.settingsButton = settingsSprite
         
@@ -112,7 +112,7 @@ class PlayerCardNode:SKNode {
         let tutImage = GameImages.commonSystemImage(name: "questionmark.diamond")!.image(with: .white)
         let tutTexture = SKTexture(image: tutImage)
         let tutSprite = SKSpriteNode(texture: tutTexture, size: CGSize(width: 36, height: 36))
-        tutSprite.anchorPoint = CGPoint(x: 0.5, y: 0)
+        tutSprite.anchorPoint = CGPoint.zero
         tutSprite.name = "tutorial"
         self.tutorialButton = tutSprite
         
@@ -129,7 +129,6 @@ class PlayerCardNode:SKNode {
         // Background
         var backgroundSize = calculateAccumulatedFrame().size
         backgroundSize.width += 12
-//        backgroundSize.height += 6
         let backRect = CGRect(origin: CGPoint(x: 6, y: -6), size: backgroundSize)
         let backShape = SKShapeNode(rect: backRect, cornerRadius: 8)
         backShape.fillColor = SCNColor.black.withAlphaComponent(0.7)
@@ -137,50 +136,55 @@ class PlayerCardNode:SKNode {
         backShape.lineWidth = 1.5
         backShape.position = CGPoint(x: 6, y: -backgroundSize.height)
         backShape.zPosition = 20
-        
-        
         addChild(backShape)
+        
         print("Back Shape: \(backShape)\n \t Size:\(backgroundSize)")
         print("Back Rect: \(backRect)")
         print("Back Size: \(backShape.calculateAccumulatedFrame().size)")
         print("Back Position: \(backShape.position)")
         
+        
+        
         // Buttons positions
-        var outsidePositionX = calculateAccumulatedFrame().size.width + 5 * CGFloat(margin)
-        let outsidePositionY = -1 * (calculateAccumulatedFrame().size.height + CGFloat(margin))
-        self.settingsButton.position = CGPoint(x: outsidePositionX, y: outsidePositionY)
+        let underpY = -(calculateAccumulatedFrame().size.height + 8)
+        var underneathPosition:CGPoint = CGPoint(x: CGFloat(margin * 4), y: underpY)
+        underneathPosition.y -= self.settingsButton.calculateAccumulatedFrame().height - 4
+        
+        self.settingsButton.position = underneathPosition //CGPoint(x: outsidePositionX, y: outsidePositionY)
         addChild(settingsButton)
-        outsidePositionX += settingsButton.calculateAccumulatedFrame().width + CGFloat(margin)
-        self.tutorialButton.position = CGPoint(x: outsidePositionX, y: outsidePositionY)
+        
+        underneathPosition.x += settingsButton.calculateAccumulatedFrame().width + 6
+        
+        self.tutorialButton.position = underneathPosition //CGPoint(x: outsidePositionX, y: outsidePositionY)
         addChild(tutorialButton)
-        print("\t Outside position: \(outsidePositionX), \(outsidePositionY)\n\n")
         
-        // Ruler
-        let rulerWidth = Double(calculateAccumulatedFrame().size.width)
-        let rulerHeight = 8.0
-//        let shearValue = CGFloat(0.3) // You can change this to anything you want
-//        let shearTransform = CGAffineTransform(a: 1, b: 0, c: shearValue, d: 1, tx: 0, ty: 0)
-        let path = CGMutablePath() //CGPath(rect: CGRect(origin: .zero, size: CGSize(width: rulerWidth, height: rulerHeight)), transform: nil)
-        path.move(to: .zero)
-        path.addLine(to: CGPoint(x: rulerWidth - 16, y: 0))
-        path.addLine(to: CGPoint(x: rulerWidth - 24, y: -rulerHeight))
-        path.addLine(to: CGPoint(x: 0, y: -rulerHeight))
-        path.addLine(to: .zero)
+        underneathPosition.x += tutorialButton.calculateAccumulatedFrame().width + 6
         
-        path.move(to: CGPoint(x: rulerWidth, y: 0))
-        path.addLine(to: CGPoint(x:rulerWidth + 16, y:0))
-        path.addLine(to: CGPoint(x: rulerWidth + 8, y: -rulerHeight))
-        path.addLine(to: CGPoint(x:rulerWidth - 8, y:-rulerHeight))
-        path.addLine(to: CGPoint(x:rulerWidth, y:0))
-        
-        let rulerShape = SKShapeNode(path: path)
-        rulerShape.position = CGPoint(x: 0, y: Double(outsidePositionY) - (rulerHeight / 2))
-        rulerShape.lineWidth = 0
-//        rulerShape.strokeColor = .red
-        rulerShape.fillColor = SCNColor.gray.withAlphaComponent(0.7)
-        rulerShape.zPosition = 32
-        addChild(rulerShape)
-        
+        // Shopping - ShopButton
+        if let cartSprite:SKSpriteNode = makeButton("cart") {
+            cartSprite.name = "ShopButton"
+            cartSprite.color = .white
+            cartSprite.colorBlendFactor = 1.0
+            cartSprite.anchorPoint = CGPoint.zero
+            cartSprite.position = underneathPosition
+            cartSprite.zPosition = 80
+            addChild(cartSprite)
+        }
+    }
+    
+    /// Makes a Sprite Node from an image name
+    func makeButton(_ imageName:String) -> SKSpriteNode? {
+        guard let image = GameImages.commonSystemImage(name: imageName)?.image(with: .white) else {
+            return nil
+        }
+        #if os(macOS)
+        image.isTemplate = true
+        let texture = SKTexture(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: [:])!)
+        #else
+        let texture = SKTexture(cgImage: camImage.cgImage!) //SKTexture(image: camImage)
+        #endif
+        let sprite:SKSpriteNode = SKSpriteNode(texture: texture, color: .white, size: CGSize(width: 36, height: 36))
+        return sprite
     }
     
     private class func makeText(_ string:String) -> SKLabelNode {

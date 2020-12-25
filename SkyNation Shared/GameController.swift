@@ -87,16 +87,40 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     camToggle.toggle()
                 }
                 
+                // Buttons Underneath Player
                 // Tutorial button
                 if sprite.name == "tutorial" {
                     print("🎓 HIT TUTORIAL NODE")
                     self.stationOverlay.showTutorial()
                     return
                 }
-                
                 if sprite.name == "settings" {
                     print("⚙️ HIT SETTINGS NODE")
                     return
+                }
+                if sprite.name == "ShopButton" {
+                    print("⚙️ Lets go shopping")
+                    return
+                }
+                
+                // Side Menu Buttons
+                if sprite.name == "LightsButton" {
+                    print("⚙️ Lets play with some lights!")
+                    return
+                }
+                if sprite.name == "ChatButton" {
+                    print("⚙️ Lets chat!")
+                    return
+                }
+                if sprite.name == "MarsButton" {
+                    print("⚙️ Lets go to Mars!")
+                    sceneRenderer.present(SCNScene(named: "Art.scnassets/MarsHab.scn")!, with: .doorsCloseVertical(withDuration: 0.75), incomingPointOfView: nil) {
+                        print("Scene Loaded :)")
+                        self.gameScene = .MarsColony
+//                        lbl.text = "Earth"
+                    }
+                    return
+                    
                 }
                 
             }

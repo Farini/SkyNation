@@ -123,7 +123,6 @@ class LabViewModel: ObservableObject {
             
         } else {
             
-            
             var problematicMessage:String = "Missing Skills:"
             // problematicMessage += "\nMissing Skills:"
             for skill in missingSkills {
@@ -140,10 +139,18 @@ class LabViewModel: ObservableObject {
         let activity = LabActivity(time: delta, name: item.rawValue)
         labModule.activity = activity
         
+        // add to workers
+        for person in self.selectedStaff {
+            person.activity = activity
+        }
+        
         // Save and update view
         LocalDatabase.shared.saveStation(station: station)
         print("Activity created")
         selection = .activity
+        
+        // Reset other vars
+        selectedStaff = []
     }
     
     func collectTech(activity:LabActivity, tech:TechItems) {

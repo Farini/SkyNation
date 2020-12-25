@@ -284,6 +284,10 @@
 		8536F4B0258D49C900B509D2 /* TravelersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F4AE258D49C900B509D2 /* TravelersView.swift */; };
 		8536F4B1258D49C900B509D2 /* TravelersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F4AE258D49C900B509D2 /* TravelersView.swift */; };
 		8536F4B2258D49C900B509D2 /* TravelersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F4AE258D49C900B509D2 /* TravelersView.swift */; };
+		8559201525959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
+		8559201625959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
+		8559201725959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
+		8559201825959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
 		85C3418525905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
 		85C3418625905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
 		85C3418725905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
@@ -398,6 +402,7 @@
 		8536F46C258D481700B509D2 /* SparkEmitter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SparkEmitter.sks; sourceTree = "<group>"; };
 		8536F4A1258D484B00B509D2 /* SceneDirector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDirector.swift; sourceTree = "<group>"; };
 		8536F4AE258D49C900B509D2 /* TravelersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TravelersView.swift; sourceTree = "<group>"; };
+		8559201425959A4300CF5467 /* SideMenuNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuNode.swift; sourceTree = "<group>"; };
 		85C3418425905A7500BF82F9 /* TutorialNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialNode.swift; sourceTree = "<group>"; };
 		85C3418D2591078700BF82F9 /* PlayerCardNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCardNode.swift; sourceTree = "<group>"; };
 		85C34196259139D800BF82F9 /* GameSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSettingsView.swift; sourceTree = "<group>"; };
@@ -725,6 +730,7 @@
 				8536F45F258D481700B509D2 /* CamControl.sks */,
 				85C3418425905A7500BF82F9 /* TutorialNode.swift */,
 				85C3418D2591078700BF82F9 /* PlayerCardNode.swift */,
+				8559201425959A4300CF5467 /* SideMenuNode.swift */,
 			);
 			path = Overlays;
 			sourceTree = "<group>";
@@ -955,6 +961,7 @@
 			files = (
 				8536F441258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				8536F39A258D475D00B509D2 /* TechTree.swift in Sources */,
+				8559201525959A4300CF5467 /* SideMenuNode.swift in Sources */,
 				8536F46D258D481700B509D2 /* CamControlNode.swift in Sources */,
 				8536F36E258D475D00B509D2 /* SceneHelpers.swift in Sources */,
 				8536F4A2258D484B00B509D2 /* SceneDirector.swift in Sources */,
@@ -1026,6 +1033,7 @@
 			files = (
 				8536F442258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				8536F39B258D475D00B509D2 /* TechTree.swift in Sources */,
+				8559201625959A4300CF5467 /* SideMenuNode.swift in Sources */,
 				8536F46E258D481700B509D2 /* CamControlNode.swift in Sources */,
 				8536F36F258D475D00B509D2 /* SceneHelpers.swift in Sources */,
 				8536F4A3258D484B00B509D2 /* SceneDirector.swift in Sources */,
@@ -1097,6 +1105,7 @@
 			files = (
 				8536F443258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				8536F39C258D475D00B509D2 /* TechTree.swift in Sources */,
+				8559201725959A4300CF5467 /* SideMenuNode.swift in Sources */,
 				8536F46F258D481700B509D2 /* CamControlNode.swift in Sources */,
 				8536F370258D475D00B509D2 /* SceneHelpers.swift in Sources */,
 				8536F4A4258D484B00B509D2 /* SceneDirector.swift in Sources */,
@@ -1201,6 +1210,7 @@
 				8536F43C258D47EA00B509D2 /* ModulesViewModel.swift in Sources */,
 				8536F448258D47EA00B509D2 /* LabViewModel.swift in Sources */,
 				8536F421258D47D000B509D2 /* BuildingVehicleView.swift in Sources */,
+				8559201825959A4300CF5467 /* SideMenuNode.swift in Sources */,
 				8536F3D9258D47D000B509D2 /* RecipeDetailViews.swift in Sources */,
 				8536F440258D47EA00B509D2 /* GarageViewModel.swift in Sources */,
 				8536F37D258D475D00B509D2 /* Recipes.swift in Sources */,

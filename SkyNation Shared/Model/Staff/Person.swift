@@ -47,7 +47,7 @@ class LabActivity:Codable, Identifiable {
     // Recipe, or Tech name
     var activityName:String
     
-    var workers:[Person]?
+//    var workers:[Person]?
     var labID:UUID?
     
     init(time:TimeInterval, name:String = "") {

@@ -23,6 +23,7 @@ class StationOverlay:NSObject, SKSceneDelegate {
     var cameraPlaceholder:SKNode?
     var orbitListHolder:SKNode
     var newsPlaceholder:SKNode
+    var sideMenuNode:SideMenuNode?
     
     // Cam
     var sceneCamera:SCNNode
@@ -71,86 +72,17 @@ class StationOverlay:NSObject, SKSceneDelegate {
         
         // Position
         var mPos = orbitListHolder.position
-        mPos.y -= 44
+        mPos.y -= 32
         
-        // Air Control
-        if let lssImage = GameImages.commonSystemImage(name: "arrow.3.trianglepath")?.image(with: .white) {
-            // SKNImage(systemSymbolName: "arrow.3.trianglepath", accessibilityDescription: "Life Support Systems")?.image(with: .white) {
-            
-            
-            #if os(macOS)
-            lssImage.isTemplate = true
-            let lssTexture = SKTexture(cgImage: lssImage.cgImage(forProposedRect: nil, context: nil, hints: [:])!)
-            #else
-            let lssTexture = SKTexture(cgImage: lssImage.cgImage!)
-            #endif
-//            let lssTexture = SKTexture(cgImage: lssImage.cgImage(forProposedRect: nil, context: nil, hints: [:])!)
-            let lssSprite = SKSpriteNode(texture: lssTexture, size: CGSize(width: 36, height: 36))
-            lssSprite.name = "Air Control"
-            lssSprite.color = .white
-            lssSprite.colorBlendFactor = 1.0
-            lssSprite.anchorPoint = CGPoint.zero
-            lssSprite.position = mPos
-            lssSprite.zPosition = 90
-            scene.addChild(lssSprite)
-        }
+        // Side menu
+        let sideMenu = SideMenuNode()
+        sideMenu.setupMenu()
+        sideMenu.position = mPos
+        scene.addChild(sideMenu)
+        cameraPlaceholder = sideMenu.cameraPlaceholder?.copy() as? SKNode
+        self.sideMenuNode = sideMenu
         
-        // Camera
-        var camSprite:SKSpriteNode?
-        if let camImage = GameImages.commonSystemImage(name: "camera.viewfinder")?.image(with: .white) {
-            // SKNImage(systemSymbolName: "camera.viewfinder", accessibilityDescription: "Camera control")?.image(with: .white) {
-            #if os(macOS)
-            camImage.isTemplate = true
-            let camTexture = SKTexture(cgImage: camImage.cgImage(forProposedRect: nil, context: nil, hints: [:])!)//SKTexture(image: camImage)
-            #else
-            let camTexture = SKTexture(cgImage: camImage.cgImage!)//SKTexture(image: camImage)
-            #endif
-            
-            
-            print("___ Cam image exists !!! \(camImage.size)")
-            let cam = SKSpriteNode(texture: camTexture, size:CGSize(width: 36, height: 34))
-            cam.name = "CameraIcon"
-            cam.color = .white
-            cam.colorBlendFactor = 1.0
-
-            cam.anchorPoint = CGPoint(x: 0, y: 0)
-            mPos.y -= 44
-            cam.position = mPos
-            let camPlace = SKNode()
-            camPlace.position = mPos
-            self.cameraPlaceholder = camPlace
-            cam.zPosition = 90
-            camSprite = cam
-        }else{
-            print("___ No Cam image :( !!!")
-        }
-        
-        // Mars
-        let marsLabel = SKLabelNode(text: "Mars")
-        marsLabel.fontName = "Menlo"
-        marsLabel.fontSize = 22
-        marsLabel.fontColor = .white
-        
-        mPos.y -= 22
-        marsLabel.position = mPos  //orbitListHolder.position //CGPoint(x: 6, y: 25)
-        marsLabel.horizontalAlignmentMode = .left
-        marsLabel.verticalAlignmentMode = .center
-        marsLabel.isUserInteractionEnabled = true
-        marsLabel.zPosition = 90
-        
-        // Mars Map
-        // Create Mars Map label
-        // Mars
-        let marsMap = SKLabelNode(text: "Map of Mars")
-        marsMap.fontName = "Menlo"
-        marsMap.fontSize = 22
-        marsMap.fontColor = .white
-        mPos.y -= 22
-        marsMap.position = mPos  //orbitListHolder.position //CGPoint(x: 6, y: 25)
-        marsMap.horizontalAlignmentMode = .left
-        marsMap.verticalAlignmentMode = .center
-        marsMap.isUserInteractionEnabled = true
-        marsMap.zPosition = 90
+        mPos.y -= sideMenu.calculateAccumulatedFrame().size.height
         
         // Vehicles
         if LocalDatabase.shared.vehicles.isEmpty == false {
@@ -169,23 +101,16 @@ class StationOverlay:NSObject, SKSceneDelegate {
             }
         }
         
-        if let cam = camSprite { scene.addChild(cam)
-            print("Did add cam")
-        } else {
-            print("Could not add cam")
-        }
-
-        scene.addChild(marsLabel)
-        scene.addChild(marsMap)
-        
+        // Unpause the scene
         scene.isPaused = false
+        
     }
     
     /// Makes Camera control appear/disappear
     func toggleCamControl() {
-        
+        print("Toggle cam ccontrol")
         if let camNode = scene.childNode(withName: "CamControl") as? CamControlNode {
-            
+            print("UP cam ccontrol")
             // Camera control is up. Remove
             let disappear = SKAction.fadeOut(withDuration: 0.25)
             let scaleDown = SKAction.scale(by: 0.2, duration: 0.5)
@@ -199,9 +124,11 @@ class StationOverlay:NSObject, SKSceneDelegate {
             let node = CamControlNode(overlay: self)
             
             // Adjust Position
-            if let camPosition = cameraPlaceholder?.position {
+            if let camPosition = sideMenuNode?.position {
+                print("Camera Placeholder Position: \(camPosition)")
                 var adjustedPos = camPosition
                 adjustedPos.x += 120
+                adjustedPos.y -= 120
                 node.position = adjustedPos
                 scene.addChild(node)
             }
