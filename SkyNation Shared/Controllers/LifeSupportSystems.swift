@@ -43,6 +43,7 @@ class LSSModel:ObservableObject {
     @Published var energyProduction:Int
     
     @Published var accountingProblems:[String] = LocalDatabase.shared.accountingProblems
+    @Published var accountingReport:AccountingReport?
     
     // Timer
     var timer = Timer()
@@ -104,7 +105,7 @@ class LSSModel:ObservableObject {
         
         
         // Air
-        let reqAir = 200 * modulesCount
+        let reqAir = station.calculateNeededAir()
         self.requiredAir = reqAir
         
         let theAir = myStation.air
@@ -135,7 +136,7 @@ class LSSModel:ObservableObject {
         self.boxes = myStation.truss.extraBoxes
         
         // People
-        inhabitants = myStation.people.count
+        inhabitants = myStation.habModules.map({ $0.inhabitants.count }).reduce(0, +) //myStation.people.count
         
         // After initialized
         self.peripherals.append(myStation.truss.antenna)
@@ -353,7 +354,7 @@ class LSSModel:ObservableObject {
         print("Going to run accounting...")
         station.runAccounting()
         accountingProblems = LocalDatabase.shared.accountingProblems
-        
+        accountingReport = station.accounting
     }
     
     // Timer

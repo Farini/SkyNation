@@ -89,57 +89,74 @@ struct LifeSupportView: View {
                 
                 switch airOption {
                     case .AirLevels:
-                        Group {
-                            HStack {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("Air Quality: \(lssModel.airQuality)")
-                                    Text("Volume: \(Double(self.lssModel.air.volume), specifier: "%.2f") m3 | \(Double(self.lssModel.requiredAir), specifier: "%.2f") m3")
-                                        .foregroundColor(GameColors.lightBlue)
-                                    Text("Pressure: \(Double(self.lssModel.currentPressure), specifier: "%.2f") KPa")
-                                        .foregroundColor(.green)
-                                    
-                                    
-                                }
-                                
-                                Spacer()
-                                
-                                // Timer
-                                VStack {
-                                    HStack {
-                                        Button(action: {
-                                            self.lssModel.prepTimer()
-                                        }) {
-                                            Text("Start")
-                                        }
+                        ScrollView {
+                            VStack(alignment:.leading) {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("Air Quality: \(lssModel.airQuality)")
+                                        Text("Volume: \(Double(self.lssModel.air.volume), specifier: "%.2f") m3 | \(Double(self.lssModel.requiredAir), specifier: "%.2f") m3")
+                                            .foregroundColor(GameColors.lightBlue)
+                                        Text("Pressure: \(Double(self.lssModel.currentPressure), specifier: "%.2f") KPa")
+                                            .foregroundColor(.green)
                                         
-                                        Button(action: {
-                                            self.lssModel.stop()
-                                        }) {
-                                            Text("Stop")
-                                        }
-                                        Button(action: {
-                                            self.lssModel.reset()
-                                        }) {
-                                            Text("Reset")
-                                        }
-                                        Text("\(lssModel.counter)")
-                                            .font(.largeTitle)
+                                        
                                     }
-                                    Text("Account: \(lssModel.accountDate, formatter:GameFormatters.dateFormatter)")
-                                    Text("Humans count: \(lssModel.inhabitants)")
+                                    
+                                    Spacer()
+                                    
+                                    // Timer
+                                    VStack {
+                                        /*
+                                         HStack {
+                                         Button(action: {
+                                         self.lssModel.prepTimer()
+                                         }) {
+                                         Text("Start")
+                                         }
+                                         
+                                         Button(action: {
+                                         self.lssModel.stop()
+                                         }) {
+                                         Text("Stop")
+                                         }
+                                         Button(action: {
+                                         self.lssModel.reset()
+                                         }) {
+                                         Text("Reset")
+                                         }
+                                         Text("\(lssModel.counter)")
+                                         .font(.largeTitle)
+                                         }
+                                         */
+                                        Text("Account: \(lssModel.accountDate, formatter:GameFormatters.dateFormatter)")
+                                        Text("Head count: \(lssModel.inhabitants)")
+                                    }
                                 }
+                                .padding()
                                 
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Air Composition")
+                                        .font(.title)
+                                        .foregroundColor(.blue)
+                                        .padding()
+                                    AirCompositionView(air: lssModel.air)
+                                        .padding([.bottom, .top], 20)
+                                }
+                                .padding([.bottom], 10)
                                 
+                                Group { // VStack(alignment:.leading) {
+                                    Text("Drinkable Water: \(lssModel.liquidWater)")
+                                        .foregroundColor(.blue)
+                                    if let wasteLiquid = lssModel.boxes.filter({ $0.type == .wasteLiquid }).map({ $0.current }).reduce(0, +) {
+                                        Text("Waste Water: \(wasteLiquid)")
+                                    }
+                                    if let wasteSolid = lssModel.boxes.filter({ $0.type == .wasteSolid }).map({ $0.current }).reduce(0, +) {
+                                        Text("Solid Waste: \(wasteSolid)")
+                                    }
+                                    
+                                }
                             }
-                            .padding()
                             
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Air Composition").font(.callout).foregroundColor(.blue)
-                                    .padding()
-                                AirCompositionView(air: lssModel.air)
-                                    .padding([.bottom, .top], 20)
-                            }
-                            .padding([.bottom], 10)
                         }
                     case .Resources:
                         // Tanks + Peripherals
@@ -275,6 +292,27 @@ struct LifeSupportView: View {
                                     Text(problem)
                                 }
                             }
+                            if lssModel.accountingReport != nil {
+                                let report = lssModel.accountingReport!
+                                Divider()
+                                VStack {
+                                    Text("Report").font(.title)
+                                    Text("Date: \(GameFormatters.dateFormatter.string(from: report.date))")
+                                    Text("Air Start (V): \(report.airStart.volume)")
+                                    
+                                    Text("Energy Start: \(report.energyStart)")
+                                    Text("Energy Input: \(report.energyInput)")
+                                    Text("Energy Finish:\(report.energyFinish ?? 0)")
+                                    
+                                    Text("💩 \(report.poopFinish ?? 0)")
+                                    Text("Pee: \(report.wasteWaterFinish ?? 0)")
+                                    Text("Air adjustment: \(report.tankAirAdjustment ?? 0)")
+                                }
+//                                Divider()
+                            }
+                            
+                            
+                            
                             Divider()
                             HStack {
                                 Button("Accounting") {

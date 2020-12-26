@@ -22,6 +22,7 @@ class Station:Codable {
     
     var air:AirComposition
     var truss:Truss
+    var accounting:AccountingReport?
     
     // Recipes that can be made
     var unlockedRecipes:[Recipe]
@@ -74,6 +75,7 @@ class Station:Codable {
             energyGenerated += panel.maxCurrent()
         }
         print("Energy Generated: \(energyGenerated)")
+        let energyInput = energyGenerated
         
         while energyGenerated > 0 {
             for battery in truss.batteries {
@@ -99,6 +101,9 @@ class Station:Codable {
         var tempAir:AirComposition = air    // The air being modified
         var accumulatedUrine:Int = 0    // Amount of urine left over from capacity of boxes
         var accumulatedPoop:Int = 0     // Amount of poop left over from capacity of boxes
+        let tempEnergy = truss.batteries.map({$0.current}).reduce(0, +)
+        
+        let report = AccountingReport(time: nextDate, energy: tempEnergy, zInput: energyInput, air: air, water: tempWater)
         
         for peripheral in peripherals {
             // power on -> broken = false || power on -> not broken = true || power off = false
@@ -309,16 +314,36 @@ class Station:Codable {
             problems.append("💩 Solid waste spilling: \(poopSpill)")
         }
         
+        // Report...
+        let finishEnergy = truss.batteries.map({ $0.current }).reduce(0, +)
+        report.results(water: tempWater, urine: accumulatedUrine, poop: accumulatedPoop, air: tempAir, energy:finishEnergy)
+        
         
         // put the air back
         self.air = tempAir
         print("Air after humans...")
         print(tempAir.describe())
         
+        // Air Adjustments
+        let airNeeded = calculateNeededAir()
+        if airNeeded > tempAir.volume {
+            let delta = airNeeded - tempAir.volume
+            if let airTank = truss.tanks.filter({ $0.type == .air }).first {
+                let airXfer = min(delta, airTank.current)
+                problems.append("💨 Air adjustment: \(airXfer)")
+                airTank.current -= airXfer
+                air.mergeWith(newAirAmount: airXfer)
+                report.reportNeededAir(amount: airXfer)
+            }
+        }
+        
         
         // 5. Modules
         // + Energy Consumption
         // + Activities
+        
+        // Report
+        self.accounting = report
         
         // + Antenna -> + Money
         let antennaMoney = truss.moneyFromAntenna()
@@ -365,6 +390,17 @@ class Station:Codable {
     /// Adds an amount of air to the Station air
     func addControlledAir(amount:Int) {
         self.air.mergeWith(newAirAmount: amount)
+    }
+    
+    /// Calculates `Volume` of air needed in Station
+    func calculateNeededAir() -> Int {
+        
+        var moduleCount = labModules.count + habModules.count + bioModules.count
+        if (garage.xp > 0 || garage.simulationXP > 0) { moduleCount += 1 }
+        if unlockedTechItems.contains(.Cuppola) { moduleCount += 1 }
+        
+        let airNeeded = GameLogic.airPerModule * moduleCount
+        return airNeeded
     }
     
     /// Returns the module associated with ID (Lab, Hab, Bio)
@@ -567,6 +603,51 @@ class Station:Codable {
         
         self.garage = Garage()
     }
+}
+
+class AccountingReport:Codable {
+    var id:UUID
+    var date:Date
+    
+    var energyStart:Int
+    var energyInput:Int
+    var waterStart:Int
+    
+    var brokenPeripherals:[UUID]
+    var airStart:AirComposition
+    
+    var airFinish:AirComposition?
+    var energyFinish:Int?
+    var waterFinish:Int?
+    var wasteWaterFinish:Int?
+    var poopFinish:Int?
+    
+    var tankAirAdjustment:Int?
+//    var tankO2Adjustment:Int?
+    
+    init(time:Date, energy:Int, zInput:Int, air:AirComposition, water:Int) {
+        self.id = UUID()
+        date = time
+        energyStart = energy
+        energyInput = zInput
+        airStart = air
+        waterStart = water
+        brokenPeripherals = []
+    }
+    
+    func results(water:Int, urine:Int, poop:Int, air:AirComposition, energy:Int) {
+        airFinish = air
+        
+        waterFinish = water
+        wasteWaterFinish = urine
+        poopFinish = poop
+        
+    }
+    
+    func reportNeededAir(amount:Int) {
+        tankAirAdjustment = amount
+    }
+    
 }
 
 /**

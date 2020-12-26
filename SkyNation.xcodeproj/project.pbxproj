@@ -537,11 +537,11 @@
 		8536F337258D419400B509D2 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				8536F438258D47EA00B509D2 /* BioModController.swift */,
 				8536F434258D47EA00B509D2 /* EarthRequestController.swift */,
+				8536F437258D47EA00B509D2 /* LifeSupportSystems.swift */,
+				8536F438258D47EA00B509D2 /* BioModController.swift */,
 				8536F433258D47EA00B509D2 /* GarageViewModel.swift */,
 				8536F435258D47EA00B509D2 /* LabViewModel.swift */,
-				8536F437258D47EA00B509D2 /* LifeSupportSystems.swift */,
 				8536F432258D47EA00B509D2 /* ModulesViewModel.swift */,
 				8536F436258D47EA00B509D2 /* VehicleBuilderViewModel.swift */,
 			);
@@ -555,8 +555,8 @@
 				8536F34D258D475D00B509D2 /* Recipes.swift */,
 				8536F343258D475D00B509D2 /* Ingredients.swift */,
 				8536F34B258D475D00B509D2 /* Peripherals */,
-				8536F344258D475D00B509D2 /* Staff */,
 				8536F34E258D475D00B509D2 /* Station */,
+				8536F344258D475D00B509D2 /* Staff */,
 				8536F347258D475D00B509D2 /* Utilities */,
 			);
 			path = Model;
