@@ -88,6 +88,7 @@ struct HabModuleView: View {
                 // Close
                 Button(action: {
                     print("Close action")
+                    NotificationCenter.default.post(name: .closeView, object: self)
                 }, label: {
                     Image(systemName: "xmark.circle")
                         .resizable()
@@ -143,7 +144,7 @@ struct HabModuleView: View {
                     } else {
                         // Details go here
                         ScrollView {
-                            PersonDetail(person: selectedPerson!)
+                            PersonDetail(person: selectedPerson!, workoutAction: workoutAction)
                         }
                     }
                     
@@ -151,6 +152,15 @@ struct HabModuleView: View {
                 }
             }
         }
+    }
+    
+    func workoutAction() {
+        guard let person = selectedPerson else {
+            return
+        }
+        let workoutActivity = LabActivity(time: 60, name: "Working out")
+        person.activity = workoutActivity
+        print("Person working out")
     }
 }
 

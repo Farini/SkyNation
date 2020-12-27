@@ -100,7 +100,12 @@ struct GameFormatters {
         format.minimumFractionDigits = 1
         format.maximumFractionDigits = 2
         format.numberStyle = NumberFormatter.Style.decimal
+        #if os(macOS)
         format.hasThousandSeparators = true
+        #else
+        format.usesGroupingSeparator = true
+        #endif
+        
         return format
     }()
 }
@@ -173,7 +178,9 @@ struct GameImages {
         im.isTemplate = true
         return im as SKNImage
         #else
-        return SKNImage(systemName: name)
+        guard let image = UIImage(systemName: name)?.withTintColor(.white, renderingMode: .alwaysTemplate) else { fatalError() }
+//        image.tintColor = .white
+        return image // as! SKNImage
         #endif
     }
     
@@ -181,6 +188,35 @@ struct GameImages {
         return SKNImage(named: "Currency")!
     }
     
+}
+
+extension Notification.Name {
+    
+    static let URLRequestFailed  = Notification.Name("URLRequestFailed")        // Any URL Request that fails sends this messsage
+    static let DidAddToFavorites = Notification.Name("DidAddToFavorites")       // Add To Favorites Notification
+    static let closeView = Notification.Name("CloseView")
+    
+//    static let GlobalQuoteUpdate = Notification.Name("GlobalQuoteUpdated")      // Need to check the object, as this may be called by several
+//    static let scopeQuoteUpdate  = Notification.Name("CompanyInScopeUpdate")    // Company in scope
+//    static let StockSearchResult = Notification.Name("StockSearchResult")       // Results of Stock search ([Company] object)
+//
+//    static let TradeFromSearch   = Notification.Name("TradeFromSearch")         // To open the CompanyDetailsController
+//    static let showCompanyDetails = Notification.Name("ShowStockDetails")       // To open the CompanyDetailsController
+//    static let showStockReport = Notification.Name("ShowStockReport")
+//
+//    static let PendingOrderExec  = Notification.Name("PendingOrderExec")
+//
+//    static let chartingUpdates = Notification.Name("ChartingUpdates")
+//
+//    // Update the app
+//    static let appNeedsUpdate = Notification.Name("appNeedsUpdate")
+//
+//    // News
+//    static let articlesFetchComplete = Notification.Name("articlesFetchComplete")
+//
+//    // Purchases
+//    static let purchaseUpdates = Notification.Name("PurchaseUpdates")
+//    static let purchaseRestore = Notification.Name("PurchaseRestore")
 }
 
 

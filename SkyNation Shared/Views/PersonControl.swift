@@ -33,12 +33,21 @@ struct PersonControl: View {
             }
             VStack {
                 if selectedPerson != nil {
-                    PersonDetail(person: selectedPerson!)
+                    PersonDetail(person: selectedPerson!, workoutAction: workoutAction)
                 }else{
                     Text("Select one")
                 }
             }
         }
+    }
+    
+    func workoutAction() {
+        guard let person = selectedPerson else {
+            return
+        }
+        let workoutActivity = LabActivity(time: 60, name: "Working out")
+        person.activity = workoutActivity
+        print("Person working out")
     }
 }
 

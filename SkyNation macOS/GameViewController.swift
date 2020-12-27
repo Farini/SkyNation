@@ -10,31 +10,22 @@ import SceneKit
 import SpriteKit
 import SwiftUI
 
-class GameViewController: NSViewController, GameNavDelegate, NSWindowDelegate {
+class GameViewController: NSViewController, NSWindowDelegate {
     
     @IBOutlet weak var sceneKitView: SCNView!
     
+    /// The main View of the game
     var gameView: SCNView {
         return sceneKitView
     }
     
+    /// The Game Controller
     var gameController: GameController!
     
-    // MARK: - Window Delegate
+    /// Presented View (if any)
+    var openedView:NSView?
     
-    //    func windowDidBecomeKey(_ notification: Notification) {
-    //            window?.level = .statusBar
-    //        }
-    
-//    func windowWillClose(_ notification: Notification) {
-//        NSApp.stopModal()
-//    }
-    
-//    var gameView: SCNView {
-//        return self.view as! SCNView
-//    }
-    
-//    var gameController: GameController!
+    // MARK: - View Lifecycle
     
     override func viewDidLoad() {
         
@@ -59,6 +50,21 @@ class GameViewController: NSViewController, GameNavDelegate, NSWindowDelegate {
         
     }
     
+    override func viewDidAppear() {
+        // Add Notification
+        NotificationCenter.default.addObserver(self, selector: #selector(closeView(_:)), name: .closeView, object: nil)
+    }
+    
+    /// Close the currently presented  `View`
+    @objc func closeView(_ notification:Notification) {
+        print("Closing current view")
+        if let sheet = self.presentedViewControllers?.first {
+            print("Dismissing Sheet")
+            dismiss(sheet)
+        }
+        openedView = nil
+    }
+    
     // MARK: - Control
     
     @objc func handleClick(_ gestureRecognizer: NSGestureRecognizer) {
@@ -67,119 +73,221 @@ class GameViewController: NSViewController, GameNavDelegate, NSWindowDelegate {
         gameController.highlightNodes(atPoint: p)
     }
     
-    // MARK: - Delegate - GameNavDelegate
+}
+
+// MARK: - Delegate - GameNavDelegate
+
+#if os(macOS)
+extension GameViewController: GameNavDelegate {
     
     func didSelectEarth() {
         
-        let window = ClosableWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 600, height: 400),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-            backing: .buffered, defer: false)
-        window.center()
-        window.setFrameAutosaveName("SUI Window")
-        window.minSize = NSSize(width: 600, height: 400)
+        let controller = NSHostingController(rootView: EarthRequestView()) //UIHostingController(rootView:EarthRequestView())
         
-        let hostess = NSHostingView(rootView: EarthRequestView())
-        window.contentView = hostess
-        window.makeKeyAndOrderFront(nil)
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controller.view)
+        controller.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        controller.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        self.openedView = controller.view
+        self.presentAsSheet(controller)
+        
     }
     
     func didSelectGarage(station: Station) {
+        
         print("Garage selected")
         
-        let window = ClosableWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-            backing: .buffered, defer: false)
-        window.center()
-        window.setFrameAutosaveName("SUI Window")
-        window.contentView = NSHostingView(rootView: GarageView())
-        window.makeKeyAndOrderFront(nil)
+        let controller = NSHostingController(rootView: GarageView()) //UIHostingController(rootView:EarthRequestView())
+        
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controller.view)
+        controller.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        controller.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        self.openedView = controller.view
+        self.presentAsSheet(controller)
+        
+        /*
+         let window = ClosableWindow(
+         contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
+         styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+         backing: .buffered, defer: false)
+         window.center()
+         window.setFrameAutosaveName("SUI Window")
+         window.contentView = NSHostingView(rootView: GarageView())
+         window.makeKeyAndOrderFront(nil)
+         */
         
     }
     
     func didSelectAir() {
-        print("Create Hab Module View to View This")
-        let window = ClosableWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-            backing: .buffered, defer: false)
-        window.center()
-        window.setFrameAutosaveName("SUI Window")
-        window.contentView = NSHostingView(rootView: LifeSupportView())
-        window.makeKeyAndOrderFront(nil)
+        
+        let controller = NSHostingController(rootView: LifeSupportView()) //UIHostingController(rootView:EarthRequestView())
+        
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controller.view)
+        controller.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        controller.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        self.openedView = controller.view
+        self.presentAsSheet(controller)
+        
+        /*
+         print("Create Hab Module View to View This")
+         let window = ClosableWindow(
+         contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
+         styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+         backing: .buffered, defer: false)
+         window.center()
+         window.setFrameAutosaveName("SUI Window")
+         window.contentView = NSHostingView(rootView: LifeSupportView())
+         window.makeKeyAndOrderFront(nil)
+         */
     }
     
     func didSelectHab(module: HabModule) {
-        print("Create Hab Module View to View This")
-        let window = ClosableWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-            backing: .buffered, defer: false)
-        window.center()
-        window.setFrameAutosaveName("SUI Window")
-        window.contentView = NSHostingView(rootView: HabModuleView(module: module))
-        window.makeKeyAndOrderFront(nil)
+        //        print("Create Hab Module View to View This")
+        
+        let controller = NSHostingController(rootView: HabModuleView(module: module)) //UIHostingController(rootView:EarthRequestView())
+        
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controller.view)
+        controller.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        controller.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        self.openedView = controller.view
+        self.presentAsSheet(controller)
+        
+        /*
+         let window = ClosableWindow(
+         contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
+         styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+         backing: .buffered, defer: false)
+         window.center()
+         window.setFrameAutosaveName("SUI Window")
+         window.contentView = NSHostingView(rootView: HabModuleView(module: module))
+         window.makeKeyAndOrderFront(nil)
+         */
+        
     }
     
     func didSelectBio(module: BioModule) {
-        print("Create Bio Module View to see this")
-        let window = ClosableWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-            backing: .buffered, defer: false)
-        window.center()
-        window.setFrameAutosaveName("SUI Window")
-        window.contentView = NSHostingView(rootView: BioView(bioMod: module))
-        window.makeKeyAndOrderFront(nil)
+        //        print("Create Bio Module View to see this")
+        
+        let controller = NSHostingController(rootView: BioView(bioMod: module)) //UIHostingController(rootView:EarthRequestView())
+        
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controller.view)
+        controller.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        controller.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        self.openedView = controller.view
+        self.presentAsSheet(controller)
+        
+        /*
+         let window = ClosableWindow(
+         contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
+         styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+         backing: .buffered, defer: false)
+         window.center()
+         window.setFrameAutosaveName("SUI Window")
+         window.contentView = NSHostingView(rootView: BioView(bioMod: module))
+         window.makeKeyAndOrderFront(nil)
+         */
     }
     
     func didChooseModule(name: String) {
         
-        let window = ClosableWindow(contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
-                                    styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-                                    backing: .buffered, defer: false)
+        let controller = NSHostingController(rootView: SelectModuleTypeView(name: name)) //UIHostingController(rootView:EarthRequestView())
         
-        // Present view
-        window.center()
-        window.setFrameAutosaveName("SUI Window")
-        window.contentView = NSHostingView(rootView: SelectModuleTypeView(name: name))
-        window.makeKeyAndOrderFront(nil)
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controller.view)
+        controller.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        controller.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
         
+        self.openedView = controller.view
+        self.presentAsSheet(controller)
+        
+        /*
+         let window = ClosableWindow(contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
+         styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+         backing: .buffered, defer: false)
+         
+         // Present view
+         window.center()
+         window.setFrameAutosaveName("SUI Window")
+         window.contentView = NSHostingView(rootView: SelectModuleTypeView(name: name))
+         window.makeKeyAndOrderFront(nil)
+         */
     }
     
     func didSelectLab(module: LabModule) {
-        print("Selected lab. Capacity: \(module.capacity)")
         
-        let window = ClosableWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 800, height: 600),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-            backing: .buffered, defer: false)
-        window.center()
-        window.contentView = NSHostingView(rootView: LaboratoryView(module: module))
-        window.makeKeyAndOrderFront(nil)
+        let controller = NSHostingController(rootView: LaboratoryView(module: module)) //UIHostingController(rootView:EarthRequestView())
+        
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controller.view)
+        controller.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        controller.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        self.openedView = controller.view
+        self.presentAsSheet(controller)
+        
+        /*
+         let window = ClosableWindow(
+         contentRect: NSRect(x: 0, y: 0, width: 800, height: 600),
+         styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+         backing: .buffered, defer: false)
+         window.center()
+         window.contentView = NSHostingView(rootView: LaboratoryView(module: module))
+         window.makeKeyAndOrderFront(nil)
+         */
     }
     
     func didSelectTruss(station:Station) {
-        print("Selected Truss")
-        let window = ClosableWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-            backing: .buffered, defer: false)
-        window.center()
-        window.contentView = NSHostingView(rootView: LifeSupportView())
-        window.makeKeyAndOrderFront(nil)
+        //        print("Selected Truss")
+        
+        let controller = NSHostingController(rootView: LifeSupportView()) //UIHostingController(rootView:EarthRequestView())
+        
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controller.view)
+        controller.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        controller.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        self.openedView = controller.view
+        self.presentAsSheet(controller)
+        /*
+         let window = ClosableWindow(
+         contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
+         styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+         backing: .buffered, defer: false)
+         window.center()
+         window.contentView = NSHostingView(rootView: LifeSupportView())
+         window.makeKeyAndOrderFront(nil)
+         */
     }
     
-    // menu
-    
-//    @IBAction func openfinder(_ sender: NSMenuItem) {
-//        print("Can we open now ???")
-//        
-//    }
-    
 }
+#endif
 
+// Deprecate
 class ClosableWindow:NSWindow {
     
     override func close() {

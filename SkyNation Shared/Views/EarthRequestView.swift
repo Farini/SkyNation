@@ -64,6 +64,8 @@ struct EarthRequestView: View {
                     // Close
                     Button(action: {
                         print("Close action")
+                        NotificationCenter.default.post(name: .closeView, object: self)
+//                        self.presentationMode.wrappedValue.dismiss()
                     }, label: {
                         Image(systemName: "xmark.circle")
                             .resizable()

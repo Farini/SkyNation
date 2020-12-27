@@ -270,33 +270,19 @@ struct CirclePercentIndicator: View {
     
     var percentage:CGFloat
     
+    let gradientStart = Color("Prograd1")
+    let gradientEnd = Color("Prograd2")
+    
     var body: some View {
-        VStack {
-            
+        ZStack {
             Circle()
-                .fill(LinearGradient(gradient: Gradient(colors: [.blue, .purple]), startPoint: .topLeading, endPoint: .bottomTrailing))
+                .fill(Color.gray)
+                .frame(width: 160, height: 160)
+            Circle()
+                .fill(LinearGradient(gradient: Gradient(colors: [gradientStart, gradientEnd]), startPoint: .topLeading, endPoint: .bottomTrailing))
                 .frame(width: 150, height: 150)
-                .modifier(PercentageIndicator(pct: self.percentage))
+                .modifier(PercentageIndicator(pct: max(0, percentage)))
                 .padding()
-            
-            HStack(spacing: 10) {
-                Button("0%") {
-//                    withAnimation(.easeInOut(duration:1.0)) { // () -> Result in
-//                        self.percentage = 0
-//                    }
-                    
-                }
-//                Button("27%") {
-//                    withAnimation(.easeInOut(duration:1.0)) { // () -> Result in
-//                        self.percentage = 0.27
-//                    }
-//                }
-//                Button("100%") {
-//                    withAnimation(.easeInOut(duration:1.0)) { // () -> Result in
-//                        self.percentage = 1.0
-//                    }
-//                }
-            }
         }
         .padding()
     }
@@ -305,6 +291,7 @@ struct CirclePercentIndicator: View {
 struct PercentageIndicator: AnimatableModifier {
     var pct: CGFloat = 0
     
+    
     var animatableData: CGFloat {
         get { pct }
         set { pct = newValue }
@@ -312,7 +299,7 @@ struct PercentageIndicator: AnimatableModifier {
     
     func body(content: Content) -> some View {
         content
-            .overlay(ArcShape(pct: pct).foregroundColor(.red))
+            .overlay(ArcShape(pct: pct).foregroundColor(.orange))
             .overlay(LabelView(pct: pct))
     }
     
@@ -336,7 +323,7 @@ struct PercentageIndicator: AnimatableModifier {
         let pct: CGFloat
         
         var body: some View {
-            Text("\(Int(pct * 100)) %")
+            Text("\(Int(pct * 100))%")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .foregroundColor(.white)
@@ -354,6 +341,7 @@ struct ProgressViews_Previews: PreviewProvider {
             Text("Progress Bar").font(.headline).padding()
             FixedLevelBar(min: 0, max: 100, current: 80, title: "Test Progress", color: .pink)
         }
+        .preferredColorScheme(.dark)
         
     }
 }
@@ -364,6 +352,7 @@ struct AirView_Previews: PreviewProvider {
             Text("Test")
             AirCompositionView(air: AirComposition())
         }
+        .preferredColorScheme(.dark)
         
     }
     
@@ -372,6 +361,7 @@ struct AirView_Previews: PreviewProvider {
 struct PercentageIndicator_Previews: PreviewProvider {
     @State var ctrl:Double = 0
     static var previews: some View {
-        CirclePercentIndicator(percentage: 0.0)
+        CirclePercentIndicator(percentage: 0.2)
+            .preferredColorScheme(.dark)
     }
 }

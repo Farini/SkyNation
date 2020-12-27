@@ -25,6 +25,7 @@ class LSSModel:ObservableObject {
     @Published var airQuality:String = "Good"
     
     @Published var liquidWater:Int
+    @Published var availableFood:[String]
     @Published var levelZ:Double
     @Published var levelZCap:Double
     @Published var solarPanels:[SolarPanel] = []
@@ -116,10 +117,6 @@ class LSSModel:ObservableObject {
         self.levelO2 = (Double(theAir.o2) / Double(theAir.volume)) * 100
         self.levelCO2 = (Double(theAir.co2) / Double(theAir.volume)) * 100
         
-        
-        
-        
-        
         // Tanks + Water
         self.tanks = myStation.truss.tanks
         
@@ -137,6 +134,16 @@ class LSSModel:ObservableObject {
         
         // People
         inhabitants = myStation.habModules.map({ $0.inhabitants.count }).reduce(0, +) //myStation.people.count
+        
+        // Food
+        let stationFood = station.food
+        var totalFood = stationFood
+        for bioModule in station.bioModules {
+            for bioBox in bioModule.boxes.filter({ $0.mode == .multiply}) {
+                totalFood.append(contentsOf: bioBox.population.filter({ bioBox.perfectDNA == $0 }))
+            }
+        }
+        self.availableFood = totalFood
         
         // After initialized
         self.peripherals.append(myStation.truss.antenna)

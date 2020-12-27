@@ -97,7 +97,7 @@ Items being worked on
 - [X] 3/8 Accounting
     - [X] Basic Accounting (testable)
     - [X] Person's happiness (if cuppola, airlock, etc.)
-    - [ ] View Accounting Problems
+    - [X] View Accounting Problems
     - [ ] Vehicle Accounting View
     - [ ] Accounting Previews
     - [ ] Save Accounting Problems
@@ -132,18 +132,29 @@ Items being worked on
     - [ ] Front View
     - [ ] Improve Background HDRI image
     
-- [ ] 1/3 iPad View Presentation
-    - [ ] Present view on iPad - Decide if ModelViewController, or just View
-    - [ ] View dismissal - like windows
+- [ ] 1/3 iOS View Presentation
+    - [X] Present view on iPad
+    - [X] View dismissal
+    - [ ] Test iPhone View sizes
 
-- [ ] 5/13 Basic Views
+- [ ] 7/13 Basic Views
     - [X] Ingredients and sufficiency
     - [X] Create a general Header View in SwiftUI for all SwiftUI base views
-    - [ ] Improve People Selection View - Add a mark so user knows when they are selected
+    - [X] Improve People Selection View - Add a mark so user knows when they are selected
+    - [X] Improve Timer View
+    - [ ] Improve General Header View
+    - [ ] Pass functions (Change skin, Rename, etc.)
     - [ ] Error messages
 
 ## 📝 To Do - Future
 Grab things from this list as you go along.
+
+- [ ] 0/21 Server
+    - [ ] Server test address
+    - [ ] Player Object(s)
+    - [ ] Free Deliveries
+    - [ ] Available Humans for delivery
+    - [ ] Guilds
 
 - [ ] 8/13 Data Model
     - [ ] 5/8 TechTree improvements (Tree improved, Add Antenna upgrades, Charge ingredients, electricity, Select Humans, Fix Time)
@@ -156,6 +167,7 @@ Grab things from this list as you go along.
     - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
     - [ ] Roboarm animation
     - [ ] Earth Revealage
+    - [ ] Earth Light Emission
     - [ ] Implement 'Skin' on all Modules
     - [ ] 1/3 Cleanup Original Scene
     - [ ] Simplify Builder (Delete orientation, etc.) - Questionable

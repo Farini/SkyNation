@@ -28,9 +28,25 @@ struct SelectModuleTypeView: View {
             
             Group {
                 
-                Text("Choose Module Type")
-                    .font(.largeTitle)
-                    .foregroundColor(.orange)
+                HStack {
+                    Text("Base Module")
+                        .font(.largeTitle)
+                        .foregroundColor(.orange)
+                    Spacer()
+                    // Close
+                    Button(action: {
+                        print("Close action")
+                        NotificationCenter.default.post(name: .closeView, object: self)
+                    }, label: {
+                        Image(systemName: "xmark.circle")
+                            .resizable()
+                            .aspectRatio(contentMode:.fit)
+                            .frame(width:34, height:34)
+                    })
+                    .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
+                    .padding(.trailing, 6)
+                }
+                
                 
                 Group {
                     Text("Air volume: \(controller.airVolume)")

@@ -156,13 +156,21 @@ enum TechItems:String, Codable, CaseIterable, Identifiable {
     /// `Human` Skills required to research this tech
     func skillSet() -> [Skills:Int] {
         switch self {
-        case .node2, .node3, .node4: return [:]
-        case .module4, .module5, .module6: return [.Material:1]
-            case .garage: return [.Material:2]
+            case .node2, .node3, .node4: return [:]
+            case .module4, .module5, .module6: return [.Material:1]
+            case .garage: return [.Material:1]
             case .recipeScrubber: return [.Handy:1]
+            case .recipeMethane: return [.Electric:1, .Handy:2]
+            case .recipeBioSolidifier: return [.Handy:2]
             case .recipeWaterFilter: return [.Biologic:1]
             case .module7, .module8, .module9, .module10: return [.Material:2]
-        default: return [.Mechanic:1, .Biologic:1]
+            case .Roboarm: return [.Mechanic:1, .Electric:1]
+            case .AU1, .AU2, .AU3, .AU4, .AntennaUp: return [.Datacomm:1]
+            case .Airlock: return [.Material:1, .Electric:1, .Handy:1]
+            case .Cuppola: return [.Material:2, .Mechanic:1, .Handy:1]
+            case .rootItem: return [:]
+            case .GarageArm: return [.SystemOS:2, .Material:2, .Datacomm:2, .Electric:2]
+//            default: return [.Mechanic:1, .Biologic:1]
         }
     }
     

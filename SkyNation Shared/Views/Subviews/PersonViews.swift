@@ -148,7 +148,9 @@ struct SkillsetView:View {
 
 
 struct PersonDetail:View {
+    
     var person:Person
+    var workoutAction:() -> Void
     
     var body: some View {
         
@@ -202,6 +204,12 @@ struct PersonDetail:View {
                     }) {
                         Text("Work")
                     }
+                    
+                    Button("Workout") {
+                        print("Working out ??")
+                        self.workoutAction()
+                    }
+                    
                 }else{
                     Text("⏱").font(.title)
                     Text(person.busynessSubtitle())
@@ -276,6 +284,6 @@ struct PersonDetail_Preview: PreviewProvider {
         let busyPerson = Person(random: true)
         busyPerson.activity = LabActivity(time: 12, name: "Test Busy")
         
-        return PersonDetail(person: busyPerson)
+        return PersonDetail(person: busyPerson, workoutAction: { print("Fake Workout")})
     }
 }

@@ -63,6 +63,7 @@ struct LifeSupportView: View {
                     // Close
                     Button(action: {
                         print("Close action")
+                        NotificationCenter.default.post(name: .closeView, object: self)
                     }, label: {
                         Image(systemName: "xmark.circle")
                             .resizable()
@@ -144,7 +145,7 @@ struct LifeSupportView: View {
                                 }
                                 .padding([.bottom], 10)
                                 
-                                Group { // VStack(alignment:.leading) {
+                                Group {
                                     Text("Drinkable Water: \(lssModel.liquidWater)")
                                         .foregroundColor(.blue)
                                     if let wasteLiquid = lssModel.boxes.filter({ $0.type == .wasteLiquid }).map({ $0.current }).reduce(0, +) {
@@ -153,7 +154,7 @@ struct LifeSupportView: View {
                                     if let wasteSolid = lssModel.boxes.filter({ $0.type == .wasteSolid }).map({ $0.current }).reduce(0, +) {
                                         Text("Solid Waste: \(wasteSolid)")
                                     }
-                                    
+                                    Text("Edible Food: \(lssModel.availableFood.count)")
                                 }
                             }
                             

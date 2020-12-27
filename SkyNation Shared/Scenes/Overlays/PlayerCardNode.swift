@@ -181,7 +181,8 @@ class PlayerCardNode:SKNode {
         image.isTemplate = true
         let texture = SKTexture(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: [:])!)
         #else
-        let texture = SKTexture(cgImage: camImage.cgImage!) //SKTexture(image: camImage)
+//        image.tintColor = .white
+        let texture = SKTexture(cgImage: image.withTintColor(.white, renderingMode: .alwaysTemplate).cgImage!) //SKTexture(image: camImage)
         #endif
         let sprite:SKSpriteNode = SKSpriteNode(texture: texture, color: .white, size: CGSize(width: 36, height: 36))
         return sprite
