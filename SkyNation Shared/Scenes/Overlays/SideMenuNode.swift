@@ -177,7 +177,15 @@ class SideMenuNode:SKNode {
         image.isTemplate = true
         let texture = SKTexture(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: [:])!)
         #else
-        let texture = SKTexture(cgImage: image.withTintColor(.white, renderingMode: .alwaysTemplate).cgImage!) //SKTexture(image: camImage)
+        let texture = SKTexture(image: image.maskWithColor(color: .white))// .cgImage!)
+//        let rect = CGRect(origin: .zero, size: texture.size())
+//        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
+//        UIColor.white.setFill()
+//        UIRectFill(rect)
+//        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+//        UIGraphicsEndImageContext()
+//        guard let cgImage = newImage?.cgImage else { return nil }
+//        texture = SKTexture(cgImage: cgImage)
         #endif
         let sprite:SKSpriteNode = SKSpriteNode(texture: texture, color: .white, size: buttonSize)
         return sprite
@@ -187,3 +195,5 @@ class SideMenuNode:SKNode {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+

@@ -33,7 +33,7 @@ class PlayerCardNode:SKNode {
         let timeTokens = player.timeTokens
         let deliveryTokens = player.deliveryTokens
         let name = player.name
-        let avatar = player.logo
+//        let avatar = player.logo
         let money = player.money
         self.player = player
         
@@ -65,7 +65,7 @@ class PlayerCardNode:SKNode {
         print("posXY begins: \(posXY)")
         
         // Name, Money and Token
-        let nameLabel = PlayerCardNode.makeText(player.name)
+        let nameLabel = PlayerCardNode.makeText(name)
         nameLabel.position = posXY
         nameLabel.fontColor = .white
         self.nameLabel = nameLabel
@@ -79,11 +79,10 @@ class PlayerCardNode:SKNode {
         currencySprite.zPosition = 90
         currencySprite.position = posXY
         self.moneySprite = currencySprite
-//        posXY.y -= currencySprite.calculateAccumulatedFrame().height + CGFloat(margin)
         print("posXY currency image: \(posXY)")
         
         // Currency Label
-        let moneyString = GameFormatters.numberFormatter.string(from: NSNumber(value: player.money)) ?? "0"
+        let moneyString = GameFormatters.numberFormatter.string(from: NSNumber(value: money)) ?? "0"
         let moneyLbl = PlayerCardNode.makeText(moneyString)
         let moneyPosX = Double(currencySprite.position.x) + 20 + 6
         moneyLbl.position = CGPoint(x: moneyPosX, y: Double(posXY.y))
@@ -102,16 +101,13 @@ class PlayerCardNode:SKNode {
         print("posXY tokens: \(posXY)")
         
         // Settings
-        let settingsTexture = SKTexture(image: GameImages.commonSystemImage(name:"gearshape.fill")!.image(with: .white))
-        let settingsSprite = SKSpriteNode(texture: settingsTexture, size: CGSize(width: 36, height: 36))
+        let settingsSprite = PlayerCardNode.makeButton("gearshape.fill")!
         settingsSprite.anchorPoint = CGPoint.zero
         settingsSprite.name = "settings"
         self.settingsButton = settingsSprite
         
         // Tutorial
-        let tutImage = GameImages.commonSystemImage(name: "questionmark.diamond")!.image(with: .white)
-        let tutTexture = SKTexture(image: tutImage)
-        let tutSprite = SKSpriteNode(texture: tutTexture, size: CGSize(width: 36, height: 36))
+        let tutSprite = PlayerCardNode.makeButton("questionmark.diamond")!
         tutSprite.anchorPoint = CGPoint.zero
         tutSprite.name = "tutorial"
         self.tutorialButton = tutSprite
@@ -160,8 +156,10 @@ class PlayerCardNode:SKNode {
         
         underneathPosition.x += tutorialButton.calculateAccumulatedFrame().width + 6
         
+        
+        
         // Shopping - ShopButton
-        if let cartSprite:SKSpriteNode = makeButton("cart") {
+        if let cartSprite:SKSpriteNode = PlayerCardNode.makeButton("cart") {
             cartSprite.name = "ShopButton"
             cartSprite.color = .white
             cartSprite.colorBlendFactor = 1.0
@@ -173,7 +171,7 @@ class PlayerCardNode:SKNode {
     }
     
     /// Makes a Sprite Node from an image name
-    func makeButton(_ imageName:String) -> SKSpriteNode? {
+    class func makeButton(_ imageName:String) -> SKSpriteNode? {
         guard let image = GameImages.commonSystemImage(name: imageName)?.image(with: .white) else {
             return nil
         }
@@ -182,7 +180,8 @@ class PlayerCardNode:SKNode {
         let texture = SKTexture(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: [:])!)
         #else
 //        image.tintColor = .white
-        let texture = SKTexture(cgImage: image.withTintColor(.white, renderingMode: .alwaysTemplate).cgImage!) //SKTexture(image: camImage)
+        let texture = SKTexture(image: image.maskWithColor(color: .white))// .cgImage!)
+//        let texture = SKTexture(cgImage: image.withTintColor(.white, renderingMode: .alwaysTemplate).cgImage!) //SKTexture(image: camImage)
         #endif
         let sprite:SKSpriteNode = SKSpriteNode(texture: texture, color: .white, size: CGSize(width: 36, height: 36))
         return sprite

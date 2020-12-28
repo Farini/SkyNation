@@ -178,9 +178,8 @@ struct GameImages {
         im.isTemplate = true
         return im as SKNImage
         #else
-        guard let image = UIImage(systemName: name)?.withTintColor(.white, renderingMode: .alwaysTemplate) else { fatalError() }
-//        image.tintColor = .white
-        return image // as! SKNImage
+        guard let image = UIImage(systemName: name)?.withTintColor(.white) else { fatalError() }
+        return image.maskWithColor(color: .white)
         #endif
     }
     
@@ -190,36 +189,17 @@ struct GameImages {
     
 }
 
+// MARK: - Notifications
+
 extension Notification.Name {
     
     static let URLRequestFailed  = Notification.Name("URLRequestFailed")        // Any URL Request that fails sends this messsage
     static let DidAddToFavorites = Notification.Name("DidAddToFavorites")       // Add To Favorites Notification
     static let closeView = Notification.Name("CloseView")
     
-//    static let GlobalQuoteUpdate = Notification.Name("GlobalQuoteUpdated")      // Need to check the object, as this may be called by several
-//    static let scopeQuoteUpdate  = Notification.Name("CompanyInScopeUpdate")    // Company in scope
-//    static let StockSearchResult = Notification.Name("StockSearchResult")       // Results of Stock search ([Company] object)
-//
-//    static let TradeFromSearch   = Notification.Name("TradeFromSearch")         // To open the CompanyDetailsController
-//    static let showCompanyDetails = Notification.Name("ShowStockDetails")       // To open the CompanyDetailsController
-//    static let showStockReport = Notification.Name("ShowStockReport")
-//
-//    static let PendingOrderExec  = Notification.Name("PendingOrderExec")
-//
-//    static let chartingUpdates = Notification.Name("ChartingUpdates")
-//
-//    // Update the app
-//    static let appNeedsUpdate = Notification.Name("appNeedsUpdate")
-//
-//    // News
-//    static let articlesFetchComplete = Notification.Name("articlesFetchComplete")
-//
-//    // Purchases
-//    static let purchaseUpdates = Notification.Name("PurchaseUpdates")
-//    static let purchaseRestore = Notification.Name("PurchaseRestore")
 }
 
-
+// MARK: - Images
 
 #if os(macOS)
 public typealias SKNImage = NSImage
@@ -227,4 +207,28 @@ public typealias SCNColor = NSColor
 #else
 public typealias SKNImage = UIImage
 public typealias SCNColor = UIColor
+#endif
+
+#if os(iOS)
+extension UIImage {
+    
+    public func maskWithColor(color: UIColor) -> UIImage {
+        
+        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
+        let context = UIGraphicsGetCurrentContext()!
+        
+        let rect = CGRect(origin: CGPoint.zero, size: size)
+        
+        color.setFill()
+        self.draw(in: rect)
+        
+        context.setBlendMode(.sourceIn)
+        context.fill(rect)
+        
+        let resultImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return resultImage
+    }
+    
+}
 #endif

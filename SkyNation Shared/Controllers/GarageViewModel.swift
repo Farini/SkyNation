@@ -59,9 +59,12 @@ class GarageViewModel:ObservableObject {
     // Data
     @Published var unlockedRecipes:[Recipe]
     @Published var unlockedTech:[TechTree]
+    
+    @Published var vehicleProgress:Double?
+    
     @Published var selectedVehicle:SpaceVehicle?
-    @Published var buildingVehicles:[SpaceVehicle] = []
-    @Published var builtVehicles:[SpaceVehicle] = []
+    @Published var buildingVehicles:[SpaceVehicle] // = []
+    @Published var builtVehicles:[SpaceVehicle] // = []
     @Published var travellingVehicles:[SpaceVehicle] = []
     
     // Available Resources
@@ -87,11 +90,26 @@ class GarageViewModel:ObservableObject {
         tanks = station.truss.getTanks()
         batteries = station.truss.batteries
         peripherals = station.peripherals
-        buildingVehicles = station.garage.buildingVehicles
+        
+        // Lists of Built and Building vehicles
+        var tempBuilding:[SpaceVehicle] = []
+        var tempBuilt:[SpaceVehicle] = []
+        for vehicle in station.garage.buildingVehicles {
+            if let vehicleProg = vehicle.calculateProgress() {
+                if vehicleProg < 1.0 {
+                    tempBuilding.append(vehicle)
+                } else {
+                    tempBuilt.append(vehicle)
+                }
+            }
+        }
+        buildingVehicles = tempBuilding
+        builtVehicles = tempBuilt
+        
         travellingVehicles = LocalDatabase.shared.vehicles
         availablePeople = station.getPeople().filter { $0.isBusy() == false }
         
-        // Afet init
+        // After init
         
         // Loop through Vehicles to see if any one arrived
         for vehicle in travellingVehicles {
@@ -163,6 +181,7 @@ class GarageViewModel:ObservableObject {
         
         guard let vehicle = selectedVehicle else { fatalError() }
         
+        print("Trying to add Peripheral to Vehicle named \(vehicle.name)")
         
 //        if vehicle.contains(where: { $0.id == battery.id }) {
 //        }
@@ -184,6 +203,8 @@ class GarageViewModel:ObservableObject {
     }
     
     // MARK: - New
+    
+    /// Returns whether its (not) possible to build a certain Engine Type
     func disabledEngine(type:EngineType) -> Bool {
         switch type {
         case .Hex6: return false
@@ -193,15 +214,34 @@ class GarageViewModel:ObservableObject {
     
     /// Selected a vehicle that is building
     func didSelectBuilding(vehicle:SpaceVehicle) {
+        
         selectedVehicle = vehicle
         garageStatus = .selectedBuilding(vehicle: vehicle)
+        
+        // Progress
+        if let progress = vehicle.calculateProgress() {
+            if progress < 1 {
+                self.checkProgressLoop(vehicle: vehicle)
+            } else {
+                self.vehicleProgress = 1.0
+                if let deleteIndex = buildingVehicles.firstIndex(where: { $0.id == vehicle.id }) {
+                    self.buildingVehicles.remove(at: deleteIndex)
+                    self.builtVehicles.append(vehicle)
+                    self.garageStatus = .selectedBuildEnd(vehicle: vehicle)
+                    self.station.garage.xp += 1
+                    
+                }
+            }
+        }
     }
     
+    /// Selected a vehicle that has finished building
     func didSelectBuildEnd(vehicle:SpaceVehicle) {
         self.selectedVehicle = vehicle
         garageStatus = .selectedBuildEnd(vehicle: vehicle)
     }
     
+    /// Selected a Vehicle that is currently travelling to Mars
     func didSelectTravelling(vehicle:SpaceVehicle) {
         
         // Check if going to Mars
@@ -225,8 +265,28 @@ class GarageViewModel:ObservableObject {
         garageStatus = .selectedTravel(vehicle: vehicle)
     }
     
-    func startNewVehicle() {
-        garageStatus = .planning(stage: .Engine)
+    /// Starts a loop to update the vehicle's progress
+    private func checkProgressLoop(vehicle:SpaceVehicle) {
+        
+        if selectedVehicle?.id != vehicle.id { return }
+        
+        if let vProgress = vehicle.calculateProgress() {
+            
+            if vProgress < 1 {
+                // keep updating
+                self.vehicleProgress = vProgress
+                print("Updating vehicle progress... \(vProgress)")
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+                    self.checkProgressLoop(vehicle: vehicle)
+                }
+            } else {
+                // Finished. Stop updating
+                self.vehicleProgress = vProgress
+                print("Stop Updating vehicle progress...")
+            }
+        } else {
+            print("There was no vehicle progress")
+        }
     }
     
     // Vehicle Building
@@ -252,17 +312,25 @@ class GarageViewModel:ObservableObject {
         LocalDatabase.shared.saveStation(station: self.station)
         
         // Update View
-        self.cancelPlanning()
+        self.cancelSelection()
     }
     
     // Planning
     
+    /// Sets the UI to start planning new Vehicle
+    func startNewVehicle() {
+        garageStatus = .planning(stage: .Engine)
+    }
+    
+    /// Called when user selects an Engine type, in the planning status
     func newEngine(type:EngineType) {
         let newVehicle = SpaceVehicle(engine: type)
         self.selectedVehicle = newVehicle
         self.garageStatus = .planning(stage: .Satellite)
     }
     
+    // DEPRECATE
+    /*
     func planSatellite(isAdding:Bool) {
         
         // Add on/off to sat
@@ -275,9 +343,14 @@ class GarageViewModel:ObservableObject {
             self.garageStatus = .planning(stage: .Payload)
         }
     }
+    */
     
+    /// Called when Vehicle Engine Setup is Finished
     func didSetupEngine(vehicle:SpaceVehicle) {
+        
         selectedVehicle = vehicle
+        station.garage.xp += 1
+        
         switch vehicle.engine {
             case .Hex6: // Skip payload
                 self.garageStatus = .planning(stage:.Inventory)
@@ -286,8 +359,10 @@ class GarageViewModel:ObservableObject {
         }
     }
     
+    // MARK: - Cancelling
+    
     /// Resets the view to the beginning state
-    func cancelPlanning() {
+    func cancelSelection() {
         self.selectedVehicle = nil
         self.garageStatus = .idle
     }

@@ -37,9 +37,9 @@ enum EngineType:String, Codable, CaseIterable, Hashable {
     }
     
     /// The time for this engine to be ready
-    var time:Int {
+    var time:Double {
         switch self {
-        case .Hex6: return 50
+        case .Hex6: return 18000
         case .T12: return 70
         case .T18: return 100
         case .T22: return 300
@@ -129,31 +129,15 @@ class SpaceVehicle:Codable, Identifiable {
     }
     
     func startBuilding() {
-        var time:Int = 0
+        var time:Double = 0
         time += engine.time
-//        for panel in solar {
-//            time += panel.size
-//        }
-//        if shell != nil {
-//            time += 20
-//        }
-//        if let heat = heatshield {
-//            switch heat {
-//            case .twelve: time += 40
-//            case .eighteen: time += 200
-//            }
-//        }
-//        if let load = payload {
-//            time += load.people.count * 20
-//            time += load.ingredients.count * 10
-//            time += load.tanks.count * 10
-//        }
         self.simulation = 0
         self.status = .Creating
         self.dateTravelStarts = Date().addingTimeInterval(TimeInterval(time))
         self.travelTime = Double(time)
     }
     
+    /// Sets the Vehicle to start travelling to Mars
     func startTravelling() {
         status = .Mars
         dateTravelStarts = Date()
@@ -164,6 +148,37 @@ class SpaceVehicle:Codable, Identifiable {
         let startDate = dateTravelStarts!
         let arriveDate = startDate.addingTimeInterval(travelTime ?? 0)
         return arriveDate
+    }
+    
+    /// Calculate how long to finish the current task (Creating, or Travelling)
+    func calculateProgress() -> Double? {
+        if let dateBegin = dateTravelStarts {
+            switch status {
+                case .Creating:
+                    let dateEnd = dateBegin.addingTimeInterval(engine.time)
+                    let totalSeconds = dateEnd.timeIntervalSince(dateBegin)
+                    let elapsed = Date().timeIntervalSince(dateBegin)
+                    let progress = elapsed / totalSeconds
+                    if elapsed > totalSeconds {
+                        return 1.0
+                    } else {
+                        return progress
+                    }
+                case .Mars:
+                    let oneWeek:TimeInterval = 60 * 60 * 24 * 7
+                    let dateEnd = dateBegin.addingTimeInterval(oneWeek)
+                    let totalSeconds = dateEnd.timeIntervalSince(dateBegin)
+                    let elapsed = Date().timeIntervalSince(dateBegin)
+                    let progress = elapsed / totalSeconds
+                    if elapsed > totalSeconds {
+                        return 1.0
+                    } else {
+                        return progress
+                    }
+                default: return nil
+            }
+        }
+        return nil
     }
     
     func runAccounting() {
@@ -408,7 +423,7 @@ class Garage:Codable {
     
     /// Adds to the array **buildingVehicles**
     func startBuildingVehicle(vehicle:SpaceVehicle) {
-        var time:Int = 0
+        var time:Double = 0
         time += vehicle.engine.time
 //        for panel in solar {
 //            time += panel.size
@@ -431,6 +446,7 @@ class Garage:Codable {
         vehicle.status = .Creating
         vehicle.dateTravelStarts = Date()
         vehicle.travelTime = Double(time)
+        vehicle.antenna = PeripheralObject(peripheral: .Antenna)
         
         self.buildingVehicles.append(vehicle)
     }

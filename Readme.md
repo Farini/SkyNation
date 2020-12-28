@@ -111,6 +111,14 @@ Items being worked on
         - [ ] Update Scene
         - [ ] Show News
         - [ ] Scene is showing Serial builder ahead of time. Check isUnlocked vs isResearched
+        
+- [ ] 2/8 Garage View Improvements
+    - [X] Time to create SpaceVehicle
+    - [X] Circular progress View
+    - [X] Transfer Building Vehicles to Built Vehicles automatically
+    - [ ] Initial Push (Fuel)
+    - [ ] Trajectory (+animations ?)
+    - [ ] Vehicle Row improvements
     
 - [ ] 5/13 Scene Overlay
     - [X] Player
@@ -122,15 +130,16 @@ Items being worked on
     - [X] Better framing
     - [X] Slider that controls Scene camera's X axis
     - [X] News (Centered)
+    - [X] Fix iOS Colors
     - [ ] Put icons inside buttons
     - [ ] Time Token Icon
     - [ ] Delivery Token Icon
     - [ ] Add colors / shaders
     - [ ] 1/3 Camera options + animations
-    - [ ] Orthographic / Perspective view control
-    - [ ] Garage View (From behind)
-    - [ ] Front View
-    - [ ] Improve Background HDRI image
+        - [ ] Orthographic / Perspective view control
+        - [ ] Garage View (From behind)
+        - [ ] Front View
+    
     
 - [ ] 1/3 iOS View Presentation
     - [X] Present view on iPad
@@ -141,7 +150,7 @@ Items being worked on
     - [X] Ingredients and sufficiency
     - [X] Create a general Header View in SwiftUI for all SwiftUI base views
     - [X] Improve People Selection View - Add a mark so user knows when they are selected
-    - [X] Improve Timer View
+    - [X] Improve Timer View 
     - [ ] Improve General Header View
     - [ ] Pass functions (Change skin, Rename, etc.)
     - [ ] Error messages
@@ -163,6 +172,7 @@ Grab things from this list as you go along.
         - [ ] Improve and use PlayerObject
 
 - [ ] 3/13 Station Scene
+    - [ ] Improve Background HDRI image
     - [ ] Loading
     - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
     - [ ] Roboarm animation

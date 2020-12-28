@@ -717,8 +717,8 @@
 			isa = PBXGroup;
 			children = (
 				8536F3C9258D47D000B509D2 /* GarageView.swift */,
-				8536F3CA258D47D000B509D2 /* VehicleInventoryView.swift */,
 				8536F3CB258D47D000B509D2 /* BuildingVehicleView.swift */,
+				8536F3CA258D47D000B509D2 /* VehicleInventoryView.swift */,
 			);
 			path = Garage;
 			sourceTree = "<group>";

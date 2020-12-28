@@ -379,7 +379,7 @@ enum SolarTypeSize:Int, Codable, CaseIterable {
     }
 }
 
-struct SolarPanel:Codable {
+struct SolarPanel:Codable, Identifiable {
     
     var id:UUID = UUID()
     var size:Int        // size of panel

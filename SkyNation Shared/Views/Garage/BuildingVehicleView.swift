@@ -79,11 +79,17 @@ struct BuildingVehicleView: View {
                         Text("K:\(key.rawValue):\(value)")
                             .foregroundColor(builderController.hasIngredients ? .green:.red)
                     }
-                    Button("Charge Ingredients") {
-                        print("Charge?")
-                        builderController.chargeIngredients()
+                    HStack {
+                        Button("Charge Ingredients") {
+                            print("Charge?")
+                            builderController.chargeIngredients()
+                        }
+                        .disabled(!builderController.hasIngredients)
+                        Button("Cancel") {
+                            garageController.cancelSelection()
+                        }
                     }
-                    .disabled(!builderController.hasIngredients)
+                    
                     
                 case .timing(let vehicle):
                     
@@ -95,15 +101,10 @@ struct BuildingVehicleView: View {
                             garageController.didSetupEngine(vehicle: vehicle)
                         }
                         Button("Cancel") {
-                            garageController.cancelPlanning()
+                            garageController.cancelSelection()
                         }
                     }
-                    
-                    
-                    
             }
-            
-            
         }
         .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: .center)
     }

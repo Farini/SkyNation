@@ -98,6 +98,7 @@ struct GarageView: View {
                 // Close
                 Button(action: {
                     print("Close action")
+                    controller.cancelSelection()
                     NotificationCenter.default.post(name: .closeView, object: self)
                 }, label: {
                     Image(systemName: "xmark.circle")
@@ -170,6 +171,10 @@ struct GarageView: View {
                         VStack {
                             Text("GARAGE")
                                 .padding(.bottom, 8)
+                            Text("Build vehicles to send to Mars")
+                                .foregroundColor(.gray)
+                                .padding()
+                            
                             Text("XP: \(controller.garage.xp)")
                             Text("Simulation: \(controller.garage.simulationXP)")
                             Text("Bot Tech: \(controller.garage.botTech)")
@@ -191,31 +196,133 @@ struct GarageView: View {
                 }
                 .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: Alignment.leading)
             case .selectedBuilding(let sev):
-                Group {
-                    Text("Building Vehicle")
-                        .font(.subheadline)
+                ScrollView {
+                    VStack {
+                        Group {
+                            Text("Building Vehicle")
+                                .font(.title)
+                                .padding()
+                            Text("Engine: \(sev.engine.rawValue) | Limit: \(sev.engine.payloadLimit * 100)Kg.")
+                            
+                            HStack {
+                                Image(systemName: "scalemass")
+                                Text("\(sev.engine.payloadLimit * 100)Kg")
+                            }
+                            .font(.headline)
+                            
+                            Text("Simulation: \(sev.simulation) hrs")
+                            Text("Destination: \(sev.status.rawValue)")
+                            Text("Travel Starts: \(GameFormatters.dateFormatter.string(from: sev.dateTravelStarts ?? Date()))")
+                            Text("V Engine: \(sev.engine.rawValue)")
+                            
+                            ForEach(sev.tanks) { tank in
+                                Text("Tank: \(tank.type.rawValue)")
+                                    .foregroundColor(.blue)
+                            }
+                            ForEach(sev.batteries) { battery in
+                                Text("Battery: \(battery.current) of \(battery.capacity)")
+                                    .foregroundColor(.red)
+                            }
+                            ForEach(sev.solar) { panel in
+                                Text("Solar Panel of size: \(panel.size)")
+                                    .foregroundColor(.red)
+                            }
+                        }
+                        
+                        
+                        Text("Status: \(sev.status.rawValue)")
+                            .padding()
+                            .font(.title)
+                            .foregroundColor(.orange)
+                        
+                        // Progress
+                        CirclePercentIndicator(percentage: CGFloat(controller.vehicleProgress ?? 0.0))
+                        
+                        Divider()
+                        HStack {
+                            Button("Launch") {
+                                controller.launch(vehicle: sev)
+                            }
+                            .disabled(controller.vehicleProgress ?? 0 < 1)
+                            
+                            Button("Cancel") {
+                                print("Cancelling")
+                                controller.cancelSelection()
+                            }
+                            
+                            Button("Simulate") {
+                                print("Go Simulate")
+                                
+                            }
+                        }
                         .padding()
-                    Text("Engine: \(sev.engine.rawValue) | Limit: \(sev.engine.payloadLimit)Kg.")
-                    Text("Simulation: \(sev.simulation) hrs")
-                    Text("Destination: \(sev.status.rawValue)")
-                    Text("Travel Starts: \(GameFormatters.dateFormatter.string(from: sev.dateTravelStarts ?? Date()))")
-                    Text("V Engine: \(sev.engine.rawValue)")
-                    Divider()
-                    HStack {
-                        Button("Launch") {
-                            controller.launch(vehicle: sev)
-                        }
-                        Button("Cancel") {
-                            print("Cancelling")
-                            controller.cancelPlanning()
-                        }
+                        
                     }
                 }
                 .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: Alignment.leading)
+                
             case .selectedBuildEnd(let sev):
-                VStack {
-                    Text("Build finished")
-                    Text("V Engine: \(sev.engine.rawValue)")
+                ScrollView {
+                    VStack {
+                        Group {
+                            Text("Building Vehicle")
+                                .font(.title)
+                                .padding()
+                            Text("Engine: \(sev.engine.rawValue) | Limit: \(sev.engine.payloadLimit * 100)Kg.")
+                            
+                            HStack {
+                                Image(systemName: "scalemass")
+                                Text("\(sev.engine.payloadLimit * 100)Kg")
+                            }
+                            .font(.headline)
+                            
+                            Text("Simulation: \(sev.simulation) hrs")
+                            Text("Destination: \(sev.status.rawValue)")
+                            Text("Travel Starts: \(GameFormatters.dateFormatter.string(from: sev.dateTravelStarts ?? Date()))")
+                            Text("V Engine: \(sev.engine.rawValue)")
+                            
+                            ForEach(sev.tanks) { tank in
+                                Text("Tank: \(tank.type.rawValue)")
+                                    .foregroundColor(.blue)
+                            }
+                            ForEach(sev.batteries) { battery in
+                                Text("Battery: \(battery.current) of \(battery.capacity)")
+                                    .foregroundColor(.red)
+                            }
+                            ForEach(sev.solar) { panel in
+                                Text("Solar Panel of size: \(panel.size)")
+                                    .foregroundColor(.red)
+                            }
+                        }
+                        
+                        
+                        Text("Status: \(sev.status.rawValue)")
+                            .padding()
+                            .font(.title)
+                            .foregroundColor(.orange)
+                        
+                        // Progress
+//                        CirclePercentIndicator(percentage: CGFloat(controller.vehicleProgress ?? 0.0))
+                        
+                        Divider()
+                        HStack {
+                            Button("🚀 Launch") {
+                                controller.launch(vehicle: sev)
+                            }
+                            .disabled(controller.vehicleProgress ?? 0 < 1)
+                            
+                            Button("Cancel") {
+                                print("Cancelling")
+                                controller.cancelSelection()
+                            }
+                            
+                            Button("Simulate") {
+                                print("Go Simulate")
+                                
+                            }
+                        }
+                        .padding()
+                    }
                 }
                 .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: Alignment.leading)
                 
@@ -352,7 +459,7 @@ struct VehicleBuiltView: View {
                 .padding()
                 Button("Cancel") {
                     print("Cancel")
-                    controller.cancelPlanning()
+                    controller.cancelSelection()
                 }
                 .padding()
             }
@@ -445,7 +552,7 @@ struct TravellingVehicleView: View {
                             }
                             Button("Cancel") {
                                 print("Cancelling")
-                                controller.cancelPlanning()
+                                controller.cancelSelection()
                                 
                             }
                         }
@@ -462,7 +569,7 @@ struct TravellingVehicleView: View {
                             
                             Button("<< Go Back") {
                                 print("Cancelling")
-                                controller.cancelPlanning()
+                                controller.cancelSelection()
                             }
                             
                             if let bot = vehicle.marsBot {
@@ -492,7 +599,7 @@ struct TravellingVehicleView: View {
                         HStack {
                             Button("<< Go Back") {
                                 print("Cancelling")
-                                controller.cancelPlanning()
+                                controller.cancelSelection()
                             }
                         }
                         .padding()
@@ -502,7 +609,7 @@ struct TravellingVehicleView: View {
                         HStack {
                             Button("<< Go Back") {
                                 print("Cancelling")
-                                controller.cancelPlanning()
+                                controller.cancelSelection()
                             }
                         }
                         .padding()
@@ -549,8 +656,10 @@ struct NewTankView: View {
                             }
                             .padding()
                         }
+                        .background(Color.black)
                         .border(Color.gray, width:2)
                         .cornerRadius(12)
+                        
                     }
             }
             .padding()

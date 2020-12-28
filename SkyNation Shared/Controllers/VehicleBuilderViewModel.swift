@@ -106,28 +106,6 @@ class VehicleBuilderViewModel:ObservableObject {
         } else {
             self.hasIngredients = false
         }
-        
-        //        if station.truss.canCharge(ingredients: required) {
-        //            hasIngredients = true
-        //        }else{
-        //            hasIngredients = false
-        //        }
-        //
-        //        var missingIngredients:[Ingredient] = []
-        //        for (key, value) in required {
-        //            var valueCount:Int = value
-        //            for box in station.truss.extraBoxes.filter({ $0.type == key }) {
-        //                valueCount -= box.current
-        //            }
-        //            if valueCount > 0 {
-        //                missingIngredients.append(key)
-        //            }
-        //        }
-        //        if missingIngredients.isEmpty {
-        //            hasIngredients = true
-        //        }else{
-        //            hasIngredients = false
-        //        }
     }
     
     func chargeIngredients() {
