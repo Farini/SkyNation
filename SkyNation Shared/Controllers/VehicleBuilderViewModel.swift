@@ -12,6 +12,7 @@ enum SVBuildStage {
     case engineType
     case pickEngineers(type:EngineType)
     case pickMaterials(type:EngineType)
+    case namingVehicle(vehicle:SpaceVehicle)
     case timing(vehicle:SpaceVehicle)
 }
 
@@ -39,6 +40,7 @@ class VehicleBuilderViewModel:ObservableObject {
         availablePeople = station.getPeople().filter { $0.isBusy() == false }
     }
     
+    /// When user selected an Engine
     func newEngine(type:EngineType) {
         let newVehicle = SpaceVehicle(engine: type)
         self.vehicle = newVehicle
@@ -46,10 +48,7 @@ class VehicleBuilderViewModel:ObservableObject {
         self.buildStage = .pickEngineers(type: type)
     }
     
-    func buildEngine() {
-        print("Building Engine")
-    }
-    
+    /// Engineer to build the engine
     func addEngineerToBuild(person:Person) {
         workersArray.append(person)
         updateStaffList()
@@ -95,6 +94,7 @@ class VehicleBuilderViewModel:ObservableObject {
         }
     }
     
+    /// Checks that the user has the necessary ingredients to build the engine
     func checkIngredients(engine:EngineType) {
         
         self.buildStage = .pickMaterials(type: engine)
@@ -108,12 +108,25 @@ class VehicleBuilderViewModel:ObservableObject {
         }
     }
     
+    /// Charge the ingredients of the station
     func chargeIngredients() {
+        guard let vehicle = vehicle else { fatalError() }
         print("Charge ingredients...")
         print("Pending the making of the function in station.truss")
-        buildStage = .timing(vehicle:vehicle!)
+        print("Needs to update the Engineers and set their **LABACTIVITY** object")
+        // FIXME: - Charge Ingredients
+        // FIXME: - Update Person's Activity
+        buildStage = .namingVehicle(vehicle: vehicle)//.timing(vehicle:vehicle!)
     }
     
+    /// User gave the Vehicle a name
+    func didNameVehicle(_ name:String) {
+        guard let vehicle = vehicle else { fatalError() }
+        vehicle.name = name
+        self.buildStage = .timing(vehicle: vehicle)
+    }
+    
+    /// The state of each `Create engine` Button
     func disabledEngine(type:EngineType) -> Bool {
         switch type {
             case .Hex6: return false

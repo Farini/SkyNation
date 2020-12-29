@@ -125,7 +125,7 @@ struct GarageView: View {
                                     .foregroundColor(.gray)
                             }else{
                                 ForEach(controller.buildingVehicles) { vehicle in
-                                    Text("Vehicle \(vehicle.engine.rawValue)")
+                                    SpaceVehicleRow(vehicle:vehicle, selected:controller.selectedVehicle == vehicle)
                                         .onTapGesture() {
                                             self.didSelectBuilding(vehicle: vehicle)
                                         }
@@ -139,7 +139,7 @@ struct GarageView: View {
                                     .foregroundColor(.gray)
                             }else{
                                 ForEach(controller.builtVehicles) { vehicle in
-                                    Text("Vehicle \(vehicle.engine.rawValue)")
+                                    SpaceVehicleRow(vehicle:vehicle, selected:controller.selectedVehicle == vehicle)
                                         .onTapGesture() {
                                             self.didSelectBuilt(vehicle: vehicle)
                                         }
@@ -154,14 +154,13 @@ struct GarageView: View {
                                     .foregroundColor(.gray)
                             }else{
                                 ForEach(controller.travellingVehicles) { vehicle in
-                                    Text("Vehicle \(vehicle.engine.rawValue)")
+                                    SpaceVehicleRow(vehicle:vehicle, selected:controller.selectedVehicle == vehicle)
                                         .onTapGesture() {
                                             self.didSelectTravelling(vehicle: vehicle)
                                         }
                                 }
                             }
                         }
-                        
                     }
                     .frame(minWidth: 140, idealWidth: 140, maxWidth: 180, minHeight: 500, maxHeight: 600, alignment: Alignment.leading)
                     Spacer(minLength: 4)
@@ -620,51 +619,36 @@ struct TravellingVehicleView: View {
     }
 }
 
-struct NewTankView: View {
-    /// Grid View (1 row)
-    private var gridRow:[GridItem] = [
-        GridItem(.fixed(100), spacing: 12)
-    ]
+struct SpaceVehicleRow: View {
     
-    var tanks:[Tank] // = [Tank(type: .o2), Tank(type: .ch4), Tank(type: .co2)]
-    
-    init(tanks:[Tank]) {
-        self.tanks = tanks
-    }
+    var vehicle:SpaceVehicle
+    var selected:Bool = false
     
     var body: some View {
-        ScrollView {
-            LazyHGrid(rows: gridRow, alignment: .center, spacing: 12, pinnedViews: [.sectionHeaders, .sectionFooters]) {
+        
+        // Total
+        let ttlCount = vehicle.tanks.count + vehicle.batteries.count + (vehicle.antenna != nil ? 1:0)
+        
+        HStack {
+            Text(selected ? "●":"○")
+            
+            VStack(alignment: .leading) {
+                Text("🚀 \(vehicle.name): \(vehicle.engine.rawValue)")
+                    .font(.headline)
                 
-                    ForEach(tanks) { tank in
-                        ZStack {
-                            VStack {
-                                Image("Tank")
-                                    .resizable()
-                                    .frame(width: 48, height: 48, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                                    .aspectRatio(contentMode: .fit)
-                                
-                                HStack {
-                                    Text(tank.type.rawValue)
-                                        .font(.title)
-                                    Button(action: {
-                                        print("Remove this tank")
-                                    }, label: {
-                                        Image(systemName: "trash")
-                                    })
-                                }
-                            }
-                            .padding()
-                        }
-                        .background(Color.black)
-                        .border(Color.gray, width:2)
-                        .cornerRadius(12)
-                        
-                    }
+                // Add Weight
+                HStack {
+                    
+                    Image(systemName: "scalemass")
+                        .font(.headline)
+                    
+                    Text("\(ttlCount) of \(vehicle.engine.payloadLimit)")
+                    
+                }
+                .foregroundColor(ttlCount == vehicle.engine.payloadLimit ? .orange:.gray)
             }
-            .padding()
         }
-        .frame(minWidth: 300, idealHeight:140, maxHeight: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        
     }
 }
 
@@ -677,41 +661,8 @@ struct GarageView_Previews: PreviewProvider {
     }
 }
 
-struct NewTankview_Previews: PreviewProvider {
+struct VehicleRow_Preview: PreviewProvider {
     static var previews: some View {
-        NewTankView(tanks:[Tank(type: .o2), Tank(type: .ch4), Tank(type: .co2)])
+        SpaceVehicleRow(vehicle: SpaceVehicle(engine: .Hex6))
     }
 }
-
-/*
-struct VehicleBuildingView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        let model = GarageViewModel()
-        let vehicle = SpaceVehicle(engine: .Hex6)
-        model.selectedVehicle = vehicle
-        return VehicleBuildingView(controller: model)
-    }
-}
-*/
-/*
-struct VehicleBuilt_Preview: PreviewProvider {
-    static var previews: some View {
-        let model = GarageViewModel()
-        let vehicle = SpaceVehicle.builtExample()
-        model.selectedVehicle = vehicle
-        return VehicleBuiltView(controller: model, vehicle: vehicle)
-    }
-}
-*/
-/*
-struct TravellingVehicles_Previews: PreviewProvider {
-    static var previews: some View {
-        let model = GarageViewModel()
-        let vehicle = SpaceVehicle.builtExample()
-        model.selectedVehicle = vehicle
-        return TravellingVehicleView(controller: model, vehicle: vehicle)
-    }
-}
-*/
-

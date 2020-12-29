@@ -11,7 +11,7 @@ import SwiftUI
 struct VehicleInventoryView: View {
     
     @ObservedObject var controller:GarageViewModel
-    var vehicle:SpaceVehicle?
+    var vehicle:SpaceVehicle
     
     // Resources
     @State var tanks:[Tank] = []
@@ -74,79 +74,99 @@ struct VehicleInventoryView: View {
             }
             .frame(minWidth:180, maxWidth:220)
             
+            // Total
+            let ttlCount = peripherals.count + tanks.count + batteries.count
+            
             // Right (The view)
-            ScrollView {
+            Group {
                 
                 VStack(alignment: .center) {
                     
-                    Text("Vehicle Engine: \(controller.selectedVehicle!.engine.rawValue)")
-                    Text("Select Resources")
-                        .font(.title)
-                        .foregroundColor(.orange)
-                        .padding()
-                    
-                    // Tanks
-                    Text("Tanks: \(tanks.count)")
-                        .font(.title)
-                        .padding()
-                    
-                    NewTankView(tanks: tanks)
-                    
-                    // Batteries
-                    Text("Batteries: \(batteries.count)")
-                        .font(.title)
-                        .padding()
-                    
-                    ForEach(batteries) { battery in
-                        HStack {
-                            Image("carBattery")
-                                .renderingMode(.template)
-                                .resizable()
-                                .colorMultiply(.red)
-                                .frame(width: 32.0, height: 32.0)
-                            FixedLevelBar(min: 0.0, max: Double(battery.capacity), current: Double(battery.current), title: "Health", color: .red)
-                        }
-                    }
-                    
-                    // Peripherals
-                    Text("Peripherals \(peripherals.count)")
-                        .font(.title)
-                        .padding()
-                    
-                    ForEach(peripherals) { peripheral in
-                        HStack {
-                            peripheral.getImage()
-                            VStack {
-                                Text("\(peripheral.peripheral.rawValue)")
-                                Text("Level \(peripheral.level) | \(peripheral.isBroken ? "Broken":"Working")")
-                            }
+                    // Header
+                    Group {
+                        Text("Vehicle Resources")
+                            .font(.headline)
+                            .foregroundColor(.orange)
+                            .padding(.top)
+                        
+                        Text("Select items from the list to add to the Space Vehicle. Select them again to remove.")
+                            .foregroundColor(.gray)
+                            .padding([.leading, .trailing])
+                            .font(.footnote)
+                        
+                        Group {
                             
+                            HStack(alignment:.center, spacing:8) {
+                                VStack {
+                                    Text("🚀").font(.largeTitle)
+                                    HStack {
+                                        Text(vehicle.name)
+                                            .font(.headline)
+                                            .foregroundColor(.blue)
+                                        
+                                        Text("\(vehicle.engine.rawValue)")
+                                            .foregroundColor(.gray)
+                                    }
+                                }
+                                Spacer()
+                                HStack {
+                                    Image(systemName: "scalemass")
+                                        .font(.title)
+                                    
+                                    Text("Payload: \(ttlCount) of \(vehicle.engine.payloadLimit)")
+                                        .foregroundColor(ttlCount > vehicle.engine.payloadLimit ? .red:.green)
+                                }
+                                .padding([.top, .bottom], 8)
+                                .frame(width: 170)
+                                .background(Color.white.opacity(0.1))
+                                .cornerRadius(4.0)
+                            }
+                        }
+                        .padding()
+                    }
+                    
+                    Divider()
+                    
+                    ScrollView(.vertical, showsIndicators: true) {
+                        // Tanks
+                        Text("Tanks: \(tanks.count)")
+                            .font(.headline)
+                            .padding([.top])
+                        TankCollectionView(tanks)
+                            .padding([.trailing])
+                        
+                        // Batteries
+                        Text("Batteries: \(batteries.count)")
+                            .font(.headline)
+                            .padding([.top])
+                        BatteryCollectionView(batteries)
+                            .padding([.trailing])
+                        
+                        // Peripherals
+                        Text("Peripherals: \(peripherals.count)")
+                            .font(.headline)
+                            .padding([.top])
+                        PeripheralCollectionView(peripherals)
+                            .padding([.trailing])
+                        
+                        // Antenna
+                        if vehicle.antenna != nil {
+                            Text("Antenna level \(controller.selectedVehicle!.antenna!.level)")
+                        } else {
+                            Text("Antenna: none")
+                                .foregroundColor(.red)
                         }
                     }
+                    
+                    Divider()
+                    
+                    Button("Done") {
+                        print("Done adding stuff")
+                        controller.startBuilding(vehicle: vehicle)
+                    }
+                    .disabled(ttlCount > vehicle.engine.payloadLimit)
+                    .padding()
                 }
-                
-                // Antenna
-                if vehicle?.antenna != nil {
-                    Text("Antenna: \(controller.selectedVehicle!.antenna!.peripheral.rawValue)")
-                }else{
-                    Text("Antenna: none")
-                        .foregroundColor(.red)
-                }
-                
-                // Total
-                let ttlCount = peripherals.count + tanks.count + batteries.count
-                Text("Payload count: \(ttlCount) of \(vehicle!.engine.payloadLimit)")
-                    .foregroundColor(ttlCount > vehicle!.engine.payloadLimit ? .red:.green)
-                
-                
-                Divider()
-                
-                Button("Done") {
-                    print("Done adding stuff")
-                    guard let sev = self.vehicle else { fatalError() }
-                    controller.startBuilding(vehicle: sev)
-                }
-                .disabled(ttlCount > vehicle!.engine.payloadLimit)
             }
         }
     }

@@ -112,13 +112,14 @@ Items being worked on
         - [ ] Show News
         - [ ] Scene is showing Serial builder ahead of time. Check isUnlocked vs isResearched
         
-- [ ] 2/8 Garage View Improvements
+- [ ] 4/8 Garage View Improvements
     - [X] Time to create SpaceVehicle
     - [X] Circular progress View
     - [X] Transfer Building Vehicles to Built Vehicles automatically
+    - [X] Vehicle Row improvements
+    - [X] Better Vehicle Assembly
     - [ ] Initial Push (Fuel)
     - [ ] Trajectory (+animations ?)
-    - [ ] Vehicle Row improvements
     
 - [ ] 5/13 Scene Overlay
     - [X] Player
@@ -136,9 +137,11 @@ Items being worked on
     - [ ] Delivery Token Icon
     - [ ] Add colors / shaders
     - [ ] 1/3 Camera options + animations
-        - [ ] Orthographic / Perspective view control
-        - [ ] Garage View (From behind)
-        - [ ] Front View
+        - [X] Perspective view
+        - [X] Garage View - CameraBack
+        - [X] Front View - CameraFront
+        - [ ] Bring Regular Camera Closer to Scene
+        - [ ] Adjust Scaling (Focal Length)? of Cameras
     
     
 - [ ] 1/3 iOS View Presentation

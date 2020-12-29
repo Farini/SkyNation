@@ -237,8 +237,25 @@ class GarageViewModel:ObservableObject {
     
     /// Selected a vehicle that has finished building
     func didSelectBuildEnd(vehicle:SpaceVehicle) {
-        self.selectedVehicle = vehicle
+        
+        selectedVehicle = vehicle
         garageStatus = .selectedBuildEnd(vehicle: vehicle)
+        
+        // Progress
+        if let progress = vehicle.calculateProgress() {
+            if progress < 1 {
+                self.checkProgressLoop(vehicle: vehicle)
+            } else {
+                self.vehicleProgress = 1.0
+                if let deleteIndex = buildingVehicles.firstIndex(where: { $0.id == vehicle.id }) {
+                    self.buildingVehicles.remove(at: deleteIndex)
+                    self.builtVehicles.append(vehicle)
+                    self.garageStatus = .selectedBuildEnd(vehicle: vehicle)
+                    self.station.garage.xp += 1
+                    
+                }
+            }
+        }
     }
     
     /// Selected a Vehicle that is currently travelling to Mars

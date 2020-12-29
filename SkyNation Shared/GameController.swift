@@ -67,12 +67,14 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 
                 // Camera Rotations
                 if sprite.name == "rotate.left" {
-                    self.cameraNode?.eulerAngles.y += 15 * (.pi / 180)
+//                    self.cameraNode?.eulerAngles.y += 15 * (.pi / 180)
+                    self.switchToBackCamera()
                     return
                 }
                 
                 if sprite.name == "rotate.right" {
-                    self.cameraNode?.eulerAngles.y += -15 * (.pi / 180)
+//                    self.cameraNode?.eulerAngles.y += -15 * (.pi / 180)
+                    self.switchToFrontCamera()
                     return
                 }
                 
@@ -258,6 +260,46 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     func hideCameraMenu() {
         print("Hide the camera menu")
         stationOverlay.toggleCamControl()
+    }
+    
+    func switchToFrontCamera() {
+        print("Moving camera ???????")
+        if let front = scene.rootNode.childNode(withName: "CameraFront", recursively: false) {
+            print("Found Camera Front")
+            let position = front.position
+            let euler = front.eulerAngles
+            let moveAction = SCNAction.move(to: position, duration: 2.2)
+            #if os(macOS)
+            let rotateAction = SCNAction.rotateTo(x: euler.x, y: euler.y, z: euler.z, duration: 2.2, usesShortestUnitArc: true)
+            #else
+            let rotateAction = SCNAction.rotateTo(x: CGFloat(euler.x), y: CGFloat(euler.y), z: CGFloat(euler.z), duration: 2.2, usesShortestUnitArc: true)
+            #endif
+            let moveGroup = SCNAction.group([moveAction, rotateAction])
+            cameraNode?.runAction(moveGroup) {
+//                self.cameraNode?.camera?.usesOrthographicProjection = false
+                print("Camera Finished Moving")
+            }
+        }
+    }
+    
+    func switchToBackCamera() {
+        print("Moving camera ???????")
+        if let front = scene.rootNode.childNode(withName: "CameraBack", recursively: false) {
+            print("Found Camera Front")
+            let position = front.position
+            let euler = front.eulerAngles
+            let moveAction = SCNAction.move(to: position, duration: 2.2)
+            #if os(macOS)
+            let rotateAction = SCNAction.rotateTo(x: euler.x, y: euler.y, z: euler.z, duration: 2.2, usesShortestUnitArc: true)
+            #else
+            let rotateAction = SCNAction.rotateTo(x: CGFloat(euler.x), y: CGFloat(euler.y), z: CGFloat(euler.z), duration: 2.2, usesShortestUnitArc: true)
+            #endif
+            let moveGroup = SCNAction.group([moveAction, rotateAction])
+            cameraNode?.runAction(moveGroup) {
+//                self.cameraNode?.camera?.usesOrthographicProjection = false
+                print("Camera Finished Moving")
+            }
+        }
     }
     
     // MARK: - Updates
@@ -602,7 +644,7 @@ extension TechItems {
             // Need to get the models
             case .garage:
                 let garageScene = SCNScene(named: "Art.scnassets/Garage.scn")!
-                if let garageObj = garageScene.rootNode.childNode(withName:"Garage", recursively: false)?.clone() {
+                if let garageObj = garageScene.rootNode.childNode(withName:"Garage", recursively: true)?.clone() {
                     let pos = Vector3D(x: 0, y: 0, z: -46)
                     #if os(macOS)
                     garageObj.position = SCNVector3(x: CGFloat(pos.x), y: CGFloat(pos.y), z: CGFloat(pos.z))

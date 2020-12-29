@@ -97,7 +97,9 @@ enum MarsBot:String, Codable, CaseIterable, Hashable {
     
 }
 
-class SpaceVehicle:Codable, Identifiable {
+class SpaceVehicle:Codable, Identifiable, Equatable {
+    
+    
     
     var id:UUID = UUID()
     var engine:EngineType           // [1] - Setup
@@ -398,6 +400,10 @@ class SpaceVehicle:Codable, Identifiable {
         vehicle.name = "Tester T18"
         
         return vehicle
+    }
+    
+    static func == (lhs: SpaceVehicle, rhs: SpaceVehicle) -> Bool {
+        return lhs.id == rhs.id
     }
     
 }
