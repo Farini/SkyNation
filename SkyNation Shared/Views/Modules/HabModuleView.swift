@@ -115,6 +115,8 @@ struct HabModuleView: View {
                         .font(.subheadline)
                     Spacer()
                 }
+                .frame(minWidth: 500, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: 275, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment:.topLeading)
+                
             }else{
                 HStack {
                     // Left List
@@ -150,6 +152,7 @@ struct HabModuleView: View {
                     
                     Spacer()
                 }
+                .frame(minWidth: 500, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: 275, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment:.topLeading)
             }
         }
     }

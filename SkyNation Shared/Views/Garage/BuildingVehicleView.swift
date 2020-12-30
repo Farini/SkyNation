@@ -68,10 +68,10 @@ struct BuildingVehicleView: View {
                         }
                     }
                     
-                        Button("Build Engine") {
-                            builderController.checkIngredients(engine: engine)
-                        }
-                        .disabled(!builderController.hasSkills)
+                    Button("Build Engine") {
+                        builderController.checkIngredients(engine: engine)
+                    }
+                    .disabled(!builderController.hasSkills)
                     
                 case .pickMaterials(let engine):
                     let dicSort = engine.ingredients.sorted(by: {$0.key.rawValue < $1.key.rawValue })

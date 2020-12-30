@@ -178,14 +178,13 @@ struct PersonDetail:View {
                     .accentColor(.orange)
                     
                     HStack {
-                        ForEach(0..<person.skills.count) { idx in
-                            GameImages.imageForSkill(skill: person.skills[idx].skill)
+                        ForEach(person.skills, id:\.skill) { skillSet in
+                            GameImages.imageForSkill(skill: skillSet.skill)
                                 .resizable()
                                 .aspectRatio(contentMode:.fit)
                                 .frame(width:22, height:22)
                         }
                     }
-                    
                 }
                 Spacer(minLength: 50)
             }// .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)

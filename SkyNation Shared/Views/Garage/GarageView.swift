@@ -251,7 +251,11 @@ struct GarageView: View {
                             
                             Button("Simulate") {
                                 print("Go Simulate")
-                                
+                            }
+                            
+                            Button("Inventory") {
+                                print("Go to Inventory")
+                                controller.setupInventory(vehicle: sev)
                             }
                         }
                         .padding()
@@ -317,7 +321,11 @@ struct GarageView: View {
                             
                             Button("Simulate") {
                                 print("Go Simulate")
-                                
+                            }
+                            
+                            Button("Inventory") {
+                                print("Go to Inventory")
+                                controller.setupInventory(vehicle: sev)
                             }
                         }
                         .padding()
@@ -336,13 +344,15 @@ struct GarageView: View {
                 switch stage {
                 case .Engine:     // Selecting Engine
                     BuildingVehicleView(garageController: controller)
-                    
-                case .Satellite:  // Selecting Satellite
-                    Text("Satellite is deprecated. Choose robot instead")
+                
+                // DEPRECATE
+//                case .Satellite:  // Selecting Satellite
+//                    Text("Satellite is deprecated. Choose robot instead")
 
                 case .Inventory:  // Adding Tanks, Batteries, etc
                     VehicleInventoryView(controller: controller)
-                    
+                
+                // DEPRECATE
                 case .Payload:    // Adding Payload (RSS, robot, etc.)
                     Group {
                         Text("3 - Choose Payload")
@@ -375,8 +385,11 @@ struct GarageView: View {
                         Text("Passengers")
                         Text("Passengers")
                     }
+                    
+                    
                 case .Confirm:    // Confirming
-                    VehicleBuiltView(controller: self.controller, vehicle: (controller.selectedVehicle ?? self.vehicle) ?? SpaceVehicle(engine: .Hex6))
+                    Text("Confirm")
+//                    VehicleBuiltView(controller: self.controller, vehicle: (controller.selectedVehicle ?? self.vehicle) ?? SpaceVehicle(engine: .Hex6))
                 }
                 
             case .simulating:
@@ -401,8 +414,43 @@ struct GarageView: View {
     }
 }
 
-// MARK: - Vehicles Selected
+// MARK: - Vehicle Row
 
+struct SpaceVehicleRow: View {
+    
+    var vehicle:SpaceVehicle
+    var selected:Bool = false
+    
+    var body: some View {
+        
+        // Total
+        let ttlCount = vehicle.tanks.count + vehicle.batteries.count + (vehicle.antenna != nil ? 1:0)
+        
+        HStack {
+            Text(selected ? "●":"○")
+            
+            VStack(alignment: .leading) {
+                Text("🚀 \(vehicle.name): \(vehicle.engine.rawValue)")
+                    .font(.headline)
+                
+                // Add Weight
+                HStack {
+                    
+                    Image(systemName: "scalemass")
+                        .font(.headline)
+                    
+                    Text("\(ttlCount) of \(vehicle.engine.payloadLimit)")
+                    
+                }
+                .foregroundColor(ttlCount == vehicle.engine.payloadLimit ? .orange:.gray)
+            }
+        }
+        
+    }
+}
+
+// MARK: - Vehicles Selected
+/*
 struct VehicleBuiltView: View {
     
     @ObservedObject var controller:GarageViewModel
@@ -466,6 +514,7 @@ struct VehicleBuiltView: View {
     }
     
 }
+*/
 
 struct TravellingVehicleView: View {
     
@@ -618,40 +667,6 @@ struct TravellingVehicleView: View {
         }
     }
 }
-
-struct SpaceVehicleRow: View {
-    
-    var vehicle:SpaceVehicle
-    var selected:Bool = false
-    
-    var body: some View {
-        
-        // Total
-        let ttlCount = vehicle.tanks.count + vehicle.batteries.count + (vehicle.antenna != nil ? 1:0)
-        
-        HStack {
-            Text(selected ? "●":"○")
-            
-            VStack(alignment: .leading) {
-                Text("🚀 \(vehicle.name): \(vehicle.engine.rawValue)")
-                    .font(.headline)
-                
-                // Add Weight
-                HStack {
-                    
-                    Image(systemName: "scalemass")
-                        .font(.headline)
-                    
-                    Text("\(ttlCount) of \(vehicle.engine.payloadLimit)")
-                    
-                }
-                .foregroundColor(ttlCount == vehicle.engine.payloadLimit ? .orange:.gray)
-            }
-        }
-        
-    }
-}
-
 
 // MARK: - Previews
 

@@ -549,10 +549,10 @@
 			children = (
 				8536F434258D47EA00B509D2 /* EarthRequestController.swift */,
 				8536F437258D47EA00B509D2 /* LifeSupportSystems.swift */,
+				8536F432258D47EA00B509D2 /* ModulesViewModel.swift */,
+				8536F435258D47EA00B509D2 /* LabViewModel.swift */,
 				8536F438258D47EA00B509D2 /* BioModController.swift */,
 				8536F433258D47EA00B509D2 /* GarageViewModel.swift */,
-				8536F435258D47EA00B509D2 /* LabViewModel.swift */,
-				8536F432258D47EA00B509D2 /* ModulesViewModel.swift */,
 				8536F436258D47EA00B509D2 /* VehicleBuilderViewModel.swift */,
 			);
 			path = Controllers;

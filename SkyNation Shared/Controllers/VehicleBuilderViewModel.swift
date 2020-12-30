@@ -14,6 +14,7 @@ enum SVBuildStage {
     case pickMaterials(type:EngineType)
     case namingVehicle(vehicle:SpaceVehicle)
     case timing(vehicle:SpaceVehicle)
+    
 }
 
 class VehicleBuilderViewModel:ObservableObject {

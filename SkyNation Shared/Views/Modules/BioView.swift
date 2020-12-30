@@ -294,6 +294,8 @@ struct BioView: View {
                     
                 }
             }
+            .frame(minWidth: 500, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: 250, maxHeight: .infinity, alignment:.topLeading)
+            
         }
         .frame(minWidth: 500, idealWidth: 600, maxWidth: 800, alignment: .top)
     }

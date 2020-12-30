@@ -151,7 +151,7 @@ struct VehicleInventoryView: View {
                         
                         // Antenna
                         if vehicle.antenna != nil {
-                            Text("Antenna level \(controller.selectedVehicle!.antenna!.level)")
+                            Text("Antenna level \(vehicle.antenna!.level)")
                         } else {
                             Text("Antenna: none")
                                 .foregroundColor(.red)
@@ -159,10 +159,14 @@ struct VehicleInventoryView: View {
                     }
                     
                     Divider()
-                    
-                    Button("Done") {
+                    Text("Once the continue button is hit, you can't put the inventory of this vehicle back in the station")
+                        .foregroundColor(.gray)
+                        .padding([.leading, .trailing])
+                    Button("Continue") {
                         print("Done adding stuff")
-                        controller.startBuilding(vehicle: vehicle)
+//                        controller.startBuilding(vehicle: vehicle)
+                        controller.didFinishInventory(vehicle: vehicle)
+                        
                     }
                     .disabled(ttlCount > vehicle.engine.payloadLimit)
                     .padding()

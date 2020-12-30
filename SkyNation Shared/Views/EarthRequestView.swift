@@ -210,6 +210,7 @@ struct EarthRequestView: View {
                 }
                 Divider()
             }
+            .frame(minWidth: 500, maxWidth: .infinity, minHeight: 275, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment:.topLeading)
             
             Divider()
             
@@ -274,7 +275,7 @@ struct EarthRequestView: View {
             }
             .padding(.vertical)
         }
-        .frame(height: 600)
+//        .frame(height: 600)
         
     }
     

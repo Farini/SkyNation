@@ -19,7 +19,10 @@ enum GarageStatus {
 
 enum VehicleBuildingStage {
     case Engine     // Selecting Engine
-    case Satellite  // Selecting Satellite
+    
+    // DECPRECATE
+//    case Satellite  // Selecting Satellite
+    
     case Inventory  // Adding Tanks, Batteries, etc
     case Payload    // Adding Payload (RSS, robot, etc.)
     case Passengers // Selecting Passengers
@@ -27,7 +30,7 @@ enum VehicleBuildingStage {
     case Paying     // Paying
     case Confirm    // Confirming
 }
-
+/*
 enum GarageProgressType {
     case none           // Looking at other vehicles, or main screen
     case engine         // Building V - Deciding what engine
@@ -47,6 +50,7 @@ enum GarageProgressType {
     // show costs + charge
     case viewMission
 }
+*/
 
 class GarageViewModel:ObservableObject {
     
@@ -124,32 +128,10 @@ class GarageViewModel:ObservableObject {
         }
     }
     
-    func build(vehicle:SpaceVehicle) {
-        
-        // + Antenna
-        // + Solar
-        // + Peripherals
-        // + Shell
-        // [X] Batteries
-        // [X] Tanks (fuel)
-        
-        // Batteries
-        let batteryOptions = station.truss.batteries
-        print("Battery Options:")
-        for b in batteryOptions {
-            print("Battery cap \(b.capacity) current:\(b.current)")
-        }
-        
-        // Tanks
-        let tankOptions = station.truss.getTanks()
-        print("Tank Options:")
-        for t in tankOptions {
-            print("Tank cap \(t.capacity) current:\(t.current)")
-        }
-        
-        self.selectedVehicle = vehicle
-//        self.progress = .inventory1
-    }
+    // ------------------
+    // Need to make sure to take from station and return to station
+    // Add option of Solar power (for its cost)
+    // ==================
     
     func addTank(tank:Tank) -> Bool {
         
@@ -195,14 +177,13 @@ class GarageViewModel:ObservableObject {
     
     /// Sets the Vehicle to start building
     func startBuilding(vehicle:SpaceVehicle) {
+        
         station.garage.startBuildingVehicle(vehicle: vehicle)
         self.buildingVehicles.append(vehicle)
         selectedVehicle = vehicle
         garageStatus = .idle
         
     }
-    
-    // MARK: - New
     
     /// Returns whether its (not) possible to build a certain Engine Type
     func disabledEngine(type:EngineType) -> Bool {
@@ -211,6 +192,8 @@ class GarageViewModel:ObservableObject {
         default: return garage.xp < type.requiredXP
         }
     }
+    
+    // MARK: - Vehicle Selection
     
     /// Selected a vehicle that is building
     func didSelectBuilding(vehicle:SpaceVehicle) {
@@ -282,7 +265,7 @@ class GarageViewModel:ObservableObject {
         garageStatus = .selectedTravel(vehicle: vehicle)
     }
     
-    /// Starts a loop to update the vehicle's progress
+    /// Starts a loop to update the vehicle's travel progress
     private func checkProgressLoop(vehicle:SpaceVehicle) {
         
         if selectedVehicle?.id != vehicle.id { return }
@@ -306,7 +289,65 @@ class GarageViewModel:ObservableObject {
         }
     }
     
-    // Vehicle Building
+    // MARK: - Cancelling
+    
+    /// Resets the view to the beginning state
+    func cancelSelection() {
+        self.selectedVehicle = nil
+        self.garageStatus = .idle
+    }
+    
+    // MARK: - Building Space Vehicle
+    
+    /// Sets the UI to start planning new Vehicle
+    func startNewVehicle() {
+        garageStatus = .planning(stage: .Engine)
+    }
+    
+    /// Called when Vehicle Engine Setup is Finished
+    func didSetupEngine(vehicle:SpaceVehicle) {
+        
+        selectedVehicle = vehicle
+        station.garage.xp += 1
+        
+//        switch vehicle.engine {
+//            case .Hex6: // Skip payload
+//                self.garageStatus = .planning(stage:.Inventory)
+//            default:
+//                self.garageStatus = .planning(stage: .Payload)
+//        }
+        
+        print("Finished setting up engine.")
+        
+        // Update UI
+        self.buildingVehicles.append(vehicle)
+        self.didSelectBuilding(vehicle: vehicle)
+        
+        // Update and save Model
+        station.garage.startBuildingVehicle(vehicle: vehicle)
+        LocalDatabase.shared.saveStation(station: station)
+    }
+    
+    /// Updates the UI to setup the Inventory
+    func setupInventory(vehicle:SpaceVehicle) {
+        // Make sure this is selected vehicle
+        guard selectedVehicle != nil && selectedVehicle == vehicle else { fatalError() }
+        // Update View Status
+        self.garageStatus = .planning(stage: .Inventory)
+    }
+    
+    func didFinishInventory(vehicle:SpaceVehicle) {
+        
+        // Make sure this is selected vehicle
+        guard selectedVehicle != nil && selectedVehicle == vehicle else { fatalError() }
+        
+        let vehicleStatus = vehicle.status
+        print("Vehicle Status (Data): \(vehicleStatus)")
+        
+        self.cancelSelection()
+    }
+    
+    /// Launches a SpaceVehicle to travel to Mars
     func launch(vehicle:SpaceVehicle) {
         
         print("🚀 Launching Vehicle!")
@@ -330,57 +371,5 @@ class GarageViewModel:ObservableObject {
         
         // Update View
         self.cancelSelection()
-    }
-    
-    // Planning
-    
-    /// Sets the UI to start planning new Vehicle
-    func startNewVehicle() {
-        garageStatus = .planning(stage: .Engine)
-    }
-    
-    /// Called when user selects an Engine type, in the planning status
-    func newEngine(type:EngineType) {
-        let newVehicle = SpaceVehicle(engine: type)
-        self.selectedVehicle = newVehicle
-        self.garageStatus = .planning(stage: .Satellite)
-    }
-    
-    // DEPRECATE
-    /*
-    func planSatellite(isAdding:Bool) {
-        
-        // Add on/off to sat
-        // Set the satellite here
-        
-        switch selectedVehicle!.engine {
-        case .Hex6: // Skip payload
-            self.garageStatus = .planning(stage:.Inventory)
-        default:
-            self.garageStatus = .planning(stage: .Payload)
-        }
-    }
-    */
-    
-    /// Called when Vehicle Engine Setup is Finished
-    func didSetupEngine(vehicle:SpaceVehicle) {
-        
-        selectedVehicle = vehicle
-        station.garage.xp += 1
-        
-        switch vehicle.engine {
-            case .Hex6: // Skip payload
-                self.garageStatus = .planning(stage:.Inventory)
-            default:
-                self.garageStatus = .planning(stage: .Payload)
-        }
-    }
-    
-    // MARK: - Cancelling
-    
-    /// Resets the view to the beginning state
-    func cancelSelection() {
-        self.selectedVehicle = nil
-        self.garageStatus = .idle
     }
 }

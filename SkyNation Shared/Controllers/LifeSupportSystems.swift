@@ -207,7 +207,7 @@ class LSSModel:ObservableObject {
     func releaseInAir(tank:Tank, amount:Int) {
         for idx in 0..<station.truss.tanks.count {
             if station.truss.tanks[idx].id == tank.id {
-                var newTank = station.truss.tanks[idx]
+                let newTank = station.truss.tanks[idx]
                 self.station.truss.tanks.remove(at: idx)
                 newTank.current = tank.current - amount
                 self.station.truss.tanks.append(newTank)

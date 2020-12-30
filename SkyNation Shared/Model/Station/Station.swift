@@ -494,7 +494,34 @@ class Station:Codable {
         return false
     }
     
+    // Peripherals
+    
+    /**
+     Removes a `Peripheral` object. (Usually when transferring to a `SpaceVehicle.
+     - Parameters:
+     - tank: The `Peripheral` object to be moved.
+     - Returns: A `boolean` indicating whther it was successful. */
+    func removePeripheral(peripheral:PeripheralObject) -> Bool {
+        if let idx = peripherals.firstIndex(where: { $0.id == peripheral.id }) {
+            peripherals.remove(at: idx)
+            return true
+        } else {
+            return false
+        }
+    }
+    
+//    func movePeripheral(object:PeripheralObject, to vehicle:SpaceVehicle) -> Bool {
+//        if let idx = peripherals.firstIndex(where: { $0.id == object.id }) {
+//            if vehicle.engine.payloadLimit > vehicle.
+//            peripherals.remove(at: idx)
+//            return true
+//        } else {
+//            return false
+//        }
+//    }
+    
     // MARK: - Living, Rooms, and People
+    // DEPRECATE SOME OF THESE - WONT NEED ALL OF THEM
     
     /// Returns how many rooms available in the station
     func checkForRoomsAvailable() -> Int {

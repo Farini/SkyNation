@@ -163,8 +163,6 @@ struct GameImages {
             case .Medic: return Image("SkillMedic")
             case .SystemOS: return Image("SkillSystems")
             case .Handy: return Image(systemName: "hand.wave.fill")
-            // handy
-//            default: return Image(systemName: "questionmark")
         }
     }
     

@@ -81,6 +81,8 @@ class Truss:Codable {
         // Add radiator here
     }
     
+    // MARK: - Refills
+    
     // FIXME: - Putting back in Containers
     // Put back....
     // Water
@@ -118,7 +120,131 @@ class Truss:Codable {
     
     // MARK: - Charging
     
-    /// Tries to consume the `energy` passed. `Returns` whether it was successful
+    // Ingredients
+    
+    // Deprecate
+    func canCharge(ingredients:[Ingredient:Int]) -> Bool {
+        var pass:Bool = true
+        for (ingr, qtty) in ingredients {
+            let relevantBoxes = extraBoxes.filter({ $0.type == ingr })  // Filter
+            let iHave = relevantBoxes.map({$0.current}).reduce(0, +)    // Reduce (see: https://stackoverflow.com/questions/24795130/finding-sum-of-elements-in-swift-array)
+            if iHave < qtty {
+                pass = false
+            }
+        }
+        return pass
+    }
+    
+    /**
+     Checks if there are enough ingredients to cover the expenses.
+    - Parameters:
+    - ingredients: a key value of ingredient and quantity
+    - Returns: An array of missing Ingredients (empty if none) */
+    func validateResources(ingredients:[Ingredient:Int]) -> [Ingredient] {
+        var lacking:[Ingredient] = []
+        for (ingr, qtty) in ingredients {
+            let relevantBoxes = extraBoxes.filter({ $0.type == ingr })  // Filter
+            let iHave = relevantBoxes.map({$0.current}).reduce(0, +)    // Reduce (see: https://stackoverflow.com/questions/24795130/finding-sum-of-elements-in-swift-array)
+            if iHave < qtty {
+                lacking.append(ingr)
+            }
+        }
+        return lacking
+    }
+    
+    /**
+     Pays (reduce amount) for the resources needed. Note: Not responsible for saving.
+     - Parameters:
+     - ingredients: a key value pair of ingredient and quantity
+     - Returns: A `boolean` indicating whther it was successful. */
+    func payForResources(ingredients:[Ingredient:Int]) -> Bool {
+        
+        // Loop through ingredients
+        for (ingr, qtty) in ingredients {
+            // Get boxes that have that ingredient
+            let relevantBoxes = extraBoxes.filter({ $0.type == ingr })  // Filter
+            var debt:Int = qtty
+            boxLoop: for box in relevantBoxes {
+                let boxQtty = box.current
+                if boxQtty > debt {
+                    box.current -= debt
+                    debt = 0
+                    break boxLoop
+                } else if boxQtty == debt {
+                    box.current = 0
+                    debt = 0
+                    // Box is empty. Remove it
+                    extraBoxes.removeAll(where: { $0.id == box.id })
+                    break boxLoop
+                } else if boxQtty < debt {
+                    debt -= boxQtty
+                    box.current = 0
+                    // Box is empty. Remove it
+                    extraBoxes.removeAll(where: { $0.id == box.id })
+                }
+            }
+            // End of box loop
+            if debt > 0 {
+                print("ERROR: COULD NOT PAY DEBT")
+                return false
+            }
+        }
+        // If it hasn't returned false at this point, its because ingredients are met.
+        return true
+    }
+    
+    // Tanks
+    
+    /**
+     Removes a `Tank` object. (Usually when transferring to a `SpaceVehicle`, or when `Tank` is empty.
+     - Parameters:
+     - tank: The `Tank` object to be removed.
+     - Returns: A `boolean` indicating whther it was successful. */
+    func removeTank(tank:Tank) -> Bool {
+        if let idx = tanks.firstIndex(of: tank) {
+            tanks.remove(at: idx)
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    // Boxes
+    
+    /**
+     Removes a `StorageBox` object. (Usually when transferring to a `SpaceVehicle`, or when `StorageBox` is empty.
+     - Parameters:
+     - tank: The `Tank` object to be removed.
+     - Returns: A `boolean` indicating whther it was successful. */
+    func removeContainer(box:StorageBox) -> Bool {
+        guard let idx = extraBoxes.firstIndex(where: { $0.id == box.id }) else { return false }
+        extraBoxes.remove(at: idx)
+        return true
+    }
+    
+    /// Remove empty boxes from storage, except the ones needed if empty.
+    func clearEmptyBoxes() {
+        // An array of box types that cannot be deleted.
+        let doNotClear:[Ingredient] = [.Water, .wasteSolid, .wasteLiquid]
+        
+        for box in extraBoxes {
+            if doNotClear.contains(box.type) == false {
+                if let idx = extraBoxes.firstIndex(where: { $0.id == box.id }) {
+                    if box.current <= 0 {
+                        extraBoxes.remove(at: idx)
+                    }
+                }
+            }
+        }
+    }
+    
+    // Energy
+    
+    /**
+     Pays (consume) the amount of energy passed. Note: Not responsible for saving.
+     - Parameters:
+     - amount: the amount of energy to be consumed
+     - Returns: A `boolean` indicating whther it was successful. */
     func consumeEnergy(amount:Int) -> Bool {
         var consumption = amount
         let ttl = batteries.map({ $0.current }).reduce(0, +)
@@ -141,37 +267,6 @@ class Truss:Codable {
     
     func getAvailableEnergy() -> Int {
         return batteries.map({ $0.current }).reduce(0, +)
-    }
-    
-    func canCharge(ingredients:[Ingredient:Int]) -> Bool {
-        var pass:Bool = true
-        for (ingr, qtty) in ingredients {
-            let relevantBoxes = extraBoxes.filter({ $0.type == ingr })  // Filter
-            let iHave = relevantBoxes.map({$0.current}).reduce(0, +)    // Reduce (see: https://stackoverflow.com/questions/24795130/finding-sum-of-elements-in-swift-array)
-            if iHave < qtty {
-                pass = false
-            }
-        }
-        return pass
-    }
-    
-    /**
-     Checks if there are enough ingredients to cover the expenses.
-    - Parameters:
-    - ingredients: a key value of ingredient and quantity
-    - Returns: An array of missing Ingredients (empty if none) */
-    func validateResources(ingredients:[Ingredient:Int]) -> [Ingredient] {
-        
-        var lacking:[Ingredient] = []
-        for (ingr, qtty) in ingredients {
-            let relevantBoxes = extraBoxes.filter({ $0.type == ingr })  // Filter
-            let iHave = relevantBoxes.map({$0.current}).reduce(0, +)    // Reduce (see: https://stackoverflow.com/questions/24795130/finding-sum-of-elements-in-swift-array)
-            if iHave < qtty {
-                lacking.append(ingr)
-            }
-        }
-        return lacking
-        
     }
     
     init() {

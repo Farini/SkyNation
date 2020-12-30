@@ -70,7 +70,7 @@ enum EngineType:String, Codable, CaseIterable, Hashable {
 enum VehicleStatus:String, CaseIterable, Codable, Hashable {
     
     case Creating   // Creating Vehicle - Engine, Satellite
-    case Loading    // Creation Ready - Adding Stuff (Payload, Tanks, etc.)
+    case Created    // Creation Ready - May add Stuff (Payload, Tanks, etc.)
     
     case Mars       // Travelling to Mars
     case Station    // Travelling back home
@@ -119,12 +119,18 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     var air:AirComposition?
     
     // Travel Info
-    var name:String = "untitled"    // name it
+    var name:String = "Untitled"    // name it
     var simulation:Int = 0          // hours simulating
     var dateTravelStarts:Date?      // Date ref
     var travelTime:TimeInterval?    // Time?
     var dateAccount:Date?
     
+    // CHANGES
+    // ADD SOLAR POWER (INTERFACE)
+    // ADD PERIPHERALS
+    // REMOVE SHELL
+    // REMOVE PAYLOAD
+    // REMOVE ROBOT
     
     init(engine:EngineType) {
         self.engine = engine
@@ -402,6 +408,7 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
         return vehicle
     }
     
+    // Equatable
     static func == (lhs: SpaceVehicle, rhs: SpaceVehicle) -> Bool {
         return lhs.id == rhs.id
     }
@@ -429,8 +436,10 @@ class Garage:Codable {
     
     /// Adds to the array **buildingVehicles**
     func startBuildingVehicle(vehicle:SpaceVehicle) {
+        
         var time:Double = 0
         time += vehicle.engine.time
+        
 //        for panel in solar {
 //            time += panel.size
 //        }
@@ -448,6 +457,7 @@ class Garage:Codable {
 //            time += load.ingredients.count * 10
 //            time += load.tanks.count * 10
 //        }
+        
         vehicle.simulation = 0
         vehicle.status = .Creating
         vehicle.dateTravelStarts = Date()
