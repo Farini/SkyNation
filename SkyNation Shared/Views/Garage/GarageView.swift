@@ -187,6 +187,7 @@ struct GarageView: View {
                                 
                                 Button("View Mission") {
 //                                    print("Making some")
+                                    controller.improveExperience()
                                 }
                             }.padding()
                         }

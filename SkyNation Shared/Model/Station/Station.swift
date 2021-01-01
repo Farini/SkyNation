@@ -210,14 +210,19 @@ class Station:Codable {
             // consume water
             if tempWater >= 3 {
                 tempWater -= 3
+                if person.healthPhysical < 50 {
+                    person.healthPhysical += 1
+                }
             } else {
-                person.healthPhysical -= 3
+                let dHealth = max(0, person.healthPhysical - 3)
+                person.healthPhysical = dHealth
                 problems.append("💦 Lack of Water")
             }
             
             // consume energy
             if truss.consumeEnergy(amount: 1) == false {
-                person.happiness -= 2
+                let dHappy = max(0, person.happiness - 2)
+                person.happiness = dHappy
                 problems.append("⚡️ Lack of Energy")
             }
             
@@ -241,15 +246,20 @@ class Station:Codable {
             if foodConsumed == nil {
                 if let lastFood = food.last {
                     person.foodEaten.append(lastFood)
+                    if person.healthPhysical < 50 {
+                        person.healthPhysical += 1
+                    }
                     food.removeLast()
                 } else {
-                    person.healthPhysical -= 2
+                    let dHealth = max(0, person.healthPhysical - 2)
+                    person.healthPhysical = dHealth
                     problems.append("🍽 Lack of food")
                 }
             }
             
-            // + Mood
+            // + Mood & adjustments
             person.randomMood()
+            
             if unlockedTechItems.contains(.Cuppola) {
                 if Bool.random() && person.happiness < 95 {
                     person.happiness += 3
@@ -281,9 +291,9 @@ class Station:Codable {
                 person.activity = nil
             }
             
-            // Aging Humans (Twice a month)
-            if m.hour == 1 && (m.day == 1 || m.day == 15) {
-                // This will only happen twice a month
+            // Aging Humans (Once a week)
+            if m.hour == 1 && m.weekday == 1 {
+                
                 person.age += 1
                 var ageExtended:String = "\(person.age)"
                 if ageExtended.last == "1" { ageExtended = "st" } else if ageExtended.last == "2" { ageExtended = "nd" } else if ageExtended.last == "3" { ageExtended = "rd" } else { ageExtended = "th" }
@@ -336,7 +346,16 @@ class Station:Codable {
                 report.reportNeededAir(amount: airXfer)
             }
         }
-        
+        // Oxygen Adjust
+        let oxygenLevel = tempAir.o2 / tempAir.volume
+        let optimalOxygen = Int(0.2 * Double(tempAir.volume))
+        if oxygenLevel < optimalOxygen {
+            if let oxygen = truss.tanks.filter({ $0.type == .o2 && $0.current > 10 }).first {
+                let o2use = min(optimalOxygen, oxygen.current)
+                oxygen.current -= o2use
+                tempAir.o2 += o2use
+            }
+        }
         
         // 5. Modules
         // + Energy Consumption

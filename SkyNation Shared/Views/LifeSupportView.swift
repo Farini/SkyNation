@@ -107,28 +107,7 @@ struct LifeSupportView: View {
                                     
                                     // Timer
                                     VStack {
-                                        /*
-                                         HStack {
-                                         Button(action: {
-                                         self.lssModel.prepTimer()
-                                         }) {
-                                         Text("Start")
-                                         }
-                                         
-                                         Button(action: {
-                                         self.lssModel.stop()
-                                         }) {
-                                         Text("Stop")
-                                         }
-                                         Button(action: {
-                                         self.lssModel.reset()
-                                         }) {
-                                         Text("Reset")
-                                         }
-                                         Text("\(lssModel.counter)")
-                                         .font(.largeTitle)
-                                         }
-                                         */
+                                       
                                         Text("Account: \(lssModel.accountDate, formatter:GameFormatters.dateFormatter)")
                                         Text("Head count: \(lssModel.inhabitants)")
                                     }
@@ -146,16 +125,24 @@ struct LifeSupportView: View {
                                 .padding([.bottom], 10)
                                 
                                 Group {
-                                    Text("Drinkable Water: \(lssModel.liquidWater)")
+                                    Text("Others")
+                                        .font(.title)
+                                        .foregroundColor(.orange)
+                                        .padding([.top, .bottom])
+                                    
+                                    let foodLasting = Int(lssModel.availableFood.count / lssModel.inhabitants)
+                                    
+                                    Text("💦 Drinkable Water: \(lssModel.liquidWater)")
                                         .foregroundColor(.blue)
+                                    Text("🍽 Edible Food: \(lssModel.availableFood.count). ⏱ Lasts \(foodLasting) hrs.")
                                     if let wasteLiquid = lssModel.boxes.filter({ $0.type == .wasteLiquid }).map({ $0.current }).reduce(0, +) {
                                         Text("Waste Water: \(wasteLiquid)")
                                     }
                                     if let wasteSolid = lssModel.boxes.filter({ $0.type == .wasteSolid }).map({ $0.current }).reduce(0, +) {
-                                        Text("Solid Waste: \(wasteSolid)")
+                                        Text("💩 Solid Waste: \(wasteSolid)")
                                     }
-                                    Text("Edible Food: \(lssModel.availableFood.count)")
                                 }
+                                .padding([.leading])
                             }
                             
                         }

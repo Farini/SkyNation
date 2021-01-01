@@ -187,10 +187,13 @@ class Person:Codable, Identifiable, Equatable {
             case .Medium:
                 if Bool.random() { happiness -= 1 }
             case .Bad:
-                healthPhysical -= 3
-                happiness -= 2
+                let dHealth = max(0, healthPhysical - 3)
+                healthPhysical = dHealth
+                let dHappy = max(0, happiness - 2)
+                happiness = dHappy
             case .Lethal:
-                healthPhysical -= 8
+                let dHealth = max(0, healthPhysical - 8)
+                healthPhysical = dHealth
         }
         
         // Oxygen

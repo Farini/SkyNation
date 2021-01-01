@@ -288,6 +288,39 @@
 		8559201625959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
 		8559201725959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
 		8559201825959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
+		8569A304259F7F990057A518 /* dissolve.fragment.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8569A303259F7F990057A518 /* dissolve.fragment.txt */; };
+		8569A305259F7F990057A518 /* dissolve.fragment.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8569A303259F7F990057A518 /* dissolve.fragment.txt */; };
+		8569A306259F7F990057A518 /* dissolve.fragment.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8569A303259F7F990057A518 /* dissolve.fragment.txt */; };
+		8569A319259F81110057A518 /* CutionStripesColored.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A30E259F81110057A518 /* CutionStripesColored.fsh */; };
+		8569A31A259F81110057A518 /* CutionStripesColored.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A30E259F81110057A518 /* CutionStripesColored.fsh */; };
+		8569A31B259F81110057A518 /* CutionStripesColored.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A30E259F81110057A518 /* CutionStripesColored.fsh */; };
+		8569A31C259F81110057A518 /* InterlaceShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A30F259F81110057A518 /* InterlaceShader.fsh */; };
+		8569A31D259F81110057A518 /* InterlaceShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A30F259F81110057A518 /* InterlaceShader.fsh */; };
+		8569A31E259F81110057A518 /* InterlaceShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A30F259F81110057A518 /* InterlaceShader.fsh */; };
+		8569A31F259F81110057A518 /* TransitionShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A310259F81110057A518 /* TransitionShader.fsh */; };
+		8569A320259F81110057A518 /* TransitionShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A310259F81110057A518 /* TransitionShader.fsh */; };
+		8569A321259F81110057A518 /* TransitionShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A310259F81110057A518 /* TransitionShader.fsh */; };
+		8569A325259F81110057A518 /* RadarShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A312259F81110057A518 /* RadarShader.fsh */; };
+		8569A326259F81110057A518 /* RadarShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A312259F81110057A518 /* RadarShader.fsh */; };
+		8569A327259F81110057A518 /* RadarShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A312259F81110057A518 /* RadarShader.fsh */; };
+		8569A328259F81110057A518 /* HexagonShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A313259F81110057A518 /* HexagonShader.fsh */; };
+		8569A329259F81110057A518 /* HexagonShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A313259F81110057A518 /* HexagonShader.fsh */; };
+		8569A32A259F81110057A518 /* HexagonShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A313259F81110057A518 /* HexagonShader.fsh */; };
+		8569A32B259F81110057A518 /* CautionStripes.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A314259F81110057A518 /* CautionStripes.fsh */; };
+		8569A32C259F81110057A518 /* CautionStripes.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A314259F81110057A518 /* CautionStripes.fsh */; };
+		8569A32D259F81110057A518 /* CautionStripes.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A314259F81110057A518 /* CautionStripes.fsh */; };
+		8569A32E259F81110057A518 /* MapShapeGradient.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A315259F81110057A518 /* MapShapeGradient.fsh */; };
+		8569A32F259F81110057A518 /* MapShapeGradient.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A315259F81110057A518 /* MapShapeGradient.fsh */; };
+		8569A330259F81110057A518 /* MapShapeGradient.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A315259F81110057A518 /* MapShapeGradient.fsh */; };
+		8569A331259F81110057A518 /* HealthShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A316259F81110057A518 /* HealthShader.fsh */; };
+		8569A332259F81110057A518 /* HealthShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A316259F81110057A518 /* HealthShader.fsh */; };
+		8569A333259F81110057A518 /* HealthShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A316259F81110057A518 /* HealthShader.fsh */; };
+		8569A334259F81110057A518 /* CirclesMovingShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A317259F81110057A518 /* CirclesMovingShader.fsh */; };
+		8569A335259F81110057A518 /* CirclesMovingShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A317259F81110057A518 /* CirclesMovingShader.fsh */; };
+		8569A336259F81110057A518 /* CirclesMovingShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A317259F81110057A518 /* CirclesMovingShader.fsh */; };
+		8569A337259F81110057A518 /* RectanglesMoving.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A318259F81110057A518 /* RectanglesMoving.fsh */; };
+		8569A338259F81110057A518 /* RectanglesMoving.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A318259F81110057A518 /* RectanglesMoving.fsh */; };
+		8569A339259F81110057A518 /* RectanglesMoving.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A318259F81110057A518 /* RectanglesMoving.fsh */; };
 		8579750F259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
 		85797510259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
 		85797511259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
@@ -411,6 +444,17 @@
 		8536F4A1258D484B00B509D2 /* SceneDirector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDirector.swift; sourceTree = "<group>"; };
 		8536F4AE258D49C900B509D2 /* TravelersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TravelersView.swift; sourceTree = "<group>"; };
 		8559201425959A4300CF5467 /* SideMenuNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuNode.swift; sourceTree = "<group>"; };
+		8569A303259F7F990057A518 /* dissolve.fragment.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dissolve.fragment.txt; sourceTree = "<group>"; };
+		8569A30E259F81110057A518 /* CutionStripesColored.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CutionStripesColored.fsh; sourceTree = "<group>"; };
+		8569A30F259F81110057A518 /* InterlaceShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = InterlaceShader.fsh; sourceTree = "<group>"; };
+		8569A310259F81110057A518 /* TransitionShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = TransitionShader.fsh; sourceTree = "<group>"; };
+		8569A312259F81110057A518 /* RadarShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = RadarShader.fsh; sourceTree = "<group>"; };
+		8569A313259F81110057A518 /* HexagonShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = HexagonShader.fsh; sourceTree = "<group>"; };
+		8569A314259F81110057A518 /* CautionStripes.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CautionStripes.fsh; sourceTree = "<group>"; };
+		8569A315259F81110057A518 /* MapShapeGradient.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = MapShapeGradient.fsh; sourceTree = "<group>"; };
+		8569A316259F81110057A518 /* HealthShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = HealthShader.fsh; sourceTree = "<group>"; };
+		8569A317259F81110057A518 /* CirclesMovingShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CirclesMovingShader.fsh; sourceTree = "<group>"; };
+		8569A318259F81110057A518 /* RectanglesMoving.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = RectanglesMoving.fsh; sourceTree = "<group>"; };
 		8579750E259B9E70004C54D2 /* FlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipView.swift; sourceTree = "<group>"; };
 		85797517259BD394004C54D2 /* ItemCollectionViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCollectionViews.swift; sourceTree = "<group>"; };
 		85C3418425905A7500BF82F9 /* TutorialNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialNode.swift; sourceTree = "<group>"; };
@@ -594,11 +638,12 @@
 		8536F33A258D41CB00B509D2 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				8536F465258D481700B509D2 /* Space Station */,
 				8536F468258D481700B509D2 /* Mars Colony */,
 				8536F460258D481700B509D2 /* Mars Map */,
 				8536F45D258D481700B509D2 /* Overlays */,
+				8569A302259F7F7A0057A518 /* Shaders */,
 				8536F46A258D481700B509D2 /* ParticleEmitters */,
-				8536F465258D481700B509D2 /* Space Station */,
 				8536F464258D481700B509D2 /* TravelersScene.swift */,
 			);
 			path = Scenes;
@@ -783,6 +828,32 @@
 			path = ParticleEmitters;
 			sourceTree = "<group>";
 		};
+		8569A302259F7F7A0057A518 /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				8569A30D259F80F50057A518 /* FSH */,
+				8569A303259F7F990057A518 /* dissolve.fragment.txt */,
+			);
+			path = Shaders;
+			sourceTree = "<group>";
+		};
+		8569A30D259F80F50057A518 /* FSH */ = {
+			isa = PBXGroup;
+			children = (
+				8569A314259F81110057A518 /* CautionStripes.fsh */,
+				8569A317259F81110057A518 /* CirclesMovingShader.fsh */,
+				8569A30E259F81110057A518 /* CutionStripesColored.fsh */,
+				8569A316259F81110057A518 /* HealthShader.fsh */,
+				8569A313259F81110057A518 /* HexagonShader.fsh */,
+				8569A30F259F81110057A518 /* InterlaceShader.fsh */,
+				8569A315259F81110057A518 /* MapShapeGradient.fsh */,
+				8569A312259F81110057A518 /* RadarShader.fsh */,
+				8569A318259F81110057A518 /* RectanglesMoving.fsh */,
+				8569A310259F81110057A518 /* TransitionShader.fsh */,
+			);
+			path = FSH;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -907,14 +978,25 @@
 			files = (
 				8536F2C5258D330300B509D2 /* Main.storyboard in Resources */,
 				8536F2C8258D330300B509D2 /* LaunchScreen.storyboard in Resources */,
+				8569A32E259F81110057A518 /* MapShapeGradient.fsh in Resources */,
 				8536F2F0258D330300B509D2 /* Assets.xcassets in Resources */,
 				8536F471258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F495258D481700B509D2 /* SparkEmitter.sks in Resources */,
+				8569A304259F7F990057A518 /* dissolve.fragment.txt in Resources */,
+				8569A31C259F81110057A518 /* InterlaceShader.fsh in Resources */,
+				8569A331259F81110057A518 /* HealthShader.fsh in Resources */,
 				8536F479258D481700B509D2 /* MarsMapScene.sks in Resources */,
+				8569A328259F81110057A518 /* HexagonShader.fsh in Resources */,
+				8569A337259F81110057A518 /* RectanglesMoving.fsh in Resources */,
+				8569A334259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
+				8569A319259F81110057A518 /* CutionStripesColored.fsh in Resources */,
+				8569A31F259F81110057A518 /* TransitionShader.fsh in Resources */,
+				8569A32B259F81110057A518 /* CautionStripes.fsh in Resources */,
 				8536F489258D481700B509D2 /* StationOverlay.sks in Resources */,
 				8536F47D258D481700B509D2 /* MapIndicators.sks in Resources */,
 				8536F491258D481700B509D2 /* Assets.xcassets in Resources */,
 				8536F2ED258D330300B509D2 /* Art.scnassets in Resources */,
+				8569A325259F81110057A518 /* RadarShader.fsh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -924,14 +1006,25 @@
 			files = (
 				8536F2D6258D330300B509D2 /* Main.storyboard in Resources */,
 				8536F2D9258D330300B509D2 /* LaunchScreen.storyboard in Resources */,
+				8569A32F259F81110057A518 /* MapShapeGradient.fsh in Resources */,
 				8536F2F1258D330300B509D2 /* Assets.xcassets in Resources */,
 				8536F472258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F496258D481700B509D2 /* SparkEmitter.sks in Resources */,
+				8569A305259F7F990057A518 /* dissolve.fragment.txt in Resources */,
+				8569A31D259F81110057A518 /* InterlaceShader.fsh in Resources */,
+				8569A332259F81110057A518 /* HealthShader.fsh in Resources */,
 				8536F47A258D481700B509D2 /* MarsMapScene.sks in Resources */,
+				8569A329259F81110057A518 /* HexagonShader.fsh in Resources */,
+				8569A338259F81110057A518 /* RectanglesMoving.fsh in Resources */,
+				8569A335259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
+				8569A31A259F81110057A518 /* CutionStripesColored.fsh in Resources */,
+				8569A320259F81110057A518 /* TransitionShader.fsh in Resources */,
+				8569A32C259F81110057A518 /* CautionStripes.fsh in Resources */,
 				8536F48A258D481700B509D2 /* StationOverlay.sks in Resources */,
 				8536F47E258D481700B509D2 /* MapIndicators.sks in Resources */,
 				8536F492258D481700B509D2 /* Assets.xcassets in Resources */,
 				8536F2EE258D330300B509D2 /* Art.scnassets in Resources */,
+				8569A326259F81110057A518 /* RadarShader.fsh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -939,14 +1032,25 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8569A32A259F81110057A518 /* HexagonShader.fsh in Resources */,
+				8569A31E259F81110057A518 /* InterlaceShader.fsh in Resources */,
 				8536F2E7258D330300B509D2 /* Main.storyboard in Resources */,
+				8569A321259F81110057A518 /* TransitionShader.fsh in Resources */,
 				8536F2F2258D330300B509D2 /* Assets.xcassets in Resources */,
+				8569A336259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
+				8569A31B259F81110057A518 /* CutionStripesColored.fsh in Resources */,
 				8536F47F258D481700B509D2 /* MapIndicators.sks in Resources */,
+				8569A339259F81110057A518 /* RectanglesMoving.fsh in Resources */,
 				8536F2EF258D330300B509D2 /* Art.scnassets in Resources */,
+				8569A306259F7F990057A518 /* dissolve.fragment.txt in Resources */,
+				8569A32D259F81110057A518 /* CautionStripes.fsh in Resources */,
+				8569A327259F81110057A518 /* RadarShader.fsh in Resources */,
+				8569A330259F81110057A518 /* MapShapeGradient.fsh in Resources */,
 				8536F497258D481700B509D2 /* SparkEmitter.sks in Resources */,
 				8536F473258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F47B258D481700B509D2 /* MarsMapScene.sks in Resources */,
 				8536F493258D481700B509D2 /* Assets.xcassets in Resources */,
+				8569A333259F81110057A518 /* HealthShader.fsh in Resources */,
 				8536F48B258D481700B509D2 /* StationOverlay.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

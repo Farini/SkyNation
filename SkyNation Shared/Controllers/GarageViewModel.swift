@@ -193,6 +193,11 @@ class GarageViewModel:ObservableObject {
         }
     }
     
+    /// Improves Experience (⚠️ Remove when Launching the game)
+    func improveExperience() {
+        self.garage.xp += 1
+    }
+    
     // MARK: - Vehicle Selection
     
     /// Selected a vehicle that is building
