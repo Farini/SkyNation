@@ -30,12 +30,17 @@ struct GameLogic {
     
     /// The maximum amount of items in a new order (EarthOrder)
     static let earthOrderLimit:Int = 6
+    static let orderTankPrice:Int = 10
+    static let orderPersonPrice:Int = 15
     
     /// The default `capacity` of a battery
     static let batteryCapacity:Int = 100
     
     /// Amount of air a module requires
     static let airPerModule:Int = 225
+    
+    /// Water consumption per `Person`
+    static let waterConsumption:Int = 2
     
     static func radiansFrom(_ degrees:Double) -> Double {
         return degrees * .pi/180

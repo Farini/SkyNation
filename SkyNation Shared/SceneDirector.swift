@@ -65,16 +65,23 @@ class SceneDirector {
     }
     
     /// Tells the Scene that the delivery os over. Rid of Ship, and Load the Earth
-    func didFinishDeliveryOrder(order:EarthOrder?) {
+    func didFinishDeliveryOrder(order:PayloadOrder?) {
         
-        if order?.delivered == true {
-            print("Order is delivered.")
-            print("1 - Make the ship go away")
-            print("2 - Put the earth back in the scene, and start animating")
-            gameController?.deliveryIsOver()
-        }else{
-            print("Something wrong with this order...")
+        if let order = order {
+            if order.delivered == false {
+                print("Order NOT delivered.")
+                print("Deliver it now?")
+                gameController?.deliveryIsArriving()
+            } else {
+                print("Order is delivered.")
+                print("1 - Make the ship go away")
+                print("2 - Put the earth back in the scene, and start animating")
+                gameController?.deliveryIsOver()
+            }
+        } else {
+            print("No order was passed....")
         }
+        
     }
     
     /// Tells the scene that the order is done. Rid of the Earth, and load the Ship

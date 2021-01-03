@@ -26,6 +26,8 @@ class LSSModel:ObservableObject {
     
     @Published var liquidWater:Int
     @Published var availableFood:[String]
+    
+    // Energy
     @Published var levelZ:Double
     @Published var levelZCap:Double
     @Published var solarPanels:[SolarPanel] = []
@@ -59,17 +61,16 @@ class LSSModel:ObservableObject {
         self.accountDate = myStation.accountingDate
         
         // Batteries
-        let batteryPack = myStation.truss.getBatteries()
+        let batteryPack = myStation.truss.batteries
+        self.batteries = batteryPack
+        
         if !batteryPack.isEmpty {
-            self.batteries = batteryPack
-            var lz = 0
-            var mz = 0
-            for batt in batteryPack {
-                lz += batt.current
-                mz += batt.capacity
-            }
-            self.levelZ = Double(lz)
-            self.levelZCap = Double(mz)
+            let totalCurrent = batteryPack.map({ $0.current }).reduce(0, +)
+            let totalCapacity = batteryPack.map({ $0.capacity }).reduce(0, +)
+
+            self.levelZ = Double(totalCurrent)
+            self.levelZCap = Double(totalCapacity)
+            
         }else{
             // For tests purposes
             let b1 = Battery(capacity: 1000, current: 800)
@@ -80,31 +81,33 @@ class LSSModel:ObservableObject {
         
         // Solar Panels
         self.solarPanels = myStation.truss.solarPanels
-        var deltaZ:Int = 0
-        for sp in myStation.truss.solarPanels {
-            deltaZ += sp.maxCurrent()
-        }
-        self.energyProduction = deltaZ
+        let totalCharge = myStation.truss.solarPanels.map({ $0.maxCurrent() }).reduce(0, +)
         
-        let modulesCount = myStation.labModules.count + myStation.habModules.count + myStation.bioModules.count
+        self.energyProduction = totalCharge //deltaZ
+        
+        // Account for energy change
+        var deltaZ = totalCharge
         
         // Peripherals
         self.peripherals = myStation.peripherals
-        var energyFromPeripherals:Int = 0
-        for device in myStation.peripherals {
-            energyFromPeripherals += device.peripheral.energyConsumption
-        }
+        let workingPeripherals = myStation.peripherals.filter({ $0.isBroken == false && $0.powerOn == true })
+        let energyFromPeripherals:Int = workingPeripherals.map({$0.peripheral.energyConsumption}).reduce(0, +)
+        
         self.consumptionPeripherals = energyFromPeripherals
         deltaZ -= energyFromPeripherals
         
         // Modules Consumption
+        let modulesCount = myStation.labModules.count + myStation.habModules.count + myStation.bioModules.count
+        
+        // FIXME: - Module Consumption (Update)
         let modulesConsume = modulesCount * 4
+        
         self.consumptionModules = modulesConsume
         deltaZ -= modulesConsume
         
         self.batteriesDelta = deltaZ
         
-        
+        // FIXME: - Adjust Air variables (Update)
         // Air
         let reqAir = station.calculateNeededAir()
         self.requiredAir = reqAir
@@ -119,21 +122,15 @@ class LSSModel:ObservableObject {
         
         // Tanks + Water
         self.tanks = myStation.truss.tanks
+        let waterTanks:[Tank] = myStation.truss.tanks.filter({ $0.type == .h2o })
         
-        var countWater:Int = 0
-        for tank in myStation.truss.tanks {
-            switch tank.type {
-                case .h2o: countWater += tank.current
-                default:continue
-            }
-        }
-        self.liquidWater = countWater
+        self.liquidWater = waterTanks.map({ $0.current }).reduce(0, +)
         
         // Ingredients (Boxes)
         self.boxes = myStation.truss.extraBoxes
         
         // People
-        inhabitants = myStation.habModules.map({ $0.inhabitants.count }).reduce(0, +) //myStation.people.count
+        self.inhabitants = myStation.habModules.map({ $0.inhabitants.count }).reduce(0, +) //myStation.people.count
         
         // Food
         let stationFood = station.food
@@ -145,9 +142,13 @@ class LSSModel:ObservableObject {
         }
         self.availableFood = totalFood
         
+        // Accounting
+        self.accountingReport = station.accounting
+        
         // After initialized
         self.peripherals.append(myStation.truss.antenna)
         updateEnergyLevels()
+        
     }
     
     func updateDisplayVars() {
@@ -356,12 +357,19 @@ class LSSModel:ObservableObject {
         peripheral.lastFixed = Date()
     }
     
-    // Real Accounting
+    // MARK: - Accounting
+    
+    /// Runs the accounting (don't save)
     func runAccounting() {
         print("Going to run accounting...")
         station.runAccounting()
         accountingProblems = LocalDatabase.shared.accountingProblems
         accountingReport = station.accounting
+    }
+    
+    /// Save Station
+    func saveAccounting() {
+        LocalDatabase.shared.saveStation(station: station)
     }
     
     // Timer

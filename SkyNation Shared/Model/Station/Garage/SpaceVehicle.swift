@@ -109,13 +109,11 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     // Resources
     var tanks:[Tank] = []           // Recommended 1 Methane + 1 Oxygen
     var batteries:[Battery] = []
+    var peripherals:[PeripheralObject] = []
     var solar:[SolarPanel] = []
     var antenna:PeripheralObject?
 
     var passengers:[Person] = []
-    var shell:PeripheralObject?
-    var payload:EarthOrder?
-    var robot:String?
     var air:AirComposition?
     
     // Travel Info
@@ -127,10 +125,6 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     
     // CHANGES
     // ADD SOLAR POWER (INTERFACE)
-    // ADD PERIPHERALS
-    // REMOVE SHELL
-    // REMOVE PAYLOAD
-    // REMOVE ROBOT
     
     init(engine:EngineType) {
         self.engine = engine
@@ -254,15 +248,29 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
         print("+ Engine: \(engineWeight)")
         
         for _ in tanks {
-            weight += 10
+            weight += 1
         }
-        print("+ Tanks: \(tanks.count * 10)")
+        print("+ Tanks: \(tanks.count)")
         
         for _ in batteries {
-            weight += 5
+            weight += 1
         }
-        print("+ Batteries: \(batteries.count * 5)")
+        print("+ Batteries: \(batteries.count)")
         
+        for _ in peripherals {
+            weight += 1
+        }
+        
+        for _ in passengers {
+            weight += 1
+        }
+        
+        if let antenna = antenna {
+            print("Antenna level: \(antenna.level)")
+            weight += 1
+        }
+        
+        /*
         for _ in payload?.ingredients ?? [] {
             weight += 10
         }
@@ -276,6 +284,7 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
         for _ in payload?.tanks ?? [] {
             weight += 10
         }
+        */
         
         // Heatshield
 //        if let heat = heatshield {

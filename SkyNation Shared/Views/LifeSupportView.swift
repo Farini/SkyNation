@@ -18,7 +18,7 @@ enum AirControlOptions: String, CaseIterable {
 struct LifeSupportView: View {
     
     @ObservedObject var lssModel:LSSModel
-    @State private var airOption:AirControlOptions = .Energy
+    @State private var airOption:AirControlOptions = .AirLevels
     @State var selectedTank:Tank?
     @State var selectedPeripheral:PeripheralObject?
     @State var selectedBox:StorageBox?
@@ -94,20 +94,17 @@ struct LifeSupportView: View {
                             VStack(alignment:.leading) {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text("Air Quality: \(lssModel.airQuality)")
-                                        Text("Volume: \(Double(self.lssModel.air.volume), specifier: "%.2f") m3 | \(Double(self.lssModel.requiredAir), specifier: "%.2f") m3")
+                                        Text("Air Quality: \(lssModel.air.airQuality().rawValue)")
+                                        Text("Volume: \(Double(self.lssModel.air.volume), specifier: "%.2f") m3 | Required: \(Double(self.lssModel.requiredAir), specifier: "%.2f") m3")
                                             .foregroundColor(GameColors.lightBlue)
                                         Text("Pressure: \(Double(self.lssModel.currentPressure), specifier: "%.2f") KPa")
                                             .foregroundColor(.green)
-                                        
-                                        
                                     }
                                     
                                     Spacer()
                                     
                                     // Timer
                                     VStack {
-                                       
                                         Text("Account: \(lssModel.accountDate, formatter:GameFormatters.dateFormatter)")
                                         Text("Head count: \(lssModel.inhabitants)")
                                     }
@@ -130,11 +127,14 @@ struct LifeSupportView: View {
                                         .foregroundColor(.orange)
                                         .padding([.top, .bottom])
                                     
-                                    let foodLasting = Int(lssModel.availableFood.count / lssModel.inhabitants)
+                                    let foodLasting = Int(lssModel.availableFood.count / max(1, lssModel.inhabitants))
+                                    let waterLasting = Int(lssModel.liquidWater / (lssModel.inhabitants * GameLogic.waterConsumption))
                                     
-                                    Text("💦 Drinkable Water: \(lssModel.liquidWater)")
-                                        .foregroundColor(.blue)
-                                    Text("🍽 Edible Food: \(lssModel.availableFood.count). ⏱ Lasts \(foodLasting) hrs.")
+                                    Text("💦 Drinkable Water: \(lssModel.liquidWater). ⏱ \(waterLasting) hrs.")
+                                        .foregroundColor(waterLasting > 8 ? .green:.red)
+                                    Text("🍽 Edible Food: \(lssModel.availableFood.count). ⏱ \(foodLasting) hrs.")
+                                        .foregroundColor(foodLasting > 8 ? .green:.red)
+                                    
                                     if let wasteLiquid = lssModel.boxes.filter({ $0.type == .wasteLiquid }).map({ $0.current }).reduce(0, +) {
                                         Text("Waste Water: \(wasteLiquid)")
                                     }
@@ -149,15 +149,13 @@ struct LifeSupportView: View {
                     case .Resources:
                         // Tanks + Peripherals
                         Group {
-                            
                             HStack {
-                                
                                 // Left View: List of Resources
                                 List() {
                                     // Tanks
                                     Section(header: Text("Tanks")) {
                                         ForEach(lssModel.tanks) { tank in
-                                            Text("Tank of \(tank.type.rawValue)")
+                                            TankRow(tank: tank)
                                                 .onTapGesture(count: 1, perform: {
                                                     selectedPeripheral = nil
                                                     selectedBox = nil
@@ -169,7 +167,7 @@ struct LifeSupportView: View {
                                     // Peripherals
                                     Section(header: Text("Peripherals")) {
                                         ForEach(lssModel.peripherals) { peripheral in
-                                            Text("Device \(peripheral.peripheral.rawValue)")
+                                            Text("\(peripheral.peripheral.rawValue)")
                                                 .onTapGesture(count: 1, perform: {
                                                     selectedTank = nil
                                                     selectedBox = nil
@@ -177,20 +175,24 @@ struct LifeSupportView: View {
                                                 })
                                         }
                                     }
+                                    
                                     // Ingredients - Boxes
-                                    Section(header: Text("Boxes")) {
+                                    Section(header: Text("Ingredients")) {
                                         ForEach(lssModel.boxes) { storageBox in
-                                            Text("Box of \(storageBox.type.rawValue)")
-                                                .onTapGesture(count: 1, perform: {
-                                                    // Select Box Here
-                                                    selectedTank = nil
-                                                    selectedPeripheral = nil
-                                                    selectedBox = storageBox
-                                                })
+                                            VStack {
+                                                Text("\(storageBox.type.rawValue)")
+                                                Text("\(storageBox.current)/\(storageBox.type.boxCapacity())")
+                                            }
+                                            .onTapGesture(count: 1, perform: {
+                                                // Select Box Here
+                                                selectedTank = nil
+                                                selectedPeripheral = nil
+                                                selectedBox = storageBox
+                                            })
                                         }
                                     }
                                 }
-                                .frame(minWidth:180, maxWidth:220, minHeight:200)
+                                .frame(minWidth:180, maxWidth:220, minHeight:200, maxHeight: .infinity)
                                 
                                 // Right: Detail View
                                 ScrollView() {
@@ -261,11 +263,17 @@ struct LifeSupportView: View {
                                     }
                                     
                                 }
-                                .frame(maxWidth:.infinity, minHeight:200, maxHeight:220)
+                                .frame(maxWidth:.infinity, minHeight:200, maxHeight:.infinity)
                             }
+                            .frame(maxWidth:.infinity, minHeight:200, maxHeight:.infinity)
+                        }//.padding(3)
+                    case .Energy:
+                        ScrollView {
+                            // Energy
+                            EnergyOverview(energyLevel: $lssModel.levelZ, energyMax: $lssModel.levelZCap, energyProduction: lssModel.energyProduction, batteryCount: lssModel.batteries.count, solarPanelCount: lssModel.solarPanels.count, peripheralCount: lssModel.peripherals.count, deltaZ: $lssModel.batteriesDelta, conumptionPeripherals: $lssModel.consumptionPeripherals, consumptionModules: $lssModel.consumptionModules)
                             
-                        }.padding(3)
-                        
+                            BatteryCollectionView(lssModel.batteries)
+                        }
                     case .Accounting:
                         // Accounting
                         ScrollView {
@@ -284,8 +292,11 @@ struct LifeSupportView: View {
                                 let report = lssModel.accountingReport!
                                 Divider()
                                 VStack {
-                                    Text("Report").font(.title)
-                                    Text("Date: \(GameFormatters.dateFormatter.string(from: report.date))")
+                                    Text("🗒 Report").font(.title)
+                                    Text("📆: \(GameFormatters.dateFormatter.string(from: report.date))")
+                                        .padding([.top], 4)
+                                        .padding([.bottom], 6)
+                                    
                                     Text("Air Start (V): \(report.airStart.volume)")
                                     
                                     Text("Energy Start: \(report.energyStart)")
@@ -296,43 +307,18 @@ struct LifeSupportView: View {
                                     Text("Pee: \(report.wasteWaterFinish ?? 0)")
                                     Text("Air adjustment: \(report.tankAirAdjustment ?? 0)")
                                 }
-//                                Divider()
                             }
-                            
-                            
-                            
                             Divider()
                             HStack {
                                 Button("Accounting") {
                                     print("Run accounting")
                                     lssModel.runAccounting()
                                 }
-                                Button("Test") {
+                                Button("💾 Save") {
                                     print("Test what?")
                                 }
                             }
-                        }.padding()
-                        
-                    case .Energy:
-                        ScrollView {
-                            // Energy
-                            EnergyOverview(energyLevel: $lssModel.levelZ, energyMax: $lssModel.levelZCap, energyProduction: lssModel.energyProduction, batteryCount: lssModel.batteries.count, solarPanelCount: lssModel.solarPanels.count, peripheralCount: lssModel.peripherals.count, deltaZ: $lssModel.batteriesDelta, conumptionPeripherals: $lssModel.consumptionPeripherals, consumptionModules: $lssModel.consumptionModules)
-                            ForEach(lssModel.batteries) { battery in
-                                HStack {
-                                    Image("carBattery")
-                                        .renderingMode(.template)
-                                        .resizable()
-                                        .colorMultiply(.red)
-                                        .frame(width: 32.0, height: 32.0)
-                                    Text("Battery \(battery.current) of \(battery.capacity)")
-                                    FixedLevelBar(min: 0.0, max: Double(battery.capacity), current: Double(battery.current), title: "Health", color: .red)
-                                }
-                                
-                            }
-//                            ForEach(0..<lssModel.batteries.count) { idx in
-//
-//                            }
-                        }
+                        }// .padding()
                 }
             }
             .frame(minWidth: 500, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: 250, maxHeight: .infinity, alignment:.topLeading)
@@ -444,6 +430,9 @@ struct TankView_Previews: PreviewProvider {
         
     }
 }
+
+// FIXME: - Transfer Code.
+// Put this code in an Appropriate file
 
 extension PeripheralObject {
     func getImage() -> Image? {

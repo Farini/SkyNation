@@ -68,6 +68,18 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
         }
     }
     
+    /// The Price to order this ingredient
+    var price:Int {
+        switch self {
+            case .wasteSolid, .wasteLiquid: return 5
+            case .Aluminium, .Copper, .Polimer, .Lithium, .Water: return 10
+            case .Battery, .DCMotor, .Fertilizer, .Iron: return 15
+            case .CarbonFiber, .Ceramic, .Sensor, .Silicate, .SolarCell: return 22
+            case .Circuitboard: return 27
+            default: return 10
+        }
+    }
+    
     /// Swift UI's image
     func image() -> Image? {
         switch self {

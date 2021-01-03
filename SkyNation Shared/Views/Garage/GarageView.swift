@@ -185,7 +185,7 @@ struct GarageView: View {
                                     controller.startNewVehicle()
                                 }
                                 
-                                Button("View Mission") {
+                                Button("Experience +") {
 //                                    print("Making some")
                                     controller.improveExperience()
                                 }
@@ -269,18 +269,22 @@ struct GarageView: View {
                 ScrollView {
                     VStack {
                         Group {
-                            Text("Building Vehicle")
+                            Text("Ready Vehicle")
                                 .font(.title)
+                                .foregroundColor(.blue)
                                 .padding()
-                            Text("Engine: \(sev.engine.rawValue) | Limit: \(sev.engine.payloadLimit * 100)Kg.")
+                            Text("Engine: \(sev.engine.rawValue)")
                             
                             HStack {
                                 Image(systemName: "scalemass")
                                 Text("\(sev.engine.payloadLimit * 100)Kg")
                             }
-                            .font(.headline)
+                            .font(.title2)
+                            
+//                            Spacer(minLength: 8)
                             
                             Text("Simulation: \(sev.simulation) hrs")
+                                .padding([.top])
                             Text("Destination: \(sev.status.rawValue)")
                             Text("Travel Starts: \(GameFormatters.dateFormatter.string(from: sev.dateTravelStarts ?? Date()))")
                             Text("V Engine: \(sev.engine.rawValue)")

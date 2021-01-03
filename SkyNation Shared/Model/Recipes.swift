@@ -36,14 +36,24 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
     /// Gets the ingredients for recipe
     func ingredients() -> [Ingredient:Int] {
         switch self {
-        case .Module: return [.Aluminium:35]
-        case .Node: return [.Aluminium:15]
-        case .tank: return [.Aluminium:8]
-        case .SolarPanel: return [.Polimer:1, .SolarCell:2]
-        default: return [.Aluminium:15, .Polimer:8, .Copper:4]
+            case .Module: return [.Aluminium:35]
+            case .Node: return [.Aluminium:15]
+            case .SolarPanel: return [.Polimer:1, .SolarCell:2]
+            case .Condensator: return [.Aluminium:2, .Copper:1, .Polimer:1]
+            case .ScrubberCO2: return [.Polimer:1, .Copper:1]
+            case .Electrolizer: return [.Polimer:1, .Copper:1, .Lithium:1]
+            case .Methanizer: return [.Polimer:2, .Ceramic:1, .Circuitboard:1]
+            case .Radiator: return [.Aluminium:2, .Ceramic:1, .Lithium:3]
+            case .Battery: return [.Lithium:5, .Copper:1]
+            case .StorageBox: return [.Polimer:5, .Aluminium:1]
+            case .tank: return [.Aluminium:8, .Iron:1, .Polimer:1]
+            case .Roboarm: return [.Circuitboard:4, .DCMotor:2, .Aluminium:4, .Polimer:2]
+            case .WaterFilter: return [.Ceramic:1, .Copper:2, .Lithium:1, .Iron:1]
+            case .BioSolidifier: return [.Ceramic:2, .Copper:4, .Silicate:2, .Iron:2]
         }
     }
     
+    /// A String that explains what this recipe does.
     var elaborate:String {
         switch self {
             case .Condensator: return "Condensates the water vapor in the air into liquid water."
@@ -61,12 +71,17 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
     /// Skills required
     func skillSet() -> [Skills:Int] {
         switch self {
-        case .tank: return [:]
-        case .SolarPanel: return [.Handy:1]
-        case .Electrolizer: return [.Handy:1]
-        
-                
-        default: return [.Mechanic:1]
+            case .Module: return [.Material:1]
+            case .Node: return [:]
+            case .SolarPanel: return [.Handy:1, .Electric:1]
+            case .ScrubberCO2: return [.Material:1]
+            case .Methanizer: return [.Mechanic:1, .Electric:1]
+            case .Radiator: return [.Material:1]
+            case .StorageBox: return [.Material:1]
+            case .Roboarm: return [.Electric:1, .SystemOS:1, .Mechanic:1]
+            case .WaterFilter: return [.Electric:1, .Mechanic:1, .Material:1]
+            case .BioSolidifier: return [.Electric:1, .Mechanic:2, .Material:1]
+            default: return [.Handy:1]
         }
     }
     

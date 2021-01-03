@@ -88,7 +88,7 @@ class LabViewModel: ObservableObject {
         let lacking:[Ingredient] = station.truss.validateResources(ingredients: reqIngredients)
         // Add problem message
         if !lacking.isEmpty {
-            var problematicMessage:String = "Missing ingredients:"
+            var problematicMessage:String = "Missing ingredients"
             for ingredient in lacking {
                 problematicMessage += "\n\(ingredient.rawValue) "
             }
@@ -117,7 +117,8 @@ class LabViewModel: ObservableObject {
                 missingSkills.append(key)
             }
         }
-        // Add problem message
+        
+        // Problems (if any)
         if missingSkills.isEmpty {
             print("There are enough skills :)")
             
@@ -139,9 +140,17 @@ class LabViewModel: ObservableObject {
         let activity = LabActivity(time: delta, name: item.rawValue)
         labModule.activity = activity
         
-        // add to workers
+        // Assign activity to workers
         for person in self.selectedStaff {
             person.activity = activity
+        }
+        
+        // Charge
+        let chargeResult = station.truss.payForResources(ingredients: reqIngredients)
+        if chargeResult == false {
+            print("ERROR: Could not charge results")
+        } else {
+            print("Charged successful: \(reqIngredients)")
         }
         
         // Save and update view
@@ -216,11 +225,74 @@ class LabViewModel: ObservableObject {
         
         print("Making recipe: \(recipe.rawValue)")
         
+        // Check Ingredients
+        let reqIngredients:[Ingredient:Int] = recipe.ingredients()
+        let lacking:[Ingredient] = station.truss.validateResources(ingredients: reqIngredients)
+        // Add problem message
+        if !lacking.isEmpty {
+            var problematicMessage:String = "Missing ingredients:"
+            for ingredient in lacking {
+                problematicMessage += "\n\(ingredient.rawValue) "
+            }
+            self.problems = problematicMessage
+            print("Cannot charge :(")
+            return
+        } else {
+            print("There are enough ingredients!")
+        }
+        
+        // Check Skills
+        let reqSkills:[Skills:Int] = recipe.skillSet()
+        let workers:[Person] = self.selectedStaff
+        var missingSkills:[Skills] = []
+        for (key, value) in reqSkills {
+            var valueCount:Int = value // The sum of ppl skills
+            for p in workers {
+                let skset:[SkillSet] = p.skills.filter({ $0.skill == key })
+                for sdk in skset {
+                    if sdk.skill == key {
+                        valueCount -= sdk.level
+                    }
+                }
+            }
+            if valueCount > 0 {
+                missingSkills.append(key)
+            }
+        }
+        
+        // Problems (if any)
+        if missingSkills.isEmpty {
+            print("There are enough skills :)")
+            
+        } else {
+            
+            var problematicMessage:String = "Missing Skills"
+            for skill in missingSkills {
+                problematicMessage += "\n\(skill.rawValue)"
+            }
+            self.problems = problematicMessage
+            print("There aren't enough skills :(")
+            return
+        }
+        
         // Create Activity
         let duration = recipe.getDuration()
         let delta:TimeInterval = Double(duration)
         let activity = LabActivity(time: delta, name: recipe.rawValue)
         labModule.activity = activity
+        
+        // Assign activity to workers
+        for person in self.selectedStaff {
+            person.activity = activity
+        }
+        
+        // Charge
+        let chargeResult = station.truss.payForResources(ingredients: reqIngredients)
+        if chargeResult == false {
+            print("ERROR: Could not charge results")
+        } else {
+            print("Charged successful: \(reqIngredients)")
+        }
         
         // Save and update view
         LocalDatabase.shared.saveStation(station: station)

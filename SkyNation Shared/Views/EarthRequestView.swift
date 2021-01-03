@@ -10,24 +10,15 @@ import SwiftUI
 
 struct EarthRequestView: View {
     
+    @Environment(\.presentationMode) var presentationMode // To Dismiss
+    
+    @ObservedObject var controller:EarthRequestController = EarthRequestController()
+    
     private var ingredientColumns: [GridItem] = [
         GridItem(.flexible(minimum: 72)),
         GridItem(.flexible(minimum: 72)),
         GridItem(.flexible(minimum: 72))
     ]
-    
-    @Environment(\.presentationMode) var presentationMode // To Dismiss
-//    @Environment(\.isPresented) var isPresented: Binding<Bool>?
-    
-    @State var selectedIngredients:[Ingredient] = []
-    @State var selectedTanks:[TankType] = []
-    @State var selectedPeople:[Person] = []
-    @State private var currentSelectionType:EarthViewPicker = .People
-    
-    var money = LocalDatabase.shared.station!.money
-    @State var orderCost:Double = EarthOrder.basePrice
-    
-    @ObservedObject var controller:EarthRequestController = EarthRequestController()
     
     var body: some View {
         
@@ -83,40 +74,42 @@ struct EarthRequestView: View {
                 
                 switch controller.orderStatus {
                     
-                    case .Ordering(_):
+                    case .Ordering(let order):
                         // What has already picked
                         Group {
-                            Text("Delivery Order").font(.title)
-                            if controller.selectedIngredients.isEmpty && controller.selectedTanks.isEmpty && controller.selectedPeople.isEmpty {
-                                Text("<< Order is empty >>")
-                                    .foregroundColor(.gray)
+                            
+                            Text("Order")
+                                .font(.title)
+                            
+                            ForEach(order.ingredients, id:\.id) { storageBox in
+                                Text(storageBox.type.rawValue)
+                                    .foregroundColor(.green)
                             }
-                            ForEach(controller.selectedIngredients, id:\.self) { order in
-                                Text(order.rawValue).foregroundColor(.green)
+                            ForEach(order.tanks, id:\.id) { tank in
+                                Text(tank.type.rawValue)
                             }
-                            ForEach(controller.selectedTanks, id:\.self) { tank in
-                                Text(tank.rawValue)
-                            }
-                            ForEach(controller.selectedPeople) { person in
+                            ForEach(order.people, id:\.id) { person in
                                 PersonRow(person: person)
                             }
+                            
                             Divider()
                         }
-                        Picker(selection: $controller.currentSelectionType, label: Text("")) {
+                        
+                        Picker(selection: $controller.orderAisle, label: Text("Aisle")) {
                             ForEach(EarthViewPicker.allCases, id:\.self) { earth in
                                 Text(earth.rawValue)
                             }
                         }
                         .pickerStyle(SegmentedPickerStyle())
                         
-                        switch controller.currentSelectionType {
+                        switch controller.orderAisle {
                             case .People:
                                 LazyVGrid(columns: ingredientColumns, alignment:.center, spacing:8) {
                                     ForEach(PeopleMaker.shared.people) { person in
                                         PersonRow(person: person)
                                             .padding(8)
                                             .onTapGesture {
-                                                controller.hire(person: person)
+                                                controller.addToHire(person: person) //hire(person: person)
                                         }
                                     }
                                 }
@@ -127,14 +120,14 @@ struct EarthRequestView: View {
                                         IngredientView(ingredient: ingredient, hasIngredient: nil, quantity: ingredient.boxCapacity())
                                             .padding(3)
                                             .onTapGesture {
-                                                controller.order(ingredient: ingredient)
+                                                controller.addToCart(ingredient: ingredient) //order(ingredient: ingredient)
                                             }
                                     }
                                 }
 
                             case .Tanks:
                                 LazyVGrid(columns: ingredientColumns, alignment:.center, spacing:8, pinnedViews:[]) {
-                                    ForEach(0..<TankType.allCases.count) { index in
+                                    ForEach(TankType.allCases, id:\.self) { tankType in
                                         
                                         HStack {
                                             Image("Tank")
@@ -142,20 +135,67 @@ struct EarthRequestView: View {
                                                 .aspectRatio(contentMode: .fit)
                                                 .frame(width: 42, height: 42)
                                             
-                                            Text(TankType.allCases[index].rawValue).font(.subheadline).padding(3)
+                                            Text(tankType.rawValue).font(.subheadline).padding(3)
                                                 
                                         }
                                         .onTapGesture {
-                                            controller.order(tankType: TankType.allCases[index])
+                                            controller.addToCart(tankType: tankType)//order(tankType: TankType.allCases[index])
                                         }
                                         
                                     }
                                 }
                         }
                         
-                    case .Reviewing:
-                        Text("Reviewing")
-                            .foregroundColor(.orange)
+                    case .Reviewing(let order):
+                        
+                        // What has already picked
+                        Group {
+                            
+                            Text("Review order")
+                                .font(.title)
+                                .padding([.bottom], 6)
+                            
+                            // Quantity / Weight
+                            HStack {
+                                Image(systemName: "scalemass")
+                                Text("\(controller.orderQuantity)00 / \(GameLogic.earthOrderLimit)00 Kg")
+                            }
+                            .font(.title2)
+                            
+                            HStack {
+                                Image("Currency")
+                                    .renderingMode(.template)
+                                    .resizable()
+                                    .fixedSize()
+                                    .frame(width: 42, height: 42, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                                    .aspectRatio(contentMode: .fill)
+                                VStack {
+                                    Text("Current \(controller.money)").foregroundColor(.green)
+                                    Text("(-) Costs \(controller.orderCost)").foregroundColor(.gray)
+                                    Text("Balance: \(controller.money - controller.orderCost)").foregroundColor(.orange)
+                                }
+                            }
+                            
+                            Divider()
+                            
+                            Text("Items")
+                                .font(.title2)
+                                .foregroundColor(.orange)
+                            
+                            LazyVGrid(columns: ingredientColumns, alignment: .center, spacing: 8) {
+                                ForEach(order.ingredients, id:\.id) { storageBox in
+                                    IngredientView(ingredient: storageBox.type, hasIngredient: nil, quantity: storageBox.type.boxCapacity())
+                                        .padding(3)
+                                }
+                                ForEach(order.tanks, id:\.id) { tank in
+                                    TankRow(tank: tank)
+                                        .padding(6)
+                                }
+                                ForEach(order.people, id:\.id) { person in
+                                    PersonRow(person: person)
+                                }
+                            }
+                        }
                         
                     case .OrderPlaced:
                         Group {
@@ -177,38 +217,27 @@ struct EarthRequestView: View {
                             }
                             .padding([.bottom], 6)
                             
-                            // Ingredients
+                            Divider()
+                            
                             LazyVGrid(columns: ingredientColumns, alignment: .center, spacing: 8, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
+                                // Ingredients
                                 ForEach(controller.currentOrder!.ingredients) { ingredient in
                                     IngredientView(ingredient: ingredient.type, hasIngredient: nil, quantity: nil)
                                         .padding(3)
                                 }
-                            }
-                            
-                            if let order:PayloadOrder = controller.currentOrder {
-                                
-                                // Ingredients
-                                ForEach(order.ingredients) { ingredient in
-                                    Text("Ingredient: \(ingredient.type.rawValue)")
-                                    IngredientView(ingredient: ingredient.type, hasIngredient: true, quantity: nil)
-                                }
                                 // Tanks
-                                ForEach(order.tanks) { tank in
-                                    Text("Ingredient: \(tank.type.rawValue)")
+                                ForEach(controller.currentOrder!.tanks) { tank in
+                                    //                                    Text("Ingredient: \(tank.type.rawValue)")
+                                    TankRow(tank: tank)
                                 }
                                 // People
-                                ForEach(order.people) { person in
+                                ForEach(controller.currentOrder!.people) { person in
                                     PersonSmallView(person: person)
                                 }
                             }
                         }
-                        
-                        
-                    case .Delivered:
-                        Text("Closed")
-                            .foregroundColor(.orange)
                 }
-                Divider()
+//                Divider()
             }
             .frame(minWidth: 500, maxWidth: .infinity, minHeight: 275, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment:.topLeading)
             
@@ -219,51 +248,53 @@ struct EarthRequestView: View {
                 HStack {
                     
                     switch controller.orderStatus {
-                        case .Ordering(let what):
-                            Text("Ordering: \(what.rawValue)")
-                            Text("Total: \(Int(self.orderCost))")
-                            Button("Place Order") {
-                                controller.placeOrder()
-                            }
-                            Button("Review") {
+                        case .Ordering(_):
+//                            Text("Ordering: \(controller.orderQuantity) items.")
+//                            Text("Total: \(controller.orderCost)")
+                            
+                            Button("Continue") {
                                 controller.reviewOrder()
                             }
                             Button("Cancel") {
                                 controller.clearOrder()
                             }
-                        case .Reviewing:
-                            Text("Reviewing")
-                            Text("Total: \(Int(self.orderCost))")
+                            
+                        case .Reviewing(_):
+                            
+//                            Text("Reviewing \(controller.orderQuantity) items.")
+//                            Text("Total: \(controller.orderCost)")
+                            
                             Button("Place Order") {
-                                controller.placeOrder()
+                                let success = self.confirmOrder()
+                                if success {
+                                    print("Order placed")
+                                } else {
+                                    print("See order error")
+                                }
                             }
+                            
                             Button("Resume") {
-                                controller.reviewOrder()
+                                controller.resumeOrder()
                             }
                             Button("Start Over") {
                                 controller.clearOrder()
                             }
                         case .OrderPlaced:
                             Text("Order Placed")
-                            Button("Order More") {
-                                controller.orderMore()
-                            }
+
                         case .Delivering:
-                            Text("Delivery action")
-                                .font(.headline)
-                                .foregroundColor(.blue)
+//                            Text("Delivering")
+//                                .font(.headline)
+//                                .foregroundColor(.blue)
                             
-                            Button("Reject") {
+                            Button("🚫 Reject") {
                                 controller.clearOrder()
                             }
                             .foregroundColor(.red)
                             
-                            Button("Accept") {
+                            Button("✅ Accept") {
                                 controller.acceptDelivery()
                             }
-                            
-                        case .Delivered:
-                            Text("Closed")
                     }
                 }
                 
@@ -278,53 +309,14 @@ struct EarthRequestView: View {
 //        .frame(height: 600)
         
     }
-    
-    func order(ingredient:Ingredient) {
-        
-        selectedIngredients.append(ingredient)
-        updateOrder()
-    }
-    
-    func hire(person:Person) {
-        updateOrder()
-        selectedPeople.append(person)
-    }
-    
-    func order(tank:TankType) {
-        updateOrder()
-        selectedTanks.append(tank)
-    }
-    
-    func updateOrder() {
-        let order = EarthOrder()
-        order.ingredients = selectedIngredients
-        order.tanks = selectedTanks
-        order.people = selectedPeople
-        let cost = order.calculateTotal()
-        self.orderCost = cost
-    }
-    
+ 
     func confirmOrder() -> Bool {
-        if money - orderCost >= 0 {
-            let station = LocalDatabase.shared.station!
-            let order = EarthOrder()
-            order.ingredients = selectedIngredients
-            order.tanks = selectedTanks
-            order.people = selectedPeople
-            station.earthOrder = order
-            station.money -= self.orderCost
-            LocalDatabase.shared.saveStation(station: station)
-            
-            return true
-            
-        }
-        
-        return false
+        return controller.placeOrder()
     }
-    
     
 }
 
+/*
 #if os(macOS)
 struct MyView: View {
     let myWindow:NSWindow?
@@ -359,6 +351,23 @@ struct MyView: View {
     }
 }
 #endif
+*/
+
+/*
+ struct MyWindow_Previews: PreviewProvider {
+ static var previews: some View {
+ //        var windowRef:NSWindow
+ //        windowRef = NSWindow(
+ //            contentRect: NSRect(x: 0, y: 0, width: 100, height: 100),
+ //            styleMask: [.titled, .closable, .miniaturizable, .fullSizeContentView],
+ //            backing: .buffered, defer: false)
+ 
+ return MyView(myWindow: nil)
+ 
+ 
+ }
+ }
+ */
 
 struct IngredientRow:Identifiable {
     let id = UUID()
@@ -370,22 +379,6 @@ struct EarthRequestView_Previews: PreviewProvider {
         EarthRequestView()
     }
 }
-
-/*
-struct MyWindow_Previews: PreviewProvider {
-    static var previews: some View {
-//        var windowRef:NSWindow
-//        windowRef = NSWindow(
-//            contentRect: NSRect(x: 0, y: 0, width: 100, height: 100),
-//            styleMask: [.titled, .closable, .miniaturizable, .fullSizeContentView],
-//            backing: .buffered, defer: false)
-        
-        return MyView(myWindow: nil)
-        
-        
-    }
-}
-*/
 
 class PeopleMaker {
     static var shared = PeopleMaker()

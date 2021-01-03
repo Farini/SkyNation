@@ -10,17 +10,16 @@ import Foundation
 
 class Station:Codable {
     
-    static let airPerModule:Int = 75
+//    static let airPerModule:Int = 75
     
-    var people:[Person]
     var modules:[Module]
-    var peripherals:[PeripheralObject]
-    
     var labModules:[LabModule]
     var habModules:[HabModule]
     var bioModules:[BioModule]
     
     var air:AirComposition
+    var peripherals:[PeripheralObject]
+    
     var truss:Truss
     var accounting:AccountingReport?
     
@@ -28,8 +27,8 @@ class Station:Codable {
     var unlockedRecipes:[Recipe]
     var labActivities:[LabActivity]?
     
-    var money:Double
-    var earthOrder:EarthOrder?
+//    var money:Double
+    var earthOrder:PayloadOrder?
     
     var accountingDate:Date
     
@@ -208,13 +207,13 @@ class Station:Codable {
             tempAir = newAir
             
             // consume water
-            if tempWater >= 3 {
-                tempWater -= 3
+            if tempWater >= GameLogic.waterConsumption {
+                tempWater -= GameLogic.waterConsumption
                 if person.healthPhysical < 50 {
                     person.healthPhysical += 1
                 }
             } else {
-                let dHealth = max(0, person.healthPhysical - 3)
+                let dHealth = max(0, person.healthPhysical - 2)
                 person.healthPhysical = dHealth
                 problems.append("💦 Lack of Water")
             }
@@ -367,8 +366,13 @@ class Station:Codable {
         // + Antenna -> + Money
         let antennaMoney = truss.moneyFromAntenna()
         print("\n 🤑💵 Antenna Money: \(antennaMoney)")
-        money += Double(antennaMoney)
-        print(" 🤑💵 Total money: \(money)")
+        if let player = LocalDatabase.shared.player {
+            player.money += antennaMoney
+            print(" 🤑💵 Player money: \(player.money)")
+        } else {
+            print("No Player, no money")
+        }
+        
         
         // Advance the date
         self.accountingDate = nextDate
@@ -396,7 +400,7 @@ class Station:Codable {
         
         // Each Requires 75?
         let totalCount = labs + habs + bios
-        let requiredAir = totalCount * Station.airPerModule
+        let requiredAir = totalCount * GameLogic.airPerModule
         let suppliedAir = self.air.volume
         
         print("--- Air:")
@@ -552,6 +556,7 @@ class Station:Codable {
         return availableRooms
     }
     
+    /// Tries to add a Person to a Hab Module. Returns success.
     func addToStaff(person:Person) -> Bool {
         
         // Check if that person is already there
@@ -599,7 +604,7 @@ class Station:Codable {
      */
     init(builder:SerialBuilder) {
         
-        people = []
+//        people = []
         modules = builder.modules
         // Peripherals
         var periArray:[BuildItem] = []
@@ -617,7 +622,7 @@ class Station:Codable {
             }
         }
         
-        money = 120000
+//        money = 120000
         
         // Scrubbers
         let scrubberActive = PeripheralObject(peripheral: .ScrubberCO2)
@@ -647,11 +652,13 @@ class Station:Codable {
         }
         food = tmpFood
         
+        
         self.garage = Garage()
     }
 }
 
 class AccountingReport:Codable {
+    
     var id:UUID
     var date:Date
     
@@ -669,7 +676,6 @@ class AccountingReport:Codable {
     var poopFinish:Int?
     
     var tankAirAdjustment:Int?
-//    var tankO2Adjustment:Int?
     
     init(time:Date, energy:Int, zInput:Int, air:AirComposition, water:Int) {
         self.id = UUID()
@@ -682,8 +688,9 @@ class AccountingReport:Codable {
     }
     
     func results(water:Int, urine:Int, poop:Int, air:AirComposition, energy:Int) {
-        airFinish = air
         
+        airFinish = air
+        energyFinish = energy
         waterFinish = water
         wasteWaterFinish = urine
         poopFinish = poop
@@ -698,72 +705,20 @@ class AccountingReport:Codable {
 
 /**
  A Container with ingredients, tanks and people
- Should be DEPRECATED, and substituted by `PayloadOrder`
- */
-class EarthOrder:Codable {
-    
-    var ingredients:[Ingredient]
-    var tanks:[TankType]
-    var people:[Person]
-    var delivered:Bool
-    
-    // TODO: - Add date?
-    
-    static let basePrice:Double = 3000.0
-    
-    init() {
-        ingredients = []
-        tanks = []
-        people = []
-        delivered = false
-    }
-    
-    func makePayload() -> PayloadOrder {
-        let payload = PayloadOrder()
-        for ing in ingredients {
-            payload.orderNewIngredient(type: ing)
-        }
-        for tankType in tanks {
-            payload.orderNewTank(type: tankType)
-        }
-        for person in people {
-            payload.addPerson(person: person)
-        }
-        return payload
-    }
-    
-    /// Calculates cost of order
-    func calculateTotal() -> Double {
-        // Needs improvement, obviously
-        let counts = ingredients.count + tanks.count + people.count
-        let prodPrice = Double(counts) * 10.0
-        let total = EarthOrder.basePrice + prodPrice
-        return total
-    }
-    
-    static var example:EarthOrder = { () -> EarthOrder in 
-        var order = EarthOrder()
-        order.ingredients = [Ingredient.Aluminium, Ingredient.Copper]
-        order.tanks = [TankType.air, TankType.o2]
-        order.people = [Person(random: true), Person(random: true)]
-        return order
-    }()
-}
-
-/**
- A Container with ingredients, tanks and people
  This is a bit more organized `PayloadOrder`
  */
 class PayloadOrder: Codable {
+    
+    static let basePrice:Int = 3000
     
     var ingredients:[StorageBox]
     var tanks:[Tank]
     var people:[Person]
     
-    static let basePrice:Double = 3000.0
     var delivered:Bool
+    var collected:Bool?
     
-    // FIXME: - Add Date (Optional)
+    var deliveryDate:Date?
     
     /// Initializes an empty container
     init() {
@@ -771,6 +726,20 @@ class PayloadOrder: Codable {
         tanks = []
         people = []
         delivered = false
+        collected = false
+    }
+    
+    /// Another initializer for dates
+    init(scheduled date:Date) {
+        ingredients = []
+        tanks = []
+        people = []
+        delivered = false
+        self.deliveryDate = date
+    }
+    
+    func isEmpty() -> Bool {
+        return ingredients.isEmpty && tanks.isEmpty && people.isEmpty
     }
     
     /// To order from **Station**
@@ -802,15 +771,31 @@ class PayloadOrder: Codable {
     
     /// Calculates Weight for **SpaceVehicle**
     func calculateWeight() -> Int {
-        return (ingredients.count + tanks.count + people.count) * 2
+        return (ingredients.count + tanks.count + people.count)
     }
     
     /// Calculates cost of order
-    func calculateTotal() -> Double {
-        // Needs improvement, obviously
+    func calculateTotal() -> Int {
+        
         let counts = ingredients.count + tanks.count + people.count
-        let prodPrice = Double(counts) * 10.0
-        let total = EarthOrder.basePrice + prodPrice
+        var ingredientsPrices:Int = 0
+        for ingredient in ingredients {
+            ingredientsPrices += ingredient.type.price
+        }
+        
+        // Other products are $10?
+        let prodPrice = counts * 10
+        let total = PayloadOrder.basePrice + prodPrice
+        
         return total
+    }
+    
+    /// Sets all the arrays to empty
+    func resetOrder() {
+        ingredients = []
+        tanks = []
+        people = []
+        delivered = false
+        deliveryDate = nil
     }
 }

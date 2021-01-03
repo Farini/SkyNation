@@ -65,6 +65,7 @@ struct TankCollectionView: View {
 }
 
 struct BatteryCollectionView: View {
+    
     /// Grid View (1 row)
     private var gridRow:[GridItem] = [
         GridItem(.fixed(100), spacing: 12)

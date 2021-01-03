@@ -15,242 +15,372 @@ enum EarthViewPicker:String, CaseIterable, Hashable, Equatable {
 }
 enum OrderStatus {
     
-    case Ordering(items:EarthViewPicker)   // Choosing
-    case Reviewing      // Looking at summary
-    case OrderPlaced    // Order placed...
+    case Ordering(order:PayloadOrder)       // Choosing
+    case Reviewing(order:PayloadOrder)      // Looking at summary
     
-    case Delivering     // Retrieving
-    case Delivered      // Finished
+    case OrderPlaced                        // Order placed...
+    
+    case Delivering(order:PayloadOrder)     // Retrieving
+//    case Delivered      // Finished
     
 }
 
 class EarthRequestController:ObservableObject {
     
+    // Database
+    private var station:Station
+    private var player:SKNPlayer
+    
     /// The limit of items that can go in an Order
-    let orderLimit:Int = GameLogic.earthOrderLimit // = 6
+    let orderLimit:Int = GameLogic.earthOrderLimit
     
-    @Published var selectedIngredients:[Ingredient] = []
-    @Published var selectedTanks:[TankType] = []
-    @Published var selectedPeople:[Person] = []
+    @Published var orderQuantity:Int = 0
+    @Published var currentOrder:PayloadOrder?
+    @Published var orderCost:Int = PayloadOrder.basePrice
+    @Published var errorMessage:String = ""
     
-    @Published var currentSelectionType:EarthViewPicker = .Ingredients
+//    @Published var selectedIngredients:[Ingredient] = []
+//    @Published var selectedTanks:[TankType] = []
+//    @Published var selectedPeople:[Person] = []
+    
+    @Published var orderAisle:EarthViewPicker = .Ingredients
     @Published var orderStatus:OrderStatus
     
-    // Station
-    var station:Station
-    @Published var money:Double
-    
-    // Order
-    @Published var currentOrder:PayloadOrder?
-    @Published var orderCost:Double = EarthOrder.basePrice
-    @Published var errorMessage:String = ""
+    @Published var money:Int
     
     init() {
         
+        let player = LocalDatabase.shared.player!
         let spaceStation = LocalDatabase.shared.station!
+        
         self.station = spaceStation
-        self.money = spaceStation.money
-        self.currentOrder = spaceStation.earthOrder?.makePayload()
+        self.player = player
         
-        if let previousOrder = spaceStation.earthOrder {
-            if previousOrder.delivered == true {
-                self.orderStatus = .Reviewing
-                //                emptyOrder = false
-            }else{
-                self.orderStatus = .Delivering
-                self.selectedIngredients = previousOrder.ingredients
-                self.selectedTanks = previousOrder.tanks
-                self.selectedPeople = previousOrder.people
-                self.orderCost = previousOrder.calculateTotal()
-                //                emptyOrder = false
-            }
+        self.money = player.money
+        self.currentOrder = spaceStation.earthOrder
+        
+        // Check current Order
+        if let oldOrder = spaceStation.earthOrder {
+            self.orderStatus = .Ordering(order: oldOrder)
+            updatePayload(order: oldOrder)
         } else {
-            self.orderStatus = .Ordering(items:EarthViewPicker.Ingredients)
-            selectedIngredients = []
-            selectedTanks = []
-            selectedPeople = []
-            //            emptyOrder = true
+            let newOrder = PayloadOrder()
+            self.currentOrder = newOrder
+            self.orderStatus = .Ordering(order: newOrder)
         }
     }
     
-    func canAddToOrder() -> Bool {
-        return countOfItems() < orderLimit
-    }
-    
-    private func countOfItems() -> Int {
-        return selectedIngredients.count + selectedPeople.count + selectedTanks.count
-    }
-    
-    private func canAffordOrder(newItem:Codable?) -> Bool {
-        
-        let newOrder = EarthOrder()
-        
-        newOrder.ingredients = self.selectedIngredients
-        newOrder.tanks = self.selectedTanks
-        newOrder.people = self.selectedPeople
-        
-        if let item = newItem {
-            if let newIngredient = item as? Ingredient {
-                newOrder.ingredients.append(newIngredient)
-            }else if let newTank = item as? TankType {
-                newOrder.tanks.append(newTank)
-            }else if let newPerson = item as? Person {
-                newOrder.people.append(newPerson)
-            }
+    /// Updates Variables with the PayloadOrder passed
+    private func updatePayload(order:PayloadOrder) {
+        if order.delivered == false {
+            // Populate
+            self.currentOrder = order
+            self.orderQuantity = order.calculateWeight()
+            self.orderCost = order.calculateTotal()
+            self.orderStatus = .Reviewing(order: order)
+            
+        } else {
+            
+            // Delivered
+            self.currentOrder = order
+            self.orderQuantity = order.calculateWeight()
+            self.orderCost = order.calculateTotal()
+            self.orderStatus = .Delivering(order: order)
         }
-        
-        let orderTotal = newOrder.calculateTotal()
-        
-        return station.money >= orderTotal
     }
-    
-    //    func isOrderEmpty() -> Bool {
-    //        return selectedIngredients.isEmpty && selectedTanks.isEmpty && selectedPeople.isEmpty
-    //    }
     
     // MARK: - Adding Stuff
     
-    func order(ingredient:Ingredient) {
-        if canAddToOrder() {
-            if canAffordOrder(newItem:ingredient) {
-                selectedIngredients.append(ingredient)
-                
-                // TODO: - Review This Order Cost
-                self.orderCost += 10
-            }else{
-                errorMessage = "Cannot afford"
+    func addToCart(ingredient:Ingredient) {
+        
+        guard let currentOrder = currentOrder else {
+            errorMessage = "No current order"
+            return
+        }
+        
+        // Check Quantity
+        if currentOrder.calculateWeight() < GameLogic.earthOrderLimit {
+            
+            // Check Money
+            let subtotal = currentOrder.calculateTotal()
+            let total = ingredient.price + subtotal
+            
+            if player.money >= total {
+                self.orderCost = total
+                self.errorMessage = ""
+                currentOrder.orderNewIngredient(type: ingredient)
+                self.orderQuantity = currentOrder.calculateWeight()
+                self.orderStatus = .Ordering(order: currentOrder)
+            } else {
+                self.errorMessage = "Not enough Sky cash."
             }
             
         } else {
-            // Can't add to order
-            errorMessage = "Limit reached"
+            self.errorMessage = "Order is full."
         }
     }
     
-    func order(tankType:TankType) {
-        if canAddToOrder() {
-            if canAffordOrder(newItem:tankType) {
-                selectedTanks.append(tankType)
-            }else{
-                errorMessage = "Cannot afford"
+    func addToCart(tankType:TankType) {
+        guard let currentOrder = currentOrder else {
+            errorMessage = "No current order"
+            return
+        }
+        
+        // Check Quantity
+        if currentOrder.calculateWeight() < GameLogic.earthOrderLimit {
+            
+            // Check Money
+            let subtotal = currentOrder.calculateTotal()
+            let total = subtotal + GameLogic.orderTankPrice
+            
+            if player.money >= total {
+                self.orderCost = total
+                self.errorMessage = ""
+                currentOrder.orderNewTank(type: tankType)
+                self.orderQuantity = currentOrder.calculateWeight()
+                self.orderStatus = .Ordering(order: currentOrder)
+            } else {
+                self.errorMessage = "Not enough Sky cash."
             }
             
         } else {
-            // Can't add to order
-            errorMessage = "Limit reached"
+            self.errorMessage = "Order is full."
         }
     }
     
-    func hire(person:Person) {
-        if canAddToOrder() {
-            if canAffordOrder(newItem:person) {
-                selectedPeople.append(person)
-            }else{
-                errorMessage = "Cannot afford"
+    func addToHire(person:Person) {
+        
+        guard let currentOrder = currentOrder else {
+            errorMessage = "No current order"
+            return
+        }
+        
+        // Check Quantity
+        if currentOrder.calculateWeight() < GameLogic.earthOrderLimit {
+            
+            // Check Money
+            let subtotal = currentOrder.calculateTotal()
+            let total = subtotal + GameLogic.orderPersonPrice
+            
+            if player.money >= total {
+                self.orderCost = total
+                self.errorMessage = ""
+                currentOrder.addPerson(person: person)
+                self.orderQuantity = currentOrder.calculateWeight()
+                self.orderStatus = .Ordering(order: currentOrder)
+            } else {
+                self.errorMessage = "Not enough Sky cash."
             }
-        }else{
-            errorMessage = "Limit reached"
+            
+        } else {
+            self.errorMessage = "Order is full."
         }
     }
     
     // Control
     
-    func placeOrder() {
+    // 1. Review
+    // 2. Confirm
+    
+    /// Sets the UI to review mode
+    func reviewOrder() {
+        guard let currentOrder = currentOrder else {
+            errorMessage = "No current order"
+            return
+        }
+        self.orderStatus = .Reviewing(order: currentOrder)
+    }
+    
+    func placeOrder() -> Bool {
         
-        let newOrder = EarthOrder()
+        guard let currentOrder = currentOrder else {
+            errorMessage = "No current order"
+            return false
+        }
         
-        newOrder.ingredients = self.selectedIngredients
-        newOrder.tanks = self.selectedTanks
-        newOrder.people = self.selectedPeople
-        newOrder.delivered = false
+        print("Placing Order...")
         
-        let orderCost = newOrder.calculateTotal()
+        let totalCost = currentOrder.calculateTotal()
         
-        if canAffordOrder(newItem: nil) == true {
-            // Order went through
-            station.money -= orderCost
-            station.earthOrder = newOrder
+        if player.money >= Int(totalCost) {
             
-            // Save
-            LocalDatabase.shared.saveStation(station: station)
+            // Update Data
+            player.money -= Int(totalCost)
+            currentOrder.delivered = true
+            currentOrder.deliveryDate = Date().addingTimeInterval(30) // 30 Seconds
+            station.earthOrder = currentOrder
+            
+            // update UI
+            self.money = player.money
             self.orderStatus = .OrderPlaced
             
-            SceneDirector.shared.didFinishPlacingOrder()
+            // update scene after 1.2 seconds
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.2) {
+                SceneDirector.shared.didFinishDeliveryOrder(order: self.station.earthOrder)
+            }
             
-        }else{
+            // Save Data
+            LocalDatabase.shared.saveStation(station: station)
+            let result = LocalDatabase.shared.savePlayer(player: player)
+            guard result == true else {
+                print("ERROR: Player \(player.name) could not be saved.")
+                return false
+            }
+            return true
+            
+        } else {
             errorMessage = "Cannot afford"
+            return false
         }
-    }
-    
-    func reviewOrder() {
-        self.orderStatus = .Reviewing
-    }
-    
-    func resumeOrder() {
-        self.orderStatus = .Ordering(items: .Ingredients)
-    }
-    
-    func clearOrder() {
-        self.selectedIngredients = []
-        self.selectedTanks = []
-        self.selectedPeople = []
-        self.orderStatus = .Ordering(items: .Ingredients)
         
-        SceneDirector.shared.didFinishDeliveryOrder(order: station.earthOrder)
-        station.earthOrder = nil
-        LocalDatabase.shared.saveStation(station: station)
+    }
+    
+    /// Goes back to ordering
+    func resumeOrder() {
+        
+        guard let currentOrder = currentOrder else {
+            errorMessage = "No current order"
+            return
+        }
+        
+        self.orderCost = currentOrder.calculateTotal()
+        self.orderQuantity = currentOrder.calculateWeight()
+        
+        self.orderStatus = .Ordering(order: currentOrder)
+        
+    }
+    
+    /// From the UI, to start over the order
+    func clearOrder() {
+        self.resetOrder()
+    }
+    
+    /// Resets the order, pass clean = true to clear the order in Station
+    private func resetOrder(cleanup:Bool? = false) {
+        
+        guard let currentOrder = currentOrder else {
+            errorMessage = "No current order"
+            return
+        }
+        
+        // Reset Order
+        currentOrder.resetOrder()
+        
+        self.orderCost = currentOrder.calculateTotal()
+        self.orderQuantity = currentOrder.calculateWeight()
+        self.orderStatus = .Ordering(order: currentOrder)
+        
+        if cleanup == true {
+            station.earthOrder = nil
+            LocalDatabase.shared.saveStation(station: station)
+        }
         
     }
     
     /// When order is complete, this is a chance to order more
-    func orderMore() {
-        self.orderStatus = .Ordering(items: .Ingredients)
-    }
+//    func orderMore() {
+//        self.orderStatus = .Ordering(items: .Ingredients)
+//    }
     
+    /// Adds the contents of the delivery order to the station and resets all the numbers
     func acceptDelivery() {
         
-        for ingredient in selectedIngredients {
-            if ingredient == .Battery {
+        guard let currentOrder = currentOrder else {
+            errorMessage = "No current order"
+            return
+        }
+        
+        for ingredientBox in currentOrder.ingredients {
+            // Some Special Ingredients require handling....
+            // Batteries
+            if ingredientBox.type == .Battery {
                 station.truss.batteries.append(Battery(shopped: true))
-            } else if ingredient == .Food {
-                for _ in 0...ingredient.boxCapacity() {
+            } else if ingredientBox.type == .Food {
+                // Food
+                for _ in 0...ingredientBox.type.boxCapacity() {
                     let dna = PerfectDNAOption.allCases.randomElement()!
                     station.food.append(dna.rawValue)
                 }
-            } else{
-                station.truss.extraBoxes.append(StorageBox(ingType: ingredient, current: ingredient.boxCapacity()))
+            } else {
+                // Normal Ingredient
+                station.truss.extraBoxes.append(ingredientBox)
             }
         }
         
-        for tank in selectedTanks {
-            station.truss.tanks.append(Tank(type: tank, full: true))
+        for tank in currentOrder.tanks {
+            station.truss.tanks.append(tank)
         }
         
-        for person in selectedPeople {
+        for person in currentOrder.people {
             let result = station.addToStaff(person: person)
             if result == false {
-                self.errorMessage = "No Room for more people"
-            }else{
-                if let idx = selectedPeople.firstIndex(of: person) {
-                    self.selectedPeople.remove(at: idx)
-                }
+                self.errorMessage = "No Room for \(person.name)"
             }
         }
         
-        station.earthOrder?.delivered = true
-        
-        SceneDirector.shared.didFinishDeliveryOrder(order: station.earthOrder)
+        currentOrder.delivered = true
         station.earthOrder = nil
         
         // Save
         LocalDatabase.shared.saveStation(station: station)
         
-        // Erase previous
-        self.selectedPeople = []
-        self.selectedTanks = []
-        self.selectedIngredients = []
+        // Update UI
+        self.resetOrder(cleanup: true)
         
-        self.orderStatus = .OrderPlaced
+        // Update Scene
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.2) {
+            SceneDirector.shared.didFinishDeliveryOrder(order: self.station.earthOrder)
+        }
+        
+        
+        
+//        self.currentOrder = nil
+//        let emptyOrder = PayloadOrder()
+//        self.orderCost = emptyOrder.calculateTotal()
+//        self.orderStatus = .Ordering(order: emptyOrder)
+        
+//        for ingredient in selectedIngredients {
+//            if ingredient == .Battery {
+//                station.truss.batteries.append(Battery(shopped: true))
+//            } else if ingredient == .Food {
+//                for _ in 0...ingredient.boxCapacity() {
+//                    let dna = PerfectDNAOption.allCases.randomElement()!
+//                    station.food.append(dna.rawValue)
+//                }
+//            } else{
+//                station.truss.extraBoxes.append(StorageBox(ingType: ingredient, current: ingredient.boxCapacity()))
+//            }
+//        }
+//
+//        for tank in selectedTanks {
+//            station.truss.tanks.append(Tank(type: tank, full: true))
+//        }
+//
+//        for person in selectedPeople {
+//            let result = station.addToStaff(person: person)
+//            if result == false {
+//                self.errorMessage = "No Room for more people"
+//            }else{
+//                if let idx = selectedPeople.firstIndex(of: person) {
+//                    self.selectedPeople.remove(at: idx)
+//                }
+//            }
+//        }
+        
+//        station.earthOrder?.delivered = true
+        
+        
+//        station.earthOrder = nil
+        
+//        // Save
+//        LocalDatabase.shared.saveStation(station: station)
+        
+        // Erase previous
+//        self.selectedPeople = []
+//        self.selectedTanks = []
+//        self.selectedIngredients = []
+        
+//        self.orderStatus = .OrderPlaced
         
         
     }

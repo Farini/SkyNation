@@ -183,6 +183,7 @@ class Truss:Codable {
                     extraBoxes.removeAll(where: { $0.id == box.id })
                 }
             }
+            
             // End of box loop
             if debt > 0 {
                 print("ERROR: COULD NOT PAY DEBT")
@@ -285,7 +286,7 @@ class Truss:Codable {
         self.extraBoxes = [peepee, poopoo]
         
         // Air, oxygen and water
-        self.tanks = [Tank(type: .air, full: true), Tank(type: .o2, full: true), Tank(type: .h2o, full: true), Tank(type: .h2o, full: true)]
+        self.tanks = [Tank(type: .air, full: true), Tank(type: .o2, full: true), Tank(type: .h2o, full: true), Tank(type: .h2o, full: true), Tank(type: .h2o, full: true), Tank(type: .h2o, full: true), Tank(type: .o2, full: true), Tank(type: .o2, full: true)]
         
         // Antenna
         let newAntenna = PeripheralObject(peripheral: .Antenna)

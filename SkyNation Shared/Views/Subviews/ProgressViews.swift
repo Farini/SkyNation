@@ -104,15 +104,12 @@ struct ProgressBar: View {
 struct VerticalBar: View {
     
     var value: Double
-//    @Binding var value: Double
     var color:Color
     var minimum:Double
     var maximum:Double
     var name:String
     
     init(min:Double?, max:Double, value:Double, color:Color?, name:String) {
-//        init(min:Double? = 0, max:Double, value:Binding<Double>, color:Color?) {
-//        self._value = value
         self.value = value
         self.minimum = min ?? 0
         self.maximum = max
@@ -121,25 +118,42 @@ struct VerticalBar: View {
     }
     
     var body: some View {
-        GeometryReader { geometry in
+        
             VStack {
-                ZStack(alignment:.bottom) {
-                    // Back
-                    Rectangle().frame(width: 16 , height: 100)
-                    .opacity(0.3)
-                    .foregroundColor(.gray)
-                    // Front
-                    Rectangle().frame(width: 16, height: CGFloat(((min(self.value, self.maximum) - self.minimum) / (self.maximum - self.minimum))) * 100)
-                        .foregroundColor(self.color)
-                    .animation(.easeOut)
+                HStack(alignment:.bottom, spacing:0) {
                     
+                    GeometryReader { geometry in
+                        ZStack(alignment:.bottom) {
+                            // Back
+                            Rectangle().frame(width: 16 , height: 100)
+                                .opacity(0.3)
+                                .foregroundColor(.gray)
+                        
+                            // Front
+                            Rectangle().frame(width: 16, height: CGFloat(((min(self.value, self.maximum) - self.minimum) / (self.maximum - self.minimum))) * 100)
+                                .foregroundColor(self.color)
+                                .animation(.easeOut)
+                        }
+                        .cornerRadius(geometry.size.height / 2)
+                    }
+                    
+                    VStack(alignment:.leading) {
+                        Text("\(Int(maximum * 100))")
+                        Spacer()
+                        Text("\(Int(value * 100))")
+                        Spacer()
+                        Text("\(Int(minimum * 100))")
+                    }
+                    .font(.caption)
+                    .offset(x: -16, y: 0)
+                    .foregroundColor(.gray)
                 }
-                .cornerRadius(geometry.size.height / 2)
                 Text(name)
             }
+//            .padding([.leading], 8)
             
             .frame(minWidth: 16, idealWidth: 20, maxWidth: 60, minHeight: 100, idealHeight: 120, maxHeight: 120, alignment: .center)
-        }
+        
     }
 }
 
@@ -255,11 +269,11 @@ struct AirCompositionView: View {
                     ProgressCircle(value: Double(air.h2o), maxValue: 100, style: .line, backgroundEnabled: true, backgroundColor: Color.blue, foregroundColor: GameColors.lightBlue, lineWidth: 8)
                     Text("Humidity: \(air.h2o) %")
                 }
-                .padding([.trailing], /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+//                .padding([.trailing], /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
                 .frame(minWidth: 125, idealWidth: 150, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
             }
             .frame(idealHeight: 120, maxHeight: 120, alignment: .leading)
-            .padding([.top, .bottom], /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+            .padding()
         }
         .frame(maxHeight: 140, alignment: .top)
         
