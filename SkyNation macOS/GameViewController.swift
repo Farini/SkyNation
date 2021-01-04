@@ -260,9 +260,8 @@ extension GameViewController: GameNavDelegate {
     }
     
     func didSelectTruss(station:Station) {
-        //        print("Selected Truss")
         
-        let controller = NSHostingController(rootView: LifeSupportView()) //UIHostingController(rootView:EarthRequestView())
+        let controller = NSHostingController(rootView: TrussLayoutView()) //UIHostingController(rootView:EarthRequestView())
         
         controller.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(controller.view)
@@ -273,15 +272,7 @@ extension GameViewController: GameNavDelegate {
         
         self.openedView = controller.view
         self.presentAsSheet(controller)
-        /*
-         let window = ClosableWindow(
-         contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
-         styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-         backing: .buffered, defer: false)
-         window.center()
-         window.contentView = NSHostingView(rootView: LifeSupportView())
-         window.makeKeyAndOrderFront(nil)
-         */
+        
     }
     
 }

@@ -197,6 +197,8 @@ class LabViewModel: ObservableObject {
                 LocalDatabase.shared.saveStation(station: self.station) // LocalDatabase.shared.saveStation(station: LocalDatabase.shared.station!)
 //                LocalDatabase.shared.saveSerialBuilder(builder: LocalDatabase.shared.builder)
                 
+                // Update UI
+                self.unlockedItems = station.unlockedTechItems
                 self.labModule.activity = nil
                 self.selected = nil
                 self.selection = .NoSelection
@@ -314,9 +316,15 @@ class LabViewModel: ObservableObject {
             case .SolarPanel:
                 print("Collect")
                 let panel = SolarPanel()
-                self.station.truss.solarPanels.append(panel)
-                finishActivity(module: module)
-                return true
+                do {
+                    try station.truss.addSolar(panel: panel)
+                    // Succeeded
+                    finishActivity(module: module)
+                    return true
+                } catch {
+                    self.problems = "Could not add Solar Panel. Error \(error.localizedDescription)"
+                    return false
+                }
                 
             case .Electrolizer:
                 print("Collect")

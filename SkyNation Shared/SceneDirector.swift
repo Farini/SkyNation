@@ -56,7 +56,7 @@ class SceneDirector {
         guard let station = LocalDatabase.shared.station else { fatalError() }
         
         // Update Truss
-        controller.updateTruss(station: station)
+//        controller.updateTrussLayout()
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
             // 3 seconds in
@@ -81,7 +81,6 @@ class SceneDirector {
         } else {
             print("No order was passed....")
         }
-        
     }
     
     /// Tells the scene that the order is done. Rid of the Earth, and load the Ship
@@ -104,6 +103,10 @@ class SceneDirector {
                 default: controller.scene.rootNode.addChildNode(model)
             }
         }
+    }
+    
+    func didChangeTrussLayout() {
+        gameController?.updateTrussLayout()
     }
     
 }

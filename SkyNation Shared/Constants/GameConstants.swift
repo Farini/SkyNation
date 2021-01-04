@@ -192,6 +192,12 @@ struct GameImages {
     
 }
 
+struct GameWindow {
+    static func closeWindow() {
+        NotificationCenter.default.post(Notification(name: .closeView))
+    }
+}
+
 // MARK: - Notifications
 
 extension Notification.Name {
@@ -235,3 +241,24 @@ extension UIImage {
     
 }
 #endif
+
+// MARK: - Errors
+
+enum AddingTrussItemProblem:Error {
+    case NoAvailableComponent
+    case ItemAlreadyAssigned
+    case Invalidated
+}
+
+extension AddingTrussItemProblem: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+            case .NoAvailableComponent:
+                return NSLocalizedString("No available Truss component", comment: "")
+            case .ItemAlreadyAssigned:
+                return NSLocalizedString("This item has already been assigned", comment: "")
+            case .Invalidated:
+                return NSLocalizedString("Unknown error", comment: "")
+        }
+    }
+}

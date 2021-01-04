@@ -288,6 +288,7 @@ struct LifeSupportView: View {
                                     Text(problem)
                                 }
                             }
+                            
                             if lssModel.accountingReport != nil {
                                 let report = lssModel.accountingReport!
                                 Divider()
@@ -316,6 +317,7 @@ struct LifeSupportView: View {
                                 }
                                 Button("💾 Save") {
                                     print("Test what?")
+                                    lssModel.saveAccounting()
                                 }
                             }
                         }// .padding()

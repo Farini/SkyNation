@@ -8,6 +8,8 @@
 
 import Foundation
 
+
+
 class Truss:Codable {
     
     static let solarPanelsLimit:Int = 8
@@ -71,11 +73,69 @@ class Truss:Codable {
     
     
     // NEW (Under test 12/08/2020)
-    func addNewSolarPanel() {
-        // Automatically places a new Solar Panel, after its made
-        // Check PeriPositions
-        // Count the objects to set "positionIndex"
+//    func addNewSolarPanel() {
+//        // Automatically places a new Solar Panel, after its made
+//        // Check PeriPositions
+//        // Count the objects to set "positionIndex"
+//
+//    }
+    
+    /**
+     Adds a Solar Panel to the station and assigns it to a truss component.
+     - Parameters:
+     - panel: The SolarPanel object to be added
+     - throws: An error when component can't be added (empty if none) */
+    func addSolar(panel:SolarPanel) throws {
+        
+        // Check array of Solar panels. If not there, add it
+        if !solarPanels.contains(where: { $0.id == panel.id }) {
+            solarPanels.append(panel)
+        }
+        
+        // Check if already assigned
+        if let prevAssign = tComponents.filter({ $0.itemID == panel.id }).first {
+            print("Throwing error: Solar Panel already assigned to component at position: \(prevAssign.posIndex)")
+            throw AddingTrussItemProblem.ItemAlreadyAssigned
+        }
+        
+        // Add it anywhere in components
+        if let availableComponent = tComponents.filter({ $0.allowedType == .Solar && $0.itemID == nil }).sorted(by: { $0.posIndex < $1.posIndex }).first {
+            let result = availableComponent.insert(solar: panel)
+            if (result) {
+                print("Adding solar success")
+            } else {
+                throw AddingTrussItemProblem.Invalidated
+            }
+        } else {
+            throw AddingTrussItemProblem.NoAvailableComponent
+        }
     }
+    
+    /// For Solar Panels only
+    func autoAssignPanels() {
+        
+        var assignedIDs:[UUID] = []
+        var availableComponents:[TrussComponent] = []
+        var unassignedPanels:[SolarPanel] = []
+        
+        assignedIDs = tComponents.filter({ $0.allowedType == .Solar && $0.itemID != nil }).map({ $0.itemID! })
+        availableComponents = tComponents.filter({ $0.allowedType == .Solar && $0.itemID == nil }).sorted(by: { $0.posIndex < $1.posIndex })
+        
+        unassignedPanels = solarPanels.filter({ !assignedIDs.contains($0.id) })
+        
+        for panel in unassignedPanels {
+            print("Auto assigning Solar Panel ID:\(panel.id)")
+            
+            if let nextComponent:TrussComponent = availableComponents.first {
+                let result = nextComponent.insert(solar: panel)
+                print("Result (Solar Panel) > \(result)")
+                availableComponents.removeFirst()
+            } else {
+                print("NO AVAILABLE SLOTS FOR THIS SOLAR PANEL")
+            }
+        }
+    }
+    
     func addNewRadiator() {
         // Automatically places a new Radiator (PeripheralObject), after its made
         // Add radiator here
@@ -395,6 +455,8 @@ class TrussComponent:Codable, Identifiable, Equatable {
         }
     }
     
+    
+    
     func insert(solar panel:SolarPanel) -> Bool {
         guard allowedType == .Solar && itemID == nil else { return false }
         self.itemID = panel.id
@@ -600,4 +662,5 @@ class AirComposition:Codable {
         return tmp
     }
 }
+
 

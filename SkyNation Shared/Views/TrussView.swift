@@ -15,11 +15,10 @@ struct TrussLayoutView: View {
     let row1:[Int] = [11, 31, 13]
     let row2:[Int] = [12, 32, 14]
     let midRow:[Int] = [0]
-    let row3:[Int] = [13, 33, 17]
+    let row3:[Int] = [15, 33, 17]
     let row4:[Int] = [16, 34, 18]
     
-    var truss = LocalDatabase.shared.station!.truss
-    
+    @ObservedObject var controller:TrussLayoutController = TrussLayoutController()
     @State var selectedComponent:TrussComponent?
     
     var body: some View {
@@ -27,7 +26,10 @@ struct TrussLayoutView: View {
             
             Text("Truss Arrangement")
                 .font(.largeTitle)
-                .padding()
+                .padding([.top])
+            
+            Text("Tap, or click an item (origin), and then a destination to move it.")
+                .foregroundColor(.gray)
             
             Divider()
             
@@ -35,22 +37,21 @@ struct TrussLayoutView: View {
                 
                 // Left Most
                 VStack {
-                    ForEach(truss.tComponents.filter({row1.contains($0.posIndex)})) { comp in
+                    ForEach(controller.truss.tComponents.filter({row1.contains($0.posIndex)})) { comp in
                         Text("\(comp.allowedType.rawValue)")
-                            .foregroundColor(comp.itemID == nil ? .white:.blue)
+                            .foregroundColor(comp.itemID == nil ? .gray:.blue)
                             .padding(6)
                             .onTapGesture {
                                 self.didSelect(item: comp)
                             }
-                            
                     }
                 }
                 
                 // Mid Left
                 VStack {
-                    ForEach(truss.tComponents.filter({row2.contains($0.posIndex)})) { comp in
+                    ForEach(controller.truss.tComponents.filter({row2.contains($0.posIndex)})) { comp in
                         Text("\(comp.allowedType.rawValue)")
-                            .foregroundColor(comp.itemID == nil ? .white:.blue)
+                            .foregroundColor(comp.itemID == nil ? .gray:.blue)
                             .padding(6)
                             .onTapGesture {
                                 self.didSelect(item: comp)
@@ -60,9 +61,9 @@ struct TrussLayoutView: View {
                 
                 // Middle
                 VStack {
-                    ForEach(truss.tComponents.filter({midRow.contains($0.posIndex)})) { comp in
+                    ForEach(controller.truss.tComponents.filter({midRow.contains($0.posIndex)})) { comp in
                         Text("\(comp.allowedType.rawValue)")
-                            .foregroundColor(comp.itemID == nil ? .white:.blue)
+                            .foregroundColor(comp.itemID == nil ? .gray:.blue)
                             .padding(6)
                             .onTapGesture {
                                 self.didSelect(item: comp)
@@ -72,9 +73,9 @@ struct TrussLayoutView: View {
                 
                 // Mid-Right
                 VStack {
-                    ForEach(truss.tComponents.filter({row3.contains($0.posIndex)})) { comp in
+                    ForEach(controller.truss.tComponents.filter({row3.contains($0.posIndex)})) { comp in
                         Text("\(comp.allowedType.rawValue)")
-                            .foregroundColor(comp.itemID == nil ? .white:.blue)
+                            .foregroundColor(comp.itemID == nil ? .gray:.blue)
                             .padding(6)
                             .onTapGesture {
                                 self.didSelect(item: comp)
@@ -84,9 +85,9 @@ struct TrussLayoutView: View {
                 
                 // Right-Most
                 VStack {
-                    ForEach(truss.tComponents.filter({row4.contains($0.posIndex)})) { comp in
+                    ForEach(controller.truss.tComponents.filter({row4.contains($0.posIndex)})) { comp in
                         Text("\(comp.allowedType.rawValue)")
-                            .foregroundColor(comp.itemID == nil ? .white:.blue)
+                            .foregroundColor(comp.itemID == nil ? .gray:.blue)
                             .padding(6)
                             .onTapGesture {
                                 self.didSelect(item: comp)
@@ -102,12 +103,30 @@ struct TrussLayoutView: View {
             // Selection
             Group {
                 Text("Selection")
-                if selectedComponent == nil {
-                    Text("Nothing selected")
-                        .foregroundColor(.gray)
-                } else {
-                    Text("\(selectedComponent!.allowedType.rawValue)")
-                    Text("\(selectedComponent!.posIndex)")
+                    .font(.title3)
+                
+                HStack(spacing: 12) {
+                    if let selected = controller.selectedComponent {
+                        TrussSelectionView(component: selected, descriptor: controller.describe(component: selected))
+                    } else {
+                        Text("Nothing selected")
+                            .foregroundColor(.gray)
+                    }
+                    VStack {
+                        Button("Save") {
+                            controller.saveSetup()
+                            GameWindow.closeWindow()
+                        }
+                        Button("Cancel") {
+                            print("Cancel doesnt do much")
+                            GameWindow.closeWindow()
+                        }
+                    }
+                }
+                
+                
+                if let message = controller.selectionMessage {
+                    Text("\(message)")
                 }
             }
             .padding()
@@ -118,40 +137,172 @@ struct TrussLayoutView: View {
     
     func didSelect(item:TrussComponent) {
         
-        if let old = self.selectedComponent {
-            if item == old {
-                self.selectedComponent = nil
-            } else {
-                swap(origin: old, destination: item)
-            }
-        } else {
-            self.selectedComponent = item
+        controller.didTap(component: item)
+        
+    }
+    
+}
+
+struct TrussSelectionView: View {
+    
+    var component:TrussComponent
+    var descriptor:String
+    
+    var body: some View {
+        VStack {
+            Text("\(component.allowedType.rawValue)")
+            Text("POS \(component.posIndex)")
+            Text(descriptor).foregroundColor(descriptor == "(Available)" ? .gray:.blue)
+        }
+        .padding(6)
+        .background(Color.black)
+        .cornerRadius(8)
+        .padding(2)
+    }
+}
+
+struct TrussComponentView: View {
+    
+    var component:TrussComponent
+    
+    var body: some View {
+        VStack {
+            Text("\(component.allowedType.rawValue)")
+                .foregroundColor(component.itemID == nil ? .gray:.blue)
+                .padding(6)
+                
         }
     }
     
-    func swap(origin:TrussComponent, destination:TrussComponent) {
-        
-        guard origin.allowedType == destination.allowedType else {
-            return
-        }
-        
-        if let itemID = origin.itemID  {
-            if destination.itemID == nil {
-                destination.itemID = itemID
-                origin.itemID = nil
-            } else {
-                print("Exchanging same stuff")
-            }
-        } else {
-            print("Origin item doesn't have an id.")
-        }
-    }
 }
 
 struct TrussView_Previews: PreviewProvider {
     static var previews: some View {
         TrussLayoutView()
     }
+}
+
+class TrussLayoutController: ObservableObject {
+    
+    private var station:Station
+    
+    @Published var truss:Truss
+    @Published var slots:[TrussComponent]
+    @Published var solarPanels:[SolarPanel]
+    
+    /// Panels that aren't in the Truss yet
+    @Published var unassignedPanels:[SolarPanel] = []
+    
+    @Published var selectedComponent:TrussComponent?
+    @Published var selectionMessage:String?
+    
+    init() {
+        
+        let station = LocalDatabase.shared.station!
+        self.station = station
+        self.truss = station.truss
+        self.slots = station.truss.tComponents
+        self.solarPanels = station.truss.solarPanels
+        
+        // After init
+        self.autoAssignSolarPanels()
+    }
+    
+    private func autoAssignSolarPanels() {
+        
+        for panel in solarPanels {
+            do {
+                try self.truss.addSolar(panel: panel)
+                print("Solar assigned just now")
+            } catch {
+                if let gError = error as? AddingTrussItemProblem {
+                    switch gError {
+                        case .ItemAlreadyAssigned:
+                            print("Item already assigned. This is ok")
+                        case .NoAvailableComponent:
+                            print("No available component")
+                        case .Invalidated:
+                            print("ERROR: see 'invalidated'")
+                    }
+                } else {
+                    print("Another error occurred")
+                }
+            }
+        }
+    }
+    
+    func didTap(component:TrussComponent) {
+        
+        print("Selecting Component position index: \(component.posIndex), type:\(component.allowedType)")
+        selectionMessage = nil
+        
+        if selectedComponent == nil {
+            selectedComponent = component
+        } else {
+            // Previously selected component
+            let previous:TrussComponent = selectedComponent!
+            
+            // Check if the same -> deselect
+            if previous.id == component.id {
+                // Same component. De-select
+                print("De-selecting component")
+                self.selectedComponent = nil
+                return
+            }
+            
+            if previous.allowedType == component.allowedType {
+                // Swap? To swap, one must be busy and the other isn't
+                if let previousID = previous.itemID, component.itemID == nil {
+                    print("Swapping previous")
+                    previous.itemID = nil
+                    component.itemID = previousID
+                    selectedComponent = nil
+                    selectionMessage = "Swapped Components"
+                    return
+                } else if let currentID = component.itemID, previous.itemID == nil {
+                    print("Swapping current")
+                    component.itemID = nil
+                    previous.itemID = currentID
+                    selectedComponent = nil
+                    selectionMessage = "Swapped Components"
+                    return
+                } else {
+                    // They are either both busy, or both free. Set the selected to the current
+                    self.selectedComponent = component
+                    selectionMessage = "Updated selected component"
+                }
+            } else {
+                // Different types. Just set the current selected
+                self.selectedComponent = component
+                selectionMessage = "Updated selected component"
+            }
+        }
+    }
+    
+    func describe(component:TrussComponent) -> String {
+        if component.itemID == nil { return "(Available)" } else {
+            switch component.allowedType {
+                case .Solar:
+                    guard let panel = truss.solarPanels.first(where: { $0.id == component.itemID }) else { return "" }
+                    return "Solar Panel \(panel.maxCurrent())kW/h"
+                case .Radiator:
+                    guard let peripheral = station.peripherals.first(where: { $0.id == component.itemID }) else { return "" }
+                    return "Radiator \(peripheral.isBroken ? "(Broken)":"")"
+                case .RoboArm:
+                    guard let peripheral = station.peripherals.first(where: { $0.id == component.itemID }) else { return "" }
+                    return "Roboarm \(peripheral.isBroken ? "(Broken)":"")"
+            }
+        }
+    }
+    
+    func saveSetup() {
+        print("Saving Truss Setup\n")
+        // Save
+        LocalDatabase.shared.saveStation(station: station)
+        // Update the Scene
+        SceneDirector.shared.didChangeTrussLayout()
+    }
+    
 }
 
 /*

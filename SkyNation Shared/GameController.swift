@@ -17,6 +17,7 @@ protocol GameNavDelegate {
     func didSelectGarage(station:Station)
     func didSelectAir()
     func didSelectEarth()
+    
 }
 
 
@@ -386,38 +387,41 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     }
     
     /// Updates Which Solar Panels to show on the Truss, and Roboarm
-    func updateTruss(station:Station) {
-        print("Updating Truss in Scene...")
-        //        guard let trussNode = scene.rootNode.childNode(withName: "Truss", recursively: false) else { return }
+    func updateTrussLayout() {
+//        print("Updating Truss in Scene...")
         
+        // Truss (Solar Panels)
+        print("Truss Layout Update:")
+        let trussNode = scene.rootNode.childNode(withName: "Truss", recursively: true)!
         
-        /*
-         let solarCount = station.truss.solarPanels.count
-         for i in 0..<solarCount {
-         let childName = "SolarPanel-00\(i)"
-         let solarNode = trussNode.childNode(withName: childName, recursively: false)!
-         solarNode.isHidden = false
-         }
-         */
+        // Delete Previous Solar Panels
+        for child in trussNode.childNodes {
+            if child.name == "SolarPanel" {
+                print("Removing old solar panel")
+                child.removeFromParentNode()
+            }
+        }
         
-        /*
-         if station.unlockedTechItems.contains(.Roboarm) {
-         
-         print("\n\n\n--- --- --- Adding Roboarm")
-         
-         
-         if let botArmScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Roboarm.scn") {
-         print("--- --- --- Adding Roboarm child")
-         let botNode = botArmScene.rootNode.childNode(withName: "Roboarm", recursively: false)!.clone()
-         botNode.position = SCNVector3(0, 4.39, 0)
-         let trussNode = scene.rootNode.childNode(withName: "Truss", recursively: false)!
-         trussNode.addChildNode(botNode)
-         }
-         
-         
-         }
-         */
-        
+        for item in station?.truss.tComponents ?? [] {
+            print("Truss Component: \(item.posIndex)")
+            guard let pos = item.getPosition() else { continue }
+            guard let eul = item.getRotation() else { continue }
+            switch item.allowedType {
+                case .Solar:
+                    if item.itemID != nil {
+                        print("Solar Panel: \(item.posIndex) pos:\(pos), euler:\(eul)")
+                        let solarScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/SolarPanel.scn")
+                        if let solarPanel = solarScene?.rootNode.childNode(withName: "SolarPanel", recursively: true)?.clone() {
+                            solarPanel.position = SCNVector3(pos.x, pos.y, pos.z)
+                            solarPanel.eulerAngles = SCNVector3(eul.x, eul.y, eul.z)
+                            solarPanel.scale = SCNVector3.init(x: 1.5, y: 2.4, z: 2.4)
+                            trussNode.addChildNode(solarPanel)
+                        }
+                    }
+                case .RoboArm: continue
+                case .Radiator: continue
+            }
+        }
     }
     
     // MARK: - Initializer and Setup
@@ -488,25 +492,30 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         }
         
         // Truss (Solar Panels)
-        let trussNode = scene.rootNode.childNode(withName: "Truss", recursively: true)!
-        for item in station?.truss.tComponents ?? [] {
-            guard let pos = item.getPosition() else { continue }
-            guard let eul = item.getRotation() else { continue }
-            switch item.allowedType {
-                case .Solar:
-                    if item.itemID != nil {
-                        let solarScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/SolarPanel.scn")
-                        if let solarPanel = solarScene?.rootNode.childNode(withName: "SolarPanel", recursively: true)?.clone() {
-                            solarPanel.position = SCNVector3(pos.x, pos.y, pos.z)
-                            solarPanel.eulerAngles = SCNVector3(eul.x, eul.y, eul.z)
-                            solarPanel.scale = SCNVector3.init(x: 1.5, y: 2.4, z: 2.4)
-                            trussNode.addChildNode(solarPanel)
-                        }
-                    }
-                case .RoboArm: continue
-                case .Radiator: continue
-            }
-        }
+        updateTrussLayout()
+//        print("Truss Layout:")
+//        let trussNode = scene.rootNode.childNode(withName: "Truss", recursively: true)!
+//        for item in station?.truss.tComponents ?? [] {
+//            print("Truss Component: \(item.posIndex)")
+//            guard let pos = item.getPosition() else { continue }
+//            guard let eul = item.getRotation() else { continue }
+//            switch item.allowedType {
+//                case .Solar:
+//                    if item.itemID != nil {
+//                        print("Solar Panel: \(item.posIndex) pos:\(pos), euler:\(eul)")
+//                        let solarScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/SolarPanel.scn")
+//                        if let solarPanel = solarScene?.rootNode.childNode(withName: "SolarPanel", recursively: true)?.clone() {
+//                            solarPanel.position = SCNVector3(pos.x, pos.y, pos.z)
+//                            solarPanel.eulerAngles = SCNVector3(eul.x, eul.y, eul.z)
+//                            solarPanel.scale = SCNVector3.init(x: 1.5, y: 2.4, z: 2.4)
+//                            trussNode.addChildNode(solarPanel)
+//                        }
+//                    }
+//                case .RoboArm: continue
+//                case .Radiator: continue
+//            }
+//        }
+        
         
         // Adds the stuff to the scene (builder unlocked items)
         for node:BuildItem in builder.nodes {
