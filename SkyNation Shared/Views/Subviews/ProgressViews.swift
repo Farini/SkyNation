@@ -258,12 +258,13 @@ struct AirCompositionView: View {
         
         VStack(alignment: .leading, spacing: 0) {
 //            Text("Air Quality")
+            let volume:Double = Double(air.getVolume())
             HStack {
-                VerticalBar(min: 0, max: 25, value: Double(air.o2)/Double(air.volume) * 100, color: .blue, name:"O2")
-                VerticalBar(min: 0, max: 2, value: Double(air.co2)/Double(air.volume) * 100, color: .orange, name:"CO2")
-                VerticalBar(min: 0, max: 85, value: Double(air.n2)/Double(air.volume) * 100, color: .green, name:"N2")
-                VerticalBar(min: 0, max: 5, value: Double(air.h2)/Double(air.volume) * 100, color: .blue, name:"H2")
-                VerticalBar(min: 0, max: 5, value: Double(air.ch4)/Double(air.volume) * 100, color: .blue, name:"CH4")
+                VerticalBar(min: 0, max: 25, value: Double(air.o2)/volume * 100, color: .blue, name:"O2")
+                VerticalBar(min: 0, max: 2, value: Double(air.co2)/volume * 100, color: .orange, name:"CO2")
+                VerticalBar(min: 0, max: 85, value: Double(air.n2)/volume * 100, color: .green, name:"N2")
+                VerticalBar(min: 0, max: 5, value: Double(air.h2)/volume * 100, color: .blue, name:"H2")
+                VerticalBar(min: 0, max: 5, value: Double(air.ch4)/volume * 100, color: .blue, name:"CH4")
                 
                 VStack {
                     ProgressCircle(value: Double(air.h2o), maxValue: 100, style: .line, backgroundEnabled: true, backgroundColor: Color.blue, foregroundColor: GameColors.lightBlue, lineWidth: 8)

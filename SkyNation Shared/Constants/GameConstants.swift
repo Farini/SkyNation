@@ -38,6 +38,7 @@ struct GameLogic {
     
     /// Amount of air a module requires
     static let airPerModule:Int = 225
+    static let energyPerModule:Int = 4
     
     /// Water consumption per `Person`
     static let waterConsumption:Int = 2

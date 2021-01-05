@@ -468,7 +468,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         self.modules = builder.modules
         
         // FIXME: - ⚠️ Tech Modifications
-        // ⚠️ Needs to add:
         
         // Load TechItem scene node, if any
         for tech in station?.unlockedTechItems ?? [] {

@@ -58,7 +58,7 @@ class ModulesViewModel: ObservableObject {
         self.reqVolume = requiredVolume
         
         // Available
-        self.airVolume = station.air.volume
+        self.airVolume = station.air.getVolume()
         
         // Can build
         self.canBuild = true // requiredVolume <= airVolume ? true:false
@@ -82,7 +82,7 @@ class ModulesViewModel: ObservableObject {
         print("Req Air: \(requiredAirVolume)")
         
         // Available
-        let availableAirVolume = station.air.volume
+        let availableAirVolume = station.air.getVolume()
         print("Available: \(availableAirVolume)")
         
         let neededVolume:Int = availableAirVolume - requiredAirVolume

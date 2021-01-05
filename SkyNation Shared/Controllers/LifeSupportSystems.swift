@@ -20,8 +20,8 @@ class LSSModel:ObservableObject {
     
     // Air
     @Published var requiredAir:Int          // Sum  of modules' volume
-    @Published var currentAir:Int           // Air Volume
-    @Published var currentPressure:Double   // volume / required air
+    @Published var airVolume:Int            // Air Volume
+    @Published var airPressure:Double       // volume / required air
     @Published var airQuality:String = "Good"
     
     @Published var liquidWater:Int
@@ -60,6 +60,11 @@ class LSSModel:ObservableObject {
         self.station = myStation
         self.accountDate = myStation.accountingDate
         
+        // Solar Panels
+        self.solarPanels = myStation.truss.solarPanels
+        let totalCharge = myStation.truss.solarPanels.map({ $0.maxCurrent() }).reduce(0, +)
+        self.energyProduction = totalCharge
+        
         // Batteries
         let batteryPack = myStation.truss.batteries
         self.batteries = batteryPack
@@ -79,29 +84,20 @@ class LSSModel:ObservableObject {
             self.levelZCap = 1000
         }
         
-        // Solar Panels
-        self.solarPanels = myStation.truss.solarPanels
-        let totalCharge = myStation.truss.solarPanels.map({ $0.maxCurrent() }).reduce(0, +)
-        
-        self.energyProduction = totalCharge //deltaZ
-        
-        // Account for energy change
-        var deltaZ = totalCharge
-        
         // Peripherals
         self.peripherals = myStation.peripherals
         let workingPeripherals = myStation.peripherals.filter({ $0.isBroken == false && $0.powerOn == true })
         let energyFromPeripherals:Int = workingPeripherals.map({$0.peripheral.energyConsumption}).reduce(0, +)
-        
         self.consumptionPeripherals = energyFromPeripherals
-        deltaZ -= energyFromPeripherals
+        
+        // Account for energy change
+        var deltaZ = totalCharge - energyFromPeripherals
         
         // Modules Consumption
         let modulesCount = myStation.labModules.count + myStation.habModules.count + myStation.bioModules.count
         
         // FIXME: - Module Consumption (Update)
-        let modulesConsume = modulesCount * 4
-        
+        let modulesConsume = modulesCount * GameLogic.energyPerModule
         self.consumptionModules = modulesConsume
         deltaZ -= modulesConsume
         
@@ -114,11 +110,11 @@ class LSSModel:ObservableObject {
         
         let theAir = myStation.air
         air = theAir
-        currentAir = theAir.volume
-        currentPressure = Double(theAir.volume / (reqAir + 1)) * 100.0
+        airVolume = theAir.getVolume()
+        airPressure = Double(theAir.getVolume()) / Double((reqAir + 1)) * 100.0
         
-        self.levelO2 = (Double(theAir.o2) / Double(theAir.volume)) * 100
-        self.levelCO2 = (Double(theAir.co2) / Double(theAir.volume)) * 100
+        self.levelO2 = (Double(theAir.o2) / Double(theAir.getVolume())) * 100
+        self.levelCO2 = (Double(theAir.co2) / Double(theAir.getVolume())) * 100
         
         // Tanks + Water
         self.tanks = myStation.truss.tanks
@@ -153,8 +149,90 @@ class LSSModel:ObservableObject {
     
     func updateDisplayVars() {
         
+        let myStation = station
+        
+        // Solar Panels
+        self.solarPanels = myStation.truss.solarPanels
+        let totalCharge = myStation.truss.solarPanels.map({ $0.maxCurrent() }).reduce(0, +)
+        self.energyProduction = totalCharge
+        
         // Batteries
-        let batteryPack = station.truss.getBatteries()
+        let batteryPack = myStation.truss.batteries
+        self.batteries = batteryPack
+        if !batteryPack.isEmpty {
+            let totalCurrent = batteryPack.map({ $0.current }).reduce(0, +)
+            let totalCapacity = batteryPack.map({ $0.capacity }).reduce(0, +)
+            
+            self.levelZ = Double(totalCurrent)
+            self.levelZCap = Double(totalCapacity)
+        }
+        
+        // Peripherals
+        self.peripherals = myStation.peripherals
+        let workingPeripherals = myStation.peripherals.filter({ $0.isBroken == false && $0.powerOn == true })
+        let energyFromPeripherals:Int = workingPeripherals.map({$0.peripheral.energyConsumption}).reduce(0, +)
+        self.consumptionPeripherals = energyFromPeripherals
+        
+        // Account for energy change
+        var deltaZ = totalCharge - energyFromPeripherals
+        
+        // Modules Consumption
+        let modulesCount = myStation.labModules.count + myStation.habModules.count + myStation.bioModules.count
+        
+        // FIXME: - Module Consumption (Update)
+        let modulesConsume = modulesCount * GameLogic.energyPerModule
+        self.consumptionModules = modulesConsume
+        deltaZ -= modulesConsume
+        
+        self.batteriesDelta = deltaZ
+        
+        // FIXME: - Adjust Air variables (Update)
+        // Air
+        let reqAir = station.calculateNeededAir()
+        self.requiredAir = reqAir
+        
+        let theAir = myStation.air
+        air = theAir
+        airVolume = theAir.getVolume()
+        airPressure = Double(theAir.getVolume()) / Double((reqAir + 1)) * 100.0
+        
+        self.levelO2 = (Double(theAir.o2) / Double(theAir.getVolume())) * 100
+        self.levelCO2 = (Double(theAir.co2) / Double(theAir.getVolume())) * 100
+        
+        // Tanks + Water
+        self.tanks = myStation.truss.tanks
+        let waterTanks:[Tank] = myStation.truss.tanks.filter({ $0.type == .h2o })
+        
+        self.liquidWater = waterTanks.map({ $0.current }).reduce(0, +)
+        
+        // Ingredients (Boxes)
+        self.boxes = myStation.truss.extraBoxes
+        
+        // People
+        self.inhabitants = myStation.habModules.map({ $0.inhabitants.count }).reduce(0, +) //myStation.people.count
+        
+        // Food
+        let stationFood = station.food
+        var totalFood = stationFood
+        for bioModule in station.bioModules {
+            for bioBox in bioModule.boxes.filter({ $0.mode == .multiply}) {
+                totalFood.append(contentsOf: bioBox.population.filter({ bioBox.perfectDNA == $0 }))
+            }
+        }
+        self.availableFood = totalFood
+        
+        // Accounting
+        self.accountingReport = station.accounting
+        
+        // After initialized
+        self.peripherals.append(myStation.truss.antenna)
+        updateEnergyLevels()
+        
+        
+        
+        /*
+        // Batteries
+        let batteryPack = station.truss.batteries
         if !batteryPack.isEmpty {
             self.batteries = batteryPack
             var lz = 0
@@ -180,11 +258,11 @@ class LSSModel:ObservableObject {
         
         let theAir = station.air
         air = theAir
-        currentAir = theAir.volume
-        currentPressure = Double(theAir.volume / (reqAir + 1)) * 100.0
+        airVolume = theAir.getVolume()
+        airPressure = Double(theAir.getVolume() / (reqAir + 1)) * 100.0
         
-        self.levelO2 = (Double(theAir.o2) / Double(theAir.volume)) * 100
-        self.levelCO2 = (Double(theAir.co2) / Double(theAir.volume)) * 100
+        self.levelO2 = (Double(theAir.o2) / Double(theAir.getVolume())) * 100
+        self.levelCO2 = (Double(theAir.co2) / Double(theAir.getVolume())) * 100
         
         // Tanks + Water
         let oxyT1 = Tank(type: .o2)
@@ -203,7 +281,9 @@ class LSSModel:ObservableObject {
         
         print("Updating displays CO2:\(self.levelCO2)")
         print("Updating displays Z:\(self.levelZ)")
+        */
     }
+    
     
     func releaseInAir(tank:Tank, amount:Int) {
         for idx in 0..<station.truss.tanks.count {
@@ -259,8 +339,8 @@ class LSSModel:ObservableObject {
 //            }
         }
         
-        self.levelO2 = (Double(air.o2) / Double(air.volume)) * 100
-        self.levelCO2 = (Double(air.co2) / Double(air.volume)) * 100
+        self.levelO2 = (Double(air.o2) / Double(air.getVolume())) * 100
+        self.levelCO2 = (Double(air.co2) / Double(air.getVolume())) * 100
         
         // Scrub CO2
         let scrubbers = self.peripherals.filter({ $0.peripheral == PeripheralType.ScrubberCO2 }).count
@@ -279,7 +359,7 @@ class LSSModel:ObservableObject {
         if let first = o2Tanks.first {
             print("Opening...")
             air.o2 += first.current
-            air.volume += first.current
+//            air.getVolume += first.current
         }
         
     }
@@ -287,8 +367,8 @@ class LSSModel:ObservableObject {
     func consumeOxygen(amt:Int) {
         air.o2 -= amt
         air.co2 += amt
-        self.levelO2 = (Double(air.o2) / Double(air.volume)) * 100
-        self.levelCO2 = (Double(air.co2) / Double(air.volume)) * 100
+        self.levelO2 = (Double(air.o2) / Double(air.getVolume())) * 100
+        self.levelCO2 = (Double(air.co2) / Double(air.getVolume())) * 100
         if !consumeEnergy(amt: 10) {
             print("Not enough energy")
         }
@@ -302,7 +382,7 @@ class LSSModel:ObservableObject {
             air.co2 = max(0, air.co2 - amt)
         }
         
-        self.levelCO2 = (Double(air.co2) / Double(air.volume)) * 100
+        self.levelCO2 = (Double(air.co2) / Double(air.getVolume())) * 100
 //        updateEnergyLevels()
         updateDisplayVars()
     }
@@ -363,8 +443,9 @@ class LSSModel:ObservableObject {
     func runAccounting() {
         print("Going to run accounting...")
         station.runAccounting()
+        updateDisplayVars()
         accountingProblems = LocalDatabase.shared.accountingProblems
-        accountingReport = station.accounting
+//        accountingReport = station.accounting
     }
     
     /// Save Station

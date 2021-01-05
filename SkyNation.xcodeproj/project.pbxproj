@@ -317,6 +317,10 @@
 		8569A337259F81110057A518 /* RectanglesMoving.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A318259F81110057A518 /* RectanglesMoving.fsh */; };
 		8569A338259F81110057A518 /* RectanglesMoving.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A318259F81110057A518 /* RectanglesMoving.fsh */; };
 		8569A339259F81110057A518 /* RectanglesMoving.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8569A318259F81110057A518 /* RectanglesMoving.fsh */; };
+		8569A34B25A3D9590057A518 /* AirComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A34A25A3D9590057A518 /* AirComposition.swift */; };
+		8569A34C25A3D9590057A518 /* AirComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A34A25A3D9590057A518 /* AirComposition.swift */; };
+		8569A34D25A3D9590057A518 /* AirComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A34A25A3D9590057A518 /* AirComposition.swift */; };
+		8569A34E25A3D9590057A518 /* AirComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A34A25A3D9590057A518 /* AirComposition.swift */; };
 		8579750F259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
 		85797510259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
 		85797511259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
@@ -450,6 +454,7 @@
 		8569A316259F81110057A518 /* HealthShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = HealthShader.fsh; sourceTree = "<group>"; };
 		8569A317259F81110057A518 /* CirclesMovingShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CirclesMovingShader.fsh; sourceTree = "<group>"; };
 		8569A318259F81110057A518 /* RectanglesMoving.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = RectanglesMoving.fsh; sourceTree = "<group>"; };
+		8569A34A25A3D9590057A518 /* AirComposition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirComposition.swift; sourceTree = "<group>"; };
 		8579750E259B9E70004C54D2 /* FlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipView.swift; sourceTree = "<group>"; };
 		85797517259BD394004C54D2 /* ItemCollectionViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCollectionViews.swift; sourceTree = "<group>"; };
 		85C3418425905A7500BF82F9 /* TutorialNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialNode.swift; sourceTree = "<group>"; };
@@ -686,6 +691,7 @@
 			isa = PBXGroup;
 			children = (
 				8536F351258D475D00B509D2 /* Truss.swift */,
+				8569A34A25A3D9590057A518 /* AirComposition.swift */,
 			);
 			path = Truss;
 			sourceTree = "<group>";
@@ -1071,6 +1077,7 @@
 			files = (
 				8536F441258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				8579750F259B9E70004C54D2 /* FlipView.swift in Sources */,
+				8569A34B25A3D9590057A518 /* AirComposition.swift in Sources */,
 				8536F39A258D475D00B509D2 /* TechTree.swift in Sources */,
 				8559201525959A4300CF5467 /* SideMenuNode.swift in Sources */,
 				8536F46D258D481700B509D2 /* CamControlNode.swift in Sources */,
@@ -1144,6 +1151,7 @@
 			files = (
 				8536F442258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				85797510259B9E70004C54D2 /* FlipView.swift in Sources */,
+				8569A34C25A3D9590057A518 /* AirComposition.swift in Sources */,
 				8536F39B258D475D00B509D2 /* TechTree.swift in Sources */,
 				8559201625959A4300CF5467 /* SideMenuNode.swift in Sources */,
 				8536F46E258D481700B509D2 /* CamControlNode.swift in Sources */,
@@ -1217,6 +1225,7 @@
 			files = (
 				8536F443258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				85797511259B9E70004C54D2 /* FlipView.swift in Sources */,
+				8569A34D25A3D9590057A518 /* AirComposition.swift in Sources */,
 				8536F39C258D475D00B509D2 /* TechTree.swift in Sources */,
 				8559201725959A4300CF5467 /* SideMenuNode.swift in Sources */,
 				8536F46F258D481700B509D2 /* CamControlNode.swift in Sources */,
@@ -1314,6 +1323,7 @@
 				8536F409258D47D000B509D2 /* EarthRequestView.swift in Sources */,
 				8536F478258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				8536F319258D361100B509D2 /* GameConstants.swift in Sources */,
+				8569A34E25A3D9590057A518 /* AirComposition.swift in Sources */,
 				8536F429258D47D000B509D2 /* LifeSupportView.swift in Sources */,
 				8536F375258D475D00B509D2 /* Persistance.swift in Sources */,
 				8579751B259BD394004C54D2 /* ItemCollectionViews.swift in Sources */,

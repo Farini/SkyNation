@@ -318,9 +318,18 @@ class Station:Codable {
         }
         
         // put back poop
-        let poopSpill = truss.refillContainers(of: .wasteLiquid, amount: accumulatedPoop)
+        let poopSpill = truss.refillContainers(of: .wasteSolid, amount: accumulatedPoop)
         if poopSpill > 0 {
             problems.append("💩 Solid waste spilling: \(poopSpill)")
+        }
+        
+        // 5. Modules
+        // + Energy Consumption
+        let modulesCount = habModules.count + labModules.count + bioModules.count
+        let energyForModules = modulesCount * GameLogic.energyPerModule
+        let emResult = truss.consumeEnergy(amount: energyForModules)
+        if emResult == true {
+            print("Modules consumed energy")
         }
         
         // Report...
@@ -335,8 +344,8 @@ class Station:Codable {
         
         // Air Adjustments
         let airNeeded = calculateNeededAir()
-        if airNeeded > tempAir.volume {
-            let delta = airNeeded - tempAir.volume
+        if airNeeded > tempAir.getVolume() {
+            let delta = airNeeded - tempAir.getVolume()
             if let airTank = truss.tanks.filter({ $0.type == .air }).first {
                 let airXfer = min(delta, airTank.current)
                 problems.append("💨 Air adjustment: \(airXfer)")
@@ -346,19 +355,30 @@ class Station:Codable {
             }
         }
         // Oxygen Adjust
-        let oxygenLevel = tempAir.o2 / tempAir.volume
-        let optimalOxygen = Int(0.2 * Double(tempAir.volume))
-        if oxygenLevel < optimalOxygen {
-            if let oxygen = truss.tanks.filter({ $0.type == .o2 && $0.current > 10 }).first {
-                let o2use = min(optimalOxygen, oxygen.current)
-                oxygen.current -= o2use
-                tempAir.o2 += o2use
+        let oxyNeeded = tempAir.needsOxygen()
+        if oxyNeeded > 0 {
+            if let oxygenTank:Tank = truss.tanks.filter({ $0.type == .o2 && $0.current > 10 }).first {
+                let oxygenUse = min(oxyNeeded, oxygenTank.current)
+                // Update Tank
+                oxygenTank.current -= oxygenUse
+                tempAir.o2 += oxygenUse
             }
         }
+        // Remove Empty Tanks
+        truss.tanks.removeAll(where: { $0.current <= 0 })
         
-        // 5. Modules
-        // + Energy Consumption
-        // + Activities
+//        let oxygenLevel:Double = Double(tempAir.o2) / Double(tempAir.volume)
+//        let optimalOxygen:Double = 0.22
+//        if oxygenLevel < optimalOxygen {
+//            if let oxygen = truss.tanks.filter({ $0.type == .o2 && $0.current > 10 }).first {
+//                let o2Amt = optimalOxygen * Double(tempAir.volume)
+//                let o2use = min(optimalOxygen, oxygen.current)
+//                oxygen.current -= o2use
+//                tempAir.o2 += o2use
+//            }
+//        }
+        
+        
         
         // Report
         self.accounting = report
@@ -401,7 +421,7 @@ class Station:Codable {
         // Each Requires 75?
         let totalCount = labs + habs + bios
         let requiredAir = totalCount * GameLogic.airPerModule
-        let suppliedAir = self.air.volume
+        let suppliedAir = self.air.getVolume()
         
         print("--- Air:")
         print("--- Required: \(requiredAir)")

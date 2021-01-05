@@ -95,9 +95,9 @@ struct LifeSupportView: View {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text("Air Quality: \(lssModel.air.airQuality().rawValue)")
-                                        Text("Volume: \(Double(self.lssModel.air.volume), specifier: "%.2f") m3 | Required: \(Double(self.lssModel.requiredAir), specifier: "%.2f") m3")
+                                        Text("Volume: \(Double(self.lssModel.air.getVolume()), specifier: "%.2f") m3 | Required: \(Double(self.lssModel.requiredAir), specifier: "%.2f") m3")
                                             .foregroundColor(GameColors.lightBlue)
-                                        Text("Pressure: \(Double(self.lssModel.currentPressure), specifier: "%.2f") KPa")
+                                        Text("Pressure: \(Double(self.lssModel.airPressure), specifier: "%.2f") KPa")
                                             .foregroundColor(.green)
                                     }
                                     
@@ -278,7 +278,7 @@ struct LifeSupportView: View {
                         // Accounting
                         ScrollView {
                             Text("Accounting").font(.headline)
-                            Text("Air Vol. \(lssModel.air.volume)")
+                            Text("Air Vol. \(lssModel.air.getVolume())")
                             Text("O2: \(lssModel.air.o2)")
                             Text("CO2: \(lssModel.air.co2)")
 //                            Text("N2: \(lssModel.air.n2)")
@@ -298,7 +298,7 @@ struct LifeSupportView: View {
                                         .padding([.top], 4)
                                         .padding([.bottom], 6)
                                     
-                                    Text("Air Start (V): \(report.airStart.volume)")
+                                    Text("Air Start (V): \(report.airStart.getVolume())")
                                     
                                     Text("Energy Start: \(report.energyStart)")
                                     Text("Energy Input: \(report.energyInput)")

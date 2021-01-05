@@ -94,34 +94,21 @@ Items being worked on
 
 ## 📝 Doing - Present
 
-- [X] 3/8 Accounting
-    - [X] Basic Accounting (testable)
-    - [X] Person's happiness (if cuppola, airlock, etc.)
-    - [X] View Accounting Problems
-    - [ ] Vehicle Accounting View
-    - [ ] Accounting Previews
-    - [ ] Save Accounting Problems
-    - [ ] Accounting Report object
-    
 - [X] 2/13 Scene Improvements
+    - [ ] Remodel Cuppola
+    - [ ] Remodel Airlock
+    - [ ] Remodel Delivery Vehicle
+    - [ ] Remodel Space Vehicle
+    - [ ] Earth with Emission
     - [X] Truss View creation
-        - [ ] Solar Panel positions
-        - [ ] Control where each solar panel goes
+        - [X] Solar Panel positions
+        - [X] Control where each solar panel goes
     - [X] 1/3 Notify scene when tech is ready (not working)
-        - [ ] Update Scene
-        - [ ] Show News
+        - [X] Update Scene
+        - [ ] Show  News
         - [ ] Scene is showing Serial builder ahead of time. Check isUnlocked vs isResearched
         
-- [ ] 4/8 Garage View Improvements
-    - [X] Time to create SpaceVehicle
-    - [X] Circular progress View
-    - [X] Transfer Building Vehicles to Built Vehicles automatically
-    - [X] Vehicle Row improvements
-    - [X] Better Vehicle Assembly
-    - [ ] Initial Push (Fuel)
-    - [ ] Trajectory (+animations ?)
-    
-- [ ] 5/13 Scene Overlay
+- [ ] 6/13 Scene Overlay
     - [X] Player
     - [X] Camera Control
     - [X] LSS - Air Control
@@ -132,9 +119,9 @@ Items being worked on
     - [X] Slider that controls Scene camera's X axis
     - [X] News (Centered)
     - [X] Fix iOS Colors
+    - [X] Coin Icon
     - [ ] Put icons inside buttons
-    - [ ] Time Token Icon
-    - [ ] Delivery Token Icon
+    - [ ] Time Token Icon (Helmet)
     - [ ] Add colors / shaders
     - [ ] 1/3 Camera options + animations
         - [X] Perspective view
@@ -142,13 +129,17 @@ Items being worked on
         - [X] Front View - CameraFront
         - [ ] Bring Regular Camera Closer to Scene
         - [ ] Adjust Scaling (Focal Length)? of Cameras
+        - [ ] Adjust animation with midpoints
+        
+- [ ] 4/8 Garage View Improvements
+    - [X] Time to create SpaceVehicle
+    - [X] Circular progress View
+    - [X] Transfer Building Vehicles to Built Vehicles automatically
+    - [X] Vehicle Row improvements
+    - [X] Better Vehicle Assembly
+    - [ ] Initial Push (Fuel)
+    - [ ] Trajectory (+animations ?)
     
-    
-- [ ] 1/3 iOS View Presentation
-    - [X] Present view on iPad
-    - [X] View dismissal
-    - [ ] Test iPhone View sizes
-
 - [ ] 7/13 Basic Views
     - [X] Ingredients and sufficiency
     - [X] Create a general Header View in SwiftUI for all SwiftUI base views
@@ -157,9 +148,18 @@ Items being worked on
     - [ ] Improve General Header View
     - [ ] Pass functions (Change skin, Rename, etc.)
     - [ ] Error messages
+    - [ ] Eliminate Horizontal Scrollers
 
 ## 📝 To Do - Future
 Grab things from this list as you go along.
+
+- [X] 5/8 Accounting
+    - [X] Basic Accounting (testable)
+    - [X] Person's happiness (if cuppola, airlock, etc.)
+    - [X] View Accounting Problems
+    - [X] Accounting Problems
+    - [X] Accounting Report object
+    - [ ] Vehicle Accounting View
 
 - [ ] 0/21 Server
     - [ ] Server test address
@@ -169,26 +169,34 @@ Grab things from this list as you go along.
     - [ ] Guilds
 
 - [ ] 8/13 Data Model
+    - [X] Accounting Adjustments
+    - [ ] 0/8 Mars Model
     - [ ] 5/8 TechTree improvements (Tree improved, Add Antenna upgrades, Charge ingredients, electricity, Select Humans, Fix Time)
         - [X] 22 Items
         - [ ] Antenna Updates
         - [ ] Improve and use PlayerObject
-
-- [ ] 3/13 Station Scene
+        
+- [ ] 3/13 Station Scene - Part II
     - [ ] Improve Background HDRI image
     - [ ] Loading
     - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
     - [ ] Roboarm animation
     - [ ] Earth Revealage
-    - [ ] Earth Light Emission
     - [ ] Implement 'Skin' on all Modules
-    - [ ] 1/3 Cleanup Original Scene
+    - [ ] Cleanup Original Scene
     - [ ] Simplify Builder (Delete orientation, etc.) - Questionable
     - [ ] Add Modules 7 ... 10
     - [ ] 1/3 Ship Animation (Needs better particle emitter, plus open the shell)
         - [ ] Particle emitter on all engines
         - [ ] Animate particle emission correctly
         - [ ] Fix Model underneath lid
+        
+- [ ] 1/3 iOS View Presentation
+    - [X] Present view on iPad
+    - [X] View dismissal
+    - [X] Test iPhone View sizes
+    - [ ] Adjust iPhone View sizes
+
 
 - [ ] 1/13 Create Mars Scene
 - [ ] 0/21 Mars Views & Controllers
