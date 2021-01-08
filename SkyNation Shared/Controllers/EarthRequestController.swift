@@ -301,6 +301,10 @@ class EarthRequestController:ObservableObject {
                     let dna = PerfectDNAOption.allCases.randomElement()!
                     station.food.append(dna.rawValue)
                 }
+            } else if ingredientBox.type == .Water {
+                // Water
+                let waterTank = Tank(type: .h2o, full: true)
+                station.truss.tanks.append(waterTank)
             } else {
                 // Normal Ingredient
                 station.truss.extraBoxes.append(ingredientBox)

@@ -36,10 +36,6 @@ class Truss:Codable {
         return profits + level
     }
     
-//    func getBatteries() -> [Battery] {
-//        return batteries
-//    }
-    
     func getTanks() -> [Tank] {
         var tankArray:[Tank] = []
         for tank in tanks {
@@ -68,15 +64,6 @@ class Truss:Codable {
     // FIXME: - Modifications
     // ⚠️ Needs to add and test:
     var tComponents:[TrussComponent]
-    
-    
-    // NEW (Under test 12/08/2020)
-//    func addNewSolarPanel() {
-//        // Automatically places a new Solar Panel, after its made
-//        // Check PeriPositions
-//        // Count the objects to set "positionIndex"
-//
-//    }
     
     /**
      Adds a Solar Panel to the station and assigns it to a truss component.
@@ -141,11 +128,12 @@ class Truss:Codable {
     
     // MARK: - Refills
     
-    // FIXME: - Putting back in Containers
-    // Put back....
-    // Water
-    // Pee (wasteLiquid)
-    // Poop (wasteSolid)
+    /**
+     Refills Tanks (Usually Water) after resetting them.
+     - Parameter type: The type of `Tank` to be refilled
+     - Parameter amount: The amount of liquid, or gas to go in the `Tank` array.
+     - Returns: The amount that could **NOT** fit the `Tank`
+     */
     func refillTanks(of type:TankType, amount:Int) -> Int {
         var leftOvers:Int = amount
         let tanksArray = tanks.filter({ $0.type == type })
@@ -156,23 +144,16 @@ class Truss:Codable {
                 let extra = tank.fillUp(leftOvers)
                 leftOvers = max(extra, 0)
             }
-            
-            
-//            if leftOvers <= 0 {
-//                tank.current = 0
-//            }else{
-//                let input = leftOvers
-//                let output = tank.fillUp(input)
-//                leftOvers = output
-//            }
         }
         return leftOvers
     }
     
-    // Put back....
-    // Water
-    // Pee (wasteLiquid)
-    // Poop (wasteSolid)
+    /**
+     Refills Containers (Pee, and poop))
+     - Parameter type: The type of `StorageBox` to be refilled
+     - Parameter amount: The amount of storage,  to go in the `StorageBox` array.
+     - Returns: The amount that could **NOT** fit the `StorageBox`(es).
+     */
     func refillContainers(of type:Ingredient, amount:Int) -> Int {
         var leftOvers = amount
         let boxArray = extraBoxes.filter({ $0.type == type })
@@ -310,6 +291,17 @@ class Truss:Codable {
     }
     
     // Energy
+    
+    /**
+     Removes a `Battery` object. (Usually when transferring to a `SpaceVehicle`
+     - Parameters:
+     - battery: The `Battery` object to be removed.
+     - Returns: A `boolean` indicating whther it was successful. */
+    func removeBattery(battery:Battery) -> Bool {
+        guard let idx = batteries.firstIndex(where: { $0.id == battery.id }) else { return false }
+        batteries.remove(at: idx)
+        return true
+    }
     
     /**
      Pays (consume) the amount of energy passed. Note: Not responsible for saving.

@@ -95,12 +95,12 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
             case .Water: return Image(systemName: "drop") // sys
             case .Ceramic: return Image(systemName:"squares.below.rectangle") // sys
             
-            case .Food: return nil // don't have yet
+            case .Food: return Image("Food")
             case .wasteSolid: return nil // poop
             case .DCMotor: return Image("DCMotor")
             
             case .Lithium: return Image("Lithium")
-            case .Iron: return nil
+            case .Iron: return Image("Iron")
             case .wasteLiquid: return nil
             case .Silicate: return nil
             case .Fertilizer: return nil

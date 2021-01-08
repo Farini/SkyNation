@@ -10,8 +10,6 @@ import Foundation
 
 class Station:Codable {
     
-//    static let airPerModule:Int = 75
-    
     var modules:[Module]
     var labModules:[LabModule]
     var habModules:[HabModule]
@@ -27,7 +25,6 @@ class Station:Codable {
     var unlockedRecipes:[Recipe]
     var labActivities:[LabActivity]?
     
-//    var money:Double
     var earthOrder:PayloadOrder?
     
     var accountingDate:Date

@@ -69,14 +69,16 @@ class SceneDirector {
         
         if let order = order {
             if order.delivered == false {
-                print("Order NOT delivered.")
-                print("Deliver it now?")
-                gameController?.deliveryIsArriving()
-            } else {
                 print("Order is delivered.")
                 print("1 - Make the ship go away")
                 print("2 - Put the earth back in the scene, and start animating")
                 gameController?.deliveryIsOver()
+                
+                
+            } else {
+                print("Order NOT delivered.")
+                print("Deliver it now?")
+                gameController?.deliveryIsArriving()
             }
         } else {
             print("No order was passed....")

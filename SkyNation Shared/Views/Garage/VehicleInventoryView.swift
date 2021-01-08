@@ -22,6 +22,10 @@ struct VehicleInventoryView: View {
         self.controller = controller
         guard let veh = controller.selectedVehicle else { fatalError() }
         self.vehicle = veh
+        
+        self.tanks = controller.selectedVehicle!.tanks
+        self.batteries = controller.selectedVehicle!.batteries
+        self.peripherals = controller.selectedVehicle!.peripherals
     }
     
     var body: some View {
@@ -37,8 +41,10 @@ struct VehicleInventoryView: View {
                                 print("Add Tank here")
                                 if controller.addTank(tank: tank) {
                                     self.tanks.append(tank)
+                                    print("Added Tank: \(tank.type)")
                                 }else {
                                     self.tanks.removeAll(where: { $0.id == tank.id })
+                                    print("Removed Tank: \(tank.type)")
                                 }
                             }
                     }
@@ -52,8 +58,10 @@ struct VehicleInventoryView: View {
                                 print("Add Battery here")
                                 if controller.addBattery(battery: battery) {
                                     self.batteries.append(battery)
+                                    print("Added Battery")
                                 }else{
                                     self.batteries.removeAll(where: { $0.id == battery.id })
+                                    print("Removed Battery")
                                 }
                             })
                     }
@@ -94,6 +102,7 @@ struct VehicleInventoryView: View {
                             .padding([.leading, .trailing])
                             .font(.footnote)
                         
+                        // Vehicle Engine and Payload info
                         Group {
                             
                             HStack(alignment:.center, spacing:8) {
@@ -172,6 +181,11 @@ struct VehicleInventoryView: View {
                     .padding()
                 }
             }
+        }
+        .onAppear() {
+            self.tanks = vehicle.tanks
+            self.peripherals = vehicle.peripherals
+            self.batteries = vehicle.batteries
         }
     }
 }

@@ -99,8 +99,6 @@ enum MarsBot:String, Codable, CaseIterable, Hashable {
 
 class SpaceVehicle:Codable, Identifiable, Equatable {
     
-    
-    
     var id:UUID = UUID()
     var engine:EngineType           // [1] - Setup
     var marsBot:MarsBot?

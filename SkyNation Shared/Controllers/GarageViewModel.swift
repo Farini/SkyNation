@@ -18,44 +18,25 @@ enum GarageStatus {
 }
 
 enum VehicleBuildingStage {
+    
     case Engine     // Selecting Engine
     
-    // DECPRECATE
-//    case Satellite  // Selecting Satellite
-    
     case Inventory  // Adding Tanks, Batteries, etc
+    
+    case PrepLaunch
+    
     case Payload    // Adding Payload (RSS, robot, etc.)
     case Passengers // Selecting Passengers
     case Hiring     // Selecting Staff to work on it
     case Paying     // Paying
     case Confirm    // Confirming
+    
+    // Preparing for launch
 }
-/*
-enum GarageProgressType {
-    case none           // Looking at other vehicles, or main screen
-    case engine         // Building V - Deciding what engine
-    case satellite      // Building V - Deciding satellite
-    case inventory1     // Building V - Adding peripherals
-    // ------------
-    case payload
-    case heatshield
-    // -----------
-    case ready
-    // Build up the costs (engine, satellite, antenna)
-    // choose persons involved
-    // Person to build Engine
-    // Person to build Antenna
-    // Person to build Solar Panel (if any)
-    // Person to build LSS (if any)
-    // show costs + charge
-    case viewMission
-}
-*/
 
 class GarageViewModel:ObservableObject {
     
     // Status
-//    @Published var progress:GarageProgressType = .none
     @Published var garageStatus:GarageStatus = .idle
     @Published var station:Station
     @Published var garage:Garage
@@ -137,8 +118,8 @@ class GarageViewModel:ObservableObject {
         
         guard let vehicle = selectedVehicle else { fatalError() }
         
-        // Removing (was added)
         if vehicle.tanks.contains(where: { $0.id == tank.id }) {
+            // Removing (was added)
             vehicle.tanks.removeAll(where: { $0.id == tank.id })
             return false
         }else{
@@ -346,10 +327,66 @@ class GarageViewModel:ObservableObject {
         // Make sure this is selected vehicle
         guard selectedVehicle != nil && selectedVehicle == vehicle else { fatalError() }
         
+        // Status
         let vehicleStatus = vehicle.status
         print("Vehicle Status (Data): \(vehicleStatus)")
         
-        self.cancelSelection()
+        // Inventory
+        let weight = vehicle.calculateWeight()
+        print("Vehicle Weight: \(weight)")
+        
+        // Prepare for Launch
+        
+        // 1. Go through Inventory
+        var inventoryBool:Bool = true
+        
+        // 2. Charge tanks, batteries, and move peripherals
+        // 2.a Tanks
+        for tank in vehicle.tanks {
+            if station.truss.removeTank(tank: tank) == true {
+                print("Tank removed from Station -> Vehicle")
+            } else {
+                inventoryBool = false
+            }
+        }
+        // 2.b. Batteries
+        for battery in vehicle.batteries {
+            if station.truss.removeBattery(battery: battery) == true {
+                print("Removing Battery from Station -> Vehicle")
+            } else {
+                inventoryBool = false
+            }
+        }
+        // 2.c. Peripherals
+        for peripheral in vehicle.peripherals {
+            if station.removePeripheral(peripheral: peripheral) == true {
+                print("Removing Peripheral from Station -> Vehicle")
+            } else {
+                inventoryBool = false
+            }
+        }
+        // 2.d Boxes
+        // FIXME: - Add Boxes to Space Vehicle
+        
+        // Check if inventory was successful
+        if inventoryBool {
+            // Success
+        } else {
+            // Add Problem
+        }
+        
+        // 3. Set the UI to "Preparing for launch" (if vehicle is ready), or cancelSelection if not
+        if builtVehicles.contains(vehicle) {
+            // Prepare for launch
+            self.garageStatus = .planning(stage: .PrepLaunch)
+            
+        } else if buildingVehicles.contains(vehicle) {
+            // not ready. Cancel selection
+            self.cancelSelection()
+        }
+        // 4. Save station
+        
+        
     }
     
     /// Launches a SpaceVehicle to travel to Mars

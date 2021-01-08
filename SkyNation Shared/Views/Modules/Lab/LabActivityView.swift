@@ -42,7 +42,8 @@ struct LabActivityView:View {
                 Text("Ends: \(GameFormatters.dateFormatter.string(from:activity.dateEnds))")
             }
             
-            CirclePercentIndicator(percentage: CGFloat(viewModel.percentage))
+//            CirclePercentIndicator(percentage: CGFloat(viewModel.percentage))
+            GameActivityView(activity: activity)
             
             if viewModel.timeRemaining > 0 {
                 HStack {

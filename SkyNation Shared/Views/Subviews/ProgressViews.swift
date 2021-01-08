@@ -280,7 +280,7 @@ struct AirCompositionView: View {
         
     }
 }
-
+/*
 struct CirclePercentIndicator: View {
     
     var percentage:CGFloat
@@ -302,6 +302,8 @@ struct CirclePercentIndicator: View {
         .padding()
     }
 }
+*/
+
 
 struct PercentageIndicator: AnimatableModifier {
     var pct: CGFloat = 0
@@ -372,7 +374,7 @@ struct AirView_Previews: PreviewProvider {
     }
     
 }
-
+/*
 struct PercentageIndicator_Previews: PreviewProvider {
     @State var ctrl:Double = 0
     static var previews: some View {
@@ -380,3 +382,5 @@ struct PercentageIndicator_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
     }
 }
+*/
+

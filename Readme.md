@@ -46,8 +46,8 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
  - [ ] ★★★☆☆ Module, Hab, Lab, Bio
  - [ ] ★★☆☆☆ Earth Order
  - [ ] ★☆☆☆☆ Garage
- - [ ] ★☆☆☆☆ Accounting System
- - [ ] ★☆☆☆☆ Truss
+ - [ ] ★★☆☆☆ Accounting System
+ - [ ] ★★☆☆☆ Truss
  - [ ] ★★★☆☆ Life Support Systems
  - [ ] ☆☆☆☆☆ Travels Scene (v 1.1)
  - [ ] ☆☆☆☆☆ Mars Scene
@@ -60,7 +60,7 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
  Icons + 2D Overlays
  - [ ] ★★★★☆ Humans + Skills
  - [ ] ★★☆☆☆ Tanks, Containers, Ingredients, Peripherals
- - [ ] ★★☆☆☆ Scenes Overlay (Camera, Vehicles list, etc.)
+ - [ ] ★★★☆☆ Scenes Overlay (Camera, Vehicles list, etc.)
  - [ ] ☆☆☆☆☆ Action Icons - Buy, Cancel, Cheat, Tokens, etc.
  - [ ] ☆☆☆☆☆ Icons - App Icon
  

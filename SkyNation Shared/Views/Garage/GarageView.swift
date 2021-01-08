@@ -236,7 +236,8 @@ struct GarageView: View {
                             .foregroundColor(.orange)
                         
                         // Progress
-                        CirclePercentIndicator(percentage: CGFloat(controller.vehicleProgress ?? 0.0))
+//                        CirclePercentIndicator(percentage: CGFloat(controller.vehicleProgress ?? 0.0))
+                        GameActivityView(vehicle: sev)
                         
                         Divider()
                         HStack {
@@ -349,13 +350,12 @@ struct GarageView: View {
                 switch stage {
                 case .Engine:     // Selecting Engine
                     BuildingVehicleView(garageController: controller)
-                
-                // DEPRECATE
-//                case .Satellite:  // Selecting Satellite
-//                    Text("Satellite is deprecated. Choose robot instead")
 
                 case .Inventory:  // Adding Tanks, Batteries, etc
                     VehicleInventoryView(controller: controller)
+                    
+                case .PrepLaunch:
+                    LaunchingVehicleView(vehicle: controller.selectedVehicle!)
                 
                 // DEPRECATE
                 case .Payload:    // Adding Payload (RSS, robot, etc.)
@@ -588,9 +588,10 @@ struct TravellingVehicleView: View {
                         Text("Destination: \(vehicle.status.rawValue)")
                         Text("Time: \(GameFormatters.dateFormatter.string(from: vehicle.dateTravelStarts ?? Date()))")
                         Text("Arrive: \(GameFormatters.dateFormatter.string(from: vehicle.arriveDate()))")
-                        let pct = Date().timeIntervalSince(vehicle.dateTravelStarts!) / vehicle.arriveDate().timeIntervalSince(vehicle.dateTravelStarts!)
+//                        let pct = Date().timeIntervalSince(vehicle.dateTravelStarts!) / vehicle.arriveDate().timeIntervalSince(vehicle.dateTravelStarts!)
                         
-                        CirclePercentIndicator(percentage: CGFloat(pct))
+//                        CirclePercentIndicator(percentage: CGFloat(pct))
+                        GameActivityView(vehicle: vehicle)
                         
                         Text("Simulation: \(vehicle.simulation) hrs")
                         Divider()
@@ -614,7 +615,9 @@ struct TravellingVehicleView: View {
                         
                         Text("In Orbit")
                         Text("Simulation: \(vehicle.simulation) hrs")
-                        CirclePercentIndicator(percentage: 1.0)
+//                        CirclePercentIndicator(percentage: 1.0)
+                        GameActivityView(vehicle: vehicle)
+                        
                         Divider()
                         
                         // Buttons
