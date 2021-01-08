@@ -354,7 +354,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             
             earth.removeFromParentNode()
             
-            print("Do you see the earth ?")
+            print("Earth going, Ship arriving")
             
             
             // Add the Ship
@@ -362,23 +362,33 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 
                 ship.name = "Ship"
                 ship.position.z = -50
-                ship.position.y = -25 // -17.829
+                ship.position.y = -50 // -25
                 ship.position.x = 0
                 ship.eulerAngles = SCNVector3(x:90.0 * (.pi/180.0), y:0, z:0)
                 
                 scene.rootNode.addChildNode(ship)
                 
-                let move = SCNAction.move(by: SCNVector3(0, 7, 50), duration: 8.0)
+                // Move
+                let move = SCNAction.move(by: SCNVector3(0, 32, 50), duration: 12.0)
                 move.timingMode = .easeInEaseOut
                 
-                let rotate = SCNAction.rotateBy(x: -90.0 * (.pi/180.0), y: 0, z: 0, duration: 5.0)
-                let group = SCNAction.group([move, rotate])
-                
-                ship.runAction(group, completionHandler: {
-                    print("Ship arrived at location")
-                    for child in ship.childNodes {
+                // Kill Engines
+                let killWaiter = SCNAction.wait(duration: 8)
+                let killAction = SCNAction.run { shipNode in
+                    print("Kill Waiter")
+                    for child in shipNode.childNodes {
+                        print("Child \(child.description)")
                         child.particleSystems?.first?.birthRate = 0
                     }
+                }
+                let killSequence = SCNAction.sequence([killWaiter, killAction])
+                
+                let rotate = SCNAction.rotateBy(x: -90.0 * (.pi/180.0), y: 0, z: 0, duration: 5.0)
+                let group = SCNAction.group([move, rotate, killSequence])
+                
+                ship.runAction(group, completionHandler: {
+                    print("f")
+                    
                 })
             }
         } else {
@@ -554,7 +564,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             print("We have an order! Delivered: \(order.delivered)")
             let ship = scene.rootNode.childNode(withName: "Ship", recursively: false)
             ship?.position.z = -50
-            ship?.position.y = -25 // -17.829
+            ship?.position.y = -50 // -17.829
             
             #if os(macOS)
             ship?.eulerAngles = SCNVector3(x:90.0 * (.pi/180.0), y:0, z:0)
@@ -562,11 +572,23 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             ship?.eulerAngles = SCNVector3(x:90.0 * (Float.pi/180.0), y:0, z:0)
             #endif
             
-            let move = SCNAction.move(by: SCNVector3(0, 7, 50), duration: 8.0)
+            // Move
+            let move = SCNAction.move(by: SCNVector3(0, 32, 50), duration: 12.0)
             move.timingMode = .easeInEaseOut
             
+            // Kill Engines
+            let killWaiter = SCNAction.wait(duration: 6)
+            let killAction = SCNAction.run { shipNode in
+                print("Kill Waiter")
+                for child in shipNode.childNodes {
+                    print("Child \(child.description)")
+                    child.particleSystems?.first?.birthRate = 0
+                }
+            }
+            let killSequence = SCNAction.sequence([killWaiter, killAction])
+            
             let rotate = SCNAction.rotateBy(x: -90.0 * (.pi/180.0), y: 0, z: 0, duration: 5.0)
-            let group = SCNAction.group([move, rotate])
+            let group = SCNAction.group([move, rotate, killSequence])
             
             ship?.runAction(group, completionHandler: {
                 print("Ship arrived at location")

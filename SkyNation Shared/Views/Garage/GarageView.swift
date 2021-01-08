@@ -348,53 +348,46 @@ struct GarageView: View {
             case .planning(let stage):
                 
                 switch stage {
-                case .Engine:     // Selecting Engine
-                    BuildingVehicleView(garageController: controller)
-
-                case .Inventory:  // Adding Tanks, Batteries, etc
-                    VehicleInventoryView(controller: controller)
                     
-                case .PrepLaunch:
-                    LaunchingVehicleView(vehicle: controller.selectedVehicle!)
-                
-                // DEPRECATE
-                case .Payload:    // Adding Payload (RSS, robot, etc.)
-                    Group {
-                        Text("3 - Choose Payload")
-                        HStack {
-                            VStack {
-                                Text("Payload with engine \(self.selectedEngine!.rawValue)")
-                                Text("Support limit: \(self.selectedEngine!.payloadLimit)")
-                                Button("Add Payload") {
-                                    print("Satcom is a go")
-//                                    controller.makeProgress(new: .heatshield)
+                    case .Engine:       // Selecting Engine
+                        BuildingVehicleView(garageController: controller)
+                        
+                    case .Inventory:    // Adding Tanks, Batteries, and Solar array
+                        VehicleInventoryView(controller: controller)
+                        
+                    case .Descent:      // Adding Ingredients, Peripherals, and BotTech
+                        Group {
+                            Text("3 - Choose Payload")
+                            HStack {
+                                VStack {
+                                    Text("Payload with engine \(self.selectedEngine!.rawValue)")
+                                    Text("Support limit: \(self.selectedEngine!.payloadLimit)")
+                                    Button("Add Payload") {
+                                        print("Satcom is a go")
+                                        //                                    controller.makeProgress(new: .heatshield)
+                                    }
+                                    Button("No Payload") {
+                                        print("Satcom is a go")
+                                    }
                                 }
-                                Button("No Payload") {
-                                    print("Satcom is a go")
-                                }
-                            }
-                        }.padding()
-                    }
-                case .Passengers: // Selecting Passengers
-                    Group {
-                        Text("Passengers")
-                        Text("Passengers")
-                    }
-                case .Hiring:     // Selecting Staff to work on it
-                    Group {
-                        Text("Passengers")
-                        Text("Passengers")
-                    }
-                case .Paying:     // Paying
-                    Group {
-                        Text("Passengers")
-                        Text("Passengers")
-                    }
-                    
-                    
-                case .Confirm:    // Confirming
-                    Text("Confirm")
-//                    VehicleBuiltView(controller: self.controller, vehicle: (controller.selectedVehicle ?? self.vehicle) ?? SpaceVehicle(engine: .Hex6))
+                            }.padding()
+                        }
+                        
+                    case .Crew:         // Selecting Passengers
+                        Group {
+                            Text("Passengers")
+                            Text("Passengers")
+                        }
+                        
+                    case .PrepLaunch:   // Last Warnings
+                        LaunchingVehicleView(vehicle: controller.selectedVehicle!)
+                        
+                    case .Launching:    // Animation
+                        Group {
+                            Text("Launching")
+                            Text("---")
+                        }
+                        
                 }
                 
             case .simulating:

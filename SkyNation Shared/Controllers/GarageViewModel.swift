@@ -18,20 +18,12 @@ enum GarageStatus {
 }
 
 enum VehicleBuildingStage {
-    
     case Engine     // Selecting Engine
-    
-    case Inventory  // Adding Tanks, Batteries, etc
-    
-    case PrepLaunch
-    
-    case Payload    // Adding Payload (RSS, robot, etc.)
-    case Passengers // Selecting Passengers
-    case Hiring     // Selecting Staff to work on it
-    case Paying     // Paying
-    case Confirm    // Confirming
-    
-    // Preparing for launch
+    case Inventory  // Adding Tanks, Batteries, and Solar array
+    case Descent    // Adding Ingredients, Peripherals, and BotTech
+    case Crew       // Selecting Passengers
+    case PrepLaunch // Preparing for launch
+    case Launching  //
 }
 
 class GarageViewModel:ObservableObject {
@@ -383,6 +375,9 @@ class GarageViewModel:ObservableObject {
         } else if buildingVehicles.contains(vehicle) {
             // not ready. Cancel selection
             self.cancelSelection()
+        } else {
+            print("Something wrong. Vehicle should be building, or built.")
+            
         }
         // 4. Save station
         

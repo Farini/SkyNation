@@ -30,9 +30,9 @@ enum EngineType:String, Codable, CaseIterable, Hashable {
     var requiredXP:Int {
         switch self {
         case .Hex6: return 0
-        case .T12: return 10
-        case .T18: return 40
-        case .T22: return 100
+        case .T12: return 6
+        case .T18: return 20
+        case .T22: return 60
         }
     }
     

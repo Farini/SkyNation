@@ -100,6 +100,7 @@ Items being worked on
     - [ ] Remodel Delivery Vehicle
     - [ ] Remodel Space Vehicle
     - [ ] Earth with Emission
+    - [ ] 5 Models of Antenna
     - [X] Truss View creation
         - [X] Solar Panel positions
         - [X] Control where each solar panel goes
@@ -187,8 +188,8 @@ Grab things from this list as you go along.
     - [ ] Simplify Builder (Delete orientation, etc.) - Questionable
     - [ ] Add Modules 7 ... 10
     - [ ] 1/3 Ship Animation (Needs better particle emitter, plus open the shell)
-        - [ ] Particle emitter on all engines
-        - [ ] Animate particle emission correctly
+        - [X] Particle emitter on all engines
+        - [X] Animate particle emission correctly
         - [ ] Fix Model underneath lid
         
 - [ ] 1/3 iOS View Presentation

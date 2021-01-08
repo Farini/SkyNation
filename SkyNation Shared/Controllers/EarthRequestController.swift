@@ -216,7 +216,8 @@ class EarthRequestController:ObservableObject {
             
             // update scene after 1.2 seconds
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.2) {
-                SceneDirector.shared.didFinishDeliveryOrder(order: self.station.earthOrder)
+                SceneDirector.shared.didFinishPlacingOrder()
+                
             }
             
             // Save Data
@@ -333,7 +334,7 @@ class EarthRequestController:ObservableObject {
         
         // Update Scene
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.2) {
-            SceneDirector.shared.didFinishDeliveryOrder(order: self.station.earthOrder)
+            SceneDirector.shared.didFinishDeliveryOrder(order: currentOrder)
         }
         
         

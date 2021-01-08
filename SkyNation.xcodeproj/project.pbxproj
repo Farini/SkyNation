@@ -333,6 +333,10 @@
 		8569A3DB25A799840057A518 /* LaunchingVehicleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3D925A799840057A518 /* LaunchingVehicleView.swift */; };
 		8569A3DC25A799840057A518 /* LaunchingVehicleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3D925A799840057A518 /* LaunchingVehicleView.swift */; };
 		8569A3DD25A799840057A518 /* LaunchingVehicleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3D925A799840057A518 /* LaunchingVehicleView.swift */; };
+		8569A3E325A8D7870057A518 /* BoosterDiagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3E225A8D7870057A518 /* BoosterDiagramView.swift */; };
+		8569A3E425A8D7870057A518 /* BoosterDiagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3E225A8D7870057A518 /* BoosterDiagramView.swift */; };
+		8569A3E525A8D7870057A518 /* BoosterDiagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3E225A8D7870057A518 /* BoosterDiagramView.swift */; };
+		8569A3E625A8D7870057A518 /* BoosterDiagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3E225A8D7870057A518 /* BoosterDiagramView.swift */; };
 		8579750F259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
 		85797510259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
 		85797511259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
@@ -470,6 +474,7 @@
 		8569A3C725A624A30057A518 /* LoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderView.swift; sourceTree = "<group>"; };
 		8569A3D025A6353C0057A518 /* GameActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameActivityView.swift; sourceTree = "<group>"; };
 		8569A3D925A799840057A518 /* LaunchingVehicleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchingVehicleView.swift; sourceTree = "<group>"; };
+		8569A3E225A8D7870057A518 /* BoosterDiagramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoosterDiagramView.swift; sourceTree = "<group>"; };
 		8579750E259B9E70004C54D2 /* FlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipView.swift; sourceTree = "<group>"; };
 		85797517259BD394004C54D2 /* ItemCollectionViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCollectionViews.swift; sourceTree = "<group>"; };
 		85C3418425905A7500BF82F9 /* TutorialNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialNode.swift; sourceTree = "<group>"; };
@@ -794,6 +799,7 @@
 				8536F3CB258D47D000B509D2 /* BuildingVehicleView.swift */,
 				8536F3CA258D47D000B509D2 /* VehicleInventoryView.swift */,
 				8569A3D925A799840057A518 /* LaunchingVehicleView.swift */,
+				8569A3E225A8D7870057A518 /* BoosterDiagramView.swift */,
 			);
 			path = Garage;
 			sourceTree = "<group>";
@@ -1143,6 +1149,7 @@
 				8536F4AF258D49C900B509D2 /* TravelersView.swift in Sources */,
 				8536F372258D475D00B509D2 /* Persistance.swift in Sources */,
 				8536F3D2258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */,
+				8569A3E325A8D7870057A518 /* BoosterDiagramView.swift in Sources */,
 				8536F485258D481700B509D2 /* StationOverlayObject.swift in Sources */,
 				8536F366258D475D00B509D2 /* SkillData.swift in Sources */,
 				8536F48D258D481700B509D2 /* MarsColonyScene.swift in Sources */,
@@ -1220,6 +1227,7 @@
 				8536F4B0258D49C900B509D2 /* TravelersView.swift in Sources */,
 				8536F373258D475D00B509D2 /* Persistance.swift in Sources */,
 				8536F3D3258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */,
+				8569A3E425A8D7870057A518 /* BoosterDiagramView.swift in Sources */,
 				8536F486258D481700B509D2 /* StationOverlayObject.swift in Sources */,
 				8536F367258D475D00B509D2 /* SkillData.swift in Sources */,
 				8536F48E258D481700B509D2 /* MarsColonyScene.swift in Sources */,
@@ -1297,6 +1305,7 @@
 				8536F4B1258D49C900B509D2 /* TravelersView.swift in Sources */,
 				8536F374258D475D00B509D2 /* Persistance.swift in Sources */,
 				8536F3D4258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */,
+				8569A3E525A8D7870057A518 /* BoosterDiagramView.swift in Sources */,
 				8536F487258D481700B509D2 /* StationOverlayObject.swift in Sources */,
 				8536F368258D475D00B509D2 /* SkillData.swift in Sources */,
 				8536F48F258D481700B509D2 /* MarsColonyScene.swift in Sources */,
@@ -1376,6 +1385,7 @@
 				85C3419A259139D800BF82F9 /* GameSettingsView.swift in Sources */,
 				8536F395258D475D00B509D2 /* BioModule.swift in Sources */,
 				8536F3F9258D47D000B509D2 /* TankViews.swift in Sources */,
+				8569A3E625A8D7870057A518 /* BoosterDiagramView.swift in Sources */,
 				8536F41D258D47D000B509D2 /* VehicleInventoryView.swift in Sources */,
 				8536F411258D47D000B509D2 /* AnimationsTest.swift in Sources */,
 				8536F3FD258D47D000B509D2 /* PersonViews.swift in Sources */,

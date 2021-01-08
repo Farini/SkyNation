@@ -239,7 +239,7 @@ enum TankType:String, Codable, CaseIterable, Hashable {
         switch self {
             case .o2: return 100
             case .co2: return 25
-            case .n2: return 0
+            case .n2: return 50
             case .h2o: return 25
             case .h2: return 10
             case .ch4: return 50
