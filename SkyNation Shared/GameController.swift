@@ -486,6 +486,14 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             }
         }
         
+        // Antenna
+        if let oldAntenna = scene.rootNode.childNode(withName: "Antenna", recursively: false) {
+            oldAntenna.removeFromParentNode()
+        }
+        let antenna = Antenna3DNode()
+        antenna.position = SCNVector3(22.0, 1.5, 0.0)
+        scene.rootNode.addChildNode(antenna)
+        
         // Deprecate below after implementing above
         // Search Tech Tree for items unlocked, to add to scene
         for tech in station?.unlockedTechItems ?? [] {
@@ -562,9 +570,12 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         if let order = station?.earthOrder {
             // Load Ship
             print("We have an order! Delivered: \(order.delivered)")
-            let ship = scene.rootNode.childNode(withName: "Ship", recursively: false)
+            
+//            let ship = scene.rootNode.childNode(withName: "Ship", recursively: false)
+            var ship:DeliveryVehicleNode? = DeliveryVehicleNode()
             ship?.position.z = -50
             ship?.position.y = -50 // -17.829
+            scene.rootNode.addChildNode(ship!)
             
             #if os(macOS)
             ship?.eulerAngles = SCNVector3(x:90.0 * (.pi/180.0), y:0, z:0)
@@ -573,17 +584,14 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             #endif
             
             // Move
-            let move = SCNAction.move(by: SCNVector3(0, 32, 50), duration: 12.0)
+            let move = SCNAction.move(by: SCNVector3(0, 30, 50), duration: 12.0)
             move.timingMode = .easeInEaseOut
             
             // Kill Engines
             let killWaiter = SCNAction.wait(duration: 6)
             let killAction = SCNAction.run { shipNode in
                 print("Kill Waiter")
-                for child in shipNode.childNodes {
-                    print("Child \(child.description)")
-                    child.particleSystems?.first?.birthRate = 0
-                }
+                ship?.killEngines()
             }
             let killSequence = SCNAction.sequence([killWaiter, killAction])
             
