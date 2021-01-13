@@ -428,8 +428,21 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                             trussNode.addChildNode(solarPanel)
                         }
                     }
+                case .Radiator:
+                    print("Radiator slot: \(item.posIndex) pos:\(pos), euler:\(eul)")
+                    if item.itemID != nil {
+                        print("Radiator: \(item.posIndex) pos:\(pos), euler:\(eul)")
+                        let radiatorNode = RadiatorNode()
+                        radiatorNode.position = SCNVector3(pos.x, pos.y, pos.z)
+                        radiatorNode.eulerAngles = SCNVector3(eul.x, eul.y, eul.z)
+                        radiatorNode.scale = SCNVector3.init(x: 1.5, y: 1.5, z: 1.5)
+                        radiatorNode.setupAngles(new: nil)
+                        trussNode.addChildNode(radiatorNode)
+                    } else {
+                        continue
+                    }
                 case .RoboArm: continue
-                case .Radiator: continue
+                
             }
         }
     }
@@ -508,32 +521,9 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             }
         }
         
-        // Truss (Solar Panels)
+        // Truss (Solar Panels, Radiator, and Roboarm)
         updateTrussLayout()
-//        print("Truss Layout:")
-//        let trussNode = scene.rootNode.childNode(withName: "Truss", recursively: true)!
-//        for item in station?.truss.tComponents ?? [] {
-//            print("Truss Component: \(item.posIndex)")
-//            guard let pos = item.getPosition() else { continue }
-//            guard let eul = item.getRotation() else { continue }
-//            switch item.allowedType {
-//                case .Solar:
-//                    if item.itemID != nil {
-//                        print("Solar Panel: \(item.posIndex) pos:\(pos), euler:\(eul)")
-//                        let solarScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/SolarPanel.scn")
-//                        if let solarPanel = solarScene?.rootNode.childNode(withName: "SolarPanel", recursively: true)?.clone() {
-//                            solarPanel.position = SCNVector3(pos.x, pos.y, pos.z)
-//                            solarPanel.eulerAngles = SCNVector3(eul.x, eul.y, eul.z)
-//                            solarPanel.scale = SCNVector3.init(x: 1.5, y: 2.4, z: 2.4)
-//                            trussNode.addChildNode(solarPanel)
-//                        }
-//                    }
-//                case .RoboArm: continue
-//                case .Radiator: continue
-//            }
-//        }
-        
-        
+
         // Adds the stuff to the scene (builder unlocked items)
         for node:BuildItem in builder.nodes {
             
@@ -572,6 +562,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             print("We have an order! Delivered: \(order.delivered)")
             
 //            let ship = scene.rootNode.childNode(withName: "Ship", recursively: false)
+            // FIXME: - Replace this for function in DeliveryVehicleNode
+            
             var ship:DeliveryVehicleNode? = DeliveryVehicleNode()
             ship?.position.z = -50
             ship?.position.y = -50 // -17.829
@@ -699,15 +691,21 @@ extension TechItems {
                     return cuppolaObject
                 }
             case .Roboarm:
-                print("\n\n\n Looking for ROBOARM SCENE")
-                guard let roboScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Roboarm.scn") else { return nil }
-                print("\n\n\n Looking for ROBOARM CHILD")
-                if let robot = roboScene.rootNode.childNode(withName: "Roboarm", recursively: true)?.clone() {
-                    print("\n\n\n FOUND ROBOARM")
-                    let pos = Vector3D(x: 0, y: 4.58, z: 0)
-                    robot.position = SCNVector3(pos.x, pos.y, pos.z)
-                    return robot
-                }
+//                print("\n\n\n Looking for ROBOARM SCENE")
+//                guard let roboScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Roboarm.scn") else { return nil }
+//                print("\n\n\n Looking for ROBOARM CHILD")
+//                if let robot = roboScene.rootNode.childNode(withName: "Roboarm", recursively: true)?.clone() {
+//                    print("\n\n\n FOUND ROBOARM")
+//                    let pos = Vector3D(x: 0, y: 4.58, z: 0)
+//                    robot.position = SCNVector3(pos.x, pos.y, pos.z)
+//                    return robot
+//                }
+                let robNode = RoboArmNode()
+                let pos = Vector3D(x: 0, y: 4.58, z: 0)
+                robNode.position = SCNVector3(pos.x, pos.y, pos.z)
+                
+                return robNode
+                
             case .Airlock:
                 guard let airlockScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Airlock.scn") else { return nil }
                 if let airlockObject = airlockScene.rootNode.childNode(withName: "Airlock", recursively: true)?.clone() {

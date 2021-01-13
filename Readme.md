@@ -101,6 +101,7 @@ Items being worked on
     - [ ] Remodel Space Vehicle
     - [ ] Earth with Emission
     - [ ] 5 Models of Antenna
+    - [ ] SCNNodes
     - [X] Truss View creation
         - [X] Solar Panel positions
         - [X] Control where each solar panel goes
