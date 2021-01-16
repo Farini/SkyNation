@@ -20,7 +20,6 @@ protocol GameNavDelegate {
     
 }
 
-
 class GameController: NSObject, SCNSceneRendererDelegate {
 
     // Views
@@ -398,7 +397,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     /// Updates Which Solar Panels to show on the Truss, and Roboarm
     func updateTrussLayout() {
-//        print("Updating Truss in Scene...")
         
         // Truss (Solar Panels)
         print("Truss Layout Update:")
@@ -488,13 +486,28 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     /// Loads the **Station** Scene
     func loadStationScene() {
         
-        self.modules = builder.modules
+        self.modules = station?.modules ?? builder.modules //builder.modules
         
         // FIXME: - ⚠️ Tech Modifications
         
         // Load TechItem scene node, if any
         for tech in station?.unlockedTechItems ?? [] {
+            var modex:ModuleIndex?
+            switch tech {
+                case .module7: modex = .mod7
+                case .module8: modex = .mod8
+                case .module9: modex = .mod9
+                default: print("Not a module")
+            }
             if let node = tech.loadToScene() {
+                if let moduleIndex = modex {
+                    for module in station!.modules {
+                        if module.moduleDex == moduleIndex {
+                            print("Module Index Found both Scene and Model: \(moduleIndex.rawValue)")
+                            node.name = module.id.uuidString
+                        }
+                    }
+                }
                 scene.rootNode.addChildNode(node)
             }
         }
@@ -517,6 +530,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             switch tech {
                 case .Cuppola, .Roboarm, .garage, .module7:
                     print("⚠️ Attention! Needs to add Technology that isn't in the builder...")
+                    
                 default: continue
             }
         }
@@ -535,17 +549,23 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         if module.type == .Module {
                             print("[+] Module \(module.id)")
                         }
-                        if let moduleObj = module.loadFromScene() {
-                            scene.rootNode.addChildNode(moduleObj)
-                        }
-                        for peripheral in module.children {
-                            print("[-] Peripheral \(module.type), N:\(module.modelInfo.name)")
-                            if let periObj = peripheral.loadFromScene() {
-                                let obPos = module.modelInfo.position
-                                periObj.position = SCNVector3(obPos.x, obPos.y, obPos.z)
-                                scene.rootNode.addChildNode(periObj)
+                        if module.unlocked {
+                            print("Unlocked Module: \(module.id)")
+                            if let moduleObj = module.loadFromScene() {
+                                scene.rootNode.addChildNode(moduleObj)
                             }
+                            for peripheral in module.children {
+                                print("[-] Peripheral \(module.type), N:\(module.modelInfo.name)")
+                                if let periObj = peripheral.loadFromScene() {
+                                    let obPos = module.modelInfo.position
+                                    periObj.position = SCNVector3(obPos.x, obPos.y, obPos.z)
+                                    scene.rootNode.addChildNode(periObj)
+                                }
+                            }
+                        } else {
+                            print("Module Locked: \(module.id)")
                         }
+                        
                     }
                 }else{
                     print("Could not load node.")
@@ -691,15 +711,7 @@ extension TechItems {
                     return cuppolaObject
                 }
             case .Roboarm:
-//                print("\n\n\n Looking for ROBOARM SCENE")
-//                guard let roboScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Roboarm.scn") else { return nil }
-//                print("\n\n\n Looking for ROBOARM CHILD")
-//                if let robot = roboScene.rootNode.childNode(withName: "Roboarm", recursively: true)?.clone() {
-//                    print("\n\n\n FOUND ROBOARM")
-//                    let pos = Vector3D(x: 0, y: 4.58, z: 0)
-//                    robot.position = SCNVector3(pos.x, pos.y, pos.z)
-//                    return robot
-//                }
+                
                 let robNode = RoboArmNode()
                 let pos = Vector3D(x: 0, y: 4.58, z: 0)
                 robNode.position = SCNVector3(pos.x, pos.y, pos.z)
@@ -725,6 +737,7 @@ extension TechItems {
                     module.eulerAngles = SCNVector3(CGFloat(GameLogic.radiansFrom(angles.x)), -0, 0)
                     return module
                 }
+//            return nil
             case .module8:
                 let moduleScene = SCNScene(named: "Art.scnassets/Module.scn")
                 guard let scene = moduleScene else { return nil }
@@ -739,7 +752,7 @@ extension TechItems {
                 let moduleScene = SCNScene(named: "Art.scnassets/Module.scn")
                 guard let scene = moduleScene else { return nil }
                 if let module = scene.rootNode.childNode(withName: "Module", recursively: true)?.clone() {
-                    let pos = Vector3D(x: 0, y: 0, z: -36)
+                    let pos = Vector3D(x: 0, y: 2, z: -36)
                     //                    let angles = Vector3D(x: -180, y: -0, z: 0)
                     module.position = SCNVector3(pos.x, pos.y, pos.z)
                     module.eulerAngles = SCNVector3(0, -0, 0)
@@ -753,13 +766,6 @@ extension TechItems {
         return nil
     }
 }
-
-//extension SCNVector3 {
-//    /// Helper to load this object with CGFloat values
-//    init(x:CGFloat, y:CGFloat, z:CGFloat) {
-//        self.init(x:Float(x), y:Float(y), z:Float(z))
-//    }
-//}
 
 extension BuildItem {
     

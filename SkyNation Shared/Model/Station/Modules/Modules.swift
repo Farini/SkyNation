@@ -16,6 +16,12 @@ import Foundation
 // /|    /
 //  *
 //
+
+//        *
+//   /    |/
+// -*-*-*-*-<
+// /| |  /
+//  *
 // ====================
 
 /// The Type of the module (Lab, Hab, Bio)
@@ -37,30 +43,7 @@ enum ModuleType:String, Codable, CaseIterable {
     }
 }
 
-enum ModuleIndex:String, Codable, CaseIterable {
-    
-    case mod0, mod1, mod2, mod3, mod4, mod5, mod6, modGarage
-    
-    func position() -> Vector3D {
-        switch self {
-        case .mod0: return Vector3D(x: 0, y: -2, z: 0)
-        case .mod1: return Vector3D(x: 0, y: 0, z: 2)
-        case .mod2: return Vector3D(x: 0, y: 0, z: -10)
-        case .mod3: return Vector3D(x: 0, y: 0, z: -22)
-        case .mod4: return Vector3D(x: 0, y: 0, z: -34)
-        case .mod5: return Vector3D(x: 0, y: 0, z: -46)
-        case .mod6: return Vector3D(x: 0, y: -2, z: -32)
-        case .modGarage: return Vector3D(x: 0, y: 0, z: -46)
-        }
-    }
-    
-    func orientation() -> Orientation3D {
-        switch self {
-        case .mod0: return .Down
-        default: return .Front
-        }
-    }
-}
+
 
 class Module:Codable {
     

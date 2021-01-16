@@ -94,21 +94,42 @@ Items being worked on
 
 ## 📝 Doing - Present
 
-- [X] 2/13 Scene Improvements
-    - [ ] Remodel Cuppola
-    - [ ] Remodel Airlock
-    - [ ] Remodel Delivery Vehicle
+- [X] 5/21 Scene Improvements
+    - [X] Cleanup Original Scene
+    - [X] SCNNodes Classes (Roboarm, Antenna, Radiator, Delivery Vehicle)
+    - [X] 3/3 Ship Animation (Needs better particle emitter, plus open the shell)
+    - [X] Particle emitter on all engines
+    - [X] Animate particle emission correctly
+    - [X] Fix Model underneath lid
+    - [ ] Loading Screen / User Registry
+    - [ ] Improve Background HDRI image
+    - [ ] Reskin Delivery Vehicle
     - [ ] Remodel Space Vehicle
-    - [ ] Earth with Emission
+    - [X] Earth with Emission
+    - [ ] Earth Revealage
+    - [ ] Build Dock 3D Model
+    - [ ] Add light and transluscent sphere to Dock
     - [ ] 5 Models of Antenna
-    - [ ] SCNNodes
+    - [X] Implement 'Skin' on all Modules
+    - [ ] Roboarm animation
+    
+    - [ ] StationBuilder Object - 01/16/2021
+        - [ ] Load Skin on all Modules
+        - [ ] Remake of Builder -> SceneBuilder to replace 'BuildItem'
+        - [ ] Simplify Builder (Delete orientation, etc.) - Questionable
+        - [ ] Add Modules 7 ... 10
+        - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
+    
     - [X] Truss View creation
         - [X] Solar Panel positions
         - [X] Control where each solar panel goes
+        - [ ] Control where each Radiator goes
     - [X] 1/3 Notify scene when tech is ready (not working)
         - [X] Update Scene
         - [ ] Show  News
-        - [ ] Scene is showing Serial builder ahead of time. Check isUnlocked vs isResearched
+        - [X] Scene is showing Serial builder ahead of time. Check isUnlocked vs isResearched
+        - [ ] Live update of tech
+        
         
 - [ ] 6/13 Scene Overlay
     - [X] Player
@@ -150,7 +171,7 @@ Items being worked on
     - [ ] Improve General Header View
     - [ ] Pass functions (Change skin, Rename, etc.)
     - [ ] Error messages
-    - [ ] Eliminate Horizontal Scrollers
+    - [ ] Remove Horizontal Scrollers
 
 ## 📝 To Do - Future
 Grab things from this list as you go along.
@@ -169,6 +190,7 @@ Grab things from this list as you go along.
     - [ ] Free Deliveries
     - [ ] Available Humans for delivery
     - [ ] Guilds
+    - [ ] Token Validation
 
 - [ ] 8/13 Data Model
     - [X] Accounting Adjustments
@@ -178,20 +200,7 @@ Grab things from this list as you go along.
         - [ ] Antenna Updates
         - [ ] Improve and use PlayerObject
         
-- [ ] 3/13 Station Scene - Part II
-    - [ ] Improve Background HDRI image
-    - [ ] Loading
-    - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
-    - [ ] Roboarm animation
-    - [ ] Earth Revealage
-    - [ ] Implement 'Skin' on all Modules
-    - [ ] Cleanup Original Scene
-    - [ ] Simplify Builder (Delete orientation, etc.) - Questionable
-    - [ ] Add Modules 7 ... 10
-    - [ ] 1/3 Ship Animation (Needs better particle emitter, plus open the shell)
-        - [X] Particle emitter on all engines
-        - [X] Animate particle emission correctly
-        - [ ] Fix Model underneath lid
+
         
 - [ ] 1/3 iOS View Presentation
     - [X] Present view on iPad

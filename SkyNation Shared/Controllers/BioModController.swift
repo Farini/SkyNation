@@ -17,10 +17,9 @@ enum BioModSelection {
 
 class BioModController: ObservableObject {
     
+    var station:Station
     var module:BioModule
     var selectedBioBox:BioBox?
-    var station:Station
-    
     
     @Published var selection:BioModSelection
     
@@ -30,11 +29,20 @@ class BioModController: ObservableObject {
     
     @Published var choosingDNA:Bool = false // Is choosing perfect DNA
     @Published var dnaOption:PerfectDNAOption
-    @Published var availableEnergy:Int
+//    @Published var availableEnergy:Int
     
     /// Available slots for new Box
     @Published var availableSlots:Int
 //    @Published var availableSpace:Int
+    
+    @Published var availablePeople:[Person]
+    @Published var selectedPeople:[Person] = []
+    
+    // Ingredients (Costs)
+    @Published var availableFertilizer:Int = 0
+    @Published var availableWater:Int = 0
+    @Published var availableEnergy:Int
+//    @Published var availableEnergy:Int = 0
     
     // GENETIC CODE
     @Published var selectedPopulation:[String] = []
@@ -64,7 +72,18 @@ class BioModController: ObservableObject {
         availableSlots = availableLimit
         
         self.availableEnergy = station.truss.getAvailableEnergy()
+        
+        self.availablePeople = station.getPeople()
+        
+        let ferts = station.truss.extraBoxes.filter({ $0.type == .Fertilizer }).map({ $0.current }).reduce(0, +)
+        self.availableFertilizer = ferts
+        let h2o = station.truss.tanks.filter({ $0.type == .h2o }).map({ $0.current }).reduce(0, +)
+        self.availableWater = h2o
+        let zzz = station.truss.getAvailableEnergy()
+        self.availableEnergy = zzz
     }
+    
+    // MARK: - Selection
     
     /// Selected **DNA**
     func didSelect(dna:PerfectDNAOption) {
@@ -112,6 +131,15 @@ class BioModController: ObservableObject {
         self.selectedPopulation = []
         errorMessage = nil
         positiveMessage = nil
+    }
+    
+    /// Select/Deselect `Person`
+    func didTapPerson(person:Person) {
+        if let idx = selectedPeople.firstIndex(of: person) {
+            selectedPeople.remove(at: idx)
+        } else {
+            selectedPeople.append(person)
+        }
     }
     
     func didChooseDNA(string:String) {
@@ -229,6 +257,73 @@ class BioModController: ObservableObject {
         }
         let availableLimit = limitation - currentPopulations
         availableSlots = availableLimit
+    }
+    
+    func validateResources(box qtty:Int) -> [String] {
+        
+        let fertilizer = qtty
+        let water = qtty * GameLogic.bioBoxWaterConsumption
+        let energy = qtty * GameLogic.bioBoxEnergyConsumption
+        
+        // Problems Array
+        var problems:[String] = []
+        
+        // Ingredients Consumption
+        if station.truss.validateResources(ingredients: [.Fertilizer:fertilizer]).isEmpty {
+            print("Fertilizer verified")
+        } else {
+            print("Not enough Fertilizer")
+            problems.append("Not enough Fertilizer")
+        }
+        
+        if availableWater >= water {
+            print("Water Verified")
+        } else {
+            print("No enough Water")
+            problems.append("Not enough Water")
+        }
+        
+        if availableEnergy >= energy {
+            print("Energy Verified")
+        } else {
+            print("Not enough Energy")
+            problems.append("Not enough Energy")
+        }
+        
+        // Workers & Skills
+        var foundSkills:[Skills:Int] = [:]
+        var bioCount:Int = 0
+        var medCount:Int = 0
+        for person in selectedPeople {
+            for skill in person.skills {
+                if skill.skill == .Biologic {
+                    bioCount += skill.level
+                }
+                if skill.skill == .Medic {
+                    medCount += 1
+                }
+            }
+        }
+        if bioCount + medCount < 1 {
+            print("Not enough Skills")
+            problems.append("Not enough Skills")
+        } else {
+            print("Skills Verified")
+        }
+        
+        if !problems.isEmpty {
+            return problems
+        }
+        
+        // FIXME: - Charging
+        
+        // 1. Charge Ingredients
+        // 2. Assign Activity
+        // 3. Save
+        // 4. Update UI
+        
+        return problems
+        
     }
     
     /// Creates a new box

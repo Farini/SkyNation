@@ -32,6 +32,15 @@ class DeliveryVehicleNode:SCNNode {
                 emitter.first?.birthRate = 0
             }
         }
+        // Open Lid
+        self.openLid()
+    }
+    
+    func openLid() {
+        if let lid = ship.childNode(withName: "Lid", recursively: false) {
+            let open = SCNAction.rotateBy(x: .pi, y: 0, z: 0, duration: 5)
+            lid.runAction(open)
+        }
     }
     
     override init() {

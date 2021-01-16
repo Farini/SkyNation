@@ -325,19 +325,3 @@ class LocalDatabase {
     
 }
 
-extension LocalDatabase {
-    
-//    func collectRecipe(recipe:Recipe, lab:LabModule) -> Bool {
-//
-//        guard let station = station else { return false }
-//            for tmpLab in station.labModules {
-//                if tmpLab.id == lab.id {
-//                    tmpLab.activity = nil
-//                }
-//            }
-//
-//        return station.collectRecipe(recipe: recipe, lab: lab)
-//    }
-    
-}
-

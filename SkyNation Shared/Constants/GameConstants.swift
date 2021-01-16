@@ -43,6 +43,13 @@ struct GameLogic {
     /// Water consumption per `Person`
     static let waterConsumption:Int = 2
     
+    /// Cost of building a `BioBox` (Water)
+    static let bioBoxWaterConsumption:Int = 3
+    /// Cost of building a `BioBox` (Energy)
+    static let bioBoxEnergyConsumption:Int = 7
+    
+    // MARK: - Funtions
+    
     static func radiansFrom(_ degrees:Double) -> Double {
         return degrees * .pi/180
     }

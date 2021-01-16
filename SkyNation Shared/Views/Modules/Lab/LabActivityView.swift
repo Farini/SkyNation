@@ -49,6 +49,12 @@ struct LabActivityView:View {
                 HStack {
                     Button(action: {
                         print("Boost")
+                        let result = controller.boostActivity()
+                        if result {
+                            print("Boost Success!")
+                        } else {
+                            print("Boost Failed")
+                        }
                     }, label:{
                         Text("Boost")
                     }).padding()

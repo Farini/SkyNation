@@ -336,6 +336,10 @@ struct BuildingBioBoxView: View {
     
     @State var chosenDNA:PerfectDNAOption = .banana     // The DNA chosen
     @State var sliderValue:Double = 0.0                 // The population Size
+    @State var productionCost:[Ingredient:Int] = [.Fertilizer:0]
+    @State var productionEnergyCost:Int = 0
+    @State var productionWaterCost:Int = 0
+    @State var problems:[String] = []
     
     let minimumLimit:Int = 5
     
@@ -385,6 +389,10 @@ struct BuildingBioBoxView: View {
                         ZStack {
                             Slider(value: $sliderValue, in: 0.0...Double(controller.availableSlots)) { (changed) in
                                 print("Slider changed \(changed)")
+                                let boxSize = Int(sliderValue)
+                                productionCost[.Fertilizer] = boxSize
+                                productionWaterCost = boxSize * GameLogic.bioBoxWaterConsumption
+                                productionEnergyCost = 7 * GameLogic.bioBoxEnergyConsumption
                             }
                             .frame(maxWidth: 250, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                             .padding(4)
@@ -401,10 +409,51 @@ struct BuildingBioBoxView: View {
             
             Divider()
             
+            // Costs
+            Group {
+                Text("Costs").font(.title)
+                
+                Text("Fertilizer: \(productionCost[.Fertilizer] ?? 0) of \(controller.availableFertilizer)")
+                Text("Water: \(productionWaterCost) of \(controller.availableWater)")
+                Text("Energy: \(productionEnergyCost) of \(controller.availableEnergy)")
+                
+                Text("Time: ?")
+            }
+            
+            Divider()
+            
+            // People Picker
+            Group {
+                Text("Staff").font(.title)
+                LazyVGrid (columns: [GridItem(.fixed(220)), GridItem(.fixed(220))], alignment: .center, spacing: 4, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
+                    ForEach(controller.availablePeople) { person in
+                        PersonSelectorView(person: person, selected: controller.selectedPeople.contains(person) ? false:true)
+                            .onTapGesture {
+                                controller.didTapPerson(person: person)
+                            }
+                    }
+                }
+            }
+            
+            
+            // Warnings
+            Group {
+                if !problems.isEmpty {
+                    Text("Warnings")
+                }
+                ForEach(self.problems, id:\.self) { problemo in
+                    Text("⚠️ \(problemo)")
+                        .foregroundColor(.red)
+                }
+            }
+            
+            
             // Buttons (Confirm, Cancel)
             HStack {
                 Button("Confirm") {
-                    confirmBioBox()
+//                    confirmBioBox()
+                    let possibleProblems = controller.validateResources(box: Int(sliderValue))
+                    self.problems = possibleProblems
                     print("Confirm")
                 }
                 .disabled(Int(sliderValue) < minimumLimit)
@@ -430,6 +479,8 @@ struct BuildingBioBoxView: View {
         
         // 2 - Pass the slider value (population size)
         let size = Int(sliderValue)
+        
+        // Check if there are enough resources
         
         // 3 - Create New Box
         controller.createNewBox(dna: choice, size: size)

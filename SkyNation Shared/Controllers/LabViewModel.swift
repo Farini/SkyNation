@@ -78,6 +78,37 @@ class LabViewModel: ObservableObject {
         return content
     }
     
+    /// Boosts the activity for 1 hour. Removes a time token from player
+    func boostActivity() -> Bool {
+        
+        // 1. Get the player
+        guard let player = LocalDatabase.shared.player else {
+            print("No Player")
+            return false
+        }
+        // 2. Tokens
+        let timeTokens = player.timeTokens
+        if timeTokens.isEmpty {
+            print("No time tokens")
+            return false
+        }
+        // 3. Activity
+        guard let activity = labModule.activity else {
+            print("No activity")
+            return false
+        }
+        // 4. Reduce Time
+        activity.dateEnds.addTimeInterval(-3600)
+        labModule.activity = activity
+        
+        // 5. Save
+        LocalDatabase.shared.saveStation(station: station)
+        
+        player.timeTokens.removeLast()
+        return LocalDatabase.shared.savePlayer(player: player)
+        
+    }
+    
     // MARK: - TECH
     
     func makeTech(item:TechItems) {
@@ -185,6 +216,20 @@ class LabViewModel: ObservableObject {
                         self.station.unlockedRecipes.append(Recipe.BioSolidifier)
                     case .recipeWaterFilter:
                         self.station.unlockedRecipes.append(Recipe.WaterFilter)
+                        
+                    case .module7:
+                        let newDex = ModuleIndex.mod7
+                        let newModule = Module(id: UUID(), modex: newDex)
+                        station.modules.append(newModule)
+                    case .module8:
+                        let newDex = ModuleIndex.mod8
+                        let newModule = Module(id: UUID(), modex: newDex)
+                        station.modules.append(newModule)
+                    case .module9:
+                        let newDex = ModuleIndex.mod9
+                        let newModule = Module(id: UUID(), modex: newDex)
+                        station.modules.append(newModule)
+                    
                     default:
                         print("Not a recipe")
                 }

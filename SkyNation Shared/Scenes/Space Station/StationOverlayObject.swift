@@ -59,10 +59,14 @@ class StationOverlay:NSObject, SKSceneDelegate {
     /// Playercard has the name, virtual money, and tokens that belong to the player
     func buildPlayerCard() {
         
-        let player = SKNPlayer()
-        let playerCard = PlayerCardNode(player: player)
-        
-        scene.addChild(playerCard)
+        if let player = LocalDatabase.shared.player {
+            let playerCard = PlayerCardNode(player: player)
+            scene.addChild(playerCard)
+        } else {
+            let newPlayer = SKNPlayer()
+            let playerCard = PlayerCardNode(player: newPlayer)
+            scene.addChild(playerCard)
+        }
         
         buildMenu()
     }
