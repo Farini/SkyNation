@@ -20,71 +20,11 @@ class LocalDatabase {
     static let shared = LocalDatabase()
     
     var player:SKNPlayer?
-    var builder:SerialBuilder
     var station:Station?
     var vehicles:[SpaceVehicle] = [] // Vehicles that are travelling
     var stationBuilder:StationBuilder
     
     // MARK: - Builder
-    static let builderFile = "SerialBuilder.json"
-    func saveSerialBuilder(builder:SerialBuilder) {
-        
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        
-        guard let encodedData:Data = try? encoder.encode(builder) else { fatalError() }
-        
-        let bcf = ByteCountFormatter()
-        bcf.allowedUnits = [.useKB]
-        bcf.countStyle = .file
-        
-        let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
-        print("Saving Game Size: \(dataSize)")
-        
-        let fileUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.builderFile)
-        
-        if !FileManager.default.fileExists(atPath: fileUrl.path) {
-            FileManager.default.createFile(atPath: fileUrl.path, contents: encodedData, attributes: nil)
-            print("File created")
-            return
-        }
-        
-        do{
-            try encodedData.write(to: fileUrl, options: .atomic)
-            print("Saved locally")
-        }catch{
-            print("Error writting data to local url: \(error)")
-        }
-    }
-    private static func loadBuilder() -> SerialBuilder? {
-        
-        print("Loading Builder")
-        let finalUrl = LocalDatabase.folder.appendingPathComponent(builderFile)
-        
-        if !FileManager.default.fileExists(atPath: finalUrl.path){
-            print("File doesn't exist")
-            return nil
-        }
-        
-        do{
-            let theData = try Data(contentsOf: finalUrl)
-            
-            do{
-                let localData:SerialBuilder = try JSONDecoder().decode(SerialBuilder.self, from: theData)
-                return localData
-                
-            }catch{
-                // Decode JSON Error
-                print("Error Decoding JSON: \(error)")
-                return nil
-            }
-        }catch{
-            // First Do - let data error
-            print("Error getting Data from URL: \(error)")
-            return nil
-        }
-    }
-    
     static let stationBuilderFile = "StationBuilder.json"
     /// Initializes `StationBuilder` with the `Station` object, or none if this is a new game.
     private static func initializeStationBuilder() -> StationBuilder {
@@ -134,6 +74,67 @@ class LocalDatabase {
             print("Error writting data to local url: \(error)")
         }
         
+    }
+    
+    // MARK: - Game Messages
+    static let gameMessagesFile = "GameMessages.json"
+    var gameMessages:[GameMessage] = []
+    private static func loadMessages() -> [GameMessage] {
+        
+        print("Loading Messages")
+        let finalUrl = LocalDatabase.folder.appendingPathComponent(gameMessagesFile)
+        
+        if !FileManager.default.fileExists(atPath: finalUrl.path){
+            print("File doesn't exist")
+//            return nil
+            return []
+        }
+        
+        do{
+            let theData = try Data(contentsOf: finalUrl)
+            
+            do{
+                let localData:[GameMessage] = try JSONDecoder().decode([GameMessage].self, from: theData)
+                return localData
+                
+            }catch{
+                // Decode JSON Error
+                print("Error Decoding JSON: \(error)")
+                return []
+            }
+        }catch{
+            // First Do - let data error
+            print("Error getting Data from URL: \(error)")
+            return []
+        }
+    }
+    func saveMessages() {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        encoder.outputFormatting = .prettyPrinted
+        guard let encodedData:Data = try? encoder.encode(gameMessages) else { fatalError() }
+        
+        let bcf = ByteCountFormatter()
+        bcf.allowedUnits = [.useKB]
+        bcf.countStyle = .file
+        
+        let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
+        print("Saving Station Builder. Size: \(dataSize)")
+        
+        let fileUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.gameMessagesFile)
+        
+        if !FileManager.default.fileExists(atPath: fileUrl.path) {
+            FileManager.default.createFile(atPath: fileUrl.path, contents: encodedData, attributes: nil)
+            print("File created")
+            return
+        }
+        
+        do{
+            try encodedData.write(to: fileUrl, options: .atomic)
+            print("Saved locally")
+        }catch{
+            print("Error writting data to local url: \(error)")
+        }
     }
     
     // MARK: - Station
@@ -327,13 +328,6 @@ class LocalDatabase {
     // Accounting Problems
     var accountingProblems:[String] = []    // Set by Station.runAccounting
     
-    // MARK: - Others
-    // TODO: - Add
-    // Player
-    // Mars Base (Server has copy)
-    // Accounting Problems?
-    // Latest News ?
-    
     // MARK: - Data Handling
     
     static var folder:URL {
@@ -366,7 +360,10 @@ class LocalDatabase {
 //            self.station = Station(builder: builder)
         }
         
+        self.gameMessages = LocalDatabase.loadMessages()
+        
         // Builder
+        /*
         if let builder = LocalDatabase.loadBuilder() {
             print("Loading Builder")
             self.builder = builder
@@ -374,6 +371,7 @@ class LocalDatabase {
             print("Starting new builder")
             builder = SerialBuilder()
         }
+        */
         
         // Space Station
 //        if let ss = LocalDatabase.loadStation() {

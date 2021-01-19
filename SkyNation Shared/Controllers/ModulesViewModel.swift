@@ -17,7 +17,7 @@ enum ModuleBuilderState:Equatable {
 
 class ModulesViewModel: ObservableObject {
     
-    var builder:SerialBuilder
+//    var builder:SerialBuilder
     var station:Station
     
     @Published var viewState:ModuleBuilderState = .Selecting
@@ -41,7 +41,7 @@ class ModulesViewModel: ObservableObject {
     init() {
         
         let db = LocalDatabase.shared
-        builder = db.builder
+//        builder = db.builder
         let station = db.station!
         
         self.station = station
@@ -218,7 +218,7 @@ class ModulesViewModel: ObservableObject {
     func confirmBuildingModule() {
         print("Confirm and save")
         self.viewState = .Confirmed
-        LocalDatabase.shared.saveSerialBuilder(builder: builder)
+//        LocalDatabase.shared.saveSerialBuilder(builder: builder)
         LocalDatabase.shared.saveStation(station: station)
         
     }

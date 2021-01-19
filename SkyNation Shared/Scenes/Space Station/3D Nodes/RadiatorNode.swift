@@ -23,7 +23,11 @@ class RadiatorNode:SCNNode {
         var opposedFold:Bool = false
         
         while let current = nextChild?.childNodes.first {
+            #if os(macOS)
             current.eulerAngles.x = CGFloat(GameLogic.radiansFrom(opposedFold ? foldAngles:-foldAngles))
+            #elseif os(iOS)
+            current.eulerAngles.x = Float(GameLogic.radiansFrom(opposedFold ? foldAngles:-foldAngles))
+            #endif
             nextChild = current
             opposedFold.toggle()
         }

@@ -271,3 +271,87 @@ extension AddingTrussItemProblem: LocalizedError {
         }
     }
 }
+
+// MARK: - SYSTEM COMMUNICATIONS
+
+enum AchievementType:String, Codable, CaseIterable {
+    
+    case tech;
+    case recipe;
+    case vehicle;
+    case deliveries;
+    case plants;
+    case learning;
+    case marsLanding;
+    case experience;
+    
+    func preString() -> String {
+        switch self {
+            case .tech: return "Researched tech: "
+            case .recipe: return "Made a recipe: "
+            case .vehicle: return "Space vehicle: "
+            case .deliveries: return "Delivery arrived: "
+            case .plants: return "DNA discovered: "
+            case .learning: return "Person learning: "
+            case .marsLanding: return "Landed on Mars: "
+            case .experience: return "Achieved experience: "
+        }
+    }
+}
+
+struct GameAchievement:Codable {
+    var type:AchievementType
+    var date:Date
+    var qtty:Int
+}
+
+class GameMessageBoard {
+    
+    static let shared:GameMessageBoard = GameMessageBoard()
+    
+    var messages:[GameMessage]
+    
+    private init() {
+        messages = LocalDatabase.shared.gameMessages
+    }
+    
+    func newAchievement(type:AchievementType, qtty:Int?) {
+        
+        self.messages = LocalDatabase.shared.gameMessages
+        
+        let theMessage = "Game Achievement! \(type.rawValue). \(qtty ?? 0). \(type.preString()) )"
+        let newMessage = GameMessage(type: .Achievement, date: Date(), message: theMessage, ingredientRewards: [.Food:10])
+        messages.append(newMessage)
+        
+        // Save
+        LocalDatabase.shared.gameMessages = messages
+        LocalDatabase.shared.saveMessages()
+    }
+}
+
+struct GameMessage:Codable {
+    
+    var id:UUID = UUID()
+    var type:GameMessageType
+    var date:Date
+    var message:String
+    var isRead:Bool = false
+    var isCollected:Bool = false
+    
+    // Optionals
+    var tokenRewards:[UUID]?
+    var ingredientRewards:[Ingredient:Int]?
+}
+
+enum GameMessageType:String, Codable, CaseIterable {
+    
+    case SystemWarning
+    case SystemError
+    
+    case Achievement
+    case Tutorial
+    case ChatMessage
+    case FreeDelivery
+    
+    case Other
+}

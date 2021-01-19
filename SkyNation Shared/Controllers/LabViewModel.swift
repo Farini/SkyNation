@@ -200,8 +200,10 @@ class LabViewModel: ObservableObject {
             
             if let techItem = TechItems(rawValue: activity.activityName) {
                 
-                print("Found tech item")
-                LocalDatabase.shared.builder.upgradeTech(item: techItem)
+                GameMessageBoard.shared.newAchievement(type: .tech, qtty: nil)
+                print("New Game Message")
+//                print("Found tech item")
+//                LocalDatabase.shared.builder.upgradeTech(item: techItem)
                 // Builder is responsible for saving....
                 
                 print("Completed Upgrading. Check JSON.")

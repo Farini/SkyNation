@@ -50,7 +50,7 @@ class EarthRequestController:ObservableObject {
     
     init() {
         
-        let player = LocalDatabase.shared.player!
+        let player = LocalDatabase.shared.player ?? SKNPlayer()
         let spaceStation = LocalDatabase.shared.station!
         
         self.station = spaceStation

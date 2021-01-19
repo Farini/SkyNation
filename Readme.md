@@ -94,6 +94,10 @@ Items being worked on
 
 ## 📝 Doing - Present
 
+- [ ] GameMessage Object - This will improve communications accross the board.
+- [ ] Add Messages to LocalDatabase
+- [ ] Load Messages
+
 - [X] 5/21 Scene Improvements
     - [X] Cleanup Original Scene
     - [X] SCNNodes Classes (Roboarm, Antenna, Radiator, Delivery Vehicle)
@@ -114,11 +118,12 @@ Items being worked on
     - [ ] Roboarm animation
     
     - [ ] StationBuilder Object - 01/16/2021
-        - [ ] Load Skin on all Modules
+        - [X] Make Skin Work
         - [X] Remake of Builder -> SceneBuilder to replace 'BuildItem'
         - [X] Simplify Builder
         - [X] Add Modules 7 ... 10
         - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
+        - [ ] Load Skin on all Modules
     
     - [X] Truss View creation
         - [X] Solar Panel positions

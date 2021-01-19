@@ -29,11 +29,11 @@ enum Orientation3D:Int, Codable, CaseIterable {
         get {
             switch self {
                 case .Up: return Vector3D(x: 0, y: GameLogic.radiansFrom(90), z: 0)
-            case .Down: return Vector3D(x: GameLogic.radiansFrom(-180), y: -0, z: 0)
-            case .Front: return Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: 0)
-            case .Back: return Vector3D(x: 0, y: GameLogic.radiansFrom(90), z: 0)
-            case .East: return Vector3D(x: GameLogic.radiansFrom(-90), y: 0, z: 0)
-            case .West: return Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: 0)
+                case .Down: return Vector3D(x: GameLogic.radiansFrom(-180), y: -0, z: 0)
+                case .Front: return Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: 0)
+                case .Back: return Vector3D(x: 0, y: GameLogic.radiansFrom(90), z: 0)
+                case .East: return Vector3D(x: GameLogic.radiansFrom(-90), y: 0, z: 0)
+                case .West: return Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: 0)
             }
         }
     }
