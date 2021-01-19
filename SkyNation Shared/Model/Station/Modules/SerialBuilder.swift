@@ -352,7 +352,7 @@ extension SerialBuilder {
 enum ModuleIndex:String, Codable, CaseIterable {
     
     // mod0 is the one facing down, mod1 is the Front
-    case mod0, mod1, mod2, mod3, mod4, mod5, mod6, mod7, mod8, mod9, modGarage
+    case mod0, mod1, mod2, mod3, mod4, mod5, mod6, mod7, mod8, mod9, mod10 //, modGarage
     
     func position() -> Vector3D {
         switch self {
@@ -362,23 +362,29 @@ enum ModuleIndex:String, Codable, CaseIterable {
             case .mod3: return Vector3D(x: 0, y: 0, z: -22)
             case .mod4: return Vector3D(x: 0, y: 0, z: -34)
             case .mod5: return Vector3D(x: 0, y: 0, z: -46)
-            case .mod6: return Vector3D(x: 0, y: -2, z: -32)
-            case .mod7: return Vector3D(x: 0, y: -2, z: 0)
-            case .mod8: return Vector3D(x: 0, y: -2, z: 0)
-            case .mod9: return Vector3D(x: 0, y: -2, z: 0)
-            case .modGarage: return Vector3D(x: 0, y: 0, z: -46)
+            case .mod6: return Vector3D(x: 0, y: -2, z: -12)
+            case .mod7: return Vector3D(x: 0, y: -2, z: 0) // Doesn't exist
+            case .mod8: return Vector3D(x: 0, y: -2, z: -36)
+            case .mod9: return Vector3D(x: 0, y: 2, z: -36)
+            case .mod10: return Vector3D(x: 0, y: -2, z: -24)
+//            case .modGarage: return Vector3D(x: 0, y: 0, z: -46)
         }
     }
     
     func orientation() -> Orientation3D {
         switch self {
             case .mod0: return .Down
+            case .mod6: return .Down
+            case .mod8: return .Down
+            case .mod9: return .Up
+            case .mod10: return .Down
+            
             default: return .Front
         }
     }
 }
 
-class StationBuilder {
+class StationBuilder:Codable {
     
     // Single Dimensional Array
     var buildList:[StationBuildItem]
@@ -464,10 +470,13 @@ class StationBuilder {
         print("Load Tech tree items here")
     }
     
-    func didFinishTech(item:TechItems) {
-        // Notify director?
-        // append to buildList
-    }
+//    func didFinishTech(item:TechItems, module:Module) {
+//        // Notify director?
+//        // append to buildList
+//        let newBuild = StationBuildItem(module: module.moduleDex)
+//        newBuild.id = module.id
+//        buildList.append(newBuild)
+//    }
     
     /// Gets the Modules (for IDs)
     func getModules() -> [Module] {

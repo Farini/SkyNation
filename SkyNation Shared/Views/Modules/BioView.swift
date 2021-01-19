@@ -454,7 +454,11 @@ struct BuildingBioBoxView: View {
 //                    confirmBioBox()
                     let possibleProblems = controller.validateResources(box: Int(sliderValue))
                     self.problems = possibleProblems
-                    print("Confirm")
+                    if possibleProblems.isEmpty {
+                        print("Confirming...")
+                        self.confirmBioBox()
+                    }
+                    
                 }
                 .disabled(Int(sliderValue) < minimumLimit)
                 
@@ -479,8 +483,6 @@ struct BuildingBioBoxView: View {
         
         // 2 - Pass the slider value (population size)
         let size = Int(sliderValue)
-        
-        // Check if there are enough resources
         
         // 3 - Create New Box
         controller.createNewBox(dna: choice, size: size)

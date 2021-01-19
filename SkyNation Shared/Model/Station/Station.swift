@@ -621,8 +621,9 @@ class Station:Codable {
      */
     init(builder:SerialBuilder) {
         
-//        people = []
+        // Modules Built
         modules = builder.modules
+        
         // Peripherals
         var periArray:[BuildItem] = []
         for node in builder.nodes {
@@ -639,7 +640,58 @@ class Station:Codable {
             }
         }
         
-//        money = 120000
+        // Scrubbers
+        let scrubberActive = PeripheralObject(peripheral: .ScrubberCO2)
+        let scrubberBroken = PeripheralObject(peripheral: .ScrubberCO2)
+        scrubberBroken.isBroken = true
+        peripherals = [scrubberBroken, scrubberActive]
+        
+        // Labs
+        labModules = []
+        habModules = []
+        bioModules = []
+        air = AirComposition()
+        truss = Truss()
+        
+        // FIXME: - Add more objects to Truss
+        
+        unlockedRecipes = [.Condensator, .Electrolizer, .SolarPanel, .Radiator, .tank, .Battery]
+        
+        accountingDate = Date()
+        unlockedTechItems = [TechItems.rootItem]
+        
+        // Initial food (10 items)
+        var tmpFood:[String] = []
+        for _ in 0...10 {
+            let dna = PerfectDNAOption.allCases.randomElement()!
+            tmpFood.append(dna.rawValue)
+        }
+        food = tmpFood
+        
+        
+        self.garage = Garage()
+    }
+    
+    init(stationBuilder:StationBuilder) {
+        
+        // Modules Built
+        modules = stationBuilder.getModules()
+        
+        // Peripherals
+//        var periArray:[BuildItem] = []
+//        for node in builder.nodes {
+//            for nodeChild in node.children {
+//                if nodeChild.type == .Peripheral {
+//                    periArray.append(node)
+//                }else{
+//                    for thirdChild in nodeChild.children {
+//                        if thirdChild.type == .Peripheral {
+//                            periArray.append(thirdChild)
+//                        }
+//                    }
+//                }
+//            }
+//        }
         
         // Scrubbers
         let scrubberActive = PeripheralObject(peripheral: .ScrubberCO2)

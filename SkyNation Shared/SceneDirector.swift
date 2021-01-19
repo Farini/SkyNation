@@ -95,8 +95,18 @@ class SceneDirector {
     
     /// Updates the Scene when a new tech is collected
     func didCollectTech(tech:TechItems, model:SCNNode?) {
+        
         print("Did collect tech: \(tech.shortName). Updating Scene.")
         guard let controller = gameController else { return }
+        
+        let moduleTechs:[TechItems] = [.module4, .module5, .module6, .module7, .module8, .module9, .module10]
+        if moduleTechs.contains(tech) {
+            gameController?.loadLastBuildItem()
+            controller.stationOverlay.generateNews(string: "Module Built: \(tech.shortName)")
+            return
+        }
+        
+        
         controller.stationOverlay.generateNews(string: "New Tech Collected: \(tech.shortName)")
         if let model = model {
             switch tech {

@@ -212,6 +212,7 @@ extension Notification.Name {
     
     static let URLRequestFailed  = Notification.Name("URLRequestFailed")        // Any URL Request that fails sends this messsage
     static let DidAddToFavorites = Notification.Name("DidAddToFavorites")       // Add To Favorites Notification
+    static let UpdateSceneWithTech = Notification.Name("UpdateSceneWithTech")
     static let closeView = Notification.Name("CloseView")
     
 }

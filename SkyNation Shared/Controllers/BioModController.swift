@@ -312,8 +312,35 @@ class BioModController: ObservableObject {
         }
         
         if !problems.isEmpty {
+            
+            print("Whats the problem?")
+            
+            return problems
+        } else {
+            // No Problem
+            
+            // 1. Make person busy
+            let activity = LabActivity(time: 10, name: "Planting life")
+            for person in selectedPeople {
+                person.activity = activity
+            }
+            
+            // 2. set selecte people to none
+            self.selectedPeople = []
+            
+            // 3. Charge Energy
+            let consumption:Bool = station.truss.consumeEnergy(amount: energy)
+            
+            // 4. Charge Fertilizers
+            let payment = station.truss.payForResources(ingredients: [.Fertilizer:fertilizer])
+            
+            print("Consumed Energy: \(consumption)")
+            print("Paid for resources: \(payment)")
+            
+//            LocalDatabase.shared.saveStation(station: self.station)
             return problems
         }
+        
         
         // FIXME: - Charging
         
@@ -322,7 +349,7 @@ class BioModController: ObservableObject {
         // 3. Save
         // 4. Update UI
         
-        return problems
+        
         
     }
     
@@ -347,6 +374,7 @@ class BioModController: ObservableObject {
         
         // Update Selection
         selection = .notSelected
+        
         // Alternatively, we can set the selection to the newly created box
     }
     

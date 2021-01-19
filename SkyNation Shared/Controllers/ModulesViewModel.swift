@@ -85,16 +85,14 @@ class ModulesViewModel: ObservableObject {
         let availableAirVolume = station.air.getVolume()
         print("Available: \(availableAirVolume)")
         
-        let neededVolume:Int = availableAirVolume - requiredAirVolume
+        let neededVolume:Int = requiredAirVolume - availableAirVolume
         print("Needed: \(neededVolume)")
         
-        if availableAirVolume > neededVolume {
+        if neededVolume <= 0 {
             self.canBuild = true
             self.problems = ["Using \(neededVolume) of \(availableAirVolume) air"]
             return true
-        }
-        
-        if neededVolume > 0 {
+        } else if neededVolume > 0 {
             // try to get air from tanks
             let airTanks = station.truss.tanks.filter({ $0.type == .air })
             let totalAirInTanks:Int = airTanks.map({$0.current}).reduce(0, +)
@@ -153,11 +151,11 @@ class ModulesViewModel: ObservableObject {
             return
         }
         
-        for module in builder.modules {
+        let newBuilder = StationBuilder(station: station)
+        for module in newBuilder.getModules() {
             print("[0] Other M: \(module.id)")
             if module.id == id {
                 print("[=] Matched a module: \(type) ID:\(id)")
-                
                 switch type {
                     case .Lab:
                         let newLab:LabModule = module.convertToLab()
@@ -181,6 +179,34 @@ class ModulesViewModel: ObservableObject {
                 }
             }
         }
+//        for module in builder.modules {
+//            print("[0] Other M: \(module.id)")
+//            if module.id == id {
+//                print("[=] Matched a module: \(type) ID:\(id)")
+//
+//                switch type {
+//                    case .Lab:
+//                        let newLab:LabModule = module.convertToLab()
+//                        module.type = .Lab
+//                        station.labModules.append(newLab)
+//                        self.viewState = .Selected(type: .Lab)
+//
+//                    case .Hab:
+//                        let newHab:HabModule = module.convertToHab()
+//                        module.type = .Hab
+//                        station.habModules.append(newHab)
+//                        self.viewState = .Selected(type: .Hab)
+//
+//                    case .Bio:
+//                        let newBio:BioModule = module.convertToBio()
+//                        module.type = .Bio
+//                        station.bioModules.append(newBio)
+//                        self.viewState = .Selected(type: .Bio)
+//
+//                    default: return
+//                }
+//            }
+//        }
     }
     
     /// Sets the viewState back to `Selecting`

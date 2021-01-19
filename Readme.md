@@ -115,9 +115,9 @@ Items being worked on
     
     - [ ] StationBuilder Object - 01/16/2021
         - [ ] Load Skin on all Modules
-        - [ ] Remake of Builder -> SceneBuilder to replace 'BuildItem'
-        - [ ] Simplify Builder (Delete orientation, etc.) - Questionable
-        - [ ] Add Modules 7 ... 10
+        - [X] Remake of Builder -> SceneBuilder to replace 'BuildItem'
+        - [X] Simplify Builder
+        - [X] Add Modules 7 ... 10
         - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
     
     - [X] Truss View creation

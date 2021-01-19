@@ -216,9 +216,20 @@ class LabViewModel: ObservableObject {
                         self.station.unlockedRecipes.append(Recipe.BioSolidifier)
                     case .recipeWaterFilter:
                         self.station.unlockedRecipes.append(Recipe.WaterFilter)
-                        
+                    case .module4:
+                        let newDex = ModuleIndex.mod3
+                        let newModule = Module(id: UUID(), modex: newDex)
+                        station.modules.append(newModule)
+                    case .module5:
+                        let newDex = ModuleIndex.mod4
+                        let newModule = Module(id: UUID(), modex: newDex)
+                        station.modules.append(newModule)
+                    case .module6:
+                        let newDex = ModuleIndex.mod5
+                        let newModule = Module(id: UUID(), modex: newDex)
+                        station.modules.append(newModule)
                     case .module7:
-                        let newDex = ModuleIndex.mod7
+                        let newDex = ModuleIndex.mod6
                         let newModule = Module(id: UUID(), modex: newDex)
                         station.modules.append(newModule)
                     case .module8:
@@ -227,6 +238,10 @@ class LabViewModel: ObservableObject {
                         station.modules.append(newModule)
                     case .module9:
                         let newDex = ModuleIndex.mod9
+                        let newModule = Module(id: UUID(), modex: newDex)
+                        station.modules.append(newModule)
+                    case .module10:
+                        let newDex = ModuleIndex.mod10
                         let newModule = Module(id: UUID(), modex: newDex)
                         station.modules.append(newModule)
                     

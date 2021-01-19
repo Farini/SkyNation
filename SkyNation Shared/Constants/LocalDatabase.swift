@@ -23,7 +23,7 @@ class LocalDatabase {
     var builder:SerialBuilder
     var station:Station?
     var vehicles:[SpaceVehicle] = [] // Vehicles that are travelling
-    
+    var stationBuilder:StationBuilder
     
     // MARK: - Builder
     static let builderFile = "SerialBuilder.json"
@@ -83,6 +83,57 @@ class LocalDatabase {
             print("Error getting Data from URL: \(error)")
             return nil
         }
+    }
+    
+    static let stationBuilderFile = "StationBuilder.json"
+    /// Initializes `StationBuilder` with the `Station` object, or none if this is a new game.
+    private static func initializeStationBuilder() -> StationBuilder {
+        if let station = LocalDatabase.loadStation() {
+            let builder = StationBuilder(station: station)
+            return builder
+        } else {
+            let builder = StationBuilder()
+            return builder
+        }
+    }
+    /// Public function to reload the Builder. Pass a Station, or reload from start. Useful to reload scene
+    func reloadBuilder(newStation:Station?) -> StationBuilder {
+        if let new = newStation {
+            let builder = StationBuilder(station: new)
+            return builder
+        } else {
+            let starter = StationBuilder()
+            return starter
+        }
+    }
+    func saveStationBuilder(builder:StationBuilder) {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        encoder.outputFormatting = .prettyPrinted
+        guard let encodedData:Data = try? encoder.encode(builder) else { fatalError() }
+        
+        let bcf = ByteCountFormatter()
+        bcf.allowedUnits = [.useKB]
+        bcf.countStyle = .file
+        
+        let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
+        print("Saving Station Builder. Size: \(dataSize)")
+        
+        let fileUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.stationBuilderFile)
+        
+        if !FileManager.default.fileExists(atPath: fileUrl.path) {
+            FileManager.default.createFile(atPath: fileUrl.path, contents: encodedData, attributes: nil)
+            print("File created")
+            return
+        }
+        
+        do{
+            try encodedData.write(to: fileUrl, options: .atomic)
+            print("Saved locally")
+        }catch{
+            print("Error writting data to local url: \(error)")
+        }
+        
     }
     
     // MARK: - Station
@@ -299,6 +350,22 @@ class LocalDatabase {
             self.player = player
         }
         
+        // Space Station
+        if let ss = LocalDatabase.loadStation() {
+            print("Loading Station")
+            // Set the Station
+            self.station = ss
+            // Load builder for station
+            let sBuilder = LocalDatabase.initializeStationBuilder()
+            self.stationBuilder = sBuilder
+        }else{
+            print("Starting New Game")
+            let sBuilder = LocalDatabase.initializeStationBuilder()
+            self.stationBuilder = sBuilder
+            self.station = Station(stationBuilder: sBuilder)
+//            self.station = Station(builder: builder)
+        }
+        
         // Builder
         if let builder = LocalDatabase.loadBuilder() {
             print("Loading Builder")
@@ -309,13 +376,14 @@ class LocalDatabase {
         }
         
         // Space Station
-        if let ss = LocalDatabase.loadStation() {
-            print("Loading Station")
-            self.station = ss
-        }else{
-            print("Starting New Station")
-            self.station = Station(builder: builder)
-        }
+//        if let ss = LocalDatabase.loadStation() {
+//            print("Loading Station")
+//            self.station = ss
+//        }else{
+//            print("Starting New Station")
+//            self.station = Station(builder: builder)
+//        }
+        
         
         // Vehicles
         let vehiclesArray = LocalDatabase.loadVehicles()

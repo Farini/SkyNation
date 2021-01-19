@@ -522,57 +522,67 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
         // Deprecate below after implementing above
         // Search Tech Tree for items unlocked, to add to scene
-        for tech in station?.unlockedTechItems ?? [] {
-            print("Has Tech: \(tech.rawValue)")
-            builder.upgradeTech(item: tech)
-            
-            // Look for items that aren't in the builder...
-            switch tech {
-                case .Cuppola, .Roboarm, .garage, .module7:
-                    print("⚠️ Attention! Needs to add Technology that isn't in the builder...")
-                    
-                default: continue
-            }
-        }
+//        for tech in station?.unlockedTechItems ?? [] {
+//            print("Has Tech: \(tech.rawValue)")
+//            builder.upgradeTech(item: tech)
+//
+//            // Look for items that aren't in the builder...
+//            switch tech {
+//                case .Cuppola, .Roboarm, .garage, .module7:
+//                    print("⚠️ Attention! Needs to add Technology that isn't in the builder...")
+//
+//                default: continue
+//            }
+//        }
         
         // Truss (Solar Panels, Radiator, and Roboarm)
         updateTrussLayout()
 
         // Adds the stuff to the scene (builder unlocked items)
-        for node:BuildItem in builder.nodes {
-            
-            if node.unlocked {
-                // Load node
-                if let nodeObj = node.loadFromScene() {
-                    scene.rootNode.addChildNode(nodeObj)
-                    for module in node.children {
-                        if module.type == .Module {
-                            print("[+] Module \(module.id)")
-                        }
-                        if module.unlocked {
-                            print("Unlocked Module: \(module.id)")
-                            if let moduleObj = module.loadFromScene() {
-                                scene.rootNode.addChildNode(moduleObj)
-                            }
-                            for peripheral in module.children {
-                                print("[-] Peripheral \(module.type), N:\(module.modelInfo.name)")
-                                if let periObj = peripheral.loadFromScene() {
-                                    let obPos = module.modelInfo.position
-                                    periObj.position = SCNVector3(obPos.x, obPos.y, obPos.z)
-                                    scene.rootNode.addChildNode(periObj)
-                                }
-                            }
-                        } else {
-                            print("Module Locked: \(module.id)")
-                        }
-                        
-                    }
-                }else{
-                    print("Could not load node.")
-                }
-            } else {
-                
-                print("--- Node is locked Type:\(node.type), \(node.modelInfo.name), \(node.describe())")
+//        for node:BuildItem in builder.nodes {
+//
+//            if node.unlocked {
+//                // Load node
+//                if let nodeObj = node.loadFromScene() {
+//                    scene.rootNode.addChildNode(nodeObj)
+//                    for module in node.children {
+//                        if module.type == .Module {
+//                            print("[+] Module \(module.id)")
+//                        }
+//                        if module.unlocked {
+//                            print("Unlocked Module: \(module.id)")
+//                            if let moduleObj = module.loadFromScene() {
+//                                scene.rootNode.addChildNode(moduleObj)
+//                            }
+//                            for peripheral in module.children {
+//                                print("[-] Peripheral \(module.type), N:\(module.modelInfo.name)")
+//                                if let periObj = peripheral.loadFromScene() {
+//                                    let obPos = module.modelInfo.position
+//                                    periObj.position = SCNVector3(obPos.x, obPos.y, obPos.z)
+//                                    scene.rootNode.addChildNode(periObj)
+//                                }
+//                            }
+//                        } else {
+//                            print("Module Locked: \(module.id)")
+//                        }
+//
+//                    }
+//                }else{
+//                    print("Could not load node.")
+//                }
+//            } else {
+//
+//                print("--- Node is locked Type:\(node.type), \(node.modelInfo.name), \(node.describe())")
+//            }
+//        }
+        
+        let stationBuilder = LocalDatabase.shared.stationBuilder
+        // ⚠️ You may add an empty node for Nodes, and nother for Modules
+        // Do it here, if you want to simplify the scene
+        for buildPart in stationBuilder.buildList {
+            print("Build part type: \(buildPart.type.rawValue)")
+            if let newNode = buildPart.loadFromScene() {
+                scene.rootNode.addChildNode(newNode)
             }
         }
         
@@ -665,6 +675,16 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         SceneDirector.shared.controllerDidLoadScene(controller: self)
     }
     
+    func loadLastBuildItem() {
+        print("Loading last build item")
+        let builder = LocalDatabase.shared.reloadBuilder(newStation: self.station)
+        let lastTech = builder.buildList.last
+        if let theNode = lastTech?.loadFromScene() {
+            print("Found node to build last tech item: \(theNode.name ?? "n/a")")
+            scene.rootNode.addChildNode(theNode)
+        }
+    }
+    
     /// Debugs - Prints information about the scene
     func debugScene() {
         print("------")
@@ -727,43 +747,121 @@ extension TechItems {
                 }
             case .GarageArm: return nil
                 
-            case .module7:
-                let moduleScene = SCNScene(named: "Art.scnassets/Module.scn")
-                guard let scene = moduleScene else { return nil }
-                if let module = scene.rootNode.childNode(withName: "Module", recursively: true)?.clone() {
-                    let pos = Vector3D(x: 0, y: -2, z: -12)
-                    let angles = Vector3D(x: -180, y: -0, z: 0)
-                    module.position = SCNVector3(pos.x, pos.y, pos.z)
-                    module.eulerAngles = SCNVector3(CGFloat(GameLogic.radiansFrom(angles.x)), -0, 0)
-                    return module
-                }
-//            return nil
-            case .module8:
-                let moduleScene = SCNScene(named: "Art.scnassets/Module.scn")
-                guard let scene = moduleScene else { return nil }
-                if let module = scene.rootNode.childNode(withName: "Module", recursively: true)?.clone() {
-                    let pos = Vector3D(x: 0, y: 10, z: -36)
-                    let angles = Vector3D(x: -180, y: -0, z: 0)
-                    module.position = SCNVector3(pos.x, pos.y, pos.z)
-                    module.eulerAngles = SCNVector3(CGFloat(GameLogic.radiansFrom(angles.x)), -0, 0)
-                    return module
-                }
-            case .module9:
-                let moduleScene = SCNScene(named: "Art.scnassets/Module.scn")
-                guard let scene = moduleScene else { return nil }
-                if let module = scene.rootNode.childNode(withName: "Module", recursively: true)?.clone() {
-                    let pos = Vector3D(x: 0, y: 2, z: -36)
-                    //                    let angles = Vector3D(x: -180, y: -0, z: 0)
-                    module.position = SCNVector3(pos.x, pos.y, pos.z)
-                    module.eulerAngles = SCNVector3(0, -0, 0)
-                    return module
-                }
-            case .module10: return nil
+//            case .module7:
+//                let moduleScene = SCNScene(named: "Art.scnassets/Module.scn")
+//                guard let scene = moduleScene else { return nil }
+//                if let module = scene.rootNode.childNode(withName: "Module", recursively: true)?.clone() {
+//                    let pos = Vector3D(x: 0, y: -2, z: -12)
+//                    let angles = Vector3D(x: -180, y: -0, z: 0)
+//                    module.position = SCNVector3(pos.x, pos.y, pos.z)
+//                    module.eulerAngles = SCNVector3(CGFloat(GameLogic.radiansFrom(angles.x)), -0, 0)
+//                    return module
+//                }
+////            return nil
+//            case .module8:
+//                let moduleScene = SCNScene(named: "Art.scnassets/Module.scn")
+//                guard let scene = moduleScene else { return nil }
+//                if let module = scene.rootNode.childNode(withName: "Module", recursively: true)?.clone() {
+//                    let pos = Vector3D(x: 0, y: 10, z: -36)
+//                    let angles = Vector3D(x: -180, y: -0, z: 0)
+//                    module.position = SCNVector3(pos.x, pos.y, pos.z)
+//                    module.eulerAngles = SCNVector3(CGFloat(GameLogic.radiansFrom(angles.x)), -0, 0)
+//                    return module
+//                }
+//            case .module9:
+//                let moduleScene = SCNScene(named: "Art.scnassets/Module.scn")
+//                guard let scene = moduleScene else { return nil }
+//                if let module = scene.rootNode.childNode(withName: "Module", recursively: true)?.clone() {
+//                    let pos = Vector3D(x: 0, y: 2, z: -36)
+//                    //                    let angles = Vector3D(x: -180, y: -0, z: 0)
+//                    module.position = SCNVector3(pos.x, pos.y, pos.z)
+//                    module.eulerAngles = SCNVector3(0, -0, 0)
+//                    return module
+//                }
+//            case .module10: return nil
                 
             default: return nil
         }
         
         return nil
+    }
+}
+
+extension StationBuildItem {
+    func loadFromScene() -> SCNNode? {
+        var nodeCount:Int = 1
+        switch type {
+            case .Node:
+                print("Load a node")
+                let nodeScene = SCNScene(named: "Art.scnassets/Node.scn")!
+                if let nodeObj = nodeScene.rootNode.childNode(withName: "Node2", recursively: false)?.clone() {
+                    nodeObj.name = "Node\(nodeCount)"
+                    nodeCount += 1
+                    let pos = position
+                    #if os(macOS)
+                    nodeObj.position = SCNVector3(x: CGFloat(pos.x), y: CGFloat(pos.y), z: CGFloat(pos.z))
+                    #else
+                    nodeObj.position = SCNVector3(pos.x, pos.y, pos.z) // (x:pos.x, y:pos.y, z:pos.z)
+                    #endif
+                    return nodeObj
+                }else{
+                    print("404 not found")
+                    return nil
+                }
+            case .Module:
+                print("Load a module")
+                let moduleScene = SCNScene(named: "Art.scnassets/Module.scn")!
+                if let nodeObj = moduleScene.rootNode.childNode(withName: "Module", recursively: false)?.clone() {
+                    // Material
+                    let imageName:String = "Art.scnassets/SpaceStation/ModuleBake4.png" // Bool.random() ? "ModuleDif1.png":
+                    
+                    for material in nodeObj.geometry?.materials ?? [] {
+                        print("Material name:\(material.name ?? "n/a") \(material.diffuse.description)")
+                        if let image = SKNImage(named: imageName) {
+                            print("Letimage")
+                            material.diffuse.contents = image
+                        } else {
+                            print("noimage")
+                        }
+                        
+                    }
+                    let pos = position
+                    
+                    if let image = SKNImage(named: imageName) {
+                        nodeObj.geometry!.materials.first!.diffuse.contents = image//SCNMaterial()
+//                        material?.diffuse.contents = image
+                        
+                    }
+                    #if os(macOS)
+                    nodeObj.position = SCNVector3(x: CGFloat(pos.x), y: CGFloat(pos.y), z: CGFloat(pos.z))
+                    #else
+                    nodeObj.position = SCNVector3(pos.x, pos.y, pos.z)
+                    #endif
+                    // Change name to id
+                    nodeObj.name = id.uuidString
+                    
+//                    if self.rotation.x != 0 || self.rotation.y != 0 { //self.modelInfo.orientation == .Down {
+//                        print("_+_+_+_+_+ is down vec \(modelInfo.orientation.vector)")
+                        let vec = rotation //modelInfo.orientation.vector
+                        let sceneVec = SCNVector3(vec.x, vec.y, vec.z)
+                        nodeObj.eulerAngles = sceneVec
+//                        // WARNING - ANGLE NEEDS TO BE IN RADIANS
+//                        #if os(macOS)
+//                        nodeObj.eulerAngles = SCNVector3(x: CGFloat(-3.14159), y: CGFloat(vec.y), z: CGFloat(vec.z))
+//                        #else
+//                        nodeObj.eulerAngles = SCNVector3(-3.14159, vec.y, vec.z)//SCNVector3(x: -3.14159, y:vec.y, z:vec.z)
+//                        #endif
+//                    }
+                    
+                    return nodeObj
+                } else {
+                    print("Module not found ID:\(id) \(self.type) ")
+                    return nil
+                }
+            case .Peripheral, .Truss:
+                print("Deprecate ?")
+                return nil
+        }
     }
 }
 
