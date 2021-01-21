@@ -94,9 +94,11 @@ Items being worked on
 
 ## 📝 Doing - Present
 
-- [ ] GameMessage Object - This will improve communications accross the board.
-- [ ] Add Messages to LocalDatabase
-- [ ] Load Messages
+- [X] 3/3 GameMessage Object - 1/19/2021
+- [X] Add Messages to LocalDatabase
+- [X] Load Messages
+
+- [ ] Loading Screen / User Registry
 
 - [X] 5/21 Scene Improvements
     - [X] Cleanup Original Scene
@@ -105,7 +107,6 @@ Items being worked on
     - [X] Particle emitter on all engines
     - [X] Animate particle emission correctly
     - [X] Fix Model underneath lid
-    - [ ] Loading Screen / User Registry
     - [ ] Improve Background HDRI image
     - [ ] Reskin Delivery Vehicle
     - [ ] Remodel Space Vehicle
@@ -116,7 +117,6 @@ Items being worked on
     - [ ] 5 Models of Antenna
     - [X] Implement 'Skin' on all Modules
     - [ ] Roboarm animation
-    
     - [ ] StationBuilder Object - 01/16/2021
         - [X] Make Skin Work
         - [X] Remake of Builder -> SceneBuilder to replace 'BuildItem'

@@ -202,3 +202,23 @@ struct BuildableLight:Codable {
     var intensty:Double
     
 }
+
+enum ModuleSkin:String, Codable, CaseIterable {
+    
+    case ModuleBake
+    case diffuse1
+    case BioModule
+    case LabModule
+    case HabModule
+    
+    var uvMapName:String {
+        switch self {
+            case .BioModule: return "BioModule"
+            case .HabModule: return "HabModule"
+            case .LabModule: return "LabModule"
+            case .ModuleBake: return "ModuleBake4"
+            case .diffuse1: return "ModuleDif1"
+        }
+    }
+    
+}

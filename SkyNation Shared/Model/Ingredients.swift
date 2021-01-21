@@ -103,7 +103,7 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
             case .Iron: return Image("Iron")
             case .wasteLiquid: return nil
             case .Silicate: return nil
-            case .Fertilizer: return nil
+            case .Fertilizer: return Image("Fertilizer")
         }
     }
 }

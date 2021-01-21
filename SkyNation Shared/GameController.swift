@@ -523,6 +523,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         // Truss (Solar Panels, Radiator, and Roboarm)
         updateTrussLayout()
         
+        // Station Builder
         let stationBuilder = LocalDatabase.shared.stationBuilder
         // ⚠️ You may add an empty node for Nodes, and nother for Modules
         // Do it here, if you want to simplify the scene
@@ -728,11 +729,11 @@ extension StationBuildItem {
                 if let nodeObj = moduleScene.rootNode.childNode(withName: "Module", recursively: false)?.clone() {
                     
                     // MATERIAL | SKIN
-                    let imageName:String = "Art.scnassets/SpaceStation/ModuleBake4.png" // Bool.random() ? "ModuleDif1.png":
-                    var skin:SKNImage?
+                    let imageName:String = "\(ModuleSkin.allCases.randomElement()!.uvMapName).png" //"Art.scnassets/SpaceStation/ModuleBake4.png"
+                    var skin:SKNImage? // ?/Users/farini/Desktop/SkyNation/Source Code/SkyNation/SkyNation Shared/Art.scnassets/UV Images
                     if let bun = Bundle.main.url(forResource: "Art", withExtension: ".scnassets") {
                         print("Bundle found: \(bun)")
-                        let pp = bun.appendingPathComponent("/SpaceStation/ModuleBake4.png")
+                        let pp = bun.appendingPathComponent("/UV Images/ModuleSkins/\(imageName)")
                         if let image = SKNImage(contentsOfFile: pp.path) {
                             print("Found Image")
                             skin = image
