@@ -409,7 +409,7 @@
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <customObject id="9jQ-uH-EOc" customClass="AppDelegate" customModule="SkyNation" customModuleProvider="target"/>
             </objects>
-            <point key="canvasLocation" x="8" y="-109"/>
+            <point key="canvasLocation" x="-633" y="-266"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -430,7 +430,7 @@
                 </windowController>
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8" y="398"/>
+            <point key="canvasLocation" x="401" y="331"/>
         </scene>
         <!--Game View Controller-->
         <scene sceneID="hIz-AP-VOD">
@@ -449,7 +449,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="0.0" y="1072"/>
+            <point key="canvasLocation" x="154" y="1054"/>
         </scene>
     </scenes>
 </document>

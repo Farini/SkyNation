@@ -106,10 +106,13 @@ struct EarthRequestView: View {
                             case .People:
                                 LazyVGrid(columns: ingredientColumns, alignment:.center, spacing:8) {
                                     ForEach(PeopleMaker.shared.people) { person in
-                                        PersonRow(person: person)
-                                            .padding(8)
+                                        PersonSmallView(person: person)
                                             .onTapGesture {
-                                                controller.addToHire(person: person) //hire(person: person)
+                                                controller.addToHire(person: person)
+//                                        PersonRow(person: person)
+//                                            .padding(8)
+//                                            .onTapGesture {
+//                                                controller.addToHire(person: person) //hire(person: person)
                                         }
                                     }
                                 }

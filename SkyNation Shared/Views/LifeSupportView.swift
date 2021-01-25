@@ -15,6 +15,20 @@ enum AirControlOptions: String, CaseIterable {
     case Accounting
 }
 
+enum LSSViewState {
+    case AirLevels
+    case Resources(type:RSSType)
+    case Energy
+    case Accounting
+}
+
+enum RSSType {
+    case Peripheral(object:PeripheralObject)
+    case Tank(object:Tank)
+    case Box(object:StorageBox)
+    case None
+}
+
 struct LifeSupportView: View {
     
     @ObservedObject var lssModel:LSSModel
@@ -22,6 +36,8 @@ struct LifeSupportView: View {
     @State var selectedTank:Tank?
     @State var selectedPeripheral:PeripheralObject?
     @State var selectedBox:StorageBox?
+    
+    var goodQualities:[AirQuality] = [.Great, .Good]
     
     init() {
         self.lssModel = LSSModel()
@@ -95,10 +111,37 @@ struct LifeSupportView: View {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text("Air Quality: \(lssModel.air.airQuality().rawValue)")
+                                            .font(.title)
+                                            .foregroundColor(goodQualities.contains(lssModel.air.airQuality()) ? .green:.orange)
+                                        
                                         Text("Volume: \(Double(self.lssModel.air.getVolume()), specifier: "%.2f") m3 | Required: \(Double(self.lssModel.requiredAir), specifier: "%.2f") m3")
                                             .foregroundColor(GameColors.lightBlue)
                                         Text("Pressure: \(Double(self.lssModel.airPressure), specifier: "%.2f") KPa")
                                             .foregroundColor(.green)
+                                        
+                                        
+                                        let foodLasting = Int(lssModel.availableFood.count / max(1, lssModel.inhabitants))
+                                        let waterLasting = Int(lssModel.liquidWater / max(1, (lssModel.inhabitants * GameLogic.waterConsumption)))
+                                        
+                                        Text("Others")
+                                            .font(.title)
+                                            .foregroundColor(.orange)
+                                            .padding([.top, .bottom])
+                                        
+                                        Text("💦 Drinkable Water: \(lssModel.liquidWater). ⏱ \(waterLasting) hrs.")
+                                            .foregroundColor(waterLasting > 8 ? .green:.red)
+                                        Text("🍽 Edible Food: \(lssModel.availableFood.count). ⏱ \(foodLasting) hrs.")
+                                            .foregroundColor(foodLasting > 8 ? .green:.red)
+                                        
+                                        if let wasteLiquid = lssModel.boxes.filter({ $0.type == .wasteLiquid }).map({ $0.current }).reduce(0, +) {
+                                            Text("Waste Water: \(wasteLiquid)")
+                                        }
+                                        if let wasteSolid = lssModel.boxes.filter({ $0.type == .wasteSolid }).map({ $0.current }).reduce(0, +) {
+                                            Text("💩 Solid Waste: \(wasteSolid)")
+                                        }
+                                        
+                                        
+                                        
                                     }
                                     
                                     Spacer()
@@ -121,28 +164,8 @@ struct LifeSupportView: View {
                                 }
                                 .padding([.bottom], 10)
                                 
-                                Group {
-                                    Text("Others")
-                                        .font(.title)
-                                        .foregroundColor(.orange)
-                                        .padding([.top, .bottom])
-                                    
-                                    let foodLasting = Int(lssModel.availableFood.count / max(1, lssModel.inhabitants))
-                                    let waterLasting = Int(lssModel.liquidWater / max(1, (lssModel.inhabitants * GameLogic.waterConsumption)))
-                                    
-                                    Text("💦 Drinkable Water: \(lssModel.liquidWater). ⏱ \(waterLasting) hrs.")
-                                        .foregroundColor(waterLasting > 8 ? .green:.red)
-                                    Text("🍽 Edible Food: \(lssModel.availableFood.count). ⏱ \(foodLasting) hrs.")
-                                        .foregroundColor(foodLasting > 8 ? .green:.red)
-                                    
-                                    if let wasteLiquid = lssModel.boxes.filter({ $0.type == .wasteLiquid }).map({ $0.current }).reduce(0, +) {
-                                        Text("Waste Water: \(wasteLiquid)")
-                                    }
-                                    if let wasteSolid = lssModel.boxes.filter({ $0.type == .wasteSolid }).map({ $0.current }).reduce(0, +) {
-                                        Text("💩 Solid Waste: \(wasteSolid)")
-                                    }
-                                }
-                                .padding([.leading])
+                                
+                              
                             }
                             
                         }
@@ -150,6 +173,7 @@ struct LifeSupportView: View {
                         // Tanks + Peripherals
                         Group {
                             HStack {
+                                
                                 // Left View: List of Resources
                                 List() {
                                     // Tanks
@@ -197,66 +221,28 @@ struct LifeSupportView: View {
                                 // Right: Detail View
                                 ScrollView() {
                                     VStack {
+                                        // Tank
                                         if selectedTank != nil {
+                                            
                                             TankView(tank: selectedTank!, model: self.lssModel)
+                                            
                                         }else if selectedPeripheral != nil {
-                                            VStack {
-                                                Text("Peripheral: \(selectedPeripheral!.peripheral.rawValue)")
-                                                    .font(.headline)
-                                                
-                                                // Image
-                                                selectedPeripheral!.getImage()
-                                                
-                                                Text("Breakable: \(selectedPeripheral!.breakable ? "YES":"NO")")
-                                                    .foregroundColor(selectedPeripheral!.breakable ? Color.red:Color.green)
-                                                
-                                                Text("Broken: \(selectedPeripheral!.isBroken ? "YES":"NO")")
-                                                    .foregroundColor(selectedPeripheral!.isBroken ? Color.red:Color.green)
-                                                
-                                                Text("Power: \(selectedPeripheral!.powerOn ? "On":"Off")")
-                                                    .foregroundColor(selectedPeripheral!.powerOn ? Color.green:Color.orange)
-                                                
-                                                HStack {
-                                                    Button(action: {
-                                                        lssModel.powerToggle(peripheral: selectedPeripheral!)
-                                                    }, label: {
-                                                        VStack {
-                                                            Image(systemName: "power")
-                                                                .foregroundColor(selectedPeripheral!.powerOn ? Color.orange:Color.blue)
-                                                            Text("Power")
-                                                        }
-                                                    })
-                                                    if selectedPeripheral!.isBroken {
-                                                        Button(action: {
-                                                            lssModel.fixBroken(peripheral: selectedPeripheral!)
-                                                        }, label: {
-                                                            VStack {
-                                                                Image(systemName: "wrench.and.screwdriver.fill")
-                                                                    .foregroundColor(selectedPeripheral!.powerOn ? Color.orange:Color.blue)
-                                                                Text("Fix")
-                                                            }
-                                                        })
-                                                        .padding()
-                                                    }
-                                                }
-                                                
-                                                // Time since fixed
-                                                if let d = selectedPeripheral!.lastFixed?.timeIntervalSince(Date()) {
-                                                    Text("Time (let d): \(d) s")
-                                                }
-                                            }
+                                            // Peripheral
+                                            PeripheralDetailView(peripheral: selectedPeripheral!)
                                             
                                         }else if selectedBox != nil {
-                                            VStack {
-                                                Text("Box")
-                                                Text("Box of: \(selectedBox!.type.rawValue)")
-                                                Text("\(selectedBox!.current) of \(selectedBox!.capacity)")
-                                            }
+                                            // Storage Box
+                                            StorageBoxDetailView(box:selectedBox!)
+                                            
                                         } else {
-                                            VStack(alignment: .leading) {
-                                                Text("No selection").foregroundColor(.gray)
+                                            
+                                            // No Selection
+                                            VStack(alignment: .center) {
+                                                Spacer()
+                                                Text("Nothing selected").foregroundColor(.gray)
                                                 Divider()
                                                 Text("Select something").foregroundColor(.gray)
+                                                Spacer()
                                             }
                                             
                                         }
@@ -323,8 +309,9 @@ struct LifeSupportView: View {
                         }// .padding()
                 }
             }
-            .frame(minWidth: 500, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: 250, maxHeight: .infinity, alignment:.topLeading)
+            
         }
+        .frame(minWidth: 700, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: 250, maxHeight: .infinity, alignment:.topLeading)
     }
 }
 
@@ -432,6 +419,8 @@ struct TankView_Previews: PreviewProvider {
         
     }
 }
+
+//struct
 
 // FIXME: - Transfer Code.
 // Put this code in an Appropriate file

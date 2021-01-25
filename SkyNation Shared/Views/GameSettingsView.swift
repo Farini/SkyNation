@@ -10,16 +10,16 @@ import SwiftUI
 struct GameSettingsView: View {
     
     @ObservedObject var controller = GameSettingsController()
-//    @State var playerName:String
     
     init() {
-//        if let player = LocalDatabase.shared.player {
-//            self.player
-//        }
+        print("Initializing Game Settings View")
+        
     }
     
     var body: some View {
+        
         VStack(alignment: .leading, spacing: nil) {
+            
             Text("Name: \(controller.playerName)")
                 .font(.largeTitle)
             Divider()
@@ -83,6 +83,10 @@ struct GameSettingsView: View {
                 Button("Stop tutorial") {
                     print("Stop the tutorial")
                 }
+                Button("Start Game") {
+                    let note = Notification(name: .startGame)
+                    NotificationCenter.default.post(note)
+                }
             }
         }
         .padding()
@@ -111,6 +115,7 @@ class GameSettingsController:ObservableObject {
     @Published var isNewPlayer:Bool
     @Published var savedChanges:Bool
     @Published var hasChanges:Bool
+    
     init() {
         if let player = LocalDatabase.shared.player {
             isNewPlayer = false

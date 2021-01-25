@@ -97,13 +97,13 @@ Items being worked on
 - [X] 3/3 GameMessage Object - 1/19/2021
 - [X] Add Messages to LocalDatabase
 - [X] Load Messages
+- [X] Fix Earth order Tank size
+- [X] Fix Hab Module size (Bigger)
 
 - [ ] Loading Screen / User Registry
 - [ ] Route to create player
 - [ ] Modify Entry Point MacOS, iOS
 - [ ] Fix Earth order Person View
-- [X] Fix Earth order Tank size
-- [X] Fix Hab Module size (Bigger)
 - [ ] Person menu -> Fire, Medicate
 - [ ] Lab Module Make Recipe Icon in List
 - [ ] Lab Module needs to update list when research is finished
@@ -111,9 +111,7 @@ Items being worked on
 - [ ] LSS View -> Improve Peripherals and Ingredients Detail View
 - [ ] LSS View -> Each Peripheral should have its own Detail View and actions
 - [ ] Free Supply Drop-offs -> Pay for more
-
-
-
+- [ ] If you simulate your vehicles, you get an extra XP for the Garage
 
 - [X] 5/21 Scene Improvements
     - [X] Cleanup Original Scene
@@ -122,15 +120,15 @@ Items being worked on
     - [X] Particle emitter on all engines
     - [X] Animate particle emission correctly
     - [X] Fix Model underneath lid
+    - [X] Earth with Emission
+    - [X] Implement 'Skin' on all Modules
     - [ ] Improve Background HDRI image
     - [ ] Reskin Delivery Vehicle
     - [ ] Remodel Space Vehicle
-    - [X] Earth with Emission
     - [ ] Earth Revealage
     - [ ] Build Dock 3D Model
     - [ ] Add light and transluscent sphere to Dock
     - [ ] 5 Models of Antenna
-    - [X] Implement 'Skin' on all Modules
     - [ ] Roboarm animation
     - [ ] StationBuilder Object - 01/16/2021
         - [X] Make Skin Work
@@ -163,6 +161,7 @@ Items being worked on
     - [X] News (Centered)
     - [X] Fix iOS Colors
     - [X] Coin Icon
+    - [ ] Helmet Icon
     - [ ] Put icons inside buttons
     - [ ] Time Token Icon (Helmet)
     - [ ] Add colors / shaders

@@ -39,9 +39,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         
         // Maximize the window
-        //        if let screen = NSScreen.mainScreen() {
-        //            window.setFrame(screen.visibleFrame, display: true, animate: true)
-        //        }
+        // if let screen = NSScreen.mainScreen() {
+        //  window.setFrame(screen.visibleFrame, display: true, animate: true)
+        // }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

@@ -95,6 +95,21 @@ enum PeripheralType:String, Codable, CaseIterable {
         }
     }
     
+    var describer:String {
+        switch self {
+            
+            case .Antenna: return "This makes money for the Station"
+            case .Condensator: return "Condensates the water vapor emitted by humans into drinkable water"
+            case .Electrolizer: return "Performs electrolisys of the water. Splitting into Hydrogen + Oxygen"
+            case .Methanizer: return "Makes methane from CO2 + H2"
+            case .Radiator: return "Maintains ideal temperature in the Space Station, and makes the inhabitants happier"
+            case .ScrubberCO2: return "Extracts the CO2 from the air"
+            case .Roboarm: return "Does a series of things"
+            
+            default: return "It is unknown what this thing does."
+        }
+    }
+    
     /// Whether peripheral can break
     var breakable:Bool {
         switch self {

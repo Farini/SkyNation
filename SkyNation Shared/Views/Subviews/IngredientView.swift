@@ -76,6 +76,52 @@ struct IngredientSufficiencyView:View {
     }
 }
 
+struct StorageBoxDetailView:View {
+    
+    var box:StorageBox
+    @State var alert:Bool = false
+    
+    var body: some View {
+        let normalizedLevel:Float = Float(box.current)/Float(box.capacity)
+        VStack {
+            let image:Image = box.type.image() ?? Image(systemName: "questionmark")
+            image
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 52, height: 52)
+                .padding(.top)
+            
+            Text("\(box.type.rawValue)")
+            Text("\(box.current) of \(box.capacity)")
+            ProgressView("", value: normalizedLevel)
+                .frame(width: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                .padding([.leading, .trailing])
+                .foregroundColor(normalizedLevel < 0.4 ? .red:normalizedLevel > 0.75 ? .green:.orange)
+            
+            // Buttons
+            HStack {
+                Button("Throw away") {
+                    print("Throw away action")
+                    alert.toggle()
+                }
+            }
+            .padding()
+        }
+        .alert(isPresented: $alert, content: {
+            Alert(title: Text("Sure ?"), message: Text("Are you sure you want to throw this out?"), primaryButton: .cancel({
+                print("Cancel")
+            }), secondaryButton: .destructive(Text("Yes"), action: {
+                print("Really throwing away")
+            }))
+        })
+    }
+}
+
+struct StorageBox_Previews: PreviewProvider {
+    static var previews: some View {
+        StorageBoxDetailView(box: StorageBox(ingType: .Aluminium, current: 10))
+    }
+}
 
 struct IngredientView_Previews2: PreviewProvider {
     static var previews: some View {
