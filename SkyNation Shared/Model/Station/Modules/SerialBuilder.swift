@@ -203,6 +203,7 @@ struct BuildableLight:Codable {
     
 }
 
+/// The Material to go on the Module.
 enum ModuleSkin:String, Codable, CaseIterable {
     
     case ModuleBake
@@ -220,5 +221,4 @@ enum ModuleSkin:String, Codable, CaseIterable {
             case .diffuse1: return "ModuleDif1"
         }
     }
-    
 }

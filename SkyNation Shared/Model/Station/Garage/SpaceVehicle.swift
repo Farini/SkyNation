@@ -8,8 +8,6 @@
 
 import Foundation
 
-// MARK: - MODEL (Move it from here)
-
 enum EngineType:String, Codable, CaseIterable, Hashable {
     case Hex6
     case T12
@@ -76,25 +74,23 @@ enum VehicleStatus:String, CaseIterable, Codable, Hashable {
     case Station    // Travelling back home
     
     case MarsOrbit      // Vehicle Arrived on mars and is in orbit
-                        // Stay in orbit (satellite)
-                        // Try to land (rover, or transporter)
+    // Stay in orbit (satellite)
+    // Try to land (rover, or transporter)
     
     case Exploring        // Vehicle Arrived on mars and is exploring (rover)
     case Settled          // [DELETE VEHICLE] Vehicle has arrived on mars, and brought things to the base
     
     case Diying           // [DELETE VEHICLE] Vehicle has crashed either before, or after arriving
     case OutOfFuel        // [delete vehicle] Vehicle is out of fuel
-
+    
 }
-
-// Use the following to replace SatelliteOption
 
 /// Mars Tech Equipped in SpaceVehicle
 enum MarsBot:String, Codable, CaseIterable, Hashable {
     case Satellite
     case Rover          // Pictures from NASA?
     case Transporter    // Bring stuff in - first one settles the colony (Must have a pass (spent $10, or invited))
-    
+    // Terraformer?
 }
 
 class SpaceVehicle:Codable, Identifiable, Equatable {

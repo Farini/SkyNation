@@ -9,11 +9,13 @@ import SwiftUI
 
 struct LaunchingVehicleView: View {
     
+    @ObservedObject var controller:GarageViewModel
     @ObservedObject var launchController:VehicleLaunchControl
 //    @State var vehicle:SpaceVehicle
     
-    init(vehicle:SpaceVehicle) {
+    init(vehicle:SpaceVehicle, controller:GarageViewModel) {
         self.launchController = VehicleLaunchControl(vehicle: vehicle)
+        self.controller = controller
 //        self.vehicle = vehicle
         
     }
@@ -89,6 +91,7 @@ struct LaunchingVehicleView: View {
             HStack {
                 Button("Inventory") {
                     print("Back To Inventory")
+                    controller.goBackToInventory()
                 }
                 Button("Launch") {
                     print("Launch Vehicle")
@@ -186,10 +189,11 @@ class VehicleLaunchControl:ObservableObject {
 struct LaunchingVehicleView_Previews: PreviewProvider {
     
     static var previews: some View {
+        let ctrl = GarageViewModel()
         if let vehicle = LocalDatabase.shared.station?.garage.buildingVehicles.last {
-            LaunchingVehicleView(vehicle: vehicle)
+            LaunchingVehicleView(vehicle: vehicle, controller: ctrl)
         } else {
-            LaunchingVehicleView(vehicle: SpaceVehicle.builtExample())
+            LaunchingVehicleView(vehicle: SpaceVehicle.builtExample(), controller:ctrl)
         }
         
     }

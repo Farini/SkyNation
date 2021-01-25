@@ -17,6 +17,8 @@ enum GarageStatus {
     case simulating
 }
 
+
+
 enum VehicleBuildingStage {
     case Engine     // Selecting Engine
     case Inventory  // Adding Tanks, Batteries, and Solar array
@@ -384,6 +386,14 @@ class GarageViewModel:ObservableObject {
         
     }
     
+    /// Brings the user back to Inventory
+    func goBackToInventory() {
+        if let vehicle = self.selectedVehicle {
+            print("Back to inventory. Vehicle: \(vehicle.name)")
+            self.garageStatus = .planning(stage: .Inventory)
+        }
+    }
+    
     /// Launches a SpaceVehicle to travel to Mars
     func launch(vehicle:SpaceVehicle) {
         
@@ -408,5 +418,30 @@ class GarageViewModel:ObservableObject {
         
         // Update View
         self.cancelSelection()
+    }
+    
+    // FIXME: - Token Use
+    
+    /// Uses a Token from Player to reduce 1hr in building time
+    func useToken(vehicle:SpaceVehicle) {
+        guard let travelStarted = vehicle.dateTravelStarts else { return }
+        let dateOffset = travelStarted.addingTimeInterval(-60*60)
+        self.selectedVehicle?.dateTravelStarts = dateOffset
+        
+        // Progress
+        if let progress = vehicle.calculateProgress() {
+            if progress < 1 {
+                self.checkProgressLoop(vehicle: vehicle)
+            } else {
+                self.vehicleProgress = 1.0
+                if let deleteIndex = buildingVehicles.firstIndex(where: { $0.id == vehicle.id }) {
+                    self.buildingVehicles.remove(at: deleteIndex)
+                    self.builtVehicles.append(vehicle)
+                    self.garageStatus = .selectedBuildEnd(vehicle: vehicle)
+                    self.station.garage.xp += 1
+                    
+                }
+            }
+        }
     }
 }

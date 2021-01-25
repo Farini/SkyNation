@@ -99,6 +99,21 @@ Items being worked on
 - [X] Load Messages
 
 - [ ] Loading Screen / User Registry
+- [ ] Route to create player
+- [ ] Modify Entry Point MacOS, iOS
+- [ ] Fix Earth order Person View
+- [X] Fix Earth order Tank size
+- [X] Fix Hab Module size (Bigger)
+- [ ] Person menu -> Fire, Medicate
+- [ ] Lab Module Make Recipe Icon in List
+- [ ] Lab Module needs to update list when research is finished
+- [ ] People generator should generate new people every 8hrs. Pay for more. And generate Materials engineer first
+- [ ] LSS View -> Improve Peripherals and Ingredients Detail View
+- [ ] LSS View -> Each Peripheral should have its own Detail View and actions
+- [ ] Free Supply Drop-offs -> Pay for more
+
+
+
 
 - [X] 5/21 Scene Improvements
     - [X] Cleanup Original Scene

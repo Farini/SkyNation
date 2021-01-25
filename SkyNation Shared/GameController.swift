@@ -42,6 +42,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     var modules:[Module] = []
     var station:Station?
     
+    
     // MARK: - Control
     
     func highlightNodes(atPoint point: CGPoint) {
@@ -116,40 +117,25 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 }
                 if sprite.name == "MarsButton" {
                     print("⚙️ Lets go to Mars!")
-                    sceneRenderer.present(SCNScene(named: "Art.scnassets/MarsHab.scn")!, with: .doorsCloseVertical(withDuration: 0.75), incomingPointOfView: nil) {
-                        print("Scene Loaded :)")
-                        self.gameScene = .MarsColony
-//                        lbl.text = "Earth"
+                    let mars = MarsBuilder()
+                    if let newScene = mars.loadScene() {
+                        sceneRenderer.present(newScene, with: .doorsCloseVertical(withDuration: 0.75), incomingPointOfView: nil) {
+                            self.scene = newScene
+                            //                            self.loadStationScene()
+                            print("Scene Loaded :)")
+                            self.gameScene = .MarsColony
+//                            lbl.text = "Mars"
+                        }
                     }
+//                    sceneRenderer.present(SCNScene(named: "Art.scnassets/MarsHab.scn")!, with: .doorsCloseVertical(withDuration: 0.75), incomingPointOfView: nil) {
+//                        print("Scene Loaded :)")
+//                        self.gameScene = .MarsColony
+////                        lbl.text = "Earth"
+//                    }
                     return
                     
                 }
                 
-            }
-            
-            // Texts
-            if let lbl = sceneResults as? SKLabelNode {
-                if lbl.text == "Air Control" {
-                    gameNavDelegate?.didSelectAir()
-                    return
-                }else if lbl.text == "Mars" {
-                    sceneRenderer.present(SCNScene(named: "Art.scnassets/MarsHab.scn")!, with: .doorsCloseVertical(withDuration: 0.75), incomingPointOfView: nil) {
-                        print("Scene Loaded :)")
-                        self.gameScene = .MarsColony
-                        lbl.text = "Earth"
-                    }
-                    return
-                }else if lbl.text == "Earth" {
-                    let nextScene = SCNScene(named: "Art.scnassets/Modeling.scn")!
-                    sceneRenderer.present(nextScene, with: .doorsCloseVertical(withDuration: 0.75), incomingPointOfView: nil) {
-                        self.scene = nextScene
-                        self.loadStationScene()
-                        print("Scene Loaded :)")
-                        self.gameScene = .SpaceStation
-                        lbl.text = "Mars"
-                    }
-                    return
-                }
             }
         }
         

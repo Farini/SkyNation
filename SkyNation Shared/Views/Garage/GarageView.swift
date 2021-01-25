@@ -241,10 +241,16 @@ struct GarageView: View {
                         
                         Divider()
                         HStack {
+                            
                             Button("Launch") {
                                 controller.launch(vehicle: sev)
                             }
                             .disabled(controller.vehicleProgress ?? 0 < 1)
+                            
+                            Button("Token") {
+                                controller.useToken(vehicle: sev)
+                            }
+                            .disabled(controller.vehicleProgress ?? 1.0 >= 1)
                             
                             Button("Cancel") {
                                 print("Cancelling")
@@ -315,10 +321,10 @@ struct GarageView: View {
                         
                         Divider()
                         HStack {
-                            Button("🚀 Launch") {
-                                controller.launch(vehicle: sev)
-                            }
-                            .disabled(controller.vehicleProgress ?? 0 < 1)
+//                            Button("🚀 Launch") {
+//                                controller.launch(vehicle: sev)
+//                            }
+//                            .disabled(controller.vehicleProgress ?? 0 < 1)
                             
                             Button("Cancel") {
                                 print("Cancelling")
@@ -380,7 +386,7 @@ struct GarageView: View {
                         }
                         
                     case .PrepLaunch:   // Last Warnings
-                        LaunchingVehicleView(vehicle: controller.selectedVehicle!)
+                        LaunchingVehicleView(vehicle: controller.selectedVehicle!, controller:controller)
                         
                     case .Launching:    // Animation
                         Group {

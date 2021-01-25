@@ -128,7 +128,7 @@ struct LifeSupportView: View {
                                         .padding([.top, .bottom])
                                     
                                     let foodLasting = Int(lssModel.availableFood.count / max(1, lssModel.inhabitants))
-                                    let waterLasting = Int(lssModel.liquidWater / (lssModel.inhabitants * GameLogic.waterConsumption))
+                                    let waterLasting = Int(lssModel.liquidWater / max(1, (lssModel.inhabitants * GameLogic.waterConsumption)))
                                     
                                     Text("💦 Drinkable Water: \(lssModel.liquidWater). ⏱ \(waterLasting) hrs.")
                                         .foregroundColor(waterLasting > 8 ? .green:.red)

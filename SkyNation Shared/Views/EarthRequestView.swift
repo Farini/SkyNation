@@ -15,9 +15,9 @@ struct EarthRequestView: View {
     @ObservedObject var controller:EarthRequestController = EarthRequestController()
     
     private var ingredientColumns: [GridItem] = [
-        GridItem(.flexible(minimum: 120)),
-        GridItem(.flexible(minimum: 120)),
-        GridItem(.flexible(minimum: 120))
+        GridItem(.fixed(200)),
+        GridItem(.fixed(200)),
+        GridItem(.fixed(200))
     ]
     
     var body: some View {

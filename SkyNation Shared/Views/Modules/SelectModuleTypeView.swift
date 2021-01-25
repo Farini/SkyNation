@@ -12,7 +12,7 @@ struct SelectModuleTypeView: View {
     
     @Environment(\.presentationMode) var presentationMode // To Dismiss
     @ObservedObject var controller:ModulesViewModel
-    let modOptions:[ModuleType] = ModuleType.allCases
+    let modOptions:[ModuleType] = [.Hab, .Lab, .Bio] //ModuleType.allCases
     
     /// The original UUID of the object
     var moduleID:UUID
@@ -28,10 +28,15 @@ struct SelectModuleTypeView: View {
             
             Group {
                 
+                // Header
                 HStack {
-                    Text("Base Module")
-                        .font(.largeTitle)
-                        .foregroundColor(.orange)
+                    VStack(alignment:.leading) {
+                        Text("Base Module")
+                            .font(.largeTitle)
+                            .foregroundColor(.orange)
+                        Text("Choose a Module type to build")
+                            .foregroundColor(.gray)
+                    }
                     Spacer()
                     // Close
                     Button(action: {
@@ -46,12 +51,26 @@ struct SelectModuleTypeView: View {
                     .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
                     .padding(.trailing, 6)
                 }
+                Divider()
                 
-                
+                // Air
                 Group {
-                    Text("Air volume: \(controller.airVolume)")
-                    Text("Required Air: \(controller.reqVolume)")
-                    Text("Active Modules: \(controller.countOfModules)")
+                    
+                    HStack {
+                        GameImages.imageForTank()
+                        
+                        VStack(alignment:.leading) {
+                            HStack {
+                                Text("Air volume: \(controller.airVolume)")
+                                Text("+ \(controller.reqVolume - controller.airVolume)")
+                            }
+                            
+                            Text("Adding air: \(controller.reqAirFromTanks)")
+                            Text("Available air: \(controller.availableAirInTanks)")
+                            Text("Active Modules: \(controller.countOfModules)")
+                        }
+                        .foregroundColor(controller.canBuild ? GameColors.airBlue:.red)
+                    }
                     
                     // Problems
                     ForEach(controller.problems, id:\.self) { problem in

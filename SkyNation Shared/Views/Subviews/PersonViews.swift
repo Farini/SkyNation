@@ -186,7 +186,8 @@ struct PersonDetail:View {
                         }
                     }
                 }
-                Spacer(minLength: 50)
+                .frame(minWidth: 200, idealWidth: 200, maxWidth: 200, minHeight: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, idealHeight: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                Spacer()
             }// .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
             
             Divider()
@@ -218,10 +219,12 @@ struct PersonDetail:View {
             
             VStack {
                 
-                Text("Skills")
+                Text("Work Skills")
                 HStack {
                     FixedLevelBar(min: 0, max: 100, current: Double(person.intelligence), title: "Intel", color: .blue)
+                        .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                     FixedLevelBar(min: 0, max: 100, current: Double(person.happiness), title: "Adaptation", color: .blue)
+                        .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 }
                 .padding()
                 
@@ -232,7 +235,10 @@ struct PersonDetail:View {
                 
                 HStack {
                     FixedLevelBar(min: 0, max: 100, current: Double(person.happiness), title: "Happiness", color: .green)
+                        .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                     FixedLevelBar(min: 0, max: 100, current: Double(person.healthPhysical), title: "Physical", color: .green)
+                        .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    
                 }
                 .padding()
                 

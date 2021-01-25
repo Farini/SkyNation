@@ -7,6 +7,9 @@
 //
 
 import Foundation
+//import SpriteKit
+//import GameKit
+import SwiftUI
 
 enum ModuleBuilderState:Equatable {
     case Selecting
@@ -17,7 +20,6 @@ enum ModuleBuilderState:Equatable {
 
 class ModulesViewModel: ObservableObject {
     
-//    var builder:SerialBuilder
     var station:Station
     
     @Published var viewState:ModuleBuilderState = .Selecting
@@ -25,8 +27,14 @@ class ModulesViewModel: ObservableObject {
     /// Volume of air available in the `Station`
     @Published var airVolume:Int
     
-    /// Required air to build another modukle
+    /// Total air required
     @Published var reqVolume:Int
+    
+    /// Additional air required
+    @Published var reqAirFromTanks:Int
+    
+    /// Air available in Station Tanks
+    @Published var availableAirInTanks:Int
     
     /// Total active modules in the station
     @Published var countOfModules:Int
@@ -37,11 +45,9 @@ class ModulesViewModel: ObservableObject {
     /// Problems (or solutions) generates
     @Published var problems:[String] = []
     
-    
     init() {
         
         let db = LocalDatabase.shared
-//        builder = db.builder
         let station = db.station!
         
         self.station = station
@@ -54,14 +60,23 @@ class ModulesViewModel: ObservableObject {
         // Air:
         
         // Required
-        let requiredVolume = GameLogic.airPerModule * modCount
+        let requiredVolume = station.calculateNeededAir() + GameLogic.airPerModule
         self.reqVolume = requiredVolume
         
         // Available
-        self.airVolume = station.air.getVolume()
+        let currentAirVolume = station.air.getVolume()
+        self.airVolume = currentAirVolume
+        
+        // Needed
+        let additionalAirNeeded = requiredVolume - currentAirVolume
+        self.reqAirFromTanks = additionalAirNeeded
+        
+        let airInTanks = station.truss.tanks.filter({ $0.type == .air }).map({$0.current}).reduce(0, +)
+        self.availableAirInTanks = airInTanks
         
         // Can build
-        self.canBuild = true // requiredVolume <= airVolume ? true:false
+        self.canBuild = airInTanks >= additionalAirNeeded
+        
     }
     
     /// Tries to balance air in station. Returns whether this is possible.
@@ -73,12 +88,8 @@ class ModulesViewModel: ObservableObject {
         
         print("Accounting for new air")
         
-        let modulesCount = station.labModules.count + station.habModules.count + station.bioModules.count + 1 // Add 1 for proposed new module
-        
-        print("Modules: \(modulesCount)")
-        
         // Required
-        let requiredAirVolume = GameLogic.airPerModule * modulesCount // * 0.85 // 85% is required
+        let requiredAirVolume = station.calculateNeededAir() + GameLogic.airPerModule
         print("Req Air: \(requiredAirVolume)")
         
         // Available
@@ -93,14 +104,14 @@ class ModulesViewModel: ObservableObject {
             self.problems = ["Using \(neededVolume) of \(availableAirVolume) air"]
             return true
         } else if neededVolume > 0 {
+            
             // try to get air from tanks
             let airTanks = station.truss.tanks.filter({ $0.type == .air })
             let totalAirInTanks:Int = airTanks.map({$0.current}).reduce(0, +)
             
             if totalAirInTanks >= neededVolume {
-                // OK.
                 
-                // Charge the air from truss tanks
+                // There is enough air. Charge the air from truss tanks
                 var deltaAir = neededVolume
                 while deltaAir > 0 {
                     for tank in airTanks {
@@ -118,6 +129,7 @@ class ModulesViewModel: ObservableObject {
                 station.addControlledAir(amount: neededVolume)
                 self.problems = ["Added \(neededVolume) air"]
                 self.canBuild = true
+                
                 return true
                 
             } else {
@@ -179,34 +191,6 @@ class ModulesViewModel: ObservableObject {
                 }
             }
         }
-//        for module in builder.modules {
-//            print("[0] Other M: \(module.id)")
-//            if module.id == id {
-//                print("[=] Matched a module: \(type) ID:\(id)")
-//
-//                switch type {
-//                    case .Lab:
-//                        let newLab:LabModule = module.convertToLab()
-//                        module.type = .Lab
-//                        station.labModules.append(newLab)
-//                        self.viewState = .Selected(type: .Lab)
-//
-//                    case .Hab:
-//                        let newHab:HabModule = module.convertToHab()
-//                        module.type = .Hab
-//                        station.habModules.append(newHab)
-//                        self.viewState = .Selected(type: .Hab)
-//
-//                    case .Bio:
-//                        let newBio:BioModule = module.convertToBio()
-//                        module.type = .Bio
-//                        station.bioModules.append(newBio)
-//                        self.viewState = .Selected(type: .Bio)
-//
-//                    default: return
-//                }
-//            }
-//        }
     }
     
     /// Sets the viewState back to `Selecting`

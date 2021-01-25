@@ -154,6 +154,7 @@ class GameFiles {
 struct GameColors {
     static let greenBackground = Color.green
     static let lightBlue = Color.blue
+    static let airBlue = Color("LightBlue")
 }
 
 enum GameSceneType {

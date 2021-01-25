@@ -360,9 +360,11 @@ class Battery:Codable, Identifiable, Hashable {
 // MARK: - Solar Panel
 
 enum SolarTypeSize:Int, Codable, CaseIterable {
+    
     case bigStation
     case smallVehicle
     case bigMars
+    
     var name:String {
         switch self {
         case .bigStation: return "Big Station"
@@ -370,6 +372,7 @@ enum SolarTypeSize:Int, Codable, CaseIterable {
         case .bigMars: return "Big Mars"
         }
     }
+    
     var size:Int {
         switch self {
         case .bigStation: return 10

@@ -9,31 +9,31 @@
 import Foundation
 import SceneKit
 
-enum SceneNames:String {
-    
-    case Modeling;
-    case Module;
-    case Node;
-    case Truss;
-    case Stage; // Stage is where scene gets presented
-    
-    func getScene() -> SCNScene? {
-        let sceneName = "\(self.rawValue).scn"
-        return SCNScene(named: "Art.scnassets/\(sceneName)")
-    }
-    
-    var objName:String {
-        get {
-            switch self {
-            case .Module: return self.rawValue
-            case .Node: return "Node2"
-            case .Truss: return "TSlot"
-            default:
-                return self.rawValue
-            }
-        }
-    }
-}
+//enum SceneNames:String {
+//
+//    case Modeling;
+//    case Module;
+//    case Node;
+//    case Truss;
+//    case Stage; // Stage is where scene gets presented
+//
+//    func getScene() -> SCNScene? {
+//        let sceneName = "\(self.rawValue).scn"
+//        return SCNScene(named: "Art.scnassets/\(sceneName)")
+//    }
+//
+//    var objName:String {
+//        get {
+//            switch self {
+//            case .Module: return self.rawValue
+//            case .Node: return "Node2"
+//            case .Truss: return "TSlot"
+//            default:
+//                return self.rawValue
+//            }
+//        }
+//    }
+//}
 
 /**
  A Singleton that helps control the main scene.
@@ -121,4 +121,17 @@ class SceneDirector {
         gameController?.updateTrussLayout()
     }
     
+}
+
+class MarsBuilder {
+    
+    init() {
+        print("Initting Mars Director")
+    }
+    // Load Scene
+    // Art.scnassets/Mars/MarsTerrain5 copy.scn
+    func loadScene() -> SCNScene? {
+        let nextScene = SCNScene(named: "Art.scnassets/Mars/MarsTerrain5 copy.scn")
+        return nextScene
+    }
 }

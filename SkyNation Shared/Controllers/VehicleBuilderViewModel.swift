@@ -17,6 +17,7 @@ enum SVBuildStage {
     
 }
 
+
 class VehicleBuilderViewModel:ObservableObject {
     
     var station:Station
