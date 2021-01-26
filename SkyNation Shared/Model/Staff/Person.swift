@@ -114,6 +114,7 @@ class Person:Codable, Identifiable, Equatable {
     
     // MARK: - Busy Status
     
+    /// Checks if this Person is performing an Activity
     func isBusy() -> Bool {
         if let _ = activity { return activity!.dateEnds.compare(Date()) == .orderedDescending }
         else {
@@ -262,6 +263,65 @@ class Person:Codable, Identifiable, Equatable {
     }
 }
 
+class PersonGenerator {
+    
+    static var shared = PersonGenerator()
+    
+    var generated:[Person]
+    var dateGenerated:Date
+    
+    private init() {
+        
+        var generation:[Person] = []
+        for idx in 0...12 {
+            let newPerson = Person(random:true)
+            generation.append(newPerson)
+            print("Person \(idx): \(newPerson.name) generated.")
+        }
+        self.generated = generation
+        self.dateGenerated = Date()
+    }
+    
+    // Every hour, generate 12 new people?
+    func requestPeople(_ amount:Int) -> [Person] {
+        let timee = Date().timeIntervalSince(dateGenerated)
+        if timee > 3600 {
+            // Generate new
+            let newArray:[Person] = generateNew()
+            generated = newArray
+        }
+        guard amount > 0 else { return [] }
+        
+        var generation:[Person] = []
+        for idx in 1...amount {
+            print("Person # \(idx): requested.")
+            if !generated.isEmpty {
+                let newPerson = generated.last!
+                generation.append(newPerson)
+                generated.removeLast()
+            } else {
+                print("Generating New Person (not from array)")
+                let newPerson = Person(random: true)
+                generation.append(newPerson)
+            }
+            
+        }
+        return generation
+    }
+    
+    private func generateNew() -> [Person] {
+        var generation:[Person] = []
+        for idx in 0...12 {
+            let newPerson = Person(random:true)
+            generation.append(newPerson)
+            print("Person \(idx): \(newPerson.name) generated.")
+        }
+        self.generated = generation
+        self.dateGenerated = Date()
+        return generation
+    }
+}
+
 class HumanGenerator:NSObject{
     
     func generateNameGenderPair() -> NameGenderPair {
@@ -270,15 +330,15 @@ class HumanGenerator:NSObject{
                                                    NameGenderPair(name: "Anita Norman", gender: .female),
                                                    NameGenderPair(name: "Salvador Lee", gender: .male),
                                                    NameGenderPair(name: "Charlene Ward", gender: .female),
-                                                   NameGenderPair(name: "Cassandra Howard", gender: .female),
-                                                   NameGenderPair(name: "Ramiro Fernandez", gender: .male),
+                                                   NameGenderPair(name: "Cassy Howard", gender: .female),
+                                                   NameGenderPair(name: "Ramiro Nunez", gender: .male),
                                                    NameGenderPair(name: "Kevin Burke", gender: .male),
                                                    NameGenderPair(name: "Edwin Greene", gender: .male),
-                                                   NameGenderPair(name: "Judith Simmons", gender: .female),
+                                                   NameGenderPair(name: "Judith Parks", gender: .female),
                                                    NameGenderPair(name: "Nettie Miles", gender: .male),
-                                                   NameGenderPair(name: "Janis Martinez", gender: .female),
-                                                   NameGenderPair(name: "Suzanne Baldwin", gender: .female),
-                                                   NameGenderPair(name: "Noel Brady", gender: .male),
+                                                   NameGenderPair(name: "Janis Ramirez", gender: .female),
+                                                   NameGenderPair(name: "Suzanne Brady", gender: .female),
+                                                   NameGenderPair(name: "Noel Baldwin", gender: .male),
                                                    NameGenderPair(name: "Renee Chavez", gender: .female),
                                                    NameGenderPair(name: "Sadie Lopez", gender: .female),
                                                    NameGenderPair(name: "Boyd Collier", gender: .male),
@@ -286,15 +346,21 @@ class HumanGenerator:NSObject{
                                                    NameGenderPair(name: "Rachael Wells", gender: .female),
                                                    NameGenderPair(name: "William Parks", gender: .male),
                                                    NameGenderPair(name: "Timothy Lyons", gender: .male),
-                                                   NameGenderPair(name: "Charlie Armstrong", gender: .female),
+                                                   NameGenderPair(name: "Charlie Walsh", gender: .female),
                                                    NameGenderPair(name: "Misty Swanson", gender: .female),
                                                    NameGenderPair(name: "Mable Morales", gender: .female),
                                                    NameGenderPair(name: "Nadine Carson", gender: .female),
-                                                   NameGenderPair(name: "Angelo Jackson", gender: .male),
-                                                   NameGenderPair(name: "Amber Walsh", gender: .female),
+                                                   NameGenderPair(name: "Angelo Wagner", gender: .male),
+                                                   NameGenderPair(name: "Amber Cross", gender: .female),
                                                    NameGenderPair(name: "Rene Goodwin", gender: .female),
                                                    NameGenderPair(name: "Shannon Cross", gender: .female),
-                                                   NameGenderPair(name: "Trevor Baker", gender: .male)]
+                                                   NameGenderPair(name: "Trevor Baker", gender: .male),
+                                                   NameGenderPair(name: "Giovanni Piza", gender: .male),
+                                                   NameGenderPair(name: "Yuri Bobov", gender: .male),
+                                                   NameGenderPair(name: "Marcus Trapuya", gender: .male),
+                                                   NameGenderPair(name: "Anna Johnson", gender: .female),
+                                                   NameGenderPair(name: "Julia Carson", gender: .female),
+                                                   NameGenderPair(name: "Sakura Saito", gender: .female)]
         return allNameGenderPairs.randomElement()!
     }
     
@@ -335,6 +401,7 @@ class HumanGenerator:NSObject{
         let upper = 95
         return lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
     }
+    
 //    // + teamwork
 //    var teamWork:Int = 50
 //    // + fix attempts

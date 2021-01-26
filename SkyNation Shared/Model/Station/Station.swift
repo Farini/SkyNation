@@ -125,10 +125,10 @@ class Station:Codable {
             // Breaking
             if isWorking && peripheral.breakable {
                 // Put this in the peripheral object
-                let chanceToBreak = GameLogic.chances(hit: 1.0, total: 30.0)
+                let chanceToBreak = GameLogic.chances(hit: 1.0, total: 40.0)
                 if chanceToBreak {
                     print("\n ⚠️ Should break peripheral !! \n\n")
-//                    peripheral.isBroken = true
+                    peripheral.isBroken = true
                     problems.append("✋ Broken Peripheral")
                 }
             } else {
@@ -152,6 +152,49 @@ class Station:Codable {
                         tempWater -= 3
                         tempAir.o2 += 3
                         tempAir.h2 += 6
+                    }
+                case .Methanizer:
+                    if tempAir.co2 > 2 {
+                        if let hydrogenTank = truss.tanks.filter({ $0.type == .h2 }).sorted(by: { $0.current > $1.current}).first, hydrogenTank.current >= 2 {
+                            if let methaneTank = truss.tanks.filter({ $0.type == .ch4 }).sorted(by: { $0.current < $1.current }).first, methaneTank.current < methaneTank.capacity - 1 {
+                                tempAir.co2 -= 2
+                                hydrogenTank.current -= 2
+                                methaneTank.current += 2
+                            }
+                        }
+                    }
+                case .WaterFilter:
+                    // Filter water. Remove from poop(StorageBox), add to tank(h2o)
+                    if let dirty = truss.extraBoxes.filter({ $0.type == .wasteLiquid }).sorted(by: { $0.current > $1.current }).first {
+                        if let drinkable = truss.tanks.filter({ $0.type == .h2o }).sorted(by: { $0.current < $1.current }).first {
+                            guard dirty.current > 5 else { continue }
+                            if dirty.current < 10 {
+                                dirty.current -= 2
+                                drinkable.current += 1
+                            } else {
+                                // up to 10, or 10% + lvl
+                                let lvl = peripheral.level + 1
+                                let amt = Int(0.1 * Double(dirty.current)) + lvl
+                                dirty.current -= (amt + 1)
+                                drinkable.current = min(drinkable.current + amt, drinkable.capacity)
+                            }
+                        }
+                    }
+                case .BioSolidifier:
+                    // Remove from poop(StorageBox), add to Fertilizer
+                    if let poop = truss.extraBoxes.filter({ $0.type == .wasteSolid }).sorted(by: { $0.current > $1.current }).first {
+                        if let box = truss.extraBoxes.filter({ $0.type == .Fertilizer }).sorted(by: { $0.current < $1.current }).first {
+                            if poop.current < 10 {
+                                poop.current -= 2
+                                box.current += 1
+                            } else {
+                                // up to 10, or 10% + lvl
+                                let lvl = peripheral.level + 1
+                                let amt = Int(0.1 * Double(poop.current)) + lvl
+                                poop.current -= (amt + 1)
+                                box.current = min(box.current + amt, box.capacity)
+                            }
+                        }
                     }
                 default:
                     continue
@@ -192,6 +235,8 @@ class Station:Codable {
         
         print("\n⚙️ [PEOPLE] ---")
         let inhabitants = habModules.flatMap({$0.inhabitants}) //.reduce(0, +)    // Reduce (see: https://stackoverflow.com/questions/24795130/finding-sum-of-elements-in-swift-array)
+        let radiatorsBoost:Bool = peripherals.filter({ $0.peripheral == .Radiator }).count * 3 >= inhabitants.count ? true:false
+        
         for person in inhabitants {
             
             // Air transformation
@@ -207,7 +252,7 @@ class Station:Codable {
             if tempWater >= GameLogic.waterConsumption {
                 tempWater -= GameLogic.waterConsumption
                 if person.healthPhysical < 50 {
-                    person.healthPhysical += 1
+                    person.healthPhysical += 3
                 }
             } else {
                 let dHealth = max(0, person.healthPhysical - 2)
@@ -256,12 +301,34 @@ class Station:Codable {
             // + Mood & adjustments
             person.randomMood()
             
-            if unlockedTechItems.contains(.Cuppola) {
-                if Bool.random() && person.happiness < 95 {
-                    person.happiness += 3
-                    if Bool.random() {
-                        person.lifeExpectancy += 1
+            // Cuppola -> Happy
+            if person.happiness < 95 {
+                if unlockedTechItems.contains(.Cuppola) {
+                    if Bool.random() == true {
+                        person.happiness += 3
                     }
+                }
+            } else {
+                // Happiness > 95, Health > 75, increase life expectancy
+                if Bool.random() && Bool.random() && person.healthPhysical > 75 {
+                    person.lifeExpectancy += 1
+                }
+            }
+            
+            // Temperature Control
+            if radiatorsBoost {
+                
+                if person.healthPhysical < 75 && Bool.random() {
+                    person.healthPhysical += 1
+                }
+                
+                if person.happiness < 95 && Bool.random() {
+                    person.happiness += 1
+                }
+            } else {
+                
+                if person.happiness > 20 && Bool.random() && Bool.random() {
+                    person.happiness -= 1
                 }
             }
             
@@ -282,7 +349,18 @@ class Station:Codable {
                 problems.append("\(person.name) is unhappy! 😭")
             }
             
-            // + Activity check (clear out)
+            // DEATH
+            if person.healthPhysical < 1 {
+                problems.append("\(person.name) is passing away")
+                for mod in habModules {
+                    if mod.inhabitants.contains(person) {
+                        // Remove
+                        mod.inhabitants.removeAll(where: { $0.id == person.id })
+                    }
+                }
+            }
+            
+            // + Activity check (cleanup)
             if person.isBusy() == false && person.activity != nil {
                 person.activity = nil
             }
@@ -300,8 +378,6 @@ class Station:Codable {
             }
         }
         
-        // TODO: - WATER
-        // ⚠️ DONT FORGET !!!
         // put the water back in the containers
         let waterSpill = truss.refillTanks(of: .h2o, amount: tempWater)
         if waterSpill > 0 {

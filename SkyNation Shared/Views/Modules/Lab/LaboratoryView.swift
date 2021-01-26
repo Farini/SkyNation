@@ -117,41 +117,50 @@ struct LaboratoryView: View {
                 
                 // Left View (Table)
                 List {
-                    // Selection
-                    Section(header: Text("Selection")) {
-                        switch controller.selection {
-                        case .NoSelection:
-                            Text("No Selection")
-                        case .recipe(let name):
-                            Text("Recipe \(name.rawValue)")
-                        case .techTree(let name):
-                            Text("Tech \(name.rawValue)")
-                        case .activity:
-                            Text("Activity")
-                        }
-                    }
+//                    // Selection
+//                    Section(header: Text("Selection")) {
+//                        switch controller.selection {
+//                        case .NoSelection:
+//                            Text("No Selection")
+//                        case .recipe(let name):
+//                            Text("Recipe \(name.rawValue)")
+//                        case .techTree(let name):
+//                            Text("Tech \(name.rawValue)")
+//                        case .activity:
+//                            Text("Activity")
+//                        }
+//                    }
                     
                     // Recipes
                     Section(header: Text("Recipes")) {
                         ForEach(controller.unlockedRecipes, id:\.self) { recipe in
-                            Text(recipe.rawValue)
-                                .foregroundColor(.green)
-                                .onTapGesture {
-                                    // print("Did tap")
-                                    
-                                    switch controller.selection {
-                                        case .activity:
-                                            print("Activity going on. Can't choose")
-                                            errorMessage = "Wait for activity to be over"
-                                        default:
-                                            controller.selection = LabSelectState.recipe(name: recipe)
-                                    }
+                            HStack(alignment:.bottom) {
+                                
+                                recipe.image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 26, height: 26)
+                                    .padding(.top)
+                                Text(recipe.rawValue)
+                                    .foregroundColor(.green)
+                            }
+                            
+                            .onTapGesture {
+                                // print("Did tap")
+                                
+                                switch controller.selection {
+                                    case .activity:
+                                        print("Activity going on. Can't choose")
+                                        errorMessage = "Wait for activity to be over"
+                                    default:
+                                        controller.selection = LabSelectState.recipe(name: recipe)
                                 }
+                            }
                         }
                     }
                     
                     // Tech
-                    Section(header: Text("Tech Tree Items")) {
+                    Section(header: Text("Tech Tree")) {
                         
                         ForEach(0..<TechItems.allCases.count) { idx in
                             

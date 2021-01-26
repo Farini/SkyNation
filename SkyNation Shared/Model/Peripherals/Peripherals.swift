@@ -62,12 +62,11 @@ enum PeripheralType:String, Codable, CaseIterable {
     /// Makes money for the station
     case Antenna
     
-    // MARK: - Improvements
+    /// Transforms part of wasteLiquid back into water (or water vapor, to be easier)
+    case WaterFilter
     
-    // FIXME: - Modifications
-    // ⚠️ Needs to add:
-    // add WaterFilter      // Transforms part of wasteLiquid back into water (or water vapor, to be easier)
-    // add BioSolidifier    // Transforms wasteSolid into fertilizer?
+    /// Transforms wasteSolid into fertilizer
+    case BioSolidifier
     
     // Add to methods
     
@@ -102,9 +101,11 @@ enum PeripheralType:String, Codable, CaseIterable {
             case .Condensator: return "Condensates the water vapor emitted by humans into drinkable water"
             case .Electrolizer: return "Performs electrolisys of the water. Splitting into Hydrogen + Oxygen"
             case .Methanizer: return "Makes methane from CO2 + H2"
-            case .Radiator: return "Maintains ideal temperature in the Space Station, and makes the inhabitants happier"
+            case .Radiator: return "Maintains ideal temperature in the Space Station, and makes the inhabitants happier. 1 for 3 people required."
             case .ScrubberCO2: return "Extracts the CO2 from the air"
             case .Roboarm: return "Does a series of things"
+            case .WaterFilter: return "Transforms part of waste water into drinkable water"
+            case .BioSolidifier: return "Transforms solid waste into fertilizer"
             
             default: return "It is unknown what this thing does."
         }
@@ -113,7 +114,7 @@ enum PeripheralType:String, Codable, CaseIterable {
     /// Whether peripheral can break
     var breakable:Bool {
         switch self {
-        case .Condensator, .ScrubberCO2, .Electrolizer, .Radiator: return true
+            case .Condensator, .ScrubberCO2, .Electrolizer, .Radiator, .WaterFilter, .BioSolidifier: return true
         default: return false
         }
     }
@@ -121,7 +122,7 @@ enum PeripheralType:String, Codable, CaseIterable {
     /// Whether this peripheral can be levelled up.
     var updatable:Bool {
         switch self {
-            case .Antenna, .GarageArm, .Roboarm, .solarPanel: return true
+            case .Antenna, .GarageArm, .Roboarm, .solarPanel, .WaterFilter, .BioSolidifier: return true
             default: return false
         }
     }
@@ -131,8 +132,9 @@ enum PeripheralType:String, Codable, CaseIterable {
         switch self {
             case .Condensator, .ScrubberCO2: return 10
             case .Electrolizer: return 15
-            case .Methanizer, .Radiator: return 20
-            case .Antenna: return 25
+            case .Methanizer, .Radiator, .WaterFilter: return 20
+            case .Antenna, .BioSolidifier: return 25
+            
             default: return 0
         }
     }
@@ -192,6 +194,31 @@ class PeripheralObject:Codable, Identifiable {
                 return (newAir, tmpWater)
             default: return (input, 0)
         }
+    }
+    
+    func filterWater(dirty:StorageBox, drinkable:Tank) {
+        
+        guard dirty.type == .wasteLiquid && drinkable.type == .h2o else {
+            return
+        }
+        
+        let dirtyAmount = dirty.current
+        let cleanAmount = drinkable.current
+        
+        if dirtyAmount < 5 { return }
+        if dirtyAmount < 10 {
+            dirty.current -= 2
+            drinkable.current += 1
+        } else {
+            // up to 10, or 10% + lvl
+            let lvl = self.level + 1
+            let amt = Int(0.1 * Double(dirtyAmount)) + lvl
+            dirty.current -= amt
+            drinkable.current = min(cleanAmount + amt, drinkable.capacity)
+        }
+        
+        
+        
     }
 }
 

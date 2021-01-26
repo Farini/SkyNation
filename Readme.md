@@ -99,19 +99,22 @@ Items being worked on
 - [X] Load Messages
 - [X] Fix Earth order Tank size
 - [X] Fix Hab Module size (Bigger)
-
+- [X] WaterFilter in Recipes and PeripheralType
+- [X] Biosolidifier in Recipes and PeripheralType
+- [X] Lab Module Make Recipe Icon in List
+- [X] Fix Earth order Person View
+- [X] Add Radiator to Truss
 - [ ] Loading Screen / User Registry
 - [ ] Route to create player
 - [ ] Modify Entry Point MacOS, iOS
-- [ ] Fix Earth order Person View
-- [ ] Person menu -> Fire, Medicate
-- [ ] Lab Module Make Recipe Icon in List
-- [ ] Lab Module needs to update list when research is finished
-- [ ] People generator should generate new people every 8hrs. Pay for more. And generate Materials engineer first
+- [ ] Lab Module needs to update list when research is finished (Needs testing)
 - [ ] LSS View -> Improve Peripherals and Ingredients Detail View
 - [ ] LSS View -> Each Peripheral should have its own Detail View and actions
 - [ ] Free Supply Drop-offs -> Pay for more
 - [ ] If you simulate your vehicles, you get an extra XP for the Garage
+- [ ] Person menu -> Fire, Medicate
+- [ ] Person Detail View -> Life Expectancy on the View
+- [ ] People generator should generate new people every hour. Pay for more. And generate Materials engineer first
 
 - [X] 5/21 Scene Improvements
     - [X] Cleanup Original Scene

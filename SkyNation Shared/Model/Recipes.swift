@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 /// **Recipe** names - recipes create a `Peripheral` or other objects
 enum Recipe:String, Codable, CaseIterable, Hashable {
@@ -25,13 +26,8 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
     case StorageBox
     case tank
     case Roboarm
-    
-    // MARK: - Improvements
-    
-    // FIXME: - Modifications
-    // ⚠️ Needs to add:
-    case  WaterFilter      // Transforms part of wasteLiquid back into water (or water vapor, to be easier)
-    case  BioSolidifier    // Transforms wasteSolid into fertilizer?
+    case WaterFilter      // Transforms part of wasteLiquid back into water (or water vapor, to be easier)
+    case BioSolidifier    // Transforms wasteSolid into fertilizer?
     
     /// Gets the ingredients for recipe
     func ingredients() -> [Ingredient:Int] {
@@ -118,4 +114,17 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
         return nil
     }
     
+    var image:Image {
+        switch self {
+            case .Condensator: return PeripheralObject(peripheral: .Condensator).getImage()!
+            case .ScrubberCO2: return PeripheralObject(peripheral: .ScrubberCO2).getImage()!
+            case .Electrolizer: return PeripheralObject(peripheral: .Electrolizer).getImage() ?? Image(systemName: "questionmark")
+            case .Methanizer: return PeripheralObject(peripheral: .Methanizer).getImage() ?? Image(systemName: "questionmark")
+            case .Radiator: return PeripheralObject(peripheral: .Radiator).getImage() ?? Image(systemName: "questionmark")
+            case .SolarPanel: return PeripheralObject(peripheral: .solarPanel).getImage() ?? Image(systemName: "questionmark")
+            case .Battery: return PeripheralObject(peripheral: .battery).getImage() ?? Image(systemName: "questionmark")
+//            case .BioSolidifier: return PeripheralObject(peripheral: .).getImage() ?? Image(systemName: "questionmark")
+            default: return Image(systemName: "questionmark")
+        }
+    }
 }

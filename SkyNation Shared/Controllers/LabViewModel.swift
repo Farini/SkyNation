@@ -198,7 +198,20 @@ class LabViewModel: ObservableObject {
         if let activity = self.labModule.activity {
             print("Found activity: \(activity.activityName)")
             
+            
+            
             if let techItem = TechItems(rawValue: activity.activityName) {
+                
+                // Make sure its not a repeat
+                guard !station.unlockedTechItems.contains(techItem) else {
+                    print("Already researched this tech...")
+                    // Update UI
+                    self.unlockedItems = station.unlockedTechItems
+                    self.labModule.activity = nil
+                    self.selected = nil
+                    self.selection = .NoSelection
+                    return
+                }
                 
                 GameMessageBoard.shared.newAchievement(type: .tech, qtty: nil)
                 print("New Game Message")
@@ -260,7 +273,22 @@ class LabViewModel: ObservableObject {
 //                LocalDatabase.shared.saveSerialBuilder(builder: LocalDatabase.shared.builder)
                 
                 // Update UI
-                self.unlockedItems = station.unlockedTechItems
+                
+                self.unlockedRecipes = station.unlockedRecipes
+                //        self.labActivity = lab.activity
+                
+                // Update Tech Tree?
+                let tree = TechTree()
+                tree.accountForItems(items: station.unlockedTechItems)
+                self.techTree = tree
+                self.unlocked = tree.showUnlocked() ?? []
+                self.complete = tree.getCompletedItemsFrom(node: tree)
+                // Unlocked Items (Can be researched)
+                for item in tree.showUnlocked() ?? [] {
+                    self.unlockedItems.append(item.item)
+                }
+                
+//                self.unlockedItems = station.unlockedTechItems
                 self.labModule.activity = nil
                 self.selected = nil
                 self.selection = .NoSelection
@@ -365,6 +393,7 @@ class LabViewModel: ObservableObject {
     }
     
     func collectRecipe(recipe:Recipe, from module:LabModule) -> Bool {
+        
         switch recipe {
             
             case .Battery:
@@ -406,6 +435,12 @@ class LabViewModel: ObservableObject {
                 print("Collect")
                 let peripheral = PeripheralObject(peripheral:.Radiator)
                 self.station.peripherals.append(peripheral)
+                if let slot = station.truss.tComponents.filter({ $0.allowedType == .Radiator && $0.itemID == nil }).first {
+                    let result = slot.insert(radiator: peripheral)
+                    print("Inserted in Truss: \(result)")
+                } else {
+                    print("ERROR: No room for Radiators")
+                }
                 finishActivity(module: module)
                 return true
                 
@@ -417,7 +452,7 @@ class LabViewModel: ObservableObject {
                 return true
                 
             case .Condensator:
-                print("Collect")
+                print("Collect Condensator")
                 let peripheral = PeripheralObject(peripheral:.Condensator)
                 self.station.peripherals.append(peripheral)
                 finishActivity(module: module)
@@ -425,6 +460,20 @@ class LabViewModel: ObservableObject {
                 
             case .Roboarm:
                 self.station.unlockedTechItems.append(.Roboarm)
+                return true
+                
+            case .BioSolidifier:
+                print("Bio")
+                let peripheral = PeripheralObject(peripheral: .BioSolidifier)
+                self.station.peripherals.append(peripheral)
+                finishActivity(module: module)
+                return true
+            
+            case .WaterFilter:
+                print("Filter")
+                let peripheral = PeripheralObject(peripheral: .WaterFilter)
+                self.station.peripherals.append(peripheral)
+                finishActivity(module: module)
                 return true
                 
             default:

@@ -453,7 +453,7 @@ class LSSModel:ObservableObject {
         LocalDatabase.shared.saveStation(station: station)
     }
     
-    // Timer
+    // MARK: - Timer
     
     func prepTimer() {
         self.timer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { timer in
