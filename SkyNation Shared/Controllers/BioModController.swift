@@ -469,11 +469,14 @@ class DNAGenerator {
         
         self.bestFit = populationStrings.first ?? "A"
         self.populationStrings = popStrings
-        self.bestLevel = 1000
+        self.bestLevel = Int.max
         self.counter = 0
         
         // Post init
-        self.bestLevel = self.calculateFitness(dna: popDNAs[0], optimal: perfect)
+        if let firstDNA = popDNAs.first {
+            self.bestLevel = self.calculateFitness(dna: firstDNA, optimal: perfect)
+        }
+        
     }
     
     /// Generates population. Pass the Chosen DNA and the size of the box. Return the Population (Strings)

@@ -10,9 +10,17 @@ import SwiftUI
 
 struct HabModuleView: View {
     
-    var module:HabModule
+//    var module:HabModule
     @State var habPopoverOn:Bool = false
-    @State var selectedPerson:Person?
+//    @State var selectedPerson:Person?
+    
+    @ObservedObject var controller:HabModuleController
+    
+    init(module:HabModule) {
+        let controller = HabModuleController(hab: module)
+        self.controller = controller
+//        self.module
+    }
     
     var body: some View {
         
@@ -21,7 +29,7 @@ struct HabModuleView: View {
             // Header
             HStack (alignment: .center, spacing: nil) {
                 
-                HabModuleHeaderView(module: module)
+                HabModuleHeaderView(module: controller.habModule)
                 
                 Spacer()
                 
@@ -101,8 +109,70 @@ struct HabModuleView: View {
             
             Divider()
             
+            switch controller.viewState {
+                case .noSelection:
+                    if controller.inhabitants.isEmpty {
+                        // Empty Module
+                        HStack {
+                            Spacer()
+                            Image(systemName: "camera.metering.none")
+                                .foregroundColor(.gray)
+                                .font(.largeTitle)
+                                .padding()
+                            Text("No one lives here. Call for Dropoff, and hire people.")
+                                .foregroundColor(.gray)
+                                .font(.subheadline)
+                            Spacer()
+                        }
+                        .frame(minWidth: 600, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: 350, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment:.topLeading)
+                    } else {
+                        HStack {
+                            // Left List
+                            List(controller.inhabitants) { person in
+                                PersonRow(person: person, selected: person == controller.selectedPerson)
+                                    .onTapGesture(count: 1, perform: {
+                                        controller.didSelect(person: person)
+                                    })
+                            }
+                            .frame(minWidth: 150, maxWidth: 230, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
+                            
+                            Divider()
+                            // No Selection
+                            HStack {
+                                Spacer()
+                                VStack {
+                                    Image(systemName: "camera.metering.none")
+                                        .font(.largeTitle)
+                                        .padding()
+                                    Text("No One selected")
+                                    Text("Hab module shelters people")
+                                }
+                                .foregroundColor(.gray)
+                                Spacer()
+                            }.padding()
+                        }
+                    }
+                case .selected(let selected):
+                    HStack {
+                        
+                        // Left List
+                        List(controller.inhabitants) { person in
+                            PersonRow(person: person, selected: person == controller.selectedPerson)
+                                .onTapGesture(count: 1, perform: {
+                                    controller.didSelect(person: person)
+                                })
+                        }
+                        .frame(minWidth: 150, maxWidth: 230, maxHeight: .infinity, alignment: .leading)
+                        
+                        // Details go here
+                        ScrollView {
+                            PersonDetail(controller: self.controller, person:controller.selectedPerson!)
+                        }
+                    }
+            }
+            /*
             // Left View
-            if module.inhabitants.isEmpty {
+            if controller.inhabitants.isEmpty {
                 // Empty Module
                 HStack {
                     Spacer()
@@ -120,9 +190,10 @@ struct HabModuleView: View {
             }else{
                 HStack {
                     // Left List
-                    List(module.inhabitants) { person in
-                        PersonRow(person: person, selected: person == selectedPerson).onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
-                            self.selectedPerson = person
+                    List(controller.inhabitants) { person in
+                        PersonRow(person: person, selected: person == controller.selectedPerson)
+                            .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
+                            controller.didSelect(person: person)
                         })
                     }
                     .frame(minWidth: 150, maxWidth: 230, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
@@ -130,7 +201,7 @@ struct HabModuleView: View {
                     Divider()
                     
                     // Right Detail View
-                    if selectedPerson == nil {
+                    if controller.selectedPerson == nil {
                         HStack {
                             Spacer()
                             VStack {
@@ -146,22 +217,24 @@ struct HabModuleView: View {
                     } else {
                         // Details go here
                         ScrollView {
-                            PersonDetail(person: selectedPerson!, workoutAction: workoutAction)
+                            PersonDetail(controller: self.controller, person:controller.selectedPerson!)
                         }
                     }
                     
                     Spacer()
                 }
                 .frame(minWidth: 600, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: 350, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment:.topLeading)
-            }
+            */
+            
+        
         }
     }
     
     func workoutAction() {
-        guard let person = selectedPerson else {
+        guard let person = controller.selectedPerson else {
             return
         }
-        let workoutActivity = LabActivity(time: 60, name: "Working out")
+        let workoutActivity = LabActivity(time: 60, name: "Workout")
         person.activity = workoutActivity
         print("Person working out")
     }

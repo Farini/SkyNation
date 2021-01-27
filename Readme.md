@@ -104,16 +104,17 @@ Items being worked on
 - [X] Lab Module Make Recipe Icon in List
 - [X] Fix Earth order Person View
 - [X] Add Radiator to Truss
-- [ ] Loading Screen / User Registry
-- [ ] Route to create player
-- [ ] Modify Entry Point MacOS, iOS
+- [X] Loading Screen / User Registry
+- [X] Route to create player
+- [X] Modify Entry Point MacOS, iOS
+- [X] Person menu -> Fire, Medicate, Workout, Study
 - [ ] Lab Module needs to update list when research is finished (Needs testing)
+
+
 - [ ] LSS View -> Improve Peripherals and Ingredients Detail View
 - [ ] LSS View -> Each Peripheral should have its own Detail View and actions
 - [ ] Free Supply Drop-offs -> Pay for more
 - [ ] If you simulate your vehicles, you get an extra XP for the Garage
-- [ ] Person menu -> Fire, Medicate
-- [ ] Person Detail View -> Life Expectancy on the View
 - [ ] People generator should generate new people every hour. Pay for more. And generate Materials engineer first
 
 - [X] 5/21 Scene Improvements
@@ -133,6 +134,7 @@ Items being worked on
     - [ ] Add light and transluscent sphere to Dock
     - [ ] 5 Models of Antenna
     - [ ] Roboarm animation
+    - [ ] Load more items of Scene in StationBuilder
     - [ ] StationBuilder Object - 01/16/2021
         - [X] Make Skin Work
         - [X] Remake of Builder -> SceneBuilder to replace 'BuildItem'

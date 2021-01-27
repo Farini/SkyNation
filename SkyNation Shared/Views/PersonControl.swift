@@ -33,7 +33,8 @@ struct PersonControl: View {
             }
             VStack {
                 if selectedPerson != nil {
-                    PersonDetail(person: selectedPerson!, workoutAction: workoutAction)
+//                    PersonDetail(person: selectedPerson!, workoutAction: workoutAction)
+                    Text("PersonDetail")
                 }else{
                     Text("Select one")
                 }

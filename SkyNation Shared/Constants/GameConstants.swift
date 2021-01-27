@@ -280,36 +280,36 @@ extension AddingTrussItemProblem: LocalizedError {
 
 // MARK: - SYSTEM COMMUNICATIONS
 
-enum AchievementType:String, Codable, CaseIterable {
+enum GameAchievementType {
+    case tech(item:TechItems)
+    case recipe(item:Recipe)
+    case vehicleBuilt(type:EngineType)
+    case vehicleLanding(vehicle:SpaceVehicle)
     
-    case tech;
-    case recipe;
-    case vehicle;
-    case deliveries;
-    case plants;
-    case learning;
-    case marsLanding;
-    case experience;
+    case newDNA(dna:PerfectDNAOption)
+    case learning(skill:Skills)
+    case deliveryXP
+    case experience
     
     func preString() -> String {
         switch self {
-            case .tech: return "Researched tech: "
-            case .recipe: return "Made a recipe: "
-            case .vehicle: return "Space vehicle: "
-            case .deliveries: return "Delivery arrived: "
-            case .plants: return "DNA discovered: "
-            case .learning: return "Person learning: "
-            case .marsLanding: return "Landed on Mars: "
-            case .experience: return "Achieved experience: "
+            case .tech(let item): return "Researched Tech \(item.rawValue)"
+            case .recipe(let recipe): return "Made a recipe \(recipe.rawValue)"
+            case .vehicleBuilt(let type): return "Space vehicle Built: \(type.rawValue)"
+            case .vehicleLanding(let vehicle): return "Landed vehicle \(vehicle.name)"
+            case .newDNA(let dna): return "DNA discovered: \(dna)"
+            case .learning(let skill): return "Someone learned \(skill)"
+            case .deliveryXP: return "Delivery arrived"
+            case .experience: return "Gained experience"
         }
     }
 }
 
-struct GameAchievement:Codable {
-    var type:AchievementType
-    var date:Date
-    var qtty:Int
-}
+//struct GameAchievement:Codable {
+//    var type:AchievementType
+//    var date:Date
+//    var qtty:Int
+//}
 
 class GameMessageBoard {
     
@@ -321,11 +321,11 @@ class GameMessageBoard {
         messages = LocalDatabase.shared.gameMessages
     }
     
-    func newAchievement(type:AchievementType, qtty:Int?) {
+    func newAchievement(type:GameAchievementType, qtty:Int?, message:String?) {
         
         self.messages = LocalDatabase.shared.gameMessages
         
-        let theMessage = "Game Achievement! \(type.rawValue). \(qtty ?? 0). \(type.preString()) )"
+        let theMessage = message ?? "Game Achievement! \(type.preString())."
         let newMessage = GameMessage(type: .Achievement, date: Date(), message: theMessage, ingredientRewards: [.Food:10])
         messages.append(newMessage)
         
@@ -333,6 +333,8 @@ class GameMessageBoard {
         LocalDatabase.shared.gameMessages = messages
         LocalDatabase.shared.saveMessages()
     }
+    
+    
 }
 
 struct GameMessage:Codable {
@@ -345,6 +347,7 @@ struct GameMessage:Codable {
     var isCollected:Bool = false
     
     // Optionals
+    var moneyRewards:Int?
     var tokenRewards:[UUID]?
     var ingredientRewards:[Ingredient:Int]?
 }

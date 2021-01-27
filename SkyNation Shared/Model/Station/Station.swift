@@ -244,8 +244,8 @@ class Station:Codable {
             // emit co2
             // emit vapor
             let newAir = person.consumeAir(airComp: tempAir)
-            print("\t Person: \(person.name)\n\t 😷 Health:\(person.healthPhysical)")
-            print("\t Air quality: \(newAir.airQuality().rawValue)")
+            print("\t 🤓: \(person.name)\t 😷:\(person.healthPhysical)")
+            print("\t 💨: \(newAir.airQuality().rawValue)")
             tempAir = newAir
             
             // consume water
@@ -274,7 +274,7 @@ class Station:Codable {
             // Look for BioBoxes
             for box in bioBoxes {
                 let newFood = box.population.filter({$0 == box.perfectDNA})
-                if let randomFood = newFood.randomElement() {
+                if let randomFood = newFood.randomElement(), newFood.count > 2 {
                     if let ridx = box.population.firstIndex(of: randomFood) {
                         // Food success
                         foodConsumed? = randomFood
@@ -294,7 +294,10 @@ class Station:Codable {
                 } else {
                     let dHealth = max(0, person.healthPhysical - 2)
                     person.healthPhysical = dHealth
-                    problems.append("🍽 Lack of food")
+                    if person.teamWork > 10 {
+                        person.teamWork -= 1
+                    }
+                    problems.append("🍽 No food for \(person.name)")
                 }
             }
             
@@ -305,13 +308,17 @@ class Station:Codable {
             if person.happiness < 95 {
                 if unlockedTechItems.contains(.Cuppola) {
                     if Bool.random() == true {
-                        person.happiness += 3
+                        person.happiness += 2
                     }
                 }
             } else {
                 // Happiness > 95, Health > 75, increase life expectancy
-                if Bool.random() && Bool.random() && person.healthPhysical > 75 {
-                    person.lifeExpectancy += 1
+                if Bool.random() && Bool.random() && Bool.random() && Bool.random() && person.healthPhysical > 75 {
+                    if Bool.random() || Bool.random() {
+                        person.teamWork = min(100, person.teamWork + 1)
+                    } else {
+                        person.lifeExpectancy += 1
+                    }
                 }
             }
             
@@ -361,9 +368,11 @@ class Station:Codable {
             }
             
             // + Activity check (cleanup)
-            if person.isBusy() == false && person.activity != nil {
-                person.activity = nil
-            }
+            person.clearActivity()
+//            if person.isBusy() == false && person.activity != nil {
+//                person.activity = nil
+//            }
+            
             
             // Aging Humans (Once a week)
             if m.hour == 1 && m.weekday == 1 {

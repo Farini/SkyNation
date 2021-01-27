@@ -47,7 +47,6 @@ class LabActivity:Codable, Identifiable {
     // Recipe, or Tech name
     var activityName:String
     
-//    var workers:[Person]?
     var labID:UUID?
     
     init(time:TimeInterval, name:String = "") {
@@ -76,14 +75,29 @@ class LabActivity:Codable, Identifiable {
         
         // Save
     }
+    
+    func activityType() -> PersonActivityType? {
+        if let _ = Skills(rawValue: activityName) {
+            return .Study
+        } else if let _ = TechItems(rawValue: activityName) {
+            return .LabWork
+        } else if activityName == "Workout" {
+            return .Workout
+        }
+        return nil
+    }
+}
+
+enum PersonActivityType:String {
+    case Study      // Person is studying
+    case Workout    // Working out
+    case Medicated  // Medicated (Cool off)
+    case Medicating // Medicating
+    case LabWork    // Tech, or Recipes
 }
 
 /// An inhabitant of the `Station`
 class Person:Codable, Identifiable, Equatable {
-    
-    static func == (lhs: Person, rhs: Person) -> Bool {
-        return lhs.id == rhs.id
-    }
     
     var id:UUID = UUID()
     var name:String
@@ -123,9 +137,10 @@ class Person:Codable, Identifiable, Equatable {
     }
     
     func busynessSubtitle() -> String {
+        
         if isBusy() == true {
             let dead = activity!.dateEnds.timeIntervalSince(Date())
-            return "Busy for \(Int(dead)) seconds"
+            return "\(activity?.activityName ?? "Busy") \(Int(dead)) s"
         }else{
             return "Idle"
         }
@@ -184,7 +199,12 @@ class Person:Codable, Identifiable, Equatable {
             case .Great:
                 if Bool.random() { happiness += 1 }
             case .Good:
-                print("air was good. boring")
+//                print("air was good. boring")
+                if Bool.random() {
+                    happiness = min(happiness + 1, 100)
+                } else {
+                    happiness = max(happiness - 1, 0)
+                }
             case .Medium:
                 if Bool.random() { happiness -= 1 }
             case .Bad:
@@ -207,6 +227,109 @@ class Person:Codable, Identifiable, Equatable {
         
         return air
     }
+    
+    func sumOfSkills() -> Int {
+        var counter:Int = 0
+        for skset in skills {
+            counter += skset.level
+        }
+        return counter
+    }
+    
+    /// Returns chances (0...1) of Studying
+    func willingnessToStudy() -> Double {
+        
+        // A Tenth of their age (Max Study Levels)
+        var tenth = Int((Double(age) / 10.0).rounded())
+        
+        // Increase the tenth if intelligent
+        if intelligence > 80 { tenth += 1 }
+        else if intelligence > 60 && Bool.random() { tenth += 1 }
+        
+        // Increase the tenth if happy
+        if happiness > 80 { tenth += 1 }
+        else if happiness > 50 && Bool.random() { tenth += 1 }
+        
+        // Decrease the tenth when health is bad
+        if healthPhysical < 50 {
+            tenth -= 1
+        }
+        
+        let sksum = sumOfSkills()
+        let balance = sksum - tenth
+        if balance > 1 { return 0.0 }
+        else if balance == 1 { return 0.25 }
+        else if balance == 0 { return 0.5 }
+        else if balance == -1 { return 0.75 }
+        else if balance < -1 { return 1.0 }
+        return 0.5
+    }
+    
+    /// Learn new Skill (Called when clearActivity() is being called)
+    private func learnNewSkill(type:Skills) {
+        
+        var newSkill:SkillSet?
+        if let idx = skills.firstIndex(where: { $0.skill == type }) {
+            newSkill = SkillSet(skill: type, level: skills[idx].level + 1)
+            skills.remove(at: idx)
+        } else {
+            newSkill = SkillSet(skill: type, level: 1)
+        }
+        if let newSkill = newSkill {
+            skills.append(newSkill)
+        }
+    }
+    
+    func clearActivity() {
+        if let activity = activity {
+            if Date().compare(activity.dateEnds) == .orderedDescending {
+                
+                // Finished Activity
+                if activity.activityName == "Workout" {
+                    
+                    // Workout
+                    GameMessageBoard.shared.newAchievement(type: .experience, qtty: nil, message: "\(name) finished a workout!")
+                    self.healthPhysical = min(100, healthPhysical + 3)
+                    self.activity = nil
+                    
+                } else if activity.activityName == "Medicating" {
+                    
+                    // Doctor Medicating
+                    GameMessageBoard.shared.newAchievement(type: .experience, qtty: nil, message: "\(name) cured someone!")
+                    self.activity = nil
+                    
+                } else if activity.activityName == "Healing" {
+                    
+                    // Patient being medicated
+                    self.healthPhysical = min(100, healthPhysical + 10)
+                    self.activity = nil
+                    
+                } else if let education = Skills(rawValue: activity.activityName) {
+                    
+                    // Learning Skill
+                    print("\(name) learned a new skill!")
+                    GameMessageBoard.shared.newAchievement(type: .learning(skill:education), qtty: nil, message: "\(name) learned a new skill!")
+                    
+                    self.learnNewSkill(type: education)
+                    self.activity = nil
+                    
+                } else if let tech = TechItems(rawValue: activity.activityName) {
+                    
+                    // Tech
+                    print("\(name) finished Tech \(tech)")
+                    self.activity = nil
+                    
+                } else if let recipe = Recipe(rawValue: activity.activityName) {
+                    
+                    // Recipe
+                    print("\(name) finished Recipe \(recipe)")
+                    self.activity = nil
+                }
+            }
+        }
+    }
+    
+    
     
     // MARK: - Creating a person
     
@@ -251,7 +374,16 @@ class Person:Codable, Identifiable, Equatable {
         if self.age > 30 {
             if Bool.random() == true {
                 let rndSk1:Skills = Skills.allCases.randomElement()!
-                self.skills.append(SkillSet(skill: rndSk1, level: 1))
+                var newSkill:SkillSet?
+                if let idx = skills.firstIndex(where: { $0.skill == rndSk1 }) {
+                    newSkill = SkillSet(skill: rndSk1, level: skills[idx].level + 1)
+                    skills.remove(at: idx)
+                } else {
+                    newSkill = SkillSet(skill: rndSk1, level: 1)
+                }
+                if let newSkill = newSkill {
+                    skills.append(newSkill)
+                }
             }
         }
         
@@ -260,6 +392,10 @@ class Person:Codable, Identifiable, Equatable {
         
         // Team / Adapt
         self.teamWork = generator.randomTeamWorkAdaptability()
+    }
+    
+    static func == (lhs: Person, rhs: Person) -> Bool {
+        return lhs.id == rhs.id
     }
 }
 
@@ -391,14 +527,14 @@ class HumanGenerator:NSObject{
     
     // + happiness
     func randomHappiness() -> Int {
-        let lower = 35
-        let upper = 80
+        let lower = 45
+        let upper = 70
         return lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
     }
     
     func randomTeamWorkAdaptability() -> Int {
         let lower = 25
-        let upper = 95
+        let upper = 99
         return lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
     }
     
@@ -413,7 +549,7 @@ class HumanGenerator:NSObject{
     
     // Intelligence
     func randomStartingIntelligence() -> Int{
-        let lower = 25
+        let lower = 35
         let upper = 99
         return lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
     }

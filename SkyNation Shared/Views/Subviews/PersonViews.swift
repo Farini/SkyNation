@@ -149,13 +149,28 @@ struct SkillsetView:View {
 
 struct PersonDetail:View {
     
+    
+    
+    @ObservedObject var controller:HabModuleController
     var person:Person
-    var workoutAction:() -> Void
+    
+    @State var fireAlert:Bool = false
+    
+    
     
     var body: some View {
         
         VStack(alignment: .leading) {
             
+            HStack {
+                Spacer()
+                Text("Profile")
+                    .font(.title)
+                Spacer()
+            }
+            .padding([.top], 8)
+            
+            // Picture, name and Skills
             HStack {
                 
                 Image(person.avatar)
@@ -189,38 +204,81 @@ struct PersonDetail:View {
                 .frame(minWidth: 200, idealWidth: 200, maxWidth: 200, idealHeight: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 
                 Spacer()
-            }// .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+            }
             
             Divider()
             
-            HStack {
-                if person.isBusy() == false {
+            // Activity
+            Group {
+                HStack {
+                    Spacer()
+                    Text("Activity").font(.title2)
+                    Spacer()
+                }
+                .padding( 8)
+                
+                HStack {
+                    Spacer()
                     Text("⏱").font(.title)
+                        .padding([.leading], 6)
                     Text(person.busynessSubtitle())
-                        .foregroundColor(.blue)
-                    
-                    Button(action: {
-                        print("Button action")
-                        self.person.addActivity()
-                    }) {
-                        Text("Work")
+                        .foregroundColor(person.isBusy() ? .red:.gray)
+                    Spacer()
+                }
+                
+                HStack {
+                    Spacer()
+                    Button("Study") {
+                        print("\(person.name) Try Studying...")
+                        
+                        let randomSubject = Skills.allCases.randomElement() ?? Skills.Handy
+                        controller.study(person: person, subject: randomSubject)
                     }
                     
                     Button("Workout") {
                         print("Working out ??")
-                        self.workoutAction()
+                        controller.workout(person: person)
                     }
+                    .disabled(person.isBusy())
                     
-                }else{
-                    Text("⏱").font(.title)
-                    Text(person.busynessSubtitle())
+                    Button("Fire") {
+                        print("Fire Person")
+                        fireAlert.toggle()
+                    }
+                    .disabled(person.isBusy())
+                    .alert(isPresented: $fireAlert, content: {
+                        Alert(title: Text("Fire"), message: Text("Are you sure you want to fire \(person.name)"),
+                              primaryButton: .cancel(),
+                              secondaryButton: .destructive(Text("Yes"), action: {
+                                print("Person fired. Needs to delete them.")
+                                controller.fire(person: person)
+                              }))
+                    })
+                    
+                    Button("Medicate") {
+                        print("Needs a doctor for medication.")
+                        controller.medicate(person: person)
+                    }
+                    .disabled(person.isBusy())
+                    
+                    Spacer()
+                }.padding()
+                
+                ForEach(controller.issues, id:\.self) { issue in
+                    Text(issue)
                         .foregroundColor(.red)
                 }
-            }.padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+                ForEach(controller.messages, id:\.self) { message in
+                    Text(message)
+                }
+            }
             
+            Divider()
+            
+            // Work Skills
             VStack {
                 
-                Text("Work Skills")
+                Text("Work Skills").font(.title2)
                 HStack {
                     FixedLevelBar(min: 0, max: 100, current: Double(person.intelligence), title: "Intel", color: .blue)
                         .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
@@ -231,22 +289,20 @@ struct PersonDetail:View {
                 
                 Divider()
                 
-                Text("Conditions")
+                Text("Conditions").font(.title2)
                 Text("Life Expectancy: \(person.lifeExpectancy)")
+                    .padding()
                 
                 HStack {
                     FixedLevelBar(min: 0, max: 100, current: Double(person.happiness), title: "Happiness", color: .green)
                         .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                     FixedLevelBar(min: 0, max: 100, current: Double(person.healthPhysical), title: "Physical", color: .green)
                         .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                    
                 }
                 .padding()
-                
-                
-//                FixedLevelBar(min: 0, max: 100, current: Double(person.healthInfection), title: "Infection", color: .red)
             }
         }
+        .frame(minHeight: 550, idealHeight: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
     }
 }
 
@@ -286,10 +342,23 @@ struct PersonSmall_Preview: PreviewProvider {
 }
 
 struct PersonDetail_Preview: PreviewProvider {
+    
     static var previews: some View {
         let busyPerson = Person(random: true)
-        busyPerson.activity = LabActivity(time: 12, name: "Test Busy")
         
-        return PersonDetail(person: busyPerson, workoutAction: { print("Fake Workout")})
+        // Uncomment the following for busy state
+//        busyPerson.activity = LabActivity(time: 12, name: "Test Busy")
+        if let habModule = LocalDatabase.shared.station?.habModules.first {
+            let controller = HabModuleController(hab: habModule)
+            controller.selectedPerson = habModule.inhabitants.first
+            return PersonDetail(controller: controller, person:controller.selectedPerson!)
+        } else {
+            let habMod = HabModule.example
+            let controller = HabModuleController(hab: habMod)
+            controller.selectedPerson = busyPerson
+            return PersonDetail(controller: controller, person: controller.selectedPerson!)
+        }
+        
+        
     }
 }

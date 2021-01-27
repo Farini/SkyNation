@@ -72,6 +72,15 @@ enum PerfectDNAOption:String, Codable, CaseIterable, Hashable {
         }
     }
     
+    var isMedication:Bool {
+        switch self {
+            case .addItAll, .ibuprofen, .acetaminophen, .aspirin, .vitaminC:
+                return true
+            default:
+                return false
+        }
+    }
+    
 }
 
 class BioModule:Codable, Identifiable {

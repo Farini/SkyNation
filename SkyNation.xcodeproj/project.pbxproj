@@ -351,6 +351,13 @@
 		8579751B259BD394004C54D2 /* ItemCollectionViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85797517259BD394004C54D2 /* ItemCollectionViews.swift */; };
 		857D9A1925BF42CB00626884 /* Entry.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 857D9A1825BF42CB00626884 /* Entry.storyboard */; };
 		857D9A2325BF5E6D00626884 /* PeripheralDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D9A2225BF5E6D00626884 /* PeripheralDetailView.swift */; };
+		857D9A2925C0820200626884 /* StartingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D9A2825C0820200626884 /* StartingViewController.swift */; };
+		857D9A2E25C088AD00626884 /* PeripheralDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D9A2225BF5E6D00626884 /* PeripheralDetailView.swift */; };
+		857D9A3325C088AE00626884 /* PeripheralDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D9A2225BF5E6D00626884 /* PeripheralDetailView.swift */; };
+		857D9A3925C0B69800626884 /* HabModuleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D9A3825C0B69800626884 /* HabModuleController.swift */; };
+		857D9A3A25C0B69800626884 /* HabModuleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D9A3825C0B69800626884 /* HabModuleController.swift */; };
+		857D9A3B25C0B69800626884 /* HabModuleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D9A3825C0B69800626884 /* HabModuleController.swift */; };
+		857D9A3C25C0B69800626884 /* HabModuleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D9A3825C0B69800626884 /* HabModuleController.swift */; };
 		8597BBAA25BF40AB00C705A0 /* StartingWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8597BBA925BF40AB00C705A0 /* StartingWindow.swift */; };
 		85C3418525905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
 		85C3418625905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
@@ -499,6 +506,8 @@
 		85797517259BD394004C54D2 /* ItemCollectionViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCollectionViews.swift; sourceTree = "<group>"; };
 		857D9A1825BF42CB00626884 /* Entry.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Entry.storyboard; sourceTree = "<group>"; };
 		857D9A2225BF5E6D00626884 /* PeripheralDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralDetailView.swift; sourceTree = "<group>"; };
+		857D9A2825C0820200626884 /* StartingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingViewController.swift; sourceTree = "<group>"; };
+		857D9A3825C0B69800626884 /* HabModuleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabModuleController.swift; sourceTree = "<group>"; };
 		8597BBA925BF40AB00C705A0 /* StartingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingWindow.swift; sourceTree = "<group>"; };
 		85C3418425905A7500BF82F9 /* TutorialNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialNode.swift; sourceTree = "<group>"; };
 		85C3418D2591078700BF82F9 /* PlayerCardNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCardNode.swift; sourceTree = "<group>"; };
@@ -599,6 +608,7 @@
 				8536F2C3258D330300B509D2 /* Main.storyboard */,
 				8536F2C6258D330300B509D2 /* LaunchScreen.storyboard */,
 				8536F2C9258D330300B509D2 /* Info.plist */,
+				857D9A2825C0820200626884 /* StartingViewController.swift */,
 			);
 			path = "SkyNation iOS";
 			sourceTree = "<group>";
@@ -653,6 +663,7 @@
 				8536F434258D47EA00B509D2 /* EarthRequestController.swift */,
 				8536F437258D47EA00B509D2 /* LifeSupportSystems.swift */,
 				8536F432258D47EA00B509D2 /* ModulesViewModel.swift */,
+				857D9A3825C0B69800626884 /* HabModuleController.swift */,
 				8536F435258D47EA00B509D2 /* LabViewModel.swift */,
 				8536F438258D47EA00B509D2 /* BioModController.swift */,
 				8536F433258D47EA00B509D2 /* GarageViewModel.swift */,
@@ -1178,6 +1189,7 @@
 				8536F36A258D475D00B509D2 /* Tutorial.swift in Sources */,
 				8536F3F6258D47D000B509D2 /* TankViews.swift in Sources */,
 				8536F445258D47EA00B509D2 /* LabViewModel.swift in Sources */,
+				857D9A3925C0B69800626884 /* HabModuleController.swift in Sources */,
 				8536F376258D475D00B509D2 /* Peripherals.swift in Sources */,
 				8536F475258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				8536F38E258D475D00B509D2 /* LabModule.swift in Sources */,
@@ -1187,12 +1199,14 @@
 				8536F41A258D47D000B509D2 /* VehicleInventoryView.swift in Sources */,
 				8569A3D125A6353C0057A518 /* GameActivityView.swift in Sources */,
 				8536F316258D361100B509D2 /* GameConstants.swift in Sources */,
+				857D9A2925C0820200626884 /* StartingViewController.swift in Sources */,
 				85797518259BD394004C54D2 /* ItemCollectionViews.swift in Sources */,
 				8536F2EA258D330300B509D2 /* GameController.swift in Sources */,
 				8536F37E258D475D00B509D2 /* Station.swift in Sources */,
 				8536F426258D47D000B509D2 /* LifeSupportView.swift in Sources */,
 				8536F4AF258D49C900B509D2 /* TravelersView.swift in Sources */,
 				8536F372258D475D00B509D2 /* Persistance.swift in Sources */,
+				857D9A2E25C088AD00626884 /* PeripheralDetailView.swift in Sources */,
 				8536F3D2258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */,
 				8569A3E325A8D7870057A518 /* BoosterDiagramView.swift in Sources */,
 				8536F485258D481700B509D2 /* StationOverlayObject.swift in Sources */,
@@ -1250,6 +1264,7 @@
 				8536F403258D47D000B509D2 /* TechTreeDiagram.swift in Sources */,
 				8536F383258D475D00B509D2 /* Truss.swift in Sources */,
 				8536F3D7258D47D000B509D2 /* RecipeDetailViews.swift in Sources */,
+				857D9A3325C088AE00626884 /* PeripheralDetailView.swift in Sources */,
 				85F6674E25AF7B9C00E5003B /* RadiatorNode.swift in Sources */,
 				85C34198259139D800BF82F9 /* GameSettingsView.swift in Sources */,
 				8536F3A3258D475D00B509D2 /* SpaceVehicle.swift in Sources */,
@@ -1264,6 +1279,7 @@
 				8536F476258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				8536F38F258D475D00B509D2 /* LabModule.swift in Sources */,
 				8536F3DF258D47D000B509D2 /* LaboratoryView.swift in Sources */,
+				857D9A3A25C0B69800626884 /* HabModuleController.swift in Sources */,
 				8536F393258D475D00B509D2 /* BioModule.swift in Sources */,
 				8536F3FF258D47D000B509D2 /* IngredientView.swift in Sources */,
 				8536F41B258D47D000B509D2 /* VehicleInventoryView.swift in Sources */,
@@ -1342,6 +1358,7 @@
 				8536F36C258D475D00B509D2 /* Tutorial.swift in Sources */,
 				8536F3F8258D47D000B509D2 /* TankViews.swift in Sources */,
 				8536F447258D47EA00B509D2 /* LabViewModel.swift in Sources */,
+				857D9A3B25C0B69800626884 /* HabModuleController.swift in Sources */,
 				8536F378258D475D00B509D2 /* Peripherals.swift in Sources */,
 				8536F477258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				8536F390258D475D00B509D2 /* LabModule.swift in Sources */,
@@ -1426,6 +1443,7 @@
 				85C3418825905A7500BF82F9 /* TutorialNode.swift in Sources */,
 				8536F490258D481700B509D2 /* MarsColonyScene.swift in Sources */,
 				8536F484258D481700B509D2 /* TravelersScene.swift in Sources */,
+				857D9A3C25C0B69800626884 /* HabModuleController.swift in Sources */,
 				8536F3F5258D47D000B509D2 /* ProgressViews.swift in Sources */,
 				8536F401258D47D000B509D2 /* IngredientView.swift in Sources */,
 				8536F43C258D47EA00B509D2 /* ModulesViewModel.swift in Sources */,
