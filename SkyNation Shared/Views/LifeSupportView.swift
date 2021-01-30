@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-enum AirControlOptions: String, CaseIterable {
+enum LSSSegment: String, CaseIterable {
     case AirLevels
     case Resources
     case Energy
@@ -16,10 +16,10 @@ enum AirControlOptions: String, CaseIterable {
 }
 
 enum LSSViewState {
-    case AirLevels
+    case Air
     case Resources(type:RSSType)
     case Energy
-    case Accounting
+    case Systems
 }
 
 enum RSSType {
@@ -31,8 +31,9 @@ enum RSSType {
 
 struct LifeSupportView: View {
     
-    @ObservedObject var lssModel:LSSModel
-    @State private var airOption:AirControlOptions = .AirLevels
+    @ObservedObject var controller:LSSModel
+    
+//    @State private var airOption:LSSSegment = .AirLevels
     @State var selectedTank:Tank?
     @State var selectedPeripheral:PeripheralObject?
     @State var selectedBox:StorageBox?
@@ -40,16 +41,16 @@ struct LifeSupportView: View {
     var goodQualities:[AirQuality] = [.Great, .Good]
     
     init() {
-        self.lssModel = LSSModel()
+        self.controller = LSSModel()
     }
     
     var body: some View {
         
         VStack {
             
-            // Header
             VStack {
                 
+                // General Header
                 HStack {
                     
                     VStack(alignment:.leading) {
@@ -90,53 +91,51 @@ struct LifeSupportView: View {
                     .padding(.trailing, 6)
                 }
                 
-                Picker("", selection: $airOption) {
-                    ForEach(AirControlOptions.allCases, id:\.self) { airOpt in
+                // Segment Picker
+                Picker("", selection: $controller.segment) { // Picker("", selection: $airOption) {
+                    ForEach(LSSSegment.allCases, id:\.self) { airOpt in
                         Text(airOpt.rawValue)
                     }
                 }
                 .pickerStyle(SegmentedPickerStyle())
-                
-                
             }
             .padding([.top, .leading, .trailing])
             Divider()
             
             Group {
-                
-                switch airOption {
-                    case .AirLevels:
+                switch controller.viewState {
+                    case .Air:
                         ScrollView {
                             VStack(alignment:.leading) {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text("Air Quality: \(lssModel.air.airQuality().rawValue)")
+                                        Text("Air Quality: \(controller.air.airQuality().rawValue)")
                                             .font(.title)
-                                            .foregroundColor(goodQualities.contains(lssModel.air.airQuality()) ? .green:.orange)
+                                            .foregroundColor(goodQualities.contains(controller.air.airQuality()) ? .green:.orange)
                                         
-                                        Text("Volume: \(Double(self.lssModel.air.getVolume()), specifier: "%.2f") m3 | Required: \(Double(self.lssModel.requiredAir), specifier: "%.2f") m3")
+                                        Text("Volume: \(Double(self.controller.air.getVolume()), specifier: "%.2f") m3 | Required: \(Double(self.controller.requiredAir), specifier: "%.2f") m3")
                                             .foregroundColor(GameColors.lightBlue)
-                                        Text("Pressure: \(Double(self.lssModel.airPressure), specifier: "%.2f") KPa")
+                                        Text("Pressure: \(Double(self.controller.airPressure), specifier: "%.2f") KPa")
                                             .foregroundColor(.green)
                                         
                                         
-                                        let foodLasting = Int(lssModel.availableFood.count / max(1, lssModel.inhabitants))
-                                        let waterLasting = Int(lssModel.liquidWater / max(1, (lssModel.inhabitants * GameLogic.waterConsumption)))
+                                        let foodLasting = Int(controller.availableFood.count / max(1, controller.inhabitants))
+                                        let waterLasting = Int(controller.liquidWater / max(1, (controller.inhabitants * GameLogic.waterConsumption)))
                                         
                                         Text("Others")
                                             .font(.title)
                                             .foregroundColor(.orange)
                                             .padding([.top, .bottom])
                                         
-                                        Text("💦 Drinkable Water: \(lssModel.liquidWater). ⏱ \(waterLasting) hrs.")
+                                        Text("💦 Drinkable Water: \(controller.liquidWater). ⏱ \(waterLasting) hrs.")
                                             .foregroundColor(waterLasting > 8 ? .green:.red)
-                                        Text("🍽 Edible Food: \(lssModel.availableFood.count). ⏱ \(foodLasting) hrs.")
+                                        Text("🍽 Edible Food: \(controller.availableFood.count). ⏱ \(foodLasting) hrs.")
                                             .foregroundColor(foodLasting > 8 ? .green:.red)
                                         
-                                        if let wasteLiquid = lssModel.boxes.filter({ $0.type == .wasteLiquid }).map({ $0.current }).reduce(0, +) {
+                                        if let wasteLiquid = controller.boxes.filter({ $0.type == .wasteLiquid }).map({ $0.current }).reduce(0, +) {
                                             Text("Waste Water: \(wasteLiquid)")
                                         }
-                                        if let wasteSolid = lssModel.boxes.filter({ $0.type == .wasteSolid }).map({ $0.current }).reduce(0, +) {
+                                        if let wasteSolid = controller.boxes.filter({ $0.type == .wasteSolid }).map({ $0.current }).reduce(0, +) {
                                             Text("💩 Solid Waste: \(wasteSolid)")
                                         }
                                         
@@ -148,8 +147,8 @@ struct LifeSupportView: View {
                                     
                                     // Timer
                                     VStack {
-                                        Text("Account: \(lssModel.accountDate, formatter:GameFormatters.dateFormatter)")
-                                        Text("Head count: \(lssModel.inhabitants)")
+                                        Text("Account: \(controller.accountDate, formatter:GameFormatters.dateFormatter)")
+                                        Text("Head count: \(controller.inhabitants)")
                                     }
                                 }
                                 .padding()
@@ -159,15 +158,202 @@ struct LifeSupportView: View {
                                         .font(.title)
                                         .foregroundColor(.blue)
                                         .padding()
-                                    AirCompositionView(air: lssModel.air)
+                                    AirCompositionView(air: controller.air)
                                         .padding([.bottom, .top], 20)
                                 }
                                 .padding([.bottom], 10)
+                            }
+                        }
+                    case .Resources(let type): // RSSType
+                        HStack {
+                            
+                            // Left View: List of Resources
+                            List() {
+                                // Tanks
+                                Section(header: Text("Tanks")) {
+                                    ForEach(controller.tanks) { tank in
+                                        TankRow(tank: tank)
+                                            .onTapGesture(count: 1, perform: {
+                                                controller.didSelect(utility: tank)
+                                            })
+                                    }
+                                }
                                 
+                                // Peripherals
+                                Section(header: Text("Peripherals")) {
+                                    ForEach(controller.peripherals) { peripheral in
+                                        Text("\(peripheral.peripheral.rawValue)")
+                                            .onTapGesture(count: 1, perform: {
+                                                controller.didSelect(utility: peripheral)
+                                            })
+                                    }
+                                }
                                 
-                              
+                                // Ingredients - Boxes
+                                Section(header: Text("Ingredients")) {
+                                    ForEach(controller.boxes) { storageBox in
+                                        VStack {
+                                            Text("\(storageBox.type.rawValue)")
+                                            Text("\(storageBox.current)/\(storageBox.type.boxCapacity())")
+                                        }
+                                        .onTapGesture(count: 1, perform: {
+                                            // Select Box Here
+                                            controller.didSelect(utility: storageBox)
+                                        })
+                                    }
+                                }
+                            }
+                            .frame(minWidth:180, maxWidth:220, minHeight:200, maxHeight: .infinity)
+                            
+                            // Right View (Detail)
+                            switch type {
+                                case .Peripheral(let periObject):
+                                    
+                                    ScrollView() {
+                                        
+                                        // Peripheral
+                                        PeripheralDetailView(controller: self.controller, peripheral: periObject)
+                                    }
+                                    .frame(maxWidth:.infinity, minHeight:200, maxHeight:.infinity)
+                                    
+                                case .Tank(let tankObject):
+                                    ScrollView {
+                                        TankView(tank: tankObject, model: self.controller)
+                                    }
+                                    .frame(maxWidth:.infinity, minHeight:200, maxHeight:.infinity)
+                                    
+                                case .Box(let storage):
+                                    // Storage Box
+                                    StorageBoxDetailView(box:storage)
+                                    .frame(maxWidth:.infinity, minHeight:200, maxHeight:.infinity)
+                                    
+                                case .None:
+                                    // No Selection
+                                    VStack(alignment: .center) {
+                                        Spacer()
+                                        Text("Nothing selected").foregroundColor(.gray)
+                                        Divider()
+                                        Text("Select something").foregroundColor(.gray)
+                                        Spacer()
+                                    }
+                                    .frame(maxWidth:.infinity, minHeight:200, maxHeight:.infinity)
+                            }
+                        }
+                    case .Energy:
+                        ScrollView {
+                            // Energy
+                            EnergyOverview(energyLevel: $controller.levelZ, energyMax: $controller.levelZCap, energyProduction: controller.energyProduction, batteryCount: controller.batteries.count, solarPanelCount: controller.solarPanels.count, peripheralCount: controller.peripherals.count, deltaZ: $controller.batteriesDelta, conumptionPeripherals: $controller.consumptionPeripherals, consumptionModules: $controller.consumptionModules)
+                            
+                            BatteryCollectionView(controller.batteries)
+                        }
+                    case .Systems:
+                        ScrollView {
+                            Text("Accounting").font(.headline)
+                            Text("Air Vol. \(controller.air.getVolume())")
+                            Text("O2: \(controller.air.o2)")
+                            Text("CO2: \(controller.air.co2)")
+                            //                            Text("N2: \(lssModel.air.n2)")
+                            Divider()
+                            VStack {
+                                ForEach(controller.accountingProblems, id:\.self) { problem in
+                                    Text(problem)
+                                }
                             }
                             
+                            if controller.accountingReport != nil {
+                                let report = controller.accountingReport!
+                                Divider()
+                                VStack {
+                                    Text("🗒 Report").font(.title)
+                                    Text("📆: \(GameFormatters.dateFormatter.string(from: report.date))")
+                                        .padding([.top], 4)
+                                        .padding([.bottom], 6)
+                                    
+                                    Text("Air Start (V): \(report.airStart.getVolume())")
+                                    
+                                    Text("Energy Start: \(report.energyStart)")
+                                    Text("Energy Input: \(report.energyInput)")
+                                    Text("Energy Finish:\(report.energyFinish ?? 0)")
+                                    
+                                    Text("💩 \(report.poopFinish ?? 0)")
+                                    Text("Pee: \(report.wasteWaterFinish ?? 0)")
+                                    Text("Air adjustment: \(report.tankAirAdjustment ?? 0)")
+                                }
+                            }
+                            Divider()
+                            HStack {
+                                Button("Accounting") {
+                                    print("Run accounting")
+                                    controller.runAccounting()
+                                }
+                                Button("💾 Save") {
+                                    print("Test what?")
+                                    controller.saveAccounting()
+                                }
+                            }
+                        }
+                }
+                /*
+                switch airOption {
+                    case .AirLevels:
+                        ScrollView {
+                            VStack(alignment:.leading) {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("Air Quality: \(controller.air.airQuality().rawValue)")
+                                            .font(.title)
+                                            .foregroundColor(goodQualities.contains(controller.air.airQuality()) ? .green:.orange)
+                                        
+                                        Text("Volume: \(Double(self.controller.air.getVolume()), specifier: "%.2f") m3 | Required: \(Double(self.controller.requiredAir), specifier: "%.2f") m3")
+                                            .foregroundColor(GameColors.lightBlue)
+                                        Text("Pressure: \(Double(self.controller.airPressure), specifier: "%.2f") KPa")
+                                            .foregroundColor(.green)
+                                        
+                                        
+                                        let foodLasting = Int(controller.availableFood.count / max(1, controller.inhabitants))
+                                        let waterLasting = Int(controller.liquidWater / max(1, (controller.inhabitants * GameLogic.waterConsumption)))
+                                        
+                                        Text("Others")
+                                            .font(.title)
+                                            .foregroundColor(.orange)
+                                            .padding([.top, .bottom])
+                                        
+                                        Text("💦 Drinkable Water: \(controller.liquidWater). ⏱ \(waterLasting) hrs.")
+                                            .foregroundColor(waterLasting > 8 ? .green:.red)
+                                        Text("🍽 Edible Food: \(controller.availableFood.count). ⏱ \(foodLasting) hrs.")
+                                            .foregroundColor(foodLasting > 8 ? .green:.red)
+                                        
+                                        if let wasteLiquid = controller.boxes.filter({ $0.type == .wasteLiquid }).map({ $0.current }).reduce(0, +) {
+                                            Text("Waste Water: \(wasteLiquid)")
+                                        }
+                                        if let wasteSolid = controller.boxes.filter({ $0.type == .wasteSolid }).map({ $0.current }).reduce(0, +) {
+                                            Text("💩 Solid Waste: \(wasteSolid)")
+                                        }
+                                        
+                                        
+                                        
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    // Timer
+                                    VStack {
+                                        Text("Account: \(controller.accountDate, formatter:GameFormatters.dateFormatter)")
+                                        Text("Head count: \(controller.inhabitants)")
+                                    }
+                                }
+                                .padding()
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Air Composition")
+                                        .font(.title)
+                                        .foregroundColor(.blue)
+                                        .padding()
+                                    AirCompositionView(air: controller.air)
+                                        .padding([.bottom, .top], 20)
+                                }
+                                .padding([.bottom], 10)
+                            }
                         }
                     case .Resources:
                         // Tanks + Peripherals
@@ -178,7 +364,7 @@ struct LifeSupportView: View {
                                 List() {
                                     // Tanks
                                     Section(header: Text("Tanks")) {
-                                        ForEach(lssModel.tanks) { tank in
+                                        ForEach(controller.tanks) { tank in
                                             TankRow(tank: tank)
                                                 .onTapGesture(count: 1, perform: {
                                                     selectedPeripheral = nil
@@ -190,7 +376,7 @@ struct LifeSupportView: View {
                                     
                                     // Peripherals
                                     Section(header: Text("Peripherals")) {
-                                        ForEach(lssModel.peripherals) { peripheral in
+                                        ForEach(controller.peripherals) { peripheral in
                                             Text("\(peripheral.peripheral.rawValue)")
                                                 .onTapGesture(count: 1, perform: {
                                                     selectedTank = nil
@@ -202,7 +388,7 @@ struct LifeSupportView: View {
                                     
                                     // Ingredients - Boxes
                                     Section(header: Text("Ingredients")) {
-                                        ForEach(lssModel.boxes) { storageBox in
+                                        ForEach(controller.boxes) { storageBox in
                                             VStack {
                                                 Text("\(storageBox.type.rawValue)")
                                                 Text("\(storageBox.current)/\(storageBox.type.boxCapacity())")
@@ -224,11 +410,11 @@ struct LifeSupportView: View {
                                         // Tank
                                         if selectedTank != nil {
                                             
-                                            TankView(tank: selectedTank!, model: self.lssModel)
+                                            TankView(tank: selectedTank!, model: self.controller)
                                             
                                         }else if selectedPeripheral != nil {
                                             // Peripheral
-                                            PeripheralDetailView(peripheral: selectedPeripheral!)
+                                            PeripheralDetailView(controller: self.controller, peripheral: selectedPeripheral!)
                                             
                                         }else if selectedBox != nil {
                                             // Storage Box
@@ -256,27 +442,27 @@ struct LifeSupportView: View {
                     case .Energy:
                         ScrollView {
                             // Energy
-                            EnergyOverview(energyLevel: $lssModel.levelZ, energyMax: $lssModel.levelZCap, energyProduction: lssModel.energyProduction, batteryCount: lssModel.batteries.count, solarPanelCount: lssModel.solarPanels.count, peripheralCount: lssModel.peripherals.count, deltaZ: $lssModel.batteriesDelta, conumptionPeripherals: $lssModel.consumptionPeripherals, consumptionModules: $lssModel.consumptionModules)
+                            EnergyOverview(energyLevel: $controller.levelZ, energyMax: $controller.levelZCap, energyProduction: controller.energyProduction, batteryCount: controller.batteries.count, solarPanelCount: controller.solarPanels.count, peripheralCount: controller.peripherals.count, deltaZ: $controller.batteriesDelta, conumptionPeripherals: $controller.consumptionPeripherals, consumptionModules: $controller.consumptionModules)
                             
-                            BatteryCollectionView(lssModel.batteries)
+                            BatteryCollectionView(controller.batteries)
                         }
                     case .Accounting:
                         // Accounting
                         ScrollView {
                             Text("Accounting").font(.headline)
-                            Text("Air Vol. \(lssModel.air.getVolume())")
-                            Text("O2: \(lssModel.air.o2)")
-                            Text("CO2: \(lssModel.air.co2)")
+                            Text("Air Vol. \(controller.air.getVolume())")
+                            Text("O2: \(controller.air.o2)")
+                            Text("CO2: \(controller.air.co2)")
 //                            Text("N2: \(lssModel.air.n2)")
                             Divider()
                             VStack {
-                                ForEach(lssModel.accountingProblems, id:\.self) { problem in
+                                ForEach(controller.accountingProblems, id:\.self) { problem in
                                     Text(problem)
                                 }
                             }
                             
-                            if lssModel.accountingReport != nil {
-                                let report = lssModel.accountingReport!
+                            if controller.accountingReport != nil {
+                                let report = controller.accountingReport!
                                 Divider()
                                 VStack {
                                     Text("🗒 Report").font(.title)
@@ -299,15 +485,16 @@ struct LifeSupportView: View {
                             HStack {
                                 Button("Accounting") {
                                     print("Run accounting")
-                                    lssModel.runAccounting()
+                                    controller.runAccounting()
                                 }
                                 Button("💾 Save") {
                                     print("Test what?")
-                                    lssModel.saveAccounting()
+                                    controller.saveAccounting()
                                 }
                             }
                         }// .padding()
                 }
+                */
             }
             
         }

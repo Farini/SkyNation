@@ -111,6 +111,22 @@ enum PeripheralType:String, Codable, CaseIterable {
         }
     }
     
+    var instantUse:String {
+        switch self {
+            case .ScrubberCO2:
+                return "Scrubber needs at least 4 CO2 in the air to work. You may spend 100 energy to cleanup 4 CO2."
+            case .Electrolizer:
+                return "Electrolizer needs 10L of water to convert it into 10 H2 + 5 O2"
+            case .Methanizer:
+                return "10 CO2 in the air & 10 H2 >>> +10 CH4 & 10 O2"
+            case .WaterFilter:
+                return "10L waste water >>> At least 5L of potable water. Upgrade Peripheral to get a better percentage."
+            case .BioSolidifier:
+                return "10L solid waste >>> At least 5Kg Fertilizer. Upgrade Peripheral to get a better percentage."
+            default: return ""
+        }
+    }
+    
     /// Whether peripheral can break
     var breakable:Bool {
         switch self {
@@ -300,6 +316,19 @@ enum TankType:String, Codable, CaseIterable, Hashable {
             case .ch4: return "Methane"
             case .air: return "Breathable air"
             case .empty: return "Empty"
+        }
+    }
+    
+    var price:Int {
+        switch self {
+            case .o2: return 100
+            case .co2: return 150
+            case .n2: return 180
+            case .h2o: return 200
+            case .h2: return 100
+            case .ch4: return 500
+            case .air: return 300
+            case .empty: return 150
         }
     }
 }

@@ -9,7 +9,8 @@ import SwiftUI
 
 struct PeripheralDetailView: View {
     
-    @State var peripheral:PeripheralObject
+    @ObservedObject var controller:LSSModel
+    var peripheral:PeripheralObject
     
     var body: some View {
         VStack {
@@ -30,7 +31,7 @@ struct PeripheralDetailView: View {
             
             Text(peripheral.peripheral.describer)
                 .foregroundColor(.gray)
-                .frame(width: 300, alignment: .leading)
+                .frame(width: 300, alignment: .center)
             
             Divider()
             
@@ -51,24 +52,55 @@ struct PeripheralDetailView: View {
                 }
             }
             
-            
             Divider()
+            
+            if !peripheral.peripheral.instantUse.isEmpty {
+                Group {
+                    Text("For 100 energy, this Peripheral can be used intantly to perform the following operation:")
+                        .frame(width: 300, alignment: .center)
+                        .foregroundColor(.gray)
+                        .padding([.bottom], 6)
+                    
+                    Text(peripheral.peripheral.instantUse)
+                        .frame(width: 300, alignment: .center)
+                        .padding([.bottom], 6)
+                    
+                    
+                    ForEach(controller.peripheralMessages, id:\.self) { msg in
+                        Text(msg)
+                            .foregroundColor(.green)
+                            .frame(width: 300, alignment: .center)
+                    }
+                    
+                    ForEach(controller.peripheralIssues, id:\.self) { msg in
+                        Text(msg)
+                            .foregroundColor(.red)
+                            .frame(width: 300, alignment: .center)
+                    }
+                    
+                    Button("Instant Use") {
+//                        print("Instause!")
+                        controller.instantUse(peripheral: peripheral)
+                    }
+                    Divider()
+                }
+            }
             
             // Buttons
             HStack {
                 Button("Fix") {
-                    peripheral.isBroken.toggle()
-                    peripheral.lastFixed = Date()
+//                    peripheral.isBroken.toggle()
+//                    peripheral.lastFixed = Date()
+                    controller.fixBroken(peripheral: peripheral)
                 }
-                Button("Use (-10 Energy)") {
-                    
-                }
+                .disabled(!peripheral.isBroken)
+                
                 Button("Break") {
-                    
+                    peripheral.isBroken.toggle()
                 }
-                Button("Throw away") {
-                    
-                }
+                .disabled(peripheral.isBroken)
+                
+//                Toggle("Power", isOn: $peripheral.powerOn)
             }
             .padding()
         }
@@ -86,7 +118,7 @@ struct PeripheralDetailView_Previews: PreviewProvider {
     
     static var previews: some View {
         ForEach(peripherals, id:\.id) { peri in
-            PeripheralDetailView(peripheral: peri)
+            PeripheralDetailView(controller:LSSModel(), peripheral: peri)
         }
         
     }

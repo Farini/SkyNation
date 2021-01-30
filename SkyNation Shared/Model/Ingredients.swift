@@ -96,7 +96,7 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
             case .Ceramic: return Image(systemName:"squares.below.rectangle") // sys
             
             case .Food: return Image("Food")
-            case .wasteSolid: return nil // poop
+            case .wasteSolid: return Image("SolidWaste") // poop
             case .DCMotor: return Image("DCMotor")
             
             case .Lithium: return Image("Lithium")

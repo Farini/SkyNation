@@ -13,6 +13,7 @@ struct EarthRequestView: View {
     @Environment(\.presentationMode) var presentationMode // To Dismiss
     
     @ObservedObject var controller:EarthRequestController = EarthRequestController()
+    @State var infoPopover:Bool = false
     
     private var ingredientColumns: [GridItem] = [
         GridItem(.fixed(200)),
@@ -177,6 +178,59 @@ struct EarthRequestView: View {
                                     Text("(-) Costs \(controller.orderCost)").foregroundColor(.gray)
                                     Text("Balance: \(controller.money - controller.orderCost)").foregroundColor(.orange)
                                 }
+                                VStack {
+                                    Spacer()
+                                    Button("ℹ️") {
+                                        infoPopover.toggle()
+                                    }
+                                    // Order Ticket Popover
+                                    .popover(isPresented: $infoPopover) {
+                                        List {
+                                            
+                                            HStack {
+                                                Text("Base Cost (Rocket): ")
+                                                Spacer()
+                                                Text("$ \(PayloadOrder.basePrice)")
+                                            }
+                                            .foregroundColor(.orange)
+                                            
+                                            Divider()
+                                            ForEach(order.ingredients, id:\.id) { storageBox in
+                                                HStack {
+                                                    Text("\(storageBox.type.rawValue) x \(storageBox.capacity)")
+                                                    Spacer()
+                                                    Text("$ \(storageBox.type.price)")
+                                                }
+                                            }
+                                            Divider()
+                                            ForEach(order.tanks, id:\.id) { tank in
+                                                HStack {
+                                                    Text("Tank \(tank.type.rawValue)")
+                                                    Spacer()
+                                                    Text("$ \(tank.type.price)")
+                                                }
+                                            }
+                                            Divider()
+                                            ForEach(order.people, id:\.id) { person in
+                                                HStack {
+                                                    Text("\(person.name)")
+                                                    Spacer()
+                                                    Text("$ \(GameLogic.orderPersonPrice)")
+                                                }
+                                            }
+                                            Divider()
+                                            HStack {
+                                                Text("Total")
+                                                    .font(.headline)
+                                                Spacer()
+                                                Text("$ \(order.calculateTotal())")
+                                                    .font(.headline)
+                                            }
+                                            
+                                        }
+                                    }
+                                    Spacer()
+                                }
                             }
                             
                             Divider()
@@ -187,15 +241,27 @@ struct EarthRequestView: View {
                             
                             LazyVGrid(columns: ingredientColumns, alignment: .center, spacing: 8) {
                                 ForEach(order.ingredients, id:\.id) { storageBox in
-                                    IngredientView(ingredient: storageBox.type, hasIngredient: nil, quantity: storageBox.type.boxCapacity())
-                                        .padding(3)
+                                    VStack {
+                                        IngredientView(ingredient: storageBox.type, hasIngredient: nil, quantity: storageBox.type.boxCapacity())
+                                            .padding(3)
+                                        Text("$ \(storageBox.type.price)")
+                                    }
+                                    
                                 }
                                 ForEach(order.tanks, id:\.id) { tank in
-                                    TankRow(tank: tank)
-                                        .padding(6)
+                                    VStack {
+                                        TankRow(tank: tank)
+                                            .padding(6)
+                                        Text("$ \(tank.type.price)")
+                                    }
+                                    
                                 }
                                 ForEach(order.people, id:\.id) { person in
-                                    PersonRow(person: person)
+                                    VStack {
+                                        PersonRow(person: person)
+                                        Text("$ \(GameLogic.orderPersonPrice)")
+                                    }
+                                    
                                 }
                             }
                         }
@@ -319,59 +385,6 @@ struct EarthRequestView: View {
     
 }
 
-/*
-#if os(macOS)
-struct MyView: View {
-    let myWindow:NSWindow?
-    var body: some View {
-        VStack{
-            Text("This is in a separate window.")
-            HStack{
-                Button(action:{
-                    showWindow()
-                }) {
-                    Text("Open another window")
-                }
-                Button(action:{
-                    self.myWindow?.close()
-                }) {
-                    Text("Close this window")
-                }
-            }
-        }
-    .padding()
-    }
-    
-    func showWindow() {
-        var windowRef:NSWindow
-        windowRef = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 100, height: 100),
-            styleMask: [.titled, .closable, .miniaturizable, .fullSizeContentView],
-            backing: .buffered, defer: false)
-        windowRef.contentView = NSHostingView(rootView: MyView(myWindow: windowRef))
-//        windowRef.contentViewController?.presentAsModalWindow(<#T##viewController: NSViewController##NSViewController#>)
-        windowRef.makeKeyAndOrderFront(nil)
-    }
-}
-#endif
-*/
-
-/*
- struct MyWindow_Previews: PreviewProvider {
- static var previews: some View {
- //        var windowRef:NSWindow
- //        windowRef = NSWindow(
- //            contentRect: NSRect(x: 0, y: 0, width: 100, height: 100),
- //            styleMask: [.titled, .closable, .miniaturizable, .fullSizeContentView],
- //            backing: .buffered, defer: false)
- 
- return MyView(myWindow: nil)
- 
- 
- }
- }
- */
-
 struct IngredientRow:Identifiable {
     let id = UUID()
     let cells:[IngredientView]
@@ -396,6 +409,7 @@ class PeopleMaker {
     }
     var people:[Person] = []
 }
+
 
 extension Array {
     /// Use this to divide views in stacks

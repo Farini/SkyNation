@@ -72,19 +72,30 @@ class Station:Codable {
         }
         print("Energy Generated: \(energyGenerated)")
         let energyInput = energyGenerated
-        
-        while energyGenerated > 0 {
-            for battery in truss.batteries {
-                let pct = Int((battery.current / battery.capacity) * 100)
-                print("Battery (before charging): \(battery.current) of \(battery.capacity) \(pct)% \(battery.id)")
-                let maxCharge = min(battery.maxCharge(), energyGenerated)
-                if battery.charge(amount:maxCharge) {
-                    energyGenerated -= maxCharge
-                }
+        for bat in truss.batteries {
+            let receivable = bat.capacity - bat.current
+            if receivable >= energyGenerated {
+                bat.current += energyGenerated
+                energyGenerated = 0
+                break
+            } else {
+                bat.current = bat.capacity
+                energyGenerated -= receivable
             }
-            // set to 0. Otherwise it won't come out of the loop when batteries are full
-            energyGenerated = 0
         }
+        
+//        while energyGenerated > 0 {
+//            for battery in truss.batteries {
+//                let pct = Int((battery.current / battery.capacity) * 100)
+//                print("Battery (before charging): \(battery.current) of \(battery.capacity) \(pct)% \(battery.id)")
+//                let maxCharge = min(battery.maxCharge(), energyGenerated)
+//                if battery.charge(amount:maxCharge) {
+//                    energyGenerated -= maxCharge
+//                }
+//            }
+//            // set to 0. Otherwise it won't come out of the loop when batteries are full
+//            energyGenerated = 0
+//        }
         
         // 3. LSS Peripherals
         // + Life Support Peripherals first
@@ -97,13 +108,13 @@ class Station:Codable {
         var tempAir:AirComposition = air    // The air being modified
         var accumulatedUrine:Int = 0    // Amount of urine left over from capacity of boxes
         var accumulatedPoop:Int = 0     // Amount of poop left over from capacity of boxes
-        let tempEnergy = truss.batteries.map({$0.current}).reduce(0, +)
+        let tempEnergy = truss.batteries.map({$0.current}).reduce(0, +) + energyGenerated
         
         let report = AccountingReport(time: nextDate, energy: tempEnergy, zInput: energyInput, air: air, water: tempWater)
         
         for peripheral in peripherals {
             // power on -> broken = false || power on -> not broken = true || power off = false
-            let isWorking = peripheral.powerOn ? (peripheral.isBroken ? false:true):false
+            let isWorking = peripheral.powerOn == true && peripheral.isBroken == false //? (peripheral.isBroken ? false:true):false
             print("\n\t \(peripheral.peripheral.rawValue) \(peripheral.isBroken) \(peripheral.powerOn) \(peripheral.level)")
             print("\t Working:\(isWorking)")
             print("\t Fixed: \(peripheral.lastFixed?.description ?? "never")")
@@ -120,19 +131,21 @@ class Station:Codable {
                         tempWater += airResult.waterProduced
                     }
                 }
+            } else {
+                problems.append("⛔️ Broken Peripheral")
+                continue
             }
             
             // Breaking
-            if isWorking && peripheral.breakable {
+            if peripheral.breakable {
                 // Put this in the peripheral object
-                let chanceToBreak = GameLogic.chances(hit: 1.0, total: 40.0)
+                let chanceToBreak = GameLogic.chances(hit: 1.0, total: 50.0)
                 if chanceToBreak {
                     print("\n ⚠️ Should break peripheral !! \n\n")
                     peripheral.isBroken = true
                     problems.append("✋ Broken Peripheral")
+                    continue
                 }
-            } else {
-                continue
             }
             
             switch peripheral.peripheral {

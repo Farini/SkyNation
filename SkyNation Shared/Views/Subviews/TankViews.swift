@@ -100,7 +100,7 @@ struct TankView: View {
             
             Button(action: {
                 print("Release tank in air")
-                self.viewModel.releaseInAir(tank: tank, amount: Int(sliderValue))
+//                self.viewModel.releaseInAir(tank: tank, amount: Int(sliderValue))
                 //                current = current - sliderValue
             }, label: {
                 Text("Release in air")

@@ -12,6 +12,15 @@ class LSSModel:ObservableObject {
     
     var station:Station
     
+    // State
+    @Published var viewState:LSSViewState = .Air
+    @Published var segment:LSSSegment = .AirLevels {
+        didSet {
+            print("Did set segment: \(segment.rawValue)")
+            didSelect(segment: segment)
+        }
+    }
+    
     @Published var air:AirComposition
     @Published var batteries:[Battery]                 // Batteries
     @Published var tanks:[Tank]                        // Tanks
@@ -22,7 +31,9 @@ class LSSModel:ObservableObject {
     @Published var requiredAir:Int          // Sum  of modules' volume
     @Published var airVolume:Int            // Air Volume
     @Published var airPressure:Double       // volume / required air
-    @Published var airQuality:String = "Good"
+    
+    @Published var levelO2:Double
+    @Published var levelCO2:Double
     
     @Published var liquidWater:Int
     @Published var availableFood:[String]
@@ -31,12 +42,7 @@ class LSSModel:ObservableObject {
     @Published var levelZ:Double
     @Published var levelZCap:Double
     @Published var solarPanels:[SolarPanel] = []
-    @Published var levelO2:Double
-    @Published var levelCO2:Double
-    
-    @Published var peripherals:[PeripheralObject]
     @Published var batteriesDelta:Int       // How much energy gainin/losing
-    @Published var accountDate:Date
     
     /// Energy consumption of Peripherals
     @Published var consumptionPeripherals:Int
@@ -45,12 +51,19 @@ class LSSModel:ObservableObject {
     /// Energy Produced
     @Published var energyProduction:Int
     
+    
+    @Published var peripherals:[PeripheralObject]
+    
+    // Accounting
+    
+    @Published var accountDate:Date
     @Published var accountingProblems:[String] = LocalDatabase.shared.accountingProblems
     @Published var accountingReport:AccountingReport?
     
-    // Timer
-    var timer = Timer()
-    @Published var counter:Int = 0
+    @Published var peripheralIssues:[String] = []
+    @Published var peripheralMessages:[String] = []
+    
+    // MARK: - Methods
     
     init() {
         
@@ -147,6 +160,31 @@ class LSSModel:ObservableObject {
         
     }
     
+    // Segment Selection
+    func didSelect(segment:LSSSegment) {
+        switch segment {
+            case .Accounting: self.viewState = .Systems
+            case .AirLevels: self.viewState = .Air
+            case .Energy:self.viewState = .Energy
+            case .Resources: self.viewState = .Resources(type: .None)
+        }
+    }
+    
+    // Resource Selection
+    func didSelect(utility:Codable) {
+        print("Did select Utility")
+        if let peripheral = utility as? PeripheralObject {
+            print("Peripheral")
+            self.viewState = .Resources(type: .Peripheral(object: peripheral))
+        } else if let tank = utility as? Tank {
+            print("Tank")
+            self.viewState = .Resources(type: .Tank(object: tank))
+        } else if let box = utility as? StorageBox {
+            print("Box")
+            self.viewState = .Resources(type: .Box(object: box))
+        }
+    }
+    
     func updateDisplayVars() {
         
         let myStation = station
@@ -228,163 +266,137 @@ class LSSModel:ObservableObject {
         self.peripherals.append(myStation.truss.antenna)
         updateEnergyLevels()
         
-        
-        
-        /*
-        // Batteries
-        let batteryPack = station.truss.batteries
-        if !batteryPack.isEmpty {
-            self.batteries = batteryPack
-            var lz = 0
-            var mz = 0
-            for batt in batteryPack {
-                lz += batt.current
-                mz += batt.capacity
-            }
-            self.levelZ = Double(lz)
-            self.levelZCap = Double(mz)
-        }else{
-            // For tests purposes
-            let b1 = Battery(capacity: 1000, current: 800)
-            self.batteries = [b1]
-            self.levelZ = 800
-            self.levelZCap = 1000
-        }
-        
-        // Air
-        let modCount = station.labModules.count + station.habModules.count + station.bioModules.count
-        let reqAir = 200 * modCount
-        self.requiredAir = reqAir
-        
-        let theAir = station.air
-        air = theAir
-        airVolume = theAir.getVolume()
-        airPressure = Double(theAir.getVolume() / (reqAir + 1)) * 100.0
-        
-        self.levelO2 = (Double(theAir.o2) / Double(theAir.getVolume())) * 100
-        self.levelCO2 = (Double(theAir.co2) / Double(theAir.getVolume())) * 100
-        
-        // Tanks + Water
-        let oxyT1 = Tank(type: .o2)
-        let waterT = Tank(type: .h2o)
-        self.liquidWater = waterT.capacity
-        
-        var otherTanks:[Tank] = []
-        for t in station.truss.getTanks() {
-            otherTanks.append(t)
-        }
-        if !otherTanks.isEmpty {
-            self.tanks = otherTanks
-        }else{
-            tanks = [oxyT1, waterT]
-        }
-        
-        print("Updating displays CO2:\(self.levelCO2)")
-        print("Updating displays Z:\(self.levelZ)")
-        */
     }
     
-    
-    func releaseInAir(tank:Tank, amount:Int) {
-        for idx in 0..<station.truss.tanks.count {
-            if station.truss.tanks[idx].id == tank.id {
-                let newTank = station.truss.tanks[idx]
-                self.station.truss.tanks.remove(at: idx)
-                newTank.current = tank.current - amount
-                self.station.truss.tanks.append(newTank)
-                self.tanks = self.station.truss.getTanks()
-                switch tank.type {
-                case .air:
-                    let newAir = AirComposition(amount: amount)
-                    self.station.air.o2 += newAir.o2
-                    self.station.air.n2 += newAir.n2
-                    self.updateDisplayVars()
-                case .o2: self.station.air.o2 += amount
-                default:
-                    print("Something wrong. Can only open o2 and air")
-                }
-            }
-        }
-    }
-    
-    // Control Accounting
-    
-    func accountForPeople() {
+    /// To Use a `PeripheralObject` instantly
+    func instantUse(peripheral:PeripheralObject) {
         
-        // Recharge Batteries
-        recharge()
+        // Peripherals that can be used (instantly)
+        self.peripheralIssues = []
+        self.peripheralMessages = []
         
-        // People
-        let folks = station.getPeople()
-        for person in folks {
-            // Consume o2
-            air.o2 -= 1
-            if person.happiness < 20 {
-                air.o2 -= 2
-                air.co2 += 2
-            }
-            
-            // generate co2
-            air.co2 += 1
-            
-            // drink water
-            liquidWater -= 2
-            
-            // evaporate water
-            air.h2o += 1
-            
-//            // Energy
-//            if !consumeEnergy(amt: 3) {
-//                print("Not enough energy")
-//            }
-        }
-        
-        self.levelO2 = (Double(air.o2) / Double(air.getVolume())) * 100
-        self.levelCO2 = (Double(air.co2) / Double(air.getVolume())) * 100
-        
-        // Scrub CO2
-        let scrubbers = self.peripherals.filter({ $0.peripheral == PeripheralType.ScrubberCO2 }).count
-        scrubCO2(amt: scrubbers)
-        
-        updateDisplayVars()
-    }
-    
-    func openOxygenTank() {
-        
-        let o2Tanks = tanks.filter({ $0.type == .o2 })
-        if o2Tanks.isEmpty {
-            print("No O2 Tanks available")
+        // 100 Energy
+        let charge = station.truss.consumeEnergy(amount: 100)
+        if charge {
+            peripheralMessages.append("100 Energy was used.")
+        } else {
+            peripheralIssues.append("Not enough energy to use this peripheral.")
             return
         }
-        if let first = o2Tanks.first {
-            print("Opening...")
-            air.o2 += first.current
-//            air.getVolume += first.current
+        
+        switch peripheral.peripheral {
+            
+            case .ScrubberCO2:
+                
+                // 1. Scrubber          -3 CO2
+                if station.air.co2 >= 4 {
+                    station.air.co2 -= 4
+                    peripheralMessages.append("4 CO2 removed from the air.")
+                } else {
+                    peripheralIssues.append("Scrubber needs at least 4 CO2 to work. Current: \(station.air.co2)")
+                }
+                
+            case .Electrolizer:
+                
+                // 2. Electrolizer      -H2O + H + O
+                let waterUse:Int = 10
+                if let waterTank = station.truss.tanks.filter({ $0.type == .h2o }).sorted(by: { $0.current > $1.current }).first, waterTank.current >= waterUse {
+                    waterTank.current -= waterUse
+                    // 10 * h2o = 10 * h2 + 5 * o2
+                    // Try to put into Hydrogen Tank
+                    if let hydrogenTank = station.truss.tanks.filter({ $0.type == .h2 }).sorted(by: { $0.current < $1.current }).first {
+                        hydrogenTank.current = min(hydrogenTank.capacity, hydrogenTank.current + waterUse)
+                        peripheralMessages.append("Hydrogen Tank is now \(hydrogenTank.current)L.")
+                    } else {
+                        peripheralIssues.append("No Hydrogen tank to fill. Had to throw the Hydrogen away")
+                    }
+                    // Oxygen goes in the air
+                    station.air.o2 += Int(waterUse / 2) // Half O2 from 10 * H2O
+                } else {
+                    peripheralIssues.append("No water tank was found. Electrolizer needds water to do electrolysis")
+                }
+                
+            case .Methanizer:
+                
+                // 3. Methanizer        -CO2, -H2, +CH4, +O2
+                if station.air.co2 > 10 {
+                    // Get hydrogen (Needed)
+                    let hydroUse:Int = 10
+                    if let hydrogenTank = station.truss.tanks.filter({ $0.type == .h2 }).sorted(by: { $0.current > $1.current }).first, hydrogenTank.current >= hydroUse {
+                        
+                        // -CO2
+                        station.air.co2 -= 10
+                        peripheralMessages.append("10 CO2 removed from the air")
+                        
+                        hydrogenTank.current -= hydroUse
+                        
+                        // Methane Tank (Optional)
+                        let methaneGive = 10
+                        if let methaneTank = station.truss.tanks.filter({ $0.type == .ch4 }).sorted(by: { $0.current < $1.current }).first {
+                            methaneTank.current = min(methaneTank.capacity, methaneTank.current + methaneGive)
+                            peripheralMessages.append("Methane tank is now \(methaneTank.current)L")
+                        } else {
+                            peripheralIssues.append("No Methane tank (CH4) was found. Had to throw it away.")
+                        }
+                        
+                        // O2 Tank (Optional)
+                        let oxygenGive = 10
+                        if let oxygenTank = station.truss.tanks.filter({ $0.type == .o2 }).sorted(by: { $0.current < $1.current }).first {
+                            oxygenTank.current = min(oxygenTank.capacity, oxygenTank.current + oxygenGive)
+                        } else {
+                            peripheralIssues.append("No Oxygen tank (O2) was found. Had to throw it away.")
+                        }
+                        
+                    } else {
+                        peripheralIssues.append("No Hydrogen tank (H2) was found. Methanizer needs hydrogen to make methane.")
+                    }
+                } else {
+                    peripheralIssues.append("CO2 in air is less than 10")
+                }
+                
+            case .WaterFilter:
+                
+                // 4. WaterFilter       -wasteWater, + h2o
+                let sewerUsage = 10
+                if let sewer = station.truss.extraBoxes.filter({ $0.type == .wasteLiquid }).sorted(by: { $0.current > $1.current }).first, sewer.current >= sewerUsage {
+                    
+                    let multiplier = 0.5 + 0.1 * Double(peripheral.level) // 50% + 10% each level
+                    let waterGain = Int(multiplier * Double(sewerUsage))
+                    
+                    if let waterTank = station.truss.tanks.filter({ $0.type == .h2o}).sorted(by: { $0.current < $1.current}).first {
+                        waterTank.current = min((waterTank.current + waterGain), waterTank.capacity)
+                        sewer.current -= sewerUsage
+                        peripheralMessages.append("\(waterGain)L of water has been added to tank, thats now \(waterTank.current)L.")
+                        return
+                    } else {
+                        peripheralIssues.append("No water tank (H2O) was found. Had to throw the water away.")
+                    }
+
+                } else {
+                    peripheralIssues.append("Not enough waste water to complete this operation.")
+                }
+                
+            case .BioSolidifier:
+                
+                // 5. BioSolidifier     -wasteSolid, + Fertilizer
+                let sewerUsage = 10
+                if let sewer = station.truss.extraBoxes.filter({ $0.type == .wasteSolid }).sorted(by: { $0.current > $1.current }).first, sewer.current >= sewerUsage {
+                    
+                    let multiplier = 0.5 + 0.1 * Double(peripheral.level) // 50% + 10% each level
+                    let fertilizerGain = Int(multiplier * Double(sewerUsage))
+                    
+                    if let fertBox = station.truss.extraBoxes.filter({ $0.type == .Fertilizer }).sorted(by: { $0.current < $1.current }).first {
+                        fertBox.current = min(fertBox.capacity, fertBox.current + fertilizerGain)
+                    } else {
+                        peripheralIssues.append("Could not find a Fertilizer storage box to store the fertilizer produced. Throwing it away.")
+                    }
+                } else {
+                    peripheralIssues.append("Not enough solid waste to complete this operation.")
+                }
+                
+            default:
+                print("Error. Another Peripheral has instant use? \(peripheral.peripheral.rawValue) id:\(peripheral.id)")
         }
-        
-    }
-    
-    func consumeOxygen(amt:Int) {
-        air.o2 -= amt
-        air.co2 += amt
-        self.levelO2 = (Double(air.o2) / Double(air.getVolume())) * 100
-        self.levelCO2 = (Double(air.co2) / Double(air.getVolume())) * 100
-        if !consumeEnergy(amt: 10) {
-            print("Not enough energy")
-        }
-    }
-    
-    func scrubCO2(amt:Int) {
-        
-        if air.co2 < 2 { return }
-        
-        if (consumeEnergy(amt: amt * 5) == true) {
-            air.co2 = max(0, air.co2 - amt)
-        }
-        
-        self.levelCO2 = (Double(air.co2) / Double(air.getVolume())) * 100
-//        updateEnergyLevels()
-        updateDisplayVars()
     }
     
     func consumeEnergy(amt:Int) -> Bool {
@@ -435,6 +447,9 @@ class LSSModel:ObservableObject {
     func fixBroken(peripheral:PeripheralObject) {
         peripheral.isBroken.toggle()
         peripheral.lastFixed = Date()
+        saveAccounting()
+        self.didSelect(utility: peripheral)
+        
     }
     
     // MARK: - Accounting
@@ -453,36 +468,8 @@ class LSSModel:ObservableObject {
         LocalDatabase.shared.saveStation(station: station)
     }
     
-    // MARK: - Timer
-    
-    func prepTimer() {
-        self.timer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { timer in
-            self.incrementCounter()
-        }
-    }
-    
-    func incrementCounter() {
-        print("Counter going \(counter)")
-        self.counter += 1
-        self.accountForPeople()
-    }
-    
-    func start() {
-        self.timer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { timer in
-            self.counter += 1
-        }
-    }
-    
-    func stop() {
-        timer.invalidate()
-    }
-    
-    func reset() {
-        counter = 0
-        timer.invalidate()
-    }
     
     deinit {
-        timer.invalidate()
+//        timer.invalidate()
     }
 }
