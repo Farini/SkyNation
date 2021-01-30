@@ -6,7 +6,7 @@ I intend to pull this project out of its **public** state to a **private reposit
 If you are a Blender artist, or can program in Swift any of the frameworks mentioned above, or Swift Vapor for this game's server, don't hesitate to contact me.
 Feel free to take a look at the *ToDo* list, make suggestions, etc.
 
-![Screenshot1](https://drive.google.com/file/d/1AjoeIrnVmOfZsoLK7KWuX3uWooEkEmtr/view?usp=sharing)
+![Screenshot1](https://drive.google.com/uc?export=view&id=1AjoeIrnVmOfZsoLK7KWuX3uWooEkEmtr)
 Format: ![Alt Text](url)
 
 
