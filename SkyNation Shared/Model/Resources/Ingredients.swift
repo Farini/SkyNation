@@ -38,7 +38,7 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
     
     // ⚠️ Write modifications here
     
-    /// Orderable from Earth Order
+    /// Whether a Player can order this item
     var orderable:Bool {
         switch self {
         case .wasteSolid, .wasteLiquid, .Silicate: return false
@@ -105,5 +105,44 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
             case .Silicate: return nil
             case .Fertilizer: return Image("Fertilizer")
         }
+    }
+}
+
+/// A box container that holds solid `Ingredients`
+class StorageBox:Codable, Identifiable, Hashable {
+    
+    var id:UUID = UUID()
+    var type:Ingredient
+    var capacity:Int { return type.boxCapacity() }
+    var current:Int = 0
+    
+    init(ingType:Ingredient, current:Int) {
+        self.type = ingType
+        self.current = current
+    }
+    
+    /**
+     Fills the Box with the input.
+     - Parameters:
+     - input: The amount to fill
+     - Returns: The amount left over, if the box is full   */
+    func fillUp(_ input:Int) -> Int {
+        let maxIntake = capacity - current
+        if input >= maxIntake {
+            self.current = capacity
+            return input - maxIntake
+        }else {
+            self.current += input
+            return 0
+        }
+    }
+    
+    static func == (lhs: StorageBox, rhs: StorageBox) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    // Make a class hashable: https://www.hackingwithswift.com/example-code/language/how-to-conform-to-the-hashable-protocol
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

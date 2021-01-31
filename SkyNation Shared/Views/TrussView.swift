@@ -31,7 +31,13 @@ struct TrussLayoutView: View {
             Text("Tap, or click an item (origin), and then a destination to move it.")
                 .foregroundColor(.gray)
             
-            Divider()
+            CautionStripeShape()
+                .fill(Color.orange, style: FillStyle(eoFill: false, antialiased: true))
+                .foregroundColor(Color.white)
+                .frame(height: 20, alignment: .leading)
+                
+            
+//            Divider()
             
             HStack(alignment: .top, spacing: 12) {
                 

@@ -7,7 +7,6 @@ If you are a Blender artist, or can program in Swift any of the frameworks menti
 Feel free to take a look at the *ToDo* list, make suggestions, etc.
 
 ![Screenshot1](https://drive.google.com/uc?export=view&id=1AjoeIrnVmOfZsoLK7KWuX3uWooEkEmtr)
-Format: ![Alt Text](url)
 
 
 # 📝 Projects
@@ -112,18 +111,16 @@ Items being worked on
 - [X] Route to create player
 - [X] Modify Entry Point MacOS, iOS
 - [X] Person menu -> Fire, Medicate, Workout, Study
-
-- [ ] Lab Module needs to update list when research is finished (Needs testing)
-
-
 - [X] LSS View 3/3 -> Each Peripheral should have its own Detail View and actions
 - [X] Fix LSS View update issues
 - [X] LSS View -> Improve Peripherals
 - [X] Accounting should use all of the energy generated first, then from batteries
 
-- [ ] Free Supply Drop-offs -> Pay for more
+- [ ] Lab Module needs to update list when research is finished (Needs testing)
+
+- [ ] Free Supply Drop-offs -> Pay for more -> Ask Server
+- [ ] People generator should generate new people every hour. Pay for more. And generate Materials engineer first -> Ask Server
 - [ ] If you simulate your vehicles, you get an extra XP for the Garage
-- [ ] People generator should generate new people every hour. Pay for more. And generate Materials engineer first
 - [ ] LSS View -> Make 1 tab for tanks & ingredients, and another for Peripherals
 - [ ] GameLoop: Auto-Accounting
 - [ ] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles)
@@ -158,8 +155,13 @@ Items being worked on
         - [X] Remake of Builder -> SceneBuilder to replace 'BuildItem'
         - [X] Simplify Builder
         - [X] Add Modules 7 ... 10
+        - [X] Make Nodes Work (right amount)
+        - [ ] Transfer StationBuilder to a new Folder (Builders ?) and import SceneKit
+        - [ ] StationBuilder should build the whole scene
+        - [ ] Add Items for Tech (Roboarm, Cuppola, Airlock, Garage, Antenna)
+        - [ ] Add Truss Items (Solar Panels, Radiator)
         - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
-        - [ ] Load Skin on all Modules
+        - [ ] Choose Skin + Persistency
     
     - [X] Truss View creation
         - [X] Solar Panel positions

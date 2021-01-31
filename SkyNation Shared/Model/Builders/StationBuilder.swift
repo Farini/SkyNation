@@ -1,14 +1,13 @@
 //
-//  SerialBuilder.swift
-//  SkyTestSceneKit
+//  StationBuilder.swift
+//  SkyNation
 //
-//  Created by Farini on 9/23/20.
-//  Copyright © 2020 Farini. All rights reserved.
+//  Created by Carlos Farini on 1/31/21.
 //
 
 import Foundation
 
-/// The type of **BuildItem** for the **SerialBuilder**
+/// The type of BuildItemfor the **SerialBuilder**
 enum BuildComponent:String, Codable, CaseIterable {
     case Node
     case Module
@@ -16,6 +15,7 @@ enum BuildComponent:String, Codable, CaseIterable {
     case Peripheral
 }
 
+/// The indexes where `Module` objects can be placed
 enum ModuleIndex:String, Codable, CaseIterable {
     
     // mod0 is the one facing down, mod1 is the Front
@@ -34,7 +34,7 @@ enum ModuleIndex:String, Codable, CaseIterable {
             case .mod8: return Vector3D(x: 0, y: -2, z: -36)
             case .mod9: return Vector3D(x: 0, y: 2, z: -36)
             case .mod10: return Vector3D(x: 0, y: -2, z: -24)
-//            case .modGarage: return Vector3D(x: 0, y: 0, z: -46)
+            //            case .modGarage: return Vector3D(x: 0, y: 0, z: -46)
         }
     }
     
@@ -45,12 +45,34 @@ enum ModuleIndex:String, Codable, CaseIterable {
             case .mod8: return .Down
             case .mod9: return .Up
             case .mod10: return .Down
-            
+                
             default: return .Front
         }
     }
 }
 
+/// The Material to go on the Module.
+enum ModuleSkin:String, Codable, CaseIterable {
+    
+    case ModuleBake
+    case diffuse1
+    case BioModule
+    case LabModule
+    case HabModule
+    
+    var uvMapName:String {
+        switch self {
+            case .BioModule: return "BioModule"
+            case .HabModule: return "HabModule"
+            case .LabModule: return "LabModule"
+            case .ModuleBake: return "ModuleBake4"
+            case .diffuse1: return "ModuleDif1"
+        }
+    }
+}
+
+/**
+ A Class that Builds the Space `Station` Object to make a `SCNScene` */
 class StationBuilder:Codable {
     
     // Single Dimensional Array
@@ -79,7 +101,7 @@ class StationBuilder:Codable {
         self.buildList = [node0, module0, node2, moduleFront, moduleBack]
     }
     
-    /// Initialize with a Station, if there is one
+    /// Initialize with a `Station`, if there is one
     init(station:Station) {
         
         // First Node
@@ -102,21 +124,39 @@ class StationBuilder:Codable {
             
             arrayOfModules.append(newModule)
             
-            switch modex {
-                case .mod3:
+            //            switch modex {
+            //                case .mod3:
+            //                    // Node 2
+            //                    let node2 = StationBuildItem(pos: Vector3D(x: 0, y: 0, z: -12), euler: Vector3D.zero, type: .Node)
+            //                    arrayOfNodes.append(node2)
+            //                case .mod4:
+            //                    // Node 3
+            //                    let node3 = StationBuildItem(pos: Vector3D(x: 0, y: 0, z: -24), euler: Vector3D.zero, type: .Node)
+            //                    arrayOfNodes.append(node3)
+            //                case .mod5:
+            //                    // Node 4
+            //                    let node4 = StationBuildItem(pos: Vector3D(x: 0, y: 0, z: -36), euler: Vector3D.zero, type: .Node)
+            //                    arrayOfNodes.append(node4)
+            //                default:
+            //                    continue
+            //            }
+        }
+        
+        for tech in station.unlockedTechItems {
+            switch tech {
+                case .node2:
                     // Node 2
                     let node2 = StationBuildItem(pos: Vector3D(x: 0, y: 0, z: -12), euler: Vector3D.zero, type: .Node)
                     arrayOfNodes.append(node2)
-                case .mod4:
+                case .node3:
                     // Node 3
                     let node3 = StationBuildItem(pos: Vector3D(x: 0, y: 0, z: -24), euler: Vector3D.zero, type: .Node)
                     arrayOfNodes.append(node3)
-                case .mod5:
+                case .node4:
                     // Node 4
                     let node4 = StationBuildItem(pos: Vector3D(x: 0, y: 0, z: -36), euler: Vector3D.zero, type: .Node)
                     arrayOfNodes.append(node4)
-                default:
-                    continue
+                default: continue
             }
         }
         
@@ -147,12 +187,14 @@ class StationBuilder:Codable {
                 array.append(Module(id: item.id, modex: modex))
             }
         }
-
+        
         return array
     }
     
 }
 
+/**
+ Build Item: Modules, Nodes, and main scene data. Part of the `StationBuilder` object */
 class StationBuildItem:Codable {
     
     var id:UUID
@@ -187,6 +229,7 @@ class StationBuildItem:Codable {
     
 }
 
+/// A Struct that represents a `Light node` to be added to the scene
 struct BuildableLight:Codable {
     
     var id:UUID
@@ -201,24 +244,4 @@ struct BuildableLight:Codable {
     
     var intensty:Double
     
-}
-
-/// The Material to go on the Module.
-enum ModuleSkin:String, Codable, CaseIterable {
-    
-    case ModuleBake
-    case diffuse1
-    case BioModule
-    case LabModule
-    case HabModule
-    
-    var uvMapName:String {
-        switch self {
-            case .BioModule: return "BioModule"
-            case .HabModule: return "HabModule"
-            case .LabModule: return "LabModule"
-            case .ModuleBake: return "ModuleBake4"
-            case .diffuse1: return "ModuleDif1"
-        }
-    }
 }
