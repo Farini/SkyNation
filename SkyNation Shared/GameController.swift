@@ -17,7 +17,11 @@ protocol GameNavDelegate {
     func didSelectGarage(station:Station)
     func didSelectAir()
     func didSelectEarth()
-    
+}
+
+enum GameSceneType {
+    case SpaceStation
+    case MarsColony
 }
 
 class GameController: NSObject, SCNSceneRendererDelegate {
@@ -41,7 +45,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
 //    var builder:SerialBuilder
     var modules:[Module] = []
     var station:Station?
-    
     
     // MARK: - Control
     
@@ -119,7 +122,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     print("⚙️ Lets go to Mars!")
                     let mars = MarsBuilder()
                     if let newScene = mars.loadScene() {
-                        sceneRenderer.present(newScene, with: .doorsCloseVertical(withDuration: 0.75), incomingPointOfView: nil) {
+                        sceneRenderer.present(newScene, with: .doorsCloseVertical(withDuration: 1.25), incomingPointOfView: nil) {
                             self.scene = newScene
                             //                            self.loadStationScene()
                             print("Scene Loaded :)")
@@ -225,6 +228,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     // MARK: - Camera
     
     func didSetCamZ(value: Double) {
+        print("DIDCAMZ")
         let originalPosition = cameraNode!.position
         
         #if os(macOS)
@@ -436,11 +440,9 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     init(sceneRenderer renderer: SCNSceneRenderer) {
         
         sceneRenderer = renderer
-        scene = SCNScene(named: "Art.scnassets/SpaceStation/SpaceStation.scn")!
-        
+   
         // Database
         let dBase = LocalDatabase.shared
-//        self.builder = dBase.builder
         self.station = dBase.station
         
         // Debug options
@@ -450,19 +452,54 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         //    let dbo4 = SCNDebugOptions.showLightInfluences
         //    sceneRenderer.debugOptions = [dbo2, dbo4]
         
-        // Camera
-        let cam = scene.rootNode.childNode(withName: "Camera", recursively: false)!
-        self.cameraNode = cam
+        var oldSchool:Bool = true
+        if let builtScene = LocalDatabase.shared.stationBuilder.scene {
+            print("--- INIT WITH BUILDER")
+            self.scene = builtScene
+            
+            // Camera
+            let cam = scene.rootNode.childNode(withName: "cameraOrbit", recursively: false)!
+            self.cameraNode = cam
+            let camChild = cam.childNodes.first!
+            
+            renderer.pointOfView = camChild
+            self.cameraNode!.look(at: SCNVector3(0, -5, 10))
+            
+            let rotate = SCNAction.rotate(by: CGFloat(Double.pi / 4), around: SCNVector3(x: 0, y: 1, z: 0), duration: 12.0)
+            cam.runAction(rotate) {
+                print("Action complete")
+                print("CamChild Angles: \(camChild.eulerAngles)")
+                print("CamOrbit Angles: \(cam.eulerAngles)")
+                camChild.look(at: SCNVector3(0, 0, 0))
+            }
+            
+            oldSchool = false
+        } else {
+            print("--- INIT THE OLD WAY")
+            scene = SCNScene(named: "Art.scnassets/SpaceStation/SpaceStation.scn")!
+            
+            // Camera
+            let cam = scene.rootNode.childNode(withName: "Camera", recursively: false)!
+            self.cameraNode = cam
+        }
+        
         
         // Overlay
-        let stationOverlay = StationOverlay(renderer: renderer, station: station!, camNode: cam)
+        let stationOverlay = StationOverlay(renderer: renderer, station: station!, camNode: self.cameraNode!)
         sceneRenderer.overlaySKScene = stationOverlay.scene
         self.stationOverlay = stationOverlay
         
         super.init()
         
-        // Load the scene
-        self.loadStationScene()
+        // After INIT
+        
+        self.modules = station?.modules ?? []
+        
+        if oldSchool {
+            // Load the scene
+            self.loadStationScene()
+        }
+        
         
         sceneRenderer.delegate = self
         sceneRenderer.scene = scene
@@ -472,7 +509,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     /// Loads the **Station** Scene
     func loadStationScene() {
         
-        self.modules = station?.modules ?? [] //builder.modules //builder.modules
+         //builder.modules //builder.modules
         
         // FIXME: - ⚠️ Tech Modifications
         

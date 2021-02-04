@@ -84,19 +84,6 @@ class Station:Codable {
             }
         }
         
-//        while energyGenerated > 0 {
-//            for battery in truss.batteries {
-//                let pct = Int((battery.current / battery.capacity) * 100)
-//                print("Battery (before charging): \(battery.current) of \(battery.capacity) \(pct)% \(battery.id)")
-//                let maxCharge = min(battery.maxCharge(), energyGenerated)
-//                if battery.charge(amount:maxCharge) {
-//                    energyGenerated -= maxCharge
-//                }
-//            }
-//            // set to 0. Otherwise it won't come out of the loop when batteries are full
-//            energyGenerated = 0
-//        }
-        
         // 3. LSS Peripherals
         // + Life Support Peripherals first
         // + Update Air
@@ -462,19 +449,6 @@ class Station:Codable {
         // Remove Empty Tanks
         truss.tanks.removeAll(where: { $0.current <= 0 })
         
-//        let oxygenLevel:Double = Double(tempAir.o2) / Double(tempAir.volume)
-//        let optimalOxygen:Double = 0.22
-//        if oxygenLevel < optimalOxygen {
-//            if let oxygen = truss.tanks.filter({ $0.type == .o2 && $0.current > 10 }).first {
-//                let o2Amt = optimalOxygen * Double(tempAir.volume)
-//                let o2use = min(optimalOxygen, oxygen.current)
-//                oxygen.current -= o2use
-//                tempAir.o2 += o2use
-//            }
-//        }
-        
-        
-        
         // Report
         self.accounting = report
         
@@ -487,7 +461,6 @@ class Station:Codable {
         } else {
             print("No Player, no money")
         }
-        
         
         // Advance the date
         self.accountingDate = nextDate
@@ -648,16 +621,6 @@ class Station:Codable {
         }
     }
     
-//    func movePeripheral(object:PeripheralObject, to vehicle:SpaceVehicle) -> Bool {
-//        if let idx = peripherals.firstIndex(where: { $0.id == object.id }) {
-//            if vehicle.engine.payloadLimit > vehicle.
-//            peripherals.remove(at: idx)
-//            return true
-//        } else {
-//            return false
-//        }
-//    }
-    
     // MARK: - Living, Rooms, and People
     // DEPRECATE SOME OF THESE - WONT NEED ALL OF THEM
     
@@ -698,14 +661,6 @@ class Station:Codable {
             folks.append(contentsOf: hab.inhabitants)
         }
         return folks
-    }
-    
-    func getPeopleInRooms() -> [Person] {
-        var ppl:[Person] = []
-        for hab in habModules {
-            ppl.append(contentsOf: hab.inhabitants)
-        }
-        return ppl
     }
     
     /**

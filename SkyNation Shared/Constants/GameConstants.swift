@@ -4,12 +4,22 @@
 
 import SwiftUI
 
-/*
+
 class GameSettings {
     
+    /// Bring up tutorial when game starts
     var showTutorial:Bool
     
+    /// Whether to render more expensive lights
+    var showLights:Bool = true
+    
+    /// To save in Cloud
+    var useCloud:Bool = false
+    
+    var startingScene:GameSceneType
+    
     static let shared = GameSettings()
+    
     private init () {
         var shouldShowTutorial:Bool = true
         if let station = LocalDatabase.shared.station {
@@ -19,9 +29,10 @@ class GameSettings {
             }
         }
         self.showTutorial = shouldShowTutorial
+        self.startingScene = .SpaceStation
     }
 }
-*/
+
 
 /**
  Main Logic items for the game.
@@ -157,10 +168,6 @@ struct GameColors {
     static let airBlue = Color("LightBlue")
 }
 
-enum GameSceneType {
-    case SpaceStation
-    case MarsColony
-}
 
 
 /// Images used by the game
@@ -201,30 +208,6 @@ struct GameImages {
     
 }
 
-struct GameWindow {
-    static func closeWindow() {
-        NotificationCenter.default.post(Notification(name: .closeView))
-    }
-}
-
-// MARK: - Notifications
-
-extension Notification.Name {
-    
-    static let URLRequestFailed  = Notification.Name("URLRequestFailed")        // Any URL Request that fails sends this messsage
-    static let DidAddToFavorites = Notification.Name("DidAddToFavorites")       // Add To Favorites Notification
-    static let UpdateSceneWithTech = Notification.Name("UpdateSceneWithTech")
-    
-    /// To Close Views
-    static let closeView = Notification.Name("CloseView")
-    
-    /// To go from Loading screen to Game
-    static let startGame = Notification.Name("StartGame")
-    
-}
-
-// MARK: - Images
-
 #if os(macOS)
 public typealias SKNImage = NSImage
 public typealias SCNColor = NSColor
@@ -256,6 +239,28 @@ extension UIImage {
     
 }
 #endif
+
+// MARK: - Notifications
+
+extension Notification.Name {
+    
+    static let URLRequestFailed  = Notification.Name("URLRequestFailed")        // Any URL Request that fails sends this messsage
+    static let DidAddToFavorites = Notification.Name("DidAddToFavorites")       // Add To Favorites Notification
+    static let UpdateSceneWithTech = Notification.Name("UpdateSceneWithTech")
+    
+    /// To Close Views
+    static let closeView = Notification.Name("CloseView")
+    
+    /// To go from Loading screen to Game
+    static let startGame = Notification.Name("StartGame")
+    
+}
+
+struct GameWindow {
+    static func closeWindow() {
+        NotificationCenter.default.post(Notification(name: .closeView))
+    }
+}
 
 // MARK: - Errors
 
@@ -304,12 +309,6 @@ enum GameAchievementType {
         }
     }
 }
-
-//struct GameAchievement:Codable {
-//    var type:AchievementType
-//    var date:Date
-//    var qtty:Int
-//}
 
 class GameMessageBoard {
     

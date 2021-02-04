@@ -163,7 +163,7 @@ class HabModuleController: ObservableObject {
         }
         
         // Medic
-        if let medic = station.getPeopleInRooms().filter({$0.skills.contains(where: { $0.skill == .Medic }) && $0.isBusy() == false }).first {
+        if let medic = station.getPeople().filter({$0.skills.contains(where: { $0.skill == .Medic }) && $0.isBusy() == false }).first {
             
             // Add activity to medic
             medic.activity = LabActivity(time: 600, name: "Medicating")

@@ -138,6 +138,7 @@ struct LifeSupportView: View {
                                         if let wasteSolid = controller.boxes.filter({ $0.type == .wasteSolid }).map({ $0.current }).reduce(0, +) {
                                             Text("💩 Solid Waste: \(wasteSolid)")
                                         }
+                                        Text("🛰📡 Antenna + 🪙 \(controller.station.truss.moneyFromAntenna())")
                                         
                                         
                                         

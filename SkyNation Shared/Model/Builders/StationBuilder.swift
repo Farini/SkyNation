@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SceneKit
 
 /// The type of BuildItemfor the **SerialBuilder**
 enum BuildComponent:String, Codable, CaseIterable {
@@ -78,6 +79,9 @@ class StationBuilder:Codable {
     // Single Dimensional Array
     var buildList:[StationBuildItem]
     var lights:[BuildableLight] = []
+    var scene:SCNScene?
+    
+    // MARK: - Initializers
     
     // Initting
     // Initialize the array with node0, node1, .modf, .mod0, .mod1
@@ -166,6 +170,21 @@ class StationBuilder:Codable {
         
     }
     
+    // MARK: - Codable
+    
+    private enum CodingKeys:String, CodingKey {
+        case buildList
+        case lights
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        buildList = try values.decode([StationBuildItem].self, forKey: .buildList)
+        lights = try values.decodeIfPresent([BuildableLight].self, forKey: .lights) ?? []
+    }
+    
+    // MARK: - Items
+    
     /// sets the lights to the buildable pieces array
     func loadLights(lights:[BuildableLight]) {
         print("Loading lights")
@@ -189,6 +208,170 @@ class StationBuilder:Codable {
         }
         
         return array
+    }
+    
+    // MARK: - Scene Building
+    
+    /// Build Scene on Background, to present
+    func build(station:Station) {
+        
+        self.prepareScene(station:station) { scene in
+            // Send notification "Finished Scene" to GameController
+            // So it can present :)
+            print("Scene Building has finished building")
+            self.scene = scene
+        }
+    }
+    
+}
+
+// MARK: - SceneKit
+
+
+
+extension StationBuilder {
+    
+    /// Prepares the scene, with a completion handler
+    func prepareScene(station:Station, _ completion:(SCNScene) -> ()) {
+        
+        let scene = SCNScene(named: "Art.scnassets/SpaceStation/SpaceStation.scn")!
+        
+        // ------------------
+        // Main Empty Parents
+        // 1. Modules
+        // 2. Nodes
+        // 3. Tech Items
+        // 4. Accessories
+        // 5. Lights
+        // 6. Camera
+        // 7. Truss
+        
+        // 1. Modules + Nodes
+        for buildPart in buildList {
+            print("Build part type: \(buildPart.type.rawValue)")
+            if let newNode = buildPart.loadFromScene() {
+                scene.rootNode.addChildNode(newNode)
+            }
+        }
+        
+        // 3. Tech Items
+        for item in station.unlockedTechItems {
+            print("Display item for tech: \(item)")
+            if let model = item.loadToScene() {
+                scene.rootNode.addChildNode(model)
+            }
+        }
+        
+        // 4. Accessories (Antenna)
+        let antenna = Antenna3DNode()
+        antenna.position = SCNVector3(22.0, 1.5, 0.0)
+        scene.rootNode.addChildNode(antenna)
+        
+        // 5. Lights
+        // Folder >> Lights?
+        
+        // 6. Camera
+        
+        // Create an invisible sphere camera node ?
+        // https://stackoverflow.com/questions/25654772/rotate-scncamera-node-looking-at-an-object-around-an-imaginary-sphere
+        
+        // Remove Old Camera
+        if let oldCam = scene.rootNode.childNode(withName: "Camera", recursively: false) {
+            oldCam.removeFromParentNode()
+        }
+        
+        let camera = SCNCamera()
+        camera.usesOrthographicProjection = false
+        camera.focalLength = 150
+        camera.fieldOfView = 9.148
+        camera.sensorHeight = 24
+        camera.zNear = 0.1
+        camera.zFar = 500
+        
+        let cameraNode = SCNNode()
+        cameraNode.position = SCNVector3(x: 50, y: 50, z: 75) // SCNVector3(x: 15, y: 15, z: 75)
+        cameraNode.camera = camera
+        
+        let cameraOrbit = SCNNode()
+        cameraOrbit.name = "cameraOrbit"
+        cameraOrbit.position = SCNVector3(x: 0, y: 0, z: 0)
+        
+        cameraOrbit.addChildNode(cameraNode)
+        scene.rootNode.addChildNode(cameraOrbit)
+
+        // rotate it (I've left out some animation code here to show just the rotation)
+        cameraOrbit.eulerAngles.x = CGFloat(Double.pi / 4)
+        cameraOrbit.eulerAngles.y = CGFloat(Double.pi)
+        
+        
+        // Truss (Solar Panels, Radiator, and Roboarm)
+        let trussNode = scene.rootNode.childNode(withName: "Truss", recursively: true)!
+        
+        // Delete Previous Solar Panels
+        for child in trussNode.childNodes {
+            if child.name == "SolarPanel" {
+                print("Removing old solar panel")
+                child.removeFromParentNode()
+            }
+        }
+        
+        // Add Solar Panels and Radiators to Truss
+        for item in station.truss.tComponents {
+            print("Truss Component: \(item.posIndex)")
+            guard let pos = item.getPosition() else { continue }
+            guard let eul = item.getRotation() else { continue }
+            switch item.allowedType {
+                case .Solar:
+                    if item.itemID != nil {
+                        print("Solar Panel: \(item.posIndex) pos:\(pos), euler:\(eul)")
+                        let solarScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/SolarPanel.scn")
+                        if let solarPanel = solarScene?.rootNode.childNode(withName: "SolarPanel", recursively: true)?.clone() {
+                            solarPanel.position = SCNVector3(pos.x, pos.y, pos.z)
+                            solarPanel.eulerAngles = SCNVector3(eul.x, eul.y, eul.z)
+                            solarPanel.scale = SCNVector3.init(x: 1.5, y: 2.4, z: 2.4)
+                            trussNode.addChildNode(solarPanel)
+                        }
+                    }
+                case .Radiator:
+                    print("Radiator slot: \(item.posIndex) pos:\(pos), euler:\(eul)")
+                    if item.itemID != nil {
+                        print("Radiator: \(item.posIndex) pos:\(pos), euler:\(eul)")
+                        let radiatorNode = RadiatorNode()
+                        radiatorNode.position = SCNVector3(pos.x, pos.y, pos.z)
+                        radiatorNode.eulerAngles = SCNVector3(eul.x, eul.y, eul.z)
+                        radiatorNode.scale = SCNVector3.init(x: 1.5, y: 1.5, z: 1.5)
+                        radiatorNode.setupAngles(new: nil)
+                        trussNode.addChildNode(radiatorNode)
+                    } else {
+                        continue
+                    }
+                case .RoboArm: continue
+                    
+            }
+        }
+        
+        // Earth or ship (Order)
+//        if let order = station?.earthOrder {...
+        
+        // NEWS
+        // Check Activities
+//        var newsLines:[String] = []
+//        if gameScene == .SpaceStation {
+//            if let labs = station?.labModules {
+//                for lab in labs {
+//                    print("*** Found lab: \(lab.id)")
+        
+        // ------------------
+        // Post Notification Scene is ready
+
+        // Tell SceneDirector that scene is loaded
+//        SceneDirector.shared.controllerDidLoadScene(controller: self)
+        
+        // Store Property
+//        self.scene = scene
+        
+        // Complete
+        completion(scene)
     }
     
 }
@@ -245,3 +428,5 @@ struct BuildableLight:Codable {
     var intensty:Double
     
 }
+
+

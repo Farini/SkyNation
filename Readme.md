@@ -118,6 +118,9 @@ Items being worked on
 
 - [ ] Lab Module needs to update list when research is finished (Needs testing)
 
+
+- PREPARE ENTIRE SCENE IN STATION BUILDER
+
 - [ ] Free Supply Drop-offs -> Pay for more -> Ask Server
 - [ ] People generator should generate new people every hour. Pay for more. And generate Materials engineer first -> Ask Server
 - [ ] If you simulate your vehicles, you get an extra XP for the Garage
@@ -126,6 +129,9 @@ Items being worked on
 - [ ] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles)
 - [ ] Accounting: Make it harder for **Person** to be happy on their own
 - [ ] Person: Have action(s) to make **Person** happier
+- [ ] Remake TrussView
+- [ ] Update Scene Overlay (Player) - especially when placed an order.
+
 
 - [X] 5/21 Scene Improvements
     - [X] Cleanup Original Scene
