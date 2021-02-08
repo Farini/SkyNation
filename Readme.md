@@ -142,19 +142,19 @@ Items being worked on
     - [X] Fix Model underneath lid
     - [X] Earth with Emission
     - [X] Implement 'Skin' on all Modules
+    - [X] Earth Revealage
+    - [X] Load more items of Scene in StationBuilder
+    - [X] Camera positions + Sphere node
     - [ ] Blender Monkey inside Helmet
     - [ ] Blender Individual Tanks
     - [ ] Improve Background HDRI image
     - [ ] Reskin Delivery Vehicle
     - [ ] Remodel Space Vehicle
-    - [ ] Earth Revealage
     - [ ] Build Dock 3D Model
     - [ ] Add light and transluscent sphere to Dock
     - [ ] 5 Models of Antenna
     - [ ] Roboarm animation
-    - [ ] Load more items of Scene in StationBuilder
     - [ ] Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
-    - [ ] Camera positions + Sphere node
     - [ ] Unbuild Module
     - [ ] StationBuilder Object - 01/16/2021
         - [X] Make Skin Work
@@ -162,12 +162,15 @@ Items being worked on
         - [X] Simplify Builder
         - [X] Add Modules 7 ... 10
         - [X] Make Nodes Work (right amount)
-        - [ ] Transfer StationBuilder to a new Folder (Builders ?) and import SceneKit
-        - [ ] StationBuilder should build the whole scene
+        - [X] Transfer StationBuilder to a new Folder 'Model' -> 'Builder' and import SceneKit
+        - [X] StationBuilder should build the whole scene
+        - [X] Add Truss Items (Solar Panels, Radiator)
+        - [X] Make Earth Node
+        - [ ] Make the Earth bright again?
         - [ ] Add Items for Tech (Roboarm, Cuppola, Airlock, Garage, Antenna)
-        - [ ] Add Truss Items (Solar Panels, Radiator)
         - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
         - [ ] Choose Skin + Persistency
+        
     
     - [X] Truss View creation
         - [X] Solar Panel positions

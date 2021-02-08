@@ -149,7 +149,7 @@ class StationOverlay:NSObject, SKSceneDelegate {
         if let x = x {
             print("Moving Camera to: \(x) | Position:\(sceneCamera.position.z)")
             #if os(macOS)
-            sceneCamera.position.z = ((x - 0.5) * 84.0) + 84.0
+            sceneCamera.position.z = -300 * x  // ((x - 0.5) * 84.0) + 84.0
             #else
             sceneCamera.position.z = ((Float(x) - 0.5) * 84.0) + 84.0
             #endif

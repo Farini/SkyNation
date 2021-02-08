@@ -305,27 +305,17 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         print("Animating ship out of scene")
         
         // Animate the ship out of the scene
-        if let ship = scene.rootNode.childNode(withName: "Ship", recursively: true) {
+        if let ship = scene.rootNode.childNode(withName: "Ship", recursively: false) as? DeliveryVehicleNode {
             
-            let move = SCNAction.move(by: SCNVector3(0, -10, -3), duration: 5.0)
-            let move2 = SCNAction.move(by: SCNVector3(0, -50, -20), duration: 2.0)
-            let moveSequence = SCNAction.sequence([move, move2])
-            
-            let rotate1 = SCNAction.wait(duration: 0.7)
-            let rotate2 = SCNAction.rotateBy(x: 180.0 * (.pi/180.0), y: 0, z: 0, duration: 5.0)
-            let rotateSequence = SCNAction.sequence([rotate1, rotate2])
-            
-            ship.runAction(SCNAction.group([moveSequence, rotateSequence])) {
-                ship.removeFromParentNode()
-            }
+            // Remove Delivery Vehicle
+            ship.beginExitAnimation()
             
             // Load Earth
-            let earth = SCNScene(named: "Art.scnassets/Earth.scn")!.rootNode.childNode(withName: "Earth", recursively: true)!.clone()
-            earth.position = SCNVector3(0, -18, 0)
-            earth.opacity = 0
-            let appear = SCNAction.fadeIn(duration: 5)
-            self.scene.rootNode.addChildNode(earth)
-            earth.runAction(appear)
+            let earth = EarthNode()
+            scene.rootNode.addChildNode(earth)
+            
+            earth.beginEntryAnimation()
+            
             
         } else {
             print("ERROR - Could not find Delivery Vehicle, A.K.A. Ship")
@@ -339,47 +329,46 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         stationOverlay.generateNews(string: "📦 Delivery arriving...")
         
         // Remove the earth
-        if let earth = scene.rootNode.childNode(withName: "Earth", recursively: true) {
+        if let earth = scene.rootNode.childNode(withName: "Earth", recursively: false) as? EarthNode {
             
-            earth.removeFromParentNode()
-            
+            earth.beginExitAnimation()
             print("Earth going, Ship arriving")
             
             
-            // Add the Ship
-            if let ship = SCNScene(named: "Art.scnassets/Vehicles/DeliveryVehicle.scn")?.rootNode.childNode(withName: "Ship", recursively: true)?.clone() {
-                
-                ship.name = "Ship"
-                ship.position.z = -50
-                ship.position.y = -50 // -25
-                ship.position.x = 0
-                ship.eulerAngles = SCNVector3(x:90.0 * (.pi/180.0), y:0, z:0)
-                
-                scene.rootNode.addChildNode(ship)
-                
-                // Move
-                let move = SCNAction.move(by: SCNVector3(0, 32, 50), duration: 12.0)
-                move.timingMode = .easeInEaseOut
-                
-                // Kill Engines
-                let killWaiter = SCNAction.wait(duration: 8)
-                let killAction = SCNAction.run { shipNode in
-                    print("Kill Waiter")
-                    for child in shipNode.childNodes {
-                        print("Child \(child.description)")
-                        child.particleSystems?.first?.birthRate = 0
-                    }
-                }
-                let killSequence = SCNAction.sequence([killWaiter, killAction])
-                
-                let rotate = SCNAction.rotateBy(x: -90.0 * (.pi/180.0), y: 0, z: 0, duration: 5.0)
-                let group = SCNAction.group([move, rotate, killSequence])
-                
-                ship.runAction(group, completionHandler: {
-                    print("f")
-                    
-                })
+            // Load Ship
+            var ship:DeliveryVehicleNode? = DeliveryVehicleNode()
+            ship?.position.z = -50
+            ship?.position.y = -50 // -17.829
+            scene.rootNode.addChildNode(ship!)
+            
+            #if os(macOS)
+            ship?.eulerAngles = SCNVector3(x:90.0 * (.pi/180.0), y:0, z:0)
+            #else
+            ship?.eulerAngles = SCNVector3(x:90.0 * (Float.pi/180.0), y:0, z:0)
+            #endif
+            
+            // Move
+            let move = SCNAction.move(by: SCNVector3(0, 30, 50), duration: 12.0)
+            move.timingMode = .easeInEaseOut
+            
+            // Kill Engines
+            let killWaiter = SCNAction.wait(duration: 6)
+            let killAction = SCNAction.run { shipNode in
+                print("Kill Waiter")
+                ship?.killEngines()
             }
+            let killSequence = SCNAction.sequence([killWaiter, killAction])
+            
+            let rotate = SCNAction.rotateBy(x: -90.0 * (.pi/180.0), y: 0, z: 0, duration: 5.0)
+            let group = SCNAction.group([move, rotate, killSequence])
+            
+            ship?.runAction(group, completionHandler: {
+                print("Ship arrived at location")
+                for child in ship?.childNodes ?? [] {
+                    child.particleSystems?.first?.birthRate = 0
+                }
+            })
+            
         } else {
             print("ERROR - Could not the earth !!!")
         }
@@ -463,17 +452,47 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             let camChild = cam.childNodes.first!
             
             renderer.pointOfView = camChild
-            self.cameraNode!.look(at: SCNVector3(0, -5, 10))
+            camChild.look(at: SCNVector3(0, -5, 0))
             
-            let rotate = SCNAction.rotate(by: CGFloat(Double.pi / 4), around: SCNVector3(x: 0, y: 1, z: 0), duration: 12.0)
-            cam.runAction(rotate) {
+            print("CamChild Angles: \(camChild.eulerAngles)")
+            print("CamOrbit Angles: \(self.cameraNode!.eulerAngles)")
+            
+            // --- SMOOTH LOOK AT TARGET
+            // https://stackoverflow.com/questions/47973953/animating-scnconstraint-lookat-for-scnnode-in-scenekit-game-to-make-the-transi
+            // influenceFactor and animationDuration work somehow together
+            let centralNode = SCNNode()
+            centralNode.position = SCNVector3(x: 0, y: -5, z: 0)
+            let constraint = SCNLookAtConstraint(target:centralNode) //SCNLookAtConstraint(target: scene.rootNode)
+            constraint.isGimbalLockEnabled = true
+            constraint.influenceFactor = 0.1
+            
+            SCNTransaction.begin()
+            SCNTransaction.animationDuration = 3.0
+            camChild.constraints = [constraint]
+            SCNTransaction.commit()
+            
+            // Great, now you can start the scene in the front view, go to camera 2 and the constraint will still be there.
+            // we dont need a parent node for the camera anymore
+            // just move it to any position in world cordinates, recalculate the constraints (depending on z axis, or camera number)
+            
+            // end smooth look
+            
+            let waiter = SCNAction.wait(duration: 8.0)
+            let rotate = SCNAction.rotate(by: CGFloat(Double.pi / 8), around: SCNVector3(x: 0, y: 1, z: 0), duration: 3.0)
+            let sequence = SCNAction.sequence([waiter, rotate])
+            
+            cam.runAction(sequence) {
                 print("Action complete")
                 print("CamChild Angles: \(camChild.eulerAngles)")
                 print("CamOrbit Angles: \(cam.eulerAngles)")
                 camChild.look(at: SCNVector3(0, 0, 0))
+                print("CamChild LOOK @ \(camChild.eulerAngles)")
             }
             
             oldSchool = false
+            
+            
+            
         } else {
             print("--- INIT THE OLD WAY")
             scene = SCNScene(named: "Art.scnassets/SpaceStation/SpaceStation.scn")!
@@ -498,6 +517,9 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         if oldSchool {
             // Load the scene
             self.loadStationScene()
+        } else {
+            // Tell SceneDirector that scene is loaded
+            SceneDirector.shared.controllerDidLoadScene(controller: self)
         }
         
         
@@ -559,11 +581,9 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
         // Earth or ship
         if let order = station?.earthOrder {
+            
             // Load Ship
             print("We have an order! Delivered: \(order.delivered)")
-            
-//            let ship = scene.rootNode.childNode(withName: "Ship", recursively: false)
-            // FIXME: - Replace this for function in DeliveryVehicleNode
             
             var ship:DeliveryVehicleNode? = DeliveryVehicleNode()
             ship?.position.z = -50

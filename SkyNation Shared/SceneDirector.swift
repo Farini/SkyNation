@@ -58,10 +58,10 @@ class SceneDirector {
         // Update Truss
 //        controller.updateTrussLayout()
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
-            // 3 seconds in
-            self.gameController?.debugScene()
-        }
+//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
+//            // 3 seconds in
+//            self.gameController?.debugScene()
+//        }
     }
     
     /// Tells the Scene that the delivery os over. Rid of Ship, and Load the Earth

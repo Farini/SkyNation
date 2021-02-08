@@ -24,6 +24,27 @@ class DeliveryVehicleNode:SCNNode {
         
     }
     
+    func beginExitAnimation() {
+        
+        print("Delivery over. Animating it out.")
+        
+        let move = SCNAction.move(by: SCNVector3(0, -10, -3), duration: 6.0)
+        let move2 = SCNAction.move(by: SCNVector3(0, -50, -20), duration: 2.0)
+        let moveSequence = SCNAction.sequence([move, move2])
+        
+        let rotate1 = SCNAction.wait(duration: 0.7)
+        let rotate2 = SCNAction.rotateBy(x: 90.0 * (.pi/180.0), y: 0, z: 0, duration: 5.0)
+        let rotateSequence = SCNAction.sequence([rotate1, rotate2])
+        
+        // Close Lid
+        closeLid(after: 1.2)
+        
+        ship.runAction(SCNAction.group([moveSequence, rotateSequence])) {
+            self.removeFromParentNode()
+        }
+        
+    }
+    
     /// Stop Emitters
     func killEngines() {
         let shipChildren = ship.childNodes
@@ -43,6 +64,15 @@ class DeliveryVehicleNode:SCNNode {
         }
     }
     
+    func closeLid(after:Double) {
+        if let lid = ship.childNode(withName: "Lid", recursively: false) {
+            let waiter = SCNAction.wait(duration: after)
+            let close = SCNAction.rotateBy(x: -.pi, y: 0, z: 0, duration: 5)
+            let sequence = SCNAction.sequence([waiter, close])
+            lid.runAction(sequence)
+        }
+    }
+    
     override init() {
         
         guard let theNode = SCNScene(named: "Art.scnassets/Vehicles/DeliveryVehicle.scn")?.rootNode.childNode(withName: "Ship", recursively: true)?.clone() else { fatalError() }
@@ -54,42 +84,10 @@ class DeliveryVehicleNode:SCNNode {
         self.name = "Ship"
         self.addChildNode(ship)
         
-        //        if let ship = SCNScene(named: "Art.scnassets/Vehicles/DeliveryVehicle.scn")?.rootNode.childNode(withName: "Ship", recursively: true)?.clone() {
-        //
-        //            ship.name = "Ship"
-        //            ship.position.z = -50
-        //            ship.position.y = -50 // -25
-        //            ship.position.x = 0
-        //            ship.eulerAngles = SCNVector3(x:90.0 * (.pi/180.0), y:0, z:0)
-        //
-        ////            scene.rootNode.addChildNode(ship)
-        //
-        //            // Move
-        //            let move = SCNAction.move(by: SCNVector3(0, 32, 50), duration: 12.0)
-        //            move.timingMode = .easeInEaseOut
-        //
-        //            // Kill Engines
-        //            let killWaiter = SCNAction.wait(duration: 8)
-        //            let killAction = SCNAction.run { shipNode in
-        //                print("Kill Waiter")
-        //                for child in shipNode.childNodes {
-        //                    print("Child \(child.description)")
-        //                    child.particleSystems?.first?.birthRate = 0
-        //                }
-        //            }
-        //            let killSequence = SCNAction.sequence([killWaiter, killAction])
-        //
-        //            let rotate = SCNAction.rotateBy(x: -90.0 * (.pi/180.0), y: 0, z: 0, duration: 5.0)
-        //            let group = SCNAction.group([move, rotate, killSequence])
-        //
-        //            ship.runAction(group, completionHandler: {
-        //                print("f")
-        //
-        //            })
-        //        }
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
+

@@ -227,8 +227,6 @@ class StationBuilder:Codable {
 
 // MARK: - SceneKit
 
-
-
 extension StationBuilder {
     
     /// Prepares the scene, with a completion handler
@@ -289,7 +287,7 @@ extension StationBuilder {
         camera.zFar = 500
         
         let cameraNode = SCNNode()
-        cameraNode.position = SCNVector3(x: 50, y: 50, z: 75) // SCNVector3(x: 15, y: 15, z: 75)
+        cameraNode.position = SCNVector3(x: 105, y: 75, z: 135)
         cameraNode.camera = camera
         
         let cameraOrbit = SCNNode()
@@ -300,8 +298,8 @@ extension StationBuilder {
         scene.rootNode.addChildNode(cameraOrbit)
 
         // rotate it (I've left out some animation code here to show just the rotation)
-        cameraOrbit.eulerAngles.x = CGFloat(Double.pi / 4)
-        cameraOrbit.eulerAngles.y = CGFloat(Double.pi)
+//        cameraOrbit.eulerAngles.x = CGFloat(Double.pi / 4)
+//        cameraOrbit.eulerAngles.y = CGFloat(Double.pi)
         
         
         // Truss (Solar Panels, Radiator, and Roboarm)
@@ -351,7 +349,54 @@ extension StationBuilder {
         }
         
         // Earth or ship (Order)
-//        if let order = station?.earthOrder {...
+        if let order = station.earthOrder {
+            
+            // Load Ship
+            print("We have an order! Delivered: \(order.delivered)")
+            
+            var ship:DeliveryVehicleNode? = DeliveryVehicleNode()
+            ship?.position.z = -50
+            ship?.position.y = -50 // -17.829
+            scene.rootNode.addChildNode(ship!)
+            
+            #if os(macOS)
+            ship?.eulerAngles = SCNVector3(x:90.0 * (.pi/180.0), y:0, z:0)
+            #else
+            ship?.eulerAngles = SCNVector3(x:90.0 * (Float.pi/180.0), y:0, z:0)
+            #endif
+            
+            // Move
+            let move = SCNAction.move(by: SCNVector3(0, 30, 50), duration: 12.0)
+            move.timingMode = .easeInEaseOut
+            
+            // Kill Engines
+            let killWaiter = SCNAction.wait(duration: 6)
+            let killAction = SCNAction.run { shipNode in
+                print("Kill Waiter")
+                ship?.killEngines()
+            }
+            let killSequence = SCNAction.sequence([killWaiter, killAction])
+            
+            let rotate = SCNAction.rotateBy(x: -90.0 * (.pi/180.0), y: 0, z: 0, duration: 5.0)
+            let group = SCNAction.group([move, rotate, killSequence])
+            
+            ship?.runAction(group, completionHandler: {
+                print("Ship arrived at location")
+                for child in ship?.childNodes ?? [] {
+                    child.particleSystems?.first?.birthRate = 0
+                }
+            })
+        }else{
+            if let ship = scene.rootNode.childNode(withName: "Ship", recursively: false) {
+                ship.removeFromParentNode()
+            }
+            
+            // Load Earth
+            let earth = SCNScene(named: "Art.scnassets/Earth.scn")!.rootNode.childNode(withName: "Earth", recursively: true)!.clone()
+            earth.position = SCNVector3(0, -18, 0)
+            
+            scene.rootNode.addChildNode(earth)
+        }
         
         // NEWS
         // Check Activities
@@ -373,6 +418,8 @@ extension StationBuilder {
         // Complete
         completion(scene)
     }
+    
+    
     
 }
 

@@ -110,6 +110,12 @@
                                         <menuItem title="Open App Support" id="beM-hf-OeJ">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
+                                        <menuItem title="Open Server" id="sJg-9d-5RA">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="openServer:" target="YaZ-3s-s6T" id="gOr-AB-DaP"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="dUX-SB-quc"/>
                                         <menuItem title="Close" keyEquivalent="w" id="xyv-n1-i5a"/>
                                         <menuItem title="Save…" keyEquivalent="s" id="rOm-Qa-ckg"/>

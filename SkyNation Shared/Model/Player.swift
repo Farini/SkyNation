@@ -82,6 +82,7 @@ struct SKNUser:Codable {
     var name: String
     var localID: UUID
     var guildID: UUID?
+    var cityID: UUID?
     
     init(name:String) {
         self.id = UUID()
@@ -105,9 +106,6 @@ enum GuildTerrainType:String, Codable, CaseIterable {
 
 struct Guild:Codable {
     
-//    static let schema = "guilds"
-    
-//    @ID(key: .id)
     var id: UUID
     
 //    @Field(key: "name")
@@ -115,11 +113,13 @@ struct Guild:Codable {
     
     // https://docs.vapor.codes/4.0/fluent/relations/
 //    @OptionalParent(key:"player_id")
-    var president:SKNUser?
+    var president:[String:UUID?]?
     
     /// The @Children property creates a one-to-many relation between two models. It does not store any values on the root model.
 //    @Children(for: \.$guild)
-    var members:[SKNUser]
+    var members:[String:UUID?]?
+    var citizens:[UUID]
+    var isOpen:Bool
     
     /// Election Date (To change President)
 //    @Field(key: "election")
@@ -128,14 +128,66 @@ struct Guild:Codable {
 //    @Enum(key: "terraintype")
     var terrain:GuildTerrainType
     
-//    init() { }
+    // Cities
+    var cities:[DBCity]?
+    
+    // Outposts
+    var outposts:[DBOutpost]?
+    
+}
+
+struct DBCity:Codable {
+    
+    var id:UUID
+    
+    var guild:[String:UUID?]?
+    
+    var name:String
+    
+    var accounting:Date
+    
+    var owner:[String:UUID?]?
+    
+    var posdex:Int
+}
+
+enum OutpostType:String, CaseIterable, Codable {
+    case Water
+    case Silica
+    case Energy
+    case Biosphere
+}
+
+struct DBOutpost:Codable {
+    
+    
+    var id:UUID
+    
+ 
+    var model:String
+    
+    var guild:[String:UUID?]?
+    
+    var type:OutpostType
+    
+    var level:Int
+    
+    var accounting:Date
+    
+//    init() {}
 //
-//    init(id: UUID? = nil, name:String, player:SKNUser) {
+//    init(id: UUID? = nil, modelName:String, guildID:UUID, oType:OutpostType, date:Date? = nil, newLevel:Int? = nil) {
+//
+//        print("Creating Outpost Model: \(modelName), in \(guild.name)")
+//
 //        self.id = id
-//        self.name = name
-//        self.members = [player]
-//        self.president  = player
-//        self.election = Date().addingTimeInterval(60 * 60 * 24 * 7) // 7 days
-//        self.terrain = .Terrain1
+//        self.type = oType
+//        self.model = modelName
+//
+//        self.level = newLevel ?? 0
+//
+//        self.accounting = date ?? Date()
+//
 //    }
+    
 }

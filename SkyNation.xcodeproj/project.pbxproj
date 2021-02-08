@@ -386,10 +386,17 @@
 		85C34198259139D800BF82F9 /* GameSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C34196259139D800BF82F9 /* GameSettingsView.swift */; };
 		85C34199259139D800BF82F9 /* GameSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C34196259139D800BF82F9 /* GameSettingsView.swift */; };
 		85C3419A259139D800BF82F9 /* GameSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C34196259139D800BF82F9 /* GameSettingsView.swift */; };
+		85CD46A725D1199A000D9C64 /* EarthNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CD46A625D1199A000D9C64 /* EarthNode.swift */; };
+		85CD46A825D1199A000D9C64 /* EarthNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CD46A625D1199A000D9C64 /* EarthNode.swift */; };
+		85CD46A925D1199A000D9C64 /* EarthNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CD46A625D1199A000D9C64 /* EarthNode.swift */; };
+		85CD46AA25D1199A000D9C64 /* EarthNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CD46A625D1199A000D9C64 /* EarthNode.swift */; };
 		85E6ECF825C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECF925C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECFA25C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECFB25C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
+		85E6ED1D25CF518500229E18 /* BackendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ED1C25CF518500229E18 /* BackendView.swift */; };
+		85E6ED1E25CF518500229E18 /* BackendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ED1C25CF518500229E18 /* BackendView.swift */; };
+		85E6ED1F25CF518500229E18 /* BackendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ED1C25CF518500229E18 /* BackendView.swift */; };
 		85F6674D25AF7B9C00E5003B /* RadiatorNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F6674C25AF7B9C00E5003B /* RadiatorNode.swift */; };
 		85F6674E25AF7B9C00E5003B /* RadiatorNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F6674C25AF7B9C00E5003B /* RadiatorNode.swift */; };
 		85F6674F25AF7B9C00E5003B /* RadiatorNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F6674C25AF7B9C00E5003B /* RadiatorNode.swift */; };
@@ -535,7 +542,9 @@
 		85C3418425905A7500BF82F9 /* TutorialNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialNode.swift; sourceTree = "<group>"; };
 		85C3418D2591078700BF82F9 /* PlayerCardNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCardNode.swift; sourceTree = "<group>"; };
 		85C34196259139D800BF82F9 /* GameSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSettingsView.swift; sourceTree = "<group>"; };
+		85CD46A625D1199A000D9C64 /* EarthNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthNode.swift; sourceTree = "<group>"; };
 		85E6ECF725C9D92B00229E18 /* ServerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAPI.swift; sourceTree = "<group>"; };
+		85E6ED1C25CF518500229E18 /* BackendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendView.swift; sourceTree = "<group>"; };
 		85F6674C25AF7B9C00E5003B /* RadiatorNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadiatorNode.swift; sourceTree = "<group>"; };
 		85F6675525AF7BBE00E5003B /* DeliveryVehicleNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryVehicleNode.swift; sourceTree = "<group>"; };
 		85F6675E25AF7CAB00E5003B /* RoboarmNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoboarmNode.swift; sourceTree = "<group>"; };
@@ -588,6 +597,7 @@
 				85F6675525AF7BBE00E5003B /* DeliveryVehicleNode.swift */,
 				85F6674C25AF7B9C00E5003B /* RadiatorNode.swift */,
 				850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */,
+				85CD46A625D1199A000D9C64 /* EarthNode.swift */,
 			);
 			path = "3D Nodes";
 			sourceTree = "<group>";
@@ -732,6 +742,7 @@
 				8536F3BD258D47CF00B509D2 /* Subviews */,
 				8536F3C5258D47D000B509D2 /* TestViews */,
 				85C34196259139D800BF82F9 /* GameSettingsView.swift */,
+				85E6ED1C25CF518500229E18 /* BackendView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1235,6 +1246,7 @@
 				8536F475258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				8536F38E258D475D00B509D2 /* LabModule.swift in Sources */,
 				8536F3DE258D47D000B509D2 /* LaboratoryView.swift in Sources */,
+				85CD46A725D1199A000D9C64 /* EarthNode.swift in Sources */,
 				8536F392258D475D00B509D2 /* BioModule.swift in Sources */,
 				8536F3FE258D47D000B509D2 /* IngredientView.swift in Sources */,
 				8536F41A258D47D000B509D2 /* VehicleInventoryView.swift in Sources */,
@@ -1268,6 +1280,7 @@
 				8536F362258D475D00B509D2 /* Person.swift in Sources */,
 				8536F416258D47D000B509D2 /* GarageView.swift in Sources */,
 				8536F35E258D475D00B509D2 /* Ingredients.swift in Sources */,
+				85E6ED1D25CF518500229E18 /* BackendView.swift in Sources */,
 				8536F2C0258D330300B509D2 /* AppDelegate.swift in Sources */,
 				8569A3C825A624A30057A518 /* LoaderView.swift in Sources */,
 				8536F449258D47EA00B509D2 /* VehicleBuilderViewModel.swift in Sources */,
@@ -1295,6 +1308,7 @@
 				8536F3CF258D47D000B509D2 /* BioView.swift in Sources */,
 				8536F407258D47D000B509D2 /* EarthRequestView.swift in Sources */,
 				8536F40B258D47D000B509D2 /* MarsMapView.swift in Sources */,
+				85CD46A825D1199A000D9C64 /* EarthNode.swift in Sources */,
 				850A1B1025ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */,
 				8504A53C25C6875000739C58 /* Energy.swift in Sources */,
 				8536F3EB258D47D000B509D2 /* PersonControl.swift in Sources */,
@@ -1320,6 +1334,7 @@
 				8536F3F7258D47D000B509D2 /* TankViews.swift in Sources */,
 				8536F446258D47EA00B509D2 /* LabViewModel.swift in Sources */,
 				8536F377258D475D00B509D2 /* Peripherals.swift in Sources */,
+				85E6ED1E25CF518500229E18 /* BackendView.swift in Sources */,
 				8536F476258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				8536F38F258D475D00B509D2 /* LabModule.swift in Sources */,
 				8536F3DF258D47D000B509D2 /* LaboratoryView.swift in Sources */,
@@ -1414,6 +1429,7 @@
 				8536F477258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				8536F390258D475D00B509D2 /* LabModule.swift in Sources */,
 				8536F3E0258D47D000B509D2 /* LaboratoryView.swift in Sources */,
+				85CD46A925D1199A000D9C64 /* EarthNode.swift in Sources */,
 				8536F394258D475D00B509D2 /* BioModule.swift in Sources */,
 				8536F400258D47D000B509D2 /* IngredientView.swift in Sources */,
 				8536F41C258D47D000B509D2 /* VehicleInventoryView.swift in Sources */,
@@ -1447,6 +1463,7 @@
 				8536F364258D475D00B509D2 /* Person.swift in Sources */,
 				8536F418258D47D000B509D2 /* GarageView.swift in Sources */,
 				8536F360258D475D00B509D2 /* Ingredients.swift in Sources */,
+				85E6ED1F25CF518500229E18 /* BackendView.swift in Sources */,
 				8536F2E2258D330300B509D2 /* AppDelegate.swift in Sources */,
 				8569A3CA25A624A30057A518 /* LoaderView.swift in Sources */,
 				8536F44B258D47EA00B509D2 /* VehicleBuilderViewModel.swift in Sources */,
@@ -1481,6 +1498,7 @@
 				8536F309258D355C00B509D2 /* DataTests.swift in Sources */,
 				85F6675925AF7BBE00E5003B /* DeliveryVehicleNode.swift in Sources */,
 				8536F3F1258D47D000B509D2 /* TrussView.swift in Sources */,
+				85CD46AA25D1199A000D9C64 /* EarthNode.swift in Sources */,
 				8536F3E9258D47D000B509D2 /* HabModuleView.swift in Sources */,
 				8569A3CB25A624A30057A518 /* LoaderView.swift in Sources */,
 				85E6ECFB25C9D92B00229E18 /* ServerAPI.swift in Sources */,

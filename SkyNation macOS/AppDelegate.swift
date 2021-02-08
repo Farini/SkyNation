@@ -67,6 +67,18 @@ class MacMenu:NSObject, NSMenuDelegate {
         }
     }
     
+    @IBAction func openServer(_ sender: NSMenuItem) {
+        let window = ClosableWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
+            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+            backing: .buffered, defer: false)
+        window.center()
+        window.setFrameAutosaveName("SUI Window")
+        window.contentView = NSHostingView(rootView: BackendView(controller: BackendController()))
+        window.makeKeyAndOrderFront(nil)
+    }
+    
+    
     @IBAction func openAppSupport(_ sender: NSMenuItem) {
         
         print("Getting finder")
