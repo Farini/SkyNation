@@ -34,6 +34,9 @@ class HabModuleController: ObservableObject {
         self.inhabitants = hab.inhabitants
         self.issues = []
         self.messages = []
+        
+        // Notification Observer
+        NotificationCenter.default.addObserver(self, selector: #selector(changeModuleNotification(_:)), name: .changeModule, object: nil)
     }
     
     func didSelect(person:Person) {
@@ -181,9 +184,55 @@ class HabModuleController: ObservableObject {
         }
     }
     
+    // Module
+    @objc func changeModuleNotification(_ notification:Notification) {
+        
+        guard let object = notification.object as? [String:Any] else {
+            print("no object passed in this notification")
+            return
+        }
+        
+        print("Change Module Notification. Object:\n\(object.description)")
+        
+        if let moduleID = object["id"] as? UUID {
+            if moduleID == habModule.id {
+                
+                // id checked
+                if let name = object["name"] as? String {
+                    self.habModule.name = name
+                    station.habModules.first(where: { $0.id == moduleID })!.name = name
+                } else
+                if let skin = object["skin"] as? String {
+                    // Skin
+                    if let modSkin = ModuleSkin(rawValue: skin) {
+                        print("Change skin to: \(modSkin.displayName)")
+                        self.habModule.skin = modSkin.rawValue
+                        station.habModules.first(where: { $0.id == moduleID })!.skin = modSkin.rawValue
+                    }
+                } else
+                if let unbuild = object["unbuild"] as? Bool, unbuild == true {
+                    // Unbuild Module.
+                    print("Danger! Wants to unbuild module")
+                    let idx = station.habModules.firstIndex(where: { $0.id == moduleID })!
+                    station.habModules.remove(at: idx)
+                }
+            }
+        } else {
+            print("Error: ID doesnt check")
+            return
+        }
+        
+        self.clearSelection()
+        save()
+    }
+    
     // MARK: - Saving Game
     
     func save() {
         LocalDatabase.shared.saveStation(station: station)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }

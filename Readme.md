@@ -97,29 +97,7 @@ Items being worked on
 
 ## 📝 Doing - Present
 
-- [X] 3/3 GameMessage Object - 1/19/2021
-- [X] Add Messages to LocalDatabase
-- [X] Load Messages
-- [X] Fix Earth order Tank size
-- [X] Fix Hab Module size (Bigger)
-- [X] WaterFilter in Recipes and PeripheralType
-- [X] Biosolidifier in Recipes and PeripheralType
-- [X] Lab Module Make Recipe Icon in List
-- [X] Fix Earth order Person View
-- [X] Add Radiator to Truss
-- [X] Loading Screen / User Registry
-- [X] Route to create player
-- [X] Modify Entry Point MacOS, iOS
-- [X] Person menu -> Fire, Medicate, Workout, Study
-- [X] LSS View 3/3 -> Each Peripheral should have its own Detail View and actions
-- [X] Fix LSS View update issues
-- [X] LSS View -> Improve Peripherals
-- [X] Accounting should use all of the energy generated first, then from batteries
-
 - [ ] Lab Module needs to update list when research is finished (Needs testing)
-
-
-- PREPARE ENTIRE SCENE IN STATION BUILDER
 
 - [ ] Free Supply Drop-offs -> Pay for more -> Ask Server
 - [ ] People generator should generate new people every hour. Pay for more. And generate Materials engineer first -> Ask Server
@@ -132,19 +110,13 @@ Items being worked on
 - [ ] Remake TrussView
 - [ ] Update Scene Overlay (Player) - especially when placed an order.
 
-
-- [X] 5/21 Scene Improvements
-    - [X] Cleanup Original Scene
-    - [X] SCNNodes Classes (Roboarm, Antenna, Radiator, Delivery Vehicle)
-    - [X] 3/3 Ship Animation (Needs better particle emitter, plus open the shell)
-    - [X] Particle emitter on all engines
-    - [X] Animate particle emission correctly
-    - [X] Fix Model underneath lid
-    - [X] Earth with Emission
-    - [X] Implement 'Skin' on all Modules
-    - [X] Earth Revealage
-    - [X] Load more items of Scene in StationBuilder
-    - [X] Camera positions + Sphere node
+- [ ] 0/13 Station Scene - 02/08/2020
+    - [X] Truss View creation
+    - [X] Solar Panel positions
+    - [X] Control where each solar panel goes
+    - [X] 1/3 Notify scene when tech is ready (not working)
+    - [X] Update Scene
+    - [X] Scene is showing Serial builder ahead of time. Check isUnlocked vs isResearched
     - [ ] Blender Monkey inside Helmet
     - [ ] Blender Individual Tanks
     - [ ] Improve Background HDRI image
@@ -156,32 +128,15 @@ Items being worked on
     - [ ] Roboarm animation
     - [ ] Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
     - [ ] Unbuild Module
-    - [ ] StationBuilder Object - 01/16/2021
-        - [X] Make Skin Work
-        - [X] Remake of Builder -> SceneBuilder to replace 'BuildItem'
-        - [X] Simplify Builder
-        - [X] Add Modules 7 ... 10
-        - [X] Make Nodes Work (right amount)
-        - [X] Transfer StationBuilder to a new Folder 'Model' -> 'Builder' and import SceneKit
-        - [X] StationBuilder should build the whole scene
-        - [X] Add Truss Items (Solar Panels, Radiator)
-        - [X] Make Earth Node
-        - [ ] Make the Earth bright again?
-        - [ ] Add Items for Tech (Roboarm, Cuppola, Airlock, Garage, Antenna)
-        - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
-        - [ ] Choose Skin + Persistency
-        
-    
-    - [X] Truss View creation
-        - [X] Solar Panel positions
-        - [X] Control where each solar panel goes
-        - [ ] Control where each Radiator goes
-    - [X] 1/3 Notify scene when tech is ready (not working)
-        - [X] Update Scene
-        - [ ] Show  News
-        - [X] Scene is showing Serial builder ahead of time. Check isUnlocked vs isResearched
-        - [ ] Live update of tech
-        
+    - [ ] Make the Earth bright again?
+    - [ ] Add TechItems updates
+    - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
+    - [ ] Choose Skin + Persistency
+    - [ ] Control where each Radiator goes
+    - [ ] Show  News
+    - [ ] Live update of tech
+    - [ ] Rebake Garage Skin x 2 (Choices)
+    - [ ] Bake 2 more Module skins
         
 - [ ] 6/13 Scene Overlay
     - [X] Player
@@ -289,3 +244,47 @@ Grab things from this list as you go along.
 - [X] 3/3 Cuppola
 - [X] Make Game work on iPad
 - [X] 1/1 Overlay Improvements
+
+[01/16/2020]
+- [X] 8/21 Scene Improvements [01/16/2020]
+- [X] Cleanup Original Scene
+- [X] SCNNodes Classes (Roboarm, Antenna, Radiator, Delivery Vehicle)
+- [X] 3/3 Ship Animation (Needs better particle emitter, plus open the shell)
+- [X] Particle emitter on all engines
+- [X] Animate particle emission correctly
+- [X] Fix Model underneath lid
+- [X] Earth with Emission
+- [X] Implement 'Skin' on all Modules
+- [X] Earth Revealage
+- [X] Load more items of Scene in StationBuilder
+- [X] Camera positions + Sphere node
+- [X] StationBuilder Object - 01/16/2021
+- [X] Make Skin Work
+- [X] Remake of Builder -> SceneBuilder to replace 'BuildItem'
+- [X] Simplify Builder
+- [X] Add Modules 7 ... 10
+- [X] Make Nodes Work (right amount)
+- [X] Transfer StationBuilder to a new Folder 'Model' -> 'Builder' and import SceneKit
+- [X] StationBuilder should build the whole scene
+- [X] Add Truss Items (Solar Panels, Radiator)
+- [X] Make Earth Node
+- [X] [02/08/2020] Add Items for Tech (Roboarm, Cuppola, Airlock, Garage, Antenna)
+- [X] 3/3 GameMessage Object - [1/19/2021]
+- [X] Add Messages to LocalDatabase
+- [X] Load Messages
+- [X] Fix Earth order Tank size
+- [X] Fix Hab Module size (Bigger)
+- [X] WaterFilter in Recipes and PeripheralType
+- [X] Biosolidifier in Recipes and PeripheralType
+- [X] Lab Module Make Recipe Icon in List
+- [X] Fix Earth order Person View
+- [X] Add Radiator to Truss
+- [X] Loading Screen / User Registry
+- [X] Route to create player
+- [X] Modify Entry Point MacOS, iOS
+- [X] Person menu -> Fire, Medicate, Workout, Study
+- [X] LSS View 3/3 -> Each Peripheral should have its own Detail View and actions
+- [X] Fix LSS View update issues
+- [X] LSS View -> Improve Peripherals
+- [X] Accounting should use all of the energy generated first, then from batteries
+[02/08/2020]

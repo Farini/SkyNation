@@ -254,6 +254,9 @@ extension Notification.Name {
     /// To go from Loading screen to Game
     static let startGame = Notification.Name("StartGame")
     
+    /// Change Module Properties (Name, Skin, Unbuild)
+    static let changeModule = Notification.Name("ChangeModuleProperties")
+    
 }
 
 struct GameWindow {

@@ -61,6 +61,18 @@ enum ModuleSkin:String, Codable, CaseIterable {
     case LabModule
     case HabModule
     
+    /// The name to display from the menu
+    var displayName:String {
+        switch self {
+            case .BioModule: return "Biology"
+            case .HabModule: return "Habitation"
+            case .LabModule: return "Laboratory"
+            case .ModuleBake: return "Do not touch"
+            case .diffuse1: return "Default"
+        }
+    }
+    
+    /// The name (path) of the UV to load
     var uvMapName:String {
         switch self {
             case .BioModule: return "BioModule"

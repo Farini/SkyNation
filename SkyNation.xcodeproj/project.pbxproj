@@ -390,6 +390,9 @@
 		85CD46A825D1199A000D9C64 /* EarthNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CD46A625D1199A000D9C64 /* EarthNode.swift */; };
 		85CD46A925D1199A000D9C64 /* EarthNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CD46A625D1199A000D9C64 /* EarthNode.swift */; };
 		85CD46AA25D1199A000D9C64 /* EarthNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CD46A625D1199A000D9C64 /* EarthNode.swift */; };
+		85CD46B025D20B42000D9C64 /* ModulePopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CD46AF25D20B42000D9C64 /* ModulePopView.swift */; };
+		85CD46B125D20B42000D9C64 /* ModulePopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CD46AF25D20B42000D9C64 /* ModulePopView.swift */; };
+		85CD46B225D20B42000D9C64 /* ModulePopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CD46AF25D20B42000D9C64 /* ModulePopView.swift */; };
 		85E6ECF825C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECF925C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECFA25C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
@@ -543,6 +546,7 @@
 		85C3418D2591078700BF82F9 /* PlayerCardNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCardNode.swift; sourceTree = "<group>"; };
 		85C34196259139D800BF82F9 /* GameSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSettingsView.swift; sourceTree = "<group>"; };
 		85CD46A625D1199A000D9C64 /* EarthNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthNode.swift; sourceTree = "<group>"; };
+		85CD46AF25D20B42000D9C64 /* ModulePopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModulePopView.swift; sourceTree = "<group>"; };
 		85E6ECF725C9D92B00229E18 /* ServerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAPI.swift; sourceTree = "<group>"; };
 		85E6ED1C25CF518500229E18 /* BackendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendView.swift; sourceTree = "<group>"; };
 		85F6674C25AF7B9C00E5003B /* RadiatorNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadiatorNode.swift; sourceTree = "<group>"; };
@@ -878,6 +882,7 @@
 				8569A3D025A6353C0057A518 /* GameActivityView.swift */,
 				857D9A2225BF5E6D00626884 /* PeripheralDetailView.swift */,
 				8504A51325C5D3B800739C58 /* CautionStripes.swift */,
+				85CD46AF25D20B42000D9C64 /* ModulePopView.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -1214,6 +1219,7 @@
 				8536F396258D475D00B509D2 /* Modules.swift in Sources */,
 				8536F3DA258D47D000B509D2 /* LabActivityView.swift in Sources */,
 				8536F2C2258D330300B509D2 /* GameViewController.swift in Sources */,
+				85CD46B025D20B42000D9C64 /* ModulePopView.swift in Sources */,
 				8536F3F2258D47D000B509D2 /* ProgressViews.swift in Sources */,
 				85C3418E2591078700BF82F9 /* PlayerCardNode.swift in Sources */,
 				8536F3CE258D47D000B509D2 /* BioView.swift in Sources */,
@@ -1305,6 +1311,7 @@
 				8536F2D3258D330300B509D2 /* GameViewController.swift in Sources */,
 				8536F3F3258D47D000B509D2 /* ProgressViews.swift in Sources */,
 				85C3418F2591078700BF82F9 /* PlayerCardNode.swift in Sources */,
+				85CD46B125D20B42000D9C64 /* ModulePopView.swift in Sources */,
 				8536F3CF258D47D000B509D2 /* BioView.swift in Sources */,
 				8536F407258D47D000B509D2 /* EarthRequestView.swift in Sources */,
 				8536F40B258D47D000B509D2 /* MarsMapView.swift in Sources */,
@@ -1397,6 +1404,7 @@
 				8536F398258D475D00B509D2 /* Modules.swift in Sources */,
 				8536F3DC258D47D000B509D2 /* LabActivityView.swift in Sources */,
 				8536F2E4258D330300B509D2 /* GameViewController.swift in Sources */,
+				85CD46B225D20B42000D9C64 /* ModulePopView.swift in Sources */,
 				8536F3F4258D47D000B509D2 /* ProgressViews.swift in Sources */,
 				85C341902591078700BF82F9 /* PlayerCardNode.swift in Sources */,
 				8536F3D0258D47D000B509D2 /* BioView.swift in Sources */,

@@ -176,7 +176,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     break
                 }
                 
-                if modName == "Earth" {
+                if modName == "Earth" || result.node.parent?.name == "Earth" {
                     gameNavDelegate?.didSelectEarth()
                     break
                 }
@@ -746,6 +746,7 @@ extension TechItems {
 }
 
 extension StationBuildItem {
+    
     func loadFromScene() -> SCNNode? {
         var nodeCount:Int = 1
         switch type {
@@ -771,24 +772,32 @@ extension StationBuildItem {
                 let moduleScene = SCNScene(named: "Art.scnassets/Module.scn")!
                 if let nodeObj = moduleScene.rootNode.childNode(withName: "Module", recursively: false)?.clone() {
                     
+                    var modSkin:ModuleSkin!
+                    if let skin = skin, let mSkin:ModuleSkin = ModuleSkin(rawValue:skin) {
+                        modSkin = mSkin
+                    } else {
+                        modSkin = ModuleSkin.allCases.randomElement()!
+                    }
+                    let uvMapName = "\(modSkin.uvMapName).png"
+                    
                     // MATERIAL | SKIN
-                    let imageName:String = "\(ModuleSkin.allCases.randomElement()!.uvMapName).png" //"Art.scnassets/SpaceStation/ModuleBake4.png"
-                    var skin:SKNImage? // ?/Users/farini/Desktop/SkyNation/Source Code/SkyNation/SkyNation Shared/Art.scnassets/UV Images
+                    // let imageName:String = "\(ModuleSkin.allCases.randomElement()!.uvMapName).png" // "Art.scnassets/SpaceStation/ModuleBake4.png"
+                    var skinImage:SKNImage? // ?/Users/farini/Desktop/SkyNation/Source Code/SkyNation/SkyNation Shared/Art.scnassets/UV Images
                     if let bun = Bundle.main.url(forResource: "Art", withExtension: ".scnassets") {
                         print("Bundle found: \(bun)")
-                        let pp = bun.appendingPathComponent("/UV Images/ModuleSkins/\(imageName)")
+                        let pp = bun.appendingPathComponent("/UV Images/ModuleSkins/\(uvMapName)")
                         if let image = SKNImage(contentsOfFile: pp.path) {
                             print("Found Image")
-                            skin = image
+                            skinImage = image
                         }
                     }
                     for material in nodeObj.geometry?.materials ?? [] {
                         print("Material name:\(material.name ?? "n/a") \(material.diffuse.description)")
-                        if let skin = skin {
-                            material.diffuse.contents = skin
+                        if let image = skinImage {
+                            material.diffuse.contents = image
                         }
                     }
-                    if let image = SKNImage(named: imageName) {
+                    if let image = SKNImage(named: uvMapName) {
                         nodeObj.geometry!.materials.first!.diffuse.contents = image
                     }
                     

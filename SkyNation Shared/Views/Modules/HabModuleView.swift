@@ -11,7 +11,7 @@ import SwiftUI
 struct HabModuleView: View {
     
 //    var module:HabModule
-    @State var habPopoverOn:Bool = false
+    @State var habPopoverOn:Bool = true
 //    @State var selectedPerson:Person?
     
     @ObservedObject var controller:HabModuleController
@@ -45,53 +45,9 @@ struct HabModuleView: View {
                 })
                 .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
                 .popover(isPresented: $habPopoverOn, content: {
-                    VStack {
-                        HStack {
-                            Text("Rename")
-                            Spacer()
-                            Image(systemName: "textformat")
-                                .fixedSize()
-                                .scaledToFit()
-                        }
-                        
-                        .onTapGesture {
-                            print("Rename Action")
-                            habPopoverOn.toggle()
-                        }
-                        Divider()
-                        HStack {
-                            // Text
-                            Text("Change Skin")
-                            // Spacer
-                            Spacer()
-                            // Image
-                            Image(systemName: "circle.circle")
-                                .fixedSize()
-                                .scaledToFit()
-                        }
-                        .onTapGesture {
-                            print("Reskin Action")
-                            habPopoverOn.toggle()
-                        }
-                        
-                        HStack {
-                            Text("Tutorial")
-                            Spacer()
-                            Image(systemName: "questionmark.diamond")
-                                .fixedSize()
-                                .scaledToFit()
-                        }
-                        
-                        .onTapGesture {
-                            print("Reskin Action")
-                            habPopoverOn.toggle()
-                        }
-                    }
-                    .frame(width: 150)
-                    .font(.headline)
-                    .foregroundColor(.gray)
-                    .padding(.leading, 6)
+                    ModulePopView(name: controller.habModule.name, module:controller.station.modules.filter({ $0.id == controller.habModule.id }).first!)
                 })
+                
                 
                 // Close
                 Button(action: {
@@ -149,10 +105,11 @@ struct HabModuleView: View {
                                 }
                                 .foregroundColor(.gray)
                                 Spacer()
-                            }.padding()
+                            }
+                            .padding()
                         }
                     }
-                case .selected(let selected):
+                case .selected(_):
                     HStack {
                         
                         // Left List
@@ -170,64 +127,9 @@ struct HabModuleView: View {
                         }
                     }
             }
-            /*
-            // Left View
-            if controller.inhabitants.isEmpty {
-                // Empty Module
-                HStack {
-                    Spacer()
-                    Image(systemName: "camera.metering.none")
-                        .foregroundColor(.gray)
-                        .font(.largeTitle)
-                        .padding()
-                    Text("No one lives here. Call for Dropoff, and hire people.")
-                        .foregroundColor(.gray)
-                        .font(.subheadline)
-                    Spacer()
-                }
-                .frame(minWidth: 600, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: 350, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment:.topLeading)
-                
-            }else{
-                HStack {
-                    // Left List
-                    List(controller.inhabitants) { person in
-                        PersonRow(person: person, selected: person == controller.selectedPerson)
-                            .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
-                            controller.didSelect(person: person)
-                        })
-                    }
-                    .frame(minWidth: 150, maxWidth: 230, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
-                    
-                    Divider()
-                    
-                    // Right Detail View
-                    if controller.selectedPerson == nil {
-                        HStack {
-                            Spacer()
-                            VStack {
-                                Image(systemName: "camera.metering.none")
-                                    .font(.largeTitle)
-                                    .padding()
-                                Text("No One selected")
-                                Text("Hab module shelters people")
-                            }
-                            .foregroundColor(.gray)
-                            Spacer()
-                        }.padding()
-                    } else {
-                        // Details go here
-                        ScrollView {
-                            PersonDetail(controller: self.controller, person:controller.selectedPerson!)
-                        }
-                    }
-                    
-                    Spacer()
-                }
-                .frame(minWidth: 600, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: 350, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment:.topLeading)
-            */
             
-        
         }
+        .frame(minWidth: 650, idealWidth: 750, maxWidth: 1000, minHeight: 350, idealHeight: 500, maxHeight: 900, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
     }
     
     func workoutAction() {
@@ -263,7 +165,7 @@ struct HabModuleHeaderView: View {
                         .foregroundColor(.gray)
                         .font(.caption)
                         .padding(.leading, 6)
-                    Text("Name: \(module.name)")
+                    Text("\(module.name)")
                         .foregroundColor(.green)
                         .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
                 }
@@ -271,6 +173,8 @@ struct HabModuleHeaderView: View {
         }
     }
 }
+
+
 
 // MARK: - Previews
 
@@ -291,3 +195,10 @@ struct HabModuleView_Previews: PreviewProvider {
         return HabModuleView(module: habModule)
     }
 }
+
+//struct SkinPopup_Previews: PreviewProvider {
+//
+//    static var previews: some View {
+//        SkinPopupPicker()
+//    }
+//}
