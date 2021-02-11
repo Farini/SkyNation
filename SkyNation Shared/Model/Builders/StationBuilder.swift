@@ -290,28 +290,29 @@ extension StationBuilder {
             oldCam.removeFromParentNode()
         }
         
-        let camera = SCNCamera()
-        camera.usesOrthographicProjection = false
-        camera.focalLength = 150
-        camera.fieldOfView = 9.148
-        camera.sensorHeight = 24
-        camera.zNear = 0.1
-        camera.zFar = 500
+//        let camera = SCNCamera()
+//        camera.usesOrthographicProjection = false
+//        camera.focalLength = 150
+//        camera.fieldOfView = 9.148
+//        camera.sensorHeight = 24
+//        camera.zNear = 0.1
+//        camera.zFar = 500
+//
+//        let cameraNode = SCNNode()
+//        cameraNode.position = SCNVector3(x: 105, y: 75, z: 135)
+//        cameraNode.camera = camera
+//
+//        let cameraOrbit = SCNNode()
+//        cameraOrbit.name = "cameraOrbit"
+//        cameraOrbit.position = SCNVector3(x: 0, y: 0, z: 0)
+//
+//        cameraOrbit.addChildNode(cameraNode)
+//        scene.rootNode.addChildNode(cameraOrbit)
         
-        let cameraNode = SCNNode()
-        cameraNode.position = SCNVector3(x: 105, y: 75, z: 135)
-        cameraNode.camera = camera
-        
-        let cameraOrbit = SCNNode()
-        cameraOrbit.name = "cameraOrbit"
-        cameraOrbit.position = SCNVector3(x: 0, y: 0, z: 0)
-        
-        cameraOrbit.addChildNode(cameraNode)
-        scene.rootNode.addChildNode(cameraOrbit)
+        let newCamera = GameCamera()
+        scene.rootNode.addChildNode(newCamera)
 
-        // rotate it (I've left out some animation code here to show just the rotation)
-//        cameraOrbit.eulerAngles.x = CGFloat(Double.pi / 4)
-//        cameraOrbit.eulerAngles.y = CGFloat(Double.pi)
+        // ------------------------------------
         
         
         // Truss (Solar Panels, Radiator, and Roboarm)

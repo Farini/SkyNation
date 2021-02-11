@@ -57,6 +57,7 @@ class CamControlNode:SKNode {
         
         // Knob
         knob.position.y = sliderSize.height / 2
+//        knob.position.x = 0
         sliderBackground.addChild(knob)
         
         // Camera Image
@@ -93,23 +94,20 @@ class CamControlNode:SKNode {
         let poz = camera.position.z
         
         // EQUATION
-        // 126 (beginning) to 42 (end)
-        // sceneCamera.position.z (poz) = ((x - 0.5) * 84.0) + 84.0
-        // poz = ((x - 0.5) * 84) + 84
-        // poz - 84 = (x - 0.5) * 84
-        // poz - 84 = (x * 84) - (0.5 * 84)
-        // poz - 84 + 42 = x * 84
-        // x = (poz - 42) / 84
+        // 0 = 75, 1 = -300
+//        sceneCamera.position.z = 75 - (150 * x) * 2.5
+        // poz - 75 = 375 * x
+        // x = (poz - 75) / 375
         
-        let x1 = ((poz - 42.0) / 84.0)
-        // x1 = 1 - knobX / maxWidth
-        let maxWidth = nodeSize.width * 0.9
+//        let x1 = ((poz - 42.0) / 84.0)
+//        // x1 = 1 - knobX / maxWidth
+//        let maxWidth = nodeSize.width * 0.9
         // 1 - knobX = x1 * maxWidth
         // knobX = x1 * maxWidth + 1
         #if os(macOS)
-        knobX = (1 - x1) * maxWidth //x1 * maxWidth + 1
+        knobX = ((poz - 75) / 375) //(1 - x1) * maxWidth //x1 * maxWidth + 1
         #else
-        knobX = (1 - CGFloat(x1)) * CGFloat(maxWidth)
+        knobX = ((poz - 75) / 375)
         #endif
         knob.position.x = knobX
     }

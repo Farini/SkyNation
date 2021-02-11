@@ -70,6 +70,11 @@ class HabModuleController: ObservableObject {
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) { [weak self] in
             
+            if self?.selectedPerson != person {
+                print("Changed person")
+                return
+            }
+            
             if self != nil {
                 
                 // Count Updates
@@ -78,6 +83,7 @@ class HabModuleController: ObservableObject {
                 
                 self?.updates = newUpdates
                 print("Updating person for \(newUpdates) time. Activity: \(activity.activityName)")
+                
                 
                 self?.didSelect(person: person)
             }
@@ -207,14 +213,24 @@ class HabModuleController: ObservableObject {
                     if let modSkin = ModuleSkin(rawValue: skin) {
                         print("Change skin to: \(modSkin.displayName)")
                         self.habModule.skin = modSkin.rawValue
+                        let rawModule = station.lookupRawModule(id: self.habModule.id)
+                        rawModule.skin = modSkin.rawValue
                         station.habModules.first(where: { $0.id == moduleID })!.skin = modSkin.rawValue
                     }
                 } else
                 if let unbuild = object["unbuild"] as? Bool, unbuild == true {
+                    
                     // Unbuild Module.
                     print("Danger! Wants to unbuild module")
                     let idx = station.habModules.firstIndex(where: { $0.id == moduleID })!
                     station.habModules.remove(at: idx)
+                    
+                    save()
+                    
+                    // Close the view
+                    let closeNotification = Notification(name: .closeView)
+                    NotificationCenter.default.post(closeNotification)
+                    return
                 }
             }
         } else {

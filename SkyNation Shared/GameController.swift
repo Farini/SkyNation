@@ -32,7 +32,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     var gameScene:GameSceneType = .SpaceStation
     
     /// An empty Node that controls the camera
-    var cameraNode:SCNNode?
+    var cameraNode:GameCamera?
     var camToggle:Bool = false { // The toggle that shows/hides the camera menu
         didSet { oldValue == false ? showCameraMenu():hideCameraMenu() }
     }
@@ -293,8 +293,28 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     }
     
     // MARK: - Updates
+//    var currentTime:TimeInterval
+    var shouldUpdateScene:Bool = false
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         // Called before each frame is rendered
+        let rounded = time.rounded() // 10.0
+        if rounded.truncatingRemainder(dividingBy: 10) == 0 {
+            // 97 is the largest prime before 100
+            switch self.gameScene {
+                case .SpaceStation:
+                    if shouldUpdateScene {
+                        print("⏱ Should update scene: \(time)")
+                        shouldUpdateScene = false
+                        station?.runAccounting()
+                    }
+                case .MarsColony:
+                    print("Update Mars Colony Scene")
+            }
+            
+            
+        } else {
+            shouldUpdateScene = true
+        }
     }
     
     /// Brings the Earth, to order - Removes the Ship
@@ -429,7 +449,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     init(sceneRenderer renderer: SCNSceneRenderer) {
         
         sceneRenderer = renderer
-   
+        
         // Database
         let dBase = LocalDatabase.shared
         self.station = dBase.station
@@ -447,6 +467,38 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             self.scene = builtScene
             
             // Camera
+            if let camera = scene.rootNode.childNode(withName: "Camera", recursively: false) as? GameCamera {
+                self.cameraNode = camera
+                renderer.pointOfView = camera.camNode
+                
+                let centralNode = SCNNode()
+                centralNode.position = SCNVector3(x: 0, y: -5, z: 0)
+                camera.camNode.look(at: centralNode.position)
+                    
+                let constraint = SCNLookAtConstraint(target:centralNode)
+                constraint.isGimbalLockEnabled = true
+                constraint.influenceFactor = 0.1
+                
+                SCNTransaction.begin()
+                SCNTransaction.animationDuration = 3.0
+                camera.camNode.constraints = [constraint]
+                SCNTransaction.commit()
+                
+                let waiter = SCNAction.wait(duration: 4.0)
+                let rotate = SCNAction.rotate(by: CGFloat(Double.pi / 8), around: SCNVector3(x: 0, y: 1, z: 0), duration: 2)
+                rotate.timingMode = .easeOut
+                let sequence = SCNAction.sequence([waiter, rotate])
+                
+                camera.runAction(sequence) { // cam.runAction(sequence) {
+                    print("Action complete")
+//                    print("CamChild Angles: \(self.cameraNode!.eulerAngles)") // print("CamChild Angles: \(camChild.eulerAngles)")
+                    //                print("CamOrbit Angles: \(cam.eulerAngles)")
+                    //                camChild.look(at: SCNVector3(0, -5, 0))
+                    print("CamChild LOOK @ \(camera.eulerAngles)") // print("CamChild LOOK @ \(camChild.eulerAngles)")
+                }
+            }
+            
+            /*
             let cam = scene.rootNode.childNode(withName: "cameraOrbit", recursively: false)!
             self.cameraNode = cam
             let camChild = cam.childNodes.first!
@@ -457,12 +509,13 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             print("CamChild Angles: \(camChild.eulerAngles)")
             print("CamOrbit Angles: \(self.cameraNode!.eulerAngles)")
             
+            
             // --- SMOOTH LOOK AT TARGET
             // https://stackoverflow.com/questions/47973953/animating-scnconstraint-lookat-for-scnnode-in-scenekit-game-to-make-the-transi
             // influenceFactor and animationDuration work somehow together
             let centralNode = SCNNode()
             centralNode.position = SCNVector3(x: 0, y: -5, z: 0)
-            let constraint = SCNLookAtConstraint(target:centralNode) //SCNLookAtConstraint(target: scene.rootNode)
+            let constraint = SCNLookAtConstraint(target:centralNode)
             constraint.isGimbalLockEnabled = true
             constraint.influenceFactor = 0.1
             
@@ -470,6 +523,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             SCNTransaction.animationDuration = 3.0
             camChild.constraints = [constraint]
             SCNTransaction.commit()
+            */
             
             // Great, now you can start the scene in the front view, go to camera 2 and the constraint will still be there.
             // we dont need a parent node for the camera anymore
@@ -477,17 +531,18 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             
             // end smooth look
             
-            let waiter = SCNAction.wait(duration: 8.0)
-            let rotate = SCNAction.rotate(by: CGFloat(Double.pi / 8), around: SCNVector3(x: 0, y: 1, z: 0), duration: 3.0)
-            let sequence = SCNAction.sequence([waiter, rotate])
-            
-            cam.runAction(sequence) {
-                print("Action complete")
-                print("CamChild Angles: \(camChild.eulerAngles)")
-                print("CamOrbit Angles: \(cam.eulerAngles)")
-                camChild.look(at: SCNVector3(0, 0, 0))
-                print("CamChild LOOK @ \(camChild.eulerAngles)")
-            }
+//            let waiter = SCNAction.wait(duration: 8.0)
+//            let rotate = SCNAction.rotate(by: CGFloat(Double.pi / 8), around: SCNVector3(x: 0, y: 1, z: 0), duration: 3.0)
+//            rotate.timingMode = .easeOut
+//            let sequence = SCNAction.sequence([waiter, rotate])
+//
+//            cameraNode?.runAction(sequence) { // cam.runAction(sequence) {
+//                print("Action complete")
+//                print("CamChild Angles: \(self.cameraNode!.eulerAngles)") // print("CamChild Angles: \(camChild.eulerAngles)")
+////                print("CamOrbit Angles: \(cam.eulerAngles)")
+////                camChild.look(at: SCNVector3(0, -5, 0))
+//                print("CamChild LOOK @ \(self.cameraNode!.eulerAngles)") // print("CamChild LOOK @ \(camChild.eulerAngles)")
+//            }
             
             oldSchool = false
             
@@ -499,7 +554,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             
             // Camera
             let cam = scene.rootNode.childNode(withName: "Camera", recursively: false)!
-            self.cameraNode = cam
+//            self.cameraNode = cam
         }
         
         

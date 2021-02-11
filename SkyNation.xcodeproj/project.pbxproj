@@ -373,6 +373,9 @@
 		857D9A3A25C0B69800626884 /* HabModuleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D9A3825C0B69800626884 /* HabModuleController.swift */; };
 		857D9A3B25C0B69800626884 /* HabModuleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D9A3825C0B69800626884 /* HabModuleController.swift */; };
 		857D9A3C25C0B69800626884 /* HabModuleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D9A3825C0B69800626884 /* HabModuleController.swift */; };
+		858D7C4725D4F0AD00A45CF9 /* GameCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */; };
+		858D7C4825D4F0AD00A45CF9 /* GameCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */; };
+		858D7C4925D4F0AD00A45CF9 /* GameCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */; };
 		8597BBAA25BF40AB00C705A0 /* StartingWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8597BBA925BF40AB00C705A0 /* StartingWindow.swift */; };
 		85C3418525905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
 		85C3418625905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
@@ -541,6 +544,7 @@
 		857D9A2225BF5E6D00626884 /* PeripheralDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralDetailView.swift; sourceTree = "<group>"; };
 		857D9A2825C0820200626884 /* StartingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingViewController.swift; sourceTree = "<group>"; };
 		857D9A3825C0B69800626884 /* HabModuleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabModuleController.swift; sourceTree = "<group>"; };
+		858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCamera.swift; sourceTree = "<group>"; };
 		8597BBA925BF40AB00C705A0 /* StartingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingWindow.swift; sourceTree = "<group>"; };
 		85C3418425905A7500BF82F9 /* TutorialNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialNode.swift; sourceTree = "<group>"; };
 		85C3418D2591078700BF82F9 /* PlayerCardNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCardNode.swift; sourceTree = "<group>"; };
@@ -754,6 +758,7 @@
 		8536F33A258D41CB00B509D2 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */,
 				8536F465258D481700B509D2 /* Space Station */,
 				8536F468258D481700B509D2 /* Mars Colony */,
 				8536F460258D481700B509D2 /* Mars Map */,
@@ -1249,6 +1254,7 @@
 				8536F445258D47EA00B509D2 /* LabViewModel.swift in Sources */,
 				857D9A3925C0B69800626884 /* HabModuleController.swift in Sources */,
 				8536F376258D475D00B509D2 /* Peripherals.swift in Sources */,
+				858D7C4725D4F0AD00A45CF9 /* GameCamera.swift in Sources */,
 				8536F475258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				8536F38E258D475D00B509D2 /* LabModule.swift in Sources */,
 				8536F3DE258D47D000B509D2 /* LaboratoryView.swift in Sources */,
@@ -1346,6 +1352,7 @@
 				8536F38F258D475D00B509D2 /* LabModule.swift in Sources */,
 				8536F3DF258D47D000B509D2 /* LaboratoryView.swift in Sources */,
 				857D9A3A25C0B69800626884 /* HabModuleController.swift in Sources */,
+				858D7C4825D4F0AD00A45CF9 /* GameCamera.swift in Sources */,
 				8536F393258D475D00B509D2 /* BioModule.swift in Sources */,
 				8536F3FF258D47D000B509D2 /* IngredientView.swift in Sources */,
 				8536F41B258D47D000B509D2 /* VehicleInventoryView.swift in Sources */,
@@ -1434,6 +1441,7 @@
 				8536F447258D47EA00B509D2 /* LabViewModel.swift in Sources */,
 				857D9A3B25C0B69800626884 /* HabModuleController.swift in Sources */,
 				8536F378258D475D00B509D2 /* Peripherals.swift in Sources */,
+				858D7C4925D4F0AD00A45CF9 /* GameCamera.swift in Sources */,
 				8536F477258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				8536F390258D475D00B509D2 /* LabModule.swift in Sources */,
 				8536F3E0258D47D000B509D2 /* LaboratoryView.swift in Sources */,

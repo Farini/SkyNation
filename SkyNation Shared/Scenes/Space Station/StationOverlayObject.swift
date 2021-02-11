@@ -26,12 +26,12 @@ class StationOverlay:NSObject, SKSceneDelegate {
     var sideMenuNode:SideMenuNode?
     
     // Cam
-    var sceneCamera:SCNNode
+    var sceneCamera:GameCamera
     
     // Viewport
     var renderer:SCNSceneRenderer
     
-    init(renderer:SCNSceneRenderer, station:Station, camNode:SCNNode) {
+    init(renderer:SCNSceneRenderer, station:Station, camNode:GameCamera) {
         
         let overlay:SKScene = SKScene(fileNamed: "StationOverlay")!
         overlay.size = renderer.currentViewport.size
@@ -144,14 +144,17 @@ class StationOverlay:NSObject, SKSceneDelegate {
     
     /// Moves the camera in the Scene to a point in the `x` axis
     func moveCamera(x:CGFloat?) {
-        // min = 0
-        // max = 42
+        // Find a good spot to make the camera @lookAt
+        // 0 = -300
+        // 1 = 75
         if let x = x {
             print("Moving Camera to: \(x) | Position:\(sceneCamera.position.z)")
             #if os(macOS)
-            sceneCamera.position.z = -300 * x  // ((x - 0.5) * 84.0) + 84.0
+//            sceneCamera.position.z = -300 + x * 375 //75 - (375 * x) //-300 * x  // ((x - 0.5) * 84.0) + 84.0
+            let destination = -300 + x * 375
+            sceneCamera.panCamera(to: Double(destination))
             #else
-            sceneCamera.position.z = ((Float(x) - 0.5) * 84.0) + 84.0
+            sceneCamera.position.z = -300 + float(x) * 375
             #endif
         }
     }

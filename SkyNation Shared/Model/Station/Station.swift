@@ -36,7 +36,9 @@ class Station:Codable {
     var garage:Garage
     
     // MARK: - Accounting
-    func runAccounting() {
+    
+    /// Set overtime to 'true' if you want to force the accounting past the current Date
+    func runAccounting(overtime:Bool = false) {
         
         // 1. Date
         // 1.A Get the date
@@ -59,6 +61,11 @@ class Station:Codable {
         
         guard let nextDate = Calendar.current.date(from: m)?.addingTimeInterval(3600) else { fatalError() }
         print("Current accounting date: \(formatter.string(from: nextDate))")
+        
+        if !overtime && Date().compare(nextDate) == .orderedAscending {
+            print("Accounting not ready yet")
+            return
+        }
         
         // Problem...
         var problems:[String] = []
@@ -547,6 +554,13 @@ class Station:Codable {
         }
         
         return nil
+    }
+    
+    func lookupRawModule(id:UUID) -> Module {
+        guard let  module = modules.filter({$0.id == id}).first else {
+            fatalError()
+        }
+        return module
     }
     
     func collectRecipe(recipe:Recipe, lab:LabModule) -> Bool {

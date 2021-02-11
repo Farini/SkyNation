@@ -43,20 +43,46 @@ class RoboArmNode:SCNNode {
         }
         
         // Wrist
-        let wristRotate = SCNAction.rotateTo(x: -1.5707963705062866, y: 0, z: 0, duration: 3)
+//        let wristRotate = SCNAction.rotateTo(x: -1.5707963705062866, y: 0, z: 0, duration: 3)
+//
+//        // Use a custom timing function
+//        wristRotate.timingFunction = { (p: Float) in
+//            return self.easeOutElastic(p)
+//        }
+//
+//        let wristWaiter = SCNAction.wait(duration: 9)
+//        let wristSequence = SCNAction.sequence([wristWaiter, wristRotate])
+//
+//        wrist.runAction(wristSequence) {
+//            print("Wrist Finished")
+//            self.debugAnime()
+//            var wristPos = self.wrist.worldPosition
+//            wristPos.z = -100
+//            self.wrist.look(at: wristPos) // SCNVector3(-100, 0, 0)
+//        }
         
-        // Use a custom timing function
-        wristRotate.timingFunction = { (p: Float) in
-            return self.easeOutElastic(p)
-        }
+        // --- SMOOTH LOOK AT TARGET
+        // https://stackoverflow.com/questions/47973953/animating-scnconstraint-lookat-for-scnnode-in-scenekit-game-to-make-the-transi
+        // influenceFactor and animationDuration work somehow together
+        let centralNode = SCNNode()
+        centralNode.position = wrist.worldPosition
+        centralNode.position.x = -100
+        self.parent?.addChildNode(centralNode)
         
-        let wristWaiter = SCNAction.wait(duration: 9)
-        let wristSequence = SCNAction.sequence([wristWaiter, wristRotate])
-        wrist.runAction(wristSequence) {
-            print("Wrist Finished")
-            self.debugAnime()
-            self.wrist.look(at: SCNVector3(-100, 0, 0))
-        }
+        let constraint = SCNLookAtConstraint(target:centralNode) //SCNLookAtConstraint(target: scene.rootNode)
+        constraint.isGimbalLockEnabled = true
+        constraint.influenceFactor = 0.1
+        
+        SCNTransaction.begin()
+        SCNTransaction.animationDuration = 3.0
+        self.wrist.constraints = [constraint]
+        SCNTransaction.commit()
+        
+        // Great, now you can start the scene in the front view, go to camera 2 and the constraint will still be there.
+        // we dont need a parent node for the camera anymore
+        // just move it to any position in world cordinates, recalculate the constraints (depending on z axis, or camera number)
+        
+        // end smooth look
         
     }
     

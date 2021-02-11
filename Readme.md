@@ -99,16 +99,23 @@ Items being worked on
 
 - [ ] Lab Module needs to update list when research is finished (Needs testing)
 
-- [ ] Free Supply Drop-offs -> Pay for more -> Ask Server
-- [ ] People generator should generate new people every hour. Pay for more. And generate Materials engineer first -> Ask Server
+- [ ] Free Supply Drop-offs -> Pay for more 
+- [ ] People generator should generate new people every hour. Pay for more. And generate Materials engineer first
 - [ ] If you simulate your vehicles, you get an extra XP for the Garage
 - [ ] LSS View -> Make 1 tab for tanks & ingredients, and another for Peripherals
-- [ ] GameLoop: Auto-Accounting
+- [X] GameLoop: Auto-Accounting
 - [ ] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles)
+- [ ] GameLoop: Detect Beginner
+- [ ] Module View -> If no other modules, only hab is available
 - [ ] Accounting: Make it harder for **Person** to be happy on their own
 - [ ] Person: Have action(s) to make **Person** happier
 - [ ] Remake TrussView
 - [ ] Update Scene Overlay (Player) - especially when placed an order.
+- [ ] Rounded Buttons
+- [ ] Get Vehicle to show up (mid-play order)
+- [ ] Better Delivery Order Ticket (Popover)
+- [ ] Person happiness going over 100?
+
 
 - [ ] 0/13 Station Scene - 02/08/2020
     - [X] Truss View creation
@@ -117,26 +124,28 @@ Items being worked on
     - [X] 1/3 Notify scene when tech is ready (not working)
     - [X] Update Scene
     - [X] Scene is showing Serial builder ahead of time. Check isUnlocked vs isResearched
-    - [ ] Blender Monkey inside Helmet
+    - [X] Roboarm animation
+    - [X] Unbuild Module
+    - [X] Choose Skin + Persistency
+    - [X] GameCamera: A better camera control
     - [ ] Blender Individual Tanks
     - [ ] Improve Background HDRI image
     - [ ] Reskin Delivery Vehicle
     - [ ] Remodel Space Vehicle
+    - [ ] Rebake Garage Skin x 2 (Choices)
+    - [ ] Bake 2 more Module skins
     - [ ] Build Dock 3D Model
     - [ ] Add light and transluscent sphere to Dock
     - [ ] 5 Models of Antenna
-    - [ ] Roboarm animation
     - [ ] Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
-    - [ ] Unbuild Module
     - [ ] Make the Earth bright again?
     - [ ] Add TechItems updates
     - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
-    - [ ] Choose Skin + Persistency
     - [ ] Control where each Radiator goes
     - [ ] Show  News
     - [ ] Live update of tech
-    - [ ] Rebake Garage Skin x 2 (Choices)
-    - [ ] Bake 2 more Module skins
+    
+   
         
 - [ ] 6/13 Scene Overlay
     - [X] Player
