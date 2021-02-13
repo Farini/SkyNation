@@ -99,6 +99,11 @@ Items being worked on
 
 - [ ] Lab Module needs to update list when research is finished (Needs testing)
 
+- [X] Custom Game Buttons
+- [X] Rounded Buttons
+- [X] Better Delivery Order Ticket (Popover)
+- [X] Person happiness going over 100?
+
 - [ ] Free Supply Drop-offs -> Pay for more 
 - [ ] People generator should generate new people every hour. Pay for more. And generate Materials engineer first
 - [ ] If you simulate your vehicles, you get an extra XP for the Garage
@@ -111,11 +116,8 @@ Items being worked on
 - [ ] Person: Have action(s) to make **Person** happier
 - [ ] Remake TrussView
 - [ ] Update Scene Overlay (Player) - especially when placed an order.
-- [ ] Rounded Buttons
-- [ ] Get Vehicle to show up (mid-play order)
-- [ ] Better Delivery Order Ticket (Popover)
-- [ ] Person happiness going over 100?
 
+- [ ] Get Vehicle to show up (mid-play order)
 
 - [ ] 0/13 Station Scene - 02/08/2020
     - [X] Truss View creation
@@ -139,9 +141,10 @@ Items being worked on
     - [ ] 5 Models of Antenna
     - [ ] Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
     - [ ] Make the Earth bright again?
-    - [ ] Add TechItems updates
+    - [ ] Add TechItems updates to StationBuilder
     - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
     - [ ] Control where each Radiator goes
+    - [ ] Straighten Radiator
     - [ ] Show  News
     - [ ] Live update of tech
     

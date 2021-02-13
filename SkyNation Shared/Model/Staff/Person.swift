@@ -197,7 +197,7 @@ class Person:Codable, Identifiable, Equatable {
         
         switch air.airQuality() {
             case .Great:
-                if Bool.random() { happiness += 1 }
+                if Bool.random() { happiness = min(100, happiness + 1) }
             case .Good:
 //                print("air was good. boring")
                 if Bool.random() {

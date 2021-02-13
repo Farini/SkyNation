@@ -54,9 +54,16 @@ struct ProgressCircle: View {
     
     var body: some View {
         ZStack {
-            Text("\(value, specifier: "%.2f") %")
-                .foregroundColor(self.foregroundColor)
-                .font(.callout)
+            VStack {
+                Image(systemName: "drop")
+                    .font(.title2)
+                    .foregroundColor(GameColors.lightBlue)
+                    .padding(4)
+                Text("\(value, specifier: "%.2f") %")
+                    .foregroundColor(self.foregroundColor)
+                    .font(.callout)
+            }
+            
             Circle()
                 .stroke(lineWidth: self.lineWidth + 4)
                 .foregroundColor(self.backgroundColor)
@@ -67,6 +74,7 @@ struct ProgressCircle: View {
                 .foregroundColor(self.foregroundColor)
                 .rotationEffect(Angle(degrees: -90))
         }
+        .frame(minWidth: 60, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: 60, maxHeight: 175, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
     }
 }
 
@@ -101,61 +109,7 @@ struct ProgressBar: View {
     }
 }
 
-struct VerticalBar: View {
-    
-    var value: Double
-    var color:Color
-    var minimum:Double
-    var maximum:Double
-    var name:String
-    
-    init(min:Double?, max:Double, value:Double, color:Color?, name:String) {
-        self.value = value
-        self.minimum = min ?? 0
-        self.maximum = max
-        self.color = color ?? .blue
-        self.name = name
-    }
-    
-    var body: some View {
-        
-            VStack {
-                HStack(alignment:.bottom, spacing:0) {
-                    
-                    GeometryReader { geometry in
-                        ZStack(alignment:.bottom) {
-                            // Back
-                            Rectangle().frame(width: 16 , height: 100)
-                                .opacity(0.3)
-                                .foregroundColor(.gray)
-                        
-                            // Front
-                            Rectangle().frame(width: 16, height: CGFloat(((min(self.value, self.maximum) - self.minimum) / (self.maximum - self.minimum))) * 100)
-                                .foregroundColor(self.color)
-                                .animation(.easeOut)
-                        }
-                        .cornerRadius(geometry.size.height / 2)
-                    }
-                    
-                    VStack(alignment:.leading) {
-                        Text("\(Int(maximum * 100))")
-                        Spacer()
-                        Text("\(Int(value * 100))")
-                        Spacer()
-                        Text("\(Int(minimum * 100))")
-                    }
-                    .font(.caption)
-                    .offset(x: -16, y: 0)
-                    .foregroundColor(.gray)
-                }
-                Text(name)
-            }
-//            .padding([.leading], 8)
-            
-            .frame(minWidth: 16, idealWidth: 20, maxWidth: 60, minHeight: 100, idealHeight: 120, maxHeight: 120, alignment: .center)
-        
-    }
-}
+
 
 /// This is better than Progress Bar (Another type)
 struct LevelBar: View {
@@ -252,57 +206,7 @@ struct FixedLevelBar:View {
     }
 }
 
-struct AirCompositionView: View {
-    var air:AirComposition
-    var body: some View {
-        
-        VStack(alignment: .leading, spacing: 0) {
-//            Text("Air Quality")
-            let volume:Double = Double(air.getVolume())
-            HStack {
-                VerticalBar(min: 0, max: 25, value: Double(air.o2)/volume * 100, color: .blue, name:"O2")
-                VerticalBar(min: 0, max: 2, value: Double(air.co2)/volume * 100, color: .orange, name:"CO2")
-                VerticalBar(min: 0, max: 85, value: Double(air.n2)/volume * 100, color: .green, name:"N2")
-                VerticalBar(min: 0, max: 5, value: Double(air.h2)/volume * 100, color: .blue, name:"H2")
-                VerticalBar(min: 0, max: 5, value: Double(air.ch4)/volume * 100, color: .blue, name:"CH4")
-                
-                VStack {
-                    ProgressCircle(value: Double(air.h2o), maxValue: 100, style: .line, backgroundEnabled: true, backgroundColor: Color.blue, foregroundColor: GameColors.lightBlue, lineWidth: 8)
-                    Text("Humidity: \(air.h2o) %")
-                }
-//                .padding([.trailing], /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
-                .frame(minWidth: 125, idealWidth: 150, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
-            }
-            .frame(idealHeight: 120, maxHeight: 120, alignment: .leading)
-            .padding()
-        }
-        .frame(maxHeight: 140, alignment: .top)
-        
-    }
-}
-/*
-struct CirclePercentIndicator: View {
-    
-    var percentage:CGFloat
-    
-    let gradientStart = Color("Prograd1")
-    let gradientEnd = Color("Prograd2")
-    
-    var body: some View {
-        ZStack {
-            Circle()
-                .fill(Color.gray)
-                .frame(width: 160, height: 160)
-            Circle()
-                .fill(LinearGradient(gradient: Gradient(colors: [gradientStart, gradientEnd]), startPoint: .topLeading, endPoint: .bottomTrailing))
-                .frame(width: 150, height: 150)
-                .modifier(PercentageIndicator(pct: max(0, percentage)))
-                .padding()
-        }
-        .padding()
-    }
-}
-*/
+
 
 
 struct PercentageIndicator: AnimatableModifier {

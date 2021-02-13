@@ -30,6 +30,9 @@
 		850A1B1025ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */; };
 		850A1B1125ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */; };
 		850A1B1225ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */; };
+		8523338C25D76A9B004CB638 /* AirCompositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8523338B25D76A9B004CB638 /* AirCompositionView.swift */; };
+		8523338D25D76A9B004CB638 /* AirCompositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8523338B25D76A9B004CB638 /* AirCompositionView.swift */; };
+		8523338E25D76A9B004CB638 /* AirCompositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8523338B25D76A9B004CB638 /* AirCompositionView.swift */; };
 		8536F2C0258D330300B509D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2BF258D330300B509D2 /* AppDelegate.swift */; };
 		8536F2C2258D330300B509D2 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2C1258D330300B509D2 /* GameViewController.swift */; };
 		8536F2C5258D330300B509D2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8536F2C3258D330300B509D2 /* Main.storyboard */; };
@@ -170,7 +173,6 @@
 		8536F3F2258D47D000B509D2 /* ProgressViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BE258D47CF00B509D2 /* ProgressViews.swift */; };
 		8536F3F3258D47D000B509D2 /* ProgressViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BE258D47CF00B509D2 /* ProgressViews.swift */; };
 		8536F3F4258D47D000B509D2 /* ProgressViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BE258D47CF00B509D2 /* ProgressViews.swift */; };
-		8536F3F5258D47D000B509D2 /* ProgressViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BE258D47CF00B509D2 /* ProgressViews.swift */; };
 		8536F3F6258D47D000B509D2 /* TankViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BF258D47CF00B509D2 /* TankViews.swift */; };
 		8536F3F7258D47D000B509D2 /* TankViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BF258D47CF00B509D2 /* TankViews.swift */; };
 		8536F3F8258D47D000B509D2 /* TankViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BF258D47CF00B509D2 /* TankViews.swift */; };
@@ -376,6 +378,9 @@
 		858D7C4725D4F0AD00A45CF9 /* GameCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */; };
 		858D7C4825D4F0AD00A45CF9 /* GameCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */; };
 		858D7C4925D4F0AD00A45CF9 /* GameCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */; };
+		858D7C5425D60FA300A45CF9 /* GameButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C5325D60FA300A45CF9 /* GameButtons.swift */; };
+		858D7C5525D60FA300A45CF9 /* GameButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C5325D60FA300A45CF9 /* GameButtons.swift */; };
+		858D7C5625D60FA300A45CF9 /* GameButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C5325D60FA300A45CF9 /* GameButtons.swift */; };
 		8597BBAA25BF40AB00C705A0 /* StartingWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8597BBA925BF40AB00C705A0 /* StartingWindow.swift */; };
 		85C3418525905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
 		85C3418625905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
@@ -434,6 +439,7 @@
 		8504A53A25C6875000739C58 /* Energy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Energy.swift; sourceTree = "<group>"; };
 		8504A54725C6884600739C58 /* Garage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Garage.swift; sourceTree = "<group>"; };
 		850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Antenna3DNode.swift; sourceTree = "<group>"; };
+		8523338B25D76A9B004CB638 /* AirCompositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirCompositionView.swift; sourceTree = "<group>"; };
 		8536F2B5258D330200B509D2 /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
 		8536F2B6258D330200B509D2 /* Art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Art.scnassets; sourceTree = "<group>"; };
 		8536F2B7258D330300B509D2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -545,6 +551,7 @@
 		857D9A2825C0820200626884 /* StartingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingViewController.swift; sourceTree = "<group>"; };
 		857D9A3825C0B69800626884 /* HabModuleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabModuleController.swift; sourceTree = "<group>"; };
 		858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCamera.swift; sourceTree = "<group>"; };
+		858D7C5325D60FA300A45CF9 /* GameButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameButtons.swift; sourceTree = "<group>"; };
 		8597BBA925BF40AB00C705A0 /* StartingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingWindow.swift; sourceTree = "<group>"; };
 		85C3418425905A7500BF82F9 /* TutorialNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialNode.swift; sourceTree = "<group>"; };
 		85C3418D2591078700BF82F9 /* PlayerCardNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCardNode.swift; sourceTree = "<group>"; };
@@ -876,17 +883,14 @@
 		8536F3BD258D47CF00B509D2 /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
-				8536F3BE258D47CF00B509D2 /* ProgressViews.swift */,
-				8536F3BF258D47CF00B509D2 /* TankViews.swift */,
-				8536F3C1258D47D000B509D2 /* IngredientView.swift */,
-				8536F3C0258D47CF00B509D2 /* PersonViews.swift */,
+				858D7C6425D6169E00A45CF9 /* UI Components */,
+				858D7C5F25D6161000A45CF9 /* Object Views */,
+				858D7C5225D60F5C00A45CF9 /* Buttons */,
 				8536F3C2258D47D000B509D2 /* TechTreeDiagram.swift */,
 				8579750E259B9E70004C54D2 /* FlipView.swift */,
 				85797517259BD394004C54D2 /* ItemCollectionViews.swift */,
 				8569A3C725A624A30057A518 /* LoaderView.swift */,
-				8569A3D025A6353C0057A518 /* GameActivityView.swift */,
 				857D9A2225BF5E6D00626884 /* PeripheralDetailView.swift */,
-				8504A51325C5D3B800739C58 /* CautionStripes.swift */,
 				85CD46AF25D20B42000D9C64 /* ModulePopView.swift */,
 			);
 			path = Subviews;
@@ -986,6 +990,35 @@
 				8569A310259F81110057A518 /* TransitionShader.fsh */,
 			);
 			path = FSH;
+			sourceTree = "<group>";
+		};
+		858D7C5225D60F5C00A45CF9 /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				858D7C5325D60FA300A45CF9 /* GameButtons.swift */,
+			);
+			path = Buttons;
+			sourceTree = "<group>";
+		};
+		858D7C5F25D6161000A45CF9 /* Object Views */ = {
+			isa = PBXGroup;
+			children = (
+				8569A3D025A6353C0057A518 /* GameActivityView.swift */,
+				8536F3C0258D47CF00B509D2 /* PersonViews.swift */,
+				8536F3C1258D47D000B509D2 /* IngredientView.swift */,
+				8536F3BF258D47CF00B509D2 /* TankViews.swift */,
+				8523338B25D76A9B004CB638 /* AirCompositionView.swift */,
+			);
+			path = "Object Views";
+			sourceTree = "<group>";
+		};
+		858D7C6425D6169E00A45CF9 /* UI Components */ = {
+			isa = PBXGroup;
+			children = (
+				8536F3BE258D47CF00B509D2 /* ProgressViews.swift */,
+				8504A51325C5D3B800739C58 /* CautionStripes.swift */,
+			);
+			path = "UI Components";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1228,6 +1261,7 @@
 				8536F3F2258D47D000B509D2 /* ProgressViews.swift in Sources */,
 				85C3418E2591078700BF82F9 /* PlayerCardNode.swift in Sources */,
 				8536F3CE258D47D000B509D2 /* BioView.swift in Sources */,
+				8523338C25D76A9B004CB638 /* AirCompositionView.swift in Sources */,
 				8536F406258D47D000B509D2 /* EarthRequestView.swift in Sources */,
 				8536F40A258D47D000B509D2 /* MarsMapView.swift in Sources */,
 				850A1B0F25ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */,
@@ -1295,6 +1329,7 @@
 				85E6ED1D25CF518500229E18 /* BackendView.swift in Sources */,
 				8536F2C0258D330300B509D2 /* AppDelegate.swift in Sources */,
 				8569A3C825A624A30057A518 /* LoaderView.swift in Sources */,
+				858D7C5425D60FA300A45CF9 /* GameButtons.swift in Sources */,
 				8536F449258D47EA00B509D2 /* VehicleBuilderViewModel.swift in Sources */,
 				8536F481258D481700B509D2 /* TravelersScene.swift in Sources */,
 			);
@@ -1310,6 +1345,7 @@
 				8536F39B258D475D00B509D2 /* TechTree.swift in Sources */,
 				8559201625959A4300CF5467 /* SideMenuNode.swift in Sources */,
 				8536F46E258D481700B509D2 /* CamControlNode.swift in Sources */,
+				8523338D25D76A9B004CB638 /* AirCompositionView.swift in Sources */,
 				8536F36F258D475D00B509D2 /* SceneHelpers.swift in Sources */,
 				8536F4A3258D484B00B509D2 /* SceneDirector.swift in Sources */,
 				8536F397258D475D00B509D2 /* Modules.swift in Sources */,
@@ -1347,6 +1383,7 @@
 				8536F3F7258D47D000B509D2 /* TankViews.swift in Sources */,
 				8536F446258D47EA00B509D2 /* LabViewModel.swift in Sources */,
 				8536F377258D475D00B509D2 /* Peripherals.swift in Sources */,
+				858D7C5525D60FA300A45CF9 /* GameButtons.swift in Sources */,
 				85E6ED1E25CF518500229E18 /* BackendView.swift in Sources */,
 				8536F476258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				8536F38F258D475D00B509D2 /* LabModule.swift in Sources */,
@@ -1415,6 +1452,7 @@
 				8536F3F4258D47D000B509D2 /* ProgressViews.swift in Sources */,
 				85C341902591078700BF82F9 /* PlayerCardNode.swift in Sources */,
 				8536F3D0258D47D000B509D2 /* BioView.swift in Sources */,
+				8523338E25D76A9B004CB638 /* AirCompositionView.swift in Sources */,
 				8536F408258D47D000B509D2 /* EarthRequestView.swift in Sources */,
 				8536F40C258D47D000B509D2 /* MarsMapView.swift in Sources */,
 				850A1B1125ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */,
@@ -1482,6 +1520,7 @@
 				85E6ED1F25CF518500229E18 /* BackendView.swift in Sources */,
 				8536F2E2258D330300B509D2 /* AppDelegate.swift in Sources */,
 				8569A3CA25A624A30057A518 /* LoaderView.swift in Sources */,
+				858D7C5625D60FA300A45CF9 /* GameButtons.swift in Sources */,
 				8536F44B258D47EA00B509D2 /* VehicleBuilderViewModel.swift in Sources */,
 				8536F483258D481700B509D2 /* TravelersScene.swift in Sources */,
 			);
@@ -1532,7 +1571,6 @@
 				8536F490258D481700B509D2 /* MarsColonyScene.swift in Sources */,
 				8536F484258D481700B509D2 /* TravelersScene.swift in Sources */,
 				857D9A3C25C0B69800626884 /* HabModuleController.swift in Sources */,
-				8536F3F5258D47D000B509D2 /* ProgressViews.swift in Sources */,
 				8536F401258D47D000B509D2 /* IngredientView.swift in Sources */,
 				8536F43C258D47EA00B509D2 /* ModulesViewModel.swift in Sources */,
 				8536F448258D47EA00B509D2 /* LabViewModel.swift in Sources */,

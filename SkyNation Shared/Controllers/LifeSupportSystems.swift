@@ -14,9 +14,9 @@ class LSSModel:ObservableObject {
     
     // State
     @Published var viewState:LSSViewState = .Air
-    @Published var segment:LSSSegment = .AirLevels {
+    @Published var segment:LSSTab = .Air {
         didSet {
-            print("Did set segment: \(segment.rawValue)")
+            print("Did set tab: \(segment.rawValue)")
             didSelect(segment: segment)
         }
     }
@@ -161,12 +161,13 @@ class LSSModel:ObservableObject {
     }
     
     // Segment Selection
-    func didSelect(segment:LSSSegment) {
+    func didSelect(segment:LSSTab) {
         switch segment {
-            case .Accounting: self.viewState = .Systems
-            case .AirLevels: self.viewState = .Air
-            case .Energy:self.viewState = .Energy
+            case .Air: self.viewState = .Air
             case .Resources: self.viewState = .Resources(type: .None)
+            case .Machinery: self.viewState = .Machinery
+            case .Power:self.viewState = .Energy
+            case .System: self.viewState = .Systems
         }
     }
     

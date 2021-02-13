@@ -10,8 +10,6 @@ import SwiftUI
 
 struct EarthRequestView: View {
     
-    @Environment(\.presentationMode) var presentationMode // To Dismiss
-    
     @ObservedObject var controller:EarthRequestController = EarthRequestController()
     @State var infoPopover:Bool = false
     
@@ -21,54 +19,53 @@ struct EarthRequestView: View {
         GridItem(.fixed(200))
     ]
     
+    var header: some View {
+        
+        Group {
+            HStack() {
+                VStack(alignment:.leading) {
+                    Text("🌎 Earth").font(.largeTitle)
+                    Text("Request ingredients from Earth")
+                        .foregroundColor(.gray)
+                }
+                
+                Spacer()
+                
+                // Money
+                Text("S$: \(GameFormatters.numberFormatter.string(from: NSNumber(value: controller.money))!)")
+                    .foregroundColor(.green)
+                
+                // Tutorial
+                Button(action: {
+                    print("Question ?")
+                }, label: {
+                    Image(systemName: "questionmark.circle")
+                        .font(.title2)
+                })
+                .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
+                
+                // Close
+                Button(action: {
+                    NotificationCenter.default.post(name: .closeView, object: self)
+                }) {
+                    Image(systemName: "xmark.circle")
+                        .font(.title2)
+                }.buttonStyle(SmallCircleButtonStyle(backColor: .pink))
+                
+            }
+            .padding([.leading, .trailing, .top], 8)
+            
+            Divider()
+                .offset(x: 0, y: -5)
+        }
+    }
+    
     var body: some View {
         
         VStack {
             
             // Header
-            Group {
-                HStack(alignment: VerticalAlignment.lastTextBaseline, spacing: /*@START_MENU_TOKEN@*/nil/*@END_MENU_TOKEN@*/) {
-                    VStack(alignment:.leading) {
-                        Text("🌎 Earth").font(.largeTitle).padding(.leading)
-                        Text("Request ingredients from Earth")
-                            .foregroundColor(.gray)
-                            .padding(.leading)
-                    }
-                    
-                    Spacer()
-                    Text("S$: \(GameFormatters.numberFormatter.string(from: NSNumber(value: controller.money))!)")
-                        .font(.title)
-                        .foregroundColor(.green)
-                        
-                    
-                    // Tutorial
-                    Button(action: {
-                        print("Tutorial action")
-                    }, label: {
-                        Image(systemName: "questionmark.diamond")
-                            .resizable()
-                            .aspectRatio(contentMode:.fit)
-                            .frame(width:34, height:34)
-                    })
-                    .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
-                    
-                    
-                    // Close
-                    Button(action: {
-                        print("Close action")
-                        NotificationCenter.default.post(name: .closeView, object: self)
-//                        self.presentationMode.wrappedValue.dismiss()
-                    }, label: {
-                        Image(systemName: "xmark.circle")
-                            .resizable()
-                            .aspectRatio(contentMode:.fit)
-                            .frame(width:34, height:34)
-                    })
-                    .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
-                    .padding(.trailing, 6)
-                }
-                Divider()
-            }
+            header
             
             // Body
             ScrollView {
@@ -76,114 +73,44 @@ struct EarthRequestView: View {
                 switch controller.orderStatus {
                     
                     case .Ordering(let order):
-                        // What has already picked
+                        
+                        // Summary
                         Group {
                             
-                            Text("Order")
-                                .font(.title)
-                            
-                            ForEach(order.ingredients, id:\.id) { storageBox in
-                                Text(storageBox.type.rawValue)
-                                    .foregroundColor(.green)
-                            }
-                            ForEach(order.tanks, id:\.id) { tank in
-                                Text(tank.type.rawValue)
-                            }
-                            ForEach(order.people, id:\.id) { person in
-                                PersonRow(person: person)
-                            }
-                            
-                            Divider()
-                        }
-                        
-                        Picker(selection: $controller.orderAisle, label: Text("Aisle")) {
-                            ForEach(EarthViewPicker.allCases, id:\.self) { earth in
-                                Text(earth.rawValue)
-                            }
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
-                        
-                        switch controller.orderAisle {
-                            case .People:
-                                LazyVGrid(columns: ingredientColumns, alignment:.center, spacing:8) {
-                                    ForEach(PeopleMaker.shared.people) { person in
-                                        PersonSmallView(person: person)
-                                            .onTapGesture {
-                                                controller.addToHire(person: person)
-//                                        PersonRow(person: person)
-//                                            .padding(8)
-//                                            .onTapGesture {
-//                                                controller.addToHire(person: person) //hire(person: person)
-                                        }
-                                    }
-                                }
-
-                            case .Ingredients:
-                                LazyVGrid(columns: ingredientColumns, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 8, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
-                                    ForEach(Ingredient.allCases.filter{$0.orderable}, id:\.self) { ingredient in
-                                        IngredientView(ingredient: ingredient, hasIngredient: nil, quantity: ingredient.boxCapacity())
-                                            .padding(3)
-                                            .onTapGesture {
-                                                controller.addToCart(ingredient: ingredient) //order(ingredient: ingredient)
-                                            }
-                                    }
-                                }
-
-                            case .Tanks:
-                                LazyVGrid(columns: ingredientColumns, alignment:.center, spacing:8, pinnedViews:[]) {
-                                    ForEach(TankType.allCases, id:\.self) { tankType in
-                                        
-                                        HStack {
-                                            Image("Tank")
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fit)
-                                                .frame(width: 42, height: 42)
-                                            
-                                            Text(tankType.rawValue).font(.subheadline).padding(3)
-                                                
-                                        }
-                                        .onTapGesture {
-                                            controller.addToCart(tankType: tankType)//order(tankType: TankType.allCases[index])
-                                        }
-                                        
-                                    }
-                                }
-                        }
-                        
-                    case .Reviewing(let order):
-                        
-                        // What has already picked
-                        Group {
-                            
-                            Text("Review order")
-                                .font(.title)
-                                .padding([.bottom], 6)
-                            
-                            // Quantity / Weight
                             HStack {
-                                Image(systemName: "scalemass")
-                                Text("\(controller.orderQuantity)00 / \(GameLogic.earthOrderLimit)00 Kg")
-                            }
-                            .font(.title2)
-                            
-                            HStack {
-                                Image("Currency")
-                                    .renderingMode(.template)
-                                    .resizable()
-                                    .fixedSize()
-                                    .frame(width: 42, height: 42, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                                    .aspectRatio(contentMode: .fill)
-                                VStack {
-                                    Text("Current \(controller.money)").foregroundColor(.green)
-                                    Text("(-) Costs \(controller.orderCost)").foregroundColor(.gray)
-                                    Text("Balance: \(controller.money - controller.orderCost)").foregroundColor(.orange)
-                                }
-                                VStack {
-                                    Spacer()
-                                    Button("ℹ️") {
-                                        infoPopover.toggle()
+                                
+                                // Summary
+                                VStack(alignment:.leading) {
+                                    Text("Summary")
+                                        .font(.title2)
+                                        .foregroundColor(.gray)
+                                    
+                                    // Quantity / Weight
+                                    HStack {
+                                        Image(systemName: "scalemass")
+                                        Text("\(controller.orderQuantity)00 / \(GameLogic.earthOrderLimit)00 Kg")
                                     }
+                                    .font(.title2)
+                                }
+                                
+                                Spacer()
+                                
+                                // Costs
+                                HStack {
+                                    
                                     // Order Ticket Popover
+                                    Button(action: {
+                                        infoPopover.toggle()
+                                        
+                                    }) {
+                                        Image("Currency")
+                                            .renderingMode(.template)
+                                            .resizable()
+                                            .fixedSize()
+                                            .frame(width: 32, height: 32, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                                            .aspectRatio(contentMode: .fill)
+                                    }
+                                    .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
                                     .popover(isPresented: $infoPopover) {
                                         List {
                                             
@@ -229,52 +156,194 @@ struct EarthRequestView: View {
                                             
                                         }
                                     }
-                                    Spacer()
+                                    
+                                    VStack {
+                                        Text("(-) Costs \(controller.orderCost)").foregroundColor(.gray)
+                                        Text("Balance: \(controller.money - controller.orderCost)").foregroundColor(.orange)
+                                    }
                                 }
                             }
                             
                             Divider()
+                        }
+                        .padding([.leading, .trailing], 8)
+                        
+                        // Aisle Picker
+                        Picker(selection: $controller.orderAisle, label: Text("")) {
+                            ForEach(EarthViewPicker.allCases, id:\.self) { earth in
+                                Text(earth.rawValue)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        
+                        switch controller.orderAisle {
+                            case .People:
+                                LazyVGrid(columns: ingredientColumns, alignment:.center, spacing:8) {
+                                    ForEach(PeopleMaker.shared.people) { person in
+                                        PersonOrderView(person: person)
+                                            .onTapGesture {
+                                                controller.addToHire(person: person)
+                                            }
+                                    }
+                                }
+
+                            case .Ingredients:
+                                LazyVGrid(columns: ingredientColumns, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 8, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
+                                    
+                                    ForEach(Ingredient.allCases.filter{$0.orderable}, id:\.self) { ingredient in
+                                        
+                                        IngredientOrderView(ingredient: ingredient)
+                                            .onTapGesture {
+                                                controller.addToCart(ingredient: ingredient)
+                                            }
+                                    }
+                                }
+
+                            case .Tanks:
+                                LazyVGrid(columns: ingredientColumns, alignment:.center, spacing:8, pinnedViews:[]) {
+                                    
+                                    ForEach(TankType.allCases, id:\.self) { tankType in
+                                        
+                                        TankOrderView(tank: tankType)
+                                            .onTapGesture {
+                                                controller.addToCart(tankType: tankType)
+                                            }
+                                    }
+                                }
+                        }
+                        
+                    case .Reviewing(let order):
+                        
+                        // Review the order
+                        Group {
+                            
+                            // Review
+                            Group {
+                                
+                                HStack {
+                                    
+                                    // Summary
+                                    VStack(alignment:.leading) {
+                                        Text("Review")
+                                            .font(.title2)
+                                            .foregroundColor(.gray)
+                                        
+                                        // Quantity / Weight
+                                        HStack {
+                                            Image(systemName: "scalemass")
+                                            Text("\(controller.orderQuantity)00 / \(GameLogic.earthOrderLimit)00 Kg")
+                                        }
+                                        .font(.title2)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    // Costs
+                                    HStack {
+                                        
+                                        // Order Ticket Popover
+                                        Button(action: {
+                                            infoPopover.toggle()
+                                            
+                                        }) {
+                                            Image("Currency")
+                                                .renderingMode(.template)
+                                                .resizable()
+                                                .fixedSize()
+                                                .frame(width: 32, height: 32, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                                                .aspectRatio(contentMode: .fill)
+                                        }
+                                        .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                                        .popover(isPresented: $infoPopover) {
+                                            List {
+                                                
+                                                HStack {
+                                                    Text("Base Cost (Rocket): ")
+                                                    Spacer()
+                                                    Text("$ \(PayloadOrder.basePrice)")
+                                                }
+                                                .foregroundColor(.orange)
+                                                
+                                                Divider()
+                                                ForEach(order.ingredients, id:\.id) { storageBox in
+                                                    HStack {
+                                                        Text("\(storageBox.type.rawValue) x \(storageBox.capacity)")
+                                                        Spacer()
+                                                        Text("$ \(storageBox.type.price)")
+                                                    }
+                                                }
+                                                Divider()
+                                                ForEach(order.tanks, id:\.id) { tank in
+                                                    HStack {
+                                                        Text("Tank \(tank.type.rawValue)")
+                                                        Spacer()
+                                                        Text("$ \(tank.type.price)")
+                                                    }
+                                                }
+                                                Divider()
+                                                ForEach(order.people, id:\.id) { person in
+                                                    HStack {
+                                                        Text("\(person.name)")
+                                                        Spacer()
+                                                        Text("$ \(GameLogic.orderPersonPrice)")
+                                                    }
+                                                }
+                                                Divider()
+                                                HStack {
+                                                    Text("Total")
+                                                        .font(.headline)
+                                                    Spacer()
+                                                    Text("$ \(order.calculateTotal())")
+                                                        .font(.headline)
+                                                }
+                                                
+                                            }
+                                        }
+                                        
+                                        VStack {
+                                            Text("(-) Costs \(controller.orderCost)").foregroundColor(.gray)
+                                            Text("Balance: \(controller.money - controller.orderCost)").foregroundColor(.orange)
+                                        }
+                                    }
+                                }
+                                
+                                Divider()
+                            }
+                            .padding([.leading, .trailing], 8)
+                            
                             
                             Text("Items")
                                 .font(.title2)
                                 .foregroundColor(.orange)
                             
                             LazyVGrid(columns: ingredientColumns, alignment: .center, spacing: 8) {
+                                
                                 ForEach(order.ingredients, id:\.id) { storageBox in
                                     VStack {
-                                        IngredientView(ingredient: storageBox.type, hasIngredient: nil, quantity: storageBox.type.boxCapacity())
-                                            .padding(3)
-                                        Text("$ \(storageBox.type.price)")
+                                        IngredientOrderView(ingredient: storageBox.type)
                                     }
-                                    
                                 }
+                                
                                 ForEach(order.tanks, id:\.id) { tank in
-                                    VStack {
-                                        TankRow(tank: tank)
-                                            .padding(6)
-                                        Text("$ \(tank.type.price)")
-                                    }
-                                    
+                                    TankOrderView(tank:tank.type)
                                 }
+                                
                                 ForEach(order.people, id:\.id) { person in
-                                    VStack {
-                                        PersonRow(person: person)
-                                        Text("$ \(GameLogic.orderPersonPrice)")
-                                    }
-                                    
+                                    PersonOrderView(person: person)
                                 }
                             }
                         }
                         
                     case .OrderPlaced:
+                        
                         Group {
                             Text("Order Placed. Wait for delivery now.")
                                 .foregroundColor(.orange)
                             
                         }
                         
-                        
                     case .Delivering:
+                        
                         Group {
                             // Head
                             VStack {
@@ -306,72 +375,122 @@ struct EarthRequestView: View {
                             }
                         }
                 }
-//                Divider()
             }
-            .frame(minWidth: 600, maxWidth: .infinity, minHeight: 275, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment:.topLeading)
+            .frame(minWidth: 620, maxWidth: .infinity, minHeight: 275, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment:.topLeading)
             
             Divider()
             
             // Footer Buttons
             VStack {
-                HStack {
-                    
-                    switch controller.orderStatus {
-                        case .Ordering(_):
-//                            Text("Ordering: \(controller.orderQuantity) items.")
-//                            Text("Total: \(controller.orderCost)")
-                            
-                            Button("Continue") {
-                                controller.reviewOrder()
-                            }
-                            Button("Cancel") {
-                                controller.clearOrder()
-                            }
-                            
-                        case .Reviewing(_):
-                            
-//                            Text("Reviewing \(controller.orderQuantity) items.")
-//                            Text("Total: \(controller.orderCost)")
-                            
-                            Button("Place Order") {
-                                let success = self.confirmOrder()
-                                if success {
-                                    print("Order placed")
-                                } else {
-                                    print("See order error")
-                                }
-                            }
-                            
-                            Button("Resume") {
-                                controller.resumeOrder()
-                            }
-                            Button("Start Over") {
-                                controller.clearOrder()
-                            }
-                        case .OrderPlaced:
-                            Text("Order Placed")
-
-                        case .Delivering:
-//                            Text("Delivering")
-//                                .font(.headline)
-//                                .foregroundColor(.blue)
-                            
-                            Button("🚫 Reject") {
-                                controller.clearOrder()
-                            }
-                            .foregroundColor(.red)
-                            
-                            Button("✅ Accept") {
-                                controller.acceptDelivery()
-                            }
-                    }
-                }
                 
+                // Errors
                 if !controller.errorMessage.isEmpty {
                     Text("* \(controller.errorMessage)")
                         .foregroundColor(.red)
                 }
-            
+                
+                HStack {
+                    
+                    switch controller.orderStatus {
+                        case .Ordering(_):
+                            
+                            Button(action: {
+                                controller.clearOrder()
+                            }) {
+                                HStack {
+                                    Image(systemName: "xmark.circle")
+                                    Text("Clear")
+                                }
+                                .frame(minWidth: 75, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            }
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                            
+                            Button(action: {
+                                controller.reviewOrder()
+                            }) {
+                                HStack {
+                                    Image(systemName: "cart.fill")
+                                    Text("Checkout")
+                                }
+                                .frame(minWidth: 75, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            }
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                            
+                        case .Reviewing(_):
+                            
+                            // Go Back
+                            Button(action: {
+                                controller.resumeOrder()
+                            }) {
+                                Image(systemName: "backward.frame")
+                            }
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                            .help("Go back")
+                            
+                            
+                            // Clear
+                            Button(action: {
+                                controller.clearOrder()
+                            }) {
+                                HStack {
+                                    Image(systemName: "xmark.circle")
+                                    Text("Clear")
+                                }
+                                .frame(minWidth: 75, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            }
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                            
+                            // Confirm
+                            Button(action: {
+                                let success = self.confirmOrder()
+                                if success {
+                                    print("Order placed")
+                                    NotificationCenter.default.post(name: .closeView, object: self)
+                                } else {
+                                    print("See order error")
+                                }
+                            }) {
+                                HStack {
+                                    Image(systemName: "cart.fill")
+                                    Text("Confirm")
+                                }
+                                .frame(minWidth: 75, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            }
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                            
+                            
+                        case .OrderPlaced:
+                            Text("Order Placed")
+
+                        case .Delivering:
+                            
+                            Button(action: {
+                                controller.clearOrder()
+                            }) {
+                                HStack {
+                                    Image(systemName: "xmark.octagon.fill")
+                                        .foregroundColor(.red)
+                                    Text("Reject")
+                                }
+                                .frame(minWidth: 75, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            }
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                            
+                            Button(action: {
+                                controller.acceptDelivery()
+                            }) {
+                                HStack {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(.green)
+                                    Text("Accept")
+                                }
+                                .frame(minWidth: 75, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            }
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                            
+                    }
+                }
+                
             }
             .padding(.vertical)
         }
@@ -383,11 +502,6 @@ struct EarthRequestView: View {
         return controller.placeOrder()
     }
     
-}
-
-struct IngredientRow:Identifiable {
-    let id = UUID()
-    let cells:[IngredientView]
 }
 
 struct EarthRequestView_Previews: PreviewProvider {

@@ -13,6 +13,7 @@ enum EarthViewPicker:String, CaseIterable, Hashable, Equatable {
     case Tanks
     case People
 }
+
 enum OrderStatus {
     
     case Ordering(order:PayloadOrder)       // Choosing
@@ -21,8 +22,6 @@ enum OrderStatus {
     case OrderPlaced                        // Order placed...
     
     case Delivering(order:PayloadOrder)     // Retrieving
-//    case Delivered      // Finished
-    
 }
 
 class EarthRequestController:ObservableObject {
@@ -39,10 +38,6 @@ class EarthRequestController:ObservableObject {
     @Published var orderCost:Int = PayloadOrder.basePrice
     @Published var errorMessage:String = ""
     
-//    @Published var selectedIngredients:[Ingredient] = []
-//    @Published var selectedTanks:[TankType] = []
-//    @Published var selectedPeople:[Person] = []
-    
     @Published var orderAisle:EarthViewPicker = .Ingredients
     @Published var orderStatus:OrderStatus
     
@@ -53,9 +48,9 @@ class EarthRequestController:ObservableObject {
         let player = LocalDatabase.shared.player ?? SKNPlayer()
         let spaceStation = LocalDatabase.shared.station!
         
+        // Assign
         self.station = spaceStation
         self.player = player
-        
         self.money = player.money
         self.currentOrder = spaceStation.earthOrder
         
@@ -177,7 +172,7 @@ class EarthRequestController:ObservableObject {
         }
     }
     
-    // Control
+    // MARK: - Order Status
     
     // 1. Review
     // 2. Confirm
@@ -275,13 +270,7 @@ class EarthRequestController:ObservableObject {
             station.earthOrder = nil
             LocalDatabase.shared.saveStation(station: station)
         }
-        
     }
-    
-    /// When order is complete, this is a chance to order more
-//    func orderMore() {
-//        self.orderStatus = .Ordering(items: .Ingredients)
-//    }
     
     /// Adds the contents of the delivery order to the station and resets all the numbers
     func acceptDelivery() {
@@ -336,56 +325,6 @@ class EarthRequestController:ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.2) {
             SceneDirector.shared.didFinishDeliveryOrder(order: currentOrder)
         }
-        
-        
-        
-//        self.currentOrder = nil
-//        let emptyOrder = PayloadOrder()
-//        self.orderCost = emptyOrder.calculateTotal()
-//        self.orderStatus = .Ordering(order: emptyOrder)
-        
-//        for ingredient in selectedIngredients {
-//            if ingredient == .Battery {
-//                station.truss.batteries.append(Battery(shopped: true))
-//            } else if ingredient == .Food {
-//                for _ in 0...ingredient.boxCapacity() {
-//                    let dna = PerfectDNAOption.allCases.randomElement()!
-//                    station.food.append(dna.rawValue)
-//                }
-//            } else{
-//                station.truss.extraBoxes.append(StorageBox(ingType: ingredient, current: ingredient.boxCapacity()))
-//            }
-//        }
-//
-//        for tank in selectedTanks {
-//            station.truss.tanks.append(Tank(type: tank, full: true))
-//        }
-//
-//        for person in selectedPeople {
-//            let result = station.addToStaff(person: person)
-//            if result == false {
-//                self.errorMessage = "No Room for more people"
-//            }else{
-//                if let idx = selectedPeople.firstIndex(of: person) {
-//                    self.selectedPeople.remove(at: idx)
-//                }
-//            }
-//        }
-        
-//        station.earthOrder?.delivered = true
-        
-        
-//        station.earthOrder = nil
-        
-//        // Save
-//        LocalDatabase.shared.saveStation(station: station)
-        
-        // Erase previous
-//        self.selectedPeople = []
-//        self.selectedTanks = []
-//        self.selectedIngredients = []
-        
-//        self.orderStatus = .OrderPlaced
         
         
     }

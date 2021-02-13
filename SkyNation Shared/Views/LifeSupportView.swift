@@ -8,16 +8,25 @@
 
 import SwiftUI
 
-enum LSSSegment: String, CaseIterable {
-    case AirLevels
+//enum LSSSegment: String, CaseIterable {
+//    case AirLevels
+//    case Resources
+//    case Energy
+//    case Accounting
+//}
+
+enum LSSTab:String, CaseIterable {
+    case Air
     case Resources
-    case Energy
-    case Accounting
+    case Machinery
+    case Power
+    case System
 }
 
 enum LSSViewState {
     case Air
     case Resources(type:RSSType)
+    case Machinery
     case Energy
     case Systems
 }
@@ -33,10 +42,9 @@ struct LifeSupportView: View {
     
     @ObservedObject var controller:LSSModel
     
-//    @State private var airOption:LSSSegment = .AirLevels
-    @State var selectedTank:Tank?
-    @State var selectedPeripheral:PeripheralObject?
-    @State var selectedBox:StorageBox?
+//    @State var selectedTank:Tank?
+//    @State var selectedPeripheral:PeripheralObject?
+//    @State var selectedBox:StorageBox?
     
     var goodQualities:[AirQuality] = [.Great, .Good]
     
@@ -44,10 +52,63 @@ struct LifeSupportView: View {
         self.controller = LSSModel()
     }
     
+    var header: some View {
+        Group {
+            HStack() {
+                
+                VStack(alignment:.leading) {
+                    Text("♻️ Life Support Systems")
+                        .font(.largeTitle)
+                    Text("Where life is supported")
+                        .foregroundColor(.gray)
+                        .font(.caption)
+                }
+                
+                Spacer()
+                
+                // Money
+//                Text("S$: \(GameFormatters.numberFormatter.string(from: NSNumber(value: controller.money))!)")
+//                    .foregroundColor(.green)
+                
+                // Tutorial
+                Button(action: {
+                    print("Question ?")
+                }, label: {
+                    Image(systemName: "questionmark.circle")
+                        .font(.title2)
+                })
+                .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
+                
+                // Close
+                Button(action: {
+                    NotificationCenter.default.post(name: .closeView, object: self)
+                }) {
+                    Image(systemName: "xmark.circle")
+                        .font(.title2)
+                }.buttonStyle(SmallCircleButtonStyle(backColor: .pink))
+                
+            }
+            .padding([.leading, .trailing, .top], 8)
+            
+            // Segment Picker
+            Picker("", selection: $controller.segment) { // Picker("", selection: $airOption) {
+                ForEach(LSSTab.allCases, id:\.self) { airOpt in
+                    Text(airOpt.rawValue)
+                }
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding([.leading, .trailing])
+            
+            Divider()
+                .offset(x: 0, y: -5)
+        }
+    }
+    
     var body: some View {
         
         VStack {
             
+            /*
             VStack {
                 
                 // General Header
@@ -101,6 +162,8 @@ struct LifeSupportView: View {
             }
             .padding([.top, .leading, .trailing])
             Divider()
+            */
+            header
             
             Group {
                 switch controller.viewState {
@@ -119,38 +182,18 @@ struct LifeSupportView: View {
                                             .foregroundColor(.green)
                                         
                                         
-                                        let foodLasting = Int(controller.availableFood.count / max(1, controller.inhabitants))
-                                        let waterLasting = Int(controller.liquidWater / max(1, (controller.inhabitants * GameLogic.waterConsumption)))
-                                        
-                                        Text("Others")
-                                            .font(.title)
-                                            .foregroundColor(.orange)
-                                            .padding([.top, .bottom])
-                                        
-                                        Text("💦 Drinkable Water: \(controller.liquidWater). ⏱ \(waterLasting) hrs.")
-                                            .foregroundColor(waterLasting > 8 ? .green:.red)
-                                        Text("🍽 Edible Food: \(controller.availableFood.count). ⏱ \(foodLasting) hrs.")
-                                            .foregroundColor(foodLasting > 8 ? .green:.red)
-                                        
-                                        if let wasteLiquid = controller.boxes.filter({ $0.type == .wasteLiquid }).map({ $0.current }).reduce(0, +) {
-                                            Text("Waste Water: \(wasteLiquid)")
-                                        }
-                                        if let wasteSolid = controller.boxes.filter({ $0.type == .wasteSolid }).map({ $0.current }).reduce(0, +) {
-                                            Text("💩 Solid Waste: \(wasteSolid)")
-                                        }
-                                        Text("🛰📡 Antenna + 🪙 \(controller.station.truss.moneyFromAntenna())")
-                                        
-                                        
+                                        // Future View
+                                        // future
                                         
                                     }
                                     
                                     Spacer()
                                     
-                                    // Timer
-                                    VStack {
-                                        Text("Account: \(controller.accountDate, formatter:GameFormatters.dateFormatter)")
-                                        Text("Head count: \(controller.inhabitants)")
-                                    }
+//                                    // Timer
+//                                    VStack {
+//                                        Text("Account: \(controller.accountDate, formatter:GameFormatters.dateFormatter)")
+//                                        Text("Head count: \(controller.inhabitants)")
+//                                    }
                                 }
                                 .padding()
                                 
@@ -240,33 +283,50 @@ struct LifeSupportView: View {
                                     .frame(maxWidth:.infinity, minHeight:200, maxHeight:.infinity)
                             }
                         }
+                        
+                    case .Machinery:
+                        VStack {
+                            Spacer()
+                            Text("Machinery")
+                            Spacer()
+                        }
                     case .Energy:
                         ScrollView {
                             // Energy
                             EnergyOverview(energyLevel: $controller.levelZ, energyMax: $controller.levelZCap, energyProduction: controller.energyProduction, batteryCount: controller.batteries.count, solarPanelCount: controller.solarPanels.count, peripheralCount: controller.peripherals.count, deltaZ: $controller.batteriesDelta, conumptionPeripherals: $controller.consumptionPeripherals, consumptionModules: $controller.consumptionModules)
                             
                             BatteryCollectionView(controller.batteries)
+                            
+                            LazyVGrid(columns: [GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100))], alignment: .leading, spacing: 16, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/, content: {
+                                ForEach(controller.batteries) { battery in
+                                    VStack {
+                                        Image("carBattery")
+                                            .renderingMode(.template)
+                                            .resizable()
+                                            .colorMultiply(.red)
+                                            .frame(width: 32.0, height: 32.0)
+                                            .padding([.top, .bottom], 8)
+                                        ProgressView("\(battery.current) of \(battery.capacity)", value: Float(battery.current), total: Float(battery.capacity))
+                                    }
+                                    .frame(width:100)
+                                    .padding([.leading, .trailing, .bottom], 6)
+                                    .background(Color.black)
+                                    .cornerRadius(12)
+                                    
+                                }
+                            })
+                            .padding([.bottom], 32)
                         }
                     case .Systems:
                         ScrollView {
-                            Text("Accounting").font(.headline)
-                            Text("Air Vol. \(controller.air.getVolume())")
-                            Text("O2: \(controller.air.o2)")
-                            Text("CO2: \(controller.air.co2)")
-                            //                            Text("N2: \(lssModel.air.n2)")
-                            Divider()
-                            VStack {
-                                ForEach(controller.accountingProblems, id:\.self) { problem in
-                                    Text(problem)
-                                }
-                            }
                             
+                            // Accounting Report
                             if controller.accountingReport != nil {
                                 let report = controller.accountingReport!
-                                Divider()
+//                                Divider()
                                 VStack {
                                     Text("🗒 Report").font(.title)
-                                    Text("📆: \(GameFormatters.dateFormatter.string(from: report.date))")
+                                    Text("📆 \(GameFormatters.dateFormatter.string(from: report.date))")
                                         .padding([.top], 4)
                                         .padding([.bottom], 6)
                                     
@@ -281,226 +341,95 @@ struct LifeSupportView: View {
                                     Text("Air adjustment: \(report.tankAirAdjustment ?? 0)")
                                 }
                             }
-                            Divider()
-                            HStack {
-                                Button("Accounting") {
-                                    print("Run accounting")
-                                    controller.runAccounting()
-                                }
-                                Button("💾 Save") {
-                                    print("Test what?")
-                                    controller.saveAccounting()
-                                }
-                            }
-                        }
-                }
-                /*
-                switch airOption {
-                    case .AirLevels:
-                        ScrollView {
-                            VStack(alignment:.leading) {
-                                HStack {
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text("Air Quality: \(controller.air.airQuality().rawValue)")
-                                            .font(.title)
-                                            .foregroundColor(goodQualities.contains(controller.air.airQuality()) ? .green:.orange)
-                                        
-                                        Text("Volume: \(Double(self.controller.air.getVolume()), specifier: "%.2f") m3 | Required: \(Double(self.controller.requiredAir), specifier: "%.2f") m3")
-                                            .foregroundColor(GameColors.lightBlue)
-                                        Text("Pressure: \(Double(self.controller.airPressure), specifier: "%.2f") KPa")
-                                            .foregroundColor(.green)
-                                        
-                                        
-                                        let foodLasting = Int(controller.availableFood.count / max(1, controller.inhabitants))
-                                        let waterLasting = Int(controller.liquidWater / max(1, (controller.inhabitants * GameLogic.waterConsumption)))
-                                        
-                                        Text("Others")
-                                            .font(.title)
-                                            .foregroundColor(.orange)
-                                            .padding([.top, .bottom])
-                                        
-                                        Text("💦 Drinkable Water: \(controller.liquidWater). ⏱ \(waterLasting) hrs.")
-                                            .foregroundColor(waterLasting > 8 ? .green:.red)
-                                        Text("🍽 Edible Food: \(controller.availableFood.count). ⏱ \(foodLasting) hrs.")
-                                            .foregroundColor(foodLasting > 8 ? .green:.red)
-                                        
-                                        if let wasteLiquid = controller.boxes.filter({ $0.type == .wasteLiquid }).map({ $0.current }).reduce(0, +) {
-                                            Text("Waste Water: \(wasteLiquid)")
-                                        }
-                                        if let wasteSolid = controller.boxes.filter({ $0.type == .wasteSolid }).map({ $0.current }).reduce(0, +) {
-                                            Text("💩 Solid Waste: \(wasteSolid)")
-                                        }
-                                        
-                                        
-                                        
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    // Timer
-                                    VStack {
-                                        Text("Account: \(controller.accountDate, formatter:GameFormatters.dateFormatter)")
-                                        Text("Head count: \(controller.inhabitants)")
-                                    }
-                                }
-                                .padding()
-                                
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("Air Composition")
-                                        .font(.title)
-                                        .foregroundColor(.blue)
-                                        .padding()
-                                    AirCompositionView(air: controller.air)
-                                        .padding([.bottom, .top], 20)
-                                }
-                                .padding([.bottom], 10)
-                            }
-                        }
-                    case .Resources:
-                        // Tanks + Peripherals
-                        Group {
-                            HStack {
-                                
-                                // Left View: List of Resources
-                                List() {
-                                    // Tanks
-                                    Section(header: Text("Tanks")) {
-                                        ForEach(controller.tanks) { tank in
-                                            TankRow(tank: tank)
-                                                .onTapGesture(count: 1, perform: {
-                                                    selectedPeripheral = nil
-                                                    selectedBox = nil
-                                                    selectedTank = tank
-                                                })
-                                        }
-                                    }
-                                    
-                                    // Peripherals
-                                    Section(header: Text("Peripherals")) {
-                                        ForEach(controller.peripherals) { peripheral in
-                                            Text("\(peripheral.peripheral.rawValue)")
-                                                .onTapGesture(count: 1, perform: {
-                                                    selectedTank = nil
-                                                    selectedBox = nil
-                                                    selectedPeripheral = peripheral
-                                                })
-                                        }
-                                    }
-                                    
-                                    // Ingredients - Boxes
-                                    Section(header: Text("Ingredients")) {
-                                        ForEach(controller.boxes) { storageBox in
-                                            VStack {
-                                                Text("\(storageBox.type.rawValue)")
-                                                Text("\(storageBox.current)/\(storageBox.type.boxCapacity())")
-                                            }
-                                            .onTapGesture(count: 1, perform: {
-                                                // Select Box Here
-                                                selectedTank = nil
-                                                selectedPeripheral = nil
-                                                selectedBox = storageBox
-                                            })
-                                        }
-                                    }
-                                }
-                                .frame(minWidth:180, maxWidth:220, minHeight:200, maxHeight: .infinity)
-                                
-                                // Right: Detail View
-                                ScrollView() {
-                                    VStack {
-                                        // Tank
-                                        if selectedTank != nil {
-                                            
-                                            TankView(tank: selectedTank!, model: self.controller)
-                                            
-                                        }else if selectedPeripheral != nil {
-                                            // Peripheral
-                                            PeripheralDetailView(controller: self.controller, peripheral: selectedPeripheral!)
-                                            
-                                        }else if selectedBox != nil {
-                                            // Storage Box
-                                            StorageBoxDetailView(box:selectedBox!)
-                                            
-                                        } else {
-                                            
-                                            // No Selection
-                                            VStack(alignment: .center) {
-                                                Spacer()
-                                                Text("Nothing selected").foregroundColor(.gray)
-                                                Divider()
-                                                Text("Select something").foregroundColor(.gray)
-                                                Spacer()
-                                            }
-                                            
-                                        }
-                                    }
-                                    
-                                }
-                                .frame(maxWidth:.infinity, minHeight:200, maxHeight:.infinity)
-                            }
-                            .frame(maxWidth:.infinity, minHeight:200, maxHeight:.infinity)
-                        }//.padding(3)
-                    case .Energy:
-                        ScrollView {
-                            // Energy
-                            EnergyOverview(energyLevel: $controller.levelZ, energyMax: $controller.levelZCap, energyProduction: controller.energyProduction, batteryCount: controller.batteries.count, solarPanelCount: controller.solarPanels.count, peripheralCount: controller.peripherals.count, deltaZ: $controller.batteriesDelta, conumptionPeripherals: $controller.consumptionPeripherals, consumptionModules: $controller.consumptionModules)
                             
-                            BatteryCollectionView(controller.batteries)
-                        }
-                    case .Accounting:
-                        // Accounting
-                        ScrollView {
-                            Text("Accounting").font(.headline)
-                            Text("Air Vol. \(controller.air.getVolume())")
-                            Text("O2: \(controller.air.o2)")
-                            Text("CO2: \(controller.air.co2)")
-//                            Text("N2: \(lssModel.air.n2)")
+                            // Future's View
+                            future
+                            
                             Divider()
+                            
+                            // General air condition?
+                            Group {
+                                Text("Accounting").font(.headline)
+                                Text("Air Vol. \(controller.air.getVolume())")
+                                Text("O2: \(controller.air.o2)")
+                                Text("CO2: \(controller.air.co2)")
+                                Text("Head count: \(controller.inhabitants)")
+                            }
+                            
+                            Divider()
+                            
+                            // Accounting problems
                             VStack {
                                 ForEach(controller.accountingProblems, id:\.self) { problem in
                                     Text(problem)
                                 }
                             }
                             
-                            if controller.accountingReport != nil {
-                                let report = controller.accountingReport!
-                                Divider()
-                                VStack {
-                                    Text("🗒 Report").font(.title)
-                                    Text("📆: \(GameFormatters.dateFormatter.string(from: report.date))")
-                                        .padding([.top], 4)
-                                        .padding([.bottom], 6)
-                                    
-                                    Text("Air Start (V): \(report.airStart.getVolume())")
-                                    
-                                    Text("Energy Start: \(report.energyStart)")
-                                    Text("Energy Input: \(report.energyInput)")
-                                    Text("Energy Finish:\(report.energyFinish ?? 0)")
-                                    
-                                    Text("💩 \(report.poopFinish ?? 0)")
-                                    Text("Pee: \(report.wasteWaterFinish ?? 0)")
-                                    Text("Air adjustment: \(report.tankAirAdjustment ?? 0)")
-                                }
-                            }
-                            Divider()
-                            HStack {
-                                Button("Accounting") {
-                                    print("Run accounting")
-                                    controller.runAccounting()
-                                }
-                                Button("💾 Save") {
-                                    print("Test what?")
-                                    controller.saveAccounting()
-                                }
-                            }
-                        }// .padding()
+                            
+                            
+//                            Divider()
+//                            HStack {
+//                                Button("Accounting") {
+//                                    print("Run accounting")
+//                                    controller.runAccounting()
+//                                }
+//                                Button("💾 Save") {
+//                                    print("Test what?")
+//                                    controller.saveAccounting()
+//                                }
+//                            }
+                        }
                 }
-                */
+                
             }
             
         }
         .frame(minWidth: 700, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: 250, maxHeight: .infinity, alignment:.topLeading)
     }
+    
+    /// Future displays how long water and food is going to last
+    var future: some View {
+        
+        let foodLasting = Int(controller.availableFood.count / max(1, controller.inhabitants))
+        let waterLasting = Int(controller.liquidWater / max(1, (controller.inhabitants * GameLogic.waterConsumption)))
+        let oxygenLasting = Int(controller.air.o2 / max(1, (controller.inhabitants * 2)))
+        
+        return VStack(alignment:.leading) {
+            
+            Text("⏱ Future")
+                .font(.title)
+                .foregroundColor(.orange)
+                .padding([.top, .bottom])
+            
+            Text("💦 Water: \(controller.liquidWater). ⏱ \(waterLasting) hrs.")
+                .foregroundColor(waterLasting > 8 ? .green:.red)
+            Text("🍽 Food: \(controller.availableFood.count). ⏱ \(foodLasting) hrs.")
+                .foregroundColor(foodLasting > 8 ? .green:.red)
+            Text("☁️ Oxygen: \(Int(controller.air.o2)). ⏱ \(oxygenLasting) hrs.")
+                .foregroundColor(oxygenLasting > 8 ? .blue:.red)
+            
+            Text("⏱ Waste Management")
+                .font(.title)
+                .foregroundColor(.orange)
+                .padding([.top, .bottom])
+            
+            if let wasteLiquid = controller.boxes.filter({ $0.type == .wasteLiquid }).map({ $0.current }).reduce(0, +) {
+                Text("Waste Water: \(wasteLiquid)")
+            }
+            if let wasteSolid = controller.boxes.filter({ $0.type == .wasteSolid }).map({ $0.current }).reduce(0, +) {
+                Text("💩 Solid Waste: \(wasteSolid)")
+            }
+            
+            Text("⏱ Money")
+                .font(.title)
+                .foregroundColor(.orange)
+                .padding([.top, .bottom])
+            
+            Text("🛰📡 Antenna + 🪙 \(controller.station.truss.moneyFromAntenna())")
+            Text("TTL Money: \(LocalDatabase.shared.player?.money ?? 0)")
+        }
+    }
+    
 }
 
 struct EnergyOverview:View {
@@ -587,14 +516,111 @@ struct EnergyOverview:View {
     }
 }
 
-
+struct AccountingReportView: View {
+    
+    @State var report:AccountingReport
+    
+    var body: some View {
+        VStack {
+            Text("🗒 Report").font(.title).padding().foregroundColor(.orange)
+            
+            Text("Air Quality: \(report.airStart.airQuality().rawValue)")
+            
+            Text("📆 \(GameFormatters.dateFormatter.string(from: report.date))")
+                .padding([.top], 4)
+                .padding([.bottom], 6)
+            
+//            Text("Air Start (V): \(report.airStart.getVolume())")
+            
+//            Group {
+//                LazyVGrid(columns: [GridItem(.fixed(80)), GridItem(.fixed(50)), GridItem(.fixed(50))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: /*@START_MENU_TOKEN@*/nil/*@END_MENU_TOKEN@*/, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/, content: {
+//
+//                    Text("Energy")
+//                    Text("\(report.energyStart)")
+//                    Text("\(report.energyFinish ?? 0)")
+//
+//                    Text("O2")
+//                    Text("\(report.airStart.o2)")
+//                    Text("\(report.airFinish?.o2 ?? 0)")
+//
+//                    Text("CO2")
+//                    Text("\(report.airStart.co2)")
+//                    Text("\(report.airFinish?.co2 ?? 0)")
+//
+////                    Text("H2O")
+////                    Text("\(report.waterStart)")
+////                    Text("\(report.waterFinish ?? 0)")
+//                })
+//
+//                Text("Energy Start: \(report.energyStart)")
+//                Text("Energy Input: \(report.energyInput)")
+//                Text("Energy Finish:\(report.energyFinish ?? 0)")
+//            }
+            
+            Text("Compare").foregroundColor(.orange).font(.title)
+            
+            // Trying Stacks
+            Group {
+                HStack {
+                    VStack {
+                        Text("Name")
+                            .foregroundColor(.gray)
+                        Text("Energy")
+                        Text("Water")
+                        Text("Air Vol.")
+                        Text("O2")
+                        Text("CO2")
+                    }
+                    
+                    VStack {
+                        Text("Start")
+                            .foregroundColor(.gray)
+                        Text("\(report.energyStart)")
+                        Text("\(report.waterStart)")
+                        Text("\(report.airStart.getVolume())")
+                        Text("\(report.airStart.o2)")
+                        Text("\(report.airStart.co2)")
+                    }
+                    
+                    VStack {
+                        Text("Finish")
+                            .foregroundColor(.gray)
+                        Text("\(report.energyFinish ?? 0)")
+                        Text("\(report.waterFinish ?? 0)")
+                        Text("\(report.airFinish?.getVolume() ?? 0)")
+                        Text("\(report.airFinish?.o2 ?? 0)")
+                        Text("\(report.airFinish?.co2 ?? 0)")
+                    }
+                    
+                    VStack {
+                        Text("Difference")
+                            .foregroundColor(.gray)
+                        Text("+2")
+                        Text("---")
+                        Text("---")
+                        Text("---")
+                        Text("---")
+                    }
+                }
+            }
+            .padding()
+            
+            
+            Text("💩 \(report.poopFinish ?? 0)")
+            Text("Pee: \(report.wasteWaterFinish ?? 0)")
+            Text("Air adjustment: \(report.tankAirAdjustment ?? 0)")
+        }
+        .padding()
+        
+    }
+}
 
 struct LifeSupportView_Previews: PreviewProvider {
     static var previews: some View {
         LifeSupportView()
     }
 }
-
+/*
 struct TankView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
@@ -607,8 +633,14 @@ struct TankView_Previews: PreviewProvider {
         
     }
 }
+*/
 
-//struct
+struct StationAccounting_Previews: PreviewProvider {
+    static var previews: some View {
+        AccountingReportView(report: AccountingReport.example()!)
+    }
+}
+
 
 // FIXME: - Transfer Code.
 // Put this code in an Appropriate file

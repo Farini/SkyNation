@@ -110,17 +110,56 @@ struct TankView: View {
     }
 }
 
+struct TankOrderView: View {
+    
+    var tank:TankType
+    
+    var body: some View {
+        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top)) {
+            HStack {
+//                Spacer()
+                Image("Tank").resizable()
+                    .frame(width: 64.0, height: 64.0)
+                VStack {
+                    Text(tank.rawValue.uppercased())
+                    Text(tank.name)
+                    Text("x \(tank.capacity)")
+                }
+                Spacer()
+            }
+            .frame(maxWidth:200)
+            
+            Text("$\(tank.price)")
+                // .frame(maxWidth:40)
+                .foregroundColor(.gray)
+                .padding(4)
+                .background(Color.black)
+        }
+        .padding(4)
+        .background(Color.black)
+        .cornerRadius(8)
+        .frame(maxWidth:200)
+        
+    }
+}
+
+// MARK: - Previews
+
 struct TankViews_Previews: PreviewProvider {
+    
     static var previews: some View {
+        
         VStack {
+            
             Text("Tank: - Big")
             TankView(tank:LocalDatabase.shared.station!.truss.getTanks().first!)
+            
             Divider()
+            
             Text("Tank: - Small")
             TankViewSmall(tank: LocalDatabase.shared.station!.truss.getTanks().first!)
             
         }
-        
     }
 }
 
@@ -132,5 +171,11 @@ struct TankPreviews2:PreviewProvider {
                 .padding()
         }
         
+    }
+}
+
+struct TankOrder_Previews: PreviewProvider {
+    static var previews: some View {
+        TankOrderView(tank: TankType.allCases.randomElement()!)
     }
 }

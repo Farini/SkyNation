@@ -250,6 +250,7 @@ class Station:Codable {
             // consume oxygen
             // emit co2
             // emit vapor
+            
             let newAir = person.consumeAir(airComp: tempAir)
             print("\t 🤓: \(person.name)\t 😷:\(person.healthPhysical)")
             print("\t 💨: \(newAir.airQuality().rawValue)")
@@ -766,7 +767,18 @@ class AccountingReport:Codable {
         tankAirAdjustment = amount
     }
     
+    static func example() -> AccountingReport? {
+        return LocalDatabase.shared.station?.accounting
+    }
 }
+
+// Partial Report?
+// Accounting Peers (Person, Module, Peripheral)
+// consumed items
+// produced items
+// ----
+// Module: 10 energy ||  ---
+// Person: 2 Water, 1 Food || 1 poop, 1 pee
 
 /**
  A Container with ingredients, tanks and people
@@ -842,17 +854,20 @@ class PayloadOrder: Codable {
     /// Calculates cost of order
     func calculateTotal() -> Int {
         
-        let counts = ingredients.count + tanks.count + people.count
-        var ingredientsPrices:Int = 0
+        var price = PayloadOrder.basePrice
         for ingredient in ingredients {
-            ingredientsPrices += ingredient.type.price
+            price += ingredient.type.price
         }
         
-        // Other products are $10?
-        let prodPrice = counts * 10
-        let total = PayloadOrder.basePrice + prodPrice
+        for tank in tanks {
+            price += tank.type.price
+        }
         
-        return total
+        for _ in people {
+            price += GameLogic.orderPersonPrice
+        }
+        
+        return price
     }
     
     /// Sets all the arrays to empty

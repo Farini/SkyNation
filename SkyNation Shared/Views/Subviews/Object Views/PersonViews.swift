@@ -306,14 +306,60 @@ struct PersonDetail:View {
     }
 }
 
+struct PersonOrderView:View {
+    
+    var person:Person
+    
+    var body: some View {
+        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top)) {
+            HStack {
+                Image(person.avatar)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 56, height: 56)
+                    .padding([.leading], 6)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    
+                    HStack {
+                        Text(person.name)
+                            .font(.headline)
+                        Text(" (\(person.age))")
+                    }
+                    
+                    ProgressView(value: Float(person.intelligence), total:100.0) {
+                        HStack {
+                            ForEach(0..<person.skills.count) { idx in
+                                GameImages.imageForSkill(skill: person.skills[idx].skill)
+                                    .resizable()
+                                    .aspectRatio(contentMode:.fit)
+                                    .frame(width:22, height:22)
+                                // Text("x\(person.skills[idx].level) ")
+                            }
+                        }
+                    }
+                    .foregroundColor(.blue)
+                    .accentColor(.orange)
+                    
+                }
+                .padding([.trailing])
+            }
+            Text("$\(GameLogic.orderPersonPrice)")
+                // .frame(maxWidth:40)
+                .foregroundColor(.gray)
+                .padding(4)
+                .background(Color.black)
+        }
+        
+        .padding(2)
+        .background(Color.black)
+        .cornerRadius(8)
+        .frame(maxWidth:200)
+    }
+}
+
 
 // MARK: - Previews
-
-//struct LivingControl_Previews: PreviewProvider {
-//    static var previews: some View {
-//        LivingControl(selected: Skills.Biologic)
-//    }
-//}
 
 struct PersonRow_Preview: PreviewProvider {
     static var previews: some View {
@@ -340,6 +386,12 @@ struct PersonSmall_Preview: PreviewProvider {
         return p
     }
 }
+    
+    struct PersonOrder_Preview: PreviewProvider {
+        static var previews: some View {
+            PersonOrderView(person: Person(random: true))
+        }
+    }
 
 struct PersonDetail_Preview: PreviewProvider {
     

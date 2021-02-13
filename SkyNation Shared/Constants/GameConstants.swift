@@ -42,7 +42,7 @@ struct GameLogic {
     /// The maximum amount of items in a new order (EarthOrder)
     static let earthOrderLimit:Int = 6
     static let orderTankPrice:Int = 10
-    static let orderPersonPrice:Int = 15
+    static let orderPersonPrice:Int = 150
     
     /// The default `capacity` of a battery
     static let batteryCapacity:Int = 100
@@ -166,6 +166,7 @@ struct GameColors {
     static let greenBackground = Color.green
     static let lightBlue = Color.blue
     static let airBlue = Color("LightBlue")
+    static let darkGray = Color("darkGray")
 }
 
 

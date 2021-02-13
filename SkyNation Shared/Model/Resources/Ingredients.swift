@@ -41,8 +41,10 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
     /// Whether a Player can order this item
     var orderable:Bool {
         switch self {
-        case .wasteSolid, .wasteLiquid, .Silicate: return false
-        default: return true
+            case .wasteSolid, .wasteLiquid, .Silicate: return false
+                
+            case .CarbonFiber : return false // Deprecating
+            default: return true
         }
     }
     
@@ -71,12 +73,12 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
     /// The Price to order this ingredient
     var price:Int {
         switch self {
-            case .wasteSolid, .wasteLiquid: return 5
-            case .Aluminium, .Copper, .Polimer, .Lithium, .Water: return 10
-            case .Battery, .DCMotor, .Fertilizer, .Iron: return 15
-            case .CarbonFiber, .Ceramic, .Sensor, .Silicate, .SolarCell: return 22
-            case .Circuitboard: return 27
-            default: return 10
+            case .wasteSolid, .wasteLiquid: return 50
+            case .Aluminium, .Copper, .Polimer, .Lithium, .Water: return 100
+            case .Battery, .DCMotor, .Fertilizer, .Iron: return 150
+            case .CarbonFiber, .Ceramic, .Sensor, .Silicate, .SolarCell: return 220
+            case .Circuitboard: return 270
+            default: return 100
         }
     }
     

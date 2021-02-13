@@ -42,7 +42,6 @@ struct IngredientView:View {
     }
 }
 
-
 struct IngredientSufficiencyView:View {
     
     var ingredient:Ingredient
@@ -117,13 +116,52 @@ struct StorageBoxDetailView:View {
     }
 }
 
+struct IngredientOrderView:View {
+    
+    var ingredient:Ingredient
+    @State var quantity:Int?
+    var image:Image = Image(systemName: "questionmark")
+    
+    var body: some View {
+        
+        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top)) {
+            
+            VStack {
+                HStack {
+                    Spacer()
+                    ingredient.image()?
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 42, height: 42)
+                    Spacer()
+                }
+                
+                Text("\(ingredient.rawValue) x \(ingredient.boxCapacity())")
+                    
+            }
+
+            Text("$\(ingredient.price)")
+                // .frame(maxWidth:40)
+                .foregroundColor(.gray)
+                .padding(4)
+                .background(Color.black)
+        }
+        .padding(4)
+        .background(Color.black)
+        .cornerRadius(8)
+        .frame(maxWidth:200)
+        
+    }
+}
+
+
 struct StorageBox_Previews: PreviewProvider {
     static var previews: some View {
         StorageBoxDetailView(box: StorageBox(ingType: .Aluminium, current: 10))
     }
 }
 
-struct IngredientView_Previews2: PreviewProvider {
+struct IngredientView_Previews_2: PreviewProvider {
     static var previews: some View {
         HStack(alignment: .top, spacing: 20){
             VStack  {
@@ -166,5 +204,18 @@ struct IngredientSufficiency_Preview:PreviewProvider {
             IngredientSufficiencyView(ingredient: .Aluminium, required: 20, available: 30)
             IngredientSufficiencyView(ingredient: .DCMotor, required: 8, available: 4)
         }
+    }
+}
+
+struct IngredientOrder_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: /*@START_MENU_TOKEN@*/nil/*@END_MENU_TOKEN@*/, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/, content: {
+            
+            ForEach(Ingredient.allCases.filter({$0.orderable == true }), id:\.rawValue) { ingredient in
+                IngredientOrderView(ingredient: ingredient)
+            }
+        })
+//        for ingredient in Ingredient.allCases.filter($0.orderable == true)
     }
 }
