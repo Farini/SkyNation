@@ -107,6 +107,19 @@ struct PeripheralDetailView: View {
     }
 }
 
+struct PeripheralSmallView: View {
+    
+    @State var peripheral:PeripheralObject
+    
+    var body: some View {
+        VStack {
+            peripheral.getImage()
+            Text("\(peripheral.peripheral.rawValue)")
+        }
+    }
+    
+}
+
 struct PeripheralDetailView_Previews: PreviewProvider {
     
     static var peripherals:[PeripheralObject] = [

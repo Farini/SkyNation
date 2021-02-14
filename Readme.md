@@ -180,8 +180,12 @@ Items being worked on
     - [X] Transfer Building Vehicles to Built Vehicles automatically
     - [X] Vehicle Row improvements
     - [X] Better Vehicle Assembly
-    - [ ] Initial Push (Fuel)
-    - [ ] Trajectory (+animations ?)
+    - [X] Post Launch View
+    - [X] GameButtons
+    - [X] Descent Inventory View
+    - [X] Add StorageBox to Vehicle Data
+    - [ ] Post Launch Scene
+    
     
 - [ ] 7/13 Basic Views
     - [X] Ingredients and sufficiency

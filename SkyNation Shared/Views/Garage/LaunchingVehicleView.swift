@@ -92,20 +92,35 @@ struct LaunchingVehicleView: View {
             Divider()
             
             HStack {
+                
+                Button(action: {
+                    print("Back Button Pressed")
+                    controller.cancelSelection()
+                }) {
+                    HStack {
+                        Image(systemName: "backward.frame")
+                        Text("Back")
+                    }
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                .help("Go back")
+                
                 Button("Inventory") {
                     print("Back To Inventory")
                     controller.goBackToInventory()
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                
                 Button("Launch") {
                     print("Launch Vehicle")
                     controller.launch(vehicle: launchController.vehicle)
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
-                Button("Test") {
-                    print("Test")
-                }
-                .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                
+//                Button("Test") {
+//                    print("Test")
+//                }
+//                .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
             }
         }
         .padding()
@@ -114,17 +129,24 @@ struct LaunchingVehicleView: View {
 
 struct PostLaunchVehicleView: View {
     
+    @ObservedObject var garageController:GarageViewModel
+    @ObservedObject var launchController:LaunchSceneController
+    
+    
     // Shows the Vehicle launching, and later its status
-    @State var vehicle:SpaceVehicle
+//    @State var vehicle:SpaceVehicle
     
     var body: some View {
         ZStack {
             SceneView(scene: SCNScene(named: "Art.scnassets/Vehicles/SpaceVehicleExport.scn"), pointOfView: nil, options: .allowsCameraControl, preferredFramesPerSecond: 30, antialiasingMode: .none, delegate: nil, technique: nil)
-            Button("Close") {
-                
+            VStack {
+                Text("V: \(launchController.vehicle.name)")
+                Button("Close") {
+                    garageController.cancelSelection()
+                }
             }
+            
         }
-        
     }
 }
 
@@ -224,6 +246,6 @@ struct LaunchingVehicleView_Previews: PreviewProvider {
 
 struct PostLaunch_Previews: PreviewProvider {
     static var previews: some View {
-        PostLaunchVehicleView(vehicle: SpaceVehicle(engine: .Hex6))
+        PostLaunchVehicleView(garageController: GarageViewModel(), launchController: LaunchSceneController(vehicle: SpaceVehicle(engine: .Hex6)))
     }
 }

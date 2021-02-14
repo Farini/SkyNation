@@ -553,7 +553,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             scene = SCNScene(named: "Art.scnassets/SpaceStation/SpaceStation.scn")!
             
             // Camera
-            let cam = scene.rootNode.childNode(withName: "Camera", recursively: false)!
+            let _ = scene.rootNode.childNode(withName: "Camera", recursively: false)!
 //            self.cameraNode = cam
         }
         

@@ -90,7 +90,7 @@ enum MarsBot:String, Codable, CaseIterable, Hashable {
     case Satellite
     case Rover          // Pictures from NASA?
     case Transporter    // Bring stuff in - first one settles the colony (Must have a pass (spent $10, or invited))
-    // Terraformer?
+    case Terraformer    // Edit Terrain
 }
 
 class SpaceVehicle:Codable, Identifiable, Equatable {
@@ -104,6 +104,11 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     var tanks:[Tank] = []           // Recommended 1 Methane + 1 Oxygen
     var batteries:[Battery] = []
     var peripherals:[PeripheralObject] = []
+    
+    // Updating boxes...
+    // ⚠️ Change back to empty array (required)
+    var boxes:[StorageBox]? = []
+    
     var solar:[SolarPanel] = []
     var antenna:PeripheralObject?
 
@@ -237,7 +242,7 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
         print("\n Vehicle Weight \n------")
         
         let engineWeight = Int(Double(engine.payloadLimit) * 1.2)
-        var weight:Int = engineWeight
+        var weight:Int = 0 // engineWeight
         
         print("+ Engine: \(engineWeight)")
         
@@ -363,6 +368,24 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
         let b1 = Battery(capacity: 100, current: 90)
         vehicle.batteries = [b1]
         vehicle.tanks = [t1]
+        return vehicle
+    }
+    
+    /// Example of a big vehicle (for the loading screen)
+    static func bigLoad() -> SpaceVehicle {
+        
+        let vehicle = SpaceVehicle(engine: .T18)
+        let t1 = Tank(type: .ch4, full: true)
+        let t2 = Tank(type: .o2, full: true)
+        let nitro = Tank(type: .n2, full: true)
+        let b1 = Battery(capacity: 100, current: 100)
+        
+        vehicle.tanks = [t1, t2, nitro]
+        vehicle.batteries = [b1]
+        vehicle.status = .Creating
+        vehicle.simulation = 1
+        vehicle.name = "Boogie Down"
+        
         return vehicle
     }
     

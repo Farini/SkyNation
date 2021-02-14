@@ -50,6 +50,7 @@ class GarageViewModel:ObservableObject {
     @Published var tanks:[Tank] = []
     @Published var batteries:[Battery] = []
     @Published var peripherals:[PeripheralObject] = []
+    @Published var ingredients:[StorageBox]
     @Published var availablePeople:[Person]
     
     init() {
@@ -69,6 +70,7 @@ class GarageViewModel:ObservableObject {
         tanks = station.truss.getTanks()
         batteries = station.truss.batteries
         peripherals = station.peripherals
+        ingredients = station.truss.extraBoxes
         
         // Lists of Built and Building vehicles
         var tempBuilding:[SpaceVehicle] = []
@@ -394,6 +396,18 @@ class GarageViewModel:ObservableObject {
         }
     }
     
+    /// `Descent` inventory
+    func setupDescentInventory() {
+        self.garageStatus = .planning(stage: .Descent)
+    }
+    
+    func finishedDescentInventory(vehicle:SpaceVehicle) {
+        // Needs to implement...
+        // Transfer stuff from station to vehicle
+        
+        cancelSelection()
+    }
+    
     /// Launches a SpaceVehicle to travel to Mars
     func launch(vehicle:SpaceVehicle) {
         
@@ -425,6 +439,7 @@ class GarageViewModel:ObservableObject {
     
     /// Uses a Token from Player to reduce 1hr in building time
     func useToken(vehicle:SpaceVehicle) {
+        
         guard let travelStarted = vehicle.dateTravelStarts else { return }
         let dateOffset = travelStarted.addingTimeInterval(-60*60)
         self.selectedVehicle?.dateTravelStarts = dateOffset
@@ -445,4 +460,19 @@ class GarageViewModel:ObservableObject {
             }
         }
     }
+}
+
+import SceneKit
+
+class LaunchSceneController:ObservableObject {
+    
+    @Published var scene:SCNScene
+    @Published var vehicle:SpaceVehicle
+    
+    init(vehicle:SpaceVehicle) {
+        self.vehicle = vehicle
+        let scene = SCNScene(named: "Art.scnassets/Vehicles/SpaceVehicleExport.scn")!
+        self.scene = scene
+    }
+    
 }

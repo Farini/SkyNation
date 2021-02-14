@@ -55,7 +55,6 @@ struct BuildingVehicleView: View {
                             .foregroundColor(builderController.hasSkills ? .green:.red)
                     }
                     
-                    
                     ScrollView([Axis.Set.horizontal], showsIndicators: true) {
                         HStack {
                             ForEach(builderController.availablePeople) { person in
@@ -94,7 +93,6 @@ struct BuildingVehicleView: View {
                 case .namingVehicle(let vehicle):
                     
                     NameVehicleCard(vehicle: vehicle, closeAction: {
-//                        builderController.didNameVehicle(vehicle.name)
                         garageController.didSetupEngine(vehicle: vehicle)
                     }, controller: builderController)
                 

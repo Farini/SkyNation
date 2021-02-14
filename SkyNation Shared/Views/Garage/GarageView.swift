@@ -111,6 +111,56 @@ struct GarageView: View {
         
     }
     
+    var sideList: some View {
+        List {
+            
+            // Selection
+            Section(header: Text("Building Vehicles")) {
+                if controller.buildingVehicles.isEmpty {
+                    Text("No vehicles")
+                        .foregroundColor(.gray)
+                }else{
+                    ForEach(controller.buildingVehicles) { vehicle in
+                        SpaceVehicleRow(vehicle:vehicle, selected:controller.selectedVehicle == vehicle)
+                            .onTapGesture() {
+                                self.didSelectBuilding(vehicle: vehicle)
+                            }
+                    }
+                }
+            }
+            
+            // Built Vehicles
+            Section(header: Text("Built Vehicles")) {
+                if controller.builtVehicles.isEmpty {
+                    Text("No vehicles")
+                        .foregroundColor(.gray)
+                }else{
+                    ForEach(controller.builtVehicles) { vehicle in
+                        SpaceVehicleRow(vehicle:vehicle, selected:controller.selectedVehicle == vehicle)
+                            .onTapGesture() {
+                                self.didSelectBuilt(vehicle: vehicle)
+                            }
+                    }
+                }
+            }
+            
+            // Travelling Vehicles
+            Section(header: Text("Travelling")) {
+                if controller.travellingVehicles.isEmpty {
+                    Text("No vehicles")
+                        .foregroundColor(.gray)
+                }else{
+                    ForEach(controller.travellingVehicles) { vehicle in
+                        SpaceVehicleRow(vehicle:vehicle, selected:controller.selectedVehicle == vehicle)
+                            .onTapGesture() {
+                                self.didSelectTravelling(vehicle: vehicle)
+                            }
+                    }
+                }
+            }
+        }
+    }
+    
     var body: some View {
         VStack {
             
@@ -120,56 +170,13 @@ struct GarageView: View {
             // Body
             switch controller.garageStatus {
             case .idle:
-                HStack(alignment: .center, spacing: 4) {
+                HStack(alignment: .top, spacing: 4) {
                     
                     // List
-                    List {
-                        // Selection
-                        Section(header: Text("Building Vehicles")) {
-                            if controller.buildingVehicles.isEmpty {
-                                Text("No vehicles")
-                                    .foregroundColor(.gray)
-                            }else{
-                                ForEach(controller.buildingVehicles) { vehicle in
-                                    SpaceVehicleRow(vehicle:vehicle, selected:controller.selectedVehicle == vehicle)
-                                        .onTapGesture() {
-                                            self.didSelectBuilding(vehicle: vehicle)
-                                        }
-                                }
-                            }
-                        }
-                        // Built Vehicles
-                        Section(header: Text("Built Vehicles")) {
-                            if controller.builtVehicles.isEmpty {
-                                Text("No vehicles")
-                                    .foregroundColor(.gray)
-                            }else{
-                                ForEach(controller.builtVehicles) { vehicle in
-                                    SpaceVehicleRow(vehicle:vehicle, selected:controller.selectedVehicle == vehicle)
-                                        .onTapGesture() {
-                                            self.didSelectBuilt(vehicle: vehicle)
-                                        }
-                                }
-                            }
-                        }
-                        
-                        // Travelling Vehicles
-                        Section(header: Text("Travelling")) {
-                            if controller.travellingVehicles.isEmpty {
-                                Text("No vehicles")
-                                    .foregroundColor(.gray)
-                            }else{
-                                ForEach(controller.travellingVehicles) { vehicle in
-                                    SpaceVehicleRow(vehicle:vehicle, selected:controller.selectedVehicle == vehicle)
-                                        .onTapGesture() {
-                                            self.didSelectTravelling(vehicle: vehicle)
-                                        }
-                                }
-                            }
-                        }
-                    }
-                    .frame(minWidth: 140, idealWidth: 140, maxWidth: 180, minHeight: 500, maxHeight: 600, alignment: Alignment.leading)
-                    Spacer(minLength: 4)
+                    sideList
+                        .frame(minWidth: 140, maxWidth: 180, maxHeight: .infinity, alignment: Alignment.leading)
+                    
+                    Spacer(minLength: 2)
                     
                     // Main
                     ScrollView {
@@ -210,155 +217,196 @@ struct GarageView: View {
                     }
                 }
                 .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: Alignment.leading)
+                
             case .selectedBuilding(let sev):
-                ScrollView {
-                    VStack {
-                        Group {
-                            Text("Building Vehicle")
-                                .font(.title)
+                
+                HStack(alignment: .top, spacing: 4) {
+                    
+                    // List
+                    sideList
+                        .frame(minWidth: 140, maxWidth: 180, maxHeight: .infinity, alignment: Alignment.leading)
+                    
+                    ScrollView {
+                        VStack {
+                            
+                            Group {
+                                Text("Building Vehicle")
+                                    .font(.title)
+                                    .padding()
+                                Text("Engine: \(sev.engine.rawValue) | Limit: \(sev.engine.payloadLimit * 100)Kg.")
+                                
+                                HStack {
+                                    Image(systemName: "scalemass")
+                                    Text("\(sev.engine.payloadLimit * 100)Kg")
+                                }
+                                .font(.headline)
+                                
+                                Text("Simulation: \(sev.simulation) hrs")
+                                Text("Destination: \(sev.status.rawValue)")
+                                Text("Travel Starts: \(GameFormatters.dateFormatter.string(from: sev.dateTravelStarts ?? Date()))")
+                                Text("V Engine: \(sev.engine.rawValue)")
+                                
+                                ForEach(sev.tanks) { tank in
+                                    Text("Tank: \(tank.type.rawValue)")
+                                        .foregroundColor(.blue)
+                                }
+                                ForEach(sev.batteries) { battery in
+                                    Text("Battery: \(battery.current) of \(battery.capacity)")
+                                        .foregroundColor(.red)
+                                }
+                                ForEach(sev.solar) { panel in
+                                    Text("Solar Panel of size: \(panel.size)")
+                                        .foregroundColor(.red)
+                                }
+                            }
+                            
+                            
+                            Text("Status: \(sev.status.rawValue)")
                                 .padding()
-                            Text("Engine: \(sev.engine.rawValue) | Limit: \(sev.engine.payloadLimit * 100)Kg.")
+                                .font(.title)
+                                .foregroundColor(.orange)
+                            
+                            // Progress
+                            GameActivityView(vehicle: sev)
+                            
+                            Divider()
                             
                             HStack {
-                                Image(systemName: "scalemass")
-                                Text("\(sev.engine.payloadLimit * 100)Kg")
+                                
+                                Button("Launch") {
+                                    controller.launch(vehicle: sev)
+                                }
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
+                                .disabled(controller.vehicleProgress ?? 0 < 1)
+                                
+                                Button("Token") {
+                                    controller.useToken(vehicle: sev)
+                                }
+                                .disabled(controller.vehicleProgress ?? 1.0 >= 1)
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: .red))
+                                
+                                Button("Cancel") {
+                                    print("Cancelling")
+                                    controller.cancelSelection()
+                                }
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                                
+                                Button("Simulate") {
+                                    print("Go Simulate")
+                                }
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                                
+                                Button("Inventory") {
+                                    print("Go to Inventory")
+                                    controller.setupInventory(vehicle: sev)
+                                }
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                             }
-                            .font(.headline)
-                            
-                            Text("Simulation: \(sev.simulation) hrs")
-                            Text("Destination: \(sev.status.rawValue)")
-                            Text("Travel Starts: \(GameFormatters.dateFormatter.string(from: sev.dateTravelStarts ?? Date()))")
-                            Text("V Engine: \(sev.engine.rawValue)")
-                            
-                            ForEach(sev.tanks) { tank in
-                                Text("Tank: \(tank.type.rawValue)")
-                                    .foregroundColor(.blue)
-                            }
-                            ForEach(sev.batteries) { battery in
-                                Text("Battery: \(battery.current) of \(battery.capacity)")
-                                    .foregroundColor(.red)
-                            }
-                            ForEach(sev.solar) { panel in
-                                Text("Solar Panel of size: \(panel.size)")
-                                    .foregroundColor(.red)
-                            }
-                        }
-                        
-                        
-                        Text("Status: \(sev.status.rawValue)")
                             .padding()
-                            .font(.title)
-                            .foregroundColor(.orange)
-                        
-                        // Progress
-//                        CirclePercentIndicator(percentage: CGFloat(controller.vehicleProgress ?? 0.0))
-                        GameActivityView(vehicle: sev)
-                        
-                        Divider()
-                        HStack {
                             
-                            Button("Launch") {
-                                controller.launch(vehicle: sev)
-                            }
-                            .disabled(controller.vehicleProgress ?? 0 < 1)
-                            
-                            Button("Token") {
-                                controller.useToken(vehicle: sev)
-                            }
-                            .disabled(controller.vehicleProgress ?? 1.0 >= 1)
-                            
-                            Button("Cancel") {
-                                print("Cancelling")
-                                controller.cancelSelection()
-                            }
-                            
-                            Button("Simulate") {
-                                print("Go Simulate")
-                            }
-                            
-                            Button("Inventory") {
-                                print("Go to Inventory")
-                                controller.setupInventory(vehicle: sev)
-                            }
                         }
-                        .padding()
-                        
                     }
+                    // .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: Alignment.leading)
+                    
                 }
-                .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: Alignment.leading)
                 
             case .selectedBuildEnd(let sev):
-                ScrollView {
-                    VStack {
-                        Group {
-                            Text("Ready Vehicle")
-                                .font(.title)
-                                .foregroundColor(.blue)
-                                .padding()
-                            Text("Engine: \(sev.engine.rawValue)")
-                            
-                            HStack {
-                                Image(systemName: "scalemass")
-                                Text("\(sev.engine.payloadLimit * 100)Kg")
-                            }
-                            .font(.title2)
-                            
-//                            Spacer(minLength: 8)
-                            
-                            Text("Simulation: \(sev.simulation) hrs")
-                                .padding([.top])
-                            Text("Destination: \(sev.status.rawValue)")
-                            Text("Travel Starts: \(GameFormatters.dateFormatter.string(from: sev.dateTravelStarts ?? Date()))")
-                            Text("V Engine: \(sev.engine.rawValue)")
-                            
-                            ForEach(sev.tanks) { tank in
-                                Text("Tank: \(tank.type.rawValue)")
+                
+                HStack(alignment: .top, spacing: 4) {
+                    
+                    // List
+                    sideList
+                        .frame(minWidth: 140, maxWidth: 180, maxHeight: .infinity, alignment: Alignment.leading)
+                    
+//                    Spacer(minLength: 2)
+                    
+                    // Main
+                    ScrollView {
+                        VStack {
+                            Group {
+                                Text("Ready Vehicle")
+                                    .font(.title)
                                     .foregroundColor(.blue)
+                                    .padding()
+                                Text("Engine: \(sev.engine.rawValue)")
+                                
+                                HStack {
+                                    Image(systemName: "scalemass")
+                                    Text("\(sev.engine.payloadLimit * 100)Kg")
+                                }
+                                .font(.title2)
+                                
+                                Text("Simulation: \(sev.simulation) hrs")
+                                    .padding([.top])
+                                Text("Destination: \(sev.status.rawValue)")
+                                Text("Travel Starts: \(GameFormatters.dateFormatter.string(from: sev.dateTravelStarts ?? Date()))")
+                                Text("V Engine: \(sev.engine.rawValue)")
+                                
+                                ForEach(sev.tanks) { tank in
+                                    Text("Tank: \(tank.type.rawValue)")
+                                        .foregroundColor(.blue)
+                                }
+                                ForEach(sev.batteries) { battery in
+                                    Text("Battery: \(battery.current) of \(battery.capacity)")
+                                        .foregroundColor(.red)
+                                }
+                                ForEach(sev.solar) { panel in
+                                    Text("Solar Panel of size: \(panel.size)")
+                                        .foregroundColor(.red)
+                                }
                             }
-                            ForEach(sev.batteries) { battery in
-                                Text("Battery: \(battery.current) of \(battery.capacity)")
-                                    .foregroundColor(.red)
+                            
+                            Text("Status: \(sev.status.rawValue)")
+                                .padding()
+                                .font(.title)
+                                .foregroundColor(.orange)
+                            
+                            Divider()
+                            HStack {
+                                
+                                
+                                Button("Cancel") {
+                                    print("Cancelling")
+                                    controller.cancelSelection()
+                                }
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: Color.blue))
+                                
+                                Button("Simulate") {
+                                    print("Go Simulate")
+                                }
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: Color.blue))
+                                
+                                Button("Inventory") {
+                                    print("Go to Inventory")
+                                    controller.setupInventory(vehicle: sev)
+                                }
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: Color.blue))
+                                
+                                if sev.engine != .Hex6 {
+                                    Button("Descent") {
+                                        print("Go to Descent")
+                                        controller.setupDescentInventory()
+                                        //                                    controller.setupInventory(vehicle: sev)
+                                    }
+                                    .buttonStyle(NeumorphicButtonStyle(bgColor: Color.blue))
+                                }
+                                
+                                Divider()
+                                
+                                Button("🚀 Launch") {
+//                                    controller.launch(vehicle: sev)
+                                    controller.garageStatus = .planning(stage: .PrepLaunch)
+                                }
+                                .disabled(controller.vehicleProgress ?? 0 < 1)
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: Color.blue))
+                                
                             }
-                            ForEach(sev.solar) { panel in
-                                Text("Solar Panel of size: \(panel.size)")
-                                    .foregroundColor(.red)
-                            }
-                        }
-                        
-                        
-                        Text("Status: \(sev.status.rawValue)")
                             .padding()
-                            .font(.title)
-                            .foregroundColor(.orange)
-                        
-                        // Progress
-//                        CirclePercentIndicator(percentage: CGFloat(controller.vehicleProgress ?? 0.0))
-                        
-                        Divider()
-                        HStack {
-//                            Button("🚀 Launch") {
-//                                controller.launch(vehicle: sev)
-//                            }
-//                            .disabled(controller.vehicleProgress ?? 0 < 1)
-                            
-                            Button("Cancel") {
-                                print("Cancelling")
-                                controller.cancelSelection()
-                            }
-                            
-                            Button("Simulate") {
-                                print("Go Simulate")
-                            }
-                            
-                            Button("Inventory") {
-                                print("Go to Inventory")
-                                controller.setupInventory(vehicle: sev)
-                            }
                         }
-                        .padding()
                     }
+//                    .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: Alignment.leading)
                 }
-                .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: Alignment.leading)
+                
                 
             case .selectedTravel( _):
                 VStack {
@@ -377,22 +425,7 @@ struct GarageView: View {
                         VehicleInventoryView(controller: controller)
                         
                     case .Descent:      // Adding Ingredients, Peripherals, and BotTech
-                        Group {
-                            Text("3 - Choose Payload")
-                            HStack {
-                                VStack {
-                                    Text("Payload with engine \(self.selectedEngine!.rawValue)")
-                                    Text("Support limit: \(self.selectedEngine!.payloadLimit)")
-                                    Button("Add Payload") {
-                                        print("Satcom is a go")
-                                        //                                    controller.makeProgress(new: .heatshield)
-                                    }
-                                    Button("No Payload") {
-                                        print("Satcom is a go")
-                                    }
-                                }
-                            }.padding()
-                        }
+                        DescentInventoryView(controller:controller, vehicle:controller.selectedVehicle!)
                         
                     case .Crew:         // Selecting Passengers
                         Group {
@@ -404,11 +437,8 @@ struct GarageView: View {
                         LaunchingVehicleView(vehicle: controller.selectedVehicle!, controller:controller)
                         
                     case .Launching:    // Animation
-                        PostLaunchVehicleView(vehicle: controller.selectedVehicle!)
-//                        Group {
-//                            Text("Launching")
-//                            Text("---")
-//                        }
+                        PostLaunchVehicleView(garageController: controller, launchController: LaunchSceneController(vehicle: controller.selectedVehicle!))
+
                         
                 }
                 
@@ -651,7 +681,7 @@ struct TravellingVehicleView: View {
                                             print("You can't stop me!")
                                         }
                                         .foregroundColor(.red)
-                                    case .Rover, .Transporter:
+                                    case .Rover, .Transporter, .Terraformer:
                                         Button("Drop Bot") {
                                             print("You can't boost me!")
                                         }

@@ -9,32 +9,6 @@
 import Foundation
 import SceneKit
 
-//enum SceneNames:String {
-//
-//    case Modeling;
-//    case Module;
-//    case Node;
-//    case Truss;
-//    case Stage; // Stage is where scene gets presented
-//
-//    func getScene() -> SCNScene? {
-//        let sceneName = "\(self.rawValue).scn"
-//        return SCNScene(named: "Art.scnassets/\(sceneName)")
-//    }
-//
-//    var objName:String {
-//        get {
-//            switch self {
-//            case .Module: return self.rawValue
-//            case .Node: return "Node2"
-//            case .Truss: return "TSlot"
-//            default:
-//                return self.rawValue
-//            }
-//        }
-//    }
-//}
-
 /**
  A Singleton that helps control the main scene.
  Use this class to send notifications to the `SCNScene`
@@ -53,7 +27,7 @@ class SceneDirector {
     func controllerDidLoadScene(controller:GameController) {
         
         self.gameController = controller
-        guard let station = LocalDatabase.shared.station else { fatalError() }
+        guard let _ = LocalDatabase.shared.station else { fatalError() }
         
         // Update Truss
 //        controller.updateTrussLayout()

@@ -93,8 +93,7 @@ struct GameButtons: View {
             
             HStack {
                 Button(action: {
-                    print("button pressed")
-                    
+                    print("Back Button Pressed")
                 }) {
                     Image(systemName: "backward.frame")
                 }
@@ -151,29 +150,41 @@ struct NeumorphicButtonStyle: ButtonStyle {
     var bgColor: Color
     
     func makeBody(configuration: Self.Configuration) -> some View {
-        configuration.label
-            .padding(8)
-            .background(
-                ZStack {
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .shadow(color: .white,
-                                radius: configuration.isPressed ? 5: 8,
-                                x: configuration.isPressed ? -3: -5,
-                                y: configuration.isPressed ? -3: -5)
-                        .blendMode(.overlay)
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+        MyButton(configuration: configuration)
+    }
+    
+    struct MyButton: View {
+        let configuration: ButtonStyle.Configuration
+        @Environment(\.isEnabled) private var isEnabled: Bool
+        var body: some View {
+            
+            
+            configuration.label
+                .padding(8)
+                .background(
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .shadow(color: .white,
+                                    radius: configuration.isPressed ? 5: 8,
+                                    x: configuration.isPressed ? -3: -5,
+                                    y: configuration.isPressed ? -3: -5)
+                            .blendMode(.overlay)
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            
+                            .fill(Color("DarkGray"))
                         
-                        .fill(Color("DarkGray"))
+                        RoundedRectangle(cornerRadius: 8, style: .circular)
+                            .strokeBorder(configuration.isPressed ? Color.orange:Color.gray)
+                        
+                    }
                     
-                    RoundedRectangle(cornerRadius: 8, style: .circular)
-                        .strokeBorder(configuration.isPressed ? Color.orange:Color.gray)
-                    
-                }
+                )
+                .scaleEffect(configuration.isPressed ? 0.95: 1)
                 
-            )
-            .scaleEffect(configuration.isPressed ? 0.95: 1)
-            .foregroundColor(.primary)
-            .animation(.spring())
+                // Disabled State
+                .foregroundColor(isEnabled ? Color.white : Color.gray)
+                .animation(.spring())
+        }
     }
 }
 
