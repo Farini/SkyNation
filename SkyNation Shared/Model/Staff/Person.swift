@@ -153,41 +153,40 @@ class Person:Codable, Identifiable, Equatable {
     /// Sets a random mood
     func randomMood() {
         
+        var happyDeltas:[Int] = [-1, 0, 1]
+        
         // Happiness
+        
+        // Busy -> More unhappy
         if isBusy() == true {
-            if Bool.random() == false {
-                happiness -= 1
-                if Bool.random() == false {
-                    happiness -= 1
-                }
-            }
-        } else {
-            if Bool.random() == true { happiness += 1 }
+            happyDeltas.append(-2)
         }
         
-        let mood = Bool.random()
-        if mood == true {
-            happiness += 1
-        }else{
-            happiness -= 1
+        // Random Mood
+        if Bool.random() {
+            if Bool.random() { happyDeltas.append(1) }
+            if Bool.random() { happyDeltas.append(-1) }
         }
+        
+        
+        var newHappy = min(100, happiness + happyDeltas.randomElement()!)
+        if newHappy < 0 { newHappy = 0 }
+        happiness = newHappy
+        
         if happiness <= 50 {
-            lifeExpectancy -= 1
-            if happiness <= 30 {
-                healthPhysical -= 1
-            }
-        }else if happiness >= 72 && healthPhysical > 95 {
-            lifeExpectancy += 1
+            // Less life expectancy
+            if Bool.random() && Bool.random() { lifeExpectancy -= 1 }
+            
+        }else if happiness >= 78 && healthPhysical > 95 && lifeExpectancy < 90 {
+            // More life expectancy
+            if Bool.random() && Bool.random() { lifeExpectancy += 1 }
         }
         
-        let lifeDelta = lifeExpectancy - age
-        if lifeDelta > age {
-            happiness += 1
-        }else{
-            happiness += Bool.random() == true ? 1:-1
-            // Health is more random
-            healthPhysical += Bool.random() == true ? 2:-2
+        if age > lifeExpectancy {
+            print("This Person is about to die !")
+            healthPhysical = max(0, healthPhysical - 10)
         }
+        
     }
     
     /// For **ACCOUNTING** only!
@@ -228,6 +227,43 @@ class Person:Codable, Identifiable, Equatable {
         return air
     }
     
+    func consumeFood(_ new:String, bio:Bool = false) {
+        
+        var happyDelta:Int = 0
+        
+        if bio == true && Bool.random() == true { happyDelta += 1 }
+        
+        if let last = foodEaten.last {
+            if new == last {
+                // Eating same food as last
+                happyDelta += [-2, -1, 0].randomElement()!
+            } else {
+                
+                if foodEaten.contains(new) {
+                    // Different food (lvl 1)
+                    happyDelta += [-1, 0, 1].randomElement()!
+                } else {
+                    // Different food (lvl 2)
+                    happyDelta += [0, 1, 2].randomElement()!
+                }
+            }
+        }
+        
+        var newHappy = min(100, happiness + happyDelta)
+        if newHappy < 0 { newHappy = 0 }
+        
+        happiness = newHappy
+        
+        if healthPhysical < 50 {
+            healthPhysical += 1
+        }
+        
+        // Refresh array of eaten foods
+        if foodEaten.count > 5 {
+            self.foodEaten = [new]
+        }
+    }
+    
     func sumOfSkills() -> Int {
         var counter:Int = 0
         for skset in skills {
@@ -235,6 +271,8 @@ class Person:Codable, Identifiable, Equatable {
         }
         return counter
     }
+    
+    
     
     /// Returns chances (0...1) of Studying
     func willingnessToStudy() -> Double {

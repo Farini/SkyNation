@@ -65,6 +65,11 @@ struct GameLogic {
         return degrees * .pi/180
     }
     
+    static func fibonnaci(index:Int) -> Int {
+        guard index > 1 else { return 1 }
+        return fibonnaci(index: index - 1) + fibonnaci(index:index-2)
+    }
+    
     /**
      Calculates chances of an event happening - 100 default total
      - Parameter hit: The chance (divided by total)

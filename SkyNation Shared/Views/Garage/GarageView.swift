@@ -17,10 +17,8 @@ struct GarageView: View {
     
     @ObservedObject var controller:GarageViewModel = GarageViewModel()
     
-    var body: some View {
-        VStack {
-            
-            // Top - Header
+    var header: some View {
+        Group {
             HStack {
                 
                 VStack(alignment:.leading) {
@@ -35,17 +33,15 @@ struct GarageView: View {
                 }
                 Spacer()
                 
-                // Settings
+                // Tutorial
                 Button(action: {
-                    print("Gear action")
+                    print("Question ?")
                     popoverGarage.toggle()
                 }, label: {
-                    Image(systemName: "ellipsis.circle")
-                        .resizable()
-                        .aspectRatio(contentMode:.fit)
-                        .frame(width:34, height:34)
+                    Image(systemName: "questionmark.circle")
+                        .font(.title2)
                 })
-                .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
+                .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
                 .popover(isPresented: $popoverGarage, content: {
                     VStack {
                         HStack {
@@ -97,25 +93,35 @@ struct GarageView: View {
                 
                 // Close
                 Button(action: {
-                    print("Close action")
                     controller.cancelSelection()
                     NotificationCenter.default.post(name: .closeView, object: self)
                 }, label: {
                     Image(systemName: "xmark.circle")
-                        .resizable()
-                        .aspectRatio(contentMode:.fit)
-                        .frame(width:34, height:34)
+                        .font(.title2)
                 })
-                .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
+                .buttonStyle(SmallCircleButtonStyle(backColor: .red))
+                
+                
                 .padding(.trailing, 6)
                 
             }
             Divider()
+                .offset(x: 0, y: -5)
+        }
+        
+    }
+    
+    var body: some View {
+        VStack {
+            
+            // Top - Header
+            header
             
             // Body
             switch controller.garageStatus {
             case .idle:
                 HStack(alignment: .center, spacing: 4) {
+                    
                     // List
                     List {
                         // Selection
@@ -184,11 +190,20 @@ struct GarageView: View {
                                     print("Starting a new vehicle")
                                     controller.startNewVehicle()
                                 }
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
                                 
                                 Button("Experience +") {
 //                                    print("Making some")
                                     controller.improveExperience()
                                 }
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                                
+                                Button("Upgrade ?") {
+                                    //                                    print("Making some")
+                                    controller.improveExperience()
+                                }
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                                
                             }.padding()
                         }
                         .padding()
@@ -389,10 +404,11 @@ struct GarageView: View {
                         LaunchingVehicleView(vehicle: controller.selectedVehicle!, controller:controller)
                         
                     case .Launching:    // Animation
-                        Group {
-                            Text("Launching")
-                            Text("---")
-                        }
+                        PostLaunchVehicleView(vehicle: controller.selectedVehicle!)
+//                        Group {
+//                            Text("Launching")
+//                            Text("---")
+//                        }
                         
                 }
                 
@@ -403,6 +419,7 @@ struct GarageView: View {
                 }
             }
         }
+        .frame(minWidth: 700, idealWidth: 800, maxWidth: 800, minHeight: 400, idealHeight: 500, maxHeight: 500, alignment:.top)
     }
     
     func didSelectBuilding(vehicle:SpaceVehicle) {

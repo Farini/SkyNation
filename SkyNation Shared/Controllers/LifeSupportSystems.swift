@@ -25,6 +25,8 @@ class LSSModel:ObservableObject {
     @Published var batteries:[Battery]                 // Batteries
     @Published var tanks:[Tank]                        // Tanks
     @Published var boxes:[StorageBox]
+    @Published var peripherals:[PeripheralObject]
+    
     @Published var inhabitants:Int                     // Count of
     
     // Air
@@ -52,7 +54,7 @@ class LSSModel:ObservableObject {
     @Published var energyProduction:Int
     
     
-    @Published var peripherals:[PeripheralObject]
+    
     
     // Accounting
     

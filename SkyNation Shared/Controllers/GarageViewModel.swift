@@ -417,7 +417,8 @@ class GarageViewModel:ObservableObject {
         LocalDatabase.shared.saveStation(station: self.station)
         
         // Update View
-        self.cancelSelection()
+        self.garageStatus = .planning(stage: .Launching)
+        // self.cancelSelection()
     }
     
     // FIXME: - Token Use

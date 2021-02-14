@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import SceneKit
 
 struct LaunchingVehicleView: View {
+    // Status = .planning(stage: .PrepLaunch)
     
     @ObservedObject var controller:GarageViewModel
     @ObservedObject var launchController:VehicleLaunchControl
@@ -58,7 +60,8 @@ struct LaunchingVehicleView: View {
             
             VStack(spacing:4) {
                 Text("Propulsion Checklist")
-                    .padding([.bottom])
+//                    .padding([.bottom])
+                Divider().offset(x:0, y:-3)
                 HStack {
                     Text(launchController.propulsionCheck.ch4Check ? "✅":"❌")
                     Text("CH4")
@@ -93,15 +96,35 @@ struct LaunchingVehicleView: View {
                     print("Back To Inventory")
                     controller.goBackToInventory()
                 }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
                 Button("Launch") {
                     print("Launch Vehicle")
+                    controller.launch(vehicle: launchController.vehicle)
                 }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
                 Button("Test") {
                     print("Test")
                 }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
             }
         }
         .padding()
+    }
+}
+
+struct PostLaunchVehicleView: View {
+    
+    // Shows the Vehicle launching, and later its status
+    @State var vehicle:SpaceVehicle
+    
+    var body: some View {
+        ZStack {
+            SceneView(scene: SCNScene(named: "Art.scnassets/Vehicles/SpaceVehicleExport.scn"), pointOfView: nil, options: .allowsCameraControl, preferredFramesPerSecond: 30, antialiasingMode: .none, delegate: nil, technique: nil)
+            Button("Close") {
+                
+            }
+        }
+        
     }
 }
 
@@ -196,5 +219,11 @@ struct LaunchingVehicleView_Previews: PreviewProvider {
             LaunchingVehicleView(vehicle: SpaceVehicle.builtExample(), controller:ctrl)
         }
         
+    }
+}
+
+struct PostLaunch_Previews: PreviewProvider {
+    static var previews: some View {
+        PostLaunchVehicleView(vehicle: SpaceVehicle(engine: .Hex6))
     }
 }

@@ -8,13 +8,6 @@
 
 import SwiftUI
 
-//enum LSSSegment: String, CaseIterable {
-//    case AirLevels
-//    case Resources
-//    case Energy
-//    case Accounting
-//}
-
 enum LSSTab:String, CaseIterable {
     case Air
     case Resources
@@ -41,10 +34,6 @@ enum RSSType {
 struct LifeSupportView: View {
     
     @ObservedObject var controller:LSSModel
-    
-//    @State var selectedTank:Tank?
-//    @State var selectedPeripheral:PeripheralObject?
-//    @State var selectedBox:StorageBox?
     
     var goodQualities:[AirQuality] = [.Great, .Good]
     
@@ -180,20 +169,10 @@ struct LifeSupportView: View {
                                             .foregroundColor(GameColors.lightBlue)
                                         Text("Pressure: \(Double(self.controller.airPressure), specifier: "%.2f") KPa")
                                             .foregroundColor(.green)
-                                        
-                                        
-                                        // Future View
-                                        // future
-                                        
                                     }
                                     
                                     Spacer()
                                     
-//                                    // Timer
-//                                    VStack {
-//                                        Text("Account: \(controller.accountDate, formatter:GameFormatters.dateFormatter)")
-//                                        Text("Head count: \(controller.inhabitants)")
-//                                    }
                                 }
                                 .padding()
                                 
@@ -285,11 +264,12 @@ struct LifeSupportView: View {
                         }
                         
                     case .Machinery:
-                        VStack {
-                            Spacer()
-                            Text("Machinery")
-                            Spacer()
-                        }
+                        MachineryView(controller: controller)
+//                        VStack {
+//                            Spacer()
+//                            Text("Machinery")
+//                            Spacer()
+//                        }
                     case .Energy:
                         ScrollView {
                             // Energy
@@ -323,23 +303,13 @@ struct LifeSupportView: View {
                             // Accounting Report
                             if controller.accountingReport != nil {
                                 let report = controller.accountingReport!
-//                                Divider()
                                 VStack {
-                                    Text("🗒 Report").font(.title)
-                                    Text("📆 \(GameFormatters.dateFormatter.string(from: report.date))")
-                                        .padding([.top], 4)
-                                        .padding([.bottom], 6)
-                                    
-                                    Text("Air Start (V): \(report.airStart.getVolume())")
-                                    
-                                    Text("Energy Start: \(report.energyStart)")
-                                    Text("Energy Input: \(report.energyInput)")
-                                    Text("Energy Finish:\(report.energyFinish ?? 0)")
-                                    
-                                    Text("💩 \(report.poopFinish ?? 0)")
-                                    Text("Pee: \(report.wasteWaterFinish ?? 0)")
-                                    Text("Air adjustment: \(report.tankAirAdjustment ?? 0)")
+                                    Text("Current Status").font(.title).foregroundColor(.orange)
+                                    Text("👤 Head count: \(controller.inhabitants)")
+                                    Text("☀️ Energy Input: \(report.energyInput)")
+                                    Text("☁️ Air adjustment: \(report.tankAirAdjustment ?? 0)")
                                 }
+                                AccountingReportView(report: report)
                             }
                             
                             // Future's View
@@ -364,20 +334,6 @@ struct LifeSupportView: View {
                                     Text(problem)
                                 }
                             }
-                            
-                            
-                            
-//                            Divider()
-//                            HStack {
-//                                Button("Accounting") {
-//                                    print("Run accounting")
-//                                    controller.runAccounting()
-//                                }
-//                                Button("💾 Save") {
-//                                    print("Test what?")
-//                                    controller.saveAccounting()
-//                                }
-//                            }
                         }
                 }
                 
@@ -430,6 +386,52 @@ struct LifeSupportView: View {
         }
     }
     
+}
+
+struct MachineryView:View {
+    
+    @ObservedObject var controller:LSSModel
+    @State var selected:PeripheralObject?
+    
+    var body: some View {
+        HStack {
+            List(controller.peripherals) { peripheral in
+                
+                HStack {
+                    // Image
+                    peripheral.getImage()
+                        .frame(width:42, height:42)
+                    VStack {
+                        Text("\(peripheral.peripheral.rawValue)")
+                        Text("Power: \(peripheral.powerOn ? "on":"false")\(peripheral.isBroken ? " broken":"")")
+                            .foregroundColor((peripheral.isBroken || !peripheral.powerOn) ? .red:.white)
+                    }
+                }
+                .onTapGesture {
+                    self.selected = peripheral
+                }
+            }
+            .frame(maxWidth: 200)
+            
+            // Detail View
+            ScrollView {
+                if let peripheral = selected {
+                    PeripheralDetailView(controller: controller, peripheral: peripheral)
+                } else {
+                    noSelectionView
+                }
+            }
+            .frame(minWidth: 400, maxWidth:.infinity)
+        }
+    }
+    
+    var noSelectionView: some View {
+        VStack {
+            Spacer()
+            Text("Machine decription")
+            Spacer()
+        }
+    }
 }
 
 struct EnergyOverview:View {
@@ -530,39 +532,12 @@ struct AccountingReportView: View {
                 .padding([.top], 4)
                 .padding([.bottom], 6)
             
-//            Text("Air Start (V): \(report.airStart.getVolume())")
-            
-//            Group {
-//                LazyVGrid(columns: [GridItem(.fixed(80)), GridItem(.fixed(50)), GridItem(.fixed(50))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: /*@START_MENU_TOKEN@*/nil/*@END_MENU_TOKEN@*/, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/, content: {
-//
-//                    Text("Energy")
-//                    Text("\(report.energyStart)")
-//                    Text("\(report.energyFinish ?? 0)")
-//
-//                    Text("O2")
-//                    Text("\(report.airStart.o2)")
-//                    Text("\(report.airFinish?.o2 ?? 0)")
-//
-//                    Text("CO2")
-//                    Text("\(report.airStart.co2)")
-//                    Text("\(report.airFinish?.co2 ?? 0)")
-//
-////                    Text("H2O")
-////                    Text("\(report.waterStart)")
-////                    Text("\(report.waterFinish ?? 0)")
-//                })
-//
-//                Text("Energy Start: \(report.energyStart)")
-//                Text("Energy Input: \(report.energyInput)")
-//                Text("Energy Finish:\(report.energyFinish ?? 0)")
-//            }
-            
             Text("Compare").foregroundColor(.orange).font(.title)
             
             // Trying Stacks
             Group {
                 HStack {
-                    VStack {
+                    VStack(alignment:.trailing) {
                         Text("Name")
                             .foregroundColor(.gray)
                         Text("Energy")
@@ -605,6 +580,15 @@ struct AccountingReportView: View {
             }
             .padding()
             
+            // Problems
+            ForEach(report.listProblems(), id:\.self) { aProblem in
+                Text(aProblem).foregroundColor(.red)
+            }
+            
+            ForEach(report.listNotes(), id:\.self) { aNote in
+                Text(aNote).foregroundColor(.gray)
+            }
+            
             
             Text("💩 \(report.poopFinish ?? 0)")
             Text("Pee: \(report.wasteWaterFinish ?? 0)")
@@ -615,25 +599,13 @@ struct AccountingReportView: View {
     }
 }
 
+// MARK: - Previews
+
 struct LifeSupportView_Previews: PreviewProvider {
     static var previews: some View {
         LifeSupportView()
     }
 }
-/*
-struct TankView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            Text("Tank: - Big")
-            TankView(tank:LocalDatabase.shared.station!.truss.getTanks().first!)
-            Divider()
-            Text("Tank: - Small")
-            TankViewSmall(tank: LocalDatabase.shared.station!.truss.getTanks().first!)
-        }
-        
-    }
-}
-*/
 
 struct StationAccounting_Previews: PreviewProvider {
     static var previews: some View {

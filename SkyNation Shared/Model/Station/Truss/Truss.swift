@@ -27,13 +27,11 @@ class Truss:Codable {
     
     /// Calculates the amount of money the `Antenna` makes
     func moneyFromAntenna() -> Int {
-        var profits:Int = 100
-        var level = antenna.level * 25
-        if antenna.level > 3 {
-            profits -= (antenna.level - 3) * 18
-            level += antenna.level * 2
-        }
-        return profits + level
+        
+        let fixedProfits:Int = 300
+        let variableProfits:Int = 100 * GameLogic.fibonnaci(index: antenna.level)
+        
+        return fixedProfits + variableProfits
     }
     
     func getTanks() -> [Tank] {

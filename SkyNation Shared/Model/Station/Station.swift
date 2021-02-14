@@ -71,7 +71,8 @@ class Station:Codable {
         var problems:[String] = []
         
         // 2. Solar panels
-        // + Fill Batteries
+        
+        // Fill Batteries
         let panels = truss.solarPanels
         var energyGenerated:Int = 0
         for panel in panels {
@@ -92,10 +93,6 @@ class Station:Codable {
         }
         
         // 3. LSS Peripherals
-        // + Life Support Peripherals first
-        // + Update Air
-        // + ⛔️ Chances of Breaking
-        // ✅ Consume Energy
         print("\n⚙️ [Peripherals] ---")
         
         var tempWater:Int = truss.tanks.filter({ $0.type == .h2o }).map({$0.current}).reduce(0, +)
@@ -106,6 +103,7 @@ class Station:Codable {
         
         let report = AccountingReport(time: nextDate, energy: tempEnergy, zInput: energyInput, air: air, water: tempWater)
         
+        // Peripherals
         for peripheral in peripherals {
             // power on -> broken = false || power on -> not broken = true || power off = false
             let isWorking = peripheral.powerOn == true && peripheral.isBroken == false //? (peripheral.isBroken ? false:true):false
@@ -126,6 +124,7 @@ class Station:Codable {
                     }
                 }
             } else {
+                report.addProblem(string: "⛔️ \(peripheral.peripheral.rawValue) is broken")
                 problems.append("⛔️ Broken Peripheral")
                 continue
             }
@@ -138,6 +137,7 @@ class Station:Codable {
                     print("\n ⚠️ Should break peripheral !! \n\n")
                     peripheral.isBroken = true
                     problems.append("✋ Broken Peripheral")
+                    report.addProblem(string: "⛔️ \(peripheral.peripheral.rawValue) is broken")
                     continue
                 }
             }
@@ -148,9 +148,10 @@ class Station:Codable {
                         tempAir.co2 -= 3
                     }
                 case .Condensator:
-                    if tempAir.h2o > 2 {
-                        tempAir.h2o -= 2
-                        tempWater += 2
+                    if tempAir.h2o > 4 {
+                        tempAir.h2o -= 4
+                        tempWater += 4
+                        report.addNote(string: "Condensator removed 4Kg of water vapor")
                     }
                 case .Electrolizer:
                     // Make electrolisys if air is bad
@@ -159,6 +160,7 @@ class Station:Codable {
                         tempWater -= 3
                         tempAir.o2 += 3
                         tempAir.h2 += 6
+                        report.addNote(string: "Electrolizer used 3Kg of water, and made 3g of O2")
                     }
                 case .Methanizer:
                     if tempAir.co2 > 2 {
@@ -167,6 +169,7 @@ class Station:Codable {
                                 tempAir.co2 -= 2
                                 hydrogenTank.current -= 2
                                 methaneTank.current += 2
+                                report.addNote(string: "Methanizer produced 2Kg of methane")
                             }
                         }
                     }
@@ -184,6 +187,7 @@ class Station:Codable {
                                 let amt = Int(0.1 * Double(dirty.current)) + lvl
                                 dirty.current -= (amt + 1)
                                 drinkable.current = min(drinkable.current + amt, drinkable.capacity)
+                                report.addNote(string: "Water filter recycled \(amt)L of water")
                             }
                         }
                     }
@@ -200,6 +204,7 @@ class Station:Codable {
                                 let amt = Int(0.1 * Double(poop.current)) + lvl
                                 poop.current -= (amt + 1)
                                 box.current = min(box.current + amt, box.capacity)
+                                report.addNote(string: "BioSolid made \(amt)Kg of fertilizer")
                             }
                         }
                     }
@@ -213,6 +218,8 @@ class Station:Codable {
         if airConditions.contains(tempAir.airQuality()) {
             // Increase oxygen
             let oxyTanks = truss.tanks.filter({ $0.type == .o2 })
+            
+            report.addNote(string: "Adding O2 from tanks into the air")
             
             for o2Tank in oxyTanks {
                 let oNeeded = tempAir.needsOxygen()
@@ -246,11 +253,6 @@ class Station:Codable {
         
         for person in inhabitants {
             
-            // Air transformation
-            // consume oxygen
-            // emit co2
-            // emit vapor
-            
             let newAir = person.consumeAir(airComp: tempAir)
             print("\t 🤓: \(person.name)\t 😷:\(person.healthPhysical)")
             print("\t 💨: \(newAir.airQuality().rawValue)")
@@ -263,9 +265,11 @@ class Station:Codable {
                     person.healthPhysical += 3
                 }
             } else {
+                // No Water
                 let dHealth = max(0, person.healthPhysical - 2)
                 person.healthPhysical = dHealth
                 problems.append("💦 Lack of Water")
+                report.addProblem(string: "\(person.name) 💦 Lack of Water")
             }
             
             // consume energy
@@ -273,6 +277,7 @@ class Station:Codable {
                 let dHappy = max(0, person.happiness - 2)
                 person.happiness = dHappy
                 problems.append("⚡️ Lack of Energy")
+                report.addProblem(string: "⚡️ Lack of Energy")
             }
             
             // Consume food
@@ -282,7 +287,7 @@ class Station:Codable {
             // Look for BioBoxes
             for box in bioBoxes {
                 let newFood = box.population.filter({$0 == box.perfectDNA})
-                if let randomFood = newFood.randomElement(), newFood.count > 2 {
+                if let randomFood = newFood.randomElement(), newFood.count > 5 {
                     if let ridx = box.population.firstIndex(of: randomFood) {
                         // Food success
                         foodConsumed? = randomFood
@@ -293,19 +298,22 @@ class Station:Codable {
             }
             // or consume from station
             if foodConsumed == nil {
-                if let lastFood = food.last {
-                    person.foodEaten.append(lastFood)
-                    if person.healthPhysical < 50 {
-                        person.healthPhysical += 1
-                    }
+                if let lastFood = food.first {
+//                    person.foodEaten.append(lastFood)
+//                    if person.healthPhysical < 50 {
+//                        person.healthPhysical += 1
+//                    }
+                    person.consumeFood(lastFood, bio: false)
                     food.removeLast()
                 } else {
+                    // No Food
                     let dHealth = max(0, person.healthPhysical - 2)
                     person.healthPhysical = dHealth
                     if person.teamWork > 10 {
                         person.teamWork -= 1
                     }
                     problems.append("🍽 No food for \(person.name)")
+                    report.addProblem(string: "🍽 No food for \(person.name)")
                 }
             }
             
@@ -337,7 +345,7 @@ class Station:Codable {
                     person.healthPhysical += 1
                 }
                 
-                if person.happiness < 95 && Bool.random() {
+                if person.happiness < 20 && Bool.random() {
                     person.happiness += 1
                 }
             } else {
@@ -350,7 +358,7 @@ class Station:Codable {
             // WASTE MANAGEMENT
             
             // wasteLiquid (pee)
-            accumulatedUrine += 2
+            accumulatedUrine += Bool.random() ? 1:2
             
             // solidWaste (poop)
             if Bool.random() {
@@ -359,28 +367,21 @@ class Station:Codable {
             
             if person.healthPhysical < 20 {
                 problems.append("\(person.name) is very sick! 🤮")
+                report.addProblem(string: "\(person.name) is very sick! 🤮")
             }
             if person.happiness < 20 {
                 problems.append("\(person.name) is unhappy! 😭")
+                report.addProblem(string: "\(person.name) is unhappy! 😭")
             }
             
             // DEATH
             if person.healthPhysical < 1 {
-                problems.append("\(person.name) is passing away")
-                for mod in habModules {
-                    if mod.inhabitants.contains(person) {
-                        // Remove
-                        mod.inhabitants.removeAll(where: { $0.id == person.id })
-                    }
-                }
+                self.prepareDeath(of: person)
+                continue
             }
             
             // + Activity check (cleanup)
             person.clearActivity()
-//            if person.isBusy() == false && person.activity != nil {
-//                person.activity = nil
-//            }
-            
             
             // Aging Humans (Once a week)
             if m.hour == 1 && m.weekday == 1 {
@@ -391,6 +392,7 @@ class Station:Codable {
                 problems.append("\(person.name)'s \(person.age)\(ageExtended) birthday!")
                 if person.age > person.lifeExpectancy {
                     problems.append("\(person.name) is diying of age. Farewell!")
+                    report.addProblem(string: "💀 \(person.name) is diying of age. Farewell!")
                 }
             }
         }
@@ -399,18 +401,21 @@ class Station:Codable {
         let waterSpill = truss.refillTanks(of: .h2o, amount: tempWater)
         if waterSpill > 0 {
             problems.append("💦 Water spilling: \(waterSpill)")
+            report.addNote(string: "💦 Water tanks are full")
         }
         
         // put back urine
         let urineSpill = truss.refillContainers(of: .wasteLiquid, amount: accumulatedUrine)
         if urineSpill > 0 {
             problems.append("💦 Urine spilling: \(urineSpill)")
+            report.addNote(string: "Waste Water tanks are full")
         }
         
         // put back poop
         let poopSpill = truss.refillContainers(of: .wasteSolid, amount: accumulatedPoop)
         if poopSpill > 0 {
             problems.append("💩 Solid waste spilling: \(poopSpill)")
+            report.addNote(string: "💩 Solid Waste containers are full")
         }
         
         // 5. Modules
@@ -420,6 +425,7 @@ class Station:Codable {
         let emResult = truss.consumeEnergy(amount: energyForModules)
         if emResult == true {
             print("Modules consumed energy")
+            report.addNote(string: "Modules consumed ⚡️ \(energyForModules)")
         }
         
         // Report...
@@ -439,6 +445,7 @@ class Station:Codable {
             if let airTank = truss.tanks.filter({ $0.type == .air }).first {
                 let airXfer = min(delta, airTank.current)
                 problems.append("💨 Air adjustment: \(airXfer)")
+                report.addNote(string: "💨 tanks released \(airXfer)L of air")
                 airTank.current -= airXfer
                 air.mergeWith(newAirAmount: airXfer)
                 report.reportNeededAir(amount: airXfer)
@@ -466,6 +473,7 @@ class Station:Codable {
         if let player = LocalDatabase.shared.player {
             player.money += antennaMoney
             print(" 🤑💵 Player money: \(player.money)")
+            report.addNote(string: "💵 \(player.money) (📡 + \(antennaMoney))")
         } else {
             print("No Player, no money")
         }
@@ -485,6 +493,13 @@ class Station:Codable {
             
             print("--- [END OF ACCOUNTING] ---\n")
         }
+    }
+    
+    /// When Accounting sees a person with health physycal < 1
+    private func prepareDeath(of person:Person) {
+        GameMessageBoard.shared.newAchievement(type: .experience, qtty: nil, message: "\(person.name) has passed away!")
+        let hab = habModules.filter({ $0.inhabitants.contains(person) }).first
+        hab?.inhabitants.removeAll(where: { $0.id == person.id })
     }
     
     /// Checks air for required vs supply
@@ -743,6 +758,12 @@ class AccountingReport:Codable {
     
     var tankAirAdjustment:Int?
     
+    // Issues encountered when accounting (lack of water, food, O2, etc.)
+    var problems:[String]?
+    
+    // Other notes worth taking
+    var notes:[String]?
+    
     init(time:Date, energy:Int, zInput:Int, air:AirComposition, water:Int) {
         self.id = UUID()
         date = time
@@ -765,6 +786,30 @@ class AccountingReport:Codable {
     
     func reportNeededAir(amount:Int) {
         tankAirAdjustment = amount
+    }
+    
+    /// Adds a problem to the accounting
+    func addProblem(string:String) {
+        var newProblems = problems ?? []
+        newProblems.append(string)
+        self.problems = newProblems
+    }
+    
+    /// Gets the problems to display
+    func listProblems() -> [String] {
+        return problems ?? []
+    }
+    
+    /// Adds a note to the report
+    func addNote(string:String) {
+        var newNotes = notes ?? []
+        newNotes.append(string)
+        self.notes = newNotes
+    }
+    
+    /// Gets the notes to display
+    func listNotes() -> [String] {
+        return notes ?? []
     }
     
     static func example() -> AccountingReport? {
