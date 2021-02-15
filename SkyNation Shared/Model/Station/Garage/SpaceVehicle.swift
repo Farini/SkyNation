@@ -257,6 +257,10 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
         print("+ Batteries: \(batteries.count)")
         
         for _ in peripherals {
+            // weight += 1
+        }
+        
+        for _ in boxes ?? [] {
             weight += 1
         }
         
@@ -268,34 +272,6 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
             print("Antenna level: \(antenna.level)")
             weight += 1
         }
-        
-        /*
-        for _ in payload?.ingredients ?? [] {
-            weight += 10
-        }
-        print("+ Ingredients: \(payload?.ingredients.count ?? 0 * 5)")
-        
-        for _ in payload?.people ?? [] {
-            weight += 50
-        }
-        print("+ People: \(payload?.people.count ?? 0 * 50)")
-        
-        for _ in payload?.tanks ?? [] {
-            weight += 10
-        }
-        */
-        
-        // Heatshield
-//        if let heat = heatshield {
-//            switch heat {
-//                case .eighteen:
-//                    weight += 18 * 2
-//                    print("+ Heatshield: \(18 * 2)")
-//                case .twelve:
-//                    weight += 12 * 2
-//                    print("+ Heatshield: \(12 * 2)")
-//            }
-//        }
         
         return weight
     }

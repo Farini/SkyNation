@@ -401,11 +401,20 @@ class GarageViewModel:ObservableObject {
         self.garageStatus = .planning(stage: .Descent)
     }
     
-    func finishedDescentInventory(vehicle:SpaceVehicle) {
+    
+    
+    func finishedDescentInventory(vehicle:SpaceVehicle, cargo:[StorageBox], devices:[PeripheralObject]) {
         // Needs to implement...
         // Transfer stuff from station to vehicle
+        station.truss.extraBoxes.removeAll(where: { cargo.map({ $0.id }).contains($0.id) })
+        station.peripherals.removeAll(where: { devices.map({ $0.id }).contains($0.id)})
         
-        cancelSelection()
+        vehicle.boxes = vehicle.boxes ?? []
+        vehicle.boxes!.append(contentsOf: cargo)
+        vehicle.peripherals.append(contentsOf: devices)
+        
+        didSelectBuildEnd(vehicle: vehicle)
+//        cancelSelection()
     }
     
     /// Launches a SpaceVehicle to travel to Mars
@@ -466,6 +475,7 @@ import SceneKit
 
 class LaunchSceneController:ObservableObject {
     
+    
     @Published var scene:SCNScene
     @Published var vehicle:SpaceVehicle
     
@@ -475,4 +485,24 @@ class LaunchSceneController:ObservableObject {
         self.scene = scene
     }
     
+}
+
+class LaunchSceneRendererMan:NSObject, SCNSceneRendererDelegate {
+    
+    var checkup:TimeInterval = 10
+    var addedBox:Bool = false
+    
+    func renderer(_ renderer: SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
+//        renderer.debugOptions = .showBoundingBoxes
+        if time > checkup {
+            print("Checkup")
+            checkup += 10
+            if !addedBox {
+                let box = SCNBox(width: 3, height: 3, length: 3, chamferRadius: 1)
+                let bnode = SCNNode(geometry: box)
+                scene.rootNode.addChildNode(bnode)
+                addedBox = true
+            }
+        }
+    }
 }

@@ -131,14 +131,14 @@ struct PostLaunchVehicleView: View {
     
     @ObservedObject var garageController:GarageViewModel
     @ObservedObject var launchController:LaunchSceneController
-    
+    let renderer = LaunchSceneRendererMan()
     
     // Shows the Vehicle launching, and later its status
 //    @State var vehicle:SpaceVehicle
     
     var body: some View {
-        ZStack {
-            SceneView(scene: SCNScene(named: "Art.scnassets/Vehicles/SpaceVehicleExport.scn"), pointOfView: nil, options: .allowsCameraControl, preferredFramesPerSecond: 30, antialiasingMode: .none, delegate: nil, technique: nil)
+        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
+            SceneView(scene: SCNScene(named: "Art.scnassets/Vehicles/SpaceVehicleExport.scn"), pointOfView: nil, options: .allowsCameraControl, preferredFramesPerSecond: 30, antialiasingMode: .none, delegate: renderer, technique: nil)
             VStack {
                 Text("V: \(launchController.vehicle.name)")
                 Button("Close") {
@@ -146,6 +146,9 @@ struct PostLaunchVehicleView: View {
                 }
             }
             
+            .padding(20)
+            .background(Color.black.luminanceToAlpha())
+            .cornerRadius(12)
         }
     }
 }

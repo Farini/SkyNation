@@ -42,11 +42,6 @@ struct DescentInventoryView: View {
     var body: some View {
         VStack {
             
-            Text("Descent").font(.title)
-                .padding([.top])
-            
-            Divider()
-            
             HStack(spacing:18) {
                 VStack {
                     Text("🚀 \(vehicle.name): \(vehicle.engine.rawValue)")
@@ -55,14 +50,16 @@ struct DescentInventoryView: View {
                 .foregroundColor(.orange)
                 .padding([.leading])
                 
+                let count = vehicle.calculateWeight() + ingredientsSelected.count + bottechSelected.count
+                
                 Spacer()
                 VStack {
                     HStack {
                         Image(systemName: "scalemass")
                             .font(.title)
-                        let count = vehicle.calculateWeight() + ingredientsSelected.count + peripheralsSelected.count + bottechSelected.count
+                        
                         Text("Payload: \(count) of \(vehicle.engine.payloadLimit) Kg") // \(vehicle.engine.payloadLimit)
-                            //.foregroundColor(ttlCount > vehicle.engine.payloadLimit ? .red:.green)
+                            .foregroundColor(count > vehicle.engine.payloadLimit ? .red:.green)
                     }
                     .padding([.top, .bottom], 8)
                     .frame(width: 170)
@@ -77,17 +74,18 @@ struct DescentInventoryView: View {
                     }
                     .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
                     .popover(isPresented: self.$popTrunk) {
-                        VehicleTrunkView(vehicle: vehicle)
+                        VehicleTrunkView(vehicle: vehicle, addedPeripherals: peripheralsSelected, addedIngredients: ingredientsSelected)
                     }
                     Button("Done") {
                         print("Finished Descent Order")
-                        controller.finishedDescentInventory(vehicle: vehicle)
+                        controller.finishedDescentInventory(vehicle: vehicle, cargo: ingredientsSelected, devices: peripheralsSelected)
                     }
                     .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
+                    .disabled(count > vehicle.engine.payloadLimit)
                 }
                 .padding([.trailing])
             }
-            
+            .padding([.top], 8)
             
             Divider()
             
@@ -106,6 +104,7 @@ struct DescentInventoryView: View {
                         LazyVGrid(columns: [GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 4, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
                             ForEach(controller.ingredients.sorted(by: { $0.type.rawValue.compare($1.type.rawValue) == .orderedAscending })) { ingredient in
                                 IngredientView(ingredient: ingredient.type, hasIngredient: true, quantity: nil)
+                                    .foregroundColor(ingredientsSelected.contains(ingredient) ? Color.red:Color.white)
                                     .onTapGesture {
                                         self.toggleSelection(ingredient: ingredient)
                                     }
@@ -115,12 +114,12 @@ struct DescentInventoryView: View {
                     case .peripherals:
                         LazyVGrid(columns: [GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 4, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
                             ForEach(controller.peripherals.sorted(by: { $0.peripheral.rawValue.compare($1.peripheral.rawValue) == .orderedAscending })) { peripheral in
-//                                IngredientView(ingredient: ingredient.type, hasIngredient: true, quantity: nil)
-//                                PeripheralCollectionView(<#T##peripherals: [PeripheralObject]##[PeripheralObject]#>)
+                                // Peripheral View
                                 PeripheralSmallView(peripheral: peripheral)
+                                    .foregroundColor(peripheralsSelected.contains(peripheral) ? Color.red:Color.white)
                                     
                                     .onTapGesture {
-//                                        self.toggleSelection(ingredient: ingredient)
+                                        self.toggleSelection(peripheral: peripheral)
                                         print("select peripheral")
                                     }
                             }
@@ -152,11 +151,32 @@ struct DescentInventoryView: View {
             ingredientsSelected.append(ingredient)
         }
     }
+    
+    func toggleSelection(peripheral:PeripheralObject) {
+        
+//        if vehicle.peripherals.contains(peripheral) {
+//            vehicle.peripherals.removeAll(where: { $0.id == peripheral.id })
+//        } else {
+//            vehicle.peripherals.append(peripheral)
+//        }
+//        self.segment = .peripherals
+        
+        
+        if peripheralsSelected.contains(peripheral) {
+            peripheralsSelected.removeAll(where: { $0.id == peripheral.id })
+        } else {
+            peripheralsSelected.append(peripheral)
+        }
+        
+    }
 }
 
 struct VehicleTrunkView: View {
     
     var vehicle:SpaceVehicle
+    
+    @State var addedPeripherals:[PeripheralObject] = []
+    @State var addedIngredients:[StorageBox] = []
     
     var body: some View {
         List {
@@ -204,7 +224,11 @@ struct VehicleTrunkView: View {
                 ForEach(vehicle.peripherals) { peripheral in
                     Text("\(peripheral.peripheral.rawValue): \(peripheral.isBroken ? "Broken":"") Powered \(peripheral.powerOn.description)")
                 }
-                if vehicle.peripherals.isEmpty {
+                ForEach(addedPeripherals) { peripheral in
+                    Text("\(peripheral.peripheral.rawValue): \(peripheral.isBroken ? "Broken":"") Powered \(peripheral.powerOn.description)")
+                        .foregroundColor(.red)
+                }
+                if vehicle.peripherals.isEmpty && addedPeripherals.isEmpty {
                     Text("< No peripherals >").foregroundColor(.gray)
                 }
             }
@@ -225,7 +249,16 @@ struct VehicleTrunkView: View {
                         // https://stackoverflow.com/questions/57919062/swiftui-list-with-alternate-background-colors
                         .listRowBackground((index  % 2 == 0) ? GameColors.darkGray : Color(.sRGBLinear, red: 0.1, green: 0.1, blue: 0.1, opacity: 0.3))
                     }
-                } else {
+                }
+                
+                ForEach(addedIngredients) { box in
+                    HStack {
+                        Text("\(box.type.rawValue)")
+                        Text("\(box.current)/\(box.capacity)")
+                    }
+                    .foregroundColor(.red)
+                }
+                if addedIngredients.isEmpty && (vehicle.boxes ?? []).isEmpty {
                     Text("< No boxes >").foregroundColor(.gray)
                 }
             }

@@ -157,7 +157,9 @@ enum PeripheralType:String, Codable, CaseIterable {
 }
 
 /// An object that produces, or transforms `Ingredients`
-class PeripheralObject:Codable, Identifiable {
+class PeripheralObject:Codable, Identifiable, Equatable {
+    
+    
     
     var id:UUID
     var peripheral:PeripheralType
@@ -235,6 +237,10 @@ class PeripheralObject:Codable, Identifiable {
         
         
         
+    }
+    
+    static func == (lhs: PeripheralObject, rhs: PeripheralObject) -> Bool {
+        return lhs.id == rhs.id
     }
 }
 
