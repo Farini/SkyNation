@@ -19,16 +19,21 @@ class RoboArmNode:SCNNode {
     func animate() {
         
         // For Debugging, print angles
-        print("Robot Animation")
-        self.debugAnime()
+        if GameSettings.shared.debugScene {
+            print("Animating Roboarm")
+            self.debugAnime()
+        }
         
         // Arm
         let waiter = SCNAction.wait(duration: 3)
         let rotate = SCNAction.rotateBy(x: CGFloat(GameLogic.radiansFrom(-20)), y: 0, z: 0, duration: 3)
         let armSequence = SCNAction.sequence([waiter, rotate])
+        
         arm.runAction(armSequence) {
-            print("Arm Finished")
-            self.debugAnime()
+            if GameSettings.shared.debugScene {
+                print("RoboArm Finished")
+                self.debugAnime()
+            }
         }
         
         // Forearm
@@ -38,28 +43,15 @@ class RoboArmNode:SCNNode {
         let foreWaiter = SCNAction.wait(duration: 6)
         let forearmSequence = SCNAction.sequence([foreWaiter, foreArmRotate])
         thirdArm.runAction(forearmSequence) {
-            print("Forearm Finished")
-            self.debugAnime()
+            
+//            self.debugAnime()
+            if GameSettings.shared.debugScene {
+                print("Forearm Finished Animating")
+                self.debugAnime()
+            }
         }
         
         // Wrist
-//        let wristRotate = SCNAction.rotateTo(x: -1.5707963705062866, y: 0, z: 0, duration: 3)
-//
-//        // Use a custom timing function
-//        wristRotate.timingFunction = { (p: Float) in
-//            return self.easeOutElastic(p)
-//        }
-//
-//        let wristWaiter = SCNAction.wait(duration: 9)
-//        let wristSequence = SCNAction.sequence([wristWaiter, wristRotate])
-//
-//        wrist.runAction(wristSequence) {
-//            print("Wrist Finished")
-//            self.debugAnime()
-//            var wristPos = self.wrist.worldPosition
-//            wristPos.z = -100
-//            self.wrist.look(at: wristPos) // SCNVector3(-100, 0, 0)
-//        }
         
         // --- SMOOTH LOOK AT TARGET
         // https://stackoverflow.com/questions/47973953/animating-scnconstraint-lookat-for-scnnode-in-scenekit-game-to-make-the-transi

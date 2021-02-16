@@ -172,7 +172,7 @@ class LocalDatabase {
         }
     }
     private static func loadStation() -> Station? {
-        print("Loading Station")
+//        print("Loading Station")
         let finalUrl = LocalDatabase.folder.appendingPathComponent(stationFile)
         
         if !FileManager.default.fileExists(atPath: finalUrl.path){
@@ -346,14 +346,14 @@ class LocalDatabase {
         
         // Space Station
         if let ss = LocalDatabase.loadStation() {
-            print("Loading Station")
+//            print("Loading Station")
             // Set the Station
             self.station = ss
             // Load builder for station
             let sBuilder = LocalDatabase.initializeStationBuilder()
             self.stationBuilder = sBuilder
         }else{
-            print("Starting New Game")
+            print("=== Starting New Game ===")
             let sBuilder = LocalDatabase.initializeStationBuilder()
             self.stationBuilder = sBuilder
             self.station = Station(stationBuilder: sBuilder)
@@ -361,27 +361,6 @@ class LocalDatabase {
         }
         
         self.gameMessages = LocalDatabase.loadMessages()
-        
-        // Builder
-        /*
-        if let builder = LocalDatabase.loadBuilder() {
-            print("Loading Builder")
-            self.builder = builder
-        }else{
-            print("Starting new builder")
-            builder = SerialBuilder()
-        }
-        */
-        
-        // Space Station
-//        if let ss = LocalDatabase.loadStation() {
-//            print("Loading Station")
-//            self.station = ss
-//        }else{
-//            print("Starting New Station")
-//            self.station = Station(builder: builder)
-//        }
-        
         
         // Vehicles
         let vehiclesArray = LocalDatabase.loadVehicles()

@@ -230,7 +230,7 @@ class StationBuilder:Codable {
         self.prepareScene(station:station) { scene in
             // Send notification "Finished Scene" to GameController
             // So it can present :)
-            print("Scene Building has finished building")
+            print("Station Builder has finished building")
             self.scene = scene
         }
     }
@@ -258,22 +258,29 @@ extension StationBuilder {
         
         // 1. Modules + Nodes
         for buildPart in buildList {
-            print("Build part type: \(buildPart.type.rawValue)")
+            print("Build SCNNode: \(buildPart.type.rawValue)")
             if let newNode = buildPart.loadFromScene() {
                 scene.rootNode.addChildNode(newNode)
             }
         }
         
         // 3. Tech Items
+        print("Loading unlocked Technology...")
         for item in station.unlockedTechItems {
-            print("Display item for tech: \(item)")
+            
             if let model = item.loadToScene() {
                 scene.rootNode.addChildNode(model)
+                
+                // Debug
+                if GameSettings.shared.debugScene {
+                    print("Loading Tech Node for: \(item)")
+                }
             }
         }
         
         // 4. Accessories (Antenna)
-        let antenna = Antenna3DNode()
+        let antennaPeripheral = station.truss.antenna
+        let antenna = Antenna3DNode(peripheral: antennaPeripheral)
         antenna.position = SCNVector3(22.0, 1.5, 0.0)
         scene.rootNode.addChildNode(antenna)
         
@@ -290,30 +297,11 @@ extension StationBuilder {
             oldCam.removeFromParentNode()
         }
         
-//        let camera = SCNCamera()
-//        camera.usesOrthographicProjection = false
-//        camera.focalLength = 150
-//        camera.fieldOfView = 9.148
-//        camera.sensorHeight = 24
-//        camera.zNear = 0.1
-//        camera.zFar = 500
-//
-//        let cameraNode = SCNNode()
-//        cameraNode.position = SCNVector3(x: 105, y: 75, z: 135)
-//        cameraNode.camera = camera
-//
-//        let cameraOrbit = SCNNode()
-//        cameraOrbit.name = "cameraOrbit"
-//        cameraOrbit.position = SCNVector3(x: 0, y: 0, z: 0)
-//
-//        cameraOrbit.addChildNode(cameraNode)
-//        scene.rootNode.addChildNode(cameraOrbit)
-        
+        // Game Camera
         let newCamera = GameCamera()
         scene.rootNode.addChildNode(newCamera)
-
-        // ------------------------------------
         
+        // 7. Truss
         
         // Truss (Solar Panels, Radiator, and Roboarm)
         let trussNode = scene.rootNode.childNode(withName: "Truss", recursively: true)!
@@ -328,13 +316,13 @@ extension StationBuilder {
         
         // Add Solar Panels and Radiators to Truss
         for item in station.truss.tComponents {
-            print("Truss Component: \(item.posIndex)")
+//            print("Truss Component: \(item.posIndex)")
             guard let pos = item.getPosition() else { continue }
             guard let eul = item.getRotation() else { continue }
             switch item.allowedType {
                 case .Solar:
                     if item.itemID != nil {
-                        print("Solar Panel: \(item.posIndex) pos:\(pos), euler:\(eul)")
+//                        print("Solar Panel: \(item.posIndex) pos:\(pos), euler:\(eul)")
                         let solarScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/SolarPanel.scn")
                         if let solarPanel = solarScene?.rootNode.childNode(withName: "SolarPanel", recursively: true)?.clone() {
                             solarPanel.position = SCNVector3(pos.x, pos.y, pos.z)
@@ -344,7 +332,7 @@ extension StationBuilder {
                         }
                     }
                 case .Radiator:
-                    print("Radiator slot: \(item.posIndex) pos:\(pos), euler:\(eul)")
+//                    print("Radiator slot: \(item.posIndex) pos:\(pos), euler:\(eul)")
                     if item.itemID != nil {
                         print("Radiator: \(item.posIndex) pos:\(pos), euler:\(eul)")
                         let radiatorNode = RadiatorNode()
@@ -385,7 +373,7 @@ extension StationBuilder {
             // Kill Engines
             let killWaiter = SCNAction.wait(duration: 6)
             let killAction = SCNAction.run { shipNode in
-                print("Kill Waiter")
+                print("Kill Engines")
                 ship?.killEngines()
             }
             let killSequence = SCNAction.sequence([killWaiter, killAction])

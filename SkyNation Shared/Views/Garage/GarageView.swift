@@ -170,13 +170,12 @@ struct GarageView: View {
             // Body
             switch controller.garageStatus {
             case .idle:
+                
                 HStack(alignment: .top, spacing: 4) {
                     
                     // List
                     sideList
-                        .frame(minWidth: 140, maxWidth: 180, maxHeight: .infinity, alignment: Alignment.leading)
-                    
-                    Spacer(minLength: 2)
+                        .frame(minWidth: 140, maxWidth: 180, alignment: Alignment.leading)
                     
                     // Main
                     ScrollView {
@@ -216,7 +215,6 @@ struct GarageView: View {
                         .padding()
                     }
                 }
-                .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: Alignment.leading)
                 
             case .selectedBuilding(let sev):
                 
@@ -224,7 +222,7 @@ struct GarageView: View {
                     
                     // List
                     sideList
-                        .frame(minWidth: 140, maxWidth: 180, maxHeight: .infinity, alignment: Alignment.leading)
+                        .frame(minWidth: 140, maxWidth: 180, alignment: Alignment.leading)
                     
                     ScrollView {
                         VStack {
@@ -306,8 +304,6 @@ struct GarageView: View {
                             
                         }
                     }
-                    // .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: Alignment.leading)
-                    
                 }
                 
             case .selectedBuildEnd(let sev):
@@ -316,9 +312,7 @@ struct GarageView: View {
                     
                     // List
                     sideList
-                        .frame(minWidth: 140, maxWidth: 180, maxHeight: .infinity, alignment: Alignment.leading)
-                    
-//                    Spacer(minLength: 2)
+                        .frame(minWidth: 140, maxWidth: 180, alignment: Alignment.leading)
                     
                     // Main
                     ScrollView {
@@ -404,15 +398,22 @@ struct GarageView: View {
                             .padding()
                         }
                     }
-//                    .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: Alignment.leading)
                 }
-                
                 
             case .selectedTravel( _):
-                VStack {
-                    TravellingVehicleView(controller: controller)
+                
+                HStack(alignment: .top, spacing: 4) {
+                    
+                    // List
+                    sideList
+                        .frame(minWidth: 140, maxWidth: 180, alignment: Alignment.leading)
+                    
+                    // Content
+                    ScrollView {
+                        TravellingVehicleView(controller: controller)
+                    }
                 }
-            
+                
             // Making a new Vehicle
             case .planning(let stage):
                 
@@ -487,10 +488,16 @@ struct SpaceVehicleRow: View {
                 // Add Weight
                 HStack {
                     
-                    Image(systemName: "scalemass")
-                        .font(.headline)
+                    if vehicle.status == .Creating {
+                        Image(systemName: "scalemass")
+                            .font(.headline)
+                        Text("\(ttlCount) of \(vehicle.engine.payloadLimit)")
+                    }
+                    if vehicle.status == .Mars {
+                        let progress = vehicle.calculateProgress() ?? 0
+                        ProgressView("Travel", value: progress)
+                    }
                     
-                    Text("\(ttlCount) of \(vehicle.engine.payloadLimit)")
                     
                 }
                 .foregroundColor(ttlCount == vehicle.engine.payloadLimit ? .orange:.gray)
@@ -498,78 +505,18 @@ struct SpaceVehicleRow: View {
         }
         
     }
+    
 }
 
 // MARK: - Vehicles Selected
-/*
-struct VehicleBuiltView: View {
-    
-    @ObservedObject var controller:GarageViewModel
-    @State var vehicle:SpaceVehicle
-    
-    var body: some View {
-        VStack {
-            Text("Vehicle Built")
-                .font(.headline)
-                .foregroundColor(.orange)
-                .padding(6)
-            Divider()
-            
-            if controller.selectedVehicle != nil {
-                
-                // Basics (Engine, Antenna, Satellite
-                Text("Engine: \(controller.selectedVehicle!.engine.rawValue)")
-                if controller.selectedVehicle!.antenna != nil {
-                    Text("Antenna: \(controller.selectedVehicle!.antenna!.peripheral.rawValue)")
-                }else{
-                    Text("Antenna: none")
-                }
-//                Text("Satellite: \(controller.selectedVehicle!.satellite?.rawValue ?? "none")")
-                Divider()
-                
-                // Tanks
-                Text("Tanks(ct): \(vehicle.tanks.count)")
-                ForEach(self.vehicle.tanks, id:\.self) { tank in
-                    TankViewSmall(tank: tank)
-                }
-                Divider()
-                
-                // Batteries
-                Text("Batteries: \(vehicle.batteries.count)")
-                ForEach(self.vehicle.batteries, id:\.self) { battery in
-                    HStack {
-                        Image("carBattery")
-                            .resizable()
-                            .frame(width: 32, height: 32)
-                        Text("Battery \(battery.current) of \(battery.capacity)")
-                    }
-                }
-                Divider()
-                
-            }
-            
-            // Buttons
-            HStack {
-                Button("Build") {
-                    print("Building Vehicle")
-                    controller.startBuilding(vehicle: controller.selectedVehicle!)
-                }
-                .padding()
-                Button("Cancel") {
-                    print("Cancel")
-                    controller.cancelSelection()
-                }
-                .padding()
-            }
-        }
-    }
-    
-}
-*/
 
 struct TravellingVehicleView: View {
     
     @ObservedObject var controller:GarageViewModel
+    
+    /// The popover
+    @State var popTrunk:Bool = false
+    
     var vehicle:SpaceVehicle
     
     init(controller:GarageViewModel) {
@@ -580,7 +527,7 @@ struct TravellingVehicleView: View {
     
     var body: some View {
         
-        ScrollView {
+        VStack {
             
             // Intro
             Group {
@@ -593,7 +540,14 @@ struct TravellingVehicleView: View {
                 // Basics (Engine, Antenna, Satellite
                 Text("Engine: \(vehicle.engine.rawValue)")
                 
-//                Text("Satellite: \(vehicle.satellite?.rawValue ?? "none")")
+                Button("Trunk") {
+                    popTrunk.toggle()
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
+                .popover(isPresented: $popTrunk) {
+                    VehicleTrunkView(vehicle: vehicle)
+                }
+                
                 Divider()
             }
             
@@ -621,7 +575,6 @@ struct TravellingVehicleView: View {
                 Divider()
             }
             
-            
             // Time
             Group {
                 Text("Status")
@@ -634,9 +587,7 @@ struct TravellingVehicleView: View {
                         Text("Destination: \(vehicle.status.rawValue)")
                         Text("Time: \(GameFormatters.dateFormatter.string(from: vehicle.dateTravelStarts ?? Date()))")
                         Text("Arrive: \(GameFormatters.dateFormatter.string(from: vehicle.arriveDate()))")
-//                        let pct = Date().timeIntervalSince(vehicle.dateTravelStarts!) / vehicle.arriveDate().timeIntervalSince(vehicle.dateTravelStarts!)
-                        
-//                        CirclePercentIndicator(percentage: CGFloat(pct))
+
                         GameActivityView(vehicle: vehicle)
                         
                         Text("Simulation: \(vehicle.simulation) hrs")
@@ -644,19 +595,20 @@ struct TravellingVehicleView: View {
                         
                         // Buttons
                         HStack {
-                            Button("Stop") {
-                                print("You can't stop me!")
-                            }
-                            Button("Boost") {
-                                print("You can't boost me!")
-                            }
-                            Button("Cancel") {
+//                            Button("Stop") {
+//                                print("You can't stop me!")
+//                            }
+//                            Button("Boost") {
+//                                print("You can't boost me!")
+//                            }
+                            Button("Back") {
                                 print("Cancelling")
                                 controller.cancelSelection()
-                                
                             }
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
                         }
                         .padding()
+                        
                     case .MarsOrbit:
                         
                         Text("In Orbit")
@@ -680,6 +632,7 @@ struct TravellingVehicleView: View {
                                         Button("Self-destruct") {
                                             print("You can't stop me!")
                                         }
+                                        .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
                                         .foregroundColor(.red)
                                     case .Rover, .Transporter, .Terraformer:
                                         Button("Drop Bot") {
@@ -699,12 +652,14 @@ struct TravellingVehicleView: View {
                         Divider()
                         
                         HStack {
-                            Button("<< Go Back") {
+                            Button("Farewell !") {
                                 print("Cancelling")
                                 controller.cancelSelection()
                             }
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
                         }
                         .padding()
+                        
                     default:
                         Text("Other: \(vehicle.status.rawValue)")
                         Divider()
@@ -713,6 +668,7 @@ struct TravellingVehicleView: View {
                                 print("Cancelling")
                                 controller.cancelSelection()
                             }
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
                         }
                         .padding()
                         
@@ -735,3 +691,14 @@ struct VehicleRow_Preview: PreviewProvider {
         SpaceVehicleRow(vehicle: SpaceVehicle(engine: .Hex6))
     }
 }
+
+//struct TravellingVehicle_Previews: PreviewProvider {
+//
+//    static var previews: some View {
+//        let controller = GarageViewModel()
+//        let vehicle = SpaceVehicle.biggerExample()
+//        controller.selectedVehicle = vehicle
+//
+//        return TravellingVehicleView(controller: controller)
+//    }
+//}

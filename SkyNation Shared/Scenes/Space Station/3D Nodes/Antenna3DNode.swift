@@ -11,10 +11,20 @@ import SceneKit
 class Antenna3DNode:SCNNode {
     
     var antenna:SCNNode
+    var peripheral:PeripheralObject
     
-    override init() {
+    init(peripheral:PeripheralObject) {
+        
+        self.peripheral = peripheral
+        
         guard let theNode = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Antenna.scn")?.rootNode.childNode(withName: "Antenna", recursively: true)?.clone() else { fatalError() }
-        print("Initializing Antenna (Children): \(theNode.childNodes.count)")
+        
+        if GameSettings.shared.debugScene {
+            print("Space Station Antenna (Children): \(theNode.childNodes.count)")
+            print("Space Station Antenna (Level): \(peripheral.level)")
+        }
+        
+        
         self.antenna = theNode
         super.init()
         

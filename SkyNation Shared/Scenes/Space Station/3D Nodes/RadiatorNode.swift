@@ -41,22 +41,28 @@ class RadiatorNode:SCNNode {
         var nextChild:SCNNode? = radiator.childNodes.first
         var opposedFold:Bool = false
         var waiterTime:Double = 5
+        var childIndex:Int = 0
+        self.eulerAngles.x = 1.9154
         
         while let current:SCNNode = nextChild?.childNodes.first {
             
-            let rotAngle = GameLogic.radiansFrom(opposedFold ? newAngle:-newAngle)
-            print("LOCROT: \(rotAngle)")
+            let rotAngle = GameLogic.radiansFrom(opposedFold ? newAngle:childIndex == 1 ? -2*newAngle:-newAngle)
+            // print("LOCROT: \(rotAngle)")
             
             let waiter = SCNAction.wait(duration: waiterTime)
             let fold = SCNAction.rotateBy(x: CGFloat(rotAngle), y: 0, z: 0, duration: 1.5)
             let sequence = SCNAction.sequence([waiter, fold])
             
             current.runAction(sequence) {
-                print("LOCROT: \(current.eulerAngles)")
+                // Debug logging
+                if GameSettings.shared.debugScene {
+                    print("Radiator Angles: \(current.eulerAngles)")
+                }
             }
             
             waiterTime += 1.5
             nextChild = current
+            childIndex += 1
             opposedFold.toggle()
         }
     }
@@ -64,7 +70,11 @@ class RadiatorNode:SCNNode {
     override init() {
         
         guard let theNode = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Radiator.scn")?.rootNode.childNode(withName: "Radiator", recursively: true)?.clone() else { fatalError() }
-        print("Initializing Antenna (Children): \(theNode.childNodes.count)")
+        
+        if GameSettings.shared.debugScene {
+            print("Initializing Radiator (Children): \(theNode.childNodes.count)")
+        }
+        
         theNode.isPaused = false
         self.radiator = theNode
         super.init()

@@ -61,14 +61,34 @@ class StationOverlay:NSObject, SKSceneDelegate {
         
         if let player = LocalDatabase.shared.player {
             let playerCard = PlayerCardNode(player: player)
+            playerCard.name = "playercard"
             scene.addChild(playerCard)
         } else {
             let newPlayer = SKNPlayer()
             let playerCard = PlayerCardNode(player: newPlayer)
+            playerCard.name = "playercard"
             scene.addChild(playerCard)
         }
         
         buildMenu()
+    }
+    
+    /// Updates the `Player Card` overlay node
+    func updatePlayerCard() {
+        
+        if let player = LocalDatabase.shared.player {
+        
+            if let card:PlayerCardNode = scene.childNode(withName: "playercard") as? PlayerCardNode {
+                card.nameLabel.text = player.name
+                card.moneyLabel.text = GameFormatters.numberFormatter.string(from: NSNumber(value:player.money))
+                card.tokenLabel.text = "\(player.timeTokens.count)"
+                
+            } else {
+                print("⚠️ Error: Couldnt find PlayerCardNode in Overlay Scene")
+            }
+        } else {
+            print("⚠️ Error: Couldn't find Local Database Player")
+        }
     }
     
     /// Orbit list is the `Space Vehicle` objects that are on their way to Mars
@@ -159,7 +179,6 @@ class StationOverlay:NSObject, SKSceneDelegate {
         }
     }
     
-    
     func generateNews(string:String, warning:Bool = false) {
         
         // Center
@@ -240,17 +259,10 @@ class StationOverlay:NSObject, SKSceneDelegate {
         let sequel = SKAction.sequence([waiter, runner])
         label.run(sequel) {
             print("Finished sequel")
-//            self.scene.removeChildren(in: [self.newsPlaceholder])
             backNode.removeFromParent()
         }
         
     }
-}
-
-extension StationOverlay {
-//    func update(_ currentTime: TimeInterval, for scene: SKScene) {
-//        <#code#>
-//    }
 }
 
 extension SKNImage {

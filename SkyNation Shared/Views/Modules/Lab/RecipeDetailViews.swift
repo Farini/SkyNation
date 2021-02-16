@@ -85,13 +85,11 @@ struct RecipeDetailView:View {
                     }
                 }
                 
-                Text("Select workers")
-                    .font(.headline)
-                
-                // People to Select
-                ScrollView(.horizontal, showsIndicators: true) {
-                    StaffSelectionView(controller: self.labModel, people: labModel.availableStaff, selection: [])
-                }
+                // Skills and People
+                ActivityStaffView(staff: labModel.availableStaff, selected: [], requiredSkills: recipe.skillSet(), chooseWithReturn: { (selectedPeople) in
+                    // labModel.togglePersonSelection(person: <#T##Person#>)
+                    labModel.selectedStaff = selectedPeople
+                }, title: "\(recipe) Skills Required", issue: "", message: "")
                 
                 Divider()
             }
@@ -105,16 +103,22 @@ struct RecipeDetailView:View {
             // Buttons
             HStack {
                 
-                Button("Cancel") {
+                Button(action: {
                     self.labModel.cancelSelection()
+                }) {
+                    HStack {
+                        Image(systemName: "backward.frame")
+                        Text("Back")
+                    }
                 }
-                .padding()
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
+                .help("Go back")
                 
-                Button("Make Recipe") {
+                
+                Button("🛠 Make Recipe") {
                     self.labModel.makeRecipe(recipe: recipe)
                 }
-                
-                .padding()
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                 .disabled(labModel.recipeDisabled(recipe: recipe))
                 
             }

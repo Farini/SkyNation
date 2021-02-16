@@ -42,7 +42,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     // Data
     var gameNavDelegate:GameNavDelegate?
-//    var builder:SerialBuilder
     var modules:[Module] = []
     var station:Station?
     
@@ -303,7 +302,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             switch self.gameScene {
                 case .SpaceStation:
                     if shouldUpdateScene {
-                        print("⏱ Should update scene: \(time)")
+//                        print("⏱ Should update scene: \(time)")
                         shouldUpdateScene = false
                         station?.runAccounting()
                     }
@@ -616,7 +615,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         if let oldAntenna = scene.rootNode.childNode(withName: "Antenna", recursively: false) {
             oldAntenna.removeFromParentNode()
         }
-        let antenna = Antenna3DNode()
+        let antenna = Antenna3DNode(peripheral: station!.truss.antenna)
         antenna.position = SCNVector3(22.0, 1.5, 0.0)
         scene.rootNode.addChildNode(antenna)
         
@@ -806,7 +805,7 @@ extension StationBuildItem {
         var nodeCount:Int = 1
         switch type {
             case .Node:
-                print("Load a node")
+//                print("Load a node")
                 let nodeScene = SCNScene(named: "Art.scnassets/Node.scn")!
                 if let nodeObj = nodeScene.rootNode.childNode(withName: "Node2", recursively: false)?.clone() {
                     nodeObj.name = "Node\(nodeCount)"
@@ -823,7 +822,7 @@ extension StationBuildItem {
                     return nil
                 }
             case .Module:
-                print("Load a module")
+
                 let moduleScene = SCNScene(named: "Art.scnassets/Module.scn")!
                 if let nodeObj = moduleScene.rootNode.childNode(withName: "Module", recursively: false)?.clone() {
                     
@@ -836,18 +835,21 @@ extension StationBuildItem {
                     let uvMapName = "\(modSkin.uvMapName).png"
                     
                     // MATERIAL | SKIN
-                    // let imageName:String = "\(ModuleSkin.allCases.randomElement()!.uvMapName).png" // "Art.scnassets/SpaceStation/ModuleBake4.png"
-                    var skinImage:SKNImage? // ?/Users/farini/Desktop/SkyNation/Source Code/SkyNation/SkyNation Shared/Art.scnassets/UV Images
+                    
+                    var skinImage:SKNImage?
                     if let bun = Bundle.main.url(forResource: "Art", withExtension: ".scnassets") {
-                        print("Bundle found: \(bun)")
                         let pp = bun.appendingPathComponent("/UV Images/ModuleSkins/\(uvMapName)")
                         if let image = SKNImage(contentsOfFile: pp.path) {
                             print("Found Image")
                             skinImage = image
+                        } else {
+                            print("\n\t ⚠️ Error: Could not find Skin Image!")
                         }
+                    } else {
+                        print("\n\t ⚠️ Error: Bundle for Skin not found !")
                     }
                     for material in nodeObj.geometry?.materials ?? [] {
-                        print("Material name:\(material.name ?? "n/a") \(material.diffuse.description)")
+                        print("Material name:\(material.name ?? "n/a")")
                         if let image = skinImage {
                             material.diffuse.contents = image
                         }

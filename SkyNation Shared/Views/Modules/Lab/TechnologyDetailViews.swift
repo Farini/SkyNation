@@ -63,43 +63,16 @@ struct TechnologyDetailView: View {
                 ForEach(ingredients.sorted(by: >), id:\.key) { key, value in
                     IngredientSufficiencyView(ingredient: Ingredient(rawValue: key)!, required: value, available: labModel.availabilityOf(ingredient: Ingredient(rawValue: key)!))
                         .padding([.leading, .trailing], 8)
-                    //                    IngredientView(ingredient: Ingredient(rawValue: key)!, hasIngredient: nil, quantity: value).foregroundColor(.orange)
                 }
             }
             Divider()
             
             // Skills and People
-            Group {
-                Text("Skills")
-                    .font(.headline)
-                    .foregroundColor(.orange)
-                    .padding()
-                
-                HStack {
-                    ForEach(0..<skills.count, id:\.self) { rSkill in
-                        //                    SkillsetView(skillset: self.skills[rSkill])
-                        let sset = self.skills[rSkill]
-                        
-                        GameImages.imageForSkill(skill: sset.skill)
-                            .resizable()
-                            .aspectRatio(contentMode:.fit)
-                            .frame(width:34, height:34)
-                        
-                        Text("x \(sset.level)")
-                            .font(.caption)
-                            .padding([.trailing], 6)
-                    }
-                }
-                
-                
-                Text("Select workers")
-                    .font(.headline)
-                
-                // People to Select
-                ScrollView(.horizontal, showsIndicators: true) {
-                    StaffSelectionView(controller: self.labModel, people: labModel.availableStaff, selection: [])
-                }
-            }
+            
+            ActivityStaffView(staff: labModel.availableStaff, selected: [], requiredSkills: tech.skillSet(), chooseWithReturn: { (selectedPeople) in
+                // labModel.togglePersonSelection(person: <#T##Person#>)
+                labModel.selectedStaff = selectedPeople
+            }, title: "\(tech.shortName) Skills Required", issue: "", message: "")
             
             Divider()
             
@@ -112,19 +85,38 @@ struct TechnologyDetailView: View {
             // Buttons
             HStack {
                 
-                Button("Cancel") {
+                Button(action: {
                     self.labModel.cancelSelection()
+                }) {
+                    HStack {
+                        Image(systemName: "backward.frame")
+                        Text("Back")
+                    }
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                .help("Go back")
+                
+                if labModel.unlockedItems.contains(self.tech) {
+                    
+                    // Can research
+                    Button("🔬 Research") {
+                        print("Will make tech: \(self.tech)")
+                        self.labModel.makeTech(item: self.tech)
+                    }
+                    .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                    
+                } else {
+                    
+                    if labModel.station.unlockedTechItems.contains(self.tech) {
+                        // already researched
+                        Text("Already researched this item").foregroundColor(.orange)
+                    } else {
+                        // cant research yet
+                        Text("Cannot research this item yet").foregroundColor(.orange)
+                    }
                     
                 }
-                .padding()
-                
-                Button("Research") {
-                    print("Will make tech: \(self.tech)")
-                    self.labModel.makeTech(item: self.tech)
-                }
-                .padding()
             }
-            
             Spacer()
         }
         

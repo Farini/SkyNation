@@ -94,13 +94,6 @@ class EarthNode:SCNNode {
         // Get the material to animate
         self.material = material
         
-        
-        
-        //            earth.opacity = 0
-        //            let appear = SCNAction.fadeIn(duration: 5)
-        //        self.scene.rootNode.addChildNode(earth)
-        //            earth.runAction(appear)
-        
         super.init()
         
         // Post init

@@ -494,12 +494,12 @@ class LabViewModel: ObservableObject {
     // MARK: - Init
     
     init(lab:LabModule) {
+        
         // Load Station
         let station = LocalDatabase.shared.station!
         self.station = station
         self.labModule = lab
         self.unlockedRecipes = station.unlockedRecipes
-        //        self.labActivity = lab.activity
         
         // Good to load file from here
         let tree = TechTree()

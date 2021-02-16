@@ -48,22 +48,26 @@ class Station:Codable {
         
         var lastDate = accountingDate
         
-        print("\n 🌎 [STATION ACCOUNTING] \n------")
-        print("Last Accounting Date: \(formatter.string(from: lastDate))")
-        
         var m = Calendar.current.dateComponents([.year, .month, .weekOfYear, .weekday, .day, .hour, .minute], from: lastDate)
         m.setValue(0, for: .minute)
         m.setValue(0, for: .second)
         m.setValue(0, for: .nanosecond)
         
         lastDate = Calendar.current.date(from: m) ?? Date()
-        print("Last date (rounded): \(formatter.string(from: lastDate))")
         
         guard let nextDate = Calendar.current.date(from: m)?.addingTimeInterval(3600) else { fatalError() }
-        print("Current accounting date: \(formatter.string(from: nextDate))")
+        
+        if GameSettings.shared.debugAccounting {
+            print("\n 🌎 [STATION ACCOUNTING] \n------")
+            print("Last Accounting Date: \(formatter.string(from: lastDate))")
+            print("Last date (rounded): \(formatter.string(from: lastDate))")
+            print("Current accounting date: \(formatter.string(from: nextDate))")
+        }
         
         if !overtime && Date().compare(nextDate) == .orderedAscending {
-            print("Accounting not ready yet")
+            if GameSettings.shared.debugAccounting {
+                print("Accounting not ready yet")
+            }
             return
         }
         

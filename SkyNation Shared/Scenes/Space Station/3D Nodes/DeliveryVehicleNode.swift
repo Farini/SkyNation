@@ -80,6 +80,11 @@ class DeliveryVehicleNode:SCNNode {
         
         super.init()
         
+        // Debug
+        if GameSettings.shared.debugScene {
+            print("Initialized Delivery Vehicle Node. Children: \(childNodes.count)")
+        }
+        
         // Post init
         self.name = "Ship"
         self.addChildNode(ship)

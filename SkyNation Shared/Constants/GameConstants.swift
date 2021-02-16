@@ -18,16 +18,28 @@ class GameSettings {
     
     var startingScene:GameSceneType
     
+    // MARK: - Debugging
+    
+    /// Whether to debug Scene objects
+    var debugScene:Bool = false
+    var debugAccounting:Bool = false
+    
     static let shared = GameSettings()
     
     private init () {
+        
         var shouldShowTutorial:Bool = true
         if let station = LocalDatabase.shared.station {
             if let mod = station.habModules.first {
-                print("We have a module: \(mod.name)")
-                shouldShowTutorial = false
+                if mod.inhabitants.isEmpty {
+                    print("No Inhabitants")
+                } else {
+                    // Disable Tutorial
+                    shouldShowTutorial = false
+                }
             }
         }
+        
         self.showTutorial = shouldShowTutorial
         self.startingScene = .SpaceStation
     }
@@ -171,10 +183,8 @@ struct GameColors {
     static let greenBackground = Color.green
     static let lightBlue = Color.blue
     static let airBlue = Color("LightBlue")
-    static let darkGray = Color("darkGray")
+    static let darkGray = Color("DarkGray")
 }
-
-
 
 /// Images used by the game
 struct GameImages {

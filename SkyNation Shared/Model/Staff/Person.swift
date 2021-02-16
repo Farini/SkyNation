@@ -79,7 +79,9 @@ class LabActivity:Codable, Identifiable {
     func activityType() -> PersonActivityType? {
         if let _ = Skills(rawValue: activityName) {
             return .Study
-        } else if let _ = TechItems(rawValue: activityName) {
+        } else if let _ = TechItems(rawValue: activityName){
+            return .LabWork
+        } else if let _ = Recipe(rawValue: activityName){
             return .LabWork
         } else if activityName == "Workout" {
             return .Workout
@@ -272,8 +274,6 @@ class Person:Codable, Identifiable, Equatable {
         return counter
     }
     
-    
-    
     /// Returns chances (0...1) of Studying
     func willingnessToStudy() -> Double {
         
@@ -366,8 +366,6 @@ class Person:Codable, Identifiable, Equatable {
             }
         }
     }
-    
-    
     
     // MARK: - Creating a person
     

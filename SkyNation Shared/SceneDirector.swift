@@ -95,6 +95,11 @@ class SceneDirector {
         gameController?.updateTrussLayout()
     }
     
+    /// Updates the `PlayerCardNode` overlay. Use this when `Player` spends money, or tokens.
+    func updatePlayerCard() {
+        gameController?.stationOverlay.updatePlayerCard()
+    }
+    
 }
 
 class MarsBuilder {

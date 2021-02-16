@@ -193,7 +193,7 @@ class EarthRequestController:ObservableObject {
             return false
         }
         
-        print("Placing Order...")
+//        print("Placing Order...")
         
         let totalCost = currentOrder.calculateTotal()
         
@@ -222,6 +222,10 @@ class EarthRequestController:ObservableObject {
                 print("ERROR: Player \(player.name) could not be saved.")
                 return false
             }
+            
+            // Update Scene Overlay
+            SceneDirector.shared.updatePlayerCard()
+            
             return true
             
         } else {

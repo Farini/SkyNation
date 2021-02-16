@@ -103,19 +103,23 @@ Items being worked on
 - [X] Rounded Buttons
 - [X] Better Delivery Order Ticket (Popover)
 - [X] Person happiness going over 100?
+- [X] Update Scene Overlay **PlayerCardNode**
+- [X] GameLoop: Auto-Accounting
 
 - [ ] Free Supply Drop-offs -> Pay for more 
 - [ ] People generator should generate new people every hour. Pay for more. And generate Materials engineer first
 - [ ] If you simulate your vehicles, you get an extra XP for the Garage
-- [ ] LSS View -> Make 1 tab for tanks & ingredients, and another for Peripherals
-- [X] GameLoop: Auto-Accounting
+
 - [ ] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles)
 - [ ] GameLoop: Detect Beginner
 - [ ] Module View -> If no other modules, only hab is available
 - [ ] Accounting: Make it harder for **Person** to be happy on their own
 - [ ] Person: Have action(s) to make **Person** happier
 - [ ] Remake TrussView
-- [ ] Update Scene Overlay (Player) - especially when placed an order.
+
+- [ ] LSS View -> Make 1 tab for tanks & ingredients, and another for Peripherals
+- [ ] LSS View -> Fix Selection bug
+
 
 - [ ] Get Vehicle to show up (mid-play order)
 
@@ -144,9 +148,11 @@ Items being worked on
     - [ ] Add TechItems updates to StationBuilder
     - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
     - [ ] Control where each Radiator goes
-    - [ ] Straighten Radiator
+    - [X] Straighten Radiator
     - [ ] Show  News
     - [ ] Live update of tech
+    - [ ] Restore Delivery Animations
+    
     
    
         

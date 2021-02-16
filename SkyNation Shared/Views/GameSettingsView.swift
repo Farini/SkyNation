@@ -13,7 +13,6 @@ struct GameSettingsView: View {
     
     init() {
         print("Initializing Game Settings View")
-        
     }
     
     var body: some View {

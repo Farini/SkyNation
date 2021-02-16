@@ -159,8 +159,6 @@ enum PeripheralType:String, Codable, CaseIterable {
 /// An object that produces, or transforms `Ingredients`
 class PeripheralObject:Codable, Identifiable, Equatable {
     
-    
-    
     var id:UUID
     var peripheral:PeripheralType
     var breakable:Bool
@@ -196,7 +194,7 @@ class PeripheralObject:Codable, Identifiable, Equatable {
         
         switch peripheral {
             case .Condensator:
-                print("Condensate")
+//                print("Condensate")
                 let vapor = newAir.h2o
                 if vapor > 2 {
                     tmpWater += 2
@@ -204,7 +202,7 @@ class PeripheralObject:Codable, Identifiable, Equatable {
                 }
                 return (newAir, tmpWater)
             case .ScrubberCO2:
-                print("Scrubs")
+//                print("Scrubs")
                 let co2 = newAir.co2
                 if co2 > 2 {
                     newAir.co2 -= 2

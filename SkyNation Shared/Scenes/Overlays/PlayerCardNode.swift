@@ -29,7 +29,7 @@ class PlayerCardNode:SKNode {
     
     init(player:SKNPlayer) {
         
-        print("\n\n Player Card...")
+//        print("\n\n Player Card...")
         let timeTokens = player.timeTokens
         let deliveryTokens = player.deliveryTokens
         let name = player.name
@@ -134,12 +134,14 @@ class PlayerCardNode:SKNode {
         backShape.zPosition = 20
         addChild(backShape)
         
-        print("Back Shape: \(backShape)\n \t Size:\(backgroundSize)")
-        print("Back Rect: \(backRect)")
-        print("Back Size: \(backShape.calculateAccumulatedFrame().size)")
-        print("Back Position: \(backShape.position)")
-        
-        
+        if GameSettings.shared.debugScene {
+            print("Player Card Overlay Node:")
+            print("Back Shape: \(backShape)\n \t Size:\(backgroundSize)")
+            print("Back Rect: \(backRect)")
+            print("Back Size: \(backShape.calculateAccumulatedFrame().size)")
+            print("Back Position: \(backShape.position)")
+            print("")
+        }
         
         // Buttons positions
         let underpY = -(calculateAccumulatedFrame().size.height + 8)
@@ -199,7 +201,7 @@ class PlayerCardNode:SKNode {
         label.verticalAlignmentMode = .top
         label.isUserInteractionEnabled = false
         label.zPosition = 90
-        print("Making label: \(label)")
+//        print("Making label: \(label)")
         
         return label
     }
