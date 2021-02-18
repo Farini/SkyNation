@@ -111,6 +111,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 }
                 if sprite.name == "ShopButton" {
                     print("⚙️ Lets go shopping")
+                    gameNavDelegate?.didSelectShopping()
                     return
                 }
                 
@@ -605,6 +606,19 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         }
                     }
                 }
+                if let habs = station?.habModules {
+                    let people = habs.flatMap({$0.inhabitants})
+                    for person in people {
+                        if let activity = person.activity {
+                            if activity.dateEnds.compare(Date()) == .orderedAscending {
+                                let moji = person.gender == "male" ? "🙋‍♂️":"🙋‍♀️"
+                                let descriptor = "\(moji) \(person.name) completed activity \(activity.activityName)."
+                                GameMessageBoard.shared.newAchievement(type: .experience, qtty: 1, message: descriptor)
+                                newsLines.append(descriptor)
+                            }
+                        }
+                    }
+                }
             }
             
             var newsDelay = 3.0
@@ -749,6 +763,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     }
                 }
             }
+            
         }
         
         var newsDelay = 3.0

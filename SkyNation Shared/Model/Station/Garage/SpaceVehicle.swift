@@ -91,6 +91,8 @@ enum MarsBot:String, Codable, CaseIterable, Hashable {
     case Rover          // Pictures from NASA?
     case Transporter    // Bring stuff in - first one settles the colony (Must have a pass (spent $10, or invited))
     case Terraformer    // Edit Terrain
+    // case Settler ?   // Estabilishes the first city
+    // case Builder ?   // Builds things without humans
 }
 
 class SpaceVehicle:Codable, Identifiable, Equatable {

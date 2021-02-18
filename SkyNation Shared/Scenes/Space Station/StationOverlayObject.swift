@@ -174,7 +174,8 @@ class StationOverlay:NSObject, SKSceneDelegate {
             let destination = -300 + x * 375
             sceneCamera.panCamera(to: Double(destination))
             #else
-            sceneCamera.position.z = -300 + float(x) * 375
+            let destination = -300 + x * 375
+            sceneCamera.panCamera(to: Double(destination))
             #endif
         }
     }

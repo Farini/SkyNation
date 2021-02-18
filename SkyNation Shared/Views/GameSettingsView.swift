@@ -179,9 +179,49 @@ struct GameSettingsView: View {
     
 }
 
+struct AvatarPickerView:View {
+    
+    var allNames:[String] = HumanGenerator().female_avatar_names + HumanGenerator().male_avatar_names
+    
+    var body: some View {
+        VStack {
+            Text("Select Avatar").font(.title)
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 6, pinnedViews: [], content: {
+                    ForEach(allNames, id:\.self) { avtName in
+                        VStack {
+                            ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                                
+                                Image(avtName)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 96, height: 96)
+                                
+                                Text(avtName).foregroundColor(.gray)
+                            }
+                            
+                            Button("Pick") {
+                                print("Selected: \(avtName)")
+                            }
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .green))
+                        }
+                    }
+                })
+            }
+        }
+    }
+    
+}
+
 struct GameSettingsView_Previews: PreviewProvider {
     static var previews: some View {
         GameSettingsView()
+    }
+}
+
+struct AvatarPicker_Previews: PreviewProvider {
+    static var previews: some View {
+        AvatarPickerView()
     }
 }
 
@@ -313,6 +353,5 @@ class GameSettingsController:ObservableObject {
             }
         }
     }
-    
     
 }

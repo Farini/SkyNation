@@ -107,7 +107,7 @@ class CamControlNode:SKNode {
         #if os(macOS)
         knobX = ((poz - 75) / 375) //(1 - x1) * maxWidth //x1 * maxWidth + 1
         #else
-        knobX = ((poz - 75) / 375)
+        knobX = CGFloat(((poz - 75) / 375))
         #endif
         knob.position.x = knobX
     }

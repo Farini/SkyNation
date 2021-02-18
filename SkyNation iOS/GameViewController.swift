@@ -227,6 +227,49 @@ extension GameViewController:GameNavDelegate {
         
     }
     
+    func didSelectSettings() {
+        clearInterface()
+        let newHost = UIHostingController(rootView: GameSettingsView(inGame: true))
+        
+        newHost.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(newHost.view)
+        newHost.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        newHost.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        newHost.didMove(toParent: self)
+        self.openedView = newHost.view
+    }
     
+    func didSelectMessages() {
+        clearInterface()
+        let newHost = UIHostingController(rootView: GameMessagesView())
+        
+        newHost.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(newHost.view)
+        newHost.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        newHost.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        newHost.didMove(toParent: self)
+        self.openedView = newHost.view
+    }
+    
+    func didSelectShopping() {
+        clearInterface()
+        let newHost = UIHostingController(rootView: GameShoppingView())
+        
+        newHost.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(newHost.view)
+        newHost.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        newHost.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        newHost.didMove(toParent: self)
+        self.openedView = newHost.view
+    }
     
 }

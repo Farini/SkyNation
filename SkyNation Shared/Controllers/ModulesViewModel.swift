@@ -12,10 +12,18 @@ import Foundation
 import SwiftUI
 
 enum ModuleBuilderState:Equatable {
-    case Selecting
+    case Selecting                      // options available
+    case Selected(type:ModuleType)      // set aside (after confirmation)
+    case Problematic                    // let problem
+    case Confirmed                      // Close window?
+}
+
+enum ModuleBuildState:Equatable {
+    case Selecting(options:[ModuleType])
     case Selected(type:ModuleType)
-    case Problematic
-    case Confirmed
+    case Problematic(problem:String)
+    case Confirm
+    case Cancel
 }
 
 class ModulesViewModel: ObservableObject {
@@ -133,29 +141,21 @@ class ModulesViewModel: ObservableObject {
                 return true
                 
             } else {
-                self.problems = ["Not enough air"]
+                self.problems = ["Not enough air. Order more air tanks to build more modules."]
                 self.canBuild = false
                 return false
             }
             
         } else {
-//            if neededVolume < 0 {
-                //            // put some air back in tanks (not needed in this case)
-                //            let refill = abs(neededVolume)
-                //
-                //            if (station.truss.refillTanks(of: .air, amount: refill)) > 0 {
-                //                // spill!
-                //
-                //            } else {
-                //                // Success refilling
-                //            }
-                //        }
             return true
         }
         
-        // Don't save
     }
     
+    /// Type of `Module` currently selected to build
+    private var selectedType:ModuleType?
+    
+    /// UI Action sent when choosing Module
     func selectModule(type:ModuleType, id:UUID) {
         
         if accountNewAir() == false {
@@ -163,33 +163,28 @@ class ModulesViewModel: ObservableObject {
             return
         }
         
-        let newBuilder = StationBuilder(station: station)
-        for module in newBuilder.getModules() {
-            print("[0] Other M: \(module.id)")
-            if module.id == id {
-                print("[=] Matched a module: \(type) ID:\(id)")
-                switch type {
-                    case .Lab:
-                        let newLab:LabModule = module.convertToLab()
-                        module.type = .Lab
-                        station.labModules.append(newLab)
-                        self.viewState = .Selected(type: .Lab)
-                        
-                    case .Hab:
-                        let newHab:HabModule = module.convertToHab()
-                        module.type = .Hab
-                        station.habModules.append(newHab)
-                        self.viewState = .Selected(type: .Hab)
-                        
-                    case .Bio:
-                        let newBio:BioModule = module.convertToBio()
-                        module.type = .Bio
-                        station.bioModules.append(newBio)
-                        self.viewState = .Selected(type: .Bio)
-                        
-                    default: return
-                }
+        self.selectedType = type
+        
+        // Save only when Confirm
+        self.viewState = .Selected(type: type)
+    }
+    
+    /// Determines whether a bytton is disabled, given its Module Type.
+    func isDisabledModule(type:ModuleType) -> Bool {
+        
+        if canBuild == false {
+            return true
+        }
+        
+        // Must have a Hab Module first
+        if station.habModules.isEmpty {
+            return type != ModuleType.Hab
+        } else {
+            // Must have a lab before Bio
+            if station.labModules.isEmpty {
+                return type == .Bio
             }
+            return false
         }
     }
     
@@ -198,14 +193,50 @@ class ModulesViewModel: ObservableObject {
         self.viewState = .Selecting
     }
     
-    
-    func confirmBuildingModule() {
+    /// Saves the State
+    func confirmBuildingModule(id:UUID) {
+        
+        guard let modType = self.selectedType else { fatalError() }
+        
+        let newBuilder = StationBuilder(station: station)
+        
+        for module in newBuilder.getModules() {
+            print("[0] Other M: \(module.id)")
+            if module.id == id {
+                print("[=] Matched a module: \(modType) ID:\(id)")
+                switch modType {
+                    case .Lab:
+                        let newLab:LabModule = module.convertToLab()
+                        module.type = .Lab
+                        module.skin = ModuleSkin.LabModule.rawValue
+                        newLab.skin = ModuleSkin.LabModule.rawValue
+                        station.labModules.append(newLab)
+                        self.viewState = .Selected(type: .Lab)
+                        
+                    case .Hab:
+                        let newHab:HabModule = module.convertToHab()
+                        module.type = .Hab
+                        module.skin = ModuleSkin.HabModule.rawValue
+                        newHab.skin = ModuleSkin.HabModule.rawValue
+                        station.habModules.append(newHab)
+                        self.viewState = .Selected(type: .Hab)
+                        
+                    case .Bio:
+                        let newBio:BioModule = module.convertToBio()
+                        module.type = .Bio
+                        module.skin = ModuleSkin.BioModule.rawValue
+                        newBio.skin = ModuleSkin.BioModule.rawValue
+                        station.bioModules.append(newBio)
+                        self.viewState = .Selected(type: .Bio)
+                        
+                    default: return
+                }
+            }
+        }
+        
         print("Confirm and save")
         self.viewState = .Confirmed
-//        LocalDatabase.shared.saveSerialBuilder(builder: builder)
         LocalDatabase.shared.saveStation(station: station)
-        
     }
-    
     
 }

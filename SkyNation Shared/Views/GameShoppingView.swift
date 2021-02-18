@@ -13,6 +13,7 @@ struct GameShoppingView: View {
         
         Group {
             HStack() {
+                
                 VStack(alignment:.leading) {
                     Text("⚙️ Shopping").font(.largeTitle)
                     Text("Details")

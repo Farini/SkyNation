@@ -42,6 +42,9 @@ class GameSettings {
         
         self.showTutorial = shouldShowTutorial
         self.startingScene = .SpaceStation
+        
+        // self.showLights = UserDefaults().bool(forKey: "showLights")
+        
     }
 }
 
@@ -383,14 +386,118 @@ enum GameMessageType:String, Codable, CaseIterable {
     case Other
 }
 
-struct GameRawPackage {
-    var id:UUID
-    var price:Int       // The price in regular Dollars
-    var tokens:Int      // How many tokens
-    var money:Int       // How much money
-    var boxes:Int       // How many boxes
-    var tanks:Int       // How many tanks
-    var staff:Int       // How many people
+enum GameRawPackage {
+    
+    case fiveDollars
+    case tenDollars
+    case twentyDollars
+    
+    var tokenAmount:Int {
+        switch self {
+            case .fiveDollars: return 5
+            case .tenDollars: return 10
+            case .twentyDollars: return 20
+        }
+    }
+    
+    var moneyAmount:Int {
+        switch self {
+            case .fiveDollars: return 150000
+            case .tenDollars: return 320000
+            case .twentyDollars: return 750000
+        }
+    }
+    
+    var boxesAmount:Int {
+        switch self {
+            case .fiveDollars: return 5
+            case .tenDollars: return 12
+            case .twentyDollars: return 25
+        }
+    }
+    
+    var tanksAmount:Int {
+        switch self {
+            case .fiveDollars: return 8
+            case .tenDollars: return 18
+            case .twentyDollars: return 45
+        }
+    }
+    
+    var peopleAmount:Int {
+        switch self {
+            case .fiveDollars: return 2
+            case .tenDollars: return 5
+            case .twentyDollars: return 12
+        }
+    }
+    
+    var gamePackage:GamePackage {
+        
+        let tokens = tokenAmount
+        let money = moneyAmount
+        let boxAmt = boxesAmount
+        let tankAmt = tanksAmount
+        let staffAmount = peopleAmount
+        
+        
+        let boxes = generateBoxes(amt: boxAmt)
+        let tanks = generateTanks(amt: tankAmt)
+        let ppl = generateNewPeople(amt: staffAmount)
+        
+        return GamePackage(id: UUID(), tokens: tokens, money: money, boxes: boxes, tanks: tanks, staff: ppl)
+    }
+    
+    func generateBoxes(amt:Int) -> [StorageBox] {
+        var boxes:[StorageBox] = []
+        for _ in 0...amt {
+            let newType = Ingredient.allCases.randomElement()!
+            var newVar = newType.boxCapacity()
+            if [Ingredient.wasteSolid, Ingredient.wasteLiquid, Ingredient.Battery].contains(newType) {
+                // Set current to zero (for some cases)
+                newVar = 0
+            }
+            let newBox = StorageBox(ingType: newType, current: newVar)
+            boxes.append(newBox)
+        }
+        return boxes
+    }
+    
+    func generateTanks(amt:Int) -> [Tank] {
+        var tanks:[Tank] = []
+        for _ in 0...amt {
+            let newType = TankType.allCases.randomElement()!
+            var newVar = newType.capacity
+            if [TankType.co2, TankType.ch4].contains(newType) {
+                newVar = 0
+            }
+            let newTank = Tank(type: newType, full: newVar == 0 ? false:true)
+            tanks.append(newTank)
+        }
+        return tanks
+    }
+    
+    func generateNewPeople(amt:Int) -> [Person] {
+        var people:[Person] = []
+        for _ in 0...amt {
+            let newPerson = Person(random: true)
+            newPerson.intelligence = max(80, newPerson.intelligence)
+            newPerson.happiness = 100
+            newPerson.healthPhysical = 100
+            
+            while newPerson.skills.count < 4 {
+                let newSkill = Skills.allCases.randomElement()!
+                if let idx = newPerson.skills.firstIndex(where: { $0.skill == newSkill }) {
+                    newPerson.skills[idx].level += 1
+                } else {
+                    newPerson.skills.append(SkillSet(skill: newSkill, level: 1))
+                }
+            }
+            people.append(newPerson)
+        }
+        return people
+    }
+    
 }
 
 /// A Package that can be purchased at the store

@@ -276,6 +276,7 @@ extension GameViewController: GameNavDelegate {
     }
     
     func didSelectSettings() {
+        
         let controller = NSHostingController(rootView: GameSettingsView(inGame:true))
         controller.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(controller.view)

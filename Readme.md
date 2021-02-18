@@ -99,13 +99,15 @@ Items being worked on
 
 ### Playability Improvements. Started: 2/17
 
+- [X] Module View -> If no other modules, only hab is available
+- [X] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles)
+
 - [ ] Lab Module needs to update list when research is finished (Needs testing)
 - [ ] People generator - every hour. Pay for more. And generate Materials engineer first
 - [ ] Freebies Generator
 - [ ] Garage simulation button -> Person activity -> Garage xp
-- [ ] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles)
+- [ ] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles) (In Mid-Game)
 - [ ] GameLoop: Detect Beginner
-- [ ] Module View -> If no other modules, only hab is available
 - [ ] Remake TrussView
 - [ ] Load Scene automatically
 - [ ] Make Settings View (and open from PlayerCard)
@@ -118,6 +120,15 @@ Items being worked on
 - [ ] Player avatar picker
 - [ ] View with GameMessages (where chat is)
 - [ ] Store (Tokens + Packages) View
+
+### Model Changes
+- [ ] Skin -> convert from String to Skin type
+- [ ] Accounting
+    (1). var problems (required)
+    (2). var notes (required)
+- [ ] Use Fibonacci for Peripheral Upgrades
+- [ ] SpaceVehicle. var boxes (required)
+- [ ] Player. var avatar (required)
 
 - [ ] New headers
     - [ ] BioView
@@ -167,6 +178,7 @@ Items being worked on
     - [X] News (Centered)
     - [X] Fix iOS Colors
     - [X] Coin Icon
+    - [X] Bring Regular Camera Closer to Scene
     - [ ] Helmet Icon - Time Token
     - [ ] Add colors / shaders
     - [ ] 1/3 Camera options + animations
@@ -174,7 +186,7 @@ Items being worked on
         - [X] Garage View - CameraBack
         - [X] Front View - CameraFront
         - [X] LOOK@ Camera constraints
-        - [ ] Bring Regular Camera Closer to Scene
+       
         - [ ] Adjust camera LOOK@ constraints
         
 - [ ] 7/8 Garage View Improvements
@@ -208,7 +220,7 @@ Features that are requested, but are not required to launch the game
 - [ ] Remodel Space Vehicle
 - [ ] Rebake Garage Skin x 2 (Choices)
 - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
-
+- [ ] Plugins
 
 ## 📝 To Do - Future
 Grab things from this list as you go along.

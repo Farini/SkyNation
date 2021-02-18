@@ -84,6 +84,9 @@ struct SKNUser:Codable {
     var guildID: UUID?
     var cityID: UUID?
     
+    // avatar:String    // Player's avatar image
+    // gcid:String      // Game Center id
+    
     init(name:String) {
         self.id = UUID()
         self.localID = UUID()
@@ -96,6 +99,21 @@ struct SKNUser:Codable {
         self.localID = player.localID
         self.guildID = player.guildID
     }
+}
+
+/// To authenticate a player
+struct SKNPlayerAuth:Codable {
+    
+    // To authenticate a player
+    
+    var name: String
+    var localID: UUID
+    
+    var serverID: UUID?
+    var guildID: UUID?
+    var cityID: UUID?
+    var authID: UUID?   // the ID allowed to post
+    
 }
 
 enum GuildTerrainType:String, Codable, CaseIterable {

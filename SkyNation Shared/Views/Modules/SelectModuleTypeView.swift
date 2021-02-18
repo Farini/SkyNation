@@ -12,7 +12,7 @@ struct SelectModuleTypeView: View {
     
     @Environment(\.presentationMode) var presentationMode // To Dismiss
     @ObservedObject var controller:ModulesViewModel
-    let modOptions:[ModuleType] = [.Hab, .Lab, .Bio] //ModuleType.allCases
+    let modOptions:[ModuleType] = [.Hab, .Lab, .Bio]
     
     /// The original UUID of the object
     var moduleID:UUID
@@ -22,113 +22,134 @@ struct SelectModuleTypeView: View {
         self.moduleID = UUID(uuidString: name ?? "") ?? UUID()
     }
     
+    var header: some View {
+        
+        VStack {
+            
+            HStack {
+                
+                VStack(alignment: .leading) {
+                    Text("Base Module")
+                        .font(.largeTitle)
+                        .foregroundColor(.orange)
+                    Text("Choose a Module type to build")
+                        .foregroundColor(.gray)
+                }
+                
+                
+                Spacer()
+                
+                // Tutorial
+                Button(action: {
+                    print("Question ?")
+                }, label: {
+                    Image(systemName: "questionmark.circle")
+                        .font(.title2)
+                })
+                .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
+                
+                // Close
+                Button(action: {
+                    NotificationCenter.default.post(name: .closeView, object: self)
+                }) {
+                    Image(systemName: "xmark.circle")
+                        .font(.title2)
+                }.buttonStyle(SmallCircleButtonStyle(backColor: .pink))
+                
+            }
+            .padding([.leading, .trailing, .top], 8)
+            
+            Divider()
+                .offset(x: 0, y: -5)
+        }
+        
+    }
+    
     var body: some View {
         
         VStack {
             
+            // Header
+            header
+            
+            // Air
             Group {
                 
-                // Header
                 HStack {
+                    GameImages.imageForTank()
+                    
                     VStack(alignment:.leading) {
-                        Text("Base Module")
-                            .font(.largeTitle)
-                            .foregroundColor(.orange)
-                        Text("Choose a Module type to build")
-                            .foregroundColor(.gray)
-                    }
-                    Spacer()
-                    // Close
-                    Button(action: {
-                        print("Close action")
-                        NotificationCenter.default.post(name: .closeView, object: self)
-                    }, label: {
-                        Image(systemName: "xmark.circle")
-                            .resizable()
-                            .aspectRatio(contentMode:.fit)
-                            .frame(width:34, height:34)
-                    })
-                    .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
-                    .padding(.trailing, 6)
-                }
-                Divider()
-                
-                // Air
-                Group {
-                    
-                    HStack {
-                        GameImages.imageForTank()
-                        
-                        VStack(alignment:.leading) {
-                            HStack {
-                                Text("Air volume: \(controller.airVolume)")
-                                Text("+ \(controller.reqVolume - controller.airVolume)")
-                            }
-                            
-                            Text("Adding air: \(controller.reqAirFromTanks)")
-                            Text("Available air: \(controller.availableAirInTanks)")
-                            Text("Active Modules: \(controller.countOfModules)")
+                        HStack {
+                            Text("Air volume: \(controller.airVolume)")
+                            Text("+ \(controller.reqVolume - controller.airVolume)")
                         }
-                        .foregroundColor(controller.canBuild ? GameColors.airBlue:.red)
+                        
+                        Text("Adding air: \(controller.reqAirFromTanks)")
+                        Text("Available air: \(controller.availableAirInTanks)")
+                        Text("Active Modules: \(controller.countOfModules)")
                     }
-                    
-                    // Problems
-                    ForEach(controller.problems, id:\.self) { problem in
-                        Text("\(problem)")
-                            .foregroundColor(controller.canBuild ? .green:.red)
-                    }
+                    .foregroundColor(controller.canBuild ? GameColors.airBlue:.red)
                 }
                 
-                Divider()
+                // Problems
+                ForEach(controller.problems, id:\.self) { problem in
+                    Text("\(problem)")
+                        .foregroundColor(controller.canBuild ? .green:.red)
+                }
             }
+            
+            Divider()
             
             switch controller.viewState {
                 case .Selecting:
                     
-                    
-                    // Select Type
-                    HStack(alignment: .top, spacing: 6) {
-                        
-                        ForEach(modOptions, id:\.self) { mod in
-                            VStack {
-                                Text("\(mod.rawValue) Module")
-                                    .font(.headline)
-                                    .padding(4)
-                                
-                                Divider()
-                                
-                                if mod == ModuleType.Lab {
-                                    Text("🔬").font(.largeTitle)
-                                }
-                                if mod == ModuleType.Hab {
-                                    Text("🏠").font(.largeTitle)
-                                }
-                                if mod == ModuleType.Bio {
-                                    Text("🧬").font(.largeTitle)
-                                }
-                                if mod == ModuleType.Unbuilt {
-                                    Text("🛠").font(.largeTitle)
-                                }
-                                Text(mod.objective())
-                                    .frame(minWidth: 180, maxWidth: 200, idealHeight: 75, maxHeight: 100, alignment: Alignment.center)
-                                    .fixedSize(horizontal: false, vertical: true)
-                                    .lineLimit(nil)
-                                    .foregroundColor(.gray)
-                                
-                                Button(action: {
-                                    controller.selectModule(type: mod, id: moduleID)
-                                }, label: {
-                                    Text("Build \(mod.rawValue)")
-                                })
-                                .disabled(!controller.canBuild)
-                                .padding(4)
-                            }
-                            .padding(4)
-                            .background(Color.black)
-                            .cornerRadius(8.0)
+                    Group {
+                        // Select Type
+                        HStack(alignment: .top, spacing: 6) {
                             
+                            ForEach(modOptions, id:\.self) { mod in
+                                VStack {
+                                    Text("\(mod.rawValue) Module")
+                                        .font(.headline)
+                                        .padding(4)
+                                    
+                                    Divider()
+                                    
+                                    if mod == ModuleType.Lab {
+                                        Text("🔬").font(.largeTitle)
+                                    }
+                                    if mod == ModuleType.Hab {
+                                        Text("🏠").font(.largeTitle)
+                                    }
+                                    if mod == ModuleType.Bio {
+                                        Text("🧬").font(.largeTitle)
+                                    }
+                                    if mod == ModuleType.Unbuilt {
+                                        Text("🛠").font(.largeTitle)
+                                    }
+                                    Text(mod.objective())
+                                        .frame(minWidth: 180, maxWidth: 200, idealHeight: 75, maxHeight: 100, alignment: Alignment.center)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                        .lineLimit(nil)
+                                        .foregroundColor(.gray)
+                                    
+                                    Button(action: {
+                                        controller.selectModule(type: mod, id: moduleID)
+                                    }, label: {
+                                        Text("Build \(mod.rawValue)")
+                                    })
+                                    .disabled(controller.isDisabledModule(type: mod))
+                                    .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                                    .padding([.bottom])
+                                }
+                                .padding(4)
+                                .background(Color.black)
+                                .cornerRadius(8.0)
+                            }
                         }
+                        .padding()
                     }
+                    
                     
                 case .Problematic:
                     VStack {
@@ -165,20 +186,30 @@ struct SelectModuleTypeView: View {
                         
                         HStack {
                             Button("Confirm") {
-                                controller.confirmBuildingModule()
+                                controller.confirmBuildingModule(id:self.moduleID)
                             }
+                            .buttonStyle(NeumorphicButtonStyle(bgColor:.green))
+                            
                             Button("Cancel") {
                                 controller.cancelBuildModule()
                             }
+                            .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
                         }
                     }
                  
                 case .Confirmed:
-                    Text("Module Created")
-                    
+                    VStack {
+                        Text("Module Created")
+                        
+                        Button("OK") {
+                            // Close the View
+                            NotificationCenter.default.post(name: .closeView, object: self)
+                        }
+                        .buttonStyle(NeumorphicButtonStyle(bgColor:.green))
+                    }
                 }
         }
-        .padding()
+//        .padding()
     }
     
     /// Dismisses the SwiftUI View
