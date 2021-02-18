@@ -617,30 +617,4 @@ struct StationAccounting_Previews: PreviewProvider {
 // FIXME: - Transfer Code.
 // Put this code in an Appropriate file
 
-extension PeripheralObject {
-    func getImage() -> Image? {
-        switch self.peripheral {
-            case .Airlock:
-                return Image("Airlock")
-            case .Antenna:
-                return Image("Antenna")
-            case .Condensator:
-                return Image("Condensator")
-            case .Methanizer:
-                return Image("Methanizer")
-            case .Radiator:
-                return Image("Radiator")
-            case .Roboarm:
-                return Image("Roboarm")
-            case .ScrubberCO2:
-                return Image("Scrubber")
-            case .solarPanel:
-                return Image("SolarPanel")
-            case .storageTank:
-                return Image("Tank")
-            default:
-                print("Don't have an image for that yet")
-                return nil
-        }
-    }
-}
+

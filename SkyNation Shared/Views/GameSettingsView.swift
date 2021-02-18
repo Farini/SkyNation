@@ -11,13 +11,63 @@ struct GameSettingsView: View {
     
     @ObservedObject var controller = GameSettingsController()
     
+    /// When turned on, this shows the "close" button
+    private var inGame:Bool = false
+    
     init() {
         print("Initializing Game Settings View")
+    }
+    
+    init(inGame:Bool? = true) {
+        self.inGame = true
+    }
+    
+    var header: some View {
+        
+        Group {
+            HStack() {
+                VStack(alignment:.leading) {
+                    Text("⚙️ Settings").font(.largeTitle)
+                    Text("Details")
+                        .foregroundColor(.gray)
+                }
+                
+                Spacer()
+                
+                // Tutorial
+                Button(action: {
+                    print("Question ?")
+                }, label: {
+                    Image(systemName: "questionmark.circle")
+                        .font(.title2)
+                })
+                .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
+                
+                // Close
+                Button(action: {
+                    NotificationCenter.default.post(name: .closeView, object: self)
+                }) {
+                    Image(systemName: "xmark.circle")
+                        .font(.title2)
+                }.buttonStyle(SmallCircleButtonStyle(backColor: .pink))
+                
+            }
+            .padding([.leading, .trailing, .top], 8)
+            
+            Divider()
+                .offset(x: 0, y: -5)
+        }
+        
     }
     
     var body: some View {
         
         VStack(alignment: .leading, spacing: nil) {
+            
+            
+            if (inGame) {
+                header
+            }
             
             Text("Name: \(controller.playerName)")
                 .font(.largeTitle)
@@ -32,26 +82,30 @@ struct GameSettingsView: View {
                     .foregroundColor(.green)
                     .font(.headline)
             }
-            HStack {
-                Text("Enter name: ")
-                TextField("Name:", text: $controller.playerName)
-                    .textFieldStyle(DefaultTextFieldStyle())
-                    .padding(4)
-                    .frame(width: 100)
-                    .cornerRadius(8)
-            }
-            Text("ID: \(controller.playerID.uuidString)")
-                .foregroundColor(.gray)
             
-            if let string = controller.fetchedString {
-                Text("Fetched:\n\(string)")
+            Group {
+                HStack {
+                    Text("Enter name: ")
+                    TextField("Name:", text: $controller.playerName)
+                        .textFieldStyle(DefaultTextFieldStyle())
+                        .padding(4)
+                        .frame(width: 100)
+                        .cornerRadius(8)
+                }
+                Text("ID: \(controller.playerID.uuidString)")
+                    .foregroundColor(.gray)
+                
+                if let string = controller.fetchedString {
+                    Text("Fetched:\n\(string)")
+                }
+                
+                if let loggedUser = controller.user {
+                    Text("Fetched User: \(loggedUser.name)")
+                }
+                
+                Spacer(minLength: 8)
             }
             
-            if let loggedUser = controller.user {
-                Text("Fetched User: \(loggedUser.name)")
-            }
-            
-            Spacer(minLength: 8)
             
             // Player Info
             Group {
@@ -94,6 +148,7 @@ struct GameSettingsView: View {
                     Button("Create Guild") {
                         controller.createGuild()
                     }
+                    .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
                 }
                 
                 // User
@@ -101,6 +156,7 @@ struct GameSettingsView: View {
                     Button("Fetch User") {
                         controller.fetchUser()
                     }
+                    .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
                 }
                 
                 Button("Load Scene") {
@@ -109,11 +165,13 @@ struct GameSettingsView: View {
                         builder.build(station:station)
                     }
                 }
+                .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
                 
                 Button("Start Game") {
                     let note = Notification(name: .startGame)
                     NotificationCenter.default.post(note)
                 }
+                .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
             }
         }
         .padding()

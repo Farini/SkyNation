@@ -32,20 +32,20 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
     /// Gets the ingredients for recipe
     func ingredients() -> [Ingredient:Int] {
         switch self {
-            case .Module: return [.Aluminium:35]
+            case .Module: return [.Aluminium:35, .Polimer:5]
             case .Node: return [.Aluminium:15]
-            case .SolarPanel: return [.Polimer:1, .SolarCell:2]
+            case .SolarPanel: return [.Polimer:3, .SolarCell:5]
             case .Condensator: return [.Aluminium:2, .Copper:1, .Polimer:1]
-            case .ScrubberCO2: return [.Polimer:1, .Copper:1]
-            case .Electrolizer: return [.Polimer:1, .Copper:1, .Lithium:1]
-            case .Methanizer: return [.Polimer:2, .Ceramic:1, .Circuitboard:1]
-            case .Radiator: return [.Aluminium:2, .Ceramic:1, .Lithium:3]
-            case .Battery: return [.Lithium:5, .Copper:1]
+            case .ScrubberCO2: return [.Polimer:1, .Copper:1, .DCMotor:1]
+            case .Electrolizer: return [.Polimer:4, .Copper:3, .Lithium:2]
+            case .Methanizer: return [.Polimer:6, .Ceramic:2, .Circuitboard:1]
+            case .Radiator: return [.Aluminium:6, .Ceramic:3, .Lithium:3]
+            case .Battery: return [.Lithium:8, .Copper:4]
             case .StorageBox: return [.Polimer:5, .Aluminium:1]
             case .tank: return [.Aluminium:8, .Iron:1, .Polimer:1]
-            case .Roboarm: return [.Circuitboard:4, .DCMotor:2, .Aluminium:4, .Polimer:2]
-            case .WaterFilter: return [.Ceramic:1, .Copper:2, .Lithium:1, .Iron:1]
-            case .BioSolidifier: return [.Ceramic:2, .Copper:4, .Silicate:2, .Iron:2]
+            case .Roboarm: return [.Circuitboard:4, .DCMotor:3, .Aluminium:8, .Polimer:16]
+            case .WaterFilter: return [.Ceramic:3, .Copper:4, .Lithium:2, .Iron:2]
+            case .BioSolidifier: return [.Ceramic:2, .Copper:4, .Sensor:1, .Iron:2]
         }
     }
     
@@ -68,15 +68,15 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
     func skillSet() -> [Skills:Int] {
         switch self {
             case .Module: return [.Material:1]
-            case .Node: return [:]
-            case .SolarPanel: return [.Handy:1, .Electric:1]
-            case .ScrubberCO2: return [.Material:1]
+            case .Node: return [.Handy:1]
+            case .SolarPanel: return [.Handy:2, .Electric:1]
+            case .ScrubberCO2: return [.Material:1, .Handy:1]
             case .Methanizer: return [.Mechanic:1, .Electric:1]
-            case .Radiator: return [.Material:1]
+            case .Radiator: return [.Material:1, .Mechanic:1]
             case .StorageBox: return [.Material:1]
-            case .Roboarm: return [.Electric:1, .SystemOS:1, .Mechanic:1]
-            case .WaterFilter: return [.Electric:1, .Mechanic:1, .Material:1]
-            case .BioSolidifier: return [.Electric:1, .Mechanic:2, .Material:1]
+            case .Roboarm: return [.Electric:1, .SystemOS:1, .Mechanic:2]
+            case .WaterFilter: return [.Electric:1, .Mechanic:1, .Material:2]
+            case .BioSolidifier: return [.Electric:1, .Mechanic:2, .Material:2]
             default: return [.Handy:1]
         }
     }
@@ -94,11 +94,23 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
     
     /// The time until the recipe is ready
     func getDuration() -> Int {
-        switch self {
-        case .ScrubberCO2: return 5
-        case .Methanizer: return 8
         
-        default: return 2
+        switch self {
+            
+            case .Module: return 60 * 60 * 5        // 5h
+            case .Node: return 60 * 30              // 30m
+            case .SolarPanel: return 60 * 40        // 40m
+            case .ScrubberCO2: return 60 * 60 * 2   // 2h
+            case .Methanizer: return 60 * 60 * 3    // 3h
+            case .Radiator: return 60 * 60 * 1      // 1h
+            case .StorageBox: return 60 * 20        // 20m
+            case .Roboarm: return 60 * 60 * 6       // 6h
+            case .WaterFilter: return 60 * 60 * 2   // 2h
+            case .BioSolidifier: return 60 * 60 * 3 // 3h
+            case .Battery: return 60 * 15           // 15m
+            case .Condensator: return 60 * 5        // 5m
+            case .Electrolizer: return 60 * 10      // 10m
+            case .tank: return 60 * 60 * 2          // 2h
         }
     }
     
@@ -122,7 +134,10 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
             case .Methanizer: return PeripheralObject(peripheral: .Methanizer).getImage() ?? Image(systemName: "questionmark")
             case .Radiator: return PeripheralObject(peripheral: .Radiator).getImage() ?? Image(systemName: "questionmark")
             case .SolarPanel: return PeripheralObject(peripheral: .solarPanel).getImage() ?? Image(systemName: "questionmark")
-            case .Battery: return PeripheralObject(peripheral: .battery).getImage() ?? Image(systemName: "questionmark")
+            case .Battery: return Image("carBattery")
+            case .tank: return Image("Tank")
+            case .WaterFilter: return PeripheralObject(peripheral: .WaterFilter).getImage()!
+            case .BioSolidifier: return PeripheralObject(peripheral: .BioSolidifier).getImage()!
 //            case .BioSolidifier: return PeripheralObject(peripheral: .).getImage() ?? Image(systemName: "questionmark")
             default: return Image(systemName: "questionmark")
         }

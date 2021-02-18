@@ -275,6 +275,45 @@ extension GameViewController: GameNavDelegate {
         
     }
     
+    func didSelectSettings() {
+        let controller = NSHostingController(rootView: GameSettingsView(inGame:true))
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controller.view)
+        controller.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        controller.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        self.openedView = controller.view
+        self.presentAsSheet(controller)
+    }
+    
+    func didSelectMessages() {
+        let controller = NSHostingController(rootView: GameMessagesView())
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controller.view)
+        controller.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        controller.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        self.openedView = controller.view
+        self.presentAsSheet(controller)
+    }
+    
+    func didSelectShopping() {
+        let controller = NSHostingController(rootView: GameShoppingView())
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controller.view)
+        controller.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        controller.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        self.openedView = controller.view
+        self.presentAsSheet(controller)
+    }
+    
 }
 #endif
 

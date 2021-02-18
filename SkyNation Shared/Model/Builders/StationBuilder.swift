@@ -259,9 +259,17 @@ extension StationBuilder {
         // 1. Modules + Nodes
         for buildPart in buildList {
             print("Build SCNNode: \(buildPart.type.rawValue)")
-            if let newNode = buildPart.loadFromScene() {
-                scene.rootNode.addChildNode(newNode)
+            if buildPart.position.x == 0 && buildPart.position.y == -12 && buildPart.position.z == 0 {
+                let dock = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Dock.scn")!
+                let node = dock.rootNode.childNode(withName: "Dock", recursively: false)!
+                node.name = "Dock"
+                scene.rootNode.addChildNode(node)
+            } else {
+                if let newNode = buildPart.loadFromScene() {
+                    scene.rootNode.addChildNode(newNode)
+                }
             }
+            
         }
         
         // 3. Tech Items
@@ -388,14 +396,14 @@ extension StationBuilder {
                 }
             })
         }else{
+            
+            // Remove Ship
             if let ship = scene.rootNode.childNode(withName: "Ship", recursively: false) {
                 ship.removeFromParentNode()
             }
             
             // Load Earth
-            let earth = SCNScene(named: "Art.scnassets/Earth.scn")!.rootNode.childNode(withName: "Earth", recursively: true)!.clone()
-            earth.position = SCNVector3(0, -18, 0)
-            
+            let earth = EarthNode()
             scene.rootNode.addChildNode(earth)
         }
         
@@ -410,11 +418,6 @@ extension StationBuilder {
         // ------------------
         // Post Notification Scene is ready
 
-        // Tell SceneDirector that scene is loaded
-//        SceneDirector.shared.controllerDidLoadScene(controller: self)
-        
-        // Store Property
-//        self.scene = scene
         
         // Complete
         completion(scene)

@@ -15,8 +15,7 @@ The contributors to these projects shall have a **fair** share of the game, and 
 
 - [X] **SkyNation** - This game's project: MacOS, iOS, TVOS
 - [X] **SceneMachine** - 3D Framework to help with scenes, shaders, special FX, etc.
-- [ ] **SKNServer** - The server hosting game info - Host the database, players interactions, and some geometry + material assets
-- [ ] **Gamebase2D** - 2D Framework (SpriteKit) created for this and other games
+- [X] **SKNServer** - The server hosting game info - Host the database, players interactions, and some geometry + material assets
 
 # 🏆 Milestones
 
@@ -31,7 +30,8 @@ The completion of each **ToDo** item will lead to the earning of **Stars**, whic
 Each **ToDo** item has a difficulty level. As each item is different, and requires some amount of work, a ToDo item should have its difficulty level indicated on the ToDo list, as described below:
 
 > ★ Completed features get a *filled* star.
->> ☆ Features that need work done, are incomplete, or not yet started, get an empty star.
+
+> ☆ Features that need work done, are incomplete, or not yet started, get an empty star.
 
 
 ### 📝 Difficulty Levels
@@ -47,24 +47,24 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
  ## Programming
  
  - [ ] ★★★☆☆ Module, Hab, Lab, Bio
- - [ ] ★★☆☆☆ Earth Order
- - [ ] ★☆☆☆☆ Garage
- - [ ] ★★☆☆☆ Accounting System
+ - [ ] ★★★★☆ Earth Order
+ - [ ] ★★☆☆☆ Garage
+ - [ ] ★★★☆☆ Accounting System
  - [ ] ★★☆☆☆ Truss
  - [ ] ★★★☆☆ Life Support Systems
- - [ ] ☆☆☆☆☆ Travels Scene (v 1.1)
- - [ ] ☆☆☆☆☆ Mars Scene
- - [ ] ☆☆☆☆☆ Server - SKNServer?
- - [ ] ★☆☆☆☆ Player(object) + settings + playability
+ - [ ] ☆☆☆☆☆ Vehicles Travelling Views/Scenes
+ - [ ] ★☆☆☆☆ Mars Scene
+ - [ ] ★☆☆☆☆ Server - SKNServer?
+ - [ ] ★☆☆☆☆ Player(object) + settings + playability + Purchases
  
  ## Art Assets
  Each Item gets a grade 1-5 (stars) that rerpresents how complete the item is.
  
  Icons + 2D Overlays
  - [ ] ★★★★☆ Humans + Skills
- - [ ] ★★☆☆☆ Tanks, Containers, Ingredients, Peripherals
+ - [ ] ★★★☆☆ Tanks, Containers, Ingredients, Peripherals
  - [ ] ★★★☆☆ Scenes Overlay (Camera, Vehicles list, etc.)
- - [ ] ☆☆☆☆☆ Action Icons - Buy, Cancel, Cheat, Tokens, etc.
+ - [ ] ★★☆☆☆ Action Icons - Buy, Cancel, Cheat, Tokens, etc.
  - [ ] ☆☆☆☆☆ Icons - App Icon
  
  3D Scenes
@@ -97,33 +97,41 @@ Items being worked on
 
 ## 📝 Doing - Present
 
+### Playability Improvements. Started: 2/17
+
 - [ ] Lab Module needs to update list when research is finished (Needs testing)
-
-- [X] Custom Game Buttons
-- [X] Rounded Buttons
-- [X] Better Delivery Order Ticket (Popover)
-- [X] Person happiness going over 100?
-- [X] Update Scene Overlay **PlayerCardNode**
-- [X] GameLoop: Auto-Accounting
-
-- [ ] Free Supply Drop-offs -> Pay for more 
-- [ ] People generator should generate new people every hour. Pay for more. And generate Materials engineer first
-- [ ] If you simulate your vehicles, you get an extra XP for the Garage
-
+- [ ] People generator - every hour. Pay for more. And generate Materials engineer first
+- [ ] Freebies Generator
+- [ ] Garage simulation button -> Person activity -> Garage xp
 - [ ] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles)
 - [ ] GameLoop: Detect Beginner
 - [ ] Module View -> If no other modules, only hab is available
-- [ ] Accounting: Make it harder for **Person** to be happy on their own
-- [ ] Person: Have action(s) to make **Person** happier
 - [ ] Remake TrussView
+- [ ] Load Scene automatically
+- [ ] Make Settings View (and open from PlayerCard)
+- [ ] LSS View -> Fix peripheral Selection bug
+- [ ] Garage -> Implement new people picker
+- [ ] More realistic numbers on building things
+- [ ] Server SpaceVehicle
+- [ ] Improve Truss View
+- [ ] Remake Bio View
+- [ ] Player avatar picker
+- [ ] View with GameMessages (where chat is)
+- [ ] Store (Tokens + Packages) View
 
-- [ ] LSS View -> Make 1 tab for tanks & ingredients, and another for Peripherals
-- [ ] LSS View -> Fix Selection bug
+- [ ] New headers
+    - [ ] BioView
+    - [ ] Truss
+        
+- [ ] Icons
+    - [X] Water Filter
+    - [X] biosolids
+    - [ ] app (game) icon
+    - [ ] electrolizer
+    - [ ] SpaceVehicle engine icons
+    - [ ] Blendered Tank icons?
 
-
-- [ ] Get Vehicle to show up (mid-play order)
-
-- [ ] 0/13 Station Scene - 02/08/2020
+- [ ] 13/21 (2/17) Station Scene Improvements - Started: 02/08/2020
     - [X] Truss View creation
     - [X] Solar Panel positions
     - [X] Control where each solar panel goes
@@ -134,28 +142,19 @@ Items being worked on
     - [X] Unbuild Module
     - [X] Choose Skin + Persistency
     - [X] GameCamera: A better camera control
-    - [ ] Blender Individual Tanks
-    - [ ] Improve Background HDRI image
-    - [ ] Reskin Delivery Vehicle
-    - [ ] Remodel Space Vehicle
-    - [ ] Rebake Garage Skin x 2 (Choices)
-    - [ ] Bake 2 more Module skins
-    - [ ] Build Dock 3D Model
-    - [ ] Add light and transluscent sphere to Dock
-    - [ ] 5 Models of Antenna
+    - [X] Build Dock 3D Model
+    - [X] Control where each Radiator goes
+    - [X] Straighten Radiator
+    - [X] Restore Delivery Animations
+    - [X] Implement Dock 3d model
+    - [X] 5 Models of Antenna
     - [ ] Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
+    - [ ] Improve Background HDRI image
     - [ ] Make the Earth bright again?
     - [ ] Add TechItems updates to StationBuilder
-    - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
-    - [ ] Control where each Radiator goes
-    - [X] Straighten Radiator
-    - [ ] Show  News
-    - [ ] Live update of tech
-    - [ ] Restore Delivery Animations
+    - [X] Show  News
     
     
-   
-        
 - [ ] 6/13 Scene Overlay
     - [X] Player
     - [X] Camera Control
@@ -168,19 +167,17 @@ Items being worked on
     - [X] News (Centered)
     - [X] Fix iOS Colors
     - [X] Coin Icon
-    - [ ] Helmet Icon
-    - [ ] Put icons inside buttons
-    - [ ] Time Token Icon (Helmet)
+    - [ ] Helmet Icon - Time Token
     - [ ] Add colors / shaders
     - [ ] 1/3 Camera options + animations
         - [X] Perspective view
         - [X] Garage View - CameraBack
         - [X] Front View - CameraFront
+        - [X] LOOK@ Camera constraints
         - [ ] Bring Regular Camera Closer to Scene
-        - [ ] Adjust Scaling (Focal Length)? of Cameras
-        - [ ] Adjust animation with midpoints
+        - [ ] Adjust camera LOOK@ constraints
         
-- [ ] 4/8 Garage View Improvements
+- [ ] 7/8 Garage View Improvements
     - [X] Time to create SpaceVehicle
     - [X] Circular progress View
     - [X] Transfer Building Vehicles to Built Vehicles automatically
@@ -192,16 +189,26 @@ Items being worked on
     - [X] Add StorageBox to Vehicle Data
     - [ ] Post Launch Scene
     
-    
+
 - [ ] 7/13 Basic Views
     - [X] Ingredients and sufficiency
     - [X] Create a general Header View in SwiftUI for all SwiftUI base views
     - [X] Improve People Selection View - Add a mark so user knows when they are selected
-    - [X] Improve Timer View 
-    - [ ] Improve General Header View
-    - [ ] Pass functions (Change skin, Rename, etc.)
+    - [X] Improve Timer View
+    - [X] Improve Game Buttons (buttonStyle)
     - [ ] Error messages
-    - [ ] Remove Horizontal Scrollers
+    
+## Wishlist
+Features that are requested, but are not required to launch the game
+
+- [ ] Free Supply Drop-offs -> Pay for more 
+- [ ] Person: Have action(s) to make **Person** happier
+- [ ] Blender Individual Tanks
+- [ ] Reskin Delivery Vehicle
+- [ ] Remodel Space Vehicle
+- [ ] Rebake Garage Skin x 2 (Choices)
+- [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
+
 
 ## 📝 To Do - Future
 Grab things from this list as you go along.
@@ -309,4 +316,13 @@ Grab things from this list as you go along.
 - [X] Fix LSS View update issues
 - [X] LSS View -> Improve Peripherals
 - [X] Accounting should use all of the energy generated first, then from batteries
+
 [02/08/2020]
+
+- [X] Custom Game Buttons
+- [X] Rounded Buttons
+- [X] Better Delivery Order Ticket (Popover)
+- [X] Person happiness going over 100?
+- [X] Update Scene Overlay **PlayerCardNode**
+- [X] GameLoop: Auto-Accounting
+- [X] LSS View -> Make 1 tab for tanks & ingredients, and another for Peripherals

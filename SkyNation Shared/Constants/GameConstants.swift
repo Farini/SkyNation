@@ -382,3 +382,32 @@ enum GameMessageType:String, Codable, CaseIterable {
     
     case Other
 }
+
+struct GameRawPackage {
+    var id:UUID
+    var price:Int       // The price in regular Dollars
+    var tokens:Int      // How many tokens
+    var money:Int       // How much money
+    var boxes:Int       // How many boxes
+    var tanks:Int       // How many tanks
+    var staff:Int       // How many people
+}
+
+/// A Package that can be purchased at the store
+struct GamePackage {
+    
+    var id:UUID
+    var tokens:Int
+    var money:Int
+    var boxes:[StorageBox]
+    var tanks:[Tank]
+    var staff:[Person]
+    
+    static func makePackage(price:Int) -> GamePackage {
+        let new = GamePackage(id: UUID(), tokens: price, money: price * 1000, boxes: [], tanks: [], staff: [])
+        return new
+    }
+    
+}
+
+// EDL - Entry Descent and Landing

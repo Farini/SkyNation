@@ -242,6 +242,40 @@ class PeripheralObject:Codable, Identifiable, Equatable {
     }
 }
 
+import SwiftUI
+
+extension PeripheralObject {
+    func getImage() -> Image? {
+        switch self.peripheral {
+            case .Airlock:
+                return Image("Airlock")
+            case .Antenna:
+                return Image("Antenna")
+            case .Condensator:
+                return Image("Condensator")
+            case .Methanizer:
+                return Image("Methanizer")
+            case .Radiator:
+                return Image("Radiator")
+            case .Roboarm:
+                return Image("Roboarm")
+            case .ScrubberCO2:
+                return Image("Scrubber")
+            case .solarPanel:
+                return Image("SolarPanel")
+            case .storageTank:
+                return Image("Tank")
+            case .WaterFilter:
+                return Image("WaterFilter")
+            case .BioSolidifier:
+                return Image("BioSolidifier")
+            default:
+                print("Don't have an image for that yet")
+                return nil
+        }
+    }
+}
+
 // MARK: - Storage
 // Boxes are in 'Ingredients.swift'
 

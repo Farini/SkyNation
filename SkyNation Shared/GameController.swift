@@ -17,6 +17,11 @@ protocol GameNavDelegate {
     func didSelectGarage(station:Station)
     func didSelectAir()
     func didSelectEarth()
+    
+    // New
+    func didSelectSettings()
+    func didSelectMessages()
+    func didSelectShopping()
 }
 
 enum GameSceneType {
@@ -101,6 +106,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 }
                 if sprite.name == "settings" {
                     print("⚙️ HIT SETTINGS NODE")
+                    gameNavDelegate?.didSelectSettings()
                     return
                 }
                 if sprite.name == "ShopButton" {
@@ -115,6 +121,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 }
                 if sprite.name == "ChatButton" {
                     print("⚙️ Lets chat!")
+                    gameNavDelegate?.didSelectMessages()
                     return
                 }
                 if sprite.name == "MarsButton" {
@@ -348,7 +355,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         stationOverlay.generateNews(string: "📦 Delivery arriving...")
         
         // Remove the earth
-        if let earth = scene.rootNode.childNode(withName: "Earth", recursively: false) as? EarthNode {
+        if let earth = scene.rootNode.childNode(withName: "Earth", recursively: true) as? EarthNode {
             
             earth.beginExitAnimation()
             print("Earth going, Ship arriving")
@@ -390,6 +397,9 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             
         } else {
             print("ERROR - Could not the earth !!!")
+            
+            
+            
         }
     }
     
@@ -572,6 +582,43 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             // Load the scene
             self.loadStationScene()
         } else {
+            
+            // New Way
+            
+            // NEWS
+            // Check Activities
+            var newsLines:[String] = []
+            if gameScene == .SpaceStation {
+                if let labs = station?.labModules {
+                    for lab in labs {
+                        print("*** Found lab: \(lab.id)")
+                        if let activity = lab.activity {
+                            print("*** Found Activity: \(activity.activityName)")
+                            if activity.dateEnds.compare(Date()) == .orderedAscending {
+                                let descriptor = "🔬 Completed Lab activities. Check Lab Modules."
+                                GameMessageBoard.shared.newAchievement(type: .experience, qtty: 2, message: "🔬 Completed Lab activitiy \(activity.activityName)")
+                                newsLines.append(descriptor)
+                            } else {
+                                let descriptor = "⏱ In progress... Lab activity \(activity.activityName). \(activity.dateEnds.timeIntervalSince(Date()))"
+                                newsLines.append(descriptor)
+                            }
+                        }
+                    }
+                }
+            }
+            
+            var newsDelay = 3.0
+            if !newsLines.isEmpty {
+                for line in newsLines {
+                    print("*** NEWS ***  (\(newsLines.count)")
+                    let timeDelay = DispatchTime.now() + newsDelay
+                    DispatchQueue.main.asyncAfter(deadline: timeDelay) {
+                        self.stationOverlay.generateNews(string: line)
+                    }
+                    newsDelay += 5.0
+                }
+            }
+            
             // Tell SceneDirector that scene is loaded
             SceneDirector.shared.controllerDidLoadScene(controller: self)
         }
