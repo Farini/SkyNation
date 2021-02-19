@@ -17,6 +17,7 @@ class PlayerCardNode:SKNode {
     var moneySprite:SKSpriteNode
     var moneyLabel:SKLabelNode
     
+    var tokenSprite:SKSpriteNode
     var tokenLabel:SKLabelNode
     
     // Buttons
@@ -29,7 +30,6 @@ class PlayerCardNode:SKNode {
     
     init(player:SKNPlayer) {
         
-//        print("\n\n Player Card...")
         let timeTokens = player.timeTokens
         let deliveryTokens = player.deliveryTokens
         let name = player.name
@@ -93,8 +93,17 @@ class PlayerCardNode:SKNode {
         
         // Tokens
         // TODO: - Make Images for Tokens
-        let tokensLbl = PlayerCardNode.makeText("TT:\(timeTokens.count), DT:\(deliveryTokens.count)")
-        tokensLbl.position = posXY
+        // Icon
+        let tokenTexture = SKTexture(image: GameImages.tokenImage)
+        let tokenSprite = SKSpriteNode(texture: tokenTexture, color: .white, size: CGSize(width: 24, height: 24))
+        tokenSprite.anchorPoint = CGPoint(x: 0, y: 1)
+        tokenSprite.zPosition = 90
+        tokenSprite.position = posXY
+        self.tokenSprite = tokenSprite
+        
+        // Tokens Label
+        let tokensLbl = PlayerCardNode.makeText("\(timeTokens.count)")
+        tokensLbl.position = CGPoint(x: moneyPosX, y: Double(posXY.y))
         tokensLbl.zPosition = 90
         
         self.tokenLabel = tokensLbl
@@ -120,6 +129,7 @@ class PlayerCardNode:SKNode {
         addChild(nameLabel)
         addChild(currencySprite)
         addChild(moneyLbl)
+        addChild(tokenSprite)
         addChild(tokensLbl)
         
         // Background
@@ -181,9 +191,7 @@ class PlayerCardNode:SKNode {
         image.isTemplate = true
         let texture = SKTexture(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: [:])!)
         #else
-//        image.tintColor = .white
-        let texture = SKTexture(image: image.maskWithColor(color: .white))// .cgImage!)
-//        let texture = SKTexture(cgImage: image.withTintColor(.white, renderingMode: .alwaysTemplate).cgImage!) //SKTexture(image: camImage)
+        let texture = SKTexture(image: image.maskWithColor(color: .white))
         #endif
         let sprite:SKSpriteNode = SKSpriteNode(texture: texture, color: .white, size: CGSize(width: 36, height: 36))
         return sprite
@@ -196,12 +204,10 @@ class PlayerCardNode:SKNode {
         label.fontName = "Menlo"
         label.fontSize = 22
         label.fontColor = .white
-//        label.position = CGPoint(x: 42, y: 25)
         label.horizontalAlignmentMode = .left
         label.verticalAlignmentMode = .top
         label.isUserInteractionEnabled = false
         label.zPosition = 90
-//        print("Making label: \(label)")
         
         return label
     }

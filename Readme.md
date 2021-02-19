@@ -101,23 +101,29 @@ Items being worked on
 
 - [X] Module View -> If no other modules, only hab is available
 - [X] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles)
+- [X] Timing of Activity according to people's happiness, teamwork and intelligence
+- [X] Garage -> Implement new people picker
+- [X] Remake TrussView
+- [X] Player avatar picker
 
-- [ ] Lab Module needs to update list when research is finished (Needs testing)
+- [ ] GameGenerators + Encoding64
 - [ ] People generator - every hour. Pay for more. And generate Materials engineer first
 - [ ] Freebies Generator
+- [ ] Freebies TokenLevels
+
+- [ ] Remake Bio View
+- [ ] Implement Player Edit
+
+- [ ] Lab Module needs to update list when research is finished (Needs testing)
 - [ ] Garage simulation button -> Person activity -> Garage xp
 - [ ] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles) (In Mid-Game)
 - [ ] GameLoop: Detect Beginner
-- [ ] Remake TrussView
+
 - [ ] Load Scene automatically
 - [ ] Make Settings View (and open from PlayerCard)
 - [ ] LSS View -> Fix peripheral Selection bug
-- [ ] Garage -> Implement new people picker
 - [ ] More realistic numbers on building things
 - [ ] Server SpaceVehicle
-- [ ] Improve Truss View
-- [ ] Remake Bio View
-- [ ] Player avatar picker
 - [ ] View with GameMessages (where chat is)
 - [ ] Store (Tokens + Packages) View
 
@@ -129,6 +135,8 @@ Items being worked on
 - [ ] Use Fibonacci for Peripheral Upgrades
 - [ ] SpaceVehicle. var boxes (required)
 - [ ] Player. var avatar (required)
+- [ ] Person var stress?
+- [ ] Activity name enum?
 
 - [ ] New headers
     - [ ] BioView
@@ -179,14 +187,13 @@ Items being worked on
     - [X] Fix iOS Colors
     - [X] Coin Icon
     - [X] Bring Regular Camera Closer to Scene
-    - [ ] Helmet Icon - Time Token
+    - [X] Helmet Icon - Time Token
     - [ ] Add colors / shaders
     - [ ] 1/3 Camera options + animations
         - [X] Perspective view
         - [X] Garage View - CameraBack
         - [X] Front View - CameraFront
         - [X] LOOK@ Camera constraints
-       
         - [ ] Adjust camera LOOK@ constraints
         
 - [ ] 7/8 Garage View Improvements

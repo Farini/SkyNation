@@ -426,7 +426,7 @@ struct GarageView: View {
                         VehicleInventoryView(controller: controller)
                         
                     case .Descent:      // Adding Ingredients, Peripherals, and BotTech
-                        DescentInventoryView(controller:controller, vehicle:controller.selectedVehicle!)
+                        EDLInventoryView(controller:controller, vehicle:controller.selectedVehicle!)
                         
                     case .Crew:         // Selecting Passengers
                         Group {

@@ -76,6 +76,7 @@ class StationOverlay:NSObject, SKSceneDelegate {
     /// Updates the `Player Card` overlay node
     func updatePlayerCard() {
         
+        
         if let player = LocalDatabase.shared.player {
         
             if let card:PlayerCardNode = scene.childNode(withName: "playercard") as? PlayerCardNode {

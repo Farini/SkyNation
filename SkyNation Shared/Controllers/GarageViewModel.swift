@@ -142,8 +142,6 @@ class GarageViewModel:ObservableObject {
         
         print("Trying to add Peripheral to Vehicle named \(vehicle.name)")
         
-//        if vehicle.contains(where: { $0.id == battery.id }) {
-//        }
         switch peripheral.peripheral {
         case .Antenna:
             print("Antenna!")
@@ -153,14 +151,14 @@ class GarageViewModel:ObservableObject {
     }
     
     /// Sets the Vehicle to start building
-    func startBuilding(vehicle:SpaceVehicle) {
-        
-        station.garage.startBuildingVehicle(vehicle: vehicle)
-        self.buildingVehicles.append(vehicle)
-        selectedVehicle = vehicle
-        garageStatus = .idle
-        
-    }
+//    func startBuilding(vehicle:SpaceVehicle) {
+//
+//        station.garage.startBuildingVehicle(vehicle: vehicle)
+//        self.buildingVehicles.append(vehicle)
+//        selectedVehicle = vehicle
+//        garageStatus = .idle
+//
+//    }
     
     /// Returns whether its (not) possible to build a certain Engine Type
     func disabledEngine(type:EngineType) -> Bool {
@@ -287,17 +285,29 @@ class GarageViewModel:ObservableObject {
     }
     
     /// Called when Vehicle Engine Setup is Finished
-    func didSetupEngine(vehicle:SpaceVehicle) {
+    func didSetupEngine(vehicle:SpaceVehicle, workers:[Person]) {
+        
+        // Update Person's Activity
+        
+        // Activity and Time
+        var bonus:Double = 0.1
+        for person in workers {
+            let lacking = Double(max(100, person.intelligence) + max(100, person.happiness) + max(100, person.teamWork)) / 3.0
+            // lacking will be 100 (best), 0 (worst)
+            bonus += lacking / Double(workers.count)
+        }
+        let timeDiscount = (bonus / 100) * 0.6 * Double(vehicle.engine.time) // up to 60% discount on time
+        
+        // Create Activity
+        let duration = vehicle.engine.time - timeDiscount
+        for person in workers {
+            let activity = LabActivity(time: duration, name: "Space Vehicle Engine")
+            person.activity = activity
+        }
+        
         
         selectedVehicle = vehicle
         station.garage.xp += 1
-        
-//        switch vehicle.engine {
-//            case .Hex6: // Skip payload
-//                self.garageStatus = .planning(stage:.Inventory)
-//            default:
-//                self.garageStatus = .planning(stage: .Payload)
-//        }
         
         print("Finished setting up engine.")
         
@@ -306,7 +316,7 @@ class GarageViewModel:ObservableObject {
         self.didSelectBuilding(vehicle: vehicle)
         
         // Update and save Model
-        station.garage.startBuildingVehicle(vehicle: vehicle)
+        station.garage.startBuildingVehicle(vehicle: vehicle, time:duration)
         LocalDatabase.shared.saveStation(station: station)
     }
     

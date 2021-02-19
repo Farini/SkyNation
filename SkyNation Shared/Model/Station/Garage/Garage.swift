@@ -27,28 +27,7 @@ class Garage:Codable {
     }
     
     /// Adds to the array **buildingVehicles**
-    func startBuildingVehicle(vehicle:SpaceVehicle) {
-        
-        var time:Double = 0
-        time += vehicle.engine.time
-        
-        //        for panel in solar {
-        //            time += panel.size
-        //        }
-        //        if shell != nil {
-        //            time += 20
-        //        }
-        //        if let heat = vehicle.heatshield {
-        //            switch heat {
-        //            case .twelve: time += 40
-        //            case .eighteen: time += 200
-        //            }
-        //        }
-        //        if let load = payload {
-        //            time += load.people.count * 20
-        //            time += load.ingredients.count * 10
-        //            time += load.tanks.count * 10
-        //        }
+    func startBuildingVehicle(vehicle:SpaceVehicle, time:Double) {
         
         vehicle.simulation = 0
         vehicle.status = .Creating

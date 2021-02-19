@@ -59,9 +59,22 @@ struct GameMessagesView: View {
             header
             
             ScrollView {
+                // Sections?
+                
                 ForEach(messages, id:\.self.id) { message in
-                    //                Text(GameFormatters.dateFormatter.string(from: message.date))
-                    Text(message.message)
+                    VStack {
+                        Text(GameFormatters.dateFormatter.string(from: message.date))
+                            .foregroundColor(message.isCollected ? .gray:.blue)
+                        Text(message.message)
+                            .foregroundColor(message.isRead ? .gray:.orange)
+                        HStack {
+                            Text("Reward: \(message.moneyRewards ?? 0)")
+                            Text("Type: \(message.type.rawValue)")
+                        }
+                        
+                        Divider()
+                    }
+                    
                 }
             }
         }

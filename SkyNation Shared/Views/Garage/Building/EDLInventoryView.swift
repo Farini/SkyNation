@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-struct DescentInventoryView: View {
+/// EDL (Entry, Descent, and Landing) Inventory View
+struct EDLInventoryView: View {
     
     @ObservedObject var controller:GarageViewModel
     
@@ -45,7 +46,7 @@ struct DescentInventoryView: View {
             HStack(spacing:18) {
                 VStack {
                     Text("🚀 \(vehicle.name): \(vehicle.engine.rawValue)")
-                    Text("Vehicle other")
+                    Text("EDL - Entry Descent and Landing")
                 }
                 .foregroundColor(.orange)
                 .padding([.leading])
@@ -167,7 +168,7 @@ struct DescentInventoryView: View {
 
 struct DescentInventoryView_Previews: PreviewProvider {
     static var previews: some View {
-        DescentInventoryView(controller:GarageViewModel(), vehicle:SpaceVehicle.bigLoad())
+        EDLInventoryView(controller:GarageViewModel(), vehicle:SpaceVehicle.bigLoad())
     }
 }
 

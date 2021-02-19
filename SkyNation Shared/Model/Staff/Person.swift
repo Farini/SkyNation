@@ -532,7 +532,21 @@ class HumanGenerator:NSObject{
                                                    NameGenderPair(name: "Marcus Trapuya", gender: .male),
                                                    NameGenderPair(name: "Anna Johnson", gender: .female),
                                                    NameGenderPair(name: "Julia Carson", gender: .female),
-                                                   NameGenderPair(name: "Sakura Saito", gender: .female)]
+                                                   NameGenderPair(name: "Sakura Saito", gender: .female),
+                                                   NameGenderPair(name: "Jenny Muligan", gender: .female),
+                                                   NameGenderPair(name: "Guta Gonzales", gender: .female),
+                                                   NameGenderPair(name: "Masha Ivanov", gender: .female),
+                                                   NameGenderPair(name: "Lauren Gucci", gender: .female),
+                                                   NameGenderPair(name: "Miranda Burke", gender: .female),
+                                                   NameGenderPair(name: "Amanda Shultz", gender: .female),
+                                                   NameGenderPair(name: "Dima Vasiliev", gender: .male),
+                                                   NameGenderPair(name: "Gene Rossi", gender: .male),
+                                                   NameGenderPair(name: "Jimmy Ferrari", gender: .male),
+                                                   NameGenderPair(name: "John Ballak", gender: .male),
+                                                   NameGenderPair(name: "David Mazzol", gender: .male),
+                                                   NameGenderPair(name: "Rick Shultz", gender: .male),
+                                                   NameGenderPair(name: "Rod Shimura", gender: .male)
+                ]
         return allNameGenderPairs.randomElement()!
     }
     
@@ -574,15 +588,6 @@ class HumanGenerator:NSObject{
         return lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
     }
     
-//    // + teamwork
-//    var teamWork:Int = 50
-//    // + fix attempts
-//    var fixAttempts:Int = 0
-//    // + life expectancy
-//    var lifeExpectancy:Int = 75
-//    // + food eaten recently?
-//    var foodEaten:[String] = []
-    
     // Intelligence
     func randomStartingIntelligence() -> Int{
         let lower = 35
@@ -590,3 +595,5 @@ class HumanGenerator:NSObject{
         return lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
     }
 }
+
+

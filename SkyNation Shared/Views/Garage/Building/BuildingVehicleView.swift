@@ -28,51 +28,64 @@ struct BuildingVehicleView: View {
                     Spacer()
                     Text("Choose Engine Type").font(.title)
                     HStack {
-                        ForEach(EngineType.allCases, id:\.self) { engine in
-                            VStack {
-                                Text("Engine \(engine.rawValue)").font(.headline)
-                                Text("Payload \(engine.payloadLimit)")
-                                
-                                Button("Make this") {
-                                    print("Making some")
-                                    builderController.newEngine(type: engine)
+                        LazyHGrid(rows: [GridItem(.flexible(minimum: 180, maximum: 250))], alignment: .top, spacing: /*@START_MENU_TOKEN@*/nil/*@END_MENU_TOKEN@*/, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
+                            ForEach(EngineType.allCases, id:\.self) { engine in
+                                VStack(spacing:8) {
+                                    Text("Engine \(engine.rawValue)").font(.headline)
+                                        .padding([.top])
+                                    Text("Payload \(engine.payloadLimit)")
+                                    Text(engine.about)
+                                        .foregroundColor(.gray)
+                                        .lineLimit(nil)
+                                        .frame(maxWidth:130, maxHeight:.infinity)
+                                        .padding(4)
+                                    Button("Build") {
+                                        print("Making some")
+                                        builderController.newEngine(type: engine)
+                                    }
+                                    .disabled(builderController.disabledEngine(type: engine))
+                                    .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                                    .padding([.bottom])
                                 }
-                                .disabled(builderController.disabledEngine(type: engine))
+                                
+                                .background(Color.black)
+                                .cornerRadius(12)
                             }
                         }
-                    }.padding()
+                    }
                     Spacer()
                 case .pickEngineers(let engine):
                     
-                    let dicSort = engine.skills.sorted(by: {$0.key.rawValue < $1.key.rawValue })
-                    Text("PE")
-                    Text("\(engine.rawValue)")
+                    // Skills and People
+                    ActivityStaffView(staff: builderController.availablePeople, selected: [], requiredSkills: engine.skills, chooseWithReturn: { (selectedPeople) in
+                        builderController.workersArray = selectedPeople
+                        builderController.updateStaffList()
+                    }, title: "Engine Skills Required", issue: "", message: "")
                     
-                    Text("Required Skills:")
-                
-                    ForEach(dicSort, id:\.key) { (key, value) in
-                        Text("K:\(key.rawValue):\(value)")
-                            .foregroundColor(builderController.hasSkills ? .green:.red)
-                    }
+                    Divider()
                     
-                    ScrollView([Axis.Set.horizontal], showsIndicators: true) {
-                        HStack {
-                            ForEach(builderController.availablePeople) { person in
-                                PersonSmallView(person: person)
-                                    .onTapGesture {
-                                        print("Adooorunrun")
-                                        builderController.addEngineerToBuild(person: person)
-                                    }
+                    HStack {
+                        Button(action: {
+                            garageController.cancelSelection()
+                        }) {
+                            HStack {
+                                Image(systemName: "backward.frame")
+                                Text("Back")
                             }
                         }
+                        .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                        .help("Go back")
+                        
+                        Button("Build Engine") {
+                            builderController.checkIngredients(engine: engine)
+                        }
+                        .disabled(!builderController.hasSkills)
+                        .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                     }
-                    
-                    Button("Build Engine") {
-                        builderController.checkIngredients(engine: engine)
-                    }
-                    .disabled(!builderController.hasSkills)
                     
                 case .pickMaterials(let engine):
+                    
+                    // Ingredients
                     let dicSort = engine.ingredients.sorted(by: {$0.key.rawValue < $1.key.rawValue })
                     Text("Ingredients Required")
                     ForEach(dicSort, id:\.key) { (key, value) in
@@ -80,27 +93,32 @@ struct BuildingVehicleView: View {
                             .foregroundColor(builderController.hasIngredients ? .green:.red)
                     }
                     HStack {
-                        Button("Charge Ingredients") {
-                            print("Charge?")
-                            builderController.chargeIngredients()
-                        }
-                        .disabled(!builderController.hasIngredients)
+                        
                         Button("Cancel") {
                             garageController.cancelSelection()
                         }
+                        .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                        
+                        Button("Charge Ingredients") {
+                            builderController.chargeIngredients()
+                        }
+                        .disabled(!builderController.hasIngredients)
+                        .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                        
                     }
                     
                 case .namingVehicle(let vehicle):
                     
                     NameVehicleCard(vehicle: vehicle, closeAction: {
-                        garageController.didSetupEngine(vehicle: vehicle)
+                        garageController.didSetupEngine(vehicle: vehicle, workers:builderController.workersArray)
                     }, controller: builderController)
+                    
                 
                 // DEPRECATE
-                case .timing(let vehicle):
-                    
-                    Text("Timing: \(vehicle.name)")
-                    Text("Timing started")
+//                case .timing(let vehicle):
+//
+//                    Text("Timing: \(vehicle.name)")
+//                    Text("Timing started")
                     
             }
         }
@@ -148,6 +166,7 @@ struct NameVehicleCard: View {
                     vehicle.name = vehicleName
                     flipCard()
                 }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                 .disabled(vehicleName.count > 10)
                 .padding()
             }
@@ -210,12 +229,16 @@ struct NameVehicleCard: View {
                 
                 // Buttons
                 HStack {
-                    Button("Done") {
-                        closeAction()
-                    }
-                    Button("Cancel") {
+                    Button("❌ Back") {
                         flipCard()
                     }
+                    .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                    
+                    Button("✅ Done") {
+                        closeAction()
+                    }
+                    .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                    
                 }
                 .padding(6)
             }

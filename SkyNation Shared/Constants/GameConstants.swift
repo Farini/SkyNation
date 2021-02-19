@@ -187,6 +187,9 @@ struct GameColors {
     static let lightBlue = Color.blue
     static let airBlue = Color("LightBlue")
     static let darkGray = Color("DarkGray")
+    
+    /// A Black Transluscent color
+    static let transBlack = Color.black.opacity(0.7)
 }
 
 /// Images used by the game
@@ -225,6 +228,9 @@ struct GameImages {
         return SKNImage(named: "Currency")!
     }
     
+    static var tokenImage:SKNImage {
+        return SKNImage(named:"Helmet")!
+    }
 }
 
 #if os(macOS)

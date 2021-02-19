@@ -374,9 +374,9 @@
 		85927D9525DB1D800071D98B /* VehicleTrunkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85927D9425DB1D800071D98B /* VehicleTrunkView.swift */; };
 		85927D9625DB1D800071D98B /* VehicleTrunkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85927D9425DB1D800071D98B /* VehicleTrunkView.swift */; };
 		85927D9725DB1D800071D98B /* VehicleTrunkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85927D9425DB1D800071D98B /* VehicleTrunkView.swift */; };
-		85960B9725D9B3F000AC9592 /* DescentInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* DescentInventoryView.swift */; };
-		85960B9825D9B3F000AC9592 /* DescentInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* DescentInventoryView.swift */; };
-		85960B9925D9B3F000AC9592 /* DescentInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* DescentInventoryView.swift */; };
+		85960B9725D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
+		85960B9825D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
+		85960B9925D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
 		8597BBAA25BF40AB00C705A0 /* StartingWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8597BBA925BF40AB00C705A0 /* StartingWindow.swift */; };
 		859D683225DD8B9F005DD42C /* GameMessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683125DD8B9F005DD42C /* GameMessagesView.swift */; };
 		859D683325DD8B9F005DD42C /* GameMessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683125DD8B9F005DD42C /* GameMessagesView.swift */; };
@@ -554,7 +554,7 @@
 		858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCamera.swift; sourceTree = "<group>"; };
 		858D7C5325D60FA300A45CF9 /* GameButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameButtons.swift; sourceTree = "<group>"; };
 		85927D9425DB1D800071D98B /* VehicleTrunkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTrunkView.swift; sourceTree = "<group>"; };
-		85960B9625D9B3F000AC9592 /* DescentInventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescentInventoryView.swift; sourceTree = "<group>"; };
+		85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EDLInventoryView.swift; sourceTree = "<group>"; };
 		8597BBA925BF40AB00C705A0 /* StartingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingWindow.swift; sourceTree = "<group>"; };
 		859D683125DD8B9F005DD42C /* GameMessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameMessagesView.swift; sourceTree = "<group>"; };
 		859D683925DD91DB005DD42C /* GameShoppingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameShoppingView.swift; sourceTree = "<group>"; };
@@ -1033,7 +1033,7 @@
 			children = (
 				8536F3CB258D47D000B509D2 /* BuildingVehicleView.swift */,
 				8536F3CA258D47D000B509D2 /* VehicleInventoryView.swift */,
-				85960B9625D9B3F000AC9592 /* DescentInventoryView.swift */,
+				85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */,
 			);
 			path = Building;
 			sourceTree = "<group>";
@@ -1335,7 +1335,7 @@
 				8536F3E2258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */,
 				8536F3EE258D47D000B509D2 /* TrussView.swift in Sources */,
 				8536F40E258D47D000B509D2 /* AnimationsTest.swift in Sources */,
-				85960B9725D9B3F000AC9592 /* DescentInventoryView.swift in Sources */,
+				85960B9725D9B3F000AC9592 /* EDLInventoryView.swift in Sources */,
 				8536F439258D47EA00B509D2 /* ModulesViewModel.swift in Sources */,
 				85F6675625AF7BBE00E5003B /* DeliveryVehicleNode.swift in Sources */,
 				8536F32B258D412600B509D2 /* LocalDatabase.swift in Sources */,
@@ -1417,7 +1417,7 @@
 				8536F41B258D47D000B509D2 /* VehicleInventoryView.swift in Sources */,
 				8569A3D225A6353C0057A518 /* GameActivityView.swift in Sources */,
 				8536F317258D361100B509D2 /* GameConstants.swift in Sources */,
-				85960B9825D9B3F000AC9592 /* DescentInventoryView.swift in Sources */,
+				85960B9825D9B3F000AC9592 /* EDLInventoryView.swift in Sources */,
 				85797519259BD394004C54D2 /* ItemCollectionViews.swift in Sources */,
 				8536F2EB258D330300B509D2 /* GameController.swift in Sources */,
 				8504A51525C5D3B800739C58 /* CautionStripes.swift in Sources */,
@@ -1534,7 +1534,7 @@
 				8536F3F0258D47D000B509D2 /* TrussView.swift in Sources */,
 				8597BBAA25BF40AB00C705A0 /* StartingWindow.swift in Sources */,
 				8536F410258D47D000B509D2 /* AnimationsTest.swift in Sources */,
-				85960B9925D9B3F000AC9592 /* DescentInventoryView.swift in Sources */,
+				85960B9925D9B3F000AC9592 /* EDLInventoryView.swift in Sources */,
 				8536F43B258D47EA00B509D2 /* ModulesViewModel.swift in Sources */,
 				85F6675825AF7BBE00E5003B /* DeliveryVehicleNode.swift in Sources */,
 				8536F32D258D412600B509D2 /* LocalDatabase.swift in Sources */,

@@ -165,8 +165,16 @@ class LabViewModel: ObservableObject {
             return
         }
         
+        var bonus:Double = 0.1
+        for person in workers {
+            let lacking = Double(max(100, person.intelligence) + max(100, person.happiness) + max(100, person.teamWork)) / 3.0
+            // lacking will be 100 (best), 0 (worst)
+            bonus += lacking / Double(workers.count)
+        }
+        let timeDiscount = (bonus / 100) * 0.6 * Double(item.getDuration()) // up to 60% discount on time
+        
         // Create activity
-        let duration = item.getDuration()
+        let duration = item.getDuration() - Int(timeDiscount)
         let delta:TimeInterval = Double(duration)
         let activity = LabActivity(time: delta, name: item.rawValue)
         labModule.activity = activity
@@ -367,8 +375,16 @@ class LabViewModel: ObservableObject {
             return
         }
         
+        var bonus:Double = 0.1
+        for person in workers {
+            let lacking = Double(max(100, person.intelligence) + max(100, person.happiness) + max(100, person.teamWork)) / 3.0
+            // lacking will be 100 (best), 0 (worst)
+            bonus += lacking / Double(workers.count)
+        }
+        let timeDiscount = (bonus / 100) * 0.6 * Double(recipe.getDuration()) // up to 60% discount on time
+        
         // Create Activity
-        let duration = recipe.getDuration()
+        let duration = recipe.getDuration() - Int(timeDiscount)
         let delta:TimeInterval = Double(duration)
         let activity = LabActivity(time: delta, name: recipe.rawValue)
         labModule.activity = activity

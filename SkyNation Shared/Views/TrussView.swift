@@ -35,76 +35,36 @@ struct TrussLayoutView: View {
                 .fill(Color.orange, style: FillStyle(eoFill: false, antialiased: true))
                 .foregroundColor(Color.white)
                 .frame(height: 20, alignment: .leading)
-                
             
-//            Divider()
+            Text("Truss Layout").font(.title2)
+                .padding(6)
+                .background(GameColors.transBlack)
+                .cornerRadius(8)
             
-            HStack(alignment: .top, spacing: 12) {
+            HStack {
                 
-                // Left Most
-                VStack {
-                    ForEach(controller.truss.tComponents.filter({row1.contains($0.posIndex)})) { comp in
-                        Text("\(comp.allowedType.rawValue)")
-                            .foregroundColor(comp.itemID == nil ? .gray:.blue)
-                            .padding(6)
-                            .onTapGesture {
-                                self.didSelect(item: comp)
-                            }
-                    }
+                TrussRowView(components: controller.truss.tComponents.filter({row1.contains($0.posIndex)}), rowIndexes: row1) { (selectedComponent) in
+                    self.didSelect(item: selectedComponent)
+                }
+                TrussRowView(components: controller.truss.tComponents.filter({row2.contains($0.posIndex)}), rowIndexes: row2) { (selectedComponent) in
+                    self.didSelect(item: selectedComponent)
                 }
                 
-                // Mid Left
-                VStack {
-                    ForEach(controller.truss.tComponents.filter({row2.contains($0.posIndex)})) { comp in
-                        Text("\(comp.allowedType.rawValue)")
-                            .foregroundColor(comp.itemID == nil ? .gray:.blue)
-                            .padding(6)
-                            .onTapGesture {
-                                self.didSelect(item: comp)
-                            }
-                    }
-                }
+                let hasBot:Bool = controller.truss.tComponents.first(where: { $0.allowedType == TrussItemType.RoboArm })?.itemID != nil ? true:false
+                Image("Roboarm")
+                    .frame(width: 32, height: 32, alignment: .center)
+                    .colorMultiply(hasBot ? Color.red:Color.blue)
+                    .offset(x: 0, y: -32)
+                    .padding(6)
                 
-                // Middle
-                VStack {
-                    ForEach(controller.truss.tComponents.filter({midRow.contains($0.posIndex)})) { comp in
-                        Text("\(comp.allowedType.rawValue)")
-                            .foregroundColor(comp.itemID == nil ? .gray:.blue)
-                            .padding(6)
-                            .onTapGesture {
-                                self.didSelect(item: comp)
-                            }
-                    }
+                TrussRowView(components: controller.truss.tComponents.filter({row3.contains($0.posIndex)}), rowIndexes: row3){ (selectedComponent) in
+                    self.didSelect(item: selectedComponent)
                 }
-                
-                // Mid-Right
-                VStack {
-                    ForEach(controller.truss.tComponents.filter({row3.contains($0.posIndex)})) { comp in
-                        Text("\(comp.allowedType.rawValue)")
-                            .foregroundColor(comp.itemID == nil ? .gray:.blue)
-                            .padding(6)
-                            .onTapGesture {
-                                self.didSelect(item: comp)
-                            }
-                    }
+                TrussRowView(components: controller.truss.tComponents.filter({row4.contains($0.posIndex)}), rowIndexes: row4){ (selectedComponent) in
+                    self.didSelect(item: selectedComponent)
                 }
-                
-                // Right-Most
-                VStack {
-                    ForEach(controller.truss.tComponents.filter({row4.contains($0.posIndex)})) { comp in
-                        Text("\(comp.allowedType.rawValue)")
-                            .foregroundColor(comp.itemID == nil ? .gray:.blue)
-                            .padding(6)
-                            .onTapGesture {
-                                self.didSelect(item: comp)
-                            }
-                    }
-                }
-                
             }
-            .padding()
-            
-            Divider()
+            .padding(8)
             
             // Selection
             Group {
@@ -118,27 +78,20 @@ struct TrussLayoutView: View {
                         Text("Nothing selected")
                             .foregroundColor(.gray)
                     }
-                    VStack {
-                        Button("Save") {
-                            controller.saveSetup()
-                            GameWindow.closeWindow()
-                        }
-                        Button("Cancel") {
-                            print("Cancel doesnt do much")
-                            GameWindow.closeWindow()
-                        }
+                    
+                    Button("Close") {
+                        controller.saveSetup()
+                        GameWindow.closeWindow()
                     }
+                    .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                 }
-                
                 
                 if let message = controller.selectionMessage {
                     Text("\(message)")
                 }
             }
             .padding()
-            
         }
-        
     }
     
     func didSelect(item:TrussComponent) {
@@ -147,6 +100,74 @@ struct TrussLayoutView: View {
         
     }
     
+}
+
+struct TrussRowView: View {
+    
+    var components:[TrussComponent]
+    var rowIndexes:[Int]
+    
+    /// A Closure for this view to respond to its parent
+    var chooseWithReturn:(_ component:TrussComponent) -> ()
+    
+    var body: some View {
+        VStack {
+            let top = components.first(where: { $0.posIndex == rowIndexes[0] })!
+            let mid = components.first(where: { $0.allowedType == .Radiator })!
+            let bot = components.first(where: { $0.posIndex != rowIndexes[0] })!
+            
+            ZStack {
+                Color.black
+                
+                // Top
+                TurtleHexagon().stroke(lineWidth: 2).foregroundColor(top.itemID == nil ? .gray:.orange)
+                    .frame(width:64, height:64)
+                    .offset(x: -12, y: 30)
+                PeripheralObject(peripheral: .solarPanel).getImage()!
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 42, height: 42, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    .offset(x: -30, y: -30)
+                    .foregroundColor(top.itemID == nil ? .gray:.orange)
+                    .onTapGesture {
+                        chooseWithReturn(top)
+                    }
+                
+                // Mid
+                TurtleHexagon().stroke(lineWidth: 2).foregroundColor(mid.itemID == nil ? .gray:.orange)
+                    .frame(width:64, height:62)
+                    .offset(x: 42, y: 60)
+                PeripheralObject(peripheral: .Radiator).getImage()!
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 42, height: 42, alignment: .center)
+                    .offset(x: 24, y: 0)
+                    .foregroundColor(mid.itemID == nil ? .gray:.orange)
+                    .onTapGesture {
+                        chooseWithReturn(mid)
+                    }
+                
+                // Bot
+                TurtleHexagon().stroke(lineWidth: 2).foregroundColor(bot.itemID == nil ? .gray:.orange)
+                    .frame(width:64, height:64)
+                    .offset(x: -12, y: 94)
+                PeripheralObject(peripheral: .solarPanel).getImage()!
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 42, height: 42, alignment: .center)
+                    .offset(x: -30, y: 32)
+                    .foregroundColor(bot.itemID == nil ? .gray:.orange)
+                    .onTapGesture {
+                        chooseWithReturn(bot)
+                    }
+                    
+            }
+            .padding(8)
+            .background(Color.black)
+            .frame(width: 132, height: 132, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            .cornerRadius(8)
+        }
+    }
 }
 
 struct TrussSelectionView: View {

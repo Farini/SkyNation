@@ -15,6 +15,50 @@ struct CautionStripes: View {
 }
 
 // Shapes
+struct TurtleHexagon: Shape {
+    
+    // MARK:- functions
+    func path(in rect: CGRect) -> Path {
+        
+        // Path
+        var path = Path()
+        
+        // Start in Middle
+        path.move(to: .zero)
+        
+        let sideLength = rect.size.width / 2
+        for _ in 0..<6 {
+            // Scuttle
+            path = scuttle(length: sideLength, path: path)
+            // Turn
+            path = turn(.pi/3.0, path: path)
+        }
+        return close(path: path)
+    }
+    
+    func scuttle(length:CGFloat, path:Path) -> Path {
+        var newPath = path //
+        newPath.addLine(to: .init(x: length, y: 0))
+        newPath = newPath.applying(CGAffineTransform(translationX: -length, y: 0))
+        return newPath
+    }
+    
+    func turn(_ radians:CGFloat, path:Path) -> Path {
+        var newPath = path
+        newPath = path.applying(CGAffineTransform(rotationAngle: radians))
+        return newPath
+    }
+    
+    func close(path:Path) -> Path {
+        let pt = path.currentPoint ?? .zero
+        var newPath = path
+        newPath.addLine(to: .init(x: 0, y: 0))
+        newPath = newPath.applying(CGAffineTransform(translationX: -pt.x, y: -pt.y))
+        newPath.closeSubpath()
+        return newPath
+    }
+    
+}
 
 struct CautionStripeShape: Shape {
     
@@ -84,8 +128,27 @@ struct CautionStripes_Previews: PreviewProvider {
             }
             .frame(width: 300, height: 20, alignment: .leading)
             .clipped()
+            
+            Text("Hexagon")
+            
+            ZStack {
+                Color.black
+                TurtleHexagon()
+                    .frame(width:64, height:64)
+                    .offset(x: 0, y: 64)
+                TurtleHexagon()
+                    .frame(width:64, height:64)
+                    .offset(x: 50, y: 94)
+                TurtleHexagon().stroke(lineWidth: 2).foregroundColor(.gray)
+                    .frame(width:64, height:64)
+                    .offset(x: 0, y: 124)
+                
+            }.frame(width: .infinity, height: 128, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            
+            
+//                .padding()
 //            Text("Text Below").font(.title)
-            ContentView()
+//            ContentView()
         }
         
     }

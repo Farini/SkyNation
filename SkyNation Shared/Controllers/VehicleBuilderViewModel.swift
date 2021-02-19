@@ -13,7 +13,7 @@ enum SVBuildStage {
     case pickEngineers(type:EngineType)
     case pickMaterials(type:EngineType)
     case namingVehicle(vehicle:SpaceVehicle)
-    case timing(vehicle:SpaceVehicle)
+//    case timing(vehicle:SpaceVehicle)
     
 }
 
@@ -51,17 +51,17 @@ class VehicleBuilderViewModel:ObservableObject {
     }
     
     /// Engineer to build the engine
-    func addEngineerToBuild(person:Person) {
-        workersArray.append(person)
-        updateStaffList()
-        if self.hasSkills == true {
-            print("Bingo")
-        }else{
-            print("Still needs more skills")
-        }
-    }
+//    func addEngineerToBuild(person:Person) {
+//        workersArray.append(person)
+//        updateStaffList()
+//        if self.hasSkills == true {
+//            print("Bingo")
+//        }else{
+//            print("Still needs more skills")
+//        }
+//    }
     
-    private func updateStaffList() {
+    func updateStaffList() {
         
         if let skillsRequired = selectedEngine?.skills {
             
@@ -112,20 +112,24 @@ class VehicleBuilderViewModel:ObservableObject {
     
     /// Charge the ingredients of the station
     func chargeIngredients() {
+        
         guard let vehicle = vehicle else { fatalError() }
         print("Charge ingredients...")
-        print("Pending the making of the function in station.truss")
-        print("Needs to update the Engineers and set their **LABACTIVITY** object")
-        // FIXME: - Charge Ingredients
-        // FIXME: - Update Person's Activity
-        buildStage = .namingVehicle(vehicle: vehicle)//.timing(vehicle:vehicle!)
+        
+        // Charge Ingredients
+        let result = station.truss.payForResources(ingredients: vehicle.engine.ingredients)
+        if result == false {
+            print("ERROR: Could not pay for resources")
+        }
+        
+        buildStage = .namingVehicle(vehicle: vehicle)
     }
     
     /// User gave the Vehicle a name
     func didNameVehicle(_ name:String) {
         guard let vehicle = vehicle else { fatalError() }
         vehicle.name = name
-        self.buildStage = .timing(vehicle: vehicle)
+//        self.buildStage = .timing(vehicle: vehicle)
     }
     
     /// The state of each `Create engine` Button
