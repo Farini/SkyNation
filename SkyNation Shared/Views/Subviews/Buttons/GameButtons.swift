@@ -145,6 +145,9 @@ struct SmallCircleButtonStyle: ButtonStyle {
     }
 }
 
+// This originated here
+// ABSTRACT: https://sarunw.com/posts/swiftui-buttonstyle/#related-resources
+
 struct NeumorphicButtonStyle: ButtonStyle {
     
     var bgColor: Color

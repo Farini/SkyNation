@@ -228,10 +228,9 @@ struct ActivityStaffView:View {
                 if message.isEmpty {
                     Text("Select staff")
                         .foregroundColor(.gray)
-                    CautionStripeShape()
-                        .frame(width:250, height:12)
-                        //.background(LinearGradient(gradient: .init(colors: [.init(white: 0.25), .init(white: 0.0), .init(white: 0.25)]), startPoint: .leading, endPoint: .trailing))
-                        .clipped()
+//                    CautionStripeShape()
+//                        .frame(width:250, height:12)
+//                        .clipped()
                 }else{
                     Text(message)
                         .foregroundColor(.gray)

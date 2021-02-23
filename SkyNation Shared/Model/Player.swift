@@ -24,6 +24,7 @@ class SKNPlayer:Codable, Identifiable {
     // Constructed
     var name:String
     var logo:String?
+    var avatar:String
     var money:Int
     var about:String
     var experience:Int
@@ -43,11 +44,15 @@ class SKNPlayer:Codable, Identifiable {
         
         self.name = "Test Player"
         self.logo = nil
-        self.money = 1000000 // 1 million
-        self.about = "Nothing about"
+        self.money = 200000 // 200,000
+        self.about = "About me"
         self.experience = 0
         self.beganGame = Date()
         self.lastSeen = Date()
+        
+        // opt
+        let allAvatars = HumanGenerator().female_avatar_names + HumanGenerator().male_avatar_names
+        self.avatar = allAvatars.randomElement()!
     }
     
 }

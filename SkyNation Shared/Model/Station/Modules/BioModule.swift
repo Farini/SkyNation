@@ -14,7 +14,7 @@ enum BioBoxMode:String, Codable, CaseIterable, Hashable {
     case grow
     
     /// Evolving DNA
-    case bloom      // Searching and evolving DNA
+    case evolve      // Searching and evolving DNA
     
     /// DNA found. Multiplying
     case multiply
@@ -91,7 +91,7 @@ class BioModule:Codable, Identifiable {
     var moduleDex:ModuleIndex   // index of module
     var type:ModuleType         // .Bio, .Hab, .Lab...
     var name:String             // any name given
-    var skin:String = "ModuleColor"
+    var skin:String = ModuleSkin.BioModule.rawValue
     
     var plants:[String]
     var boxes:[BioBox]
@@ -171,6 +171,10 @@ class BioBox:Codable, Identifiable {
         }
         
         return bestFitString
+    }
+    
+    func convertToDNA() -> PerfectDNAOption {
+        return PerfectDNAOption(rawValue: perfectDNA)!
     }
 }
 

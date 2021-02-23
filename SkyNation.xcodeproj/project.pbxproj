@@ -384,6 +384,13 @@
 		859D683A25DD91DB005DD42C /* GameShoppingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683925DD91DB005DD42C /* GameShoppingView.swift */; };
 		859D683B25DD91DB005DD42C /* GameShoppingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683925DD91DB005DD42C /* GameShoppingView.swift */; };
 		859D683C25DD91DB005DD42C /* GameShoppingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683925DD91DB005DD42C /* GameShoppingView.swift */; };
+		85A658FA25E2251B008AA9BA /* PlayerEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A658F925E2251B008AA9BA /* PlayerEditView.swift */; };
+		85A658FB25E2251B008AA9BA /* PlayerEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A658F925E2251B008AA9BA /* PlayerEditView.swift */; };
+		85A658FC25E2251B008AA9BA /* PlayerEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A658F925E2251B008AA9BA /* PlayerEditView.swift */; };
+		85A6590625E4178F008AA9BA /* GameSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6590525E4178F008AA9BA /* GameSettingsController.swift */; };
+		85A6590725E4178F008AA9BA /* GameSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6590525E4178F008AA9BA /* GameSettingsController.swift */; };
+		85A6590825E4178F008AA9BA /* GameSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6590525E4178F008AA9BA /* GameSettingsController.swift */; };
+		85A6590925E4178F008AA9BA /* GameSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6590525E4178F008AA9BA /* GameSettingsController.swift */; };
 		85C3418525905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
 		85C3418625905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
 		85C3418725905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
@@ -558,6 +565,8 @@
 		8597BBA925BF40AB00C705A0 /* StartingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingWindow.swift; sourceTree = "<group>"; };
 		859D683125DD8B9F005DD42C /* GameMessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameMessagesView.swift; sourceTree = "<group>"; };
 		859D683925DD91DB005DD42C /* GameShoppingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameShoppingView.swift; sourceTree = "<group>"; };
+		85A658F925E2251B008AA9BA /* PlayerEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEditView.swift; sourceTree = "<group>"; };
+		85A6590525E4178F008AA9BA /* GameSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSettingsController.swift; sourceTree = "<group>"; };
 		85C3418425905A7500BF82F9 /* TutorialNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialNode.swift; sourceTree = "<group>"; };
 		85C3418D2591078700BF82F9 /* PlayerCardNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCardNode.swift; sourceTree = "<group>"; };
 		85C34196259139D800BF82F9 /* GameSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSettingsView.swift; sourceTree = "<group>"; };
@@ -731,6 +740,7 @@
 				8536F438258D47EA00B509D2 /* BioModController.swift */,
 				8536F433258D47EA00B509D2 /* GarageViewModel.swift */,
 				8536F436258D47EA00B509D2 /* VehicleBuilderViewModel.swift */,
+				85A6590525E4178F008AA9BA /* GameSettingsController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -761,7 +771,7 @@
 				8536F3B2258D47CF00B509D2 /* Modules */,
 				8536F3BD258D47CF00B509D2 /* Subviews */,
 				8536F3C5258D47D000B509D2 /* TestViews */,
-				85C34196259139D800BF82F9 /* GameSettingsView.swift */,
+				85A658F825E224C1008AA9BA /* Settings */,
 				85E6ED1C25CF518500229E18 /* BackendView.swift */,
 				859D683125DD8B9F005DD42C /* GameMessagesView.swift */,
 				859D683925DD91DB005DD42C /* GameShoppingView.swift */,
@@ -1038,6 +1048,15 @@
 			path = Building;
 			sourceTree = "<group>";
 		};
+		85A658F825E224C1008AA9BA /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				85C34196259139D800BF82F9 /* GameSettingsView.swift */,
+				85A658F925E2251B008AA9BA /* PlayerEditView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1293,6 +1312,7 @@
 				8536F44D258D47EA00B509D2 /* LifeSupportSystems.swift in Sources */,
 				8536F402258D47D000B509D2 /* TechTreeDiagram.swift in Sources */,
 				8536F382258D475D00B509D2 /* Truss.swift in Sources */,
+				85A658FA25E2251B008AA9BA /* PlayerEditView.swift in Sources */,
 				8536F3D6258D47D000B509D2 /* RecipeDetailViews.swift in Sources */,
 				85F6674D25AF7B9C00E5003B /* RadiatorNode.swift in Sources */,
 				85C34197259139D800BF82F9 /* GameSettingsView.swift in Sources */,
@@ -1332,6 +1352,7 @@
 				8536F485258D481700B509D2 /* StationOverlayObject.swift in Sources */,
 				8536F366258D475D00B509D2 /* SkillData.swift in Sources */,
 				8536F48D258D481700B509D2 /* MarsColonyScene.swift in Sources */,
+				85A6590625E4178F008AA9BA /* GameSettingsController.swift in Sources */,
 				8536F3E2258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */,
 				8536F3EE258D47D000B509D2 /* TrussView.swift in Sources */,
 				8536F40E258D47D000B509D2 /* AnimationsTest.swift in Sources */,
@@ -1397,6 +1418,7 @@
 				85E6ECF925C9D92B00229E18 /* ServerAPI.swift in Sources */,
 				8536F3A3258D475D00B509D2 /* SpaceVehicle.swift in Sources */,
 				85F6676025AF7CAB00E5003B /* RoboarmNode.swift in Sources */,
+				85A658FB25E2251B008AA9BA /* PlayerEditView.swift in Sources */,
 				8536F413258D47D000B509D2 /* Parafernalia.swift in Sources */,
 				8569A3DB25A799840057A518 /* LaunchingVehicleView.swift in Sources */,
 				8536F3E7258D47D000B509D2 /* HabModuleView.swift in Sources */,
@@ -1429,6 +1451,7 @@
 				8536F3D3258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */,
 				8569A3E425A8D7870057A518 /* BoosterDiagramView.swift in Sources */,
 				8536F486258D481700B509D2 /* StationOverlayObject.swift in Sources */,
+				85A6590725E4178F008AA9BA /* GameSettingsController.swift in Sources */,
 				8536F367258D475D00B509D2 /* SkillData.swift in Sources */,
 				8536F48E258D481700B509D2 /* MarsColonyScene.swift in Sources */,
 				8536F3E3258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */,
@@ -1492,6 +1515,7 @@
 				8536F44F258D47EA00B509D2 /* LifeSupportSystems.swift in Sources */,
 				8536F404258D47D000B509D2 /* TechTreeDiagram.swift in Sources */,
 				8536F384258D475D00B509D2 /* Truss.swift in Sources */,
+				85A658FC25E2251B008AA9BA /* PlayerEditView.swift in Sources */,
 				8536F3D8258D47D000B509D2 /* RecipeDetailViews.swift in Sources */,
 				85F6674F25AF7B9C00E5003B /* RadiatorNode.swift in Sources */,
 				85C34199259139D800BF82F9 /* GameSettingsView.swift in Sources */,
@@ -1531,6 +1555,7 @@
 				8536F368258D475D00B509D2 /* SkillData.swift in Sources */,
 				8536F48F258D481700B509D2 /* MarsColonyScene.swift in Sources */,
 				8536F3E4258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */,
+				85A6590825E4178F008AA9BA /* GameSettingsController.swift in Sources */,
 				8536F3F0258D47D000B509D2 /* TrussView.swift in Sources */,
 				8597BBAA25BF40AB00C705A0 /* StartingWindow.swift in Sources */,
 				8536F410258D47D000B509D2 /* AnimationsTest.swift in Sources */,
@@ -1581,6 +1606,7 @@
 				8536F3E9258D47D000B509D2 /* HabModuleView.swift in Sources */,
 				8569A3CB25A624A30057A518 /* LoaderView.swift in Sources */,
 				85E6ECFB25C9D92B00229E18 /* ServerAPI.swift in Sources */,
+				85A6590925E4178F008AA9BA /* GameSettingsController.swift in Sources */,
 				8536F478258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				8536F319258D361100B509D2 /* GameConstants.swift in Sources */,
 				8569A34E25A3D9590057A518 /* AirComposition.swift in Sources */,

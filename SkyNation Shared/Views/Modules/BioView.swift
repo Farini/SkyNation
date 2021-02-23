@@ -35,92 +35,122 @@ struct BioView: View {
 //        }
     }
     
+    var header: some View {
+        Group {
+            HStack() {
+                
+                VStack(alignment:.leading) {
+                    Text("🧬 Biology Module")
+                        .font(.largeTitle)
+                    
+                    HStack(alignment: .lastTextBaseline) {
+                        Text("ID: \(controller.module.id)")
+                            .foregroundColor(.gray)
+                            .font(.caption)
+                            .padding(.leading, 6)
+                        Text("Name: \(controller.module.name)")
+                            .foregroundColor(.blue)
+                            .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+                        Spacer()
+                    }
+                }
+                
+                Spacer()
+                
+                Group {
+                    // Tutorial
+                    Button(action: {
+                        print("Question ?")
+                    }, label: {
+                        Image(systemName: "questionmark.circle")
+                            .font(.title2)
+                    })
+                    .buttonStyle(SmallCircleButtonStyle(backColor: .blue))
+                    
+                    // Settings
+                    Button(action: {
+                        print("Gear action")
+                        menuPopover.toggle()
+                    }, label: {
+                        Image(systemName: "ellipsis.circle")
+                            .font(.title2)
+                    })
+                    .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
+                    .popover(isPresented: $menuPopover, content: {
+                        VStack {
+                            HStack {
+                                Text("Rename")
+                                Spacer()
+                                Image(systemName: "textformat")
+                                    .fixedSize()
+                                    .scaledToFit()
+                            }
+                            
+                            .onTapGesture {
+                                print("Rename Action")
+                                menuPopover.toggle()
+                            }
+                            Divider()
+                            HStack {
+                                // Text
+                                Text("Change Skin")
+                                // Spacer
+                                Spacer()
+                                // Image
+                                Image(systemName: "circle.circle")
+                                    .fixedSize()
+                                    .scaledToFit()
+                            }
+                            .onTapGesture {
+                                print("Reskin Action")
+                                menuPopover.toggle()
+                            }
+                            
+                            HStack {
+                                Text("Tutorial")
+                                Spacer()
+                                Image(systemName: "questionmark.diamond")
+                                    .fixedSize()
+                                    .scaledToFit()
+                            }
+                            
+                            .onTapGesture {
+                                print("Reskin Action")
+                                menuPopover.toggle()
+                            }
+                        }
+                        .frame(width: 150)
+                        .font(.headline)
+                        .foregroundColor(.gray)
+                        .padding(.leading, 6)
+                    })
+                    
+                    // Close
+                    Button(action: {
+                        print("Close action")
+                        NotificationCenter.default.post(name: .closeView, object: self)
+                    }, label: {
+                        Image(systemName: "xmark.circle")
+                            .font(.title2)
+                    })
+                    .buttonStyle(SmallCircleButtonStyle(backColor: .pink))
+                    .padding(.trailing, 6)
+                }
+            }
+            .padding([.leading, .trailing, .top], 8)
+            
+            Divider()
+                .offset(x: 0, y: -5)
+        }
+    }
+    
     var body: some View {
         
         VStack {
             
             // Header
-            HStack (alignment: .center, spacing: nil) {
-                
-                BioModuleHeaderView(module: module)
-                
-                Spacer()
-                
-                // Settings
-                Button(action: {
-                    print("Gear action")
-                    menuPopover.toggle()
-                }, label: {
-                    Image(systemName: "ellipsis.circle")
-                        .resizable()
-                        .aspectRatio(contentMode:.fit)
-                        .frame(width:34, height:34)
-                })
-                .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
-                .popover(isPresented: $menuPopover, content: {
-                    VStack {
-                        HStack {
-                            Text("Rename")
-                            Spacer()
-                            Image(systemName: "textformat")
-                                .fixedSize()
-                                .scaledToFit()
-                        }
-                        
-                        .onTapGesture {
-                            print("Rename Action")
-                            menuPopover.toggle()
-                        }
-                        Divider()
-                        HStack {
-                            // Text
-                            Text("Change Skin")
-                            // Spacer
-                            Spacer()
-                            // Image
-                            Image(systemName: "circle.circle")
-                                .fixedSize()
-                                .scaledToFit()
-                        }
-                        .onTapGesture {
-                            print("Reskin Action")
-                            menuPopover.toggle()
-                        }
-                        
-                        HStack {
-                            Text("Tutorial")
-                            Spacer()
-                            Image(systemName: "questionmark.diamond")
-                                .fixedSize()
-                                .scaledToFit()
-                        }
-                        
-                        .onTapGesture {
-                            print("Reskin Action")
-                            menuPopover.toggle()
-                        }
-                    }
-                    .frame(width: 150)
-                    .font(.headline)
-                    .foregroundColor(.gray)
-                    .padding(.leading, 6)
-                })
-                
-                // Close
-                Button(action: {
-                    print("Close action")
-                    NotificationCenter.default.post(name: .closeView, object: self)
-                }, label: {
-                    Image(systemName: "xmark.circle")
-                        .resizable()
-                        .aspectRatio(contentMode:.fit)
-                        .frame(width:34, height:34)
-                })
-                .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
-                .padding(.trailing, 6)
-            }
-            Divider()
-
+            header
+            
             // Main Body
             Group {
                 
@@ -144,7 +174,7 @@ struct BioView: View {
                             }
                         }
                     }
-                    .frame(minWidth: 100, idealWidth: 180, maxWidth: 200, alignment: .leading)
+                    .frame(minWidth: 80, maxWidth: 150, alignment: .leading)
                     
                     switch controller.selection {
                         case .notSelected:
@@ -169,14 +199,17 @@ struct BioView: View {
                                     }
                                     
                                     HStack {
-                                        Button("New Bio Box") {
+                                        Button(action: {
                                             controller.startAddingBox()
-                                        }
+                                        }, label: {
+                                            HStack {
+                                                Image(systemName:"staroflife")
+                                                Text("Create")
+                                            }
+                                        })
+                                        .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
                                         .disabled(model.isRunning)
                                         
-                                        Button("Destroy") {
-                                            print("Destroy everything?")
-                                        }
                                     }
                                     .padding()
                                 }
@@ -188,91 +221,11 @@ struct BioView: View {
                             HStack {
                                 
                                 ScrollView([.vertical], showsIndicators: true) {
-                                
+                                    
                                     // BioBox
-                                    Group {
-                                        
-                                        // Control (Action)
-                                        VStack {
-                                            
-                                            Text("DNA \(bioBox.perfectDNA)")
-                                                .font(.title)
-                                                .padding()
-                                            
-                                            Divider()
-                                            
-                                            Group {
-                                                
-                                                Text("Mode  \(bioBox.mode.rawValue)")
-                                                    .font(.headline)
-                                                    .foregroundColor(.blue)
-                                                    .padding()
-                                                
-                                                Text("Energy: \(controller.availableEnergy)")
-                                                    .foregroundColor(.green)
-                                                    .padding()
-                                                Text("Generations \(controller.geneticLoops)")
-                                                Text("Score: \(controller.geneticScore) %")
-                                                Text("Population: \(controller.selectedPopulation.count) / \(bioBox.populationLimit)")
-                                                
-                                                Text("🏆 Best fit")
-                                                    .font(.title)
-                                                    .padding(.top, 8)
-                                                
-                                                Text(controller.geneticFitString)
-                                                    .foregroundColor(.orange)
-                                                
-                                                if let error = controller.errorMessage {
-                                                    Text(error)
-                                                        .foregroundColor(.red)
-                                                }
-                                                if let positive = controller.positiveMessage {
-                                                    Text(positive)
-                                                        .foregroundColor(.green)
-                                                }
-                                            }
-                                            
-                                            
-                                            
-                                            // Buttons
-                                            HStack {
-                                                
-                                                Button("Grow") {
-                                                    print("Grow population")
-                                                    controller.growPopulation(box:bioBox)
-                                                }
-                                                .disabled(controller.geneticRunning)
-                                                
-                                                Button("Evolve") {
-                                                    controller.loadGeneticCode(box:bioBox)
-                                                }
-                                                .disabled(controller.geneticRunning)
-                                                
-//                                                Button("Trim") {
-//                                                    print("Trim Population")
-//                                                    // ------------
-//                                                    // Continue from here:
-//                                                    // Add @State and array of items selected from the list
-//                                                    // Trim those items of the array
-//                                                    // Also, change the strings to the enum (Data Model)
-//                                                    // Charge Electricity
-//                                                    // ============
-//                                                }
-//                                                .disabled(bioBox.population.count < 2 || controller.geneticRunning)
-                                                
-                                                Button("Cancel") {
-                                                    print("Cancelling Selection")
-                                                    controller.cancelBoxSelection()
-                                                }
-                                                .disabled(controller.geneticRunning)
-                                            }
-                                            .padding()
-                                        }
-                                        .frame(minWidth: 250, alignment: .top)
-                                    }
+                                    BioBoxDetailView(controller:controller, bioBox:bioBox)
+                                    
                                 }
-                                
-                                Divider()
                                 
                                 // Population Display
                                 List(controller.selectedPopulation, id:\.self) { dna in
@@ -294,40 +247,14 @@ struct BioView: View {
                     
                 }
             }
-            .frame(minWidth: 500, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: 250, maxHeight: .infinity, alignment:.topLeading)
+//            .frame(minWidth: 500, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment:.topLeading)
             
         }
-        .frame(minWidth: 500, idealWidth: 600, maxWidth: 800, alignment: .top)
+        .frame(minWidth: 600, idealWidth: 700, maxWidth: 800, alignment: .top)
     }
 }
 
-struct BioModuleHeaderView: View {
-    
-    var module:BioModule
-    
-    var body: some View {
-        VStack(alignment:.leading) {
-            Group {
-                HStack {
-                    Text("🧬 Biology Module")
-                        .font(.largeTitle)
-                        .padding([.leading], 6)
-                        .foregroundColor(.red)
-                }
-                
-                HStack(alignment: .lastTextBaseline) {
-                    Text("ID: \(module.id)")
-                        .foregroundColor(.gray)
-                        .font(.caption)
-                        .padding(.leading, 6)
-                    Text("Name: \(module.name)")
-                        .foregroundColor(.red)
-                        .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
-                }
-            }
-        }
-    }
-}
+
 
 /// Building a new Bio Box
 struct BuildingBioBoxView: View {
@@ -364,77 +291,121 @@ struct BuildingBioBoxView: View {
             // To the right, insert Timer (So the population can grow, and user may "crop")
             // ---
             
-            VStack {
-                // Picker Perfect DNA
-                HStack {
-                    Text("Pick DNA").padding(.leading, 6)
-                    Picker(selection: $chosenDNA, label: Text("")){
-                        ForEach(PerfectDNAOption.allCases, id:\.self) { dna in
-                            Text("\(dna.emoji) | \(dna.rawValue)")
-                        }
-                    }
-                    .frame(maxWidth: 250, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                    Spacer()
-                }
+            HStack(alignment:.top) {
                 
-                // Box Size
-                HStack {
-                    Text("Pick Size").padding(.leading, 8)
+                // Pickers
+                VStack(alignment:.leading) {
                     
-                    VStack(alignment: .leading) {
-                        // Choose amount of slots (Slider)
-                        // --------
-                        // Change food limit to the limit of the BioModule minus the amount being used
-                        // --------
-                        ZStack {
-                            Slider(value: $sliderValue, in: 0.0...Double(controller.availableSlots)) { (changed) in
-                                print("Slider changed \(changed)")
-                                let boxSize = Int(sliderValue)
-                                productionCost[.Fertilizer] = boxSize
-                                productionWaterCost = boxSize * GameLogic.bioBoxWaterConsumption
-                                productionEnergyCost = 7 * GameLogic.bioBoxEnergyConsumption
+                    // Picker Perfect DNA
+                    HStack {
+                        Text("Box DNA").padding(.leading, 6)
+                        Picker(selection: $chosenDNA, label: Text("")){
+                            ForEach(PerfectDNAOption.allCases, id:\.self) { dna in
+                                Text("\(dna.emoji) | \(dna.rawValue)")
                             }
-                            .frame(maxWidth: 250, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                            .padding(4)
-                            
-                            Text("\(Int(sliderValue)) of \(controller.availableSlots)")
-                                .offset(x: 100, y: /*@START_MENU_TOKEN@*/10.0/*@END_MENU_TOKEN@*/)
-                                .foregroundColor(.gray)
+                        }
+                        .frame(maxWidth: 200, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    }
+                    
+                    // Box Size
+                    HStack {
+                        Text("Box Size").padding(.leading, 8)
+                        
+                        VStack(alignment: .leading) {
+                            ZStack {
+                                Slider(value: $sliderValue, in: 0.0...Double(controller.availableSlots)) { (changed) in
+                                    print("Slider changed \(changed)")
+                                    let boxSize = Int(sliderValue)
+                                    productionCost[.Fertilizer] = boxSize
+                                    productionWaterCost = boxSize * GameLogic.bioBoxWaterConsumption
+                                    productionEnergyCost = 7 * GameLogic.bioBoxEnergyConsumption
+                                }
+                                .frame(maxWidth: 200, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                                .padding(4)
+                                
+                                Text("\(Int(sliderValue)) of \(controller.availableSlots)")
+                                    .offset(x: 80, y: /*@START_MENU_TOKEN@*/10.0/*@END_MENU_TOKEN@*/)
+                                    .foregroundColor(.gray)
+                            }
                         }
                     }
-                    Spacer()
+                    
+                    HStack {
+                        Spacer()
+                        Image(systemName: "timer")
+                        Text("Time: 1h")
+                        Spacer()
+                    }
+                    .frame(minWidth: 200, maxWidth:280, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    .font(.headline)
+                    
+                    HStack {
+                        Spacer()
+                        Image(nsImage: GameImages.tokenImage)
+                            .resizable()
+                            .frame(width: 22, height: 22, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            .aspectRatio(contentMode: .fill)
+                        Text("Tokens 2")
+                        Spacer()
+                    }
+                    .frame(minWidth: 200, maxWidth:280, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    .font(.headline)
                 }
+                .padding([.trailing], 10)
+                Divider()
+                
+                // Costs
+                VStack(alignment:.leading) {
+                    
+                    Text("Costs").foregroundColor(.gray) //.font(.title)
+                    Divider().frame(width:150)
+                    HStack {
+                        
+                        Ingredient.Fertilizer.image()!
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 22, height: 22, alignment: .center)
+                            
+                        Text("Fertilizer: \(productionCost[.Fertilizer] ?? 0) of \(controller.availableFertilizer)")
+                    }
+                    .foregroundColor(controller.availableFertilizer >= productionCost[.Fertilizer] ?? 0 ? .green:.red)
+                    
+                    HStack {
+                        Ingredient.Water.image()!
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 22, height: 22, alignment: .center)
+                        Text("Water: \(productionWaterCost) of \(controller.availableWater)")
+                    }
+                    .foregroundColor(controller.availableWater >= productionWaterCost ? .green:.red)
+                    
+                    HStack {
+                        
+                        Ingredient.Battery.image()!
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 22, height: 22, alignment: .center)
+                        Text("Energy: \(productionEnergyCost) of \(controller.availableEnergy)")
+                       
+                    }
+                    .foregroundColor(controller.availableEnergy >= productionEnergyCost ? .green:.red)
+                    
+//                    Text("Time: ?")
+                }
+                .padding()
+                .background(Color.black)
+                .cornerRadius(12)
+                .padding(.horizontal)
+                Spacer()
             }
             .padding()
             
-            Divider()
-            
-            // Costs
-            Group {
-                Text("Costs").font(.title)
-                
-                Text("Fertilizer: \(productionCost[.Fertilizer] ?? 0) of \(controller.availableFertilizer)")
-                Text("Water: \(productionWaterCost) of \(controller.availableWater)")
-                Text("Energy: \(productionEnergyCost) of \(controller.availableEnergy)")
-                
-                Text("Time: ?")
-            }
-            
-            Divider()
+            Divider().offset(x: 0, y: -3)
             
             // People Picker
-            Group {
-                Text("Staff").font(.title)
-                LazyVGrid (columns: [GridItem(.fixed(220)), GridItem(.fixed(220))], alignment: .center, spacing: 4, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
-                    ForEach(controller.availablePeople) { person in
-                        PersonSelectorView(person: person, selected: controller.selectedPeople.contains(person) ? false:true)
-                            .onTapGesture {
-                                controller.didTapPerson(person: person)
-                            }
-                    }
-                }
-            }
-            
+            ActivityStaffView(staff: controller.availablePeople, selected: [], requiredSkills: [.Biologic:1], chooseWithReturn: { (selectedPeople) in
+                controller.selectedPeople = selectedPeople
+            }, title: "Select Biologist", issue: "", message: "")
             
             // Warnings
             Group {
@@ -450,27 +421,42 @@ struct BuildingBioBoxView: View {
             
             // Buttons (Confirm, Cancel)
             HStack {
-                Button("Confirm") {
-//                    confirmBioBox()
+                
+                Button(action: {
+                    print("Back Button Pressed")
+                    controller.cancelBoxSelection()
+                }) {
+                    HStack {
+                        Image(systemName: "backward.frame")
+                        Text("Back")
+                    }
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                .help("Go back")
+                .frame(width:100)
+                
+                Button("Create") {
                     let possibleProblems = controller.validateResources(box: Int(sliderValue))
                     self.problems = possibleProblems
                     if possibleProblems.isEmpty {
                         print("Confirming...")
                         self.confirmBioBox()
                     }
-                    
                 }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                 .disabled(Int(sliderValue) < minimumLimit)
                 
-                Button("Cancel") {
-                    print("Cancel")
-//                    controller.selection = .notSelected
-                    controller.cancelBoxSelection()
+                Button("Use \(Int(sliderValue/10.0) + 1) Tokens ") {
+                    print("Pay with tokens ??? ^^")
+                    let problems = controller.validadeTokenPayment(box: Int(sliderValue), tokens: Int(sliderValue/10.0) + 1)
+                    self.problems = problems
+                    if problems.isEmpty {
+                        self.confirmBioBox()
+                    }
                 }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                .disabled(Int(sliderValue) < minimumLimit)
                 
-                Button("Trim") {
-                    print("Trim")
-                }
             }
             .padding()
         }
@@ -489,6 +475,113 @@ struct BuildingBioBoxView: View {
         
     }
     
+}
+
+struct BioBoxDetailView:View {
+    
+    @ObservedObject var controller:BioModController
+    var bioBox:BioBox
+    
+    var body: some View {
+        
+        VStack {
+            
+            Group {
+                
+                Group {
+                    Text("Bio Box")
+                        .font(.title)
+                        .padding()
+                    
+                    Text("\(bioBox.convertToDNA().emoji)").font(.largeTitle)
+                    Text("\(bioBox.convertToDNA().rawValue)")
+                    
+                    Divider()
+                    
+                    Text("Mode  \(bioBox.mode.rawValue)")
+                        .font(.headline)
+                        .foregroundColor(.blue)
+//                        .padding()
+                    
+                    Text("Energy: \(controller.availableEnergy)")
+                        .foregroundColor(.green)
+//                        .padding()
+                }
+                
+                Group {
+                    
+                    Text("Generations \(controller.geneticLoops)")
+                    Text("Score: \(controller.geneticScore) %")
+                    Text("Population: \(controller.selectedPopulation.count) / \(bioBox.populationLimit)")
+                    
+                    ProgressView("Growth", value: Float(bioBox.population.count), total: Float(bioBox.populationLimit))
+                        .frame(width:200)
+                    
+                    Text("Date")
+                    Text(GameFormatters.dateFormatter.string(from:bioBox.dateAccount))
+                    
+                    Text("🏆 Best fit")
+                        .font(.title)
+                        .padding(.top, 8)
+                    
+                    Text(controller.geneticFitString)
+                        .foregroundColor(.orange)
+                    
+                    if let error = controller.errorMessage {
+                        Text(error)
+                            .foregroundColor(.red)
+                    }
+                    if let positive = controller.positiveMessage {
+                        Text(positive)
+                            .foregroundColor(.green)
+                    }
+                }
+                
+                Divider()
+            }
+            
+            
+            // Buttons
+            HStack {
+                
+                Button("Cancel") {
+                    print("Cancelling Selection")
+                    controller.cancelBoxSelection()
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                .disabled(controller.geneticRunning)
+                
+                Divider()
+                
+                Button("Grow") {
+                    print("Grow population")
+                    controller.growPopulation(box:bioBox)
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                .disabled(controller.growDisabledState(box: bioBox))
+                
+                Button("Crop") {
+                    print("Crop population")
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                .disabled(controller.cropDisabledState(box: bioBox))
+                
+                Button("Evolve") {
+                    controller.evolveBio(box:bioBox)
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                .disabled(controller.evolveDisabledState(box:bioBox))
+                
+                Button("Multiply") {
+                    controller.multiply(box: bioBox)
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                .disabled(controller.multiplyDisabledState(box: bioBox))
+                
+                
+            }
+        }
+    }
 }
 
 // MARK: - Previews
@@ -514,33 +607,33 @@ struct BioBuilder_Previews: PreviewProvider {
     }
 }
 
-struct GameButtonStyle: ButtonStyle {
-    var foregroundColor: Color
-    var backgroundColor: Color
-    var pressedColor: Color
-    
-    func makeBody(configuration: Self.Configuration) -> some View {
-        configuration.label
-            .font(.headline)
-            .padding(8)
-            .foregroundColor(foregroundColor)
-            .background(configuration.isPressed ? pressedColor : backgroundColor)
-            .cornerRadius(8)
-    }
-}
-
-extension View {
-    func gameButton(
-        foregroundColor: Color = .white,
-        backgroundColor: Color = Color(SCNColor.darkGray),
-        pressedColor: Color = .accentColor
-    ) -> some View {
-        self.buttonStyle(
-            GameButtonStyle(
-                foregroundColor: foregroundColor,
-                backgroundColor: backgroundColor,
-                pressedColor: pressedColor
-            )
-        )
-    }
-}
+//struct GameButtonStyle: ButtonStyle {
+//    var foregroundColor: Color
+//    var backgroundColor: Color
+//    var pressedColor: Color
+//
+//    func makeBody(configuration: Self.Configuration) -> some View {
+//        configuration.label
+//            .font(.headline)
+//            .padding(8)
+//            .foregroundColor(foregroundColor)
+//            .background(configuration.isPressed ? pressedColor : backgroundColor)
+//            .cornerRadius(8)
+//    }
+//}
+//
+//extension View {
+//    func gameButton(
+//        foregroundColor: Color = .white,
+//        backgroundColor: Color = Color(SCNColor.darkGray),
+//        pressedColor: Color = .accentColor
+//    ) -> some View {
+//        self.buttonStyle(
+//            GameButtonStyle(
+//                foregroundColor: foregroundColor,
+//                backgroundColor: backgroundColor,
+//                pressedColor: pressedColor
+//            )
+//        )
+//    }
+//}

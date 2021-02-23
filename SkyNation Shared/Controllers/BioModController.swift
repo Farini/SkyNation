@@ -13,6 +13,7 @@ enum BioModSelection {
     case selected(box:BioBox)
     case building
     // trimming
+    
 }
 
 class BioModController: ObservableObject {
@@ -29,11 +30,9 @@ class BioModController: ObservableObject {
     
     @Published var choosingDNA:Bool = false // Is choosing perfect DNA
     @Published var dnaOption:PerfectDNAOption
-//    @Published var availableEnergy:Int
     
     /// Available slots for new Box
     @Published var availableSlots:Int
-//    @Published var availableSpace:Int
     
     @Published var availablePeople:[Person]
     @Published var selectedPeople:[Person] = []
@@ -42,7 +41,6 @@ class BioModController: ObservableObject {
     @Published var availableFertilizer:Int = 0
     @Published var availableWater:Int = 0
     @Published var availableEnergy:Int
-//    @Published var availableEnergy:Int = 0
     
     // GENETIC CODE
     @Published var selectedPopulation:[String] = []
@@ -133,21 +131,19 @@ class BioModController: ObservableObject {
         positiveMessage = nil
     }
     
-    /// Select/Deselect `Person`
-    func didTapPerson(person:Person) {
-        if let idx = selectedPeople.firstIndex(of: person) {
-            selectedPeople.remove(at: idx)
-        } else {
-            selectedPeople.append(person)
+    // MARK: - Detail View: Buttons
+    
+    // Grow
+    func growDisabledState(box:BioBox) -> Bool {
+        if geneticRunning { return true } else {
+            // to grow, we need room
+            return box.population.count >= box.populationLimit
         }
     }
     
-    func didChooseDNA(string:String) {
-        selectedBioBox?.perfectDNA = string
-        choosingDNA = false
-    }
-    
     func growPopulation(box:BioBox) {
+        
+        
         
         // Check if population is over limit
         let boxLimit = box.populationLimit
@@ -158,22 +154,47 @@ class BioModController: ObservableObject {
         
         // Population shouldn't be empty
         if box.population.count == 0 {
-            print("Population empty!")
+            let newPopulation = DNAGenerator.populate(dnaChoice: self.dnaOption, popSize: 1)
+            box.population = newPopulation
             return
         }
         
-        while box.population.count < boxLimit {
-//            box.population.removeLast()
-            let random:String = box.population.randomElement() ?? String(box.perfectDNA.reversed())
-            box.population.append(random)
+        var newBorns:Int = 0
+        let pct = Double(box.population.count) / Double(box.populationLimit)
+        if pct < 0.25 {
+            // double population
+            newBorns = box.population.count * 2
+        } else if pct < 0.5 {
+            // 30%
+            newBorns = Int(Double(box.population.count) * 0.33)
+        } else if pct < 1.0 {
+            // add 2
+            newBorns = 2
         }
+        
+        if station.truss.consumeEnergy(amount: newBorns * 10) {
+            let newPopulation = DNAGenerator.populate(dnaChoice: self.dnaOption, popSize: newBorns)
+            box.population.append(contentsOf: newPopulation)
+        } else {
+            errorMessage = "Did not have enough energy. Requires 10KW"
+        }
+        
+        
         
         self.selectedPopulation = box.population
         
     }
     
+    // Crop
+    func cropDisabledState(box:BioBox) -> Bool {
+        if geneticRunning { return true } else {
+            // to crop, we need at least 2
+            return box.population.count < 4
+        }
+    }
+    
     func trimItem(string:String) {
-        guard selectedPopulation.count > 1 else {
+        guard selectedPopulation.count > 2 else {
             print("Cannot trim any more. Population is in its lower limit.")
             return
         }
@@ -184,8 +205,44 @@ class BioModController: ObservableObject {
         }
     }
     
-    /// The cost (in energy) to multiply a box
-    let multiplyEnergyCost:Int = 10
+    // Evolve
+    func evolveDisabledState(box:BioBox) -> Bool {
+        // To evolve, we need population to be more than 2
+        if geneticRunning { return true } else {
+            // to crop, we need at least 2
+            return box.population.count < 3
+        }
+    }
+    
+    func evolveBio(box:BioBox) {
+        
+        // Check if perfect DNA already found
+        let populi = box.population
+        let perfect = box.perfectDNA
+        if populi.contains(perfect) {
+            box.mode = .multiply
+            self.multiply(box: box)
+            print("Perfect DNA Found! Updating box.")
+            return
+        }
+        
+        // Use the Generator
+        let generator = DNAGenerator(controller: self, box: box)
+        self.dnaGenerator = generator
+        self.geneticLoops = generator.counter
+        let score:Double = (1.0 / (Double(generator.bestLevel) + 1.0)) * 100.0
+        self.geneticScore = Int(score)
+        self.geneticRunning = true
+        dnaGenerator?.main()
+    }
+    
+    // Multiply
+    func multiplyDisabledState(box:BioBox) -> Bool {
+        if geneticRunning { return true } else {
+            // to multiply, we need at least one perfect DNA
+            return !box.population.contains(box.perfectDNA)
+        }
+    }
     
     func multiply(box:BioBox) {
         
@@ -217,30 +274,10 @@ class BioModController: ObservableObject {
         }
     }
     
-    private func saveStation() {
-        LocalDatabase.shared.saveStation(station: station)
-    }
+    /// The cost (in energy) to multiply a box
+    let multiplyEnergyCost:Int = 10
     
-    // DEPRECATE
-    func startBuildingBox() {
-        /*
-         To build a box, user needs to choose DNA, and LIMIT (Box size)
-         Adding Feature:
-         User may be able to discar some unuseful parts of population
-        */
-        // Get the BioModule's limit
-        let limitation = BioModule.foodLimit
-        // subtract all other boxes
-        var currentPopulations:Int = 0
-        for box in module.boxes {
-            currentPopulations += box.population.count
-        }
-        let availableLimit = limitation - currentPopulations
-        availableSlots = availableLimit
-        // result will be the max of the new box
-        // select perfect DNA
-        // Start random population
-    }
+    // MARK: - Adding Bio Box
     
     /// Used when adding a new box. It brings the interface to build a box
     func startAddingBox() {
@@ -259,6 +296,7 @@ class BioModController: ObservableObject {
         availableSlots = availableLimit
     }
     
+    /// Tries to charge resources and skills. Returns an array of problems, or empty
     func validateResources(box qtty:Int) -> [String] {
         
         let fertilizer = qtty
@@ -291,7 +329,6 @@ class BioModController: ObservableObject {
         }
         
         // Workers & Skills
-        var foundSkills:[Skills:Int] = [:]
         var bioCount:Int = 0
         var medCount:Int = 0
         for person in selectedPeople {
@@ -320,7 +357,7 @@ class BioModController: ObservableObject {
             // No Problem
             
             // 1. Make person busy
-            let activity = LabActivity(time: 10, name: "Planting life")
+            let activity = LabActivity(time: 3600, name: "Planting life")
             for person in selectedPeople {
                 person.activity = activity
             }
@@ -337,20 +374,57 @@ class BioModController: ObservableObject {
             print("Consumed Energy: \(consumption)")
             print("Paid for resources: \(payment)")
             
-//            LocalDatabase.shared.saveStation(station: self.station)
+            //            LocalDatabase.shared.saveStation(station: self.station)
             return problems
         }
         
+    }
+    
+    func validadeTokenPayment(box qtty:Int, tokens:Int) -> [String] {
         
-        // FIXME: - Charging
+        var problems:[String] = []
         
-        // 1. Charge Ingredients
-        // 2. Assign Activity
-        // 3. Save
-        // 4. Update UI
+        if let playerTokens = LocalDatabase.shared.player?.timeTokens {
+            if playerTokens.count >= tokens {
+                
+                // Player Has enough tokens - Check if Skills match
+                var bioCount:Int = 0
+                var medCount:Int = 0
+                for person in selectedPeople {
+                    for skill in person.skills {
+                        if skill.skill == .Biologic {
+                            bioCount += skill.level
+                        }
+                        if skill.skill == .Medic {
+                            medCount += 1
+                        }
+                    }
+                }
+                if bioCount + medCount < 1 {
+                    print("Not enough Skills")
+                    problems.append("Not enough Skills")
+                } else {
+                    print("Skills Verified - Charging Tokens")
+                    
+                    // Charge Player
+                    LocalDatabase.shared.player?.timeTokens.removeFirst(tokens)
+                    
+                    // Make people busy
+                    let activity = LabActivity(time: 3600, name: "Planting life")
+                    for person in selectedPeople {
+                        person.activity = activity
+                    }
+                }
+                
+            } else {
+                problems.append("Not enough tokens")
+            }
+        } else {
+            print("ERROR: Could not find LocalDatabase >> Player >> Tokens")
+            problems.append("Unknown error")
+        }
         
-        
-        
+        return problems
     }
     
     /// Creates a new box
@@ -377,30 +451,16 @@ class BioModController: ObservableObject {
         
         // Alternatively, we can set the selection to the newly created box
     }
+ 
+    // MARK: - Saving
+    
+    private func saveStation() {
+        LocalDatabase.shared.saveStation(station: station)
+    }
+    
+    // MARK: - DNA Generator
     
     var dnaGenerator:DNAGenerator?
-    
-    func loadGeneticCode(box:BioBox) {
-        
-        // Check if perfect DNA already found
-        let populi = box.population
-        let perfect = box.perfectDNA
-        if populi.contains(perfect) {
-            box.mode = .multiply
-            self.multiply(box: box)
-            print("Perfect DNA Found! Updating box.")
-            return
-        }
-        
-        // Use the Generator
-        let generator = DNAGenerator(controller: self, box: box)
-        self.dnaGenerator = generator
-        self.geneticLoops = generator.counter
-        let score:Double = (1.0 / (Double(generator.bestLevel) + 1.0)) * 100.0
-        self.geneticScore = Int(score)
-        self.geneticRunning = true
-        dnaGenerator?.main()
-    }
     
     /// Called by `DNAGenerator`
     func updateGeneticCode(sender:DNAGenerator, finished:Bool = false) {
@@ -418,10 +478,6 @@ class BioModController: ObservableObject {
         }
     }
     
-    // DEPRECATE
-    func shouldChooseDNA() -> Bool {
-        return selectedBioBox?.perfectDNA.isEmpty ?? false
-    }
     
 }
 
@@ -481,6 +537,7 @@ class DNAGenerator {
     
     /// Generates population. Pass the Chosen DNA and the size of the box. Return the Population (Strings)
     static func populate(dnaChoice:PerfectDNAOption, popSize:Int) -> [String] {
+        
         let letters : [UInt8] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_|-.@0123456789".asciiArray
         let len = UInt32(letters.count)
         

@@ -43,7 +43,7 @@ struct HabModuleView: View {
                         .aspectRatio(contentMode:.fit)
                         .frame(width:34, height:34)
                 })
-                .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
+                .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
                 .popover(isPresented: $habPopoverOn, content: {
                     ModulePopView(name: controller.habModule.name, module:controller.station.modules.filter({ $0.id == controller.habModule.id }).first!)
                 })
@@ -59,7 +59,7 @@ struct HabModuleView: View {
                         .aspectRatio(contentMode:.fit)
                         .frame(width:34, height:34)
                 })
-                .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
+                .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
                 .padding(.trailing, 6)
             }
             

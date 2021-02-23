@@ -1,15 +1,30 @@
 //
 //  GameSettingsView.swift
 //  SkyNation
-//
 //  Created by Carlos Farini on 12/21/20.
-//
 
 import SwiftUI
+import CoreImage
+
+enum GameSettingsTab: String, CaseIterable {
+    
+    case Loading            // Loading the scene (can be interrupted)
+    case EditingPlayer      // Editing Player Attributes
+    case Server             // Checking Server Info
+    case Settings           // Going through GameSettings
+    
+    var tabString:String {
+        switch self {
+            case .Loading, .Server, .Settings: return self.rawValue
+            case .EditingPlayer: return "Player"
+        }
+    }
+}
 
 struct GameSettingsView: View {
     
     @ObservedObject var controller = GameSettingsController()
+    @State var tab:GameSettingsTab = .Loading
     
     /// When turned on, this shows the "close" button
     private var inGame:Bool = false
@@ -64,100 +79,127 @@ struct GameSettingsView: View {
         
         VStack(alignment: .leading, spacing: nil) {
             
-            
             if (inGame) {
                 header
             }
             
-            Text("Name: \(controller.playerName)")
-                .font(.largeTitle)
+            // Segment Control
+            Picker("", selection: $tab) {
+                ForEach(GameSettingsTab.allCases, id:\.self) { tabName in
+                    Text(tabName.tabString)
+                }
+            }.pickerStyle(SegmentedPickerStyle())
+            
+            
             Divider()
             
-            if controller.isNewPlayer {
-                Text("New Player")
-                    .foregroundColor(.green)
-                    .font(.headline)
-            } else {
-                Text("Active Player. Last seen: \(GameFormatters.dateFormatter.string(from: controller.player.lastSeen))")
-                    .foregroundColor(.green)
-                    .font(.headline)
+            switch tab {
+                case .Loading:
+                    
+                    HStack {
+                        Image("\(controller.player.avatar)")
+                            .resizable()
+                            .frame(width:82, height:82)
+                        VStack(alignment:.leading) {
+                            Text(controller.player.name)
+                            Text("XP: \(controller.player.experience)")
+                            Text("Online: \(GameFormatters.dateFormatter.string(from:controller.player.lastSeen))")
+                                .foregroundColor(.green)
+                            HStack(alignment:.center) {
+                                Image(nsImage:GameImages.tokenImage)
+                                    .resizable()
+                                    .frame(width:32, height:32)
+                                Text("x\(controller.player.timeTokens.count)")
+                                Divider()
+                                Image(nsImage:GameImages.currencyImage)
+                                    .resizable()
+                                    .frame(width:32, height:32)
+                                Text("\(controller.player.money)")
+                            }
+                            .frame(height:36)
+                        }
+                        Spacer()
+                        generateBarcode(from:controller.player.id)
+                    }
+                    
+                    if controller.isNewPlayer {
+                        Text("New Player")
+                            .foregroundColor(.orange)
+                            .font(.headline)
+                    }
+                    
+                    Group {
+                        HStack {
+                            Text("Enter name: ")
+                            TextField("Name:", text: $controller.playerName)
+                                .textFieldStyle(DefaultTextFieldStyle())
+                                .padding(4)
+                                .frame(width: 100)
+                                .cornerRadius(8)
+                        }
+                        
+                        if let string = controller.fetchedString {
+                            Text("Fetched:\n\(string)")
+                        }
+                        
+                        if let loggedUser = controller.user {
+                            Text("Fetched User: \(loggedUser.name)")
+                        }
+                        
+                        Spacer(minLength: 8)
+                    }
+                    
+                    // Player Info
+//                    Group {
+//                        Text("Player Info")
+//                            .foregroundColor(.gray)
+//                            .font(.headline)
+//
+//                        Text("S$ \(controller.player.money)")
+//                        Text("Tokens: \(controller.player.timeTokens.count)")
+//                            .foregroundColor(.blue)
+//                        Text("Delivery Tokens: \(controller.player.deliveryTokens.count)")
+//                            .foregroundColor(.orange)
+//
+//                        Divider()
+//                    }
+                case .EditingPlayer:
+                    PlayerEditView(controller: controller)
+                    
+                case .Server:
+                    SettingsServerTab(controller:controller)
+                case .Settings:
+                    GameSettingsTabView()
             }
             
-            Group {
-                HStack {
-                    Text("Enter name: ")
-                    TextField("Name:", text: $controller.playerName)
-                        .textFieldStyle(DefaultTextFieldStyle())
-                        .padding(4)
-                        .frame(width: 100)
-                        .cornerRadius(8)
-                }
-                Text("ID: \(controller.playerID.uuidString)")
-                    .foregroundColor(.gray)
-                
-                if let string = controller.fetchedString {
-                    Text("Fetched:\n\(string)")
-                }
-                
-                if let loggedUser = controller.user {
-                    Text("Fetched User: \(loggedUser.name)")
-                }
-                
-                Spacer(minLength: 8)
-            }
+            Divider()
             
-            
-            // Player Info
-            Group {
-                Text("Player Info")
-                    .foregroundColor(.gray)
-                    .font(.headline)
-                
-                Text("S$ \(controller.player.money)")
-                Text("Tokens: \(controller.player.timeTokens.count)")
-                    .foregroundColor(.blue)
-                Text("Delivery Tokens: \(controller.player.deliveryTokens.count)")
-                    .foregroundColor(.orange)
-                
-                Divider()
-            }
-            
-            
+            // Buttons Bar
             HStack {
                 if controller.isNewPlayer {
                     Button("Create Player") {
                         controller.createPlayer()
                     }
                 } else {
-                    if controller.hasChanges {
+//                    if controller.hasChanges {
                         Button("Save Player") {
                             controller.savePlayer()
                         }
+                        .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
                         .disabled(!controller.hasChanges)
-                    }
+//                    }
                     
                 }
                 
-//                Button("Fetch Data") {
-//                    print("Fetching Data...")
-//                    controller.requestInfo()
+                // Guild
+//                if controller.guild == nil {
+//                    Button("Create Guild") {
+//                        controller.createGuild()
+//                    }
+//                    .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
 //                }
                 
-                // Guild
-                if controller.guild == nil {
-                    Button("Create Guild") {
-                        controller.createGuild()
-                    }
-                    .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
-                }
                 
-                // User
-                if controller.user != nil {
-                    Button("Fetch User") {
-                        controller.fetchUser()
-                    }
-                    .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
-                }
                 
                 Button("Load Scene") {
                     let builder = LocalDatabase.shared.stationBuilder
@@ -177,6 +219,50 @@ struct GameSettingsView: View {
         .padding()
     }
     
+    func generateBarcode(from uuid: UUID) -> Image? {
+        let data = uuid.uuidString.prefix(8).data(using: String.Encoding.ascii)
+        
+        if let filter = CIFilter(name: "CICode128BarcodeGenerator") {
+            filter.setValue(data, forKey: "inputMessage")
+            
+            if let output:CIImage = filter.outputImage {
+                
+                if let inverter = CIFilter(name:"CIColorInvert") {
+                    
+                    inverter.setValue(output, forKey:"inputImage")
+                    
+                    if let invertedOutput = inverter.outputImage {
+                        let rep = NSCIImageRep(ciImage: invertedOutput)
+                        let nsImage = NSImage(size: rep.size)
+                        nsImage.addRepresentation(rep)
+                        return Image(nsImage:nsImage)
+                    }
+                    
+                } else {
+                    let rep = NSCIImageRep(ciImage: output)
+                    let nsImage = NSImage(size: rep.size)
+                    nsImage.addRepresentation(rep)
+                    
+                    return Image(nsImage:nsImage)
+                }
+                
+                
+            }
+            
+            
+//            return NSImage(ciImage: filter.outputImage)
+//            let transform = CGAffineTransform(scaleX: 3, y: 3)
+//            let out = filter.outputImage?.transformed(by:transform)
+//
+//            if let output = filter.outputImage?.transformed(by: transform) {
+//                let image = NSImage(ciImage:output)
+//                return image
+//            }
+        }
+        
+        return nil
+    }
+    
 }
 
 // MARK: - Previews
@@ -187,157 +273,58 @@ struct GameSettingsView_Previews: PreviewProvider {
     }
 }
 
+struct GameTabs_Previews: PreviewProvider {
+    static var previews:some View {
+        
+        TabView {
+            
+            // Server
+            SettingsServerTab(controller:GameSettingsController())
+                .tabItem {
+                    Text("Server")
+                }
+            
+            // Settings
+            GameSettingsTabView()
+                .tabItem {
+                    Text("Settings")
+                }
+            // Game
+            LoadingGameTab()
+                .tabItem {
+                    Text("Game")
+                }
+            
+            // Player
+            PlayerEditView(controller:GameSettingsController())
+                .tabItem {
+                    Text("Player")
+                }
+            
+            
+            
+        }
+    }
+}
+
+/*
 struct AvatarPicker_Previews: PreviewProvider {
     static var previews: some View {
         AvatarPickerView()
     }
 }
+*/
 
-// MARK: - Controller
-
-class GameSettingsController:ObservableObject {
-    
-    @Published var player:SKNPlayer
-    @Published var playerName:String {
-        didSet {
-            if player.name != playerName {
-                self.hasChanges = true
-            }
-        }
-    }
-    @Published var user:SKNUser?
-    @Published var guild:Guild?
-    
-    @Published var playerID:UUID
-    @Published var isNewPlayer:Bool
-    @Published var savedChanges:Bool
-    @Published var hasChanges:Bool
-    
-    @Published var fetchedString:String?
-    
-    init() {
-        
-        // Player
-        if let player = LocalDatabase.shared.player {
-            isNewPlayer = false
-            self.player = player
-            playerID = player.localID
-            playerName = player.name
-            hasChanges = false
-            savedChanges = true
-            user = SKNUser(player: player)
-            
-        } else {
-            let newPlayer = SKNPlayer()
-            self.player = newPlayer
-            playerName = newPlayer.name
-            playerID = newPlayer.localID
-            isNewPlayer = true
-            hasChanges = true
-            savedChanges = false
-        }
-    }
-    
-    /// Creates a player **Locally**
-    func createPlayer() {
-        player.name = playerName
-        if LocalDatabase.shared.savePlayer(player: player) {
-            savedChanges = true
-            hasChanges = false
-        }
-    }
-    
-    func savePlayer() {
-        player.name = playerName
-        if LocalDatabase.shared.savePlayer(player: player) {
-            savedChanges = true
-            hasChanges = false
-        }
-    }
-    
-    func requestInfo() {
-        SKNS.getSimpleData { (data, error) in
-            if let data = data {
-                print("We got data: \(data.count)")
-                if let string = String(data: data, encoding: .utf8) {
-                    self.fetchedString = string
-                    return
-                }
-                let decoder = JSONDecoder()
-                if let a = try? decoder.decode([SKNUser].self, from: data) {
-                    self.fetchedString = "Users CT: \(a.count)"
-                } else {
-                    self.fetchedString = "Somthing else happened"
-                }
-            } else {
-                print("Could not get data. Reason: \(error?.localizedDescription ?? "n/a")")
-            }
-        }
-    }
-    
-    func fetchUser() {
-        
-        guard let user = user else {
-            print("No user")
-            return
-        }
-        
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .secondsSince1970
-        
-        SKNS.fetchPlayer(id: self.player.id) { (sknUser, error) in
-            if let user = sknUser {
-                print("Found user: \(user.id)")
-                self.user = user
-            } else {
-                // Create
-                if let error = error {
-                    print("Error: \(error.localizedDescription)")
-                    return
-                } else {
-                    print("No User. Creating...")
-                    SKNS.createPlayer(localPlayer: user) { (data, error) in
-                        if let data = data, let newUser = try? decoder.decode(SKNUser.self, from: data) {
-                            print("We got a new user !!!")
-                            self.user = newUser
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    func createGuild() {
-        guard let user = user else {
-            print("No user")
-            return
-        }
-        
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .secondsSince1970
-        
-        SKNS.createGuild(localPlayer: user, guildName: "Test Guild") { (data, error) in
-            if let data = data, let guild = try? decoder.decode(Guild.self, from: data) {
-                print("We got a Guild: \(guild.name)")
-                self.guild = guild
-            } else {
-                print("Failed creating guild. Reason: \(error?.localizedDescription ?? "n/a")")
-            }
-        }
-    }
-    
-}
 
 // MARK: - Avatar
 
 class AvatarCard: Identifiable, Equatable {
+    
     static func == (lhs: AvatarCard, rhs: AvatarCard) -> Bool {
         return lhs.id == rhs.id
     }
     
-    
     var id:UUID = UUID()
-//    var img:String
     var name:String
     var selected:Bool
     
@@ -347,6 +334,25 @@ class AvatarCard: Identifiable, Equatable {
         self.name = name
     }
 }
+
+//struct AvatarCardView: View {
+//    var card:AvatarCard
+//    var body: some View {
+//        ZStack {
+//            Image(card.name)
+//                .resizable()
+//                .frame(width: 180, height: card.selected ? 180:200, alignment: .center)
+//
+//        }
+//        .frame(width: 200, height: 200, alignment: .center)
+//        .background(GameColors.darkGray)
+//
+//        .cornerRadius(25)
+//    }
+//}
+
+/*
+
 
 struct AvatarPickerView:View {
     
@@ -378,7 +384,8 @@ struct AvatarPickerView:View {
         VStack {
             Text("Select Avatar").font(.title)
             
-            CarouselView(itemHeight: 200, views: avtViews) { theCard in
+            CarouselView(itemHeight: 250
+                         , views: avtViews) { theCard in
                 print("Selected Avatar: \(theCard.name)")
                 self.selectedCard = theCard
             }
@@ -399,21 +406,7 @@ struct AvatarPickerView:View {
     
 }
 
-struct AvatarCardView: View {
-    var card:AvatarCard
-    var body: some View {
-        ZStack {
-            Image(card.name)
-                .resizable()
-                .frame(width: 180, height: card.selected ? 180:200, alignment: .center)
-            
-        }
-        .frame(width: 200, height: 200, alignment: .center)
-        .background(GameColors.darkGray)
-        
-        .cornerRadius(25)
-    }
-}
+
 
 struct CarouselView: View {
     
@@ -437,9 +430,8 @@ struct CarouselView: View {
         {
             carouselLocation =  carouselLocation + 1
         }
-//        let pindex = relativeLoc()/views.count
+
         selectedName = "\(carouselLocation) \(views[carouselLocation].card.name)"
-//        didSelect(views[carouselLocation].card)
         chooseWithReturn(views[carouselLocation].card)
     }
     
@@ -630,3 +622,10 @@ enum DragState {
         }
     }
 }
+*/
+
+
+
+
+
+

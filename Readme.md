@@ -50,7 +50,7 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
  - [ ] ★★★★☆ Earth Order
  - [ ] ★★☆☆☆ Garage
  - [ ] ★★★☆☆ Accounting System
- - [ ] ★★☆☆☆ Truss
+ - [ ] ★★★★☆ Truss
  - [ ] ★★★☆☆ Life Support Systems
  - [ ] ☆☆☆☆☆ Vehicles Travelling Views/Scenes
  - [ ] ★☆☆☆☆ Mars Scene
@@ -110,9 +110,11 @@ Items being worked on
 - [ ] People generator - every hour. Pay for more. And generate Materials engineer first
 - [ ] Freebies Generator
 - [ ] Freebies TokenLevels
+- [ ] Where to display freebies?
 
 - [ ] Remake Bio View
 - [ ] Implement Player Edit
+- [ ] Use Player Avatar with FlipView instead.
 
 - [ ] Lab Module needs to update list when research is finished (Needs testing)
 - [ ] Garage simulation button -> Person activity -> Garage xp
@@ -137,6 +139,7 @@ Items being worked on
 - [ ] Player. var avatar (required)
 - [ ] Person var stress?
 - [ ] Activity name enum?
+- [ ] BioBox DNA enum
 
 - [ ] New headers
     - [ ] BioView
