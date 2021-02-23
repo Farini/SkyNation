@@ -133,8 +133,8 @@ struct SettingsServerTab:View {
     @ObservedObject var controller:GameSettingsController
     
     var body: some View {
+        
         ScrollView {
-            
             
             VStack {
                 Text("Player").font(.title)

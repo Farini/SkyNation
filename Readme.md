@@ -110,7 +110,7 @@ Items being worked on
 - [ ] People generator - every hour. Pay for more. And generate Materials engineer first
 - [ ] Freebies Generator
 - [ ] Freebies TokenLevels
-- [ ] Where to display freebies?
+- [ ] Where to display freebies? -> Accounting, add new game message (not achievement)
 
 - [ ] Remake Bio View
 - [ ] Implement Player Edit

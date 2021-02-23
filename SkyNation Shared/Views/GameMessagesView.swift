@@ -11,6 +11,15 @@ struct GameMessagesView: View {
     
     var messages:[GameMessage]
     
+    // Message Types
+    // achievement   > all messages seem to be achievement
+    // chatmessage
+    // free delivery
+    // other
+    // systemerror
+    // systemwarning
+    // tutorial
+    
     init() {
         let messages = LocalDatabase.shared.gameMessages
         self.messages = messages
@@ -55,29 +64,34 @@ struct GameMessagesView: View {
     }
     
     var body: some View {
-        VStack {
-            header
-            
-            ScrollView {
-                // Sections?
+        
+        
+            VStack {
+                header
                 
-                ForEach(messages, id:\.self.id) { message in
-                    VStack {
-                        Text(GameFormatters.dateFormatter.string(from: message.date))
-                            .foregroundColor(message.isCollected ? .gray:.blue)
-                        Text(message.message)
-                            .foregroundColor(message.isRead ? .gray:.orange)
-                        HStack {
-                            Text("Reward: \(message.moneyRewards ?? 0)")
-                            Text("Type: \(message.type.rawValue)")
+                ScrollView {
+                    // Sections?
+                    
+                    ForEach(messages, id:\.self.id) { message in
+                        VStack {
+                            Text(GameFormatters.dateFormatter.string(from: message.date))
+                                .foregroundColor(message.isCollected ? .gray:.blue)
+                            Text(message.message)
+                                .foregroundColor(message.isRead ? .gray:.orange)
+                            HStack {
+                                Text("Reward: \(message.moneyRewards ?? 0)")
+                                Text("Type: \(message.type.rawValue)")
+                            }
+                            
+                            Divider()
                         }
                         
-                        Divider()
                     }
-                    
                 }
             }
-        }
+            .frame(maxHeight:600)
+        
+        
     }
 }
 

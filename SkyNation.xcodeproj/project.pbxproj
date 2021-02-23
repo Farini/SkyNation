@@ -365,6 +365,10 @@
 		857D9A3A25C0B69800626884 /* HabModuleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D9A3825C0B69800626884 /* HabModuleController.swift */; };
 		857D9A3B25C0B69800626884 /* HabModuleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D9A3825C0B69800626884 /* HabModuleController.swift */; };
 		857D9A3C25C0B69800626884 /* HabModuleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D9A3825C0B69800626884 /* HabModuleController.swift */; };
+		857DDEC725E4DCAD00E64752 /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857DDEC625E4DCAD00E64752 /* Messages.swift */; };
+		857DDEC825E4DCAD00E64752 /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857DDEC625E4DCAD00E64752 /* Messages.swift */; };
+		857DDEC925E4DCAD00E64752 /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857DDEC625E4DCAD00E64752 /* Messages.swift */; };
+		857DDECA25E4DCAD00E64752 /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857DDEC625E4DCAD00E64752 /* Messages.swift */; };
 		858D7C4725D4F0AD00A45CF9 /* GameCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */; };
 		858D7C4825D4F0AD00A45CF9 /* GameCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */; };
 		858D7C4925D4F0AD00A45CF9 /* GameCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */; };
@@ -558,6 +562,7 @@
 		857D9A2225BF5E6D00626884 /* PeripheralDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralDetailView.swift; sourceTree = "<group>"; };
 		857D9A2825C0820200626884 /* StartingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingViewController.swift; sourceTree = "<group>"; };
 		857D9A3825C0B69800626884 /* HabModuleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabModuleController.swift; sourceTree = "<group>"; };
+		857DDEC625E4DCAD00E64752 /* Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
 		858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCamera.swift; sourceTree = "<group>"; };
 		858D7C5325D60FA300A45CF9 /* GameButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameButtons.swift; sourceTree = "<group>"; };
 		85927D9425DB1D800071D98B /* VehicleTrunkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTrunkView.swift; sourceTree = "<group>"; };
@@ -749,6 +754,7 @@
 			isa = PBXGroup;
 			children = (
 				8536F35D258D475D00B509D2 /* Player.swift */,
+				857DDEC625E4DCAD00E64752 /* Messages.swift */,
 				8504A51B25C6840300739C58 /* Builders */,
 				8536F34B258D475D00B509D2 /* Resources */,
 				8536F34E258D475D00B509D2 /* Station */,
@@ -1280,6 +1286,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8504A51425C5D3B800739C58 /* CautionStripes.swift in Sources */,
+				857DDEC725E4DCAD00E64752 /* Messages.swift in Sources */,
 				8536F441258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				8579750F259B9E70004C54D2 /* FlipView.swift in Sources */,
 				8569A34B25A3D9590057A518 /* AirComposition.swift in Sources */,
@@ -1438,6 +1445,7 @@
 				8536F3FF258D47D000B509D2 /* IngredientView.swift in Sources */,
 				8536F41B258D47D000B509D2 /* VehicleInventoryView.swift in Sources */,
 				8569A3D225A6353C0057A518 /* GameActivityView.swift in Sources */,
+				857DDEC825E4DCAD00E64752 /* Messages.swift in Sources */,
 				8536F317258D361100B509D2 /* GameConstants.swift in Sources */,
 				85960B9825D9B3F000AC9592 /* EDLInventoryView.swift in Sources */,
 				85797519259BD394004C54D2 /* ItemCollectionViews.swift in Sources */,
@@ -1483,6 +1491,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8504A51625C5D3B800739C58 /* CautionStripes.swift in Sources */,
+				857DDEC925E4DCAD00E64752 /* Messages.swift in Sources */,
 				8536F443258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				85797511259B9E70004C54D2 /* FlipView.swift in Sources */,
 				8569A34D25A3D9590057A518 /* AirComposition.swift in Sources */,
@@ -1585,6 +1594,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8536F3E1258D47D000B509D2 /* LaboratoryView.swift in Sources */,
+				857DDECA25E4DCAD00E64752 /* Messages.swift in Sources */,
 				8536F3A9258D475D00B509D2 /* Player.swift in Sources */,
 				8536F365258D475D00B509D2 /* Person.swift in Sources */,
 				8536F399258D475D00B509D2 /* Modules.swift in Sources */,

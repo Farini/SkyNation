@@ -201,13 +201,13 @@ struct GameSettingsView: View {
                 
                 
                 
-                Button("Load Scene") {
-                    let builder = LocalDatabase.shared.stationBuilder
-                    if let station = LocalDatabase.shared.station {
-                        builder.build(station:station)
-                    }
-                }
-                .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
+//                Button("Load Scene") {
+//                    let builder = LocalDatabase.shared.stationBuilder
+//                    if let station = LocalDatabase.shared.station {
+//                        builder.build(station:station)
+//                    }
+//                }
+//                .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
                 
                 Button("Start Game") {
                     let note = Notification(name: .startGame)
@@ -217,6 +217,16 @@ struct GameSettingsView: View {
             }
         }
         .padding()
+        .onAppear() {
+            self.loadScene()
+        }
+    }
+    
+    func loadScene() {
+        let builder = LocalDatabase.shared.stationBuilder
+        if let station = LocalDatabase.shared.station {
+            builder.build(station:station)
+        }
     }
     
     func generateBarcode(from uuid: UUID) -> Image? {
