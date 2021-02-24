@@ -15,14 +15,10 @@ struct TravelersView: View {
     var body: some View {
         SpriteKitContainer(scene: self.scene)
             .frame(width: 600, height: 400)
-//            .edgesIgnoringSafeArea(.all)
-        
     }
     
     var scene:SKScene {
         let scene = TravelersScene(size: CGSize(width: 600, height: 400))
-//        scene.size =
-//        scene.scaleMode = .fill
         return scene
     }
 }
@@ -43,7 +39,6 @@ struct SpriteKitContainer: NSViewRepresentable {
     
     init(scene: SKScene) {
         skScene = scene
-//        self.skScene.scaleMode = .aspectFill
     }
     
     class Coordinator: NSObject {

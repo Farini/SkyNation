@@ -70,6 +70,16 @@ class GameSettingsController:ObservableObject {
         }
     }
     
+    /// Choosing Avatar
+    func didSelectAvatar(card:AvatarCard) {
+        self.player.avatar = card.name
+        
+        if LocalDatabase.shared.savePlayer(player: player) {
+            savedChanges = true
+            hasChanges = false
+        }
+    }
+    
     func requestInfo() {
         SKNS.getSimpleData { (data, error) in
             if let data = data {
@@ -138,6 +148,25 @@ class GameSettingsController:ObservableObject {
             } else {
                 print("Failed creating guild. Reason: \(error?.localizedDescription ?? "n/a")")
             }
+        }
+    }
+    
+    /// Disabled state for the `StartGame` button
+    func startGameDisabled() -> Bool {
+        
+        if isNewPlayer {
+            print("New player. make sure to setup first")
+            if hasChanges {
+                print("Save Changes first")
+            }
+            if savedChanges {
+                print("Changes are saved")
+                return false
+            }
+            return true
+            
+        } else {
+            return false
         }
     }
     

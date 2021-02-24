@@ -105,6 +105,7 @@ Items being worked on
 - [X] Garage -> Implement new people picker
 - [X] Remake TrussView
 - [X] Player avatar picker
+- [X] Load Scene automatically
 
 - [ ] GameGenerators + Encoding64
 - [ ] People generator - every hour. Pay for more. And generate Materials engineer first
@@ -113,23 +114,28 @@ Items being worked on
 - [ ] Where to display freebies? -> Accounting, add new game message (not achievement)
 
 - [ ] Remake Bio View
-- [ ] Implement Player Edit
-- [ ] Use Player Avatar with FlipView instead.
+
+- [ ] Improve Loading Screen
+    - [X] Make Settings View (and open from PlayerCard)
+    - [X] Implement Player Edit
+    - [ ] Don't let game start before name and avatar are chosen
 
 - [ ] Lab Module needs to update list when research is finished (Needs testing)
 - [ ] Garage simulation button -> Person activity -> Garage xp
 - [ ] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles) (In Mid-Game)
 - [ ] GameLoop: Detect Beginner
 
-- [ ] Load Scene automatically
-- [ ] Make Settings View (and open from PlayerCard)
 - [ ] LSS View -> Fix peripheral Selection bug
+- [ ] LSS View -> Empty Tanks and Boxes must have a way to define type.
+- [ ] LSS View -> Better Station Accounting & Reporting.
+
 - [ ] More realistic numbers on building things
 - [ ] Server SpaceVehicle
 - [ ] View with GameMessages (where chat is)
 - [ ] Store (Tokens + Packages) View
 
 ### Model Changes
+- [X] Player -> Avatar
 - [ ] Skin -> convert from String to Skin type
 - [ ] Accounting
     (1). var problems (required)
@@ -210,6 +216,8 @@ Items being worked on
     - [X] Descent Inventory View
     - [X] Add StorageBox to Vehicle Data
     - [ ] Post Launch Scene
+    - [ ] Space Vehicle Registration (when launch)
+    - [ ] Space Vehicle Validation (when arriving (orbit))
     
 
 - [ ] 7/13 Basic Views

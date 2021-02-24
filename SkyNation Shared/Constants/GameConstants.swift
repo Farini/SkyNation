@@ -311,9 +311,7 @@ extension AddingTrussItemProblem: LocalizedError {
     }
 }
 
-// MARK: - SYSTEM COMMUNICATIONS
-
-
+// MARK: - Shopping
 
 enum GameRawPackage {
     

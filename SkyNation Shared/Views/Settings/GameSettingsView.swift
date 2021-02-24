@@ -180,6 +180,7 @@ struct GameSettingsView: View {
                     Button("Create Player") {
                         controller.createPlayer()
                     }
+                    .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
                 } else {
 //                    if controller.hasChanges {
                         Button("Save Player") {
@@ -209,11 +210,16 @@ struct GameSettingsView: View {
 //                }
 //                .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
                 
-                Button("Start Game") {
-                    let note = Notification(name: .startGame)
-                    NotificationCenter.default.post(note)
+                if (!inGame) {
+                    Button("Start Game") {
+                        let note = Notification(name: .startGame)
+                        NotificationCenter.default.post(note)
+                    }
+                    .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
+                    .disabled(controller.startGameDisabled())
                 }
-                .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
+                
+                
             }
         }
         .padding()

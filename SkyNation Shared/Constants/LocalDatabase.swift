@@ -21,7 +21,7 @@ class LocalDatabase {
     
     var player:SKNPlayer?
     var station:Station?
-    var vehicles:[SpaceVehicle] = [] // Vehicles that are travelling
+    var vehicles:[SpaceVehicle] = []    // Vehicles that are travelling
     var stationBuilder:StationBuilder
     
     // MARK: - Game Generators

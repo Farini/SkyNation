@@ -45,10 +45,12 @@ struct TechnologyDetailView: View {
                 
                 // Description text
                 Text(tech.elaborate())
-                    .padding()
-                    .frame(maxWidth: 300, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                
-                Text("⏱ \(tech.getDuration())")
+                    .frame(width:300, height: 50)
+                    .lineLimit(3)
+                    .multilineTextAlignment(.leading)
+                    .foregroundColor(.gray)
+                    
+                Text("⏱ \(TimeInterval(tech.getDuration()).stringFromTimeInterval())")
                     .font(.largeTitle)
                 
             }

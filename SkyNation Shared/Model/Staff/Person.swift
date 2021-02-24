@@ -35,6 +35,7 @@ enum Skills:String, Codable, CaseIterable, Hashable {
 struct SkillSet:Codable {
     var skill:Skills
     var level:Int
+    var xp:Int? = 0
 }
 
 /// An activity associated with an event (i.e. Making Tech, or Recipe)
@@ -148,9 +149,9 @@ class Person:Codable, Identifiable, Equatable {
         }
     }
     
-    func addActivity() {
-        self.activity = LabActivity(time: 60)
-    }
+//    func addActivity() {
+//        self.activity = LabActivity(time: 60)
+//    }
     
     /// Sets a random mood
     func randomMood() {
@@ -161,6 +162,7 @@ class Person:Codable, Identifiable, Equatable {
         
         // Busy -> More unhappy
         if isBusy() == true {
+            happyDeltas.append(-2)
             happyDeltas.append(-2)
         }
         

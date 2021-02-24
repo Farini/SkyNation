@@ -18,29 +18,23 @@ struct PlayerEditView: View {
     @State var about:String = ""
     
     init(controller:GameSettingsController) {
+        
         self.allNames = HumanGenerator().female_avatar_names + HumanGenerator().male_avatar_names
         self.controller = controller
+        
         var newCards:[AvatarCard] = []
-//        var newViews:[AvatarCardView] = []
         for name in allNames {
             let card = AvatarCard(name: name)
             newCards.append(card)
         }
-//        for card in newCards {
-//            let avt = AvatarCardView(card: card)
-//            newViews.append(avt)
-//        }
         
         self.cards = newCards
-//        self.avtViews = newViews
     }
     
     var body: some View {
         ScrollView {
             
             VStack {
-                
-                
                 
                 Group {
                     HStack {
@@ -79,8 +73,13 @@ struct PlayerEditView: View {
                                         .frame(width: 82, height: 82, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                                 }
                                 .padding(.vertical)
-                                .background(selectedCard == avtCard ? Color.red:Color.black)
+                                .background(avtCard == selectedCard ? Color.red:Color.black)
                                 .cornerRadius(8)
+                                .onTapGesture {
+                                    // Set the new avatar
+                                    self.selectedCard = avtCard
+                                    controller.didSelectAvatar(card: avtCard)
+                                }
                             }
                         })
                     }

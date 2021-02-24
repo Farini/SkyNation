@@ -108,8 +108,20 @@ enum TechItems:String, Codable, CaseIterable, Identifiable {
     /// Amount of seconds it takes to complete this tech research
     func getDuration() -> Int {
         switch self {
-            case .recipeScrubber, .recipeMethane, .Cuppola: return 500
-            default:return 200
+            case .AU1, .AU2, .AU3, .AU4, .AntennaUp: return 60 * 60 * 4 // 4h
+            case .module10, .module9, .module8, .module7 : return 60 * 60 * 6 // 6h
+            case .module6, .module5, .module4: return 60*60*4 // 4h
+            case .node2, .node3, .node4: return 60 * 30 // 30 min
+            case .Cuppola: return 60*60*6 // 6h
+            case .recipeMethane: return 60*60*2 // 2h
+            case .recipeScrubber: return 60*60*2 // 2h
+            case .recipeWaterFilter: return 60*60*6 // 6h
+            case .recipeBioSolidifier: return 60*60*8 // 8h
+            case .Airlock: return 60*60*5 // 5h
+            case .Roboarm: return 60*60*8 // 8h
+            case .garage: return 60*60*12 // 12h
+            case .rootItem: return 1    // 1s
+            case .GarageArm: return 60*60*48 //48h
         }
     }
     
@@ -156,21 +168,20 @@ enum TechItems:String, Codable, CaseIterable, Identifiable {
     /// `Human` Skills required to research this tech
     func skillSet() -> [Skills:Int] {
         switch self {
-            case .node2, .node3, .node4: return [:]
-            case .module4, .module5, .module6: return [.Material:1]
-            case .garage: return [.Material:1]
-            case .recipeScrubber: return [.Handy:1]
+            case .node2, .node3, .node4: return [.Handy:1]
+            case .module4, .module5, .module6: return [.Material:1, .Handy:1]
+            case .garage: return [.Material:2, .Handy:2]
+            case .recipeScrubber: return [.Handy:1, .Electric:1]
             case .recipeMethane: return [.Electric:1, .Handy:2]
-            case .recipeBioSolidifier: return [.Handy:2]
+            case .recipeBioSolidifier: return [.Handy:2, .Electric:1]
             case .recipeWaterFilter: return [.Biologic:1]
-            case .module7, .module8, .module9, .module10: return [.Material:2]
-            case .Roboarm: return [.Mechanic:1, .Electric:1]
+            case .module7, .module8, .module9, .module10: return [.Material:2, .Handy:1, .SystemOS:1]
+            case .Roboarm: return [.Mechanic:1, .Electric:1, .Datacomm:1]
             case .AU1, .AU2, .AU3, .AU4, .AntennaUp: return [.Datacomm:1]
             case .Airlock: return [.Material:1, .Electric:1, .Handy:1]
             case .Cuppola: return [.Material:2, .Mechanic:1, .Handy:1]
             case .rootItem: return [:]
             case .GarageArm: return [.SystemOS:2, .Material:2, .Datacomm:2, .Electric:2]
-//            default: return [.Mechanic:1, .Biologic:1]
         }
     }
     
@@ -455,3 +466,18 @@ extension TechTree: CustomStringConvertible {
     }
 }
 
+extension TimeInterval{
+    
+    func stringFromTimeInterval() -> String {
+        
+        let time = NSInteger(self)
+        
+//        let ms = Int((self.truncatingRemainder(dividingBy: 1)) * 1000)
+        let seconds = time % 60
+        let minutes = (time / 60) % 60
+        let hours = (time / 3600)
+        
+        return String(format: "%dh %0.2dm %0.2ds",hours,minutes,seconds)
+        
+    }
+}

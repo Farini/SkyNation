@@ -153,7 +153,7 @@ struct CautionStripes_Previews: PreviewProvider {
         
     }
 }
-
+/*
 struct ContentView: View {
     var body: some View {
         
@@ -250,5 +250,5 @@ struct ContentView: View {
         
     }
 }
-
+*/
 
