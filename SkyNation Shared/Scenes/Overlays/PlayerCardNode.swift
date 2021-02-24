@@ -39,22 +39,24 @@ class PlayerCardNode:SKNode {
         
         
         // Player Avatar
-        var avTex:SKTexture!
-        if let logo = player.logo {
-            avTex = SKTexture(imageNamed: logo)
-        } else {
-            let avimg = GameImages.commonSystemImage(name: "person.crop.square")!.image(with: .white)
-            #if os(macOS)
-            // image.isTemplate = true
-            avTex = SKTexture(cgImage: avimg.cgImage(forProposedRect: nil, context: nil, hints: [:])!)
-            // avTex = SKTexture(cgImage: avimg.cgim)
-            #else
-            avTex = SKTexture(image: avimg)
-            #endif
-        }
-        let avWidth = max(avTex.size().width, 112)
-        let avHeight = (avTex.size().height / avTex.size().width) * avWidth
-        let avatarNode = SKSpriteNode(texture: avTex, size: CGSize(width: avWidth, height: avHeight))
+//        var avTex:SKTexture!
+        let avatarTexture = SKTexture(imageNamed: player.avatar)
+        
+//        if let logo = player.logo {
+//            avTex = SKTexture(imageNamed: logo)
+//        } else {
+//            let avimg = GameImages.commonSystemImage(name: "person.crop.square")!.image(with: .white)
+//            #if os(macOS)
+//            // image.isTemplate = true
+//            avTex = SKTexture(cgImage: avimg.cgImage(forProposedRect: nil, context: nil, hints: [:])!)
+//            // avTex = SKTexture(cgImage: avimg.cgim)
+//            #else
+//            avTex = SKTexture(image: avimg)
+//            #endif
+//        }
+        let avWidth = min(avatarTexture.size().width, 110)
+        let avHeight = (avatarTexture.size().height / avatarTexture.size().width) * avWidth
+        let avatarNode = SKSpriteNode(texture: avatarTexture, size: CGSize(width: avWidth, height: avHeight))
         
         avatarNode.anchorPoint = CGPoint(x: 0.0, y: 1.0)
         avatarNode.position = CGPoint(x: margin, y: -margin)

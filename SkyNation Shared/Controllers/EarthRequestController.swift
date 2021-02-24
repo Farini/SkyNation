@@ -63,6 +63,9 @@ class EarthRequestController:ObservableObject {
             self.currentOrder = newOrder
             self.orderStatus = .Ordering(order: newOrder)
         }
+        
+        // Get people from Generator
+        LocalDatabase.shared.gameGenerators?.update()
     }
     
     /// Updates Variables with the PayloadOrder passed
@@ -147,6 +150,11 @@ class EarthRequestController:ObservableObject {
         
         guard let currentOrder = currentOrder else {
             errorMessage = "No current order"
+            return
+        }
+        
+        if currentOrder.people.contains(person) {
+            print("Person already here")
             return
         }
         
@@ -313,6 +321,9 @@ class EarthRequestController:ObservableObject {
             let result = station.addToStaff(person: person)
             if result == false {
                 self.errorMessage = "No Room for \(person.name)"
+            } else {
+                // Remove person from list of available for hire
+                LocalDatabase.shared.gameGenerators?.didHirePerson(person: person)
             }
         }
         

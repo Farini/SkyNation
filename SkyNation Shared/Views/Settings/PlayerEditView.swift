@@ -23,12 +23,19 @@ struct PlayerEditView: View {
         self.controller = controller
         
         var newCards:[AvatarCard] = []
+        var selCard:AvatarCard?
+        
         for name in allNames {
             let card = AvatarCard(name: name)
             newCards.append(card)
+            if controller.player.avatar == name {
+                selCard = card
+//                card.selected = true
+            }
         }
         
         self.cards = newCards
+//        self.selectedCard = selCard
     }
     
     var body: some View {
@@ -73,12 +80,13 @@ struct PlayerEditView: View {
                                         .frame(width: 82, height: 82, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                                 }
                                 .padding(.vertical)
-                                .background(avtCard == selectedCard ? Color.red:Color.black)
+                                .background(self.selectedCard?.name == avtCard.name ? Color.red:Color.black)
                                 .cornerRadius(8)
                                 .onTapGesture {
                                     // Set the new avatar
                                     self.selectedCard = avtCard
                                     controller.didSelectAvatar(card: avtCard)
+                                    highlightCard()
                                 }
                             }
                         })
@@ -87,7 +95,7 @@ struct PlayerEditView: View {
                     
                     // About
                     VStack(alignment:.leading) {
-                        TextField("About:", text: $about)
+                        TextField("About", text: $about)
 //                            .textFieldStyle(RoundedBorderTextFieldStyle())
 //                            .frame(width: .m)
                             .padding(.horizontal)
@@ -104,6 +112,17 @@ struct PlayerEditView: View {
         }
         
         }
+    }
+    
+    func highlightCard() {
+        let cardName = controller.player.avatar
+        for card in cards {
+            if card.name == cardName {
+                self.selectedCard = card
+            }
+        }
+//        let newCards = cards.sorted(by: { $0.id.uuidString < $1.id.uuidString })
+//        self.cards = newCards
     }
     
 }

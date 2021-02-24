@@ -12,7 +12,7 @@ class StartingWindow: NSWindowController, NSWindowDelegate {
 
     override func windowDidLoad() {
         super.windowDidLoad()
-//        print("Window did load")
+        
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
         
         self.window!.center()
@@ -33,9 +33,10 @@ class StartingWindow: NSWindowController, NSWindowDelegate {
             if let newWindow = newWindowController.window {
                 print("New Window here: \(newWindow.title)")
                 newWindow.makeKeyAndOrderFront(self)
+                
+                // Close this window
+                self.window?.close()
             }
-            
-            
         }
     }
     

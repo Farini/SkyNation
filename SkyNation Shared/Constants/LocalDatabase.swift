@@ -528,6 +528,11 @@ class GameGenerators:Codable {
         }
     }
     
+    /// Removes the person from the available array
+    func didHirePerson(person:Person) {
+        people.removeAll(where: {$0.id == person.id})
+    }
+    
     /// Force updates with Tokens
     func spentTokenToUpdate(amt:Int) {
         generatePeople()
@@ -538,11 +543,11 @@ class GameGenerators:Codable {
     }
     
     func canGenerateNewPeople() -> Bool {
-        return datePeople.addingTimeInterval(60 * 60 * 1).compare(Date()) == .orderedDescending // 1hr
+        return datePeople.addingTimeInterval(60 * 60 * 1).compare(Date()) == .orderedAscending // 1hr
     }
     
     func canGenerateFreebies() -> Bool {
-        return dateFreebies.addingTimeInterval(60 * 60 * 24).compare(Date()) == .orderedDescending // 24hr
+        return dateFreebies.addingTimeInterval(60 * 60 * 24).compare(Date()) == .orderedAscending // 24hr
     }
     
     private func generatePeople() {

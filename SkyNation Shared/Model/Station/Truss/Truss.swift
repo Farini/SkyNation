@@ -124,6 +124,23 @@ class Truss:Codable {
         // Add radiator here
     }
     
+    func mergeTanks() {
+        for tankType in TankType.allCases {
+            if tankType == .empty { continue }
+            let relTanks = self.tanks.filter({ $0.type == tankType }).sorted(by: { $0.current > $1.current })
+            if relTanks.count >= 2 {
+                let firstLast = relTanks.prefix(2)
+                let firstAmount = firstLast.first!.current
+                let lastCapacity = firstLast.last!.capacity - firstLast.last!.current
+                if lastCapacity >= firstAmount {
+                    // Merge Tanks
+                    self.tanks.first(where: { $0.id == firstLast.last!.id })!.current += firstAmount
+                    self.tanks.removeAll(where: { $0.id == firstLast.first!.id })
+                }
+            } // else no merge
+        }
+    }
+    
     // MARK: - Refills
     
     /**

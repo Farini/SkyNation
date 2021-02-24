@@ -24,7 +24,6 @@ enum GameSettingsTab: String, CaseIterable {
 struct GameSettingsView: View {
     
     @ObservedObject var controller = GameSettingsController()
-    @State var tab:GameSettingsTab = .Loading
     
     /// When turned on, this shows the "close" button
     private var inGame:Bool = false
@@ -84,8 +83,9 @@ struct GameSettingsView: View {
             }
             
             // Segment Control
-            Picker("", selection: $tab) {
-                ForEach(GameSettingsTab.allCases, id:\.self) { tabName in
+            Picker("", selection: $controller.viewState) {
+                let options = inGame ? [GameSettingsTab.EditingPlayer, GameSettingsTab.Server, GameSettingsTab.Settings]:GameSettingsTab.allCases
+                ForEach(options, id:\.self) { tabName in
                     Text(tabName.tabString)
                 }
             }.pickerStyle(SegmentedPickerStyle())
@@ -93,7 +93,8 @@ struct GameSettingsView: View {
             
             Divider()
             
-            switch tab {
+            switch controller.viewState {
+                
                 case .Loading:
                     
                     HStack {
@@ -224,7 +225,11 @@ struct GameSettingsView: View {
         }
         .padding()
         .onAppear() {
-            self.loadScene()
+            if inGame {
+                controller.viewState = .EditingPlayer
+            } else {
+                self.loadScene()
+            }
         }
     }
     

@@ -106,10 +106,14 @@ Items being worked on
 - [X] Remake TrussView
 - [X] Player avatar picker
 - [X] Load Scene automatically
+- [X] Player Avatar on Overlay
+- [X] View with GameMessages (where chat is)
+- [X] More realistic numbers on building things
 
-- [ ] GameGenerators + Encoding64
-- [ ] People generator - every hour. Pay for more. And generate Materials engineer first
-- [ ] Freebies Generator
+
+- [X] GameGenerators + Encoding64
+- [X] People generator - every hour. Pay for more. And generate Materials engineer first
+- [X] Freebies Generator
 - [ ] Freebies TokenLevels
 - [ ] Where to display freebies? -> Accounting, add new game message (not achievement)
 
@@ -118,20 +122,28 @@ Items being worked on
 - [ ] Improve Loading Screen
     - [X] Make Settings View (and open from PlayerCard)
     - [X] Implement Player Edit
-    - [ ] Don't let game start before name and avatar are chosen
+    - [X] Highlight PlayerCard
+    - [X] Don't let game start before name and avatar are chosen
+    - [ ] Update Player avatar on Overlay View
 
-- [ ] Lab Module needs to update list when research is finished (Needs testing)
+- [ ] Lab Module needs to update list when research is finished
+- [ ] Lab Module needs to estabilish the time for humans as well (the correct, lowered one)
+- [ ] Lab Module - Select from tree
+- [ ] Lab Module - Change boos for Token, and update button style
+
 - [ ] Garage simulation button -> Person activity -> Garage xp
 - [ ] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles) (In Mid-Game)
 - [ ] GameLoop: Detect Beginner
 
-- [ ] LSS View -> Fix peripheral Selection bug
-- [ ] LSS View -> Empty Tanks and Boxes must have a way to define type.
+- [X] LSS View -> Fix peripheral Selection bug
+- [X] LSS View -> Empty Tanks and Boxes must have a way to define type.
+- [ ] LSS View -> Empty Boxes must have a way to define type?
 - [ ] LSS View -> Better Station Accounting & Reporting.
 
-- [ ] More realistic numbers on building things
+- [ ] Fake Store (Shopping View)
+
 - [ ] Server SpaceVehicle
-- [ ] View with GameMessages (where chat is)
+
 - [ ] Store (Tokens + Packages) View
 
 ### Model Changes
@@ -156,6 +168,7 @@ Items being worked on
     - [X] biosolids
     - [ ] app (game) icon
     - [ ] electrolizer
+    - [ ] waste water
     - [ ] SpaceVehicle engine icons
     - [ ] Blendered Tank icons?
 
@@ -176,11 +189,11 @@ Items being worked on
     - [X] Restore Delivery Animations
     - [X] Implement Dock 3d model
     - [X] 5 Models of Antenna
+    - [X] Show  News
     - [ ] Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
     - [ ] Improve Background HDRI image
     - [ ] Make the Earth bright again?
     - [ ] Add TechItems updates to StationBuilder
-    - [X] Show  News
     
     
 - [ ] 6/13 Scene Overlay

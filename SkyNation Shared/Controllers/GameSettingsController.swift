@@ -11,6 +11,8 @@ import Foundation
 
 class GameSettingsController:ObservableObject {
     
+    @Published var viewState:GameSettingsTab // = .Loading
+    
     @Published var player:SKNPlayer
     @Published var playerName:String {
         didSet {
@@ -41,7 +43,7 @@ class GameSettingsController:ObservableObject {
             hasChanges = false
             savedChanges = true
             user = SKNUser(player: player)
-            
+            viewState = GameSettingsTab.Loading
         } else {
             let newPlayer = SKNPlayer()
             self.player = newPlayer
@@ -50,6 +52,7 @@ class GameSettingsController:ObservableObject {
             isNewPlayer = true
             hasChanges = true
             savedChanges = false
+            viewState = GameSettingsTab.EditingPlayer
         }
     }
     
@@ -78,6 +81,7 @@ class GameSettingsController:ObservableObject {
             savedChanges = true
             hasChanges = false
         }
+        self.viewState = .EditingPlayer
     }
     
     func requestInfo() {

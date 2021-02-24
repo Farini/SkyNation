@@ -155,7 +155,7 @@ class Station:Codable {
                     if tempAir.h2o > 4 {
                         tempAir.h2o -= 4
                         tempWater += 4
-                        report.addNote(string: "Condensator removed 4Kg of water vapor")
+                        report.addNote(string: "Condensator removed 4L of water vapor from the air")
                     }
                 case .Electrolizer:
                     // Make electrolisys if air is bad
@@ -163,8 +163,8 @@ class Station:Codable {
                     if conditions.contains(tempAir.airQuality()) {
                         tempWater -= 3
                         tempAir.o2 += 3
-                        tempAir.h2 += 6
-                        report.addNote(string: "Electrolizer used 3Kg of water, and made 3g of O2")
+//                        tempAir.h2 += 6
+                        report.addNote(string: "Electrolizer used 3L of water, and made 3L of O2")
                     }
                 case .Methanizer:
                     if tempAir.co2 > 2 {
@@ -174,7 +174,15 @@ class Station:Codable {
                                 hydrogenTank.current -= 2
                                 methaneTank.current += 2
                                 report.addNote(string: "Methanizer produced 2Kg of methane")
+                            } else {
+                                report.addNote(string: "Methanizer couldn't find a Methane Tank for output.")
                             }
+                            // o2
+                            if let o2Tank = truss.tanks.filter({ $0.type == .o2 }).sorted(by: { $0.current < $1.current }).first, o2Tank.current < o2Tank.capacity - 1 {
+                                o2Tank.current += 2
+                            }
+                        } else {
+                            report.addNote(string: "Methanizer couldn't find a Hydrogen Tank for input.")
                         }
                     }
                 case .WaterFilter:
@@ -208,7 +216,7 @@ class Station:Codable {
                                 let amt = Int(0.1 * Double(poop.current)) + lvl
                                 poop.current -= (amt + 1)
                                 box.current = min(box.current + amt, box.capacity)
-                                report.addNote(string: "BioSolid made \(amt)Kg of fertilizer")
+                                report.addNote(string: "BioSolidifier made \(amt)Kg of fertilizer")
                             }
                         }
                     }
@@ -465,8 +473,11 @@ class Station:Codable {
                 tempAir.o2 += oxygenUse
             }
         }
-        // Remove Empty Tanks
-        truss.tanks.removeAll(where: { $0.current <= 0 })
+        
+        // Remove Empty Tanks -> Actually, make a function on truss to consolidate them.
+        // Keep the old tanks that are empty. They can be transformed
+        truss.tanks.removeAll(where: { $0.current <= 0 && $0.type != .empty })
+        truss.mergeTanks()
         
         // Report
         self.accounting = report

@@ -179,7 +179,7 @@ struct EarthRequestView: View {
                         switch controller.orderAisle {
                             case .People:
                                 LazyVGrid(columns: ingredientColumns, alignment:.center, spacing:8) {
-                                    ForEach(PeopleMaker.shared.people) { person in
+                                    ForEach(LocalDatabase.shared.gameGenerators?.people ?? []) { person in
                                         PersonOrderView(person: person)
                                             .onTapGesture {
                                                 controller.addToHire(person: person)
@@ -188,7 +188,7 @@ struct EarthRequestView: View {
                                 }
 
                             case .Ingredients:
-                                LazyVGrid(columns: ingredientColumns, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 8, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
+                                LazyVGrid(columns: ingredientColumns, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 8, pinnedViews: []) {
                                     
                                     ForEach(Ingredient.allCases.filter{$0.orderable}, id:\.self) { ingredient in
                                         
@@ -510,6 +510,8 @@ struct EarthRequestView_Previews: PreviewProvider {
     }
 }
 
+
+/*
 class PeopleMaker {
     static var shared = PeopleMaker()
     private init() {
@@ -523,7 +525,7 @@ class PeopleMaker {
     }
     var people:[Person] = []
 }
-
+*/
 
 extension Array {
     /// Use this to divide views in stacks

@@ -19,7 +19,7 @@ enum LSSTab:String, CaseIterable {
 enum LSSViewState {
     case Air
     case Resources(type:RSSType)
-    case Machinery
+    case Machinery(object:PeripheralObject?)
     case Energy
     case Systems
 }
@@ -54,10 +54,6 @@ struct LifeSupportView: View {
                 }
                 
                 Spacer()
-                
-                // Money
-//                Text("S$: \(GameFormatters.numberFormatter.string(from: NSNumber(value: controller.money))!)")
-//                    .foregroundColor(.green)
                 
                 // Tutorial
                 Button(action: {
@@ -97,61 +93,7 @@ struct LifeSupportView: View {
         
         VStack {
             
-            /*
-            VStack {
-                
-                // General Header
-                HStack {
-                    
-                    VStack(alignment:.leading) {
-                        Text("♻️ Life Support Systems")
-                            .font(.largeTitle)
-                        Text("Where life is supported")
-                            .foregroundColor(.gray)
-                            .font(.caption)
-                    }
-                    
-                    Spacer()
-                    Text("S$:3,456")
-                        .foregroundColor(.green)
-                    
-                    // Tutorial
-                    Button(action: {
-                        print("Tutorial action")
-                    }, label: {
-                        Image(systemName: "questionmark.diamond")
-                            .resizable()
-                            .aspectRatio(contentMode:.fit)
-                            .frame(width:34, height:34)
-                    })
-                    .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
-                    .padding(.trailing, 6)
-                    
-                    // Close
-                    Button(action: {
-                        print("Close action")
-                        NotificationCenter.default.post(name: .closeView, object: self)
-                    }, label: {
-                        Image(systemName: "xmark.circle")
-                            .resizable()
-                            .aspectRatio(contentMode:.fit)
-                            .frame(width:34, height:34)
-                    })
-                    .buttonStyle(GameButtonStyle(foregroundColor: .white, backgroundColor: .black, pressedColor: .orange))
-                    .padding(.trailing, 6)
-                }
-                
-                // Segment Picker
-                Picker("", selection: $controller.segment) { // Picker("", selection: $airOption) {
-                    ForEach(LSSSegment.allCases, id:\.self) { airOpt in
-                        Text(airOpt.rawValue)
-                    }
-                }
-                .pickerStyle(SegmentedPickerStyle())
-            }
-            .padding([.top, .leading, .trailing])
-            Divider()
-            */
+            // Header
             header
             
             Group {
@@ -203,14 +145,14 @@ struct LifeSupportView: View {
                                 }
                                 
                                 // Peripherals
-                                Section(header: Text("Peripherals")) {
-                                    ForEach(controller.peripherals) { peripheral in
-                                        Text("\(peripheral.peripheral.rawValue)")
-                                            .onTapGesture(count: 1, perform: {
-                                                controller.didSelect(utility: peripheral)
-                                            })
-                                    }
-                                }
+//                                Section(header: Text("Peripherals")) {
+//                                    ForEach(controller.peripherals) { peripheral in
+//                                        Text("\(peripheral.peripheral.rawValue)")
+//                                            .onTapGesture(count: 1, perform: {
+//                                                controller.didSelect(utility: peripheral)
+//                                            })
+//                                    }
+//                                }
                                 
                                 // Ingredients - Boxes
                                 Section(header: Text("Ingredients")) {
@@ -230,14 +172,14 @@ struct LifeSupportView: View {
                             
                             // Right View (Detail)
                             switch type {
-                                case .Peripheral(let periObject):
-                                    
-                                    ScrollView() {
-                                        
-                                        // Peripheral
-                                        PeripheralDetailView(controller: self.controller, peripheral: periObject)
-                                    }
-                                    .frame(maxWidth:.infinity, minHeight:200, maxHeight:.infinity)
+                                case .Peripheral(let _):
+                                    Text("Peripheral")
+//                                    ScrollView() {
+//
+//                                        // Peripheral
+//                                        PeripheralDetailView(controller: self.controller, peripheral: periObject)
+//                                    }
+//                                    .frame(maxWidth:.infinity, minHeight:200, maxHeight:.infinity)
                                     
                                 case .Tank(let tankObject):
                                     ScrollView {
@@ -263,8 +205,9 @@ struct LifeSupportView: View {
                             }
                         }
                         
-                    case .Machinery:
-                        MachineryView(controller: controller)
+                    case .Machinery(let peripheral):
+                        
+                        MachineryView(controller: controller, selected: peripheral)
 //                        VStack {
 //                            Spacer()
 //                            Text("Machinery")
@@ -275,9 +218,9 @@ struct LifeSupportView: View {
                             // Energy
                             EnergyOverview(energyLevel: $controller.levelZ, energyMax: $controller.levelZCap, energyProduction: controller.energyProduction, batteryCount: controller.batteries.count, solarPanelCount: controller.solarPanels.count, peripheralCount: controller.peripherals.count, deltaZ: $controller.batteriesDelta, conumptionPeripherals: $controller.consumptionPeripherals, consumptionModules: $controller.consumptionModules)
                             
-                            BatteryCollectionView(controller.batteries)
+//                            BatteryCollectionView(controller.batteries)
                             
-                            LazyVGrid(columns: [GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100))], alignment: .leading, spacing: 16, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/, content: {
+                            LazyVGrid(columns: [GridItem(.fixed(120)), GridItem(.fixed(120)), GridItem(.fixed(120)), GridItem(.fixed(120))], alignment: .center, spacing: 16, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/, content: {
                                 ForEach(controller.batteries) { battery in
                                     VStack {
                                         Image("carBattery")

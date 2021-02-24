@@ -13,8 +13,8 @@ class LSSModel:ObservableObject {
     var station:Station
     
     // State
-    @Published var viewState:LSSViewState = .Air
-    @Published var segment:LSSTab = .Air {
+    @Published var viewState:LSSViewState = LSSViewState.Energy
+    @Published var segment:LSSTab = .Power {
         didSet {
             print("Did set tab: \(segment.rawValue)")
             didSelect(segment: segment)
@@ -167,7 +167,7 @@ class LSSModel:ObservableObject {
         switch segment {
             case .Air: self.viewState = .Air
             case .Resources: self.viewState = .Resources(type: .None)
-            case .Machinery: self.viewState = .Machinery
+            case .Machinery: self.viewState = .Machinery(object:nil)
             case .Power:self.viewState = .Energy
             case .System: self.viewState = .Systems
         }
@@ -178,7 +178,7 @@ class LSSModel:ObservableObject {
         print("Did select Utility")
         if let peripheral = utility as? PeripheralObject {
             print("Peripheral")
-            self.viewState = .Resources(type: .Peripheral(object: peripheral))
+            self.viewState = .Machinery(object:peripheral) //.Resources(type: .Peripheral(object: peripheral))
         } else if let tank = utility as? Tank {
             print("Tank")
             self.viewState = .Resources(type: .Tank(object: tank))
@@ -453,6 +453,67 @@ class LSSModel:ObservableObject {
         saveAccounting()
         self.didSelect(utility: peripheral)
         
+    }
+    
+    // MARK: - Tanks and Boxes Control
+    
+    /// Throw away tank
+    func discardTank(_ tank:Tank) {
+        self.station.truss.tanks.removeAll(where: { $0.id == tank.id })
+        self.tanks.removeAll(where: { $0.id == tank.id })
+        self.viewState = .Resources(type: .None)
+    }
+    
+    /// Merges same `TankType`
+    func mergeTanks(_ origin:Tank) {
+        print("Merging Tanks")
+        
+        // Merge tanks here
+        let candidates = station.truss.tanks.filter({ $0.type == origin.type && $0.id != origin.id }).sorted(by: { $0.current < $1.current })
+        
+        var amountToFill = origin.availabilityToFill()
+        for tank in candidates {
+            if amountToFill <= 0 { break }
+            if tank.current <= amountToFill {
+                print("Merging tank: \(tank.id) into tank:\(origin.id)")
+                amountToFill -= tank.current
+                origin.current += tank.current
+                tank.current = 0
+            } else {
+                print("no merge")
+            }
+        }
+        print("Tank Done Merging. Now:\(origin.current) of \(origin.capacity)")
+    }
+    
+    /// Defines a `TankType` for the tank
+    func defineType(_ tank:Tank, type:TankType) {
+        
+        if let tankIndex = station.truss.tanks.firstIndex(of: tank) {
+            
+            let theTank = station.truss.tanks[tankIndex]
+            theTank.type = type
+            theTank.current = 0
+            theTank.capacity = type.capacity
+            
+            // Update Tanks
+            self.tanks = station.truss.tanks
+            self.viewState = .Resources(type: .Tank(object: theTank))
+            
+        } else {
+            print("Error: Could not find")
+        }
+    }
+    
+    /// Makes the tank emtpy
+    func emptyTank(_ tank:Tank) {
+        if let actualTank = station.truss.tanks.first(where:{ $0.id == tank.id }) {
+            actualTank.current = 0
+            actualTank.type = .empty
+            self.viewState = .Resources(type: .Tank(object: actualTank))
+        } else {
+            print("Error: Could not find tank to empty")
+        }
     }
     
     // MARK: - Accounting

@@ -187,7 +187,7 @@ struct IngredientView_Previews_2: PreviewProvider {
             
             VStack {
                 IngredientView(ingredient: Ingredient.Water, hasIngredient: nil, quantity: nil)
-                IngredientView(ingredient: Ingredient.Silicate, hasIngredient: nil, quantity: nil)
+                IngredientView(ingredient: Ingredient.Silica, hasIngredient: nil, quantity: nil)
                 IngredientView(ingredient: Ingredient.wasteSolid, hasIngredient: nil, quantity: nil)
                 IngredientView(ingredient: Ingredient.Iron, hasIngredient: nil, quantity: nil)
                 IngredientView(ingredient: Ingredient.Polimer, hasIngredient: nil, quantity: nil)

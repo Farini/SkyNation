@@ -18,7 +18,7 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
     case Polimer    // Plastic
     case Lithium
     case Iron
-    case Silicate
+    case Silica
     
     case SolarCell
     case Circuitboard
@@ -41,7 +41,7 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
     /// Whether a Player can order this item
     var orderable:Bool {
         switch self {
-            case .wasteSolid, .wasteLiquid, .Silicate: return false
+            case .wasteSolid, .wasteLiquid, .Silica: return false
                 
             case .CarbonFiber : return false // Deprecating
             default: return true
@@ -61,6 +61,7 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
         case .Battery: return 100
         case .Ceramic: return 6
         case .Food: return 75
+        case .Silica: return 20
             
         case .wasteSolid: return 100
         case .wasteLiquid: return 100
@@ -76,7 +77,7 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
             case .wasteSolid, .wasteLiquid: return 50
             case .Aluminium, .Copper, .Polimer, .Lithium, .Water: return 100
             case .Battery, .DCMotor, .Fertilizer, .Iron: return 150
-            case .CarbonFiber, .Ceramic, .Sensor, .Silicate, .SolarCell: return 220
+            case .CarbonFiber, .Ceramic, .Sensor, .Silica, .SolarCell: return 220
             case .Circuitboard: return 270
             default: return 100
         }
@@ -104,7 +105,7 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
             case .Lithium: return Image("Lithium")
             case .Iron: return Image("Iron")
             case .wasteLiquid: return nil
-            case .Silicate: return nil
+            case .Silica: return nil
             case .Fertilizer: return Image("Fertilizer")
         }
     }

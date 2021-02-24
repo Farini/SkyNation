@@ -64,12 +64,13 @@ class Tank:Codable, Identifiable, Hashable {
     
     var id:UUID = UUID()
     var type:TankType
-    var capacity:Int { return type.capacity }
+    var capacity:Int // { return type.capacity }
     var current:Int
     
     init(type:TankType, full:Bool? = false) {
         self.type = type
-        self.current = full! ? type.capacity:0
+        self.capacity = type.capacity
+        self.current = full == true ? type.capacity:0
     }
     
     /**
@@ -88,6 +89,13 @@ class Tank:Codable, Identifiable, Hashable {
         }
     }
     
+    /**
+     Checks how much room there is (capacity - current)
+     - Returns: How much  can be added before the tank is full */
+    func availabilityToFill() -> Int {
+        return capacity - current
+    }
+    
     static func == (lhs: Tank, rhs: Tank) -> Bool {
         return lhs.id == rhs.id
     }
@@ -96,4 +104,6 @@ class Tank:Codable, Identifiable, Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
+    
+    
 }
