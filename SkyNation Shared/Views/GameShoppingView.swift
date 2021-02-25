@@ -9,6 +9,8 @@ import SwiftUI
 
 struct GameShoppingView: View {
     
+    var packages = GameRawPackage.allCases
+    
     var header: some View {
         
         Group {
@@ -51,9 +53,150 @@ struct GameShoppingView: View {
     var body: some View {
         VStack {
             header
-            Text("Shopping")
-            Text("Cart")
+            ScrollView {
+                
+                Text("Shopping").font(.title).foregroundColor(.orange)
+                
+                ForEach(packages, id:\.self) { package in
+                    HStack(spacing: 22) {
+                        // Title
+                        VStack {
+                            Text(package.rawValue.uppercased()).foregroundColor(.orange)
+                            Text("$ \(package.moneyAmount)")
+                        }
+                        
+                        Divider()
+                        // Stack
+                        VStack(alignment:.leading) {
+                            HStack {
+                                Image(nsImage: GameImages.tokenImage)
+                                    .resizable()
+                                    .frame(width: 32, height: 32, alignment: .center)
+                                
+                                Text(" x\(package.tokenAmount)")
+                                    .font(.headline)
+                            }
+                            HStack {
+                                Image(nsImage: GameImages.currencyImage)
+                                Text("$ \(GameFormatters.numberFormatter.string(from: NSNumber(value:package.moneyAmount))!)")
+                                    .font(.headline)
+                                
+                            }
+                            
+                            Text("👤 x \(package.peopleAmount)")
+                            Text("Token \(package.tokenAmount)")
+                            Text("Tanks \(package.tanksAmount)")
+                            Text("Boxes \(package.boxesAmount)")
+                            
+                        }
+                        // Button
+                        VStack {
+                            Button(action: {
+                                self.purchasePackage(package: package)
+                            }, label: {
+                                HStack {
+                                    Image(systemName: "cart")
+                                    Text("Buy")
+                                }
+                            })
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                            
+                            generateBarcode(from: LocalDatabase.shared.player?.id ?? UUID())
+                        }
+                    }
+                    Divider()
+                }
+            }
+            
+            
         }
+    }
+    
+    // Purchase
+    func purchasePackage(package:GameRawPackage) {
+        let player = LocalDatabase.shared.player!
+        player.money += package.moneyAmount
+        for _ in 0..<package.tokenAmount {
+            let new = UUID()
+            player.timeTokens.append(new)
+        }
+        if LocalDatabase.shared.savePlayer(player: player) == true {
+            print("Success updating player with new shop")
+        }
+        // station
+        guard let station = LocalDatabase.shared.station else {
+            print("Error. No Station")
+            return
+        }
+        // ppl
+        for _ in 0...package.peopleAmount {
+            let new = Person(random: true)
+            if station.addToStaff(person: new) == true {
+                // success
+            } else {
+                // cant add person
+            }
+        }
+        // tanks
+        for _ in 0...package.tanksAmount {
+            let newType = TankType.allCases.randomElement()!
+            let newTank = Tank(type: newType, full: [TankType.co2, TankType.ch4, TankType.empty].contains(newType) ? false:true)
+            station.truss.tanks.append(newTank)
+        }
+        // ingredients'
+        for _ in 0...package.boxesAmount {
+            let newType = Ingredient.allCases.randomElement()!
+            let newBox = StorageBox(ingType: newType, current: [Ingredient.wasteLiquid, Ingredient.wasteSolid].contains(newType) ? 0:newType.boxCapacity())
+            station.truss.extraBoxes.append(newBox)
+        }
+        LocalDatabase.shared.saveStation(station: station)
+        
+    }
+    
+    // Barcode
+    
+    func generateBarcode(from uuid: UUID) -> Image? {
+        let data = uuid.uuidString.prefix(8).data(using: String.Encoding.ascii)
+        
+        if let filter = CIFilter(name: "CICode128BarcodeGenerator") {
+            filter.setValue(data, forKey: "inputMessage")
+            
+            if let output:CIImage = filter.outputImage {
+                
+                if let inverter = CIFilter(name:"CIColorInvert") {
+                    
+                    inverter.setValue(output, forKey:"inputImage")
+                    
+                    if let invertedOutput = inverter.outputImage {
+                        let rep = NSCIImageRep(ciImage: invertedOutput)
+                        let nsImage = NSImage(size: rep.size)
+                        nsImage.addRepresentation(rep)
+                        return Image(nsImage:nsImage)
+                    }
+                    
+                } else {
+                    let rep = NSCIImageRep(ciImage: output)
+                    let nsImage = NSImage(size: rep.size)
+                    nsImage.addRepresentation(rep)
+                    
+                    return Image(nsImage:nsImage)
+                }
+                
+                
+            }
+            
+            
+            //            return NSImage(ciImage: filter.outputImage)
+            //            let transform = CGAffineTransform(scaleX: 3, y: 3)
+            //            let out = filter.outputImage?.transformed(by:transform)
+            //
+            //            if let output = filter.outputImage?.transformed(by: transform) {
+            //                let image = NSImage(ciImage:output)
+            //                return image
+            //            }
+        }
+        
+        return nil
     }
 }
 

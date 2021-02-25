@@ -109,7 +109,15 @@ Items being worked on
 - [X] Player Avatar on Overlay
 - [X] View with GameMessages (where chat is)
 - [X] More realistic numbers on building things
-
+- [X] Lab Module needs to update list when research is finished
+- [X] Lab Module needs to estabilish the time for humans as well (the correct, lowered one)
+- [X] Lab Module - Select from tree
+- [X] Lab Module - Change boost for Token, and update button style
+- [X] Make Settings View (and open from PlayerCard)
+- [X] Implement Player Edit
+- [X] Highlight PlayerCard
+- [X] Don't let game start before name and avatar are chosen
+- [X] Update Player avatar on Overlay View
 
 - [X] GameGenerators + Encoding64
 - [X] People generator - every hour. Pay for more. And generate Materials engineer first
@@ -119,18 +127,6 @@ Items being worked on
 
 - [ ] Remake Bio View
 
-- [ ] Improve Loading Screen
-    - [X] Make Settings View (and open from PlayerCard)
-    - [X] Implement Player Edit
-    - [X] Highlight PlayerCard
-    - [X] Don't let game start before name and avatar are chosen
-    - [ ] Update Player avatar on Overlay View
-
-- [ ] Lab Module needs to update list when research is finished
-- [ ] Lab Module needs to estabilish the time for humans as well (the correct, lowered one)
-- [ ] Lab Module - Select from tree
-- [ ] Lab Module - Change boos for Token, and update button style
-
 - [ ] Garage simulation button -> Person activity -> Garage xp
 - [ ] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles) (In Mid-Game)
 - [ ] GameLoop: Detect Beginner
@@ -138,23 +134,27 @@ Items being worked on
 - [X] LSS View -> Fix peripheral Selection bug
 - [X] LSS View -> Empty Tanks and Boxes must have a way to define type.
 - [ ] LSS View -> Empty Boxes must have a way to define type?
+- [ ] LSS View -> Let wasteWater, and wasteSolid be an **orderable** product (empty)
 - [ ] LSS View -> Better Station Accounting & Reporting.
+- [ ] Recipes add Solid Waste Box
+- [ ] Recipes add liquid waste box
 
-- [ ] Fake Store (Shopping View)
 
 - [ ] Server SpaceVehicle
 
-- [ ] Store (Tokens + Packages) View
+- [X] Store (Tokens + Packages) View
+- [ ] Store Improvements
 
 ### Model Changes
 - [X] Player -> Avatar
+- [X] Player. var avatar (required)
 - [ ] Skin -> convert from String to Skin type
 - [ ] Accounting
     (1). var problems (required)
     (2). var notes (required)
 - [ ] Use Fibonacci for Peripheral Upgrades
 - [ ] SpaceVehicle. var boxes (required)
-- [ ] Player. var avatar (required)
+
 - [ ] Person var stress?
 - [ ] Activity name enum?
 - [ ] BioBox DNA enum
@@ -166,11 +166,11 @@ Items being worked on
 - [ ] Icons
     - [X] Water Filter
     - [X] biosolids
-    - [ ] app (game) icon
-    - [ ] electrolizer
-    - [ ] waste water
+    - [X] app (game) icon
+    - [X] electrolizer
+    - [X] waste water
+    - [X] waste solid
     - [ ] SpaceVehicle engine icons
-    - [ ] Blendered Tank icons?
 
 - [ ] 13/21 (2/17) Station Scene Improvements - Started: 02/08/2020
     - [X] Truss View creation

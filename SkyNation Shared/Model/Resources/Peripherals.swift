@@ -269,19 +269,12 @@ extension PeripheralObject {
                 return Image("WaterFilter")
             case .BioSolidifier:
                 return Image("BioSolidifier")
+            case .Electrolizer:
+                return Image("Electrolizer")
             default:
                 print("Don't have an image for that yet")
                 return nil
         }
     }
 }
-
-// MARK: - Storage
-// Boxes are in 'Ingredients.swift'
-
-// MARK: - Tanks
-// Moved to 'Tanks.swift'
-
-// MARK: - Energy
-// Moved to 'Energy.swift'
 

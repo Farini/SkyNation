@@ -138,7 +138,6 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
             case .tank: return Image("Tank")
             case .WaterFilter: return PeripheralObject(peripheral: .WaterFilter).getImage()!
             case .BioSolidifier: return PeripheralObject(peripheral: .BioSolidifier).getImage()!
-//            case .BioSolidifier: return PeripheralObject(peripheral: .).getImage() ?? Image(systemName: "questionmark")
             default: return Image(systemName: "questionmark")
         }
     }

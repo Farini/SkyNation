@@ -41,7 +41,7 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
     /// Whether a Player can order this item
     var orderable:Bool {
         switch self {
-            case .wasteSolid, .wasteLiquid, .Silica: return false
+//            case .wasteSolid, .wasteLiquid, .Silica: return false
                 
             case .CarbonFiber : return false // Deprecating
             default: return true
@@ -99,12 +99,12 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
             case .Ceramic: return Image(systemName:"squares.below.rectangle") // sys
             
             case .Food: return Image("Food")
-            case .wasteSolid: return Image("SolidWaste") // poop
+            case .wasteSolid: return Image("WasteSolidBox") // poop
             case .DCMotor: return Image("DCMotor")
             
             case .Lithium: return Image("Lithium")
             case .Iron: return Image("Iron")
-            case .wasteLiquid: return nil
+            case .wasteLiquid: return Image("WasteLiquidBox")
             case .Silica: return nil
             case .Fertilizer: return Image("Fertilizer")
         }

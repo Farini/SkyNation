@@ -50,16 +50,11 @@ struct TankRow:View {
                         .font(.subheadline)
                         // Colors (GREEN > 50%, ORANGE > 0, RED == 0)
                         .foregroundColor(tank.current > (tank.capacity / 2) ? Color.green:tank.current > 0 ? Color.orange:Color.red)
-//                    Text(tank.type.name)
                 }
             }
             .foregroundColor(.blue)
             .accentColor(.orange)
-            
-//            Spacer()
-            
         }
-//        .padding()
         .frame(minWidth: 50, maxWidth: 200, minHeight: 15, maxHeight: 40, alignment: .leading)
         
     }
@@ -217,19 +212,7 @@ struct TankView: View {
                     
                     return Image(nsImage:nsImage)
                 }
-                
-                
             }
-            
-            
-            //            return NSImage(ciImage: filter.outputImage)
-            //            let transform = CGAffineTransform(scaleX: 3, y: 3)
-            //            let out = filter.outputImage?.transformed(by:transform)
-            //
-            //            if let output = filter.outputImage?.transformed(by: transform) {
-            //                let image = NSImage(ciImage:output)
-            //                return image
-            //            }
         }
         
         return nil
@@ -243,10 +226,9 @@ struct TankOrderView: View {
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top)) {
             HStack {
-//                Spacer()
                 Image("Tank").resizable()
                     .frame(width: 64.0, height: 64.0)
-                VStack {
+                VStack(alignment: .leading) {
                     Text(tank.rawValue.uppercased())
                     Text(tank.name)
                     Text("x \(tank.capacity)")

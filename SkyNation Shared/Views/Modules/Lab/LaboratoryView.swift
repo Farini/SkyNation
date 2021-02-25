@@ -210,7 +210,7 @@ struct LaboratoryView: View {
                             Spacer()
                             Text("Tech Tree").font(.largeTitle)
                             Divider()
-                            DiagramContent()
+                            DiagramContent(controller:controller)
                             Divider()
                         }
                         .padding()
@@ -227,6 +227,7 @@ struct LaboratoryView: View {
                     }
                     
                 case .activity:
+                    
                     LabActivityView(activity: self.labModule.activity!, controller:self.controller, module: self.labModule)
                 }
             }

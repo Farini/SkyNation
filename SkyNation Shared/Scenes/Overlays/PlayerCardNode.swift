@@ -31,29 +31,15 @@ class PlayerCardNode:SKNode {
     init(player:SKNPlayer) {
         
         let timeTokens = player.timeTokens
-        let deliveryTokens = player.deliveryTokens
+//        let deliveryTokens = player.deliveryTokens
         let name = player.name
-//        let avatar = player.logo
         let money = player.money
         self.player = player
         
         
         // Player Avatar
-//        var avTex:SKTexture!
         let avatarTexture = SKTexture(imageNamed: player.avatar)
         
-//        if let logo = player.logo {
-//            avTex = SKTexture(imageNamed: logo)
-//        } else {
-//            let avimg = GameImages.commonSystemImage(name: "person.crop.square")!.image(with: .white)
-//            #if os(macOS)
-//            // image.isTemplate = true
-//            avTex = SKTexture(cgImage: avimg.cgImage(forProposedRect: nil, context: nil, hints: [:])!)
-//            // avTex = SKTexture(cgImage: avimg.cgim)
-//            #else
-//            avTex = SKTexture(image: avimg)
-//            #endif
-//        }
         let avWidth = min(avatarTexture.size().width, 110)
         let avHeight = (avatarTexture.size().height / avatarTexture.size().width) * avWidth
         let avatarNode = SKSpriteNode(texture: avatarTexture, size: CGSize(width: avWidth, height: avHeight))
@@ -184,6 +170,16 @@ class PlayerCardNode:SKNode {
         }
     }
     
+    /// Updates the PlayerCard UI
+    func updatePlayer() {
+        if let newPlayer = LocalDatabase.shared.player {
+            nameLabel.text = newPlayer.name
+            avatar.texture = SKTexture(imageNamed: newPlayer.avatar)
+            moneyLabel.text = "\(GameFormatters.numberFormatter.string(from: NSNumber(value:newPlayer.money)) ?? "---")"
+            tokenLabel.text = "\(newPlayer.timeTokens.count)"
+        }
+    }
+    
     /// Makes a Sprite Node from an image name
     class func makeButton(_ imageName:String) -> SKSpriteNode? {
         guard let image = GameImages.commonSystemImage(name: imageName)?.image(with: .white) else {
@@ -199,6 +195,7 @@ class PlayerCardNode:SKNode {
         return sprite
     }
     
+    /// Makes a `Default` Label node
     private class func makeText(_ string:String) -> SKLabelNode {
         
         let label = SKLabelNode()
@@ -217,4 +214,6 @@ class PlayerCardNode:SKNode {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    
 }

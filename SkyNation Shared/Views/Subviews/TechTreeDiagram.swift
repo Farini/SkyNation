@@ -12,6 +12,7 @@ import SwiftUI
 
 struct DiagramContent: View {
     
+    @ObservedObject var controller:LabViewModel
     @State var tree = TechnologyTree().uniqueTree
     @State var station:Station = LocalDatabase.shared.station!
     
@@ -35,6 +36,9 @@ struct DiagramContent: View {
                 .background(value.isUnlocked(station:station) ? Color.blue:Color.black)
                 .cornerRadius(6)
                 .padding(6)
+                .onTapGesture {
+                    controller.selectedFromDiagram(value.value)
+                }
                 
             })
         }
@@ -42,8 +46,10 @@ struct DiagramContent: View {
 }
 
 struct DiagramContent_Previews: PreviewProvider {
+    static var module = LocalDatabase.shared.station?.labModules.first ?? LabModule(module: Module(id: UUID(), modex: .mod0))
     static var previews: some View {
-        DiagramContent()
+        DiagramContent(controller: LabViewModel(lab: module))
+        
     }
 }
 

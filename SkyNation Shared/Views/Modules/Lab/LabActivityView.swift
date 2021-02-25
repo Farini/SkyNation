@@ -42,13 +42,14 @@ struct LabActivityView:View {
                 Text("Ends: \(GameFormatters.dateFormatter.string(from:activity.dateEnds))")
             }
             
-//            CirclePercentIndicator(percentage: CGFloat(viewModel.percentage))
             GameActivityView(activity: activity)
             
             if viewModel.timeRemaining > 0 {
                 HStack {
+                    
+                    // Token
                     Button(action: {
-                        print("Boost")
+                        print("Token")
                         let result = controller.boostActivity()
                         if result {
                             print("Boost Success!")
@@ -56,24 +57,32 @@ struct LabActivityView:View {
                             print("Boost Failed")
                         }
                     }, label:{
-                        Text("Boost")
-                    }).padding()
+                        Text("Token")
+                    })
+                    .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
+                    
+                    // Cancel
                     Button(action: {
                         print("Cancel activity")
                     }, label:{
                         Text("Cancel")
-                    }).padding()
+                    })
+                    .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
                 }
             }else{
                 HStack {
+                    
+                    // Throw away
                     Button(action: {
                         print("Throw out")
                         controller.throwAwayTech()
                         
                     }, label:{
                         Text("Throw Away")
-                    }).padding()
+                    })
+                    .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
                     
+                    // Collect
                     Button(action: {
                         
                         print("Collect activity")
@@ -103,11 +112,14 @@ struct LabActivityView:View {
                         
                     }, label:{
                         Text("Collect")
-                    }).padding()
+                    })
+                    .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
                 }
             }
             
         }.padding()
+        
+        
         
         .onAppear() {
             self.percentor = Double(viewModel.timeRemaining)/viewModel.totalTime
@@ -127,11 +139,10 @@ struct LabActivity_Previews: PreviewProvider {
     
     static var previews: some View {
         VStack {
-            Text("Random activity - For Preview Only")
-                .padding()
             
             LabActivityView(activity: act, controller: LabViewModel(demo: act), module: LabModule.example())
         }
-        .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        // Temporarily here to show a better interface. Remove, or comment this code once done
+        .frame(width: 500, height: 800, alignment: .center)
     }
 }

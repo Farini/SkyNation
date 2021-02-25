@@ -313,6 +313,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
 //                        print("⏱ Should update scene: \(time)")
                         shouldUpdateScene = false
                         station?.runAccounting()
+                        stationOverlay.updatePlayerCard()
                     }
                 case .MarsColony:
                     print("Update Mars Colony Scene")

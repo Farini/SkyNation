@@ -92,6 +92,7 @@ struct PlayerEditView: View {
                         })
                     }
                     .frame(minHeight:140, maxHeight:250)
+                    .background(LinearGradient(gradient: Gradient(colors: [Color.red.opacity(0.1), Color.blue.opacity(0.1)]), startPoint: .topLeading, endPoint: .bottomTrailing))
                     
                     // About
                     VStack(alignment:.leading) {

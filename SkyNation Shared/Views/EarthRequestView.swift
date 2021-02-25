@@ -185,6 +185,16 @@ struct EarthRequestView: View {
                                                 controller.addToHire(person: person)
                                             }
                                     }
+                                    HStack {
+                                        Image(systemName:"clock")
+                                            .font(.title)
+                                        VStack {
+                                            Text("\(LocalDatabase.shared.gameGenerators?.datePeople.timeIntervalSince(Date()) ?? 0)")
+                                        }
+                                    }
+                                    .padding(8)
+                                    .background(Color.black)
+                                    .cornerRadius(6)
                                 }
 
                             case .Ingredients:

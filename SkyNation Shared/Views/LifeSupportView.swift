@@ -144,16 +144,6 @@ struct LifeSupportView: View {
                                     }
                                 }
                                 
-                                // Peripherals
-//                                Section(header: Text("Peripherals")) {
-//                                    ForEach(controller.peripherals) { peripheral in
-//                                        Text("\(peripheral.peripheral.rawValue)")
-//                                            .onTapGesture(count: 1, perform: {
-//                                                controller.didSelect(utility: peripheral)
-//                                            })
-//                                    }
-//                                }
-                                
                                 // Ingredients - Boxes
                                 Section(header: Text("Ingredients")) {
                                     ForEach(controller.boxes) { storageBox in
@@ -172,14 +162,8 @@ struct LifeSupportView: View {
                             
                             // Right View (Detail)
                             switch type {
-                                case .Peripheral(let _):
+                                case .Peripheral( _):
                                     Text("Peripheral")
-//                                    ScrollView() {
-//
-//                                        // Peripheral
-//                                        PeripheralDetailView(controller: self.controller, peripheral: periObject)
-//                                    }
-//                                    .frame(maxWidth:.infinity, minHeight:200, maxHeight:.infinity)
                                     
                                 case .Tank(let tankObject):
                                     ScrollView {
@@ -208,11 +192,7 @@ struct LifeSupportView: View {
                     case .Machinery(let peripheral):
                         
                         MachineryView(controller: controller, selected: peripheral)
-//                        VStack {
-//                            Spacer()
-//                            Text("Machinery")
-//                            Spacer()
-//                        }
+
                     case .Energy:
                         ScrollView {
                             // Energy

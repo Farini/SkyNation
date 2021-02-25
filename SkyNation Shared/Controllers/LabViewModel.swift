@@ -101,6 +101,11 @@ class LabViewModel: ObservableObject {
         activity.dateEnds.addTimeInterval(-3600)
         labModule.activity = activity
         
+        let workers = availableStaff.filter({ $0.activity?.id == activity.id })
+        for person in workers {
+            person.activity = activity
+        }
+        
         // 5. Save
         LocalDatabase.shared.saveStation(station: station)
         
@@ -275,15 +280,11 @@ class LabViewModel: ObservableObject {
                 // Update Scene
                 SceneDirector.shared.didCollectTech(tech:techItem, model:techItem.loadToScene())
                 
-                // Save
-                self.station.unlockedTechItems.append(tech) //LocalDatabase.shared.station!.unlockedTechItems.append(tech)
-                LocalDatabase.shared.saveStation(station: self.station) // LocalDatabase.shared.saveStation(station: LocalDatabase.shared.station!)
-//                LocalDatabase.shared.saveSerialBuilder(builder: LocalDatabase.shared.builder)
+                // Add item
+                self.station.unlockedTechItems.append(tech)
                 
                 // Update UI
-                
                 self.unlockedRecipes = station.unlockedRecipes
-                //        self.labActivity = lab.activity
                 
                 // Update Tech Tree?
                 let tree = TechTree()
@@ -291,15 +292,19 @@ class LabViewModel: ObservableObject {
                 self.techTree = tree
                 self.unlocked = tree.showUnlocked() ?? []
                 self.complete = tree.getCompletedItemsFrom(node: tree)
+                
+                self.unlockedItems = []
                 // Unlocked Items (Can be researched)
                 for item in tree.showUnlocked() ?? [] {
                     self.unlockedItems.append(item.item)
                 }
                 
-//                self.unlockedItems = station.unlockedTechItems
                 self.labModule.activity = nil
                 self.selected = nil
                 self.selection = .NoSelection
+                
+                // Save
+                LocalDatabase.shared.saveStation(station: self.station)
             }
             
         }
@@ -312,6 +317,10 @@ class LabViewModel: ObservableObject {
             LocalDatabase.shared.saveStation(station: station)
             self.selection = .NoSelection
         }
+    }
+    
+    func selectedFromDiagram(_ tech:TechItems) {
+        self.selection = .techTree(name: tech)
     }
     
     // MARK: - Recipes

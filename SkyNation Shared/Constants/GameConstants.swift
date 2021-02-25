@@ -313,7 +313,7 @@ extension AddingTrussItemProblem: LocalizedError {
 
 // MARK: - Shopping
 
-enum GameRawPackage {
+enum GameRawPackage:String, Codable, CaseIterable {
     
     case fiveDollars
     case tenDollars
