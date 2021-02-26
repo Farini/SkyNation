@@ -55,6 +55,14 @@ class SKNPlayer:Codable, Identifiable {
         self.avatar = allAvatars.randomElement()!
     }
     
+    func receiveFreebiesAndSave(currency:Int, newTokens:[UUID]) {
+        self.money += currency
+        guard newTokens.count <= 3 else { print("More than 3 tokens not allowed in a gift"); return }
+        self.timeTokens.append(contentsOf: newTokens)
+        let result = LocalDatabase.shared.savePlayer(player: self)
+        print("Saving Player result: \(result)")
+    }
+    
 }
 
 class PlayerPreferences:Codable {

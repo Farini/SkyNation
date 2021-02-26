@@ -374,6 +374,9 @@
 		85927D9525DB1D800071D98B /* VehicleTrunkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85927D9425DB1D800071D98B /* VehicleTrunkView.swift */; };
 		85927D9625DB1D800071D98B /* VehicleTrunkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85927D9425DB1D800071D98B /* VehicleTrunkView.swift */; };
 		85927D9725DB1D800071D98B /* VehicleTrunkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85927D9425DB1D800071D98B /* VehicleTrunkView.swift */; };
+		859281FC25E9529C001233BE /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859281FB25E9529C001233BE /* TutorialView.swift */; };
+		859281FD25E9529C001233BE /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859281FB25E9529C001233BE /* TutorialView.swift */; };
+		859281FE25E9529C001233BE /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859281FB25E9529C001233BE /* TutorialView.swift */; };
 		85960B9725D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
 		85960B9825D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
 		85960B9925D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
@@ -561,6 +564,7 @@
 		858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCamera.swift; sourceTree = "<group>"; };
 		858D7C5325D60FA300A45CF9 /* GameButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameButtons.swift; sourceTree = "<group>"; };
 		85927D9425DB1D800071D98B /* VehicleTrunkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTrunkView.swift; sourceTree = "<group>"; };
+		859281FB25E9529C001233BE /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EDLInventoryView.swift; sourceTree = "<group>"; };
 		8597BBA925BF40AB00C705A0 /* StartingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingWindow.swift; sourceTree = "<group>"; };
 		859D683125DD8B9F005DD42C /* GameMessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameMessagesView.swift; sourceTree = "<group>"; };
@@ -772,6 +776,7 @@
 				8536F3BD258D47CF00B509D2 /* Subviews */,
 				8536F3C5258D47D000B509D2 /* TestViews */,
 				85A658F825E224C1008AA9BA /* Settings */,
+				859281FA25E95279001233BE /* Tutorials */,
 				85E6ED1C25CF518500229E18 /* BackendView.swift */,
 				859D683125DD8B9F005DD42C /* GameMessagesView.swift */,
 				859D683925DD91DB005DD42C /* GameShoppingView.swift */,
@@ -1036,6 +1041,14 @@
 				8504A51325C5D3B800739C58 /* CautionStripes.swift */,
 			);
 			path = "UI Components";
+			sourceTree = "<group>";
+		};
+		859281FA25E95279001233BE /* Tutorials */ = {
+			isa = PBXGroup;
+			children = (
+				859281FB25E9529C001233BE /* TutorialView.swift */,
+			);
+			path = Tutorials;
 			sourceTree = "<group>";
 		};
 		85960B9525D9B3AF00AC9592 /* Building */ = {
@@ -1371,6 +1384,7 @@
 				85E6ED1D25CF518500229E18 /* BackendView.swift in Sources */,
 				8536F2C0258D330300B509D2 /* AppDelegate.swift in Sources */,
 				8569A3C825A624A30057A518 /* LoaderView.swift in Sources */,
+				859281FC25E9529C001233BE /* TutorialView.swift in Sources */,
 				858D7C5425D60FA300A45CF9 /* GameButtons.swift in Sources */,
 				8536F449258D47EA00B509D2 /* VehicleBuilderViewModel.swift in Sources */,
 				8536F481258D481700B509D2 /* TravelersScene.swift in Sources */,
@@ -1424,6 +1438,7 @@
 				8536F3E7258D47D000B509D2 /* HabModuleView.swift in Sources */,
 				8536F36B258D475D00B509D2 /* Tutorial.swift in Sources */,
 				8536F3F7258D47D000B509D2 /* TankViews.swift in Sources */,
+				859281FD25E9529C001233BE /* TutorialView.swift in Sources */,
 				8536F446258D47EA00B509D2 /* LabViewModel.swift in Sources */,
 				8536F377258D475D00B509D2 /* Peripherals.swift in Sources */,
 				858D7C5525D60FA300A45CF9 /* GameButtons.swift in Sources */,
@@ -1574,6 +1589,7 @@
 				85E6ED1F25CF518500229E18 /* BackendView.swift in Sources */,
 				8536F2E2258D330300B509D2 /* AppDelegate.swift in Sources */,
 				8569A3CA25A624A30057A518 /* LoaderView.swift in Sources */,
+				859281FE25E9529C001233BE /* TutorialView.swift in Sources */,
 				858D7C5625D60FA300A45CF9 /* GameButtons.swift in Sources */,
 				8536F44B258D47EA00B509D2 /* VehicleBuilderViewModel.swift in Sources */,
 				8536F483258D481700B509D2 /* TravelersScene.swift in Sources */,

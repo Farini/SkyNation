@@ -12,6 +12,7 @@ struct LaboratoryView: View {
     
     @ObservedObject var controller:LabViewModel // = LabViewModel()
     
+    @State var popTutorial:Bool = false
     @State var popoverLab:Bool = false
     @State var errorMessage:String = ""
     
@@ -52,12 +53,16 @@ struct LaboratoryView: View {
                 Group {
                     // Tutorial
                     Button(action: {
-                        print("Question ?")
+                        popTutorial.toggle()
                     }, label: {
                         Image(systemName: "questionmark.circle")
                             .font(.title2)
                     })
                     .buttonStyle(SmallCircleButtonStyle(backColor: .blue))
+                    .popover(isPresented: $popTutorial, attachmentAnchor: .point(.bottom),   // here !
+                             arrowEdge: .bottom) {
+                        TutorialView(tutType:.LabView)
+                    }
                     
                     // Settings
                     Button(action: {

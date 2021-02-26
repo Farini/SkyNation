@@ -8,6 +8,7 @@
 import Foundation
 
 enum GameAchievementType {
+    
     case tech(item:TechItems)
     case recipe(item:Recipe)
     case vehicleBuilt(type:EngineType)
@@ -76,17 +77,28 @@ struct GameMessage:Codable {
     var moneyRewards:Int?
     var tokenRewards:[UUID]?
     var ingredientRewards:[Ingredient:Int]?
+    
 }
 
 enum GameMessageType:String, Codable, CaseIterable {
     
-    case SystemWarning
-    case SystemError
-    
     case Achievement
+    case Freebie
+    
+    case Chat
+    case System
     case Tutorial
-    case ChatMessage
-    case FreeDelivery
     
     case Other
+    
+    var emoji:String {
+        switch self {
+            case .Achievement: return "🏆"
+            case .Freebie: return "🎁"
+            case .Chat: return "💬"
+            case .System: return "⚙️"
+            case .Tutorial: return "🎓"
+            case .Other: return "❓"
+        }
+    }
 }

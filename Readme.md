@@ -48,14 +48,14 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
  
  - [ ] ★★★☆☆ Module, Hab, Lab, Bio
  - [ ] ★★★★☆ Earth Order
- - [ ] ★★☆☆☆ Garage
+ - [ ] ★★★☆☆ Garage
  - [ ] ★★★☆☆ Accounting System
  - [ ] ★★★★☆ Truss
- - [ ] ★★★☆☆ Life Support Systems
+ - [ ] ★★★★☆ Life Support Systems
  - [ ] ☆☆☆☆☆ Vehicles Travelling Views/Scenes
  - [ ] ★☆☆☆☆ Mars Scene
  - [ ] ★☆☆☆☆ Server - SKNServer?
- - [ ] ★☆☆☆☆ Player(object) + settings + playability + Purchases
+ - [ ] ★★★☆☆ Player(object) + settings + playability + Purchases
  
  ## Art Assets
  Each Item gets a grade 1-5 (stars) that rerpresents how complete the item is.
@@ -64,13 +64,13 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
  - [ ] ★★★★☆ Humans + Skills
  - [ ] ★★★☆☆ Tanks, Containers, Ingredients, Peripherals
  - [ ] ★★★☆☆ Scenes Overlay (Camera, Vehicles list, etc.)
- - [ ] ★★☆☆☆ Action Icons - Buy, Cancel, Cheat, Tokens, etc.
- - [ ] ☆☆☆☆☆ Icons - App Icon
+ - [ ] ★★★☆☆ Action Icons - Buy, Cancel, Cheat, Tokens, etc.
+ - [ ] ★★☆☆☆ Icons - App Icon
  
  3D Scenes
  - [ ] ★★★☆☆ Space Station
- - [ ] ★★☆☆☆ Delivery Vehicle
- - [ ] ☆☆☆☆☆ Mars Colony
+ - [ ] ★★★☆☆ Delivery Vehicle
+ - [ ] ★☆☆☆☆ Mars Colony
  - [ ] ★☆☆☆☆ Space Vehicle
  - [ ] ☆☆☆☆☆ Sound Effects
  - [ ] ☆☆☆☆☆ Music / Soudtrack
@@ -118,26 +118,26 @@ Items being worked on
 - [X] Highlight PlayerCard
 - [X] Don't let game start before name and avatar are chosen
 - [X] Update Player avatar on Overlay View
+- [X] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles) (In Mid-Game)
+
 
 - [X] GameGenerators + Encoding64
 - [X] People generator - every hour. Pay for more. And generate Materials engineer first
 - [X] Freebies Generator
+- [X] Where to display freebies? -> Accounting, add new game message (not achievement)
 - [ ] Freebies TokenLevels
-- [ ] Where to display freebies? -> Accounting, add new game message (not achievement)
 
 - [ ] Remake Bio View
 
 - [ ] Garage simulation button -> Person activity -> Garage xp
-- [ ] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles) (In Mid-Game)
+
 - [ ] GameLoop: Detect Beginner
 
 - [X] LSS View -> Fix peripheral Selection bug
 - [X] LSS View -> Empty Tanks and Boxes must have a way to define type.
-- [ ] LSS View -> Empty Boxes must have a way to define type?
-- [ ] LSS View -> Let wasteWater, and wasteSolid be an **orderable** product (empty)
+- [X] LSS View -> Let wasteWater, and wasteSolid be an **orderable** product (empty)
 - [ ] LSS View -> Better Station Accounting & Reporting.
-- [ ] Recipes add Solid Waste Box
-- [ ] Recipes add liquid waste box
+- [ ] Make sure Solid Waste and Liquid Waste come in empty
 
 
 - [ ] Server SpaceVehicle
@@ -170,6 +170,7 @@ Items being worked on
     - [X] electrolizer
     - [X] waste water
     - [X] waste solid
+    - [X] silica
     - [ ] SpaceVehicle engine icons
 
 - [ ] 13/21 (2/17) Station Scene Improvements - Started: 02/08/2020

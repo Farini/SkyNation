@@ -10,9 +10,8 @@ import SwiftUI
 
 struct HabModuleView: View {
     
-//    var module:HabModule
-    @State var habPopoverOn:Bool = true
-//    @State var selectedPerson:Person?
+    @State var habPopoverOn:Bool = false
+    @State var popTutorial:Bool = false
     
     @ObservedObject var controller:HabModuleController
     
@@ -33,20 +32,30 @@ struct HabModuleView: View {
                 
                 Spacer()
                 
+                // Tutorial
+                Button(action: {
+                    popTutorial.toggle()
+                }, label: {
+                    Image(systemName: "questionmark.circle")
+                        .font(.title2)
+                })
+                .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
+                .popover(isPresented: $popTutorial, attachmentAnchor: .point(.bottom), arrowEdge: .bottom) {
+                    TutorialView(tutType:.HabView)
+                }
+                
                 // Settings
                 Button(action: {
                     print("Gear action")
                     habPopoverOn.toggle()
                 }, label: {
                     Image(systemName: "ellipsis.circle")
-                        .resizable()
-                        .aspectRatio(contentMode:.fit)
-                        .frame(width:34, height:34)
+                        .font(.title2)
                 })
-                .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
-                .popover(isPresented: $habPopoverOn, content: {
+                .buttonStyle(SmallCircleButtonStyle(backColor: .blue))
+                .popover(isPresented: $habPopoverOn, attachmentAnchor: .point(.bottom), arrowEdge: .bottom) {
                     ModulePopView(name: controller.habModule.name, module:controller.station.modules.filter({ $0.id == controller.habModule.id }).first!)
-                })
+                }
                 
                 
                 // Close
@@ -55,11 +64,9 @@ struct HabModuleView: View {
                     NotificationCenter.default.post(name: .closeView, object: self)
                 }, label: {
                     Image(systemName: "xmark.circle")
-                        .resizable()
-                        .aspectRatio(contentMode:.fit)
-                        .frame(width:34, height:34)
+                        .font(.title2)
                 })
-                .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
+                .buttonStyle(SmallCircleButtonStyle(backColor: .red))
                 .padding(.trailing, 6)
             }
             
