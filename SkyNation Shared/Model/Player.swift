@@ -16,6 +16,7 @@ class SKNPlayer:Codable, Identifiable {
     var id:UUID
     var localID:UUID            // id given by local machine
     var serverID:UUID?          // an ID given by the server
+    var gcid:String?            // an ID given by GameCenter
     var guildID:UUID?           // id of the Guild
     var deliveryTokens:[UUID]   // Free deliveries
     var timeTokens:[UUID]       // Tokens to cut through time
@@ -65,13 +66,6 @@ class SKNPlayer:Codable, Identifiable {
     
 }
 
-class PlayerPreferences:Codable {
-    // Lights?
-    // Sounds?
-    // Notifications?
-    // Graphics?
-    // Tutorials?
-}
 
 /// `Public` information about a `Player`
 struct PlayerCard {
@@ -80,7 +74,7 @@ struct PlayerCard {
     
     // Constructed
     var name:String
-    var logo:String?
+    var avatar:String?
     var money:Int
     var about:String
     
@@ -126,99 +120,5 @@ struct SKNPlayerAuth:Codable {
     var guildID: UUID?
     var cityID: UUID?
     var authID: UUID?   // the ID allowed to post
-    
-}
-
-enum GuildTerrainType:String, Codable, CaseIterable {
-    case Terrain1
-    case Terrain2
-    case Terrain3
-}
-
-struct Guild:Codable {
-    
-    var id: UUID
-    
-//    @Field(key: "name")
-    var name: String
-    
-    // https://docs.vapor.codes/4.0/fluent/relations/
-//    @OptionalParent(key:"player_id")
-    var president:[String:UUID?]?
-    
-    /// The @Children property creates a one-to-many relation between two models. It does not store any values on the root model.
-//    @Children(for: \.$guild)
-    var members:[String:UUID?]?
-    var citizens:[UUID]
-    var isOpen:Bool
-    
-    /// Election Date (To change President)
-//    @Field(key: "election")
-    var election:Date
-    
-//    @Enum(key: "terraintype")
-    var terrain:GuildTerrainType
-    
-    // Cities
-    var cities:[DBCity]?
-    
-    // Outposts
-    var outposts:[DBOutpost]?
-    
-}
-
-struct DBCity:Codable {
-    
-    var id:UUID
-    
-    var guild:[String:UUID?]?
-    
-    var name:String
-    
-    var accounting:Date
-    
-    var owner:[String:UUID?]?
-    
-    var posdex:Int
-}
-
-enum OutpostType:String, CaseIterable, Codable {
-    case Water
-    case Silica
-    case Energy
-    case Biosphere
-}
-
-struct DBOutpost:Codable {
-    
-    
-    var id:UUID
-    
- 
-    var model:String
-    
-    var guild:[String:UUID?]?
-    
-    var type:OutpostType
-    
-    var level:Int
-    
-    var accounting:Date
-    
-//    init() {}
-//
-//    init(id: UUID? = nil, modelName:String, guildID:UUID, oType:OutpostType, date:Date? = nil, newLevel:Int? = nil) {
-//
-//        print("Creating Outpost Model: \(modelName), in \(guild.name)")
-//
-//        self.id = id
-//        self.type = oType
-//        self.model = modelName
-//
-//        self.level = newLevel ?? 0
-//
-//        self.accounting = date ?? Date()
-//
-//    }
     
 }

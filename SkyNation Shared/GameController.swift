@@ -9,6 +9,7 @@ import SceneKit
 import SpriteKit
 
 protocol GameNavDelegate {
+    
     func didChooseModule(name:String)
     func didSelectLab(module:LabModule)
     func didSelectHab(module:HabModule)
@@ -22,6 +23,9 @@ protocol GameNavDelegate {
     func didSelectSettings()
     func didSelectMessages()
     func didSelectShopping()
+    
+    // Mars
+    func openCityView(position:Vector3D, name:String?)
 }
 
 enum GameSceneType {
@@ -61,97 +65,120 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         print("Point In Overlay Scene: \(converted)")
         
         // Check Overlay First
-        if let sceneResults = sceneRenderer.overlaySKScene?.nodes(at: converted).first {
-            print("Scene Results !!!! \(sceneResults.description)")
+        if let node = sceneRenderer.overlaySKScene?.nodes(at: converted).first {
+            print("Overlay Results !!!! \(node.description)")
+            self.hitNode2D(node: node)
             
-            // Images
-            if let sprite = sceneResults as? SKSpriteNode {
-                
-                // Life support systems (Air Control)
-                if sprite.name == "Air Control" {
-                    gameNavDelegate?.didSelectAir()
-                    return
-                }
-                
-                // Camera Rotations
-                if sprite.name == "rotate.left" {
-//                    self.cameraNode?.eulerAngles.y += 15 * (.pi / 180)
-                    self.switchToBackCamera()
-                    return
-                }
-                
-                if sprite.name == "rotate.right" {
-//                    self.cameraNode?.eulerAngles.y += -15 * (.pi / 180)
-                    self.switchToFrontCamera()
-                    return
-                }
-                
-                if sprite.name == "CameraIcon" {
-                    print("Clicked on camera.")
-                    print("Use this function to pull a camera menu")
-                    print("In that menu, the user is supposed to control the camera")
-                    print("it should have a slider (to control camera's Z position)")
-                    print("it should also have 2 buttons for rotation (along the Y axis)")
-                    print("and another button to see the garage (if scene == .station)")
-                    print("[End of Camera menu]\n---- ")
-                    camToggle.toggle()
-                }
-                
-                // Buttons Underneath Player
-                // Tutorial button
-                if sprite.name == "tutorial" {
-                    print("🎓 HIT TUTORIAL NODE")
-                    self.stationOverlay.showTutorial()
-                    return
-                }
-                if sprite.name == "settings" {
-                    print("⚙️ HIT SETTINGS NODE")
-                    gameNavDelegate?.didSelectSettings()
-                    return
-                }
-                if sprite.name == "ShopButton" {
-                    print("⚙️ Lets go shopping")
-                    gameNavDelegate?.didSelectShopping()
-                    return
-                }
-                
-                // Side Menu Buttons
-                if sprite.name == "LightsButton" {
-                    print("⚙️ Lets play with some lights!")
-                    return
-                }
-                if sprite.name == "ChatButton" {
-                    print("⚙️ Lets chat!")
-                    gameNavDelegate?.didSelectMessages()
-                    return
-                }
-                if sprite.name == "MarsButton" {
-                    print("⚙️ Lets go to Mars!")
-                    let mars = MarsBuilder()
-                    if let newScene = mars.loadScene() {
-                        sceneRenderer.present(newScene, with: .doorsCloseVertical(withDuration: 1.25), incomingPointOfView: nil) {
-                            self.scene = newScene
-                            //                            self.loadStationScene()
-                            print("Scene Loaded :)")
-                            self.gameScene = .MarsColony
-//                            lbl.text = "Mars"
-                        }
-                    }
-//                    sceneRenderer.present(SCNScene(named: "Art.scnassets/MarsHab.scn")!, with: .doorsCloseVertical(withDuration: 0.75), incomingPointOfView: nil) {
-//                        print("Scene Loaded :)")
-//                        self.gameScene = .MarsColony
-////                        lbl.text = "Earth"
+//            // Images
+//            if let sprite = sceneResults as? SKSpriteNode {
+//
+//                // Life support systems (Air Control)
+//                if sprite.name == "Air Control" {
+//                    gameNavDelegate?.didSelectAir()
+//                    return
+//                }
+//
+//                // Camera Rotations
+//                if sprite.name == "rotate.left" {
+////                    self.cameraNode?.eulerAngles.y += 15 * (.pi / 180)
+//                    self.switchToBackCamera()
+//                    return
+//                }
+//
+//                if sprite.name == "rotate.right" {
+////                    self.cameraNode?.eulerAngles.y += -15 * (.pi / 180)
+//                    self.switchToFrontCamera()
+//                    return
+//                }
+//
+//                if sprite.name == "CameraIcon" {
+//                    print("Clicked on camera.")
+//                    print("Use this function to pull a camera menu")
+//                    print("In that menu, the user is supposed to control the camera")
+//                    print("it should have a slider (to control camera's Z position)")
+//                    print("it should also have 2 buttons for rotation (along the Y axis)")
+//                    print("and another button to see the garage (if scene == .station)")
+//                    print("[End of Camera menu]\n---- ")
+//                    camToggle.toggle()
+//                }
+//
+//                // Buttons Underneath Player
+//                // Tutorial button
+//                if sprite.name == "tutorial" {
+//                    print("🎓 HIT TUTORIAL NODE")
+//                    self.stationOverlay.showTutorial()
+//                    return
+//                }
+//                if sprite.name == "settings" {
+//                    print("⚙️ HIT SETTINGS NODE")
+//                    gameNavDelegate?.didSelectSettings()
+//                    return
+//                }
+//                if sprite.name == "ShopButton" {
+//                    print("⚙️ Lets go shopping")
+//                    gameNavDelegate?.didSelectShopping()
+//                    return
+//                }
+//
+//                // Side Menu Buttons
+//                if sprite.name == "LightsButton" {
+//                    print("⚙️ Lets play with some lights!")
+//                    return
+//                }
+//                if sprite.name == "ChatButton" {
+//                    print("⚙️ Lets chat!")
+//                    gameNavDelegate?.didSelectMessages()
+//                    return
+//                }
+//
+//                if sprite.name == "MarsButton" {
+//                    print("⚙️ Lets go to Mars!")
+//                    // Player should have GuildID
+//                    // Otherwise, load prospect guild selector, or prospect terrain selector?
+//
+//                    let mars = MarsBuilder()
+//                    if let newScene = mars.loadScene() {
+//                        sceneRenderer.present(newScene, with: .doorsCloseVertical(withDuration: 1.25), incomingPointOfView: nil) {
+//                            self.scene = newScene
+//                            print("Mars Scene Loaded :)")
+//                            self.gameScene = .MarsColony
+//                        }
 //                    }
-                    return
-                    
-                }
-                
-            }
+//                    return
+//
+//                }
+//
+//            }
         }
         
         // Check 3D Scene
         let hitResults = self.sceneRenderer.hitTest(point, options: [:])
         
+        // MARS
+        if self.gameScene == .MarsColony {
+            for result in hitResults {
+                // Get the name of the node
+                if let modName = result.node.name {
+                    print("Mod Name: \(modName)")
+                    if let parent = result.node.parent {
+                        print("Mars Parent: \(parent.name ?? "n/a")")
+                        if parent.name == "Cities" {
+                            print("Go to city: \(modName)")
+                            // get position
+                            let posScene = result.node.position
+                            let posvec = Vector3D(x: Double(posScene.x), y: Double(posScene.y), z: Double(posScene.z))
+                            gameNavDelegate?.openCityView(position: posvec, name: modName)
+                            print("pos: \(posvec)")
+                        } else if parent.name == "Resources" {
+                            print("Go to outpost: \(modName) (resources)")
+                        }
+                    }
+                }
+            }
+            return
+        }
+        
+        // Station Scene
         for result in hitResults {
             
             // Get the name of the node
@@ -161,7 +188,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 for mod in modules {
                     if mod.id.uuidString == modName {
                         if let lab = station?.lookupModule(id: mod.id) as? LabModule {
-                            LocalDatabase.shared.saveStation(station: station!)
+//                            LocalDatabase.shared.saveStation(station: station!)
                             print("Lab: \(lab.name)")
                             gameNavDelegate?.didSelectLab(module: lab)
                         }else if let hab = station?.lookupModule(id: mod.id) as? HabModule {
@@ -226,6 +253,93 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     func hitNode2D(node:SKNode) {
         
+        let glow = SKAction.colorize(with: SCNColor.systemRed, colorBlendFactor: 0.5, duration: 1.0)
+        let fade = glow.reversed()
+        let sequence = SKAction.sequence([glow, fade])
+        
+        // Images
+        if let sprite = node as? SKSpriteNode {
+            
+            // Glow red
+            sprite.run(sequence)
+            
+            // Life support systems (Air Control)
+            if sprite.name == "Air Control" {
+                gameNavDelegate?.didSelectAir()
+                return
+            }
+            
+            // Camera Rotations
+            if sprite.name == "rotate.left" {
+                //                    self.cameraNode?.eulerAngles.y += 15 * (.pi / 180)
+                self.switchToBackCamera()
+                return
+            }
+            
+            if sprite.name == "rotate.right" {
+                //                    self.cameraNode?.eulerAngles.y += -15 * (.pi / 180)
+                self.switchToFrontCamera()
+                return
+            }
+            
+            if sprite.name == "CameraIcon" {
+                print("Clicked on camera.")
+                print("Use this function to pull a camera menu")
+                print("In that menu, the user is supposed to control the camera")
+                print("it should have a slider (to control camera's Z position)")
+                print("it should also have 2 buttons for rotation (along the Y axis)")
+                print("and another button to see the garage (if scene == .station)")
+                print("[End of Camera menu]\n---- ")
+                camToggle.toggle()
+            }
+            
+            // Buttons Underneath Player
+            // Tutorial button
+            if sprite.name == "tutorial" {
+                print("🎓 HIT TUTORIAL NODE")
+                self.stationOverlay.showTutorial()
+                return
+            }
+            if sprite.name == "settings" {
+                print("⚙️ HIT SETTINGS NODE")
+                gameNavDelegate?.didSelectSettings()
+                return
+            }
+            if sprite.name == "ShopButton" {
+                print("⚙️ Lets go shopping")
+                gameNavDelegate?.didSelectShopping()
+                return
+            }
+            
+            // Side Menu Buttons
+            if sprite.name == "LightsButton" {
+                print("⚙️ Lets play with some lights!")
+                return
+            }
+            if sprite.name == "ChatButton" {
+                print("⚙️ Lets chat!")
+                gameNavDelegate?.didSelectMessages()
+                return
+            }
+            
+            if sprite.name == "MarsButton" {
+                print("⚙️ Lets go to Mars!")
+                // Player should have GuildID
+                // Otherwise, load prospect guild selector, or prospect terrain selector?
+                
+                let mars = MarsBuilder()
+                if let newScene = mars.loadScene() {
+                    sceneRenderer.present(newScene, with: .doorsCloseVertical(withDuration: 1.25), incomingPointOfView: nil) {
+                        self.scene = newScene
+                        print("Mars Scene Loaded :)")
+                        self.gameScene = .MarsColony
+                    }
+                }
+                return
+                
+            }
+            
+        }
     }
     
     func hitNode3D(node:SCNNode) {
@@ -300,7 +414,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     }
     
     // MARK: - Updates
-//    var currentTime:TimeInterval
     var shouldUpdateScene:Bool = false
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         // Called before each frame is rendered
@@ -316,7 +429,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         stationOverlay.updatePlayerCard()
                     }
                 case .MarsColony:
-                    print("Update Mars Colony Scene")
+                    return
+//                    print("Update Mars Colony Scene")
             }
             
             

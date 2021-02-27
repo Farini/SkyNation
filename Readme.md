@@ -99,6 +99,11 @@ Items being worked on
 
 ### Playability Improvements. Started: 2/17
 
+- [X] Ingredients and sufficiency
+- [X] Create a general Header View in SwiftUI for all SwiftUI base views
+- [X] Improve People Selection View - Add a mark so user knows when they are selected
+- [X] Improve Timer View
+- [X] Improve Game Buttons (buttonStyle)
 - [X] Module View -> If no other modules, only hab is available
 - [X] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles)
 - [X] Timing of Activity according to people's happiness, teamwork and intelligence
@@ -119,19 +124,21 @@ Items being worked on
 - [X] Don't let game start before name and avatar are chosen
 - [X] Update Player avatar on Overlay View
 - [X] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles) (In Mid-Game)
-
+- [X] Store (Tokens + Packages) View
+- [X] Freebies TokenLevels
 
 - [X] GameGenerators + Encoding64
 - [X] People generator - every hour. Pay for more. And generate Materials engineer first
 - [X] Freebies Generator
 - [X] Where to display freebies? -> Accounting, add new game message (not achievement)
-- [ ] Freebies TokenLevels
+
 
 - [ ] Remake Bio View
 
 - [ ] Garage simulation button -> Person activity -> Garage xp
-
-- [ ] GameLoop: Detect Beginner
+- [ ] Post Launch Scene
+- [ ] Server SpaceVehicle
+- [ ] Bring Scene in - Desktop:SpaceVehilce2.dae
 
 - [X] LSS View -> Fix peripheral Selection bug
 - [X] LSS View -> Empty Tanks and Boxes must have a way to define type.
@@ -139,11 +146,8 @@ Items being worked on
 - [ ] LSS View -> Better Station Accounting & Reporting.
 - [ ] Make sure Solid Waste and Liquid Waste come in empty
 
+- [ ] Game Store Improvements
 
-- [ ] Server SpaceVehicle
-
-- [X] Store (Tokens + Packages) View
-- [ ] Store Improvements
 
 ### Model Changes
 - [X] Player -> Avatar
@@ -173,7 +177,7 @@ Items being worked on
     - [X] silica
     - [ ] SpaceVehicle engine icons
 
-- [ ] 13/21 (2/17) Station Scene Improvements - Started: 02/08/2020
+- [ ] 13/21 (Feb.17) Station Scene Improvements - Started: 02/08/2021
     - [X] Truss View creation
     - [X] Solar Panel positions
     - [X] Control where each solar panel goes
@@ -234,12 +238,7 @@ Items being worked on
     - [ ] Space Vehicle Validation (when arriving (orbit))
     
 
-- [ ] 7/13 Basic Views
-    - [X] Ingredients and sufficiency
-    - [X] Create a general Header View in SwiftUI for all SwiftUI base views
-    - [X] Improve People Selection View - Add a mark so user knows when they are selected
-    - [X] Improve Timer View
-    - [X] Improve Game Buttons (buttonStyle)
+- [ ] 12/13 Basic Views
     - [ ] Error messages
     
 ## Wishlist

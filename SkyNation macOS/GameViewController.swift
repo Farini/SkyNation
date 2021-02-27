@@ -315,6 +315,24 @@ extension GameViewController: GameNavDelegate {
         self.presentAsSheet(controller)
     }
     
+    // MARS
+    
+    func openCityView(position: Vector3D, name: String?) {
+        print("Should open city view at (x): \(position.x)")
+        
+        let controller = NSHostingController(rootView: MarsCityCreatorView(name: name ?? "", position: position))
+        
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controller.view)
+        controller.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        controller.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        self.openedView = controller.view
+        self.presentAsSheet(controller)
+    }
+    
 }
 #endif
 

@@ -110,7 +110,7 @@ class MarsBuilder {
     // Load Scene
     // Art.scnassets/Mars/MarsTerrain5 copy.scn
     func loadScene() -> SCNScene? {
-        let nextScene = SCNScene(named: "Art.scnassets/Mars/MarsTerrain5 copy.scn")
+        let nextScene = SCNScene(named: "Art.scnassets/Mars/Surface_Edges copy.scn")
         return nextScene
     }
 }

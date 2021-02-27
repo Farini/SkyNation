@@ -130,7 +130,22 @@ struct GameMessagesView: View {
                             }
                             .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                         } else {
+                            let lastSpent = max(2, self.generator?.spentOnFreebies ?? 1)
+                            let nextSpent = GameLogic.fibonnaci(index: lastSpent + 1)
+                            
                             Text("⏰ \(nextGenerated.timeIntervalSince(Date()))")
+                            Button("\(nextSpent) Tokens") {
+                                
+                                print("Get Freebie via Tokens (force)")
+                                print("Last Spent: \(lastSpent)")
+                                print("Next Spent (value): \(nextSpent)")
+                                
+                                self.generator?.spentOnFreebies += 1
+                                print("Need to save generator")
+                                
+                                getMyFreebies(payTokens: nextSpent)
+                            }
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                         }
                     }
                     
@@ -163,9 +178,20 @@ struct GameMessagesView: View {
         return Text("\(current)").foregroundColor(current == 0 ? Color.gray:Color.red)
     }
     
-    func getMyFreebies() {
+    func getMyFreebies(payTokens:Int = 0) {
         
-        guard let generator = generator else { return }
+        guard let generator = generator, let player = LocalDatabase.shared.player else { return }
+        
+        // Paying Tokens
+        if payTokens > 0 {
+            if player.timeTokens.count < payTokens {
+                print("Not enough tokens")
+            } else {
+                player.timeTokens.removeFirst(payTokens)
+                let saveResult = LocalDatabase.shared.savePlayer(player: player)
+                print("Saved Player: \(saveResult)")
+            }
+        }
         
 //        let generator = LocalDatabase.shared.gameGenerators!
         let dateGenerated = generator.dateFreebies
@@ -199,12 +225,18 @@ struct GameMessagesView: View {
 //            station.truss.extraBoxes.append(contentsOf: boxes)
 //            station.truss.tanks.append(contentsOf: tanks)
             
-            for person in ppl {
-                print("Attention! Could not add person \(person.name). Lack of room.")
-            }
+            // Not adding people
+//            for person in ppl {
+//                print("Attention! Could not add person \(person.name). Lack of room.")
+//            }
             
-            self.generator?.dateFreebies = Date()
+            generator.dateFreebies = Date()
+            generator.spentOnFreebies += 1
+            generator.update()
+            self.generator = generator
+            
             self.tab = .Freebie
+            LocalDatabase.saveGenerators(gameGen: generator)
             
             
         }
