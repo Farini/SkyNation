@@ -97,9 +97,11 @@ enum VehicleStatus:String, CaseIterable, Codable, Hashable {
 /// Mars Tech Equipped in SpaceVehicle
 enum MarsBot:String, Codable, CaseIterable, Hashable {
     case Satellite
-    case Rover          // Pictures from NASA?
+    case Rover          // Settles the city. Explores environment. Pictures from NASA?
     case Transporter    // Bring stuff in - first one settles the colony (Must have a pass (spent $10, or invited))
     case Terraformer    // Edit Terrain
+    case GrandMaster    // Can do the job of .handy?
+    
     // case Settler ?   // Estabilishes the first city
     // case Builder ?   // Builds things without humans
 }
@@ -107,7 +109,7 @@ enum MarsBot:String, Codable, CaseIterable, Hashable {
 class SpaceVehicle:Codable, Identifiable, Equatable {
     
     var id:UUID = UUID()
-    var engine:EngineType           // [1] - Setup
+    var engine:EngineType
     var marsBot:MarsBot?
     var status:VehicleStatus = .Creating  // Station, Mars, Building (Station while building)
     
@@ -429,3 +431,19 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
 }
 
 
+struct SpaceVehicleModel:Codable {
+    
+    var id:UUID?
+    var eta:Date
+    var owner:UUID
+    var engine:String
+    var status:String
+    
+    init(spaceVehicle:SpaceVehicle, player:SKNUser) {
+        self.id = spaceVehicle.id
+        self.eta = Date().addingTimeInterval(60 * 60 * 24 * 5)
+        self.owner = player.id
+        self.engine = spaceVehicle.engine.rawValue
+        self.status = spaceVehicle.status.rawValue
+    }
+}

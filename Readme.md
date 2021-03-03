@@ -126,12 +126,10 @@ Items being worked on
 - [X] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles) (In Mid-Game)
 - [X] Store (Tokens + Packages) View
 - [X] Freebies TokenLevels
-
 - [X] GameGenerators + Encoding64
 - [X] People generator - every hour. Pay for more. And generate Materials engineer first
 - [X] Freebies Generator
 - [X] Where to display freebies? -> Accounting, add new game message (not achievement)
-
 
 - [ ] Remake Bio View
 
@@ -144,6 +142,8 @@ Items being worked on
 - [X] LSS View -> Empty Tanks and Boxes must have a way to define type.
 - [X] LSS View -> Let wasteWater, and wasteSolid be an **orderable** product (empty)
 - [ ] LSS View -> Better Station Accounting & Reporting.
+- [ ] LSS View -> Make Peripheral `Power Off` button
+- [ ] LSS View -> Resources need Icon
 - [ ] Make sure Solid Waste and Liquid Waste come in empty
 
 - [ ] Game Store Improvements

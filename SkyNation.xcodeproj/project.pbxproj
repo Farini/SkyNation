@@ -389,6 +389,20 @@
 		8592822125EABD5B001233BE /* MarsCityCreatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592821F25EABD5B001233BE /* MarsCityCreatorView.swift */; };
 		8592822225EABD5B001233BE /* MarsCityCreatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592821F25EABD5B001233BE /* MarsCityCreatorView.swift */; };
 		8592822325EABD5B001233BE /* MarsCityCreatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592821F25EABD5B001233BE /* MarsCityCreatorView.swift */; };
+		8592822D25EC44F7001233BE /* GuildExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592822C25EC44F7001233BE /* GuildExplorerView.swift */; };
+		8592822E25EC44F7001233BE /* GuildExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592822C25EC44F7001233BE /* GuildExplorerView.swift */; };
+		8592822F25EC44F7001233BE /* GuildExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592822C25EC44F7001233BE /* GuildExplorerView.swift */; };
+		8592823625EC4DD3001233BE /* GuildController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592823525EC4DD3001233BE /* GuildController.swift */; };
+		8592823725EC4DD3001233BE /* GuildController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592823525EC4DD3001233BE /* GuildController.swift */; };
+		8592823825EC4DD3001233BE /* GuildController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592823525EC4DD3001233BE /* GuildController.swift */; };
+		8592823925EC4DD3001233BE /* GuildController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592823525EC4DD3001233BE /* GuildController.swift */; };
+		8592824325EC74FD001233BE /* GuildView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592824225EC74FD001233BE /* GuildView.swift */; };
+		8592824425EC74FD001233BE /* GuildView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592824225EC74FD001233BE /* GuildView.swift */; };
+		8592824525EC74FD001233BE /* GuildView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592824225EC74FD001233BE /* GuildView.swift */; };
+		8592825025EED6EF001233BE /* SpaceVehicleNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592824F25EED6EF001233BE /* SpaceVehicleNode.swift */; };
+		8592825125EED6EF001233BE /* SpaceVehicleNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592824F25EED6EF001233BE /* SpaceVehicleNode.swift */; };
+		8592825225EED6EF001233BE /* SpaceVehicleNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592824F25EED6EF001233BE /* SpaceVehicleNode.swift */; };
+		8592825325EED6EF001233BE /* SpaceVehicleNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592824F25EED6EF001233BE /* SpaceVehicleNode.swift */; };
 		85960B9725D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
 		85960B9825D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
 		85960B9925D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
@@ -484,7 +498,7 @@
 		8536F2E6258D330300B509D2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8536F2E8258D330300B509D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8536F2E9258D330300B509D2 /* SkyNation_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SkyNation_macOS.entitlements; sourceTree = "<group>"; };
-		8536F301258D34D100B509D2 /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
+		8536F301258D34D100B509D2 /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.markdown; };
 		8536F306258D355C00B509D2 /* DataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8536F308258D355C00B509D2 /* DataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTests.swift; sourceTree = "<group>"; };
 		8536F30A258D355C00B509D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -580,6 +594,10 @@
 		8592820725EA2D91001233BE /* Generators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Generators.swift; sourceTree = "<group>"; };
 		8592821125EA3287001233BE /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		8592821F25EABD5B001233BE /* MarsCityCreatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarsCityCreatorView.swift; sourceTree = "<group>"; };
+		8592822C25EC44F7001233BE /* GuildExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildExplorerView.swift; sourceTree = "<group>"; };
+		8592823525EC4DD3001233BE /* GuildController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildController.swift; sourceTree = "<group>"; };
+		8592824225EC74FD001233BE /* GuildView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildView.swift; sourceTree = "<group>"; };
+		8592824F25EED6EF001233BE /* SpaceVehicleNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceVehicleNode.swift; sourceTree = "<group>"; };
 		85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EDLInventoryView.swift; sourceTree = "<group>"; };
 		8597BBA925BF40AB00C705A0 /* StartingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingWindow.swift; sourceTree = "<group>"; };
 		859D683125DD8B9F005DD42C /* GameMessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameMessagesView.swift; sourceTree = "<group>"; };
@@ -752,6 +770,7 @@
 		8536F337258D419400B509D2 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				8592823425EC4D9B001233BE /* Mars */,
 				8536F434258D47EA00B509D2 /* EarthRequestController.swift */,
 				8536F437258D47EA00B509D2 /* LifeSupportSystems.swift */,
 				8536F432258D47EA00B509D2 /* ModulesViewModel.swift */,
@@ -807,6 +826,7 @@
 			children = (
 				858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */,
 				8536F465258D481700B509D2 /* Space Station */,
+				8592824E25EED6C6001233BE /* SpaceVehicle */,
 				8536F468258D481700B509D2 /* Mars Colony */,
 				8536F460258D481700B509D2 /* Mars Map */,
 				8536F45D258D481700B509D2 /* Overlays */,
@@ -1081,8 +1101,26 @@
 			isa = PBXGroup;
 			children = (
 				8592821F25EABD5B001233BE /* MarsCityCreatorView.swift */,
+				8592822C25EC44F7001233BE /* GuildExplorerView.swift */,
+				8592824225EC74FD001233BE /* GuildView.swift */,
 			);
 			path = Mars;
+			sourceTree = "<group>";
+		};
+		8592823425EC4D9B001233BE /* Mars */ = {
+			isa = PBXGroup;
+			children = (
+				8592823525EC4DD3001233BE /* GuildController.swift */,
+			);
+			path = Mars;
+			sourceTree = "<group>";
+		};
+		8592824E25EED6C6001233BE /* SpaceVehicle */ = {
+			isa = PBXGroup;
+			children = (
+				8592824F25EED6EF001233BE /* SpaceVehicleNode.swift */,
+			);
+			path = SpaceVehicle;
 			sourceTree = "<group>";
 		};
 		85960B9525D9B3AF00AC9592 /* Building */ = {
@@ -1342,6 +1380,7 @@
 				8536F3DA258D47D000B509D2 /* LabActivityView.swift in Sources */,
 				859D683A25DD91DB005DD42C /* GameShoppingView.swift in Sources */,
 				8536F2C2258D330300B509D2 /* GameViewController.swift in Sources */,
+				8592823625EC4DD3001233BE /* GuildController.swift in Sources */,
 				859D683225DD8B9F005DD42C /* GameMessagesView.swift in Sources */,
 				85CD46B025D20B42000D9C64 /* ModulePopView.swift in Sources */,
 				8536F3F2258D47D000B509D2 /* ProgressViews.swift in Sources */,
@@ -1397,7 +1436,10 @@
 				8536F4AF258D49C900B509D2 /* TravelersView.swift in Sources */,
 				8536F372258D475D00B509D2 /* Persistance.swift in Sources */,
 				857D9A2E25C088AD00626884 /* PeripheralDetailView.swift in Sources */,
+				8592822D25EC44F7001233BE /* GuildExplorerView.swift in Sources */,
 				8504A51D25C6845200739C58 /* StationBuilder.swift in Sources */,
+				8592824325EC74FD001233BE /* GuildView.swift in Sources */,
+				8592825025EED6EF001233BE /* SpaceVehicleNode.swift in Sources */,
 				8536F3D2258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */,
 				8569A3E325A8D7870057A518 /* BoosterDiagramView.swift in Sources */,
 				8536F485258D481700B509D2 /* StationOverlayObject.swift in Sources */,
@@ -1445,6 +1487,7 @@
 				8536F397258D475D00B509D2 /* Modules.swift in Sources */,
 				8536F3DB258D47D000B509D2 /* LabActivityView.swift in Sources */,
 				8536F2D3258D330300B509D2 /* GameViewController.swift in Sources */,
+				8592823725EC4DD3001233BE /* GuildController.swift in Sources */,
 				8536F3F3258D47D000B509D2 /* ProgressViews.swift in Sources */,
 				85C3418F2591078700BF82F9 /* PlayerCardNode.swift in Sources */,
 				85CD46B125D20B42000D9C64 /* ModulePopView.swift in Sources */,
@@ -1457,6 +1500,7 @@
 				8504A53C25C6875000739C58 /* Energy.swift in Sources */,
 				8536F3EB258D47D000B509D2 /* PersonControl.swift in Sources */,
 				8536F41F258D47D000B509D2 /* BuildingVehicleView.swift in Sources */,
+				8592824425EC74FD001233BE /* GuildView.swift in Sources */,
 				8536F3A7258D475D00B509D2 /* Player.swift in Sources */,
 				8536F43E258D47EA00B509D2 /* GarageViewModel.swift in Sources */,
 				8536F3FB258D47D000B509D2 /* PersonViews.swift in Sources */,
@@ -1509,11 +1553,13 @@
 				85A6590725E4178F008AA9BA /* GameSettingsController.swift in Sources */,
 				8536F48E258D481700B509D2 /* MarsColonyScene.swift in Sources */,
 				8536F3E3258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */,
+				8592822E25EC44F7001233BE /* GuildExplorerView.swift in Sources */,
 				8536F3EF258D47D000B509D2 /* TrussView.swift in Sources */,
 				8536F40F258D47D000B509D2 /* AnimationsTest.swift in Sources */,
 				8592822125EABD5B001233BE /* MarsCityCreatorView.swift in Sources */,
 				8536F43A258D47EA00B509D2 /* ModulesViewModel.swift in Sources */,
 				85F6675725AF7BBE00E5003B /* DeliveryVehicleNode.swift in Sources */,
+				8592825125EED6EF001233BE /* SpaceVehicleNode.swift in Sources */,
 				8536F32C258D412600B509D2 /* LocalDatabase.swift in Sources */,
 				8536F387258D475D00B509D2 /* HabModule.swift in Sources */,
 				859D683B25DD91DB005DD42C /* GameShoppingView.swift in Sources */,
@@ -1553,6 +1599,7 @@
 				8536F3DC258D47D000B509D2 /* LabActivityView.swift in Sources */,
 				859D683C25DD91DB005DD42C /* GameShoppingView.swift in Sources */,
 				8536F2E4258D330300B509D2 /* GameViewController.swift in Sources */,
+				8592823825EC4DD3001233BE /* GuildController.swift in Sources */,
 				859D683425DD8B9F005DD42C /* GameMessagesView.swift in Sources */,
 				85CD46B225D20B42000D9C64 /* ModulePopView.swift in Sources */,
 				8536F3F4258D47D000B509D2 /* ProgressViews.swift in Sources */,
@@ -1608,7 +1655,10 @@
 				8536F374258D475D00B509D2 /* Persistance.swift in Sources */,
 				8536F3D4258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */,
 				857D9A2325BF5E6D00626884 /* PeripheralDetailView.swift in Sources */,
+				8592822F25EC44F7001233BE /* GuildExplorerView.swift in Sources */,
 				8504A51F25C6845200739C58 /* StationBuilder.swift in Sources */,
+				8592824525EC74FD001233BE /* GuildView.swift in Sources */,
+				8592825225EED6EF001233BE /* SpaceVehicleNode.swift in Sources */,
 				8569A3E525A8D7870057A518 /* BoosterDiagramView.swift in Sources */,
 				8536F487258D481700B509D2 /* StationOverlayObject.swift in Sources */,
 				8536F48F258D481700B509D2 /* MarsColonyScene.swift in Sources */,
@@ -1670,6 +1720,7 @@
 				85A6590925E4178F008AA9BA /* GameSettingsController.swift in Sources */,
 				8536F478258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				8536F319258D361100B509D2 /* GameConstants.swift in Sources */,
+				8592825325EED6EF001233BE /* SpaceVehicleNode.swift in Sources */,
 				8592820B25EA2D91001233BE /* Generators.swift in Sources */,
 				8569A34E25A3D9590057A518 /* AirComposition.swift in Sources */,
 				8536F375258D475D00B509D2 /* Persistance.swift in Sources */,
@@ -1692,6 +1743,7 @@
 				8536F36D258D475D00B509D2 /* Tutorial.swift in Sources */,
 				8536F385258D475D00B509D2 /* Truss.swift in Sources */,
 				8536F379258D475D00B509D2 /* Peripherals.swift in Sources */,
+				8592823925EC4DD3001233BE /* GuildController.swift in Sources */,
 				8536F371258D475D00B509D2 /* SceneHelpers.swift in Sources */,
 				8536F395258D475D00B509D2 /* BioModule.swift in Sources */,
 				8536F3F9258D47D000B509D2 /* TankViews.swift in Sources */,

@@ -138,7 +138,7 @@ struct PostLaunchVehicleView: View {
     
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
-            SceneView(scene: SCNScene(named: "Art.scnassets/Vehicles/SpaceVehicleExport.scn"), pointOfView: nil, options: .allowsCameraControl, preferredFramesPerSecond: 30, antialiasingMode: .none, delegate: renderer, technique: nil)
+            SceneView(scene: launchController.scene, pointOfView: nil, options: .allowsCameraControl, preferredFramesPerSecond: 30, antialiasingMode: .none, delegate: renderer, technique: nil)
             VStack {
                 Text("V: \(launchController.vehicle.name)")
                 Button("Close") {
@@ -249,6 +249,6 @@ struct LaunchingVehicleView_Previews: PreviewProvider {
 
 struct PostLaunch_Previews: PreviewProvider {
     static var previews: some View {
-        PostLaunchVehicleView(garageController: GarageViewModel(), launchController: LaunchSceneController(vehicle: SpaceVehicle(engine: .Hex6)))
+        PostLaunchVehicleView(garageController: GarageViewModel(), launchController: LaunchSceneController(vehicle: SpaceVehicle(engine: .T12)))
     }
 }

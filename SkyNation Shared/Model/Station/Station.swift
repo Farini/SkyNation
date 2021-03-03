@@ -498,7 +498,7 @@ class Station:Codable {
         self.accountingDate = nextDate
         if nextDate.addingTimeInterval(3600).compare(Date()) == .orderedAscending {
             print("Next Accouting...")
-            self.runAccounting()
+//            self.runAccounting()
         } else {
             // Report Problems
             print("\n\n 💀 *** [PROBLEMS ENCOUNTERED] *** ")

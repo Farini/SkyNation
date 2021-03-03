@@ -634,7 +634,7 @@ struct TravellingVehicleView: View {
                                         }
                                         .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
                                         .foregroundColor(.red)
-                                    case .Rover, .Transporter, .Terraformer:
+                                    case .Rover, .Transporter, .Terraformer, .GrandMaster:
                                         Button("Drop Bot") {
                                             print("You can't boost me!")
                                         }

@@ -70,6 +70,11 @@ struct Guild:Codable {
     // Outposts
     var outposts:[DBOutpost]?
     
+    static var example:Guild {
+        let guild = Guild(id: UUID(), name: "Example", president: ["President":UUID()], members: nil, citizens: [UUID(), UUID(), UUID()], isOpen: true, election: Date(), terrain: .Terrain1, cities:nil, outposts: nil)
+        return guild
+    }
+    
 }
 
 struct DBCity:Codable {
@@ -90,22 +95,27 @@ struct DBCity:Codable {
 struct City {
     
     var owner:UUID?
-    var position:Vector3D
-    var dorms:Int // this will have to be an object, like HabModule
+    var name:String = ""
     
-    var air:AirComposition
+    var position:Vector3D
+    var habs:[CityHab] // this will have to be an object, like HabModule
     
     // Resources
+    var air:AirComposition
     var boxes:[StorageBox]
     var tanks:[Tank]
     var batteries:[Battery]
     var bioBoxes:[BioBox]
+    
+    // Tech
     var cityTech:[CityTech]
+    
+    var bots:[MarsBot]?
     
     init(user:SKNUser, position:Vector3D) {
         self.owner = user.localID
         self.position = position
-        self.dorms = 3
+        self.habs = [CityHab(id: UUID(), capacity: 4, inhabitants: [], name: "untitled", skin: "skin", position: .zero)]
         self.air = AirComposition(amount: 200)
         self.boxes = []
         self.tanks = []
@@ -119,34 +129,159 @@ struct City {
     }
 }
 
+struct CityHab:Codable {
+    
+    var id:UUID
+    var capacity:Int            // Limit of people
+    var inhabitants:[Person]    // People
+    var name:String             // any name given
+    var skin:String             // If we decide so...
+    var position:Vector3D
+}
+
 enum CityTech:String, Codable, CaseIterable {
+    
+    case Gate
+    case Elevator
+    
     case HQ
-    case Lab1
-    case Hab1
     case HQ1
     case HQ2
+    
+    // Hab
+    /*
+     Each hab has 9 people (4 + 3 + 2)
+     3 habs inside = 27 people.
+     2 habs outside = 45 people total */
+    case Hab1
+    case Hab2
+    case Hab3
+    case HabOut1
+    case HabOut2
+    case HabOut3
+    
+    // case Lab1
+    
+    case Bio1
+    case Bio2
+    case BioOut1
+    
+    case Cement
+    case Foundry        // Melt metals found in mines
+    case ChargedGlass   // Expose to sunlight, without problems
+    
+    case OutsideBio
+    case OutsidePark
+    case OutsideHab
+    
 }
 
 enum OutpostType:String, CaseIterable, Codable {
-    case Water
-    case Silica
-    case Energy
-    case Biosphere
+    
+    case Water          // OK Produces Water
+    case Silica         // OK Produces Silica
+    case Energy         // OK Produces Energy
+    case Biosphere      // OK Produces Food
+    case Titanium       // OK Produces Titanium
+    case Observatory    //
+    case Antenna        // OK Comm
+    case Launchpad      // OK Launch / Receive Vehicles
+    case Arena          // Super Center
+    case ETEC           // Extraterrestrial Entertainement Center
+    
+    var productionBase: [Ingredient:Int] {
+        switch self {
+            case .Water: return [.Water:20]
+            case .Silica: return [.Silica:10]
+            case .Energy: return [.Battery:20]
+            case .Biosphere: return [.Food:100]
+            case .Titanium: return [.Iron:5, .Aluminium:10]
+            case .Observatory: return [:]
+            case .Antenna: return [:]
+            case .Launchpad: return [:]
+            case .Arena: return [:]
+            case .ETEC: return [:]
+        }
+    }
+    
+    /// Happiness Production
+    var happyDelta:Int {
+        switch self {
+            case .Energy: return 0
+            case .Water: return 0
+            case .Silica: return -1
+            case .Biosphere: return 3
+            case .Titanium: return -1
+            case .Observatory: return 2
+            case .Antenna: return 1
+            case .Launchpad: return 0
+            case .Arena: return 5
+            case .ETEC: return 3
+        }
+    }
+    
+    /// Energy production (Consumed as negative)
+    var energyDelta:Int {
+        switch self {
+            case .Energy: return 100
+            case .Water: return -20
+            case .Silica: return -25
+            case .Biosphere: return -15
+            case .Titanium: return -25
+            case .Observatory: return -5
+            case .Antenna: return -5
+            case .Launchpad: return -10
+            case .Arena: return -50
+            case .ETEC: return -20
+        }
+    }
 }
 
-struct Outpost:Codable {
+class Outpost:Codable {
     
     var id:UUID
+    var guild:UUID
+    
     var model:String
     var position:Vector3D
     
     var type:OutpostType
     var job:OutpostJob
+    var level:Int
+    
+    func createAnOutpostJobPair() {
+        let job = OutpostJob(wantedSkills: [.Biologic:5, .Medic:3, .SystemOS:5, .Handy:12],
+                             wantedIngredients: [.Aluminium:1, .Fertilizer:80, .Food:25])
+        self.job = job
+    }
+    
+    func makeModel() {
+        switch type {
+            case .Water: print("Make Water")
+                switch level {
+                    case 0...5: print("Low Level")
+                    case 6...10: print("Mid Level")
+                    case 11...15: print("Advanced")
+                    default:print("ERROR")
+                }
+            case .Silica: print("Make Silica")
+            case .Energy: print("Make Energy")
+            case .Biosphere: print("Make Biosphere")
+            case .Titanium: print("Make Titanium")
+            case .Observatory: print("Make Observatory")
+            case .Antenna: print("Make Antenna")
+            case .Launchpad: print("Make Launchpad")
+            case .Arena: print("Make Arena")
+            case .ETEC: print("Make ETEC")
+        }
+    }
 }
 
 struct OutpostJob: Codable {
-    var wantedSkills:[String]
-    var wantedIngredients:[String]
+    
+    var wantedSkills:[Skills:Int] // [String:Int]
+    var wantedIngredients:[Ingredient:Int] // [String:Int]
+    
 }
 
 struct DBOutpost:Codable {

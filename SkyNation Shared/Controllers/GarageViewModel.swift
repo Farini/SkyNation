@@ -431,6 +431,30 @@ class GarageViewModel:ObservableObject {
     func launch(vehicle:SpaceVehicle) {
         
         print("🚀 Launching Vehicle!")
+        self.garageStatus = .planning(stage: .Launching)
+        
+        // Register Vehicle in Server
+        /*
+        guard let player = LocalDatabase.shared.player else {
+            fatalError()
+        }
+        let user = SKNUser(player: player)
+        SKNS.registerSpace(vehicle: vehicle, player: user) { (data, error) in
+            if let data = data {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                if let vehicleModel = try? decoder.decode(SpaceVehicleModel.self, from: data) {
+                    print("We got a Vehicle ! \(vehicleModel.engine)")
+                } else {
+                    print("No vehicle model")
+                }
+            } else {
+                print("No data. Error: \(error?.localizedDescription ?? "n/a")")
+            }
+        }
+        */
+        
+        /*
         
         // Set Vehicle to start travelling
         vehicle.startTravelling()
@@ -452,6 +476,8 @@ class GarageViewModel:ObservableObject {
         // Update View
         self.garageStatus = .planning(stage: .Launching)
         // self.cancelSelection()
+ 
+        */
     }
     
     // FIXME: - Token Use
@@ -487,13 +513,46 @@ class LaunchSceneController:ObservableObject {
     
     
     @Published var scene:SCNScene
+    @Published var vehicleNode:SpaceVehicleNode
     @Published var vehicle:SpaceVehicle
     
     init(vehicle:SpaceVehicle) {
+        
         self.vehicle = vehicle
-        let scene = SCNScene(named: "Art.scnassets/Vehicles/SpaceVehicleExport.scn")!
+        
+        let scene = SCNScene(named: "Art.scnassets/Vehicles/SpaceVehicle3.scn")!
+        for childnode in scene.rootNode.childNodes {
+            if !["Camera", "Light"].contains(childnode.name ?? "") {
+                childnode.isHidden = true
+            }
+        }
+        
         self.scene = scene
+        
+        let node = SpaceVehicleNode(vehicle: vehicle, parentScene:scene)
+        self.vehicleNode = node
+        
+        node.move()
+        
+        if let camera = scene.rootNode.childNode(withName: "Camera", recursively: false) {
+            let constraint = SCNLookAtConstraint(target:vehicleNode)
+            constraint.isGimbalLockEnabled = true
+            constraint.influenceFactor = 0.1
+            
+            let follow = SCNDistanceConstraint(target: vehicleNode)
+            follow.minimumDistance = 20
+            follow.maximumDistance = 50
+            
+            SCNTransaction.begin()
+            SCNTransaction.animationDuration = 3.0
+            camera.constraints = [constraint, follow]
+            SCNTransaction.commit()
+        }
+        
+        
     }
+    
+//    func move
     
 }
 
@@ -505,14 +564,14 @@ class LaunchSceneRendererMan:NSObject, SCNSceneRendererDelegate {
     func renderer(_ renderer: SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
 //        renderer.debugOptions = .showBoundingBoxes
         if time > checkup {
-            print("Checkup")
-            checkup += 10
-            if !addedBox {
-                let box = SCNBox(width: 3, height: 3, length: 3, chamferRadius: 1)
-                let bnode = SCNNode(geometry: box)
-                scene.rootNode.addChildNode(bnode)
-                addedBox = true
-            }
+//            print("Checkup")
+//            checkup += 10
+//            if !addedBox {
+//                let box = SCNBox(width: 3, height: 3, length: 3, chamferRadius: 1)
+//                let bnode = SCNNode(geometry: box)
+//                scene.rootNode.addChildNode(bnode)
+//                addedBox = true
+//            }
         }
     }
 }

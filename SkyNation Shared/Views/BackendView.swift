@@ -9,13 +9,13 @@ import SwiftUI
 
 struct BackendView: View {
     
-    @ObservedObject var controller:BackendController
+    @ObservedObject var controller:GuildController
     
     var body: some View {
         
         VStack {
             
-            Text("Hello, Back End!").foregroundColor(.green).font(.largeTitle)
+            Text("Back End").foregroundColor(.green).font(.largeTitle)
             Divider()
             Text("News")
             Text(controller.news).foregroundColor(.gray)
@@ -91,89 +91,7 @@ struct BackendView: View {
 
 struct BackendView_Previews: PreviewProvider {
     static var previews: some View {
-        BackendView(controller:BackendController())
+        BackendView(controller:GuildController())
     }
 }
 
-class BackendController:ObservableObject {
-    
-    @Published var news:String
-    @Published var guilds:[Guild] = []
-    @Published var player:SKNPlayer?
-    @Published var user:SKNUser?
-    @Published var joinedGuild:Guild?
-    
-    init() {
-        news = "Do somthing first"
-        
-        if let player = LocalDatabase.shared.player {
-//            isNewPlayer = false
-            self.player = player
-            self.user = SKNUser(player: player)
-        }
-    }
-    
-    func loginUser() {
-        guard let user = user else {
-            print("No user")
-            return
-        }
-        
-        SKNS.newLogin(user: user) { (loggedUser, error) in
-            if let loguser = loggedUser {
-                print("User logged in!")
-                self.user = loguser
-            } else {
-                print("Could not log in user. Reason: \(error?.localizedDescription ?? "n/a")")
-            }
-            self.news = error?.localizedDescription ?? ""
-        }
-    }
-    
-    func fetchGuilds() {
-        news = "Fetching Guilds..."
-        SKNS.fetchGuilds(player: user) { (guilds, error) in
-            if let array = guilds {
-                print("Updating Guilds")
-                self.guilds = array
-                self.news = "Here are the guilds"
-            } else {
-                if let error = error {
-                    self.news = error.localizedDescription
-                } else {
-                    self.news = "Something else happened. Not an error, but no Guilds"
-                    print("Something else happened. Not an error, but no Guilds")
-                }
-            }
-            
-        }
-    }
-    
-    func findMyGuild() {
-        news = "Searching your guild..."
-        SKNS.findMyGuild(user: user!) { (guild, error) in
-            if let guild = guild {
-                print("Found your guild: \(guild.name)")
-                self.news = "Your guild is \(guild.name)"
-                self.user?.guildID = guild.id
-                self.joinedGuild = guild
-                print("Should save user guild id ???")
-                
-            } else {
-                self.news = "Cannot find guild"
-            }
-        }
-    }
-    
-    func requestJoinGuild(guild:Guild) {
-        SKNS.requestJoinGuild(playerID: player!.id, guildID: guild.id) { (guild, error) in
-            if let guild = guild {
-                print("Joined a guild !!!! \(guild.name)")
-                self.joinedGuild = guild
-            } else {
-                print("Did not join?")
-                self.news = error?.localizedDescription ?? "n/a"
-            }
-        }
-    }
-}
