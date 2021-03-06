@@ -421,23 +421,25 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         if time < 5 { return }
         
         if rounded.truncatingRemainder(dividingBy: 10) == 0 {
-            print("acc")
+//            print("acc")
             // 97 is the largest prime before 100
-            switch self.gameScene {
-                case .SpaceStation:
-                    if shouldUpdateScene {
-//                        print("⏱ Should update scene: \(time)")
+            if shouldUpdateScene {
+                shouldUpdateScene = false
+                
+                switch self.gameScene {
+                    case .SpaceStation:
+                    print("⏱ Should update scene: \(time)")
+                    //  station?.runAccounting()
+                        station?.accountingLoop(recursive: false) { (messages) in
+                            print("Accounting message: \(messages.first ?? "n/a")")
+                        }
+                    stationOverlay.updatePlayerCard()
                         
-                        shouldUpdateScene = false
-                        station?.runAccounting()
-                        stationOverlay.updatePlayerCard()
-                    }
-                case .MarsColony:
-                    return
-//                    print("Update Mars Colony Scene")
+                    case .MarsColony:
+                        // print("Update Mars Colony Scene")
+                        return
+                }
             }
-            
-            
         } else {
             shouldUpdateScene = true
         }

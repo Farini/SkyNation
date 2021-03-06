@@ -155,6 +155,8 @@ class GameSettingsController:ObservableObject {
         }
     }
     
+    // MARK: - Game Start
+    
     /// Disabled state for the `StartGame` button
     func startGameDisabled() -> Bool {
         
@@ -171,6 +173,30 @@ class GameSettingsController:ObservableObject {
             
         } else {
             return false
+        }
+    }
+    
+    func loadGameData() {
+        let builder = LocalDatabase.shared.stationBuilder
+        if let station = LocalDatabase.shared.station {
+//            let accountingLoops = station.accountingTimeSheet()
+            DispatchQueue(label: "Accounting").async {
+                station.accountingLoop(recursive: true) { comments in
+                    for comment in comments {
+                        print("COMMENTS: \(comment)")
+                    }
+                    DispatchQueue.main.async {
+                        builder.prepareScene(station: station) { loadedScene in
+                            builder.scene = loadedScene
+                            LocalDatabase.shared.saveStation(station: station)
+                            print("⚠️ Are we finally ready? 🏆")
+                            print("Enable buttons now ???")
+                        }
+                    }
+                }
+            }
+            
+//            builder.build(station:station)
         }
     }
     

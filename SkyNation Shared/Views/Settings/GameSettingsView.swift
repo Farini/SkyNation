@@ -228,17 +228,19 @@ struct GameSettingsView: View {
             if inGame {
                 controller.viewState = .EditingPlayer
             } else {
-                self.loadScene()
+                controller.loadGameData()
+//                self.loadScene()
             }
         }
     }
     
-    func loadScene() {
-        let builder = LocalDatabase.shared.stationBuilder
-        if let station = LocalDatabase.shared.station {
-            builder.build(station:station)
-        }
-    }
+    
+//    func loadScene() {
+//        let builder = LocalDatabase.shared.stationBuilder
+//        if let station = LocalDatabase.shared.station {
+//            builder.build(station:station)
+//        }
+//    }
     
     func generateBarcode(from uuid: UUID) -> Image? {
         let data = uuid.uuidString.prefix(8).data(using: String.Encoding.ascii)

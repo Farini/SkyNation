@@ -108,7 +108,7 @@ Items being worked on
 - [X] LSS View -> Fix peripheral Selection bug
 - [X] LSS View -> Empty Tanks and Boxes must have a way to define type.
 - [X] LSS View -> Let wasteWater, and wasteSolid be an **orderable** product (empty)
-
+- [X] 8/8 Recoding Accounting system
 - [ ] LSS View -> Better Station Accounting & Reporting + Accounting Bug Fix
 - [ ] LSS View -> Make Peripheral `Power Off` button
 - [ ] LSS View -> Resources need Icon

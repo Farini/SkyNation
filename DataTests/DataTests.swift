@@ -35,10 +35,30 @@ class DataTests: XCTestCase {
         // Part 1 (Validation)
         XCTAssertNotNil(station)
         
-        let tsResult = station!.accountingTimeSheet()
-        print("Timesheet result: \(tsResult)")
+        let tsResult = station!.acc
+        print("Timesheet result: \(tsResult.loops)")
         
-        station?.runAccounting()
+        station?.accountingLoop(recursive: true) { errors in
+            print("Errors: \(errors)")
+            print("code completion")
+        }
+        
+//        station?.runAccounting()
+//
+//        let report = station?.accounting
+//        print("\n [Accounting report] ")
+//        for item in report?.problems ?? [] {
+//            print(" +⚠️ \(item)")
+//        }
+//        for item in report?.notes ?? [] {
+//            print(" +[N] \(item)")
+//        }
+//        for item in report?.humanNotes ?? [] {
+//            print(" +[H] \(item)")
+//        }
+//        for item in report?.peripheralNotes ?? [] {
+//            print(" +[P] \(item)")
+//        }
         
         print("\n --- Accounting End ---")
     }
