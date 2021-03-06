@@ -111,6 +111,8 @@ class GameGenerators:Codable {
     /// Removes the person from the available array
     func didHirePerson(person:Person) {
         people.removeAll(where: {$0.id == person.id})
+        self.update()
+        LocalDatabase.saveGenerators(gameGen: self)
     }
     
     /// Force updates with Tokens

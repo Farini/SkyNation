@@ -481,11 +481,6 @@ class TrussComponent:Codable, Identifiable, Equatable {
     
     var allowedType:TrussItemType
     
-    /// Implement this, to conveniently position and rotate object
-//    func getPositionForPositionIndex() -> Model3D? {
-//        return nil
-//    }
-    
     func getPosition() -> Vector3D? {
         switch posIndex {
             // Roboarm
@@ -538,7 +533,7 @@ class TrussComponent:Codable, Identifiable, Equatable {
         }
     }
     
-    
+    // MARK: - Management
     
     func insert(solar panel:SolarPanel) -> Bool {
         guard allowedType == .Solar && itemID == nil else { return false }

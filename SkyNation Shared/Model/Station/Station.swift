@@ -1134,7 +1134,7 @@ class Station:Codable {
     
     /// When Accounting sees a person with health physycal < 1
     private func prepareDeath(of person:Person) {
-        GameMessageBoard.shared.newAchievement(type: .experience, qtty: nil, message: "\(person.name) has passed away!")
+        GameMessageBoard.shared.newAchievement(type: .experience, message: "💀 \(person.name) has passed away!") //newAchievement(type: .experience, qtty: nil, message: "\(person.name) has passed away!")
         let hab = habModules.filter({ $0.inhabitants.contains(person) }).first
         hab?.inhabitants.removeAll(where: { $0.id == person.id })
     }
@@ -1416,36 +1416,7 @@ class AccountingReport:Codable {
     
     var tankAirAdjustment:Int?
     
-    // Other
-    // power notes
-    // peri notes
-    // human notes
     
-    // Future
-    // 1. How long food is going to last
-    // 2. How long water in going to last
-    // 3. How long oxygen is going to last
-    // - How much air there is left?
-    // - How much oxygen there is left?
-    // 4. poop is full
-    // 5. waste water is full
-    
-    // Report sick people
-    // report unhappy people
-    
-//    init(time:Date, energy:Int, zInput:Int, air:AirComposition, water:Int) {
-//        self.id = UUID()
-//        date = time
-//        energyStart = energy
-//        energyInput = zInput
-//        airStart = air
-//        waterStart = water
-//        brokenPeripherals = []
-//        problems = []
-//        notes = []
-//    }
-    
-    // new
     init(time:Date, powerGen:Int, energy:Int, water:Int, air:AirComposition) {
         
         self.id = UUID()

@@ -212,10 +212,10 @@ class HabModuleController: ObservableObject {
                     // Skin
                     if let modSkin = ModuleSkin(rawValue: skin) {
                         print("Change skin to: \(modSkin.displayName)")
-                        self.habModule.skin = modSkin.rawValue
+                        self.habModule.skin = modSkin
                         let rawModule = station.lookupRawModule(id: self.habModule.id)
-                        rawModule.skin = modSkin.rawValue
-                        station.habModules.first(where: { $0.id == moduleID })!.skin = modSkin.rawValue
+                        rawModule.skin = modSkin// .rawValue
+                        station.habModules.first(where: { $0.id == moduleID })!.skin = modSkin
                     }
                 } else
                 if let unbuild = object["unbuild"] as? Bool, unbuild == true {

@@ -447,7 +447,7 @@ class StationBuildItem:Codable {
     
     // (Not needed)
     // var researched:Bool
-    var skin:String?
+    var skin:ModuleSkin? //String?
     var modex:String?
     // static func makeFromTech
     
@@ -465,7 +465,7 @@ class StationBuildItem:Codable {
         self.position = modex.position()
         self.rotation = modex.orientation().vector
         self.type = .Module
-        self.skin = "ModuleColor"
+        self.skin = ModuleSkin.allCases.randomElement()! //"ModuleColor"
         self.modex = modex.rawValue
     }
     

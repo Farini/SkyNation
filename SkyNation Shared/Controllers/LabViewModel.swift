@@ -226,7 +226,7 @@ class LabViewModel: ObservableObject {
                     return
                 }
                 
-                GameMessageBoard.shared.newAchievement(type: .tech(item: tech), qtty: nil, message: nil)
+                GameMessageBoard.shared.newAchievement(type: .tech(item: tech), message: nil) //newAchievement(type: .tech(item: tech), qtty: nil, message: nil)
                 print("New Game Message")
 //                print("Found tech item")
 //                LocalDatabase.shared.builder.upgradeTech(item: techItem)

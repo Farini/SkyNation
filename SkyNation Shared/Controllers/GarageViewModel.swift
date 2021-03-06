@@ -419,8 +419,8 @@ class GarageViewModel:ObservableObject {
         station.truss.extraBoxes.removeAll(where: { cargo.map({ $0.id }).contains($0.id) })
         station.peripherals.removeAll(where: { devices.map({ $0.id }).contains($0.id)})
         
-        vehicle.boxes = vehicle.boxes ?? []
-        vehicle.boxes!.append(contentsOf: cargo)
+//        vehicle.boxes = vehicle.boxes ?? []
+        vehicle.boxes.append(contentsOf: cargo)
         vehicle.peripherals.append(contentsOf: devices)
         
         didSelectBuildEnd(vehicle: vehicle)

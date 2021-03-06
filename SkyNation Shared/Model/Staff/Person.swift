@@ -111,7 +111,7 @@ class Person:Codable, Identifiable, Equatable {
     var intelligence:Int
     
     var healthPhysical:Int
-    var healthInfection:Int
+//    var healthInfection:Int
     
     // New (2020)
     // + happiness
@@ -149,9 +149,6 @@ class Person:Codable, Identifiable, Equatable {
         }
     }
     
-//    func addActivity() {
-//        self.activity = LabActivity(time: 60)
-//    }
     
     /// Sets a random mood
     func randomMood(tech:[TechItems]) {
@@ -321,19 +318,20 @@ class Person:Codable, Identifiable, Equatable {
     func willingnessToStudy() -> Double {
         
         // A Tenth of their age (Max Study Levels)
-        var tenth = Int((Double(age) / 10.0).rounded())
+        var tenth = Int((Double(age) / 10.0).rounded()) - 1
         
         // Increase the tenth if intelligent
-        if intelligence > 80 { tenth += 1 }
-        else if intelligence > 60 && Bool.random() { tenth += 1 }
+        // if intelligence > 80 { tenth += 1 }
+        // else if intelligence > 60 && Bool.random() { tenth += 1 }
         
         // Increase the tenth if happy
-        if happiness > 80 { tenth += 1 }
-        else if happiness > 50 && Bool.random() { tenth += 1 }
+        if happiness > 90 { tenth += 1 }
+        // else if happiness > 50 && Bool.random() { tenth += 1 }
         
         // Decrease the tenth when health is bad
         if healthPhysical < 50 {
-            tenth -= 1
+            // tenth -= 1
+            return 0
         }
         
         let sksum = sumOfSkills()
@@ -347,7 +345,7 @@ class Person:Codable, Identifiable, Equatable {
     }
     
     /// Learn new Skill (Called when clearActivity() is being called)
-    private func learnNewSkill(type:Skills) {
+    func learnNewSkill(type:Skills) {
         
         var newSkill:SkillSet?
         if let idx = skills.firstIndex(where: { $0.skill == type }) {
@@ -369,14 +367,14 @@ class Person:Codable, Identifiable, Equatable {
                 if activity.activityName == "Workout" {
                     
                     // Workout
-                    GameMessageBoard.shared.newAchievement(type: .experience, qtty: nil, message: "\(name) finished a workout!")
+                    GameMessageBoard.shared.newAchievement(type: .experience, message: "\(name) finished a workout 💪") //newAchievement(type: .experience, qtty: nil, message: "\(name) finished a workout!")
                     self.healthPhysical = min(100, healthPhysical + 3)
                     self.activity = nil
                     
                 } else if activity.activityName == "Medicating" {
                     
                     // Doctor Medicating
-                    GameMessageBoard.shared.newAchievement(type: .experience, qtty: nil, message: "\(name) cured someone!")
+                    GameMessageBoard.shared.newAchievement(type: .experience, message: "\(name) cured someone!")//newAchievement(type: .experience, qtty: nil, message: "\(name) cured someone!")
                     self.activity = nil
                     
                 } else if activity.activityName == "Healing" {
@@ -389,7 +387,7 @@ class Person:Codable, Identifiable, Equatable {
                     
                     // Learning Skill
                     print("\(name) learned a new skill!")
-                    GameMessageBoard.shared.newAchievement(type: .learning(skill:education), qtty: nil, message: "\(name) learned a new skill!")
+                    GameMessageBoard.shared.newAchievement(type: .learning(skill: education), message: "\(name) learned a new skill!")//newAchievement(type: .learning(skill:education), qtty: nil, message: "\(name) learned a new skill!")
                     
                     self.learnNewSkill(type: education)
                     self.activity = nil
@@ -445,7 +443,7 @@ class Person:Codable, Identifiable, Equatable {
         self.intelligence = newInteligence
         
         self.healthPhysical = 100
-        self.healthInfection = 0
+//        self.healthInfection = 0
         
         // After init
         
@@ -572,7 +570,7 @@ class HumanGenerator:NSObject{
                                                    NameGenderPair(name: "Trevor Baker", gender: .male),
                                                    NameGenderPair(name: "Giovanni Piza", gender: .male),
                                                    NameGenderPair(name: "Yuri Bobov", gender: .male),
-                                                   NameGenderPair(name: "Marcus Trapuya", gender: .male),
+                                                   NameGenderPair(name: "Marko Trapuya", gender: .male),
                                                    NameGenderPair(name: "Anna Johnson", gender: .female),
                                                    NameGenderPair(name: "Julia Carson", gender: .female),
                                                    NameGenderPair(name: "Sakura Saito", gender: .female),
@@ -588,7 +586,11 @@ class HumanGenerator:NSObject{
                                                    NameGenderPair(name: "John Ballak", gender: .male),
                                                    NameGenderPair(name: "David Mazzol", gender: .male),
                                                    NameGenderPair(name: "Rick Shultz", gender: .male),
-                                                   NameGenderPair(name: "Rod Shimura", gender: .male)
+                                                   NameGenderPair(name: "Rod Shimura", gender: .male),
+                                                   NameGenderPair(name: "Jena Thomson", gender: .female),
+                                                   NameGenderPair(name: "Maura Pizani", gender: .female),
+                                                   NameGenderPair(name: "Jeff Johnson", gender: .male),
+                                                   NameGenderPair(name: "Carl Hikken", gender: .male)
                 ]
         return allNameGenderPairs.randomElement()!
     }

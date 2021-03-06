@@ -11,7 +11,7 @@ struct GameMessagesView: View {
     
     var messages:[GameMessage]
     
-    @State var tab:GameMessageType = .Freebie
+    @State var tab:GameMessageType = .Achievement
     @State var generator:GameGenerators? = LocalDatabase.shared.gameGenerators
     // Message Types
     // achievement   > all messages seem to be achievement

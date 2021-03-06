@@ -15,7 +15,7 @@ class HabModule:Codable {
     var type:ModuleType         // .Bio, .Hab, .Lab...
     
     var name:String             // any name given
-    var skin:String
+    var skin:ModuleSkin //String
     
     var inhabitants:[Person]
     var capacity:Int
@@ -33,7 +33,7 @@ class HabModule:Codable {
         }
         
         self.inhabitants = []
-        self.skin = "ModuleColor"
+        self.skin = .HabModule //"ModuleColor"
     }
     
     /// An example for the SwiftUI

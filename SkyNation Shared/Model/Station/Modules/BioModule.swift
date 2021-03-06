@@ -18,6 +18,9 @@ enum BioBoxMode:String, Codable, CaseIterable, Hashable {
     
     /// DNA found. Multiplying
     case multiply
+    
+    /// Distributing to people?
+    case serving
 }
 
 /// What plants produces as Food, or Medicine
@@ -91,7 +94,7 @@ class BioModule:Codable, Identifiable {
     var moduleDex:ModuleIndex   // index of module
     var type:ModuleType         // .Bio, .Hab, .Lab...
     var name:String             // any name given
-    var skin:String = ModuleSkin.BioModule.rawValue
+    var skin:ModuleSkin
     
     var plants:[String]
     var boxes:[BioBox]
@@ -105,6 +108,7 @@ class BioModule:Codable, Identifiable {
         self.plants = []
         self.boxes = []
         self.capacity = 4
+        self.skin = ModuleSkin.BioModule
     }
     
     static var example:BioModule {

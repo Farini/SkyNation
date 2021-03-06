@@ -164,7 +164,7 @@ class PeripheralObject:Codable, Identifiable, Equatable {
     var powerOn:Bool
     
     /// Information (Name, Position, Orientation) to build a `SCNNode` in the scene
-    var model:Model3D?
+//    var model:Model3D?
     
     /// Initializes a Peripheral Object from its equivalent `PeripheralType`
     init(peripheral:PeripheralType) {
@@ -211,10 +211,6 @@ class PeripheralObject:Codable, Identifiable, Equatable {
             return 0
         }
     }
-    
-    
-    
-    
     
     func powerConsumption() -> Int {
         return peripheral.energyConsumption

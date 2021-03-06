@@ -120,7 +120,7 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     
     // Updating boxes...
     // ⚠️ Change back to empty array (required)
-    var boxes:[StorageBox]? = []
+    var boxes:[StorageBox] = []
     
     var solar:[SolarPanel] = []
     var antenna:PeripheralObject?

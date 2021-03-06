@@ -15,12 +15,11 @@ class LabModule:Codable {
     var type:ModuleType         // .Bio, .Hab, .Lab...
     
     var name:String             // any name given
-    var skin:String
+    var skin:ModuleSkin
     var activity:LabActivity?
     var capacity:Int
     var usedRacks:[String]
-    
-    // FIXME: - Add Skin
+
     
     init(module:Module) {
         self.id = module.id
@@ -30,7 +29,7 @@ class LabModule:Codable {
         self.capacity = 12
         self.usedRacks = []
         self.type = .Lab
-        self.skin = "ModuleColor"
+        self.skin = .LabModule //"ModuleColor"
     }
     
     static func example() -> LabModule {

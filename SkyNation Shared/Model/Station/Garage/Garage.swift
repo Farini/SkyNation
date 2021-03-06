@@ -12,10 +12,13 @@ class Garage:Codable {
     var xp:Int
     var vehicles:[SpaceVehicle]
     var buildingVehicles:[SpaceVehicle]
-    var destination:String?
+//    var destination:String?
     var botTech:Int
     var simulator:Int
     var simulationXP:Int
+    
+    /// The garage Skin, in case we ever create one.
+    var skin:String?
     
     init() {
         self.xp = 0

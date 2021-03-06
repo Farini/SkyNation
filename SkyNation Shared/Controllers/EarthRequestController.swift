@@ -307,6 +307,14 @@ class EarthRequestController:ObservableObject {
                 // Water
                 let waterTank = Tank(type: .h2o, full: true)
                 station.truss.tanks.append(waterTank)
+            } else if ingredientBox.type == .wasteSolid {
+                // Poop
+                let poopBox = StorageBox(ingType: .wasteSolid, current: 0)
+                station.truss.extraBoxes.append(poopBox)
+            } else if ingredientBox.type == .wasteLiquid {
+                // Pee
+                let peeBox = StorageBox(ingType: .wasteLiquid, current: 0)
+                station.truss.extraBoxes.append(peeBox)
             } else {
                 // Normal Ingredient
                 station.truss.extraBoxes.append(ingredientBox)

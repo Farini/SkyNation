@@ -29,7 +29,6 @@ enum AirQuality:String {
 /// The air inside the **Station**, **SpaceVehicle**, etc.
 class AirComposition:Codable {
     
-//    var volume:Int      // The amount of all particles
     
     var o2:Int          // min, max
     var co2:Int         // 0, max
@@ -85,36 +84,17 @@ class AirComposition:Codable {
     func getVolume() -> Int {
         return o2 + co2 + n2 + h2 + ch4
     }
-    
-    // Compute
-    // compute acceptable ranges
-    // compute "orange" ranges
-    // compute red ranges
-    // Shouldn't this be in GameLogic?
-    /*
-    func computeO2() -> (min:Double, max:Double, result:Double) {
-        // green < 19, green > 25
-        // orange <= 17, orange > 23
-        // 17(O) < 20(G) < 21 > 23(G) > 25(O)
-        let percentO2 = Double((o2/volume)) * 100
-        let gmin = 0.17 * Double(volume)
-        let gmax = 0.25 * Double(volume)
-        return(min:gmin, max:gmax, result:percentO2)
-    }
-    */
+
     
     
     // To filter CO2, it changes the volume
-    func filterCO2(qtty:Int) {
-        
-        // there must be enough
-        if co2 > (qtty * 10) {
-            // energy that it takes to filter
-            co2 -= qtty
-//            volume -= qtty
-            // add the cartridges logic
-        }
-    }
+//    func filterCO2(qtty:Int) {
+//
+//        // there must be enough
+//        if co2 > (qtty * 10) {
+//            co2 -= qtty
+//        }
+//    }
     
     /// Adds an amount of air to this air
     func mergeWith(newAirAmount:Int) {

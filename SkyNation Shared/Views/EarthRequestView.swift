@@ -189,7 +189,9 @@ struct EarthRequestView: View {
                                         Image(systemName:"clock")
                                             .font(.title)
                                         VStack {
-                                            Text("\(LocalDatabase.shared.gameGenerators?.datePeople.timeIntervalSince(Date()) ?? 0)")
+                                            let delta = Date().timeIntervalSince(LocalDatabase.shared.gameGenerators!.datePeople)
+                                            let oo = Calendar.current.dateComponents([.minute, .second], from: Date(), to: LocalDatabase.shared.gameGenerators!.datePeople)
+                                            Text("Delta: \(delta) +  \(oo.minute ?? 0)m \(oo.second ?? 0)s")
                                         }
                                     }
                                     .padding(8)

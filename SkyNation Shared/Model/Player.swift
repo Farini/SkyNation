@@ -24,7 +24,7 @@ class SKNPlayer:Codable, Identifiable {
     
     // Constructed
     var name:String
-    var logo:String?
+//    var logo:String?
     var avatar:String
     var money:Int
     var about:String
@@ -44,7 +44,7 @@ class SKNPlayer:Codable, Identifiable {
         self.purchases = []
         
         self.name = "Test Player"
-        self.logo = nil
+//        self.logo = nil
         self.money = 200000 // 200,000
         self.about = "About me"
         self.experience = 0

@@ -43,12 +43,13 @@ class GameMessageBoard {
         messages = LocalDatabase.shared.gameMessages
     }
     
-    func newAchievement(type:GameAchievementType, qtty:Int?, message:String?) {
+    // func newAchievement(type:GameAchievementType, qtty:Int?, message:String?) {
+    func newAchievement(type:GameAchievementType, message:String?) {
         
         self.messages = LocalDatabase.shared.gameMessages
         
-        let theMessage = message ?? "Game Achievement! \(type.preString())."
-        let newMessage = GameMessage(type: .Achievement, date: Date(), message: theMessage, ingredientRewards: [.Food:10])
+        let theMessage = message ?? "Achievement \(type.preString())."
+        let newMessage = GameMessage(type: .Achievement, message: theMessage, rewards: nil) //GameMessage(type: .Achievement, date: Date(), message: theMessage, ingredientRewards: [.Food:10])
         messages.append(newMessage)
         
         // Save
@@ -66,17 +67,27 @@ class GameMessageBoard {
 
 struct GameMessage:Codable {
     
-    var id:UUID = UUID()
+    var id:UUID
     var type:GameMessageType
     var date:Date
     var message:String
-    var isRead:Bool = false
-    var isCollected:Bool = false
+    var isRead:Bool
+    var isCollected:Bool
     
     // Optionals
     var moneyRewards:Int?
     var tokenRewards:[UUID]?
     var ingredientRewards:[Ingredient:Int]?
+    
+    init(type:GameMessageType, message:String, rewards:[Ingredient:Int]? = nil) {
+        self.id = UUID()
+        self.type = type
+        self.date = Date()
+        self.message = message
+        self.isRead = false
+        self.isCollected = false
+        self.ingredientRewards = rewards
+    }
     
 }
 

@@ -43,8 +43,6 @@ enum ModuleType:String, Codable, CaseIterable {
     }
 }
 
-
-
 class Module:Codable {
     
     var id:UUID                 // *** REFERENCE TO  BuildItem.id
@@ -53,8 +51,7 @@ class Module:Codable {
     
     var name:String             // any name given
     
-    // TODO: - Add Skin
-    var skin:String
+    var skin:ModuleSkin //String
     
     private enum CodingKeys:String, CodingKey {
         case id
@@ -69,7 +66,7 @@ class Module:Codable {
         self.name = "Untitled"
         self.type = .Unbuilt
         self.moduleDex = modex
-        self.skin = "ModuleColor"
+        self.skin = [ModuleSkin.ModuleBake, ModuleSkin.diffuse1].randomElement()! //"ModuleColor"
     }
     
     func convertToLab() -> LabModule {

@@ -47,7 +47,7 @@ enum TankType:String, Codable, CaseIterable, Hashable {
     
     var price:Int {
         switch self {
-            case .o2: return 100
+            case .o2: return 120
             case .co2: return 150
             case .n2: return 180
             case .h2o: return 200
@@ -64,7 +64,7 @@ class Tank:Codable, Identifiable, Hashable {
     
     var id:UUID = UUID()
     var type:TankType
-    var capacity:Int // { return type.capacity }
+    var capacity:Int
     var current:Int
     
     init(type:TankType, full:Bool? = false) {

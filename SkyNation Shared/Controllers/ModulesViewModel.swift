@@ -208,24 +208,24 @@ class ModulesViewModel: ObservableObject {
                     case .Lab:
                         let newLab:LabModule = module.convertToLab()
                         module.type = .Lab
-                        module.skin = ModuleSkin.LabModule.rawValue
-                        newLab.skin = ModuleSkin.LabModule.rawValue
+                        module.skin = ModuleSkin.LabModule// .rawValue
+                        newLab.skin = ModuleSkin.LabModule
                         station.labModules.append(newLab)
                         self.viewState = .Selected(type: .Lab)
                         
                     case .Hab:
                         let newHab:HabModule = module.convertToHab()
                         module.type = .Hab
-                        module.skin = ModuleSkin.HabModule.rawValue
-                        newHab.skin = ModuleSkin.HabModule.rawValue
+                        module.skin = ModuleSkin.HabModule// .rawValue
+                        newHab.skin = ModuleSkin.HabModule
                         station.habModules.append(newHab)
                         self.viewState = .Selected(type: .Hab)
                         
                     case .Bio:
                         let newBio:BioModule = module.convertToBio()
                         module.type = .Bio
-                        module.skin = ModuleSkin.BioModule.rawValue
-                        newBio.skin = ModuleSkin.BioModule.rawValue
+                        module.skin = ModuleSkin.BioModule// .rawValue
+                        newBio.skin = ModuleSkin.BioModule
                         station.bioModules.append(newBio)
                         self.viewState = .Selected(type: .Bio)
                         

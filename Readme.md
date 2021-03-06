@@ -101,31 +101,32 @@ Items being worked on
 - [ ] Remake Bio View
 
 - [ ] Garage simulation button -> Person activity -> Garage xp
-- [ ] Post Launch Scene
-- [ ] Server SpaceVehicle
-- [ ] Bring Scene in - Desktop:SpaceVehilce2.dae
+- [X] Post Launch Scene
+- [X] Server SpaceVehicle
+- [X] Bring Scene in - Desktop:SpaceVehilce2.dae
+
+- [X] Model Upgrade
+- [X] Player -> Avatar
+- [X] Player. var avatar (required)
+- [X] Skin -> convert from String to Skin type
+- [X] Accounting (problems + notes)
+- [X] SpaceVehicle. var boxes (required)
 
 - [X] LSS View -> Fix peripheral Selection bug
 - [X] LSS View -> Empty Tanks and Boxes must have a way to define type.
 - [X] LSS View -> Let wasteWater, and wasteSolid be an **orderable** product (empty)
 - [X] 8/8 Recoding Accounting system
+- [X] Make sure Solid Waste and Liquid Waste come in empty
 - [ ] LSS View -> Better Station Accounting & Reporting + Accounting Bug Fix
 - [ ] LSS View -> Make Peripheral `Power Off` button
 - [ ] LSS View -> Resources need Icon
-- [ ] Make sure Solid Waste and Liquid Waste come in empty
+
 
 - [ ] Game Store Improvements
-
-
-### Model Changes
-- [X] Player -> Avatar
-- [X] Player. var avatar (required)
-- [ ] Skin -> convert from String to Skin type
-- [ ] Accounting
-    (1). var problems (required)
-    (2). var notes (required)
+- [ ] GameMessages showing strange dates
+- [ ] Delete Person from GameGenerator after hiring
 - [ ] Use Fibonacci for Peripheral Upgrades
-- [ ] SpaceVehicle. var boxes (required)
+
 
 - [ ] Person var stress?
 - [ ] Activity name enum?
@@ -201,7 +202,7 @@ Items being worked on
     - [X] GameButtons
     - [X] Descent Inventory View
     - [X] Add StorageBox to Vehicle Data
-    - [ ] Post Launch Scene
+    - [X] Post Launch Scene
     - [ ] Space Vehicle Registration (when launch)
     - [ ] Space Vehicle Validation (when arriving (orbit))
     

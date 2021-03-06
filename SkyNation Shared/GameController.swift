@@ -718,7 +718,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                             print("*** Found Activity: \(activity.activityName)")
                             if activity.dateEnds.compare(Date()) == .orderedAscending {
                                 let descriptor = "🔬 Completed Lab activities. Check Lab Modules."
-                                GameMessageBoard.shared.newAchievement(type: .experience, qtty: 2, message: "🔬 Completed Lab activitiy \(activity.activityName)")
+                                GameMessageBoard.shared.newAchievement(type: .experience, message: "🔬 Completed Lab activitiy: \(activity.activityName)")
+                                //newAchievement(type: .experience, qtty: 2, message: "🔬 Completed Lab activitiy \(activity.activityName)")
                                 newsLines.append(descriptor)
                             } else {
                                 let descriptor = "⏱ In progress... Lab activity \(activity.activityName). \(activity.dateEnds.timeIntervalSince(Date()))"
@@ -734,7 +735,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                             if activity.dateEnds.compare(Date()) == .orderedAscending {
                                 let moji = person.gender == "male" ? "🙋‍♂️":"🙋‍♀️"
                                 let descriptor = "\(moji) \(person.name) completed activity \(activity.activityName)."
-                                GameMessageBoard.shared.newAchievement(type: .experience, qtty: 1, message: descriptor)
+                                GameMessageBoard.shared.newAchievement(type: .experience, message: descriptor) //newAchievement(type: .experience, qtty: 1, message: descriptor)
                                 newsLines.append(descriptor)
                             }
                         }
@@ -1009,13 +1010,13 @@ extension StationBuildItem {
                 let moduleScene = SCNScene(named: "Art.scnassets/Module.scn")!
                 if let nodeObj = moduleScene.rootNode.childNode(withName: "Module", recursively: false)?.clone() {
                     
-                    var modSkin:ModuleSkin!
-                    if let skin = skin, let mSkin:ModuleSkin = ModuleSkin(rawValue:skin) {
-                        modSkin = mSkin
-                    } else {
-                        modSkin = ModuleSkin.allCases.randomElement()!
-                    }
-                    let uvMapName = "\(modSkin.uvMapName).png"
+//                    var modSkin:ModuleSkin!
+//                    if let skin = skin {
+//                        modSkin = mSkin
+//                    } else {
+//                        modSkin = ModuleSkin.allCases.randomElement()!
+//                    }
+                    let uvMapName = "\(skin?.uvMapName ?? ModuleSkin.allCases.randomElement()!.uvMapName).png"
                     
                     // MATERIAL | SKIN
                     
