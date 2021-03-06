@@ -115,7 +115,7 @@ struct SolarPanel:Codable, Identifiable {
     
     /// The energy generated
     func maxCurrent() -> Int {
-        return size * 20
+        return size * 15
     }  // output current
     
 }

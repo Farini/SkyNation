@@ -39,6 +39,12 @@ enum PeripheralType:String, Codable, CaseIterable {
     /// Stores `TankType` (Gases and liquid)
     case storageTank    // Container
     
+    /// Transforms part of wasteLiquid back into water (or water vapor, to be easier)
+    case WaterFilter
+    
+    /// Transforms wasteSolid into fertilizer
+    case BioSolidifier
+    
     // MARK: - Model Building
     
     /// Where delivery ships can dock
@@ -62,19 +68,6 @@ enum PeripheralType:String, Codable, CaseIterable {
     /// Makes money for the station
     case Antenna
     
-    /// Transforms part of wasteLiquid back into water (or water vapor, to be easier)
-    case WaterFilter
-    
-    /// Transforms wasteSolid into fertilizer
-    case BioSolidifier
-    
-    // Add to methods
-    
-    /// How much each level contributes to its production
-    // var enegyConsumptionMultiplier
-    
-    /// Whether this Peripheral can be used off Accounting time
-    // var canBoost:Bool
     
     // MARK: - Calculated Variables
     
@@ -146,10 +139,10 @@ enum PeripheralType:String, Codable, CaseIterable {
     /// Energy Consumption at **Level 0**
     var energyConsumption:Int {
         switch self {
-            case .Condensator, .ScrubberCO2: return 10
-            case .Electrolizer: return 15
-            case .Methanizer, .Radiator, .WaterFilter: return 20
-            case .Antenna, .BioSolidifier: return 25
+            case .Condensator, .ScrubberCO2: return 12
+            case .Electrolizer: return 18
+            case .Methanizer, .Radiator, .WaterFilter: return 25
+            case .Antenna, .BioSolidifier: return 30
             
             default: return 0
         }
@@ -183,10 +176,65 @@ class PeripheralObject:Codable, Identifiable, Equatable {
         powerOn = true
     }
     
+    /**
+     Indicates the power consumption. Used in Accounting
+     - Parameters:
+     - crack: A *boolean*  indicating if device should break - `isBroken`
+     - Returns: The amount of energy it consumes, if it does. */
+    func powerConsume(crack:Bool) -> Int {
+
+        if powerOn == true {
+            // Power is on
+            // Consume Energy
+            // return peripheral.energyConsumption
+            
+            if breakable { // It can only break if it is breakabale and the power is on
+                if isBroken {
+                    // already broken
+                    return peripheral.energyConsumption
+                } else {
+                    // can break
+                    if !crack { return peripheral.energyConsumption }
+                    let chanceToBreak = GameLogic.chances(hit: 1.0, total: 50.0)
+                    if chanceToBreak {
+                        self.isBroken = true
+                    }
+                    return peripheral.energyConsumption
+                }
+            } else {
+                // unbreakable
+                return peripheral.energyConsumption
+            }
+            
+        } else {
+            // Power off
+            return 0
+        }
+    }
+    
+    
+    
+    
+    
     func powerConsumption() -> Int {
         return peripheral.energyConsumption
     }
     
+    func getConsumables() -> [String:Int] {
+        
+        switch peripheral {
+            case .ScrubberCO2: return [TankType.co2.rawValue: 2, "CarbDiox":-2]
+            case .Condensator: return [TankType.h2o.rawValue: 2, "vapor": -2]
+            case .Electrolizer: return [TankType.h2o.rawValue: -2, "oxygen":2, TankType.h2.rawValue:4]
+            case .Methanizer: return [TankType.co2.rawValue:-2, TankType.h2.rawValue:-4, TankType.ch4.rawValue:2, TankType.o2.rawValue:2]
+            case .WaterFilter: return [Ingredient.wasteLiquid.rawValue: -2, TankType.h2o.rawValue:2]
+            case .BioSolidifier: return [Ingredient.wasteSolid.rawValue: -2, Ingredient.Fertilizer.rawValue:2]
+            default: return [:]
+        }
+    }
+    
+    
+    // Deprecate
     func runAirMods(air input:AirComposition) -> (output:AirComposition, waterProduced:Int) {
         
         var tmpWater:Int = 0
@@ -196,7 +244,7 @@ class PeripheralObject:Codable, Identifiable, Equatable {
             case .Condensator:
 //                print("Condensate")
                 let vapor = newAir.h2o
-                if vapor > 2 {
+                if vapor > 5 {
                     tmpWater += 2
                     newAir.h2o -= 2
                 }
@@ -204,7 +252,7 @@ class PeripheralObject:Codable, Identifiable, Equatable {
             case .ScrubberCO2:
 //                print("Scrubs")
                 let co2 = newAir.co2
-                if co2 > 2 {
+                if co2 > 3 {
                     newAir.co2 -= 2
                 }
                 return (newAir, tmpWater)

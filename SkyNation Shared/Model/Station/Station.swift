@@ -37,22 +37,14 @@ class Station:Codable {
     
     // MARK: - Accounting
     
-    /// Set overtime to 'true' if you want to force the accounting past the current Date
-    func runAccounting(overtime:Bool = false) {
-        
-        // 1. Date
-        // 1.A Get the date
-        // 1.B Get hours and time constraints
+    func accountingTimeSheet() -> Int {
         
         let formatter = GameFormatters.fullDateFormatter
-        
         var lastDate = accountingDate
-        
         var m = Calendar.current.dateComponents([.year, .month, .weekOfYear, .weekday, .day, .hour, .minute], from: lastDate)
         m.setValue(0, for: .minute)
         m.setValue(0, for: .second)
         m.setValue(0, for: .nanosecond)
-        
         lastDate = Calendar.current.date(from: m) ?? Date()
         
         guard let nextDate = Calendar.current.date(from: m)?.addingTimeInterval(3600) else { fatalError() }
@@ -64,7 +56,39 @@ class Station:Codable {
             print("Current accounting date: \(formatter.string(from: nextDate))")
         }
         
-        if !overtime && Date().compare(nextDate) == .orderedAscending {
+        if Date().compare(nextDate) == .orderedAscending {
+            if GameSettings.shared.debugAccounting {
+                print("Accounting not ready yet")
+            }
+            return 0
+        } else {
+            let hours = Calendar.current.dateComponents([.hour], from: nextDate, to: Date()).hour ?? Int.max
+            return hours
+        }
+    }
+    
+    /// Set overtime to 'true' if you want to force the accounting past the current Date
+    func runAccounting(overtime:Bool? = false) {
+        
+        // Date
+        
+        let formatter = GameFormatters.fullDateFormatter
+        var lastDate = accountingDate
+        var m = Calendar.current.dateComponents([.year, .month, .weekOfYear, .weekday, .day, .hour, .minute], from: lastDate)
+        m.setValue(0, for: .minute)
+        m.setValue(0, for: .second)
+        m.setValue(0, for: .nanosecond)
+        lastDate = Calendar.current.date(from: m) ?? Date()
+        
+        guard let nextDate = Calendar.current.date(from: m)?.addingTimeInterval(3600) else { fatalError() }
+        
+        if GameSettings.shared.debugAccounting {
+            print("\n 🌎 [STATION ACCOUNTING] \n------")
+            print("Last Accounting Date: \(formatter.string(from: lastDate))")
+            print("Last date (rounded): \(formatter.string(from: lastDate))")
+            print("Current accounting date: \(formatter.string(from: nextDate))")
+        }
+        if overtime == false && Date().compare(nextDate) == .orderedAscending {
             if GameSettings.shared.debugAccounting {
                 print("Accounting not ready yet")
             }
@@ -76,173 +100,312 @@ class Station:Codable {
         
         // 2. Solar panels
         
+        // Add this to report
+        let powerGeneration = truss.powerGeneration()
+        
+        // Add this to report
+        let leftOverPower = truss.refillBatteries(amount: powerGeneration)
+        
+        
+        
         // Fill Batteries
-        let panels = truss.solarPanels
-        var energyGenerated:Int = 0
-        for panel in panels {
-            energyGenerated += panel.maxCurrent()
-        }
-        print("Energy Generated: \(energyGenerated)")
-        let energyInput = energyGenerated
-        for bat in truss.batteries {
-            let receivable = bat.capacity - bat.current
-            if receivable >= energyGenerated {
-                bat.current += energyGenerated
-                energyGenerated = 0
-                break
-            } else {
-                bat.current = bat.capacity
-                energyGenerated -= receivable
-            }
-        }
+//        let panels = truss.solarPanels
+//        var energyGenerated:Int = 0
+//        for panel in panels {
+//            energyGenerated += panel.maxCurrent()
+//        }
+//        print("Energy Generated: \(energyGenerated)")
+//        let energyInput = energyGenerated
+//        for bat in truss.batteries {
+//            let receivable = bat.capacity - bat.current
+//            if receivable >= energyGenerated {
+//                bat.current += energyGenerated
+//                energyGenerated = 0
+//                break
+//            } else {
+//                bat.current = bat.capacity
+//                energyGenerated -= receivable
+//            }
+//        }
         
         // 3. LSS Peripherals
         print("\n⚙️ [Peripherals] ---")
         
-        var tempWater:Int = truss.tanks.filter({ $0.type == .h2o }).map({$0.current}).reduce(0, +)
-        var tempAir:AirComposition = air    // The air being modified
-        var accumulatedUrine:Int = 0    // Amount of urine left over from capacity of boxes
-        var accumulatedPoop:Int = 0     // Amount of poop left over from capacity of boxes
-        let tempEnergy = truss.batteries.map({$0.current}).reduce(0, +) + energyGenerated
+        // report
+        var water:Int = truss.getAvailableWater()
+        var currentAir = air
         
-        let report = AccountingReport(time: nextDate, energy: tempEnergy, zInput: energyInput, air: air, water: tempWater)
+        var peeSewage = truss.getAvailableRoom(for: .wasteLiquid)   // Amount of urine left over from capacity of boxes
+        var pooSewage = truss.getAvailableRoom(for: .wasteSolid)    // Amount of poop left over from capacity of boxes
+        
+        var producedPee:Int = 0
+        var producedPoo:Int = 0
+        
+        
+//        var tempWater:Int = truss.tanks.filter({ $0.type == .h2o }).map({$0.current}).reduce(0, +)
+//        var tempAir:AirComposition = air    // The air being modified
+//
+//        var accumulatedUrine:Int = 0    // Amount of urine left over from capacity of boxes
+//        var accumulatedPoop:Int = 0     // Amount of poop left over from capacity of boxes
+//
+//        let tempEnergy = truss.batteries.map({$0.current}).reduce(0, +) + energyGenerated
+        
+//        let report = AccountingReport(time: nextDate, energy: tempEnergy, zInput: energyInput, air: air, water: tempWater)
+        let report = AccountingReport(time: nextDate, powerGen: powerGeneration, energy: leftOverPower, water: water, air: currentAir)
+        
         
         // Peripherals
         for peripheral in peripherals {
             // power on -> broken = false || power on -> not broken = true || power off = false
-            let isWorking = peripheral.powerOn == true && peripheral.isBroken == false //? (peripheral.isBroken ? false:true):false
-            print("\n\t \(peripheral.peripheral.rawValue) \(peripheral.isBroken) \(peripheral.powerOn) \(peripheral.level)")
-            print("\t Working:\(isWorking)")
-            print("\t Fixed: \(peripheral.lastFixed?.description ?? "never")")
-            print("\t Power Consumption: \(peripheral.powerConsumption())")
+            
+//            let isWorking = peripheral.powerOn == true && peripheral.isBroken == false //? (peripheral.isBroken ? false:true):false
+//            print("\n\t \(peripheral.peripheral.rawValue) \(peripheral.isBroken) \(peripheral.powerOn) \(peripheral.level)")
+//            print("\t Working:\(isWorking)")
+//            print("\t Fixed: \(peripheral.lastFixed?.description ?? "never")")
+//            print("\t Power Consumption: \(peripheral.powerConsumption())")
             
             // Energy.
             // Increase power consumption if working
+            let useResult = peripheral.powerConsume(crack: true)
+            if useResult > 0 {
+                
+                if peripheral.isBroken {
+                    report.brokenPeripherals.append(peripheral.id)
+                    report.addProblem(string: "⛔️ Peripheral \(peripheral.peripheral.rawValue) is broken")
+                }
+                
+                let trussResult = truss.consumeEnergy(amount: useResult)
+                if trussResult && peripheral.isBroken == false {
+                    // Now it can work
+                    
+                    let production = peripheral.getConsumables()
+                    var didFail:Bool = false
+                    
+                    // Subtracting
+                    for (key, value) in production where value < 0 {
+                        if let ingredient = Ingredient(rawValue: key) {
+                            // Ingredient
+                            let array = truss.validateResources(ingredients:[ingredient:abs(value)])
+                            if !array.isEmpty {
+                                report.problems.append("Not enough ingredients for peripheral \(peripheral.peripheral.rawValue)")
+                                didFail = true
+                            } else {
+                                let payment = truss.payForResources(ingredients: [ingredient:value])
+                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) produced: \(value) \(ingredient.rawValue)")
+                                print("Account Pay: \(payment)")
+                            }
+                            
+                        } else if let tank = TankType(rawValue: key) {
+                            // Tank
+                            if truss.tanks.filter({ $0.type == tank }).compactMap({ $0.current }).reduce(0, +) < abs(value) {
+                                report.problems.append("Not enough of \(tank.name) for peripheral")
+                                didFail = true
+                            } else {
+                                let _ = truss.chargeFrom(tank: tank, amount: value)
+                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) produced: \(value) \(tank.rawValue)")
+                            }
+                        } else if key == "vapor" {
+                            
+                            if air.h2o < abs(value) {
+                                report.problems.append("Not enough vapor for \(peripheral.peripheral.rawValue)")
+                                didFail = true
+                            } else {
+                                self.air.h2o += value // this actually subtracts
+                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) produced: \(value) vapor")
+                            }
+                            // vapor in air
+                        } else if key == "oxygen" {
+                            // oxygen in air, not tank
+                            if air.o2 < abs(value) {
+                                report.problems.append("Not enough oxygen for \(peripheral.peripheral.rawValue)")
+                                didFail = true
+                            } else {
+                                self.air.o2 += value // this actually subtracts
+                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) produced: \(value) oxygen")
+                            }
+                        } else if key == "CarbDiox" {
+                            // Carbon dioxide in air (CO2)
+                            if air.co2 < abs(value) {
+                                report.problems.append("Not enough CO2 for \(peripheral.peripheral.rawValue)")
+                                didFail = true
+                            } else {
+                                self.air.co2 += value // This actually subtracts
+                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) produced: \(value) CO2")
+                            }
+                        }
+                    }
+                    
+                    guard didFail == false else { continue }
+                    
+                    // Adding
+                    for (key, value) in production where value > 0 {
+                        if let ingredient = Ingredient(rawValue: key) {
+                            // Ingredient
+                            let spill = truss.refillContainers(of: ingredient, amount: value)
+                            if spill > 0 {
+                                report.problems.append("Could not find refill \(ingredient) completely")
+                            }
+                        } else if let tank = TankType(rawValue: key) {
+                            // Tank
+                            let spill = truss.refillTanks(of: tank, amount: value)
+                            if spill > 0 {
+                                report.problems.append("Could not refill \(tank) completely")
+                            }
+                        } else if key == "vapor" {
+                            // vapor in air
+                            // No peripherals produce Vapor
+                            
+                        } else if key == "oxygen" {
+                            // oxygen in air, not tank
+                            self.air.o2 += value
+                        }
+                    }
+                    
+                }
+                
+            } else { continue }
+            
+            
+            
+            
+            
+            
             // Run air through
-            if isWorking {
-                if truss.consumeEnergy(amount: peripheral.powerConsumption()) {
-                    let airResult = peripheral.runAirMods(air: tempAir)
-                    tempAir = airResult.output
-                    if airResult.waterProduced != 0 {
-                        tempWater += airResult.waterProduced
-                    }
-                }
-            } else {
-                report.addProblem(string: "⛔️ \(peripheral.peripheral.rawValue) is broken")
-                problems.append("⛔️ Broken Peripheral")
-                continue
-            }
+//            if isWorking {
+//                if truss.consumeEnergy(amount: peripheral.powerConsumption()) {
+//                    let airResult = peripheral.runAirMods(air: tempAir)
+//                    tempAir = airResult.output
+//                    if airResult.waterProduced != 0 {
+//                        tempWater += airResult.waterProduced
+//                    }
+//                }
+//            } else {
+//                report.addProblem(string: "⛔️ \(peripheral.peripheral.rawValue) is broken")
+//                problems.append("⛔️ Broken Peripheral")
+//                continue
+//            }
+//
+//            // Breaking
+//            if peripheral.breakable {
+//                // Put this in the peripheral object
+//                let chanceToBreak = GameLogic.chances(hit: 1.0, total: 50.0)
+//                if chanceToBreak {
+//                    print("\n ⚠️ Should break peripheral !! \n\n")
+//                    peripheral.isBroken = true
+//                    problems.append("✋ Broken Peripheral")
+//                    report.addProblem(string: "⛔️ \(peripheral.peripheral.rawValue) is broken")
+//                    continue
+//                }
+//            }
             
-            // Breaking
-            if peripheral.breakable {
-                // Put this in the peripheral object
-                let chanceToBreak = GameLogic.chances(hit: 1.0, total: 50.0)
-                if chanceToBreak {
-                    print("\n ⚠️ Should break peripheral !! \n\n")
-                    peripheral.isBroken = true
-                    problems.append("✋ Broken Peripheral")
-                    report.addProblem(string: "⛔️ \(peripheral.peripheral.rawValue) is broken")
-                    continue
-                }
-            }
+//            switch peripheral.peripheral {
+//                case .ScrubberCO2:
+//                    if tempAir.co2 > 3 {
+//                        tempAir.co2 -= 3
+//                    }
+//                case .Condensator:
+//                    if tempAir.h2o > 4 {
+//                        tempAir.h2o -= 4
+//                        tempWater += 4
+//                        report.addNote(string: "Condensator removed 4L of water vapor from the air")
+//                    }
+//                case .Electrolizer:
+//                    // Make electrolisys if air is bad
+//                    let conditions = [AirQuality.Lethal, AirQuality.Medium, AirQuality.Bad]
+//                    if conditions.contains(tempAir.airQuality()) {
+//                        tempWater -= 3
+//                        tempAir.o2 += 3
+////                        tempAir.h2 += 6
+//                        report.addNote(string: "Electrolizer used 3L of water, and made 3L of O2")
+//                    }
+//                case .Methanizer:
+//                    if tempAir.co2 > 2 {
+//                        if let hydrogenTank = truss.tanks.filter({ $0.type == .h2 }).sorted(by: { $0.current > $1.current}).first, hydrogenTank.current >= 2 {
+//                            if let methaneTank = truss.tanks.filter({ $0.type == .ch4 }).sorted(by: { $0.current < $1.current }).first, methaneTank.current < methaneTank.capacity - 1 {
+//                                tempAir.co2 -= 2
+//                                hydrogenTank.current -= 2
+//                                methaneTank.current += 2
+//                                report.addNote(string: "Methanizer produced 2Kg of methane")
+//                            } else {
+//                                report.addNote(string: "Methanizer couldn't find a Methane Tank for output.")
+//                            }
+//                            // o2
+//                            if let o2Tank = truss.tanks.filter({ $0.type == .o2 }).sorted(by: { $0.current < $1.current }).first, o2Tank.current < o2Tank.capacity - 1 {
+//                                o2Tank.current += 2
+//                            }
+//                        } else {
+//                            report.addNote(string: "Methanizer couldn't find a Hydrogen Tank for input.")
+//                        }
+//                    }
+//                case .WaterFilter:
+//                    // Filter water. Remove from poop(StorageBox), add to tank(h2o)
+//                    if let dirty = truss.extraBoxes.filter({ $0.type == .wasteLiquid }).sorted(by: { $0.current > $1.current }).first {
+//                        if let drinkable = truss.tanks.filter({ $0.type == .h2o }).sorted(by: { $0.current < $1.current }).first {
+//                            guard dirty.current > 5 else { continue }
+//                            if dirty.current < 10 {
+//                                dirty.current -= 2
+//                                drinkable.current += 1
+//                            } else {
+//                                // up to 10, or 10% + lvl
+//                                let lvl = peripheral.level + 1
+//                                let amt = Int(0.1 * Double(dirty.current)) + lvl
+//                                dirty.current -= (amt + 1)
+//                                drinkable.current = min(drinkable.current + amt, drinkable.capacity)
+//                                report.addNote(string: "Water filter recycled \(amt)L of water")
+//                            }
+//                        }
+//                    }
+//                case .BioSolidifier:
+//                    // Remove from poop(StorageBox), add to Fertilizer
+//                    if let poop = truss.extraBoxes.filter({ $0.type == .wasteSolid }).sorted(by: { $0.current > $1.current }).first {
+//                        if let box = truss.extraBoxes.filter({ $0.type == .Fertilizer }).sorted(by: { $0.current < $1.current }).first {
+//                            if poop.current < 10 {
+//                                poop.current -= 2
+//                                box.current += 1
+//                            } else {
+//                                // up to 10, or 10% + lvl
+//                                let lvl = peripheral.level + 1
+//                                let amt = Int(0.1 * Double(poop.current)) + lvl
+//                                poop.current -= (amt + 1)
+//                                box.current = min(box.current + amt, box.capacity)
+//                                report.addNote(string: "BioSolidifier made \(amt)Kg of fertilizer")
+//                            }
+//                        }
+//                    }
+//                default:
+//                    continue
+//            }
             
-            switch peripheral.peripheral {
-                case .ScrubberCO2:
-                    if tempAir.co2 > 3 {
-                        tempAir.co2 -= 3
-                    }
-                case .Condensator:
-                    if tempAir.h2o > 4 {
-                        tempAir.h2o -= 4
-                        tempWater += 4
-                        report.addNote(string: "Condensator removed 4L of water vapor from the air")
-                    }
-                case .Electrolizer:
-                    // Make electrolisys if air is bad
-                    let conditions = [AirQuality.Lethal, AirQuality.Medium, AirQuality.Bad]
-                    if conditions.contains(tempAir.airQuality()) {
-                        tempWater -= 3
-                        tempAir.o2 += 3
-//                        tempAir.h2 += 6
-                        report.addNote(string: "Electrolizer used 3L of water, and made 3L of O2")
-                    }
-                case .Methanizer:
-                    if tempAir.co2 > 2 {
-                        if let hydrogenTank = truss.tanks.filter({ $0.type == .h2 }).sorted(by: { $0.current > $1.current}).first, hydrogenTank.current >= 2 {
-                            if let methaneTank = truss.tanks.filter({ $0.type == .ch4 }).sorted(by: { $0.current < $1.current }).first, methaneTank.current < methaneTank.capacity - 1 {
-                                tempAir.co2 -= 2
-                                hydrogenTank.current -= 2
-                                methaneTank.current += 2
-                                report.addNote(string: "Methanizer produced 2Kg of methane")
-                            } else {
-                                report.addNote(string: "Methanizer couldn't find a Methane Tank for output.")
-                            }
-                            // o2
-                            if let o2Tank = truss.tanks.filter({ $0.type == .o2 }).sorted(by: { $0.current < $1.current }).first, o2Tank.current < o2Tank.capacity - 1 {
-                                o2Tank.current += 2
-                            }
-                        } else {
-                            report.addNote(string: "Methanizer couldn't find a Hydrogen Tank for input.")
-                        }
-                    }
-                case .WaterFilter:
-                    // Filter water. Remove from poop(StorageBox), add to tank(h2o)
-                    if let dirty = truss.extraBoxes.filter({ $0.type == .wasteLiquid }).sorted(by: { $0.current > $1.current }).first {
-                        if let drinkable = truss.tanks.filter({ $0.type == .h2o }).sorted(by: { $0.current < $1.current }).first {
-                            guard dirty.current > 5 else { continue }
-                            if dirty.current < 10 {
-                                dirty.current -= 2
-                                drinkable.current += 1
-                            } else {
-                                // up to 10, or 10% + lvl
-                                let lvl = peripheral.level + 1
-                                let amt = Int(0.1 * Double(dirty.current)) + lvl
-                                dirty.current -= (amt + 1)
-                                drinkable.current = min(drinkable.current + amt, drinkable.capacity)
-                                report.addNote(string: "Water filter recycled \(amt)L of water")
-                            }
-                        }
-                    }
-                case .BioSolidifier:
-                    // Remove from poop(StorageBox), add to Fertilizer
-                    if let poop = truss.extraBoxes.filter({ $0.type == .wasteSolid }).sorted(by: { $0.current > $1.current }).first {
-                        if let box = truss.extraBoxes.filter({ $0.type == .Fertilizer }).sorted(by: { $0.current < $1.current }).first {
-                            if poop.current < 10 {
-                                poop.current -= 2
-                                box.current += 1
-                            } else {
-                                // up to 10, or 10% + lvl
-                                let lvl = peripheral.level + 1
-                                let amt = Int(0.1 * Double(poop.current)) + lvl
-                                poop.current -= (amt + 1)
-                                box.current = min(box.current + amt, box.capacity)
-                                report.addNote(string: "BioSolidifier made \(amt)Kg of fertilizer")
-                            }
-                        }
-                    }
-                default:
-                    continue
-            }
         }
         
-        // Tanks - Regulate amount of oxygen in air
+        // OXYGEN - Regulate amount of oxygen in air
         let airConditions = [AirQuality.Lethal, AirQuality.Medium, AirQuality.Bad]
-        if airConditions.contains(tempAir.airQuality()) {
-            // Increase oxygen
-            let oxyTanks = truss.tanks.filter({ $0.type == .o2 })
+        if airConditions.contains(self.air.airQuality()) {
             
-            report.addNote(string: "Adding O2 from tanks into the air")
+            // Increase oxygen
+            let oxyTanks = truss.tanks.filter({ $0.type == .o2 && $0.current > 0 }).sorted(by: { $0.current > $1.current })
+            
+            var oxygenNeeds = self.air.needsOxygen()
+//            report.addNote(string: "Adding O2 from tanks into the air")
+            var added:Int = 0
             
             for o2Tank in oxyTanks {
-                let oNeeded = tempAir.needsOxygen()
-                if oNeeded > o2Tank.current {
-                    tempAir.o2 += o2Tank.current
-                    o2Tank.current = 0
+//                let oNeeded = tempAir.needsOxygen()
+                if o2Tank.current >= oxygenNeeds {
+                    added += oxygenNeeds
+                    self.air.o2 += oxygenNeeds
+                    o2Tank.current -= oxygenNeeds
+                    oxygenNeeds = 0
+                    
                 } else {
-                    o2Tank.current -= oNeeded
-                    tempAir.o2 += oNeeded
+                    added += o2Tank.current
+                    self.air.o2 += o2Tank.current
+                    oxygenNeeds -= o2Tank.current
+                    o2Tank.current = 0
                 }
             }
+            
+            report.addNote(string: "Added \(added)L of O2 to the air")
         }
         
         // 4. Humans
@@ -256,13 +419,120 @@ class Station:Codable {
         // + Mood
         // + Activity check
         
-        print("Air before humans...")
-        print(tempAir.describe())
+//        print("Air before humans...")
+//        print(tempAir.describe())
         
         print("\n⚙️ [PEOPLE] ---")
+        print("\t 💨: \(self.air.airQuality().rawValue)")
+        
         let inhabitants = habModules.flatMap({$0.inhabitants}) //.reduce(0, +)    // Reduce (see: https://stackoverflow.com/questions/24795130/finding-sum-of-elements-in-swift-array)
         let radiatorsBoost:Bool = peripherals.filter({ $0.peripheral == .Radiator }).count * 3 >= inhabitants.count ? true:false
         
+        for person in inhabitants {
+            
+            print("🤓: \(person.name)\t 😷:\(person.healthPhysical) 😃:\(person.happiness) ❤️:\(person.lifeExpectancy)")
+            let personalNote = "🤓: \(person.name)\t 😷:\(person.healthPhysical) 😃:\(person.happiness) ❤️:\(person.lifeExpectancy)"
+            report.humanNotes.append(personalNote)
+            
+            // Air
+            let newAir = person.consumeAir(airComp: self.air)
+            self.air = newAir
+            
+            // Water
+            if water >= GameLogic.waterConsumption {
+                water -= GameLogic.waterConsumption
+                person.consumedWater(success: true)
+                
+            } else {
+                
+                // No Water
+                person.consumedWater(success: false)
+                report.addProblem(string: "💦 No water for \(person.name)")
+//                let dHealth = max(0, person.healthPhysical - 2)
+//                person.healthPhysical = dHealth
+//                problems.append("💦 Lack of Water")
+//                report.addProblem(string: "\(person.name) 💦 Lack of Water")
+            }
+            
+            // Energy
+            let randomEnergy:Int = [1,2,3].randomElement()!
+            person.consumedEnergy(success: truss.consumeEnergy(amount: randomEnergy))
+            
+//            if truss.consumeEnergy(amount: 1) == false {
+//                let dHappy = max(0, person.happiness - 2)
+//                person.happiness = dHappy
+//                problems.append("⚡️ Lack of Energy")
+//                report.addProblem(string: "⚡️ Lack of Energy")
+//            }
+            
+            // Food
+            if let lastFood:String = food.last {
+                person.consumedFood(lastFood)
+                self.food.removeLast()
+            } else {
+                // Look for bio boxes
+                let bboxes = bioModules.flatMap({ $0.boxes }).filter({ $0.mode == .multiply && $0.population.count > 3 })
+                if let nextBox = bboxes.sorted(by: { $0.population.count > $1.population.count }).first {
+                    if let nextFood = nextBox.population.last {
+                        nextBox.population.removeLast()
+                        person.consumedFood(nextFood, bio:true)
+                    }
+                } else {
+                    // no food
+                    person.consumedFood("")
+                }
+            }
+            
+            // + Mood & adjustments
+            person.randomMood(tech:unlockedTechItems)
+            
+            // Radiator
+            if radiatorsBoost {
+                if person.healthPhysical < 75 && person.happiness < 30 {
+                    person.healthPhysical += 1
+                    person.happiness += 1
+                }
+            }
+            
+            // WASTE MANAGEMENT
+            producedPee += Bool.random() ? 1:2
+            
+            // solidWaste (poop)
+            producedPoo += Bool.random() ? 0:1
+            
+            if person.healthPhysical < 20 {
+                report.addProblem(string: "\(person.name) is very sick! 🤮")
+            }
+            if person.happiness < 20 {
+                report.addProblem(string: "\(person.name) is unhappy! 😭")
+            }
+            
+            // DEATH
+            if person.healthPhysical < 1 {
+                self.prepareDeath(of: person)
+                continue
+            }
+            
+            // + Activity check (cleanup)
+            person.clearActivity()
+            
+            // Aging Humans (Once a week)
+            if m.hour == 1 && m.weekday == 1 {
+                
+                person.age += 1
+                var ageExtended:String = "\(person.age)"
+                if ageExtended.last == "1" { ageExtended = "st" } else if ageExtended.last == "2" { ageExtended = "nd" } else if ageExtended.last == "3" { ageExtended = "rd" } else { ageExtended = "th" }
+//                problems.append("\(person.name)'s \(person.age)\(ageExtended) birthday!")
+                report.humanNotes.append("🎉 \(person.name)'s \(person.age)\(ageExtended) birthday! 🥳")
+                if person.age > person.lifeExpectancy {
+                    problems.append("\(person.name) is diying of age. Farewell!")
+                    report.addProblem(string: "💀 \(person.name) is diying of age. Farewell!")
+                    self.prepareDeath(of: person)
+                }
+            }
+        }
+        
+        /*
         for person in inhabitants {
             
             let newAir = person.consumeAir(airComp: tempAir)
@@ -409,23 +679,24 @@ class Station:Codable {
                 }
             }
         }
+        */
         
         // put the water back in the containers
-        let waterSpill = truss.refillTanks(of: .h2o, amount: tempWater)
+        let waterSpill = truss.refillTanks(of: .h2o, amount: water)
         if waterSpill > 0 {
             problems.append("💦 Water spilling: \(waterSpill)")
             report.addNote(string: "💦 Water tanks are full")
         }
         
         // put back urine
-        let urineSpill = truss.refillContainers(of: .wasteLiquid, amount: accumulatedUrine)
+        let urineSpill = truss.refillContainers(of: .wasteLiquid, amount: producedPee)
         if urineSpill > 0 {
             problems.append("💦 Urine spilling: \(urineSpill)")
-            report.addNote(string: "Waste Water tanks are full")
+            report.addProblem(string: "Waste Water tanks are full")
         }
         
         // put back poop
-        let poopSpill = truss.refillContainers(of: .wasteSolid, amount: accumulatedPoop)
+        let poopSpill = truss.refillContainers(of: .wasteSolid, amount: producedPoo)
         if poopSpill > 0 {
             problems.append("💩 Solid waste spilling: \(poopSpill)")
             report.addNote(string: "💩 Solid Waste containers are full")
@@ -443,18 +714,20 @@ class Station:Codable {
         
         // Report...
         let finishEnergy = truss.batteries.map({ $0.current }).reduce(0, +)
-        report.results(water: tempWater, urine: accumulatedUrine, poop: accumulatedPoop, air: tempAir, energy:finishEnergy)
+        report.results(water: water, urine: producedPee, poop: producedPoo, air: self.air, energy:truss.getAvailableEnergy())
         
         
         // put the air back
-        self.air = tempAir
-        print("Air after humans...")
-        print(tempAir.describe())
+//        self.air = tempAir
+//        print("Air after humans...")
+//        print(tempAir.describe())
         
         // Air Adjustments
         let airNeeded = calculateNeededAir()
-        if airNeeded > tempAir.getVolume() {
-            let delta = airNeeded - tempAir.getVolume()
+        let currentVolume = self.air.getVolume()
+        
+        if airNeeded > currentVolume {
+            let delta = airNeeded - currentVolume
             if let airTank = truss.tanks.filter({ $0.type == .air }).first {
                 let airXfer = min(delta, airTank.current)
                 problems.append("💨 Air adjustment: \(airXfer)")
@@ -464,14 +737,15 @@ class Station:Codable {
                 report.reportNeededAir(amount: airXfer)
             }
         }
+        
         // Oxygen Adjust
-        let oxyNeeded = tempAir.needsOxygen()
+        let oxyNeeded = self.air.needsOxygen()
         if oxyNeeded > 0 {
             if let oxygenTank:Tank = truss.tanks.filter({ $0.type == .o2 && $0.current > 10 }).first {
                 let oxygenUse = min(oxyNeeded, oxygenTank.current)
                 // Update Tank
                 oxygenTank.current -= oxygenUse
-                tempAir.o2 += oxygenUse
+                self.air.o2 += oxygenUse
             }
         }
         
@@ -498,7 +772,9 @@ class Station:Codable {
         self.accountingDate = nextDate
         if nextDate.addingTimeInterval(3600).compare(Date()) == .orderedAscending {
             print("Next Accouting...")
+            
 //            self.runAccounting()
+            
         } else {
             // Report Problems
             print("\n\n 💀 *** [PROBLEMS ENCOUNTERED] *** ")
@@ -754,6 +1030,17 @@ class Station:Codable {
     }
 }
 
+struct EnergyReport:Codable {
+    
+    var solarInput:Int
+    
+    var batteriesBefore:Int
+    var batteriesAfter:Int
+    
+    /// The total power consumed in an Accounting cycle
+    var powerConsumption:Int
+}
+
 class AccountingReport:Codable {
     
     var id:UUID
@@ -763,10 +1050,20 @@ class AccountingReport:Codable {
     var energyInput:Int
     var waterStart:Int
     
-    var brokenPeripherals:[UUID]
-    var airStart:AirComposition
+    // Issues encountered when accounting (lack of water, food, O2, etc.)
+    var problems:[String]
     
+    // Other notes worth taking
+    var notes:[String]
+    var powerNotes:[String]
+    var peripheralNotes:[String]
+    var humanNotes:[String]
+    
+    var brokenPeripherals:[UUID]
+    
+    var airStart:AirComposition
     var airFinish:AirComposition?
+    
     var energyFinish:Int?
     var waterFinish:Int?
     var wasteWaterFinish:Int?
@@ -774,20 +1071,52 @@ class AccountingReport:Codable {
     
     var tankAirAdjustment:Int?
     
-    // Issues encountered when accounting (lack of water, food, O2, etc.)
-    var problems:[String]?
+    // Other
+    // power notes
+    // peri notes
+    // human notes
     
-    // Other notes worth taking
-    var notes:[String]?
+    // Future
+    // 1. How long food is going to last
+    // 2. How long water in going to last
+    // 3. How long oxygen is going to last
+    // - How much air there is left?
+    // - How much oxygen there is left?
+    // 4. poop is full
+    // 5. waste water is full
     
-    init(time:Date, energy:Int, zInput:Int, air:AirComposition, water:Int) {
+    // Report sick people
+    // report unhappy people
+    
+//    init(time:Date, energy:Int, zInput:Int, air:AirComposition, water:Int) {
+//        self.id = UUID()
+//        date = time
+//        energyStart = energy
+//        energyInput = zInput
+//        airStart = air
+//        waterStart = water
+//        brokenPeripherals = []
+//        problems = []
+//        notes = []
+//    }
+    
+    // new
+    init(time:Date, powerGen:Int, energy:Int, water:Int, air:AirComposition) {
+        
         self.id = UUID()
         date = time
         energyStart = energy
-        energyInput = zInput
+        energyInput = powerGen
         airStart = air
         waterStart = water
+        
         brokenPeripherals = []
+        problems = []
+        notes = []
+        
+        powerNotes = []
+        peripheralNotes = []
+        humanNotes = []
     }
     
     func results(water:Int, urine:Int, poop:Int, air:AirComposition, energy:Int) {
@@ -806,26 +1135,26 @@ class AccountingReport:Codable {
     
     /// Adds a problem to the accounting
     func addProblem(string:String) {
-        var newProblems = problems ?? []
+        var newProblems = problems
         newProblems.append(string)
         self.problems = newProblems
     }
     
     /// Gets the problems to display
     func listProblems() -> [String] {
-        return problems ?? []
+        return problems
     }
     
     /// Adds a note to the report
     func addNote(string:String) {
-        var newNotes = notes ?? []
+        var newNotes = notes
         newNotes.append(string)
         self.notes = newNotes
     }
     
     /// Gets the notes to display
     func listNotes() -> [String] {
-        return notes ?? []
+        return notes
     }
     
     static func example() -> AccountingReport? {

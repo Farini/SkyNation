@@ -154,9 +154,15 @@ class Person:Codable, Identifiable, Equatable {
 //    }
     
     /// Sets a random mood
-    func randomMood() {
+    func randomMood(tech:[TechItems]) {
         
         var happyDeltas:[Int] = [-1, 0, 1]
+        if tech.contains(.Cuppola) {
+            happyDeltas.append(2)
+        }
+        if tech.contains(.Airlock) {
+            happyDeltas.append(1)
+        }
         
         // Happiness
         
@@ -181,7 +187,7 @@ class Person:Codable, Identifiable, Equatable {
             // Less life expectancy
             if Bool.random() && Bool.random() { lifeExpectancy -= 1 }
             
-        }else if happiness >= 78 && healthPhysical > 95 && lifeExpectancy < 90 {
+        }else if happiness >= 78 && healthPhysical > 95 && lifeExpectancy < 100 {
             // More life expectancy
             if Bool.random() && Bool.random() { lifeExpectancy += 1 }
         }
@@ -231,9 +237,16 @@ class Person:Codable, Identifiable, Equatable {
         return air
     }
     
-    func consumeFood(_ new:String, bio:Bool = false) {
+    func consumedFood(_ new:String, bio:Bool = false) {
         
         var happyDelta:Int = 0
+        
+        // No food
+        if new.isEmpty {
+            self.healthPhysical = min(0, healthPhysical - 3)
+            self.happiness = min(0, happiness - 2)
+            return
+        }
         
         if bio == true && Bool.random() == true { happyDelta += 1 }
         
@@ -253,18 +266,46 @@ class Person:Codable, Identifiable, Equatable {
             }
         }
         
-        var newHappy = min(100, happiness + happyDelta)
-        if newHappy < 0 { newHappy = 0 }
-        
+        var newHappy = happiness + happyDelta
+        if newHappy < 0 { newHappy = 0 } else if newHappy > 100 { newHappy = 100 }
         happiness = newHappy
         
-        if healthPhysical < 50 {
+        if healthPhysical < 30 {
             healthPhysical += 1
         }
         
         // Refresh array of eaten foods
         if foodEaten.count > 5 {
             self.foodEaten = [new]
+        } else {
+            self.foodEaten.append(new)
+        }
+    }
+    
+    /// Performs changes in health and happiness according to water consumption
+    func consumedWater(success:Bool) {
+        if success {
+            // Help the sick
+            if healthPhysical < 45 {
+                healthPhysical += 3
+            }
+        } else {
+            // No success. Hit health
+            if healthPhysical > 2 {
+                healthPhysical -= 2
+            }
+            // hit happy
+            if happiness > 50 {
+                happiness -= 5
+            }
+        }
+    }
+    
+    func consumedEnergy(success:Bool) {
+        if !success {
+            if happiness > 20 {
+                happiness -= 2
+            }
         }
     }
     

@@ -171,7 +171,7 @@ class Truss:Codable {
      */
     func refillContainers(of type:Ingredient, amount:Int) -> Int {
         var leftOvers = amount
-        let boxArray = extraBoxes.filter({ $0.type == type })
+        let boxArray = extraBoxes.filter({ $0.type == type }).sorted(by: { $0.current < $1.current })
         for box in boxArray {
             if leftOvers <= 0 {
                 return 0
@@ -276,6 +276,23 @@ class Truss:Codable {
         }
     }
     
+    /// If this returns more than 0, it is because we couldn't charge
+    func chargeFrom(tank type:TankType, amount:Int) -> Int {
+        var remaining = amount
+        for tank in tanks.filter({ $0.type == type }).sorted(by: { $0.current > $1.current }) {
+            if remaining <= 0 { break }
+            let room = tank.capacity - tank.current
+            if room > remaining {
+                tank.current -= remaining
+                remaining = 0
+            } else {
+                tank.current = 0
+                remaining -= room
+            }
+        }
+        return remaining
+    }
+    
     // Boxes
     
     /**
@@ -307,6 +324,32 @@ class Truss:Codable {
     
     // Energy
     
+    func powerGeneration() -> Int {
+        let panels = solarPanels
+        let powerGen:Int = panels.compactMap({ $0.maxCurrent() }).reduce(0, +)
+        if GameSettings.shared.debugAccounting == true {
+            print("Power Generated: \(powerGen)")
+        }
+        return powerGen
+    }
+    
+    func refillBatteries(amount:Int) -> Int {
+        var remaining:Int = amount
+        for battery in batteries.sorted(by: { $0.current < $1.current }) {
+            let receivable = battery.capacity - battery.current
+            if receivable >= remaining {
+                battery.current += remaining
+                remaining = 0
+                break
+            } else {
+                battery.current = battery.capacity
+                remaining -= receivable
+            }
+        }
+        guard remaining >= 0 else { fatalError() }
+        return remaining
+    }
+    
     /**
      Removes a `Battery` object. (Usually when transferring to a `SpaceVehicle`
      - Parameters:
@@ -326,7 +369,7 @@ class Truss:Codable {
     func consumeEnergy(amount:Int) -> Bool {
         var consumption = amount
         let ttl = batteries.map({ $0.current }).reduce(0, +)
-        // return nil if not enough energy
+        
         if ttl < consumption {
             return false
         } else {
@@ -341,6 +384,29 @@ class Truss:Codable {
             }
             return true
         }
+    }
+    
+    // Getters ?
+    
+    func getAvailableWater() -> Int {
+        return tanks.filter({ $0.type == .h2o }).map({$0.current}).reduce(0, +)
+    }
+    
+    /// Gets the total amount for any `TankType`
+    func getTotal(for tankType:TankType) -> Int {
+        return tanks.filter({ $0.type == tankType }).map({ $0.current }).reduce(0, +)
+    }
+    
+    func getAvailableVolume(for tankType:TankType) -> Int {
+        let totalCapacity = tanks.filter({ $0.type == tankType }).map({ $0.capacity }).reduce(0, +)
+        let totalCurrent  = tanks.filter({ $0.type == tankType }).map({ $0.current }).reduce(0, +)
+        return totalCapacity - totalCurrent
+    }
+    
+    func getAvailableRoom(for ingredient:Ingredient) -> Int {
+        let totalCapacity = extraBoxes.filter({ $0.type == ingredient }).map({ $0.capacity }).reduce(0, +)
+        let totalCurrent  = extraBoxes.filter({ $0.type == ingredient }).map({ $0.current }).reduce(0, +)
+        return totalCapacity - totalCurrent
     }
     
     func getAvailableEnergy() -> Int {

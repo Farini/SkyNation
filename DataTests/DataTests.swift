@@ -24,6 +24,25 @@ class DataTests: XCTestCase {
         print("Quantity: \(qtty)")
     }
     
+    func testAccounting() throws {
+        
+        print("\n --- Accounting Start ---")
+        
+        
+        GameSettings.shared.debugAccounting = true
+        let station = LocalDatabase.shared.station
+        
+        // Part 1 (Validation)
+        XCTAssertNotNil(station)
+        
+        let tsResult = station!.accountingTimeSheet()
+        print("Timesheet result: \(tsResult)")
+        
+        station?.runAccounting()
+        
+        print("\n --- Accounting End ---")
+    }
+    
     func testAntennaLevel() {
         let antenna = PeripheralObject(peripheral: .Antenna)
         let level = antenna.level
@@ -45,6 +64,7 @@ class DataTests: XCTestCase {
         // This is an example of a performance test case.
         measure {
             // Put the code you want to measure the time of here.
+            
         }
     }
 

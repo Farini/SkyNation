@@ -97,39 +97,6 @@ Items being worked on
 
 ## 📝 Doing - Present
 
-### Playability Improvements. Started: 2/17
-
-- [X] Ingredients and sufficiency
-- [X] Create a general Header View in SwiftUI for all SwiftUI base views
-- [X] Improve People Selection View - Add a mark so user knows when they are selected
-- [X] Improve Timer View
-- [X] Improve Game Buttons (buttonStyle)
-- [X] Module View -> If no other modules, only hab is available
-- [X] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles)
-- [X] Timing of Activity according to people's happiness, teamwork and intelligence
-- [X] Garage -> Implement new people picker
-- [X] Remake TrussView
-- [X] Player avatar picker
-- [X] Load Scene automatically
-- [X] Player Avatar on Overlay
-- [X] View with GameMessages (where chat is)
-- [X] More realistic numbers on building things
-- [X] Lab Module needs to update list when research is finished
-- [X] Lab Module needs to estabilish the time for humans as well (the correct, lowered one)
-- [X] Lab Module - Select from tree
-- [X] Lab Module - Change boost for Token, and update button style
-- [X] Make Settings View (and open from PlayerCard)
-- [X] Implement Player Edit
-- [X] Highlight PlayerCard
-- [X] Don't let game start before name and avatar are chosen
-- [X] Update Player avatar on Overlay View
-- [X] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles) (In Mid-Game)
-- [X] Store (Tokens + Packages) View
-- [X] Freebies TokenLevels
-- [X] GameGenerators + Encoding64
-- [X] People generator - every hour. Pay for more. And generate Materials engineer first
-- [X] Freebies Generator
-- [X] Where to display freebies? -> Accounting, add new game message (not achievement)
 
 - [ ] Remake Bio View
 
@@ -141,7 +108,8 @@ Items being worked on
 - [X] LSS View -> Fix peripheral Selection bug
 - [X] LSS View -> Empty Tanks and Boxes must have a way to define type.
 - [X] LSS View -> Let wasteWater, and wasteSolid be an **orderable** product (empty)
-- [ ] LSS View -> Better Station Accounting & Reporting.
+
+- [ ] LSS View -> Better Station Accounting & Reporting + Accounting Bug Fix
 - [ ] LSS View -> Make Peripheral `Power Off` button
 - [ ] LSS View -> Resources need Icon
 - [ ] Make sure Solid Waste and Liquid Waste come in empty
@@ -360,7 +328,7 @@ Grab things from this list as you go along.
 - [X] LSS View -> Improve Peripherals
 - [X] Accounting should use all of the energy generated first, then from batteries
 
-[02/08/2020]
+[02/08/2021]
 
 - [X] Custom Game Buttons
 - [X] Rounded Buttons
@@ -369,3 +337,37 @@ Grab things from this list as you go along.
 - [X] Update Scene Overlay **PlayerCardNode**
 - [X] GameLoop: Auto-Accounting
 - [X] LSS View -> Make 1 tab for tanks & ingredients, and another for Peripherals
+
+[2/17 to 3/1/2021]
+
+- [X] Ingredients and sufficiency
+- [X] Create a general Header View in SwiftUI for all SwiftUI base views
+- [X] Improve People Selection View - Add a mark so user knows when they are selected
+- [X] Improve Timer View
+- [X] Improve Game Buttons (buttonStyle)
+- [X] Module View -> If no other modules, only hab is available
+- [X] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles)
+- [X] Timing of Activity according to people's happiness, teamwork and intelligence
+- [X] Garage -> Implement new people picker
+- [X] Remake TrussView
+- [X] Player avatar picker
+- [X] Load Scene automatically
+- [X] Player Avatar on Overlay
+- [X] View with GameMessages (where chat is)
+- [X] More realistic numbers on building things
+- [X] Lab Module needs to update list when research is finished
+- [X] Lab Module needs to estabilish the time for humans as well (the correct, lowered one)
+- [X] Lab Module - Select from tree
+- [X] Lab Module - Change boost for Token, and update button style
+- [X] Make Settings View (and open from PlayerCard)
+- [X] Implement Player Edit
+- [X] Highlight PlayerCard
+- [X] Don't let game start before name and avatar are chosen
+- [X] Update Player avatar on Overlay View
+- [X] GameLoop: Look for dates (Lab Activities, Human Activities, Vehicles) (In Mid-Game)
+- [X] Store (Tokens + Packages) View
+- [X] Freebies TokenLevels
+- [X] GameGenerators + Encoding64
+- [X] People generator - every hour. Pay for more. And generate Materials engineer first
+- [X] Freebies Generator
+- [X] Where to display freebies? -> Accounting, add new game message (not achievement)

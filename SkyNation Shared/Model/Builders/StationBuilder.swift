@@ -223,6 +223,13 @@ class StationBuilder:Codable {
     }
     
     // MARK: - Scene Building
+    func prepareGame(station:Station, completion:((Station?, Error?) -> ())?) {
+        // Use this to...
+        // 1. Run Accounting
+        // 2. Load Scene
+        // 3. Return a completion handler
+    }
+    
     
     /// Build Scene on Background, to present
     func build(station:Station) {
@@ -233,6 +240,7 @@ class StationBuilder:Codable {
             print("Station Builder has finished building")
             self.scene = scene
         }
+        
     }
     
 }

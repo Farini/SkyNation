@@ -418,12 +418,16 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         // Called before each frame is rendered
         let rounded = time.rounded() // 10.0
+        if time < 5 { return }
+        
         if rounded.truncatingRemainder(dividingBy: 10) == 0 {
+            print("acc")
             // 97 is the largest prime before 100
             switch self.gameScene {
                 case .SpaceStation:
                     if shouldUpdateScene {
 //                        print("⏱ Should update scene: \(time)")
+                        
                         shouldUpdateScene = false
                         station?.runAccounting()
                         stationOverlay.updatePlayerCard()

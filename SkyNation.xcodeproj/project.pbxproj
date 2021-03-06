@@ -133,31 +133,24 @@
 		8536F3CE258D47D000B509D2 /* BioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B3258D47CF00B509D2 /* BioView.swift */; };
 		8536F3CF258D47D000B509D2 /* BioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B3258D47CF00B509D2 /* BioView.swift */; };
 		8536F3D0258D47D000B509D2 /* BioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B3258D47CF00B509D2 /* BioView.swift */; };
-		8536F3D1258D47D000B509D2 /* BioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B3258D47CF00B509D2 /* BioView.swift */; };
 		8536F3D2258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B5258D47CF00B509D2 /* TechnologyDetailViews.swift */; };
 		8536F3D3258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B5258D47CF00B509D2 /* TechnologyDetailViews.swift */; };
 		8536F3D4258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B5258D47CF00B509D2 /* TechnologyDetailViews.swift */; };
-		8536F3D5258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B5258D47CF00B509D2 /* TechnologyDetailViews.swift */; };
 		8536F3D6258D47D000B509D2 /* RecipeDetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B6258D47CF00B509D2 /* RecipeDetailViews.swift */; };
 		8536F3D7258D47D000B509D2 /* RecipeDetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B6258D47CF00B509D2 /* RecipeDetailViews.swift */; };
 		8536F3D8258D47D000B509D2 /* RecipeDetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B6258D47CF00B509D2 /* RecipeDetailViews.swift */; };
-		8536F3D9258D47D000B509D2 /* RecipeDetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B6258D47CF00B509D2 /* RecipeDetailViews.swift */; };
 		8536F3DA258D47D000B509D2 /* LabActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B7258D47CF00B509D2 /* LabActivityView.swift */; };
 		8536F3DB258D47D000B509D2 /* LabActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B7258D47CF00B509D2 /* LabActivityView.swift */; };
 		8536F3DC258D47D000B509D2 /* LabActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B7258D47CF00B509D2 /* LabActivityView.swift */; };
-		8536F3DD258D47D000B509D2 /* LabActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B7258D47CF00B509D2 /* LabActivityView.swift */; };
 		8536F3DE258D47D000B509D2 /* LaboratoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B8258D47CF00B509D2 /* LaboratoryView.swift */; };
 		8536F3DF258D47D000B509D2 /* LaboratoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B8258D47CF00B509D2 /* LaboratoryView.swift */; };
 		8536F3E0258D47D000B509D2 /* LaboratoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B8258D47CF00B509D2 /* LaboratoryView.swift */; };
-		8536F3E1258D47D000B509D2 /* LaboratoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B8258D47CF00B509D2 /* LaboratoryView.swift */; };
 		8536F3E2258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B9258D47CF00B509D2 /* SelectModuleTypeView.swift */; };
 		8536F3E3258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B9258D47CF00B509D2 /* SelectModuleTypeView.swift */; };
 		8536F3E4258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B9258D47CF00B509D2 /* SelectModuleTypeView.swift */; };
-		8536F3E5258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3B9258D47CF00B509D2 /* SelectModuleTypeView.swift */; };
 		8536F3E6258D47D000B509D2 /* HabModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BA258D47CF00B509D2 /* HabModuleView.swift */; };
 		8536F3E7258D47D000B509D2 /* HabModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BA258D47CF00B509D2 /* HabModuleView.swift */; };
 		8536F3E8258D47D000B509D2 /* HabModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BA258D47CF00B509D2 /* HabModuleView.swift */; };
-		8536F3E9258D47D000B509D2 /* HabModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BA258D47CF00B509D2 /* HabModuleView.swift */; };
 		8536F3EA258D47D000B509D2 /* PersonControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BB258D47CF00B509D2 /* PersonControl.swift */; };
 		8536F3EB258D47D000B509D2 /* PersonControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BB258D47CF00B509D2 /* PersonControl.swift */; };
 		8536F3EC258D47D000B509D2 /* PersonControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BB258D47CF00B509D2 /* PersonControl.swift */; };
@@ -170,11 +163,9 @@
 		8536F3F6258D47D000B509D2 /* TankViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BF258D47CF00B509D2 /* TankViews.swift */; };
 		8536F3F7258D47D000B509D2 /* TankViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BF258D47CF00B509D2 /* TankViews.swift */; };
 		8536F3F8258D47D000B509D2 /* TankViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BF258D47CF00B509D2 /* TankViews.swift */; };
-		8536F3F9258D47D000B509D2 /* TankViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3BF258D47CF00B509D2 /* TankViews.swift */; };
 		8536F3FA258D47D000B509D2 /* PersonViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C0258D47CF00B509D2 /* PersonViews.swift */; };
 		8536F3FB258D47D000B509D2 /* PersonViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C0258D47CF00B509D2 /* PersonViews.swift */; };
 		8536F3FC258D47D000B509D2 /* PersonViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C0258D47CF00B509D2 /* PersonViews.swift */; };
-		8536F3FD258D47D000B509D2 /* PersonViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C0258D47CF00B509D2 /* PersonViews.swift */; };
 		8536F3FE258D47D000B509D2 /* IngredientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C1258D47D000B509D2 /* IngredientView.swift */; };
 		8536F3FF258D47D000B509D2 /* IngredientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C1258D47D000B509D2 /* IngredientView.swift */; };
 		8536F400258D47D000B509D2 /* IngredientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C1258D47D000B509D2 /* IngredientView.swift */; };
@@ -203,7 +194,6 @@
 		8536F41A258D47D000B509D2 /* VehicleInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3CA258D47D000B509D2 /* VehicleInventoryView.swift */; };
 		8536F41B258D47D000B509D2 /* VehicleInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3CA258D47D000B509D2 /* VehicleInventoryView.swift */; };
 		8536F41C258D47D000B509D2 /* VehicleInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3CA258D47D000B509D2 /* VehicleInventoryView.swift */; };
-		8536F41D258D47D000B509D2 /* VehicleInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3CA258D47D000B509D2 /* VehicleInventoryView.swift */; };
 		8536F41E258D47D000B509D2 /* BuildingVehicleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3CB258D47D000B509D2 /* BuildingVehicleView.swift */; };
 		8536F41F258D47D000B509D2 /* BuildingVehicleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3CB258D47D000B509D2 /* BuildingVehicleView.swift */; };
 		8536F420258D47D000B509D2 /* BuildingVehicleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3CB258D47D000B509D2 /* BuildingVehicleView.swift */; };
@@ -233,7 +223,6 @@
 		8536F44D258D47EA00B509D2 /* LifeSupportSystems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F437258D47EA00B509D2 /* LifeSupportSystems.swift */; };
 		8536F44E258D47EA00B509D2 /* LifeSupportSystems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F437258D47EA00B509D2 /* LifeSupportSystems.swift */; };
 		8536F44F258D47EA00B509D2 /* LifeSupportSystems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F437258D47EA00B509D2 /* LifeSupportSystems.swift */; };
-		8536F450258D47EA00B509D2 /* LifeSupportSystems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F437258D47EA00B509D2 /* LifeSupportSystems.swift */; };
 		8536F451258D47EA00B509D2 /* BioModController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F438258D47EA00B509D2 /* BioModController.swift */; };
 		8536F452258D47EA00B509D2 /* BioModController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F438258D47EA00B509D2 /* BioModController.swift */; };
 		8536F453258D47EA00B509D2 /* BioModController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F438258D47EA00B509D2 /* BioModController.swift */; };
@@ -265,7 +254,6 @@
 		8536F485258D481700B509D2 /* StationOverlayObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F466258D481700B509D2 /* StationOverlayObject.swift */; };
 		8536F486258D481700B509D2 /* StationOverlayObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F466258D481700B509D2 /* StationOverlayObject.swift */; };
 		8536F487258D481700B509D2 /* StationOverlayObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F466258D481700B509D2 /* StationOverlayObject.swift */; };
-		8536F488258D481700B509D2 /* StationOverlayObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F466258D481700B509D2 /* StationOverlayObject.swift */; };
 		8536F489258D481700B509D2 /* StationOverlay.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F467258D481700B509D2 /* StationOverlay.sks */; };
 		8536F48A258D481700B509D2 /* StationOverlay.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F467258D481700B509D2 /* StationOverlay.sks */; };
 		8536F48B258D481700B509D2 /* StationOverlay.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F467258D481700B509D2 /* StationOverlay.sks */; };
@@ -337,7 +325,6 @@
 		8569A3D125A6353C0057A518 /* GameActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3D025A6353C0057A518 /* GameActivityView.swift */; };
 		8569A3D225A6353C0057A518 /* GameActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3D025A6353C0057A518 /* GameActivityView.swift */; };
 		8569A3D325A6353C0057A518 /* GameActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3D025A6353C0057A518 /* GameActivityView.swift */; };
-		8569A3D425A6353C0057A518 /* GameActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3D025A6353C0057A518 /* GameActivityView.swift */; };
 		8569A3DA25A799840057A518 /* LaunchingVehicleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3D925A799840057A518 /* LaunchingVehicleView.swift */; };
 		8569A3DB25A799840057A518 /* LaunchingVehicleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3D925A799840057A518 /* LaunchingVehicleView.swift */; };
 		8569A3DC25A799840057A518 /* LaunchingVehicleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3D925A799840057A518 /* LaunchingVehicleView.swift */; };
@@ -403,6 +390,9 @@
 		8592825125EED6EF001233BE /* SpaceVehicleNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592824F25EED6EF001233BE /* SpaceVehicleNode.swift */; };
 		8592825225EED6EF001233BE /* SpaceVehicleNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592824F25EED6EF001233BE /* SpaceVehicleNode.swift */; };
 		8592825325EED6EF001233BE /* SpaceVehicleNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592824F25EED6EF001233BE /* SpaceVehicleNode.swift */; };
+		8592828825F176C1001233BE /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2B5258D330200B509D2 /* GameController.swift */; };
+		8592828D25F176F4001233BE /* GameCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */; };
+		8592829225F17721001233BE /* StationOverlayObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F466258D481700B509D2 /* StationOverlayObject.swift */; };
 		85960B9725D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
 		85960B9825D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
 		85960B9925D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
@@ -419,7 +409,6 @@
 		85A6590625E4178F008AA9BA /* GameSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6590525E4178F008AA9BA /* GameSettingsController.swift */; };
 		85A6590725E4178F008AA9BA /* GameSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6590525E4178F008AA9BA /* GameSettingsController.swift */; };
 		85A6590825E4178F008AA9BA /* GameSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6590525E4178F008AA9BA /* GameSettingsController.swift */; };
-		85A6590925E4178F008AA9BA /* GameSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6590525E4178F008AA9BA /* GameSettingsController.swift */; };
 		85C3418525905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
 		85C3418625905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
 		85C3418725905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
@@ -1693,9 +1682,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8536F3E1258D47D000B509D2 /* LaboratoryView.swift in Sources */,
 				857DDECA25E4DCAD00E64752 /* Messages.swift in Sources */,
 				8536F3A9258D475D00B509D2 /* Player.swift in Sources */,
+				8592829225F17721001233BE /* StationOverlayObject.swift in Sources */,
 				8536F365258D475D00B509D2 /* Person.swift in Sources */,
 				8536F399258D475D00B509D2 /* Modules.swift in Sources */,
 				8536F3A1258D475D00B509D2 /* TechTreeDisplay.swift in Sources */,
@@ -1704,20 +1693,16 @@
 				8536F389258D475D00B509D2 /* HabModule.swift in Sources */,
 				8536F454258D47EA00B509D2 /* BioModController.swift in Sources */,
 				8536F44C258D47EA00B509D2 /* VehicleBuilderViewModel.swift in Sources */,
-				8536F450258D47EA00B509D2 /* LifeSupportSystems.swift in Sources */,
-				8536F3D1258D47D000B509D2 /* BioView.swift in Sources */,
-				8536F3E5258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */,
 				85797512259B9E70004C54D2 /* FlipView.swift in Sources */,
 				8536F415258D47D000B509D2 /* Parafernalia.swift in Sources */,
+				8592828825F176C1001233BE /* GameController.swift in Sources */,
 				8536F361258D475D00B509D2 /* Ingredients.swift in Sources */,
 				8536F32E258D412600B509D2 /* LocalDatabase.swift in Sources */,
 				8536F309258D355C00B509D2 /* DataTests.swift in Sources */,
 				85F6675925AF7BBE00E5003B /* DeliveryVehicleNode.swift in Sources */,
 				85CD46AA25D1199A000D9C64 /* EarthNode.swift in Sources */,
-				8536F3E9258D47D000B509D2 /* HabModuleView.swift in Sources */,
 				8569A3CB25A624A30057A518 /* LoaderView.swift in Sources */,
 				85E6ECFB25C9D92B00229E18 /* ServerAPI.swift in Sources */,
-				85A6590925E4178F008AA9BA /* GameSettingsController.swift in Sources */,
 				8536F478258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				8536F319258D361100B509D2 /* GameConstants.swift in Sources */,
 				8592825325EED6EF001233BE /* SpaceVehicleNode.swift in Sources */,
@@ -1737,30 +1722,23 @@
 				8536F448258D47EA00B509D2 /* LabViewModel.swift in Sources */,
 				8559201825959A4300CF5467 /* SideMenuNode.swift in Sources */,
 				85F6676225AF7CAB00E5003B /* RoboarmNode.swift in Sources */,
-				8536F3D9258D47D000B509D2 /* RecipeDetailViews.swift in Sources */,
 				8536F440258D47EA00B509D2 /* GarageViewModel.swift in Sources */,
 				8536F37D258D475D00B509D2 /* Recipes.swift in Sources */,
 				8536F36D258D475D00B509D2 /* Tutorial.swift in Sources */,
 				8536F385258D475D00B509D2 /* Truss.swift in Sources */,
 				8536F379258D475D00B509D2 /* Peripherals.swift in Sources */,
 				8592823925EC4DD3001233BE /* GuildController.swift in Sources */,
+				8592828D25F176F4001233BE /* GameCamera.swift in Sources */,
 				8536F371258D475D00B509D2 /* SceneHelpers.swift in Sources */,
 				8536F395258D475D00B509D2 /* BioModule.swift in Sources */,
-				8536F3F9258D47D000B509D2 /* TankViews.swift in Sources */,
-				8536F41D258D47D000B509D2 /* VehicleInventoryView.swift in Sources */,
 				8592822325EABD5B001233BE /* MarsCityCreatorView.swift in Sources */,
 				850A1B1225ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */,
 				8536F411258D47D000B509D2 /* AnimationsTest.swift in Sources */,
-				8536F3FD258D47D000B509D2 /* PersonViews.swift in Sources */,
 				8536F4A5258D484B00B509D2 /* SceneDirector.swift in Sources */,
-				8536F3D5258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */,
 				8536F470258D481700B509D2 /* CamControlNode.swift in Sources */,
 				8536F444258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
-				8536F488258D481700B509D2 /* StationOverlayObject.swift in Sources */,
 				8504A52025C6845200739C58 /* StationBuilder.swift in Sources */,
-				8536F3DD258D47D000B509D2 /* LabActivityView.swift in Sources */,
 				8536F381258D475D00B509D2 /* Station.swift in Sources */,
-				8569A3D425A6353C0057A518 /* GameActivityView.swift in Sources */,
 				8536F405258D47D000B509D2 /* TechTreeDiagram.swift in Sources */,
 				8536F391258D475D00B509D2 /* LabModule.swift in Sources */,
 				8504A53125C6872B00739C58 /* Tanks.swift in Sources */,

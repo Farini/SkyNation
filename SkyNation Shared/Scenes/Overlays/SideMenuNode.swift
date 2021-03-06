@@ -170,7 +170,7 @@ class SideMenuNode:SKNode {
     
     /// Makes a Sprite Node from an image name
     func makeButton(_ imageName:String) -> SKSpriteNode? {
-        guard let image = GameImages.commonSystemImage(name: imageName)?.image(with: .white) else {
+        guard let image = GameImages.commonSystemImage(name: imageName)?.image(with: SCNColor.white) else {
             return nil
         }
         #if os(macOS)
