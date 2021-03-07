@@ -759,16 +759,13 @@
 		8536F337258D419400B509D2 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				85A6590525E4178F008AA9BA /* GameSettingsController.swift */,
+				85C798D625F46B290028AE49 /* Modules */,
 				8592823425EC4D9B001233BE /* Mars */,
 				8536F434258D47EA00B509D2 /* EarthRequestController.swift */,
 				8536F437258D47EA00B509D2 /* LifeSupportSystems.swift */,
-				8536F432258D47EA00B509D2 /* ModulesViewModel.swift */,
-				857D9A3825C0B69800626884 /* HabModuleController.swift */,
-				8536F435258D47EA00B509D2 /* LabViewModel.swift */,
-				8536F438258D47EA00B509D2 /* BioModController.swift */,
 				8536F433258D47EA00B509D2 /* GarageViewModel.swift */,
 				8536F436258D47EA00B509D2 /* VehicleBuilderViewModel.swift */,
-				85A6590525E4178F008AA9BA /* GameSettingsController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1129,6 +1126,17 @@
 				85A658F925E2251B008AA9BA /* PlayerEditView.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		85C798D625F46B290028AE49 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				8536F432258D47EA00B509D2 /* ModulesViewModel.swift */,
+				857D9A3825C0B69800626884 /* HabModuleController.swift */,
+				8536F435258D47EA00B509D2 /* LabViewModel.swift */,
+				8536F438258D47EA00B509D2 /* BioModController.swift */,
+			);
+			path = Modules;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

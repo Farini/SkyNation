@@ -42,6 +42,7 @@ struct LifeSupportView: View {
     }
     
     var header: some View {
+        
         Group {
             HStack() {
                 
@@ -147,9 +148,17 @@ struct LifeSupportView: View {
                                 // Ingredients - Boxes
                                 Section(header: Text("Ingredients")) {
                                     ForEach(controller.boxes) { storageBox in
-                                        VStack {
-                                            Text("\(storageBox.type.rawValue)")
-                                            Text("\(storageBox.current)/\(storageBox.type.boxCapacity())")
+                                        HStack {
+                                            storageBox.type.image()! //?? Image(systemName:"questionmark")
+                                                .resizable()
+                                                .frame(width:28, height:28)
+                                                .aspectRatio(contentMode: .fit)
+                                            
+                                            VStack(alignment:.leading) {
+                                                Text("\(storageBox.type.rawValue)")
+                                                Text("\(storageBox.current)/\(storageBox.type.boxCapacity())")
+                                            }
+                                            
                                         }
                                         .onTapGesture(count: 1, perform: {
                                             // Select Box Here
@@ -220,19 +229,58 @@ struct LifeSupportView: View {
                             })
                             .padding([.bottom], 32)
                         }
+                        
                     case .Systems:
                         ScrollView {
                             
                             // Accounting Report
                             if controller.accountingReport != nil {
                                 let report = controller.accountingReport!
-                                VStack {
-                                    Text("Current Status").font(.title).foregroundColor(.orange)
-                                    Text("👤 Head count: \(controller.inhabitants)")
-                                    Text("☀️ Energy Input: \(report.energyInput)")
-                                    Text("☁️ Air adjustment: \(report.tankAirAdjustment ?? 0)")
+                                HStack(spacing:12) {
+                                    VStack {
+                                        Text("★ Current Status").font(.title).foregroundColor(.orange)
+                                        Text("👤👤 Head count: \(controller.inhabitants)")
+                                        Text("☀️ Energy Input: \(report.energyInput)")
+                                        Text("☁️ Air adjustment: \(report.tankAirAdjustment ?? 0)")
+                                    }
+                                    .padding()
+                                    
+//                                    Spacer()
+                                    
+                                    VStack {
+                                        Text("🪙 Sky Coins")
+                                            .font(.title)
+                                            .foregroundColor(.orange)
+                                            // .padding([.top, .bottom])
+                                        
+                                        let mot = controller.station.truss.moneyFromAntenna()
+                                        let pot = LocalDatabase.shared.player?.money ?? 0
+                                        Text("📡 Antenna + 🪙 \(mot)")
+                                        Text("\(Int(Double(mot)/Double(pot)) * 100) %")
+                                        Text("Total: \(GameFormatters.numberFormatter.string(from:NSNumber(value:pot)) ?? "---")")
+                                    }
+                                    .padding()
+                                    
+                                    VStack {
+                                        let foodLasting = Int(controller.availableFood.count / max(1, controller.inhabitants))
+                                        let waterLasting = Int(controller.liquidWater / max(1, (controller.inhabitants * GameLogic.waterConsumption)))
+                                        let oxygenLasting = Int(controller.air.o2 / max(1, (controller.inhabitants * 2)))
+                                        
+                                        Text("⏱ Future")
+                                            .font(.title)
+                                            .foregroundColor(.orange)
+                                            // .padding([.top, .bottom])
+                                        
+                                        Text("💦 Water: \(controller.liquidWater). ⏱ \(waterLasting) hrs.")
+                                            .foregroundColor(waterLasting > 8 ? .green:.red)
+                                        Text("🍽 Food: \(controller.availableFood.count). ⏱ \(foodLasting) hrs.")
+                                            .foregroundColor(foodLasting > 8 ? .green:.red)
+                                        Text("☁️ Oxygen: \(Int(controller.air.o2)). ⏱ \(oxygenLasting) hrs.")
+                                            .foregroundColor(oxygenLasting > 8 ? .blue:.red)
+                                    }
                                 }
-                                AccountingReportView(report: report)
+                                
+                                AccountingReportView(controller:controller, report: report)
                             }
                             
                             // Future's View
@@ -275,17 +323,20 @@ struct LifeSupportView: View {
         
         return VStack(alignment:.leading) {
             
-            Text("⏱ Future")
-                .font(.title)
-                .foregroundColor(.orange)
-                .padding([.top, .bottom])
+            Group {
+                Text("⏱ Future")
+                    .font(.title)
+                    .foregroundColor(.orange)
+                    .padding([.top, .bottom])
+                
+                Text("💦 Water: \(controller.liquidWater). ⏱ \(waterLasting) hrs.")
+                    .foregroundColor(waterLasting > 8 ? .green:.red)
+                Text("🍽 Food: \(controller.availableFood.count). ⏱ \(foodLasting) hrs.")
+                    .foregroundColor(foodLasting > 8 ? .green:.red)
+                Text("☁️ Oxygen: \(Int(controller.air.o2)). ⏱ \(oxygenLasting) hrs.")
+                    .foregroundColor(oxygenLasting > 8 ? .blue:.red)
+            }
             
-            Text("💦 Water: \(controller.liquidWater). ⏱ \(waterLasting) hrs.")
-                .foregroundColor(waterLasting > 8 ? .green:.red)
-            Text("🍽 Food: \(controller.availableFood.count). ⏱ \(foodLasting) hrs.")
-                .foregroundColor(foodLasting > 8 ? .green:.red)
-            Text("☁️ Oxygen: \(Int(controller.air.o2)). ⏱ \(oxygenLasting) hrs.")
-                .foregroundColor(oxygenLasting > 8 ? .blue:.red)
             
             Text("⏱ Waste Management")
                 .font(.title)
@@ -299,13 +350,16 @@ struct LifeSupportView: View {
                 Text("💩 Solid Waste: \(wasteSolid)")
             }
             
-            Text("⏱ Money")
+            Text("🪙 Sky Coins")
                 .font(.title)
                 .foregroundColor(.orange)
                 .padding([.top, .bottom])
             
-            Text("🛰📡 Antenna + 🪙 \(controller.station.truss.moneyFromAntenna())")
-            Text("TTL Money: \(LocalDatabase.shared.player?.money ?? 0)")
+            let mot = controller.station.truss.moneyFromAntenna()
+            let pot = LocalDatabase.shared.player?.money ?? 0
+            Text("📡 Antenna + 🪙 \(mot)")
+            Text("\(mot/pot) %")
+            Text("Total: \(GameFormatters.numberFormatter.string(from:NSNumber(value:pot)) ?? "---")")
         }
     }
     
@@ -443,79 +497,147 @@ struct EnergyOverview:View {
 
 struct AccountingReportView: View {
     
+    @ObservedObject var controller:LSSModel
     @State var report:AccountingReport
     
     var body: some View {
         VStack {
-            Text("🗒 Report").font(.title).padding().foregroundColor(.orange)
             
-            Text("Air Quality: \(report.airStart.airQuality().rawValue)")
+            HStack(spacing:12) {
+                Text("🗒 Report").font(.title).padding().foregroundColor(.orange)
+                Text("📆 \(GameFormatters.dateFormatter.string(from: report.date))")
+                    .font(.title).padding().foregroundColor(.orange)
+            }
             
-            Text("📆 \(GameFormatters.dateFormatter.string(from: report.date))")
-                .padding([.top], 4)
-                .padding([.bottom], 6)
+            Divider()
             
-            Text("Compare").foregroundColor(.orange).font(.title)
-            
-            // Trying Stacks
-            Group {
-                HStack {
-                    VStack(alignment:.trailing) {
-                        Text("Name")
-                            .foregroundColor(.gray)
-                        Text("Energy")
-                        Text("Water")
-                        Text("Air Vol.")
-                        Text("O2")
-                        Text("CO2")
-                    }
+            HStack {
+                // Trying Stacks
+                VStack {
+                    Text("Compare").foregroundColor(.orange).font(.title2)
                     
-                    VStack {
-                        Text("Start")
-                            .foregroundColor(.gray)
-                        Text("\(report.energyStart)")
-                        Text("\(report.waterStart)")
-                        Text("\(report.airStart.getVolume())")
-                        Text("\(report.airStart.o2)")
-                        Text("\(report.airStart.co2)")
-                    }
-                    
-                    VStack {
-                        Text("Finish")
-                            .foregroundColor(.gray)
-                        Text("\(report.energyFinish ?? 0)")
-                        Text("\(report.waterFinish ?? 0)")
-                        Text("\(report.airFinish?.getVolume() ?? 0)")
-                        Text("\(report.airFinish?.o2 ?? 0)")
-                        Text("\(report.airFinish?.co2 ?? 0)")
-                    }
-                    
-                    VStack {
-                        Text("Difference")
-                            .foregroundColor(.gray)
-                        Text("+2")
-                        Text("---")
-                        Text("---")
-                        Text("---")
-                        Text("---")
+                    HStack {
+                        VStack(alignment:.trailing) {
+                            Text("Name")
+                                .foregroundColor(.gray)
+                            Text("Energy")
+                            Text("Water")
+                            Text("Air Vol.")
+                            Text("O2")
+                            Text("CO2")
+                        }
+                        
+                        VStack {
+                            Text("Previous")
+                                .foregroundColor(.gray)
+                            Text("\(report.energyStart)")
+                            Text("\(report.waterStart)")
+                            Text("\(report.airStart.getVolume())")
+                            Text("\(report.airStart.o2)")
+                            Text("\(report.airStart.co2)")
+                        }
+                        
+                        VStack {
+                            Text("Current")
+                                .foregroundColor(.gray)
+                            Text("\(report.energyFinish ?? 0)")
+                            Text("\(report.waterFinish ?? 0)")
+                            Text("\(report.airFinish?.getVolume() ?? 0)")
+                            Text("\(report.airFinish?.o2 ?? 0)")
+                            Text("\(report.airFinish?.co2 ?? 0)")
+                        }
+                        
+                        VStack {
+                            Text("Difference")
+                                .foregroundColor(.gray)
+                            Text("---")
+                            Text("\(report.waterStart - (report.waterFinish ?? 0))")
+                            Text("\(report.airStart.getVolume() - (report.airFinish?.getVolume() ?? 0))")
+                            Text("\(report.airStart.o2 - (report.airFinish?.o2 ?? 0))")
+                            Text("\(report.airStart.co2 - (report.airFinish?.co2 ?? 0))")
+                        }
                     }
                 }
+                .padding(.horizontal)
+                
+                Divider()
+                
+                VStack {
+                    Text("Air Quality: \(report.airStart.airQuality().rawValue)").font(.title2)
+                        .padding([.bottom])
+                        .foregroundColor([AirQuality.Good, AirQuality.Great].contains(report.airStart.airQuality()) ? Color.green:Color.orange)
+                    
+                    Text("♳ Waste Management")
+                        .font(.title2)
+                        .foregroundColor(.orange)
+                        .padding([.bottom])
+                    
+                    let wasteLiquid = controller.boxes.filter({ $0.type == .wasteLiquid }).map({ $0.current }).reduce(0, +)
+                    let wasteLiquidCap = controller.boxes.filter({ $0.type == .wasteLiquid }).map({ $0.capacity }).reduce(0, +)
+                    let wasteLiquidPct = Int(Double(wasteLiquid)/Double(wasteLiquidCap) * 100.0)
+                    
+                    ProgressView("💦 liquid | \(wasteLiquid) of \(wasteLiquidCap). \(wasteLiquidPct)%", value: Float(wasteLiquid), total: Float(wasteLiquidCap))
+                    
+                    let wasteSolid = controller.boxes.filter({ $0.type == .wasteSolid }).map({ $0.current }).reduce(0, +)
+                    let wasteSolidCap = controller.boxes.filter({ $0.type == .wasteSolid }).map({ $0.capacity }).reduce(0, +)
+                    let wasteSolidPct = Int(Double(wasteSolid)/Double(wasteSolidCap) * 100.0)
+                    ProgressView("💩 solid |  \(wasteSolid) of \(wasteSolidCap). \(wasteSolidPct)%", value: Float(wasteSolid), total: Float(wasteSolidCap))
+                    
+                }
+                .padding(.horizontal)
             }
-            .padding()
             
-            // Problems
-            ForEach(report.listProblems(), id:\.self) { aProblem in
-                Text(aProblem).foregroundColor(.red)
+            
+            // Problems + Notes
+            VStack(alignment:.leading) {
+                // Problems
+                Group {
+                    Text("🛑 Problems")
+                        .foregroundColor(report.listProblems().isEmpty ? .gray:.red)
+                        .font(.title3)
+                    Divider()
+                    
+                    ForEach(report.listProblems(), id:\.self) { aProblem in
+                        Text(aProblem).foregroundColor(.red)
+                    }
+                }
+                
+                Group {
+                    Text("Peripherals")
+                        .foregroundColor(.orange)
+                        .font(.title3)
+                        .padding(.vertical, 6)
+                    Divider()
+                    
+                    ForEach(report.peripheralNotes, id:\.self) { perinote in
+                        Text(perinote)
+                    }
+                }
+                
+                Group {
+                    Text("Human")
+                        .foregroundColor(.green)
+                        .font(.title3)
+                        .padding(.vertical, 6)
+                    
+                    Divider()
+                    ForEach(report.humanNotes, id:\.self) { humannote in
+                        Text(humannote)
+                    }
+                    Text("Produced 💩: \(report.poopFinish ?? 0)")
+                    Text("Produced 💦: \(report.wasteWaterFinish ?? 0)")
+                }
+                
+                
+                Text("Notes")
+                    .foregroundColor(.blue)
+                    .font(.title3)
+                    .padding(.vertical, 6)
+                ForEach(report.listNotes(), id:\.self) { aNote in
+                    Text(aNote).foregroundColor(.gray)
+                }
             }
             
-            ForEach(report.listNotes(), id:\.self) { aNote in
-                Text(aNote).foregroundColor(.gray)
-            }
-            
-            
-            Text("💩 \(report.poopFinish ?? 0)")
-            Text("Pee: \(report.wasteWaterFinish ?? 0)")
-            Text("Air adjustment: \(report.tankAirAdjustment ?? 0)")
         }
         .padding()
         
@@ -532,12 +654,7 @@ struct LifeSupportView_Previews: PreviewProvider {
 
 struct StationAccounting_Previews: PreviewProvider {
     static var previews: some View {
-        AccountingReportView(report: AccountingReport.example()!)
+        AccountingReportView(controller:LSSModel(), report: AccountingReport.example()!)
+            .frame(height:600)
     }
 }
-
-
-// FIXME: - Transfer Code.
-// Put this code in an Appropriate file
-
-

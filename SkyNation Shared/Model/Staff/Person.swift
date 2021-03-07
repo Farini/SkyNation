@@ -590,7 +590,8 @@ class HumanGenerator:NSObject{
                                                    NameGenderPair(name: "Jena Thomson", gender: .female),
                                                    NameGenderPair(name: "Maura Pizani", gender: .female),
                                                    NameGenderPair(name: "Jeff Johnson", gender: .male),
-                                                   NameGenderPair(name: "Carl Hikken", gender: .male)
+                                                   NameGenderPair(name: "Carl Hikken", gender: .male),
+                                                   NameGenderPair(name: "Albert Fritz", gender: .male)
                 ]
         return allNameGenderPairs.randomElement()!
     }

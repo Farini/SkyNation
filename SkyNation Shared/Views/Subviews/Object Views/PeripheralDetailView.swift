@@ -82,6 +82,8 @@ struct PeripheralDetailView: View {
 //                        print("Instause!")
                         controller.instantUse(peripheral: peripheral)
                     }
+                    .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                    
                     Divider()
                 }
             }
@@ -93,13 +95,20 @@ struct PeripheralDetailView: View {
 //                    peripheral.lastFixed = Date()
                     controller.fixBroken(peripheral: peripheral)
                 }
+                .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
                 .disabled(!peripheral.isBroken)
                 
                 Button("Break") {
                     peripheral.isBroken.toggle()
                 }
+                .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
                 .disabled(peripheral.isBroken)
                 
+                Button(peripheral.powerOn ? "Power off":"Power on") {
+                    peripheral.powerOn.toggle()
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                .disabled(peripheral.isBroken)
 //                Toggle("Power", isOn: $peripheral.powerOn)
             }
             .padding()
