@@ -52,7 +52,7 @@ class AirComposition:Codable {
         let percentageCO2 = Double(co2) / Double(newVolume)
         if  percentageCO2 > 0.05 {
             currentQuality = currentQuality.decrease()
-            if percentageCO2 > 0.15 {
+            if percentageCO2 > 0.10 {
                 currentQuality = .Bad
                 if percentageCO2 > 0.2 {
                     return .Lethal

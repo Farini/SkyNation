@@ -33,6 +33,7 @@ struct BioView: View {
 //        if let bioBox = bioMod.boxes.first {
 //            controller.didSelect(box: bioBox)
 //        }
+        
     }
     
     var header: some View {

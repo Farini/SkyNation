@@ -77,6 +77,35 @@ struct Guild:Codable {
     
 }
 
+/// the guild. Full Content Format
+struct GuildFullContent:Codable {
+    
+    var id:UUID
+    
+    var name: String
+    
+    // https://docs.vapor.codes/4.0/fluent/relations/
+    var president:SKNUser?
+    
+    var citizens:[PlayerContent]
+    
+    var isOpen:Bool
+    
+    /// Election Date (To change President)
+    var election:Date
+    
+    var terrain:GuildTerrainType
+    
+    // Cities
+    var cities:[DBCity]
+    
+    // Outposts
+    var outposts:[DBOutpost]
+    
+    
+}
+
+
 struct DBCity:Codable {
     
     var id:UUID
@@ -96,6 +125,7 @@ struct City {
     
     var owner:UUID?
     var name:String = ""
+    var posdex:Posdex
     
     var position:Vector3D
     var habs:[CityHab] // this will have to be an object, like HabModule
@@ -112,9 +142,9 @@ struct City {
     
     var bots:[MarsBot]?
     
-    init(user:SKNUser, position:Vector3D) {
+    init(user:SKNUser, posdex:Posdex) {
         self.owner = user.localID
-        self.position = position
+        self.position = posdex.position
         self.habs = [CityHab(id: UUID(), capacity: 4, inhabitants: [], name: "untitled", skin: "skin", position: .zero)]
         self.air = AirComposition(amount: 200)
         self.boxes = []
@@ -122,6 +152,7 @@ struct City {
         self.batteries = []
         self.bioBoxes = []
         self.cityTech = [.HQ]
+        self.posdex = posdex
     }
     
     func keepInMemory() {
@@ -169,6 +200,7 @@ enum CityTech:String, Codable, CaseIterable {
     case Cement
     case Foundry        // Melt metals found in mines
     case ChargedGlass   // Expose to sunlight, without problems
+    case Biocell        // A cell used for Bio Outposts
     
     case OutsideBio
     case OutsidePark
@@ -242,12 +274,13 @@ class Outpost:Codable {
     var id:UUID
     var guild:UUID
     
-    var model:String
+    var model:String = ""
     var position:Vector3D
+    var posdex:Posdex
     
     var type:OutpostType
     var job:OutpostJob
-    var level:Int
+    var level:Int = 0
     
     func createAnOutpostJobPair() {
         let job = OutpostJob(wantedSkills: [.Biologic:5, .Medic:3, .SystemOS:5, .Handy:12],
@@ -316,4 +349,62 @@ struct DBOutpost:Codable {
     //
     //    }
     
+}
+
+/**
+ The `Position` index of **City**, or **Outpost**
+ */
+enum Posdex:Int, Codable, CaseIterable {
+    
+    case hq = 0
+    case city1
+    case city2
+    case city3
+    case city4
+    case city5
+    case city6
+    case city7
+    case city8
+    case city9
+    case antenna
+    case arena
+    case biosphere1
+    case biosphere2
+    case launchPad
+    case mining1
+    case mining2
+    case mining3
+    case observatory
+    case power1
+    case power2
+    case power3
+    case power4
+    
+    /// Position on the map
+    var position:Vector3D {
+        switch self {
+            case .hq: return Vector3D.zero
+            default: return Vector3D.zero
+        }
+    }
+    
+    var sceneName:String {
+        switch self {
+            case .antenna: return "Antenna"
+            case .arena: return "Arena"
+            case .biosphere1: return "Biosphere-01"
+            case .biosphere2: return "Biosphere-02"
+            case .launchPad: return "LandingPad"
+            case .mining1: return "Mining-01"
+            case .mining2: return "Mining-02"
+            case .mining3: return "Mining-03"
+            case .observatory: return "Observatory"
+            case .power1: return "Power-01"
+            case .power2: return "Power-02"
+            case .power3: return "Power-03"
+            case .power4: return "Power-04"
+                
+            default: return "\(self.rawValue)"
+        }
+    }
 }

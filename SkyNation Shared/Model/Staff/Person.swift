@@ -434,6 +434,11 @@ class Person:Codable, Identifiable, Equatable {
             let randSkill:Skills = Skills.allCases.randomElement()!
             let skset = SkillSet(skill: randSkill, level: 1)
             self.skills.append(skset)
+        } else {
+            if Bool.random() == true {
+                let handy = SkillSet(skill: .Handy, level: 1)
+                self.skills.append(handy)
+            }
         }
         
         self.name = newName

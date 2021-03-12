@@ -179,7 +179,10 @@ class BioModController: ObservableObject {
             errorMessage = "Did not have enough energy. Requires 10KW"
         }
         
-        
+        // Update and Save
+        self.availableEnergy = station.truss.getAvailableEnergy()
+        self.saveStation()
+        positiveMessage = "Populattion grew ."
         
         self.selectedPopulation = box.population
         
@@ -521,7 +524,7 @@ class DNAGenerator {
         self.dnaSize = perfect.count
         self.popCount = popStrings.count
         self.generations = 20
-        self.mutationChance = 100
+        self.mutationChance = 20
         
         self.bestFit = populationStrings.first ?? "A"
         self.populationStrings = popStrings

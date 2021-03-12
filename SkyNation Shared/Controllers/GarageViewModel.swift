@@ -434,7 +434,7 @@ class GarageViewModel:ObservableObject {
         self.garageStatus = .planning(stage: .Launching)
         
         // Register Vehicle in Server
-        /*
+        
         guard let player = LocalDatabase.shared.player else {
             fatalError()
         }
@@ -452,9 +452,6 @@ class GarageViewModel:ObservableObject {
                 print("No data. Error: \(error?.localizedDescription ?? "n/a")")
             }
         }
-        */
-        
-        /*
         
         // Set Vehicle to start travelling
         vehicle.startTravelling()
@@ -477,7 +474,6 @@ class GarageViewModel:ObservableObject {
         self.garageStatus = .planning(stage: .Launching)
         // self.cancelSelection()
  
-        */
     }
     
     // FIXME: - Token Use

@@ -23,8 +23,20 @@ struct MarsCityCreatorView: View {
             Text("City name: \(name)")
             Text("Position: \(Int(position.x)), \(Int(position.y)), \(Int(position.z))")
             
-            Button("Create") {
-                print("Create city here")
+            Divider()
+            
+            HStack {
+                Button("Create") {
+                    print("Create city here")
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .green))
+                
+                Button("Close") {
+                    print("Close dialogue")
+                    NotificationCenter.default.post(name: .closeView, object: nil)
+                    
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
             }
             .padding()
         }

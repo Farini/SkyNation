@@ -52,7 +52,7 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
  - [ ] ★★★☆☆ Accounting System
  - [ ] ★★★★☆ Truss
  - [ ] ★★★★☆ Life Support Systems
- - [ ] ☆☆☆☆☆ Vehicles Travelling Views/Scenes
+ - [ ] ★★★☆☆ Vehicles Travelling Views/Scenes
  - [ ] ★☆☆☆☆ Mars Scene
  - [ ] ★☆☆☆☆ Server - SKNServer?
  - [ ] ★★★☆☆ Player(object) + settings + playability + Purchases
@@ -62,16 +62,16 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
  
  Icons + 2D Overlays
  - [ ] ★★★★☆ Humans + Skills
- - [ ] ★★★☆☆ Tanks, Containers, Ingredients, Peripherals
+ - [ ] ★★★★☆ Tanks, Containers, Ingredients, Peripherals
  - [ ] ★★★☆☆ Scenes Overlay (Camera, Vehicles list, etc.)
  - [ ] ★★★☆☆ Action Icons - Buy, Cancel, Cheat, Tokens, etc.
  - [ ] ★★☆☆☆ Icons - App Icon
  
  3D Scenes
  - [ ] ★★★☆☆ Space Station
- - [ ] ★★★☆☆ Delivery Vehicle
+ - [ ] ★★★★☆ Delivery Vehicle
  - [ ] ★☆☆☆☆ Mars Colony
- - [ ] ★☆☆☆☆ Space Vehicle
+ - [ ] ★★★☆☆ Space Vehicle
  - [ ] ☆☆☆☆☆ Sound Effects
  - [ ] ☆☆☆☆☆ Music / Soudtrack
  
@@ -127,15 +127,11 @@ Items being worked on
 - [ ] GameMessages showing strange dates
 - [ ] Delete Person from GameGenerator after hiring
 - [ ] Use Fibonacci for Peripheral Upgrades
-
+- [ ] Increase the chances of generating a .handy `person`
 
 - [ ] Person var stress?
 - [ ] Activity name enum?
 - [ ] BioBox DNA enum
-
-- [ ] New headers
-    - [ ] BioView
-    - [ ] Truss
         
 - [ ] Icons
     - [X] Water Filter

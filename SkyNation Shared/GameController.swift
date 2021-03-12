@@ -162,15 +162,21 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     print("Mod Name: \(modName)")
                     if let parent = result.node.parent {
                         print("Mars Parent: \(parent.name ?? "n/a")")
-                        if parent.name == "Cities" {
+                        if parent.name == "Cities" || parent.parent?.name == "Cities" {
                             print("Go to city: \(modName)")
                             // get position
                             let posScene = result.node.position
                             let posvec = Vector3D(x: Double(posScene.x), y: Double(posScene.y), z: Double(posScene.z))
                             gameNavDelegate?.openCityView(position: posvec, name: modName)
                             print("pos: \(posvec)")
-                        } else if parent.name == "Resources" {
-                            print("Go to outpost: \(modName) (resources)")
+                        } else if parent.name == "Outposts" || parent.parent?.name == "Outposts"{
+                            print("Go to outpost: \(modName)")
+                            for posdex in Posdex.allCases {
+                                if posdex.sceneName == modName || posdex.sceneName == parent.name {
+                                    print("Found Outpost! Posdex:\(posdex.rawValue) \(posdex.sceneName)")
+                                    
+                                }
+                            }
                         }
                     }
                 }

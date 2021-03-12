@@ -83,8 +83,8 @@ enum TechItems:String, Codable, CaseIterable, Identifiable {
     func ingredients() -> [Ingredient:Int] {
         
         switch self {
-        case .Cuppola: return [.Aluminium:25]
-        case .Roboarm: return [.Circuitboard:8]
+            case .Cuppola: return [.Aluminium:25, .Circuitboard:1, .Polimer:10]
+            case .Roboarm: return [.Circuitboard:8, .Iron:5, .Aluminium:15, .Polimer:25]
         case .node2, .node3, .node4: return Recipe.Node.ingredients()
         case .module4, .module5, .module6: return Recipe.Module.ingredients()
         default: return [.Aluminium:15, .Polimer:8, .Copper:4]
@@ -175,7 +175,7 @@ enum TechItems:String, Codable, CaseIterable, Identifiable {
             case .recipeMethane: return [.Electric:1, .Handy:2]
             case .recipeBioSolidifier: return [.Handy:2, .Electric:1]
             case .recipeWaterFilter: return [.Biologic:1]
-            case .module7, .module8, .module9, .module10: return [.Material:2, .Handy:1, .SystemOS:1]
+            case .module7, .module8, .module9, .module10: return [.Material:1, .Handy:1, .Electric:1]
             case .Roboarm: return [.Mechanic:1, .Electric:1, .Datacomm:1]
             case .AU1, .AU2, .AU3, .AU4, .AntennaUp: return [.Datacomm:1]
             case .Airlock: return [.Material:1, .Electric:1, .Handy:1]
@@ -184,22 +184,6 @@ enum TechItems:String, Codable, CaseIterable, Identifiable {
             case .GarageArm: return [.SystemOS:2, .Material:2, .Datacomm:2, .Electric:2]
         }
     }
-    
-    
-    
-    /** ⚠️ Needs to add: `BuildItem` objects
-     Add a method to load this each tech from scene
-     The method could return an optional **BuildItem**, to add to the scene
-     it might be better than going through the serialBuilder
-     unless you want to update the serial builder completely... */
-//    func loadItem() {
-//        // Examples
-//        let garage = BuildItem(module: .modGarage)
-//        let peripheral = BuildItem(peripheral: self.rawValue, orientation: .Down)
-//        let node = BuildItem(node: Vector3D(x: 1, y: 1, z: 1), orientation: .Up)
-//        print("G: \(garage.describe()), P:\(peripheral.describe()), N:\(node.describe()))")
-//    }
-    
 }
 
 // MARK: - TECH TREE

@@ -178,6 +178,50 @@ class SKNS {
         task.resume()
     }
     
+    static func updatePlayer(object:PlayerContent, completion:((PlayerContent?, Error?) -> ())?) {
+        
+        print("Creating Player")
+        
+        let url = URL(string: "\(baseAddress)/update_player")!
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        
+        request.httpMethod = HTTPMethod.POST.rawValue // (Post): HTTPMethod.POST.rawValue // (Get): HTTPMethod.GET.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let encoder = JSONEncoder()
+        if let data = try? encoder.encode(object) {
+            print("Adding Data")
+            request.httpBody = data
+            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
+            print("DS: \(dataString)")
+        }
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                DispatchQueue.main.async {
+                    print("Data returning")
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .secondsSince1970
+                    if let playerBack = try? decoder.decode(PlayerContent.self, from: data) {
+                        completion?(playerBack, nil)
+                    }else {
+                        print("Data is not formattted to 'PlayerContent' ")
+                        completion?(nil, error)
+                    }
+                }
+                
+            } else if let error = error {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    
     // MARK: - Guild
     static func requestJoinGuild(playerID:UUID, guildID:UUID, completion:((Guild?, Error?) -> ())?) {
         
@@ -242,6 +286,53 @@ class SKNS {
                             print("\n\nString:")
                             print(string ?? "n/a")
 //                        }
+                        completion?(nil, error)
+                    }
+                }
+                
+            } else {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    static func guildInfo(user:SKNUser, completion:((GuildFullContent?, Error?) -> ())?) {
+        
+        guard let gid = user.guildID else {
+            print("Needs Guild ID to continue")
+            completion?(nil, nil)
+            return
+        }
+        
+        let url = URL(string: "\(baseAddress)/myguildinfo/\(gid)")!
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        
+        request.httpMethod = HTTPMethod.GET.rawValue // (Post): HTTPMethod.POST.rawValue // (Get): HTTPMethod.GET.rawValue
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                DispatchQueue.main.async {
+//                    print("Data returning")
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .secondsSince1970
+                    let string = String(data:data, encoding:.utf8)
+                    
+                    do {
+                        let guild = try decoder.decode(GuildFullContent.self, from: data)
+                        completion?(guild, nil)
+                        return
+                    }catch{
+                        print("Error decoding: \(error.localizedDescription)")
+                        //                        if let string = try? String(data:data, encoding:.utf8) {
+                        print("\n\nString:")
+                        print(string ?? "n/a")
+                        //                        }
                         completion?(nil, error)
                     }
                 }

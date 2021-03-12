@@ -391,8 +391,8 @@ class Station:Codable {
             }
         }
         
-        // Remove Empty Tanks
-        truss.tanks.removeAll(where: { $0.current <= 0 && $0.type != .empty })
+        // Remove Empty Tanks - oxygen only
+        truss.tanks.removeAll(where: { $0.current <= 0 && $0.type == .o2 })
         truss.mergeTanks()
         
         // + Antenna -> + Money

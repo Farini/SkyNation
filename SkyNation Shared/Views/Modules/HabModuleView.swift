@@ -92,12 +92,18 @@ struct HabModuleView: View {
                         HStack {
                             // Left List
                             List(controller.inhabitants) { person in
-                                PersonRow(person: person, selected: person == controller.selectedPerson)
+                                
+                                ActivityPersonCell(person: person, selected: person == controller.selectedPerson)
                                     .onTapGesture(count: 1, perform: {
                                         controller.didSelect(person: person)
                                     })
+//                                PersonRow(person: person, selected: person == controller.selectedPerson)
+//                                    .onTapGesture(count: 1, perform: {
+//                                        controller.didSelect(person: person)
+//                                    })
+                                
                             }
-                            .frame(minWidth: 150, maxWidth: 230, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
+                            .frame(minWidth: 100, maxWidth: 220, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
                             
                             Divider()
                             // No Selection
@@ -121,10 +127,14 @@ struct HabModuleView: View {
                         
                         // Left List
                         List(controller.inhabitants) { person in
-                            PersonRow(person: person, selected: person == controller.selectedPerson)
+                            ActivityPersonCell(person: person, selected: person == controller.selectedPerson)
                                 .onTapGesture(count: 1, perform: {
                                     controller.didSelect(person: person)
                                 })
+//                            PersonRow(person: person, selected: person == controller.selectedPerson)
+//                                .onTapGesture(count: 1, perform: {
+//                                    controller.didSelect(person: person)
+//                                })
                         }
                         .frame(minWidth: 150, maxWidth: 230, maxHeight: .infinity, alignment: .leading)
                         

@@ -94,6 +94,7 @@ class GuildController:ObservableObject {
                 print("Found your guild: \(guild.name)")
                 self.news = "Your guild is \(guild.name)"
                 self.user?.guildID = guild.id
+                LocalDatabase.shared.player?.guildID = guild.id
                 self.joinedGuild = guild
                 print("Should save user guild id ???")
                 

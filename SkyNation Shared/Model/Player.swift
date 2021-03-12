@@ -18,6 +18,7 @@ class SKNPlayer:Codable, Identifiable {
     var serverID:UUID?          // an ID given by the server
     var gcid:String?            // an ID given by GameCenter
     var guildID:UUID?           // id of the Guild
+    var cityID:UUID?            // City ID
     var deliveryTokens:[UUID]   // Free deliveries
     var timeTokens:[UUID]       // Tokens to cut through time
     var purchases:[UUID]        // Purchases this player made
@@ -81,6 +82,40 @@ struct PlayerCard {
     // Dates
     var beganGame:Date
     var lastSeen:Date
+}
+
+/**
+ The Content used to **update**  a `DBPlayer`
+ */
+struct PlayerContent:Codable {
+    
+    var id:UUID
+    var localID:UUID            // id given by local machine
+    var guildID:UUID?           // id of the Guild
+    
+    var name:String
+    var avatar:String
+    var money:Int
+    var about:String
+    var experience:Int
+    
+    // Dates
+    var beganGame:Date
+    var lastSeen:Date
+    
+    init(player:SKNPlayer) {
+        self.id = player.id
+        self.localID = player.localID
+        self.guildID = player.guildID
+        self.name = player.name
+        self.avatar = player.avatar
+        self.money = player.money
+        self.about = player.about
+        self.experience = player.experience
+        self.beganGame = player.beganGame
+        self.lastSeen = Date()
+    }
+    
 }
 
 struct SKNUser:Codable {

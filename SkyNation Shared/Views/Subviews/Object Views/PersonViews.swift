@@ -226,43 +226,7 @@ struct PersonDetail:View {
                     Spacer()
                 }
                 
-                HStack {
-                    Spacer()
-                    Button("Study") {
-                        print("\(person.name) Try Studying...")
-                        
-                        let randomSubject = Skills.allCases.randomElement() ?? Skills.Handy
-                        controller.study(person: person, subject: randomSubject)
-                    }
-                    
-                    Button("Workout") {
-                        print("Working out ??")
-                        controller.workout(person: person)
-                    }
-                    .disabled(person.isBusy())
-                    
-                    Button("Fire") {
-                        print("Fire Person")
-                        fireAlert.toggle()
-                    }
-                    .disabled(person.isBusy())
-                    .alert(isPresented: $fireAlert, content: {
-                        Alert(title: Text("Fire"), message: Text("Are you sure you want to fire \(person.name)"),
-                              primaryButton: .cancel(),
-                              secondaryButton: .destructive(Text("Yes"), action: {
-                                print("Person fired. Needs to delete them.")
-                                controller.fire(person: person)
-                              }))
-                    })
-                    
-                    Button("Medicate") {
-                        print("Needs a doctor for medication.")
-                        controller.medicate(person: person)
-                    }
-                    .disabled(person.isBusy())
-                    
-                    Spacer()
-                }.padding()
+                
                 
                 ForEach(controller.issues, id:\.self) { issue in
                     Text(issue)
@@ -279,30 +243,78 @@ struct PersonDetail:View {
             VStack {
                 
                 Text("Work Skills").font(.title2)
-                HStack {
+                HStack(spacing:12) {
                     FixedLevelBar(min: 0, max: 100, current: Double(person.intelligence), title: "Intel", color: .blue)
                         .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    Divider()
                     FixedLevelBar(min: 0, max: 100, current: Double(person.happiness), title: "Adaptation", color: .blue)
                         .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 }
-                .padding()
+                .padding(.bottom, 4)
                 
                 Divider()
                 
-                Text("Conditions").font(.title2)
-                Text("Life Expectancy: \(person.lifeExpectancy)")
-                    .padding()
+                Text("Conditions").font(.title2).foregroundColor(.green)
+//                Text("Life Expectancy: \(person.lifeExpectancy)")
+//                    .padding()
+                ProgressView("Life Expectancy: \(person.lifeExpectancy)", value: Float(person.age), total: Float(person.lifeExpectancy))
+                    .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    .padding(.top, 4)
                 
-                HStack {
+                HStack(spacing:12) {
                     FixedLevelBar(min: 0, max: 100, current: Double(person.happiness), title: "Happiness", color: .green)
                         .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    Divider()
                     FixedLevelBar(min: 0, max: 100, current: Double(person.healthPhysical), title: "Physical", color: .green)
                         .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 }
-                .padding()
+                .padding(.bottom, 12)
             }
+            Divider()
+            HStack {
+                Spacer()
+                Button("Study") {
+                    print("\(person.name) Try Studying...")
+                    
+                    let randomSubject = Skills.allCases.randomElement() ?? Skills.Handy
+                    controller.study(person: person, subject: randomSubject)
+                }
+                .disabled(person.isBusy())
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                
+                Button("Workout") {
+                    print("Working out ??")
+                    controller.workout(person: person)
+                }
+                .disabled(person.isBusy())
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                
+                Button("Fire") {
+                    print("Fire Person")
+                    fireAlert.toggle()
+                }
+                .disabled(person.isBusy())
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                .alert(isPresented: $fireAlert, content: {
+                    Alert(title: Text("Fire"), message: Text("Are you sure you want to fire \(person.name)"),
+                          primaryButton: .cancel(),
+                          secondaryButton: .destructive(Text("Yes"), action: {
+                            print("Person fired. Needs to delete them.")
+                            controller.fire(person: person)
+                          }))
+                })
+                
+                Button("Medicate") {
+                    print("Needs a doctor for medication.")
+                    controller.medicate(person: person)
+                }
+                .disabled(person.isBusy())
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                
+                Spacer()
+            }.padding()
         }
-        .frame(minHeight: 550, idealHeight: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        .frame(minHeight: 550, idealHeight: 600, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
     }
 }
 
