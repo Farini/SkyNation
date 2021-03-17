@@ -8,14 +8,14 @@
 
 import Foundation
 
-
 /// **Private** information about the `Player`
 class SKNPlayer:Codable, Identifiable {
     
     // IDs
     var id:UUID
     var localID:UUID            // id given by local machine
-    var serverID:UUID?          // an ID given by the server
+    var serverID:UUID?          // an ID given by the server (SKNUser)
+    var playerID:UUID?          // an ID for the `DBPlayer` object
     var gcid:String?            // an ID given by GameCenter
     var guildID:UUID?           // id of the Guild
     var cityID:UUID?            // City ID
@@ -25,7 +25,6 @@ class SKNPlayer:Codable, Identifiable {
     
     // Constructed
     var name:String
-//    var logo:String?
     var avatar:String
     var money:Int
     var about:String
@@ -34,6 +33,10 @@ class SKNPlayer:Codable, Identifiable {
     // Dates
     var beganGame:Date
     var lastSeen:Date
+    
+    // Server Pass
+    var datePass:Date?
+    var keyPass:String?
     
     init() {
         self.id = UUID()
@@ -45,7 +48,6 @@ class SKNPlayer:Codable, Identifiable {
         self.purchases = []
         
         self.name = "Test Player"
-//        self.logo = nil
         self.money = 200000 // 200,000
         self.about = "About me"
         self.experience = 0
@@ -66,7 +68,6 @@ class SKNPlayer:Codable, Identifiable {
     }
     
 }
-
 
 /// `Public` information about a `Player`
 struct PlayerCard {
@@ -118,42 +119,62 @@ struct PlayerContent:Codable {
     
 }
 
-struct SKNUser:Codable {
+/**
+ A base structure used to identify player, login, etc. */
+struct SKNUserPost:Codable {
+
+    var id:UUID         // Wildcard ID
+    var name:String     // Name of Player
+    var localID:UUID    // ID received when started game
     
-    var id: UUID
-    var name: String
-    var localID: UUID
-    var guildID: UUID?
-    var cityID: UUID?
+    var serverID:UUID?  // The one created on here (server)
     
-    // avatar:String    // Player's avatar image
-    // gcid:String      // Game Center id
+    /// Date last password is received
+    var date:Date?
     
+    /// A password defined by system
+    var pass:String?
+    
+    /// The PlayerContent associated with the DBPlayer
+    var player:PlayerContent?
+    
+//    var id: UUID
+//    var name: String
+//    var localID: UUID
+//    var guildID: UUID?
+//    var cityID: UUID?
+//    var serverID: UUID?
+//
+//    /// Date last password is received
+//    var date:Date?
+//    /// A password defined by system
+//    var pass:String?
+//
+//    /// The PlayerContent associated with the DBPlayer
+//    var player:PlayerContent?
+
     init(name:String) {
         self.id = UUID()
         self.localID = UUID()
         self.name = name
     }
-    
+
     init(player:SKNPlayer) {
+        
         self.id = player.id
         self.name = player.name
         self.localID = player.localID
-        self.guildID = player.guildID
+//        self.guildID = player.guildID
+        self.serverID = player.serverID
+        
+        // Update Password only if 1 hour has not passed yet
+        if let pDate = player.datePass,
+           pDate.addingTimeInterval(60*60).compare(Date()) == .orderedAscending {
+            self.date = player.datePass
+            self.pass = player.keyPass
+        }
+        
+        // player pptyd
+        self.player = PlayerContent(player: player)
     }
-}
-
-/// To authenticate a player
-struct SKNPlayerAuth:Codable {
-    
-    // To authenticate a player
-    
-    var name: String
-    var localID: UUID
-    
-    var serverID: UUID?
-    var guildID: UUID?
-    var cityID: UUID?
-    var authID: UUID?   // the ID allowed to post
-    
 }

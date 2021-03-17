@@ -613,7 +613,20 @@ struct TravellingVehicleView: View {
                         
                         Text("In Orbit")
                         Text("Simulation: \(vehicle.simulation) hrs")
-//                        CirclePercentIndicator(percentage: 1.0)
+                        
+                        // Batteries
+                        let power = vehicle.batteries.compactMap{$0.current}.reduce(1, +)
+                        let powerMax = vehicle.batteries.compactMap{$0.capacity}.reduce(1, +)
+                        Text("Energy: \(power) of \(powerMax)")
+                        ProgressView("\(power) of \(powerMax)", value: Float(power), total: Float(powerMax))
+                            .frame(width:200)
+                        
+                        // Peripherals + Antenna
+                        // Keep Satellite alive?
+                        // Buttons, and options (Land, Go back, Destroy, etc.)
+                        // if satellite, no land
+                        // if landing, send to portal
+                        
                         GameActivityView(vehicle: vehicle)
                         
                         Divider()
@@ -624,6 +637,15 @@ struct TravellingVehicleView: View {
                             Button("<< Go Back") {
                                 print("Cancelling")
                                 controller.cancelSelection()
+                            }
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                            
+                            if vehicle.engine != .Hex6 {
+                                Button("Begin EDL") {
+                                    print("Beginning Entry, Descent and Landing")
+//                                    controller.cancelSelection()
+                                }
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                             }
                             
                             if let bot = vehicle.marsBot {

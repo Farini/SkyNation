@@ -219,10 +219,10 @@ class PeripheralObject:Codable, Identifiable, Equatable {
     func getConsumables() -> [String:Int] {
         
         switch peripheral {
-            case .ScrubberCO2: return [TankType.co2.rawValue: 2, "CarbDiox":-2]
+            case .ScrubberCO2: return [TankType.co2.rawValue: 3, "CarbDiox":-3]
             case .Condensator: return [TankType.h2o.rawValue: 2, "vapor": -2]
             case .Electrolizer: return [TankType.h2o.rawValue: -2, "oxygen":2, TankType.h2.rawValue:4]
-            case .Methanizer: return [TankType.co2.rawValue:-2, TankType.h2.rawValue:-4, TankType.ch4.rawValue:2, TankType.o2.rawValue:2]
+            case .Methanizer: return ["CarbDiox":-4, TankType.h2.rawValue:-4, TankType.ch4.rawValue:4, TankType.o2.rawValue:4]
             case .WaterFilter: return [Ingredient.wasteLiquid.rawValue: -2, TankType.h2o.rawValue:2]
             case .BioSolidifier: return [Ingredient.wasteSolid.rawValue: -2, Ingredient.Fertilizer.rawValue:2]
             default: return [:]

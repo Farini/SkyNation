@@ -406,7 +406,6 @@ class LocalDatabase {
         
         // Space Station
         if let ss = LocalDatabase.loadStation() {
-//            print("Loading Station")
             // Set the Station
             self.station = ss
             // Load builder for station
@@ -417,7 +416,6 @@ class LocalDatabase {
             let sBuilder = LocalDatabase.initializeStationBuilder()
             self.stationBuilder = sBuilder
             self.station = Station(stationBuilder: sBuilder)
-//            self.station = Station(builder: builder)
         }
         
         self.gameMessages = LocalDatabase.loadMessages()
@@ -430,7 +428,5 @@ class LocalDatabase {
         if let gg:GameGenerators = LocalDatabase.loadGameGenerators() {
             self.gameGenerators = gg
         }
-        
     }
-    
 }

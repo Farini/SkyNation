@@ -15,26 +15,29 @@ struct BackendView: View {
         
         VStack {
             
-            Text("Back End").foregroundColor(.green).font(.largeTitle)
-            Divider()
-            Text("News")
-            Text(controller.news).foregroundColor(.gray)
+            Group {
+                Text("Back End").foregroundColor(.green).font(.largeTitle)
+                Divider()
+                Text("News")
+                Text(controller.news).foregroundColor(.gray)
+            }
+            
             
             // User Info
             Group {
                 VStack(alignment:.leading) {
                     Text("User Info").font(.title).foregroundColor(.blue)
-                    Text("GID: \(controller.user?.guildID?.uuidString ?? "n/a")")
+//                    Text("GID: \(controller.user?.guildID?.uuidString ?? "n/a")")
                     Text("PID: \(controller.user?.id.uuidString ?? "n/a")")
                     Text("LID: \(controller.user?.localID.uuidString ?? "n/a")")
-                    Text("CID: \(controller.user?.cityID?.uuidString ?? "n/a")")
+//                    Text("CID: \(controller.user?.cityID?.uuidString ?? "n/a")")
                 }
                 .padding([.top, .bottom])
             }
             
             // Guild Info
             Group {
-                if let guild = controller.joinedGuild {
+                if controller.joinedGuild != nil {
                     VStack(alignment:.leading) {
                         Text("Guild Info").font(.title).foregroundColor(.red)
                         Text("GID: \(controller.joinedGuild!.id.uuidString)")
@@ -48,17 +51,15 @@ struct BackendView: View {
                 }
             }
             
-            
-            
             HStack {
                 ForEach(controller.guilds, id:\.id) { guild in
                     VStack {
                         Text("Guild: \(guild.name)")
                             .foregroundColor(.yellow)
-                        Text("Election: \(GameFormatters.dateFormatter.string(from: guild.election))")
+//                        Text("Election: \(GameFormatters.dateFormatter.string(from: guild.election))")
                         Text("Citizens: \(guild.citizens.count)")
-                        Text("Cities: \(guild.cities?.count ?? 0)")
-                        if guild.members?.count ?? 0 <= 20 {
+                        Text("Cities: \(guild.cities.count)")
+                        if guild.citizens.count <= 9 {
                             Button("Join") {
                                 controller.requestJoinGuild(guild: guild)
                             }
@@ -76,6 +77,7 @@ struct BackendView: View {
                     controller.findMyGuild()
                 }
                 Button("Fetch Guilds") {
+                    controller.guilds = []
                     controller.fetchGuilds()
                 }
                 Button("New Login") {
@@ -85,7 +87,6 @@ struct BackendView: View {
             .padding()
         }
         .padding()
-        
     }
 }
 

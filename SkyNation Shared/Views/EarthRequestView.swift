@@ -12,6 +12,7 @@ struct EarthRequestView: View {
     
     @ObservedObject var controller:EarthRequestController = EarthRequestController()
     @State var infoPopover:Bool = false
+    @State var alertRenewPeople:Bool = false
     
     private var ingredientColumns: [GridItem] = [
         GridItem(.fixed(200)),
@@ -189,14 +190,27 @@ struct EarthRequestView: View {
                                         Image(systemName:"clock")
                                             .font(.title)
                                         VStack {
-                                            let delta = Date().timeIntervalSince(LocalDatabase.shared.gameGenerators!.datePeople)
-                                            let oo = Calendar.current.dateComponents([.minute, .second], from: Date(), to: LocalDatabase.shared.gameGenerators!.datePeople)
-                                            Text("Delta: \(delta) +  \(oo.minute ?? 0)m \(oo.second ?? 0)s")
+//                                            let delta = LocalDatabase.shared.gameGenerators!.datePeople.timeIntervalSince(Date())
+                                            let oo = Calendar.current.dateComponents([.minute, .second], from: LocalDatabase.shared.gameGenerators!.datePeople, to: Date())
+                                            Text("Refresh: \(oo.minute ?? 0)m \(oo.second ?? 0)s")
                                         }
                                     }
                                     .padding(8)
                                     .background(Color.black)
                                     .cornerRadius(6)
+                                    .onTapGesture {
+                                        alertRenewPeople.toggle()
+                                    }
+                                    .alert(isPresented: $alertRenewPeople, content: {
+                                        Alert(title: Text("Refresh candidates"), message: Text("Spend 1 token to refresh candidates?"),
+                                              primaryButton: .cancel(),
+                                              secondaryButton: .destructive(Text("Yes"), action: {
+                                                
+                                                LocalDatabase.shared.gameGenerators?.spentTokenToUpdate(amt: 1)
+                                                controller.orderAisle = .People
+                                                
+                                              }))
+                                    })
                                 }
 
                             case .Ingredients:

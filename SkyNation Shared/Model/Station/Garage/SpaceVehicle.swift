@@ -439,7 +439,7 @@ struct SpaceVehicleModel:Codable {
     var engine:String
     var status:String
     
-    init(spaceVehicle:SpaceVehicle, player:SKNUser) {
+    init(spaceVehicle:SpaceVehicle, player:SKNUserPost) {
         self.id = spaceVehicle.id
         self.eta = Date().addingTimeInterval(60 * 60 * 24 * 5)
         self.owner = player.id

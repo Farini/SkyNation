@@ -18,6 +18,12 @@ class GameSettings {
     
     var startingScene:GameSceneType
     
+    // MARK: - Game Logic
+    
+    /// Wether the game should automatically clear empty tanks
+    var clearEmptyTanks:Bool = false
+    
+    
     // MARK: - Debugging
     
     /// Whether to debug Scene objects
@@ -44,6 +50,13 @@ class GameSettings {
         self.startingScene = .SpaceStation
         
         // self.showLights = UserDefaults().bool(forKey: "showLights")
+        let clear = UserDefaults.standard.bool(forKey: "clearEmptyTanks")
+        self.clearEmptyTanks = clear
+        
+    }
+    
+    func save() {
+        UserDefaults.standard.setValue(self.clearEmptyTanks, forKey: "clearEmptyTanks")
         
     }
 }

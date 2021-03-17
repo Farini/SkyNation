@@ -438,7 +438,7 @@ class GarageViewModel:ObservableObject {
         guard let player = LocalDatabase.shared.player else {
             fatalError()
         }
-        let user = SKNUser(player: player)
+        let user = SKNUserPost(player: player)
         SKNS.registerSpace(vehicle: vehicle, player: user) { (data, error) in
             if let data = data {
                 let decoder = JSONDecoder()

@@ -172,6 +172,7 @@ class Station:Codable {
                                 report.peripheralNotes.append("\(peripheral.peripheral.rawValue) produced: \(value) oxygen")
                             }
                         } else if key == "CarbDiox" {
+                            
                             // Carbon dioxide in air (CO2)
                             if air.co2 < abs(value) {
                                 report.problems.append("Not enough CO2 for \(peripheral.peripheral.rawValue)")
@@ -392,7 +393,9 @@ class Station:Codable {
         }
         
         // Remove Empty Tanks - oxygen only
-        truss.tanks.removeAll(where: { $0.current <= 0 && $0.type == .o2 })
+        if GameSettings.shared.clearEmptyTanks == true {
+            truss.tanks.removeAll(where: { $0.current <= 0 && ($0.type == .o2 || $0.type == .h2o) })
+        }
         truss.mergeTanks()
         
         // + Antenna -> + Money

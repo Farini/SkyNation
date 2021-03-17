@@ -12,18 +12,18 @@ class GuildController:ObservableObject {
     @Published var news:String
     
     @Published var player:SKNPlayer?
-    @Published var user:SKNUser?
+    @Published var user:SKNPlayer?
     
-    @Published var guilds:[Guild] = []
-    @Published var highlightedGuild:Guild? // The Guild to display (bigger)
-    @Published var joinedGuild:Guild?
+    @Published var guilds:[GuildSummary] = []
+    @Published var highlightedGuild:GuildSummary? // The Guild to display (bigger)
+    @Published var joinedGuild:GuildSummary?
     
     init() {
         news = "Do somthing first"
         
         if let player = LocalDatabase.shared.player {
             self.player = player
-            self.user = SKNUser(player: player)
+//            self.user = SKNUserPost(player: player)
             print("Backend Controller")
             print("User id:\(player.id)")
             print("Server: \n (P):\(player.serverID?.uuidString ?? "NO SERVER ID") \n (U):\(user?.id.uuidString ?? "NO SERVER ID")")
@@ -31,12 +31,13 @@ class GuildController:ObservableObject {
     }
     
     // NEW
+    
     init(autologin:Bool) {
         news = "Autologin"
         
         if let player = LocalDatabase.shared.player {
             self.player = player
-            self.user = SKNUser(player: player)
+//            self.user = SKNUserPost(player: player)
             print("Backend Controller")
             print("User id:\(player.id)")
             print("Server: \n (P):\(player.serverID?.uuidString ?? "NO SERVER ID") \n (U):\(user?.id.uuidString ?? "NO SERVER ID")")
@@ -51,25 +52,28 @@ class GuildController:ObservableObject {
     }
     
     func loginUser() {
-        guard let user = user else {
-            print("No user")
-            return
-        }
         
-        SKNS.newLogin(user: user) { (loggedUser, error) in
+        SKNS.resolveLogin { (loggedUser, error) in
+            
             if let loguser = loggedUser {
-                print("User logged in!")
+                
+                print("** LOGIN     >> \(loguser.name)")
+                print("** LOCAL     >> \(loguser.localID.uuidString)")
+                print("** SERVER    >> \(loguser.serverID?.uuidString ?? "[]")")
+//                print("** GUILD     >> \(loguser.guildID?.uuidString ?? "[]")")
+//                print("** CITY      >> \(loguser.cityID?.uuidString ?? "[]")")
+                
                 self.user = loguser
             } else {
                 print("Could not log in user. Reason: \(error?.localizedDescription ?? "n/a")")
             }
-            self.news = error?.localizedDescription ?? ""
         }
+        
     }
     
     func fetchGuilds() {
         news = "Fetching Guilds..."
-        SKNS.fetchGuilds(player: user) { (guilds, error) in
+        SKNS.browseGuilds { (guilds, error) in
             if let array = guilds {
                 print("Updating Guilds")
                 self.guilds = array
@@ -83,35 +87,41 @@ class GuildController:ObservableObject {
                     print("Something else happened. Not an error, but no Guilds")
                 }
             }
-            
+
         }
     }
     
     func findMyGuild() {
         news = "Searching your guild..."
-        SKNS.findMyGuild(user: user!) { (guild, error) in
-            if let guild = guild {
-                print("Found your guild: \(guild.name)")
-                self.news = "Your guild is \(guild.name)"
-                self.user?.guildID = guild.id
-                LocalDatabase.shared.player?.guildID = guild.id
-                self.joinedGuild = guild
-                print("Should save user guild id ???")
-                
-            } else {
-                self.news = "Cannot find guild"
-            }
-        }
+//        SKNS.findMyGuild(user: user) { (guild, error) in
+//            if let guild = guild {
+//                print("Found your guild: \(guild.name)")
+//                self.news = "Your guild is \(guild.name)"
+////                self.user?.guildID = guild.id
+//                LocalDatabase.shared.player?.guildID = guild.id
+////                self.joinedGuild = guild
+//                print("Should save user guild id ???")
+//
+//            } else {
+//                self.news = "Cannot find guild"
+//            }
+//        }
     }
     
-    func requestJoinGuild(guild:Guild) {
-        SKNS.requestJoinGuild(playerID: player!.id, guildID: guild.id) { (guild, error) in
-            if let guild = guild {
-                print("Joined a guild !!!! \(guild.name)")
-                self.joinedGuild = guild
+    func requestJoinGuild(guild:GuildSummary) {
+        let summary = guild
+        
+        SKNS.joinGuildPetition(guildID: guild.id) { (guildSum, error) in
+            if let guildSum = guildSum {
+                if guildSum.citizens.contains(self.player?.playerID ?? UUID()) {
+                    // accepted
+                    print("Accepted")
+                    self.joinedGuild = guildSum
+                } else {
+                    print("not accepted")
+                }
             } else {
-                print("Did not join?")
-                self.news = error?.localizedDescription ?? "n/a"
+                print("⚠️ ERROR: \(error?.localizedDescription ?? "n/a")")
             }
         }
     }

@@ -10,7 +10,7 @@ import SwiftUI
 struct GuildView: View {
     
     
-    var guild:Guild = Guild.example
+    var guild:GuildSummary = Guild.example.makeSummary()
     
     var style: Style
     enum Style {
@@ -50,7 +50,7 @@ struct GuildView: View {
                         }
                     }
                     
-                    Text("Cities: \(guild.cities?.count ?? 0)")
+                    Text("Cities: \(guild.cities.count)")
                         .foregroundColor(style == .largeDescriptive ? Color.yellow:Color.white)
                         .font(style == .largeDescriptive ? .title3:.body)
                     if style == .largeDescriptive {
@@ -60,7 +60,7 @@ struct GuildView: View {
                     }
                     
                     HStack {
-                        if guild.members?.count ?? 0 <= 20 {
+                        if guild.citizens.count <= 20 {
                             Button("Join") {
                                 //                    controller.requestJoinGuild(guild: guild)
                             }
@@ -77,8 +77,9 @@ struct GuildView: View {
                     
                 } else {
                     Text("👤 \(guild.citizens.count)")
-                    Text("🌆 \(guild.cities?.count ?? 0)")
-                    Text("📆 \(GameFormatters.dateFormatter.string(from: guild.election))")
+                    Text("🌆 \(guild.cities.count)")
+                    Text("⚙️ \(guild.outposts.count)")
+//                    Text("📆 \(GameFormatters.dateFormatter.string(from: guild.election))")
                 }
             }
             .background(GameColors.transBlack)

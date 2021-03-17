@@ -317,10 +317,27 @@ extension GameViewController: GameNavDelegate {
     
     // MARS
     
-    func openCityView(position: Vector3D, name: String?) {
-        print("Should open city view at (x): \(position.x)")
+    //func openCityView(position: Vector3D, name: String?) {
+    func openCityView(posdex: Posdex, city: DBCity?) {
+       
+//        print("Should open city view at (x): \(position.x)")
         
-        let controller = NSHostingController(rootView: MarsCityCreatorView(name: name ?? "", position: position))
+        let controller = NSHostingController(rootView: MarsCityCreatorView(posdex: posdex, city: city)) //MarsCityCreatorView(name: name ?? "", position: position))
+        
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controller.view)
+        controller.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        controller.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        self.openedView = controller.view
+        self.presentAsSheet(controller)
+    }
+    
+    func openOutpostView(posdex: Posdex, outpost:DBOutpost) {
+        
+        let controller = NSHostingController(rootView: OutpostView(posdex: posdex, outpost: outpost))
         
         controller.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(controller.view)

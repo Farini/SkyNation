@@ -7,6 +7,13 @@
 
 import SwiftUI
 
+// MARK: - 4 Tabs
+
+// MARK: - Tab1: Loading
+// MARK: - Tab2: Player
+// MARK: - Tab3: Server
+// MARK: - Tab4: Settings
+
 struct PlayerEditView: View {
     
     @ObservedObject var controller:GameSettingsController
@@ -23,13 +30,13 @@ struct PlayerEditView: View {
         self.controller = controller
         
         var newCards:[AvatarCard] = []
-        var selCard:AvatarCard?
+//        var selCard:AvatarCard?
         
         for name in allNames {
             let card = AvatarCard(name: name)
             newCards.append(card)
             if controller.player.avatar == name {
-                selCard = card
+//                selCard = card
 //                card.selected = true
             }
         }
@@ -95,16 +102,14 @@ struct PlayerEditView: View {
                     .background(LinearGradient(gradient: Gradient(colors: [Color.red.opacity(0.1), Color.blue.opacity(0.1)]), startPoint: .topLeading, endPoint: .bottomTrailing))
                     
                     // About
-                    VStack(alignment:.leading) {
-                        TextField("About", text: $about)
-//                            .textFieldStyle(RoundedBorderTextFieldStyle())
-//                            .frame(width: .m)
-                            .padding(.horizontal)
-                            .lineLimit(3)
-                            .cornerRadius(8)
+//                    VStack(alignment:.leading) {
+//                        TextField("About", text: $about)
+//                            .padding(.horizontal)
+//                            .lineLimit(3)
+//                            .cornerRadius(8)
                     
-                    Spacer(minLength: 8)
-                }
+//                    Spacer(minLength: 8)
+//                }
             }
             .onAppear() {
                 self.selectedCard = cards.first(where: { $0.name == controller.player.avatar })
@@ -129,7 +134,6 @@ struct PlayerEditView: View {
 }
 
 // MARK: - Other Tabs
-
 
 struct LoadingGameTab: View {
     var body: some View {
@@ -156,19 +160,55 @@ struct SettingsServerTab:View {
         ScrollView {
             
             VStack {
-                Text("Player").font(.title)
-                Text("Fetch player pending...").foregroundColor(.gray)
-                Divider()
-                Text("Server").font(.title)
-                Text("Server version: 1.0").foregroundColor(.gray)
-                Text("Guild")
-                if let guild = controller.guild {
-                    Text("\(guild.name)")
-                    Text("\(guild.id.uuidString)")
-                    Text("Cities: \(guild.cities?.count ?? 0)")
-                }else {
-                    Text("No guild").foregroundColor(.gray)
+                
+                HStack(alignment:.top) {
+                    VStack(alignment:.leading, spacing:24) {
+                        //                    Text("Player").font(.title)
+                        //                    Divider()
+                        Text("Server").font(.title)
+                        Text("Server version: 1.0").foregroundColor(.gray)
+                        Text("Guild")
+                        
+                        if let guild = controller.guild {
+                            Text("\(guild.name)")
+                            Text("\(guild.id.uuidString)")
+                            Text("Cities: \(guild.cities?.count ?? 0)")
+                        } else {
+                            Text("No guild").foregroundColor(.gray)
+                        }
+                    }
+                    
+                    Spacer()
+                    
+                    if let guild = controller.guild {
+                        // Make a Guild view with the full object
+                        Text("G: \(guild.name)")
+                    } else if let guild = controller.selectedGuildSum {
+                        GuildView(guild: guild, style: .largeSummary, closeAction: closeviewaction, flipAction: closeviewaction)
+                    } else if let guild = controller.selectedGuildObj {
+                        // Make another view for full object
+                        Text("G: \(guild.name)")
+                    }
+                    
                 }
+                .padding(.horizontal)
+                
+                
+                
+                
+                
+                // Exploring
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 130), spacing: 16, alignment: .top)], alignment: .center, spacing: 16) {
+                    ForEach(controller.joinableGuilds, id:\.id) { guild in
+                        
+                        GuildView(guild: guild, style: .thumbnail, closeAction: closeviewaction)
+                            .onTapGesture {
+                                print("Selecting: \(guild.name)")
+                                select(guild: guild)
+                            }
+                    }
+                }
+                
                 Divider()
                 // Buttons
                 HStack {
@@ -188,7 +228,14 @@ struct SettingsServerTab:View {
                         .foregroundColor(.red)
                         .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
                         
+                        Button("Fetch Guilds") {
+                            controller.fetchGuilds()
+                        }
+                        .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
+                    } else {
+                        // Fetch My guild
                     }
+                    
                     // Join
                     if controller.guild == nil {
                         Button("Join Guild") {
@@ -205,24 +252,93 @@ struct SettingsServerTab:View {
                             //                        controller.createGuild()
                         }
                         .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
-                        
                     }
                 }
             }
         }
     }
-}
-
-struct PlayerEditView_Previews: PreviewProvider {
-    static var previews: some View {
-        PlayerEditView(controller: GameSettingsController())
+    
+    func select(guild: GuildSummary) {
+        withAnimation(.openCard) {
+            controller.selectedGuildSum = guild
+        }
+    }
+    
+    func closeviewaction() {
+        print("closeviewaction")
     }
 }
 
+struct GameSettingsTabView: View {
+    
+    var settings:GameSettings
+    
+    @State var showTutorial:Bool = GameSettings.shared.showTutorial
+    @State var useCloudData:Bool = GameSettings.shared.useCloud
+    @State var showLights:Bool = GameSettings.shared.showLights
+    @State var clearTanks:Bool = GameSettings.shared.clearEmptyTanks
+    
+    init() {
+        self.settings = GameSettings.shared
+    }
+    
+    var body:some View {
+        ScrollView{
+            VStack(alignment:.leading) {
+                
+                Text("Graphics").font(.title)
+                Toggle("Show Lights", isOn:$showLights)
+                
+                Divider()
+                Group {
+                    Text("Gameplay").font(.title)
+                    Toggle("Clear empty tanks", isOn:$clearTanks)
+                    Toggle("Show Tutorial", isOn:$showTutorial)
+                    Toggle("Use iCloud", isOn:$useCloudData)
+                }
+                
+                Divider()
+                Group {
+                    Text("Data").font(.title)
+                    Toggle("Use iCloud", isOn:$useCloudData)
+                }
+                
+                Divider()
+                
+                Button("Save") {
+                    print("Save Settings")
+                    settings.showTutorial = self.showTutorial
+                    settings.useCloud = self.useCloudData
+                    settings.showLights = self.showLights
+                    settings.clearEmptyTanks = self.clearTanks
+                    settings.save()
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
+            }
+            .padding(.horizontal)
+        }
+        
+    }
+    
+}
+
+// MARK: - Previews
+
+struct PlayerEditView_Previews: PreviewProvider {
+    static var previews: some View {
+//        PlayerEditView(controller: GameSettingsController())
+        SettingsServerTab(controller:GameSettingsController())
+    }
+}
 
 struct GameTabs_Previews2: PreviewProvider {
     static var previews:some View {
         TabView {
+            // Settings
+            GameSettingsTabView()
+                .tabItem {
+                    Label("Settings", systemImage:"gamecontroller")
+                }
             // Game
             LoadingGameTab()
                 .tabItem {
@@ -233,11 +349,7 @@ struct GameTabs_Previews2: PreviewProvider {
                 .tabItem {
                     Label("Server", systemImage:"gamecontroller")
                 }
-            // Settings
-            GameSettingsTabView()
-                .tabItem {
-                    Label("Settings", systemImage:"gamecontroller")
-                }
+            
             
             // Player
             PlayerEditView(controller:GameSettingsController())
@@ -251,38 +363,4 @@ struct GameTabs_Previews2: PreviewProvider {
     }
 }
 
-struct GameSettingsTabView: View {
-    
-    @State var settings:GameSettings = GameSettings.shared
-    
-    var body:some View {
-        VStack {
-            
-            // Settings
-            Group {
-                Text("Settings").font(.title)
-                Toggle("Show Tutorial", isOn:$settings.showTutorial)
-                Toggle("Use iCloud", isOn:$settings.useCloud)
-            }
-            
-            
-            Text("Graphics").font(.title)
-            Toggle("Show Lights", isOn:$settings.showLights)
-            
-            Group {
-                Text("Display Settings")
-                Text("Graphic Settings")
-                Text("Player Preferences")
-                Text("Data Saving")
-            }
-            
-            
-            Divider()
-            
-            Button("Save") {
-                print("Save Settings")
-            }
-            .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
-        }
-    }
-}
+

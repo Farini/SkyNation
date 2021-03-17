@@ -31,14 +31,14 @@ struct GuildExplorerView: View {
                         Group {
                             Text("User Info").font(.title).foregroundColor(.blue)
                             Divider()
-                            Text("GID: \(controller.user?.guildID?.uuidString ?? "n/a")")
-                                .font(.footnote)
+//                            Text("GID: \(controller.user?.guildID?.uuidString ?? "n/a")")
+//                                .font(.footnote)
                             Text("PID: \(controller.user?.id.uuidString ?? "n/a")")
                                 .font(.footnote)
                             Text("LID: \(controller.user?.localID.uuidString ?? "n/a")")
                                 .font(.footnote)
-                            Text("CID: \(controller.user?.cityID?.uuidString ?? "n/a")")
-                                .font(.footnote)
+//                            Text("CID: \(controller.user?.cityID?.uuidString ?? "n/a")")
+//                                .font(.footnote)
                             
                         }
                         .padding(.horizontal)
@@ -102,7 +102,7 @@ struct GuildExplorerView: View {
         .frame(minWidth: 700, idealWidth: 700, maxWidth: 900, minHeight: 500, idealHeight: 500, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
     }
     
-    func select(guild: Guild) {
+    func select(guild: GuildSummary) {
         withAnimation(.openCard) {
             controller.highlightedGuild = guild
         }

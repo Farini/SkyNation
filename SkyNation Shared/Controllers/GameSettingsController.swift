@@ -11,7 +11,7 @@ import Foundation
 
 class GameSettingsController:ObservableObject {
     
-    @Published var viewState:GameSettingsTab // = .Loading
+    @Published var viewState:GameSettingsTab
     
     @Published var player:SKNPlayer
     @Published var playerName:String {
@@ -21,16 +21,29 @@ class GameSettingsController:ObservableObject {
             }
         }
     }
-    
-    @Published var user:SKNUser?
-    @Published var guild:Guild?
-    
+    @Published var hasChanges:Bool
     @Published var playerID:UUID
     @Published var isNewPlayer:Bool
     @Published var savedChanges:Bool
-    @Published var hasChanges:Bool
+    
+    @Published var user:SKNPlayer?
+    @Published var guild:Guild?
+    
+    // Guild Selection
+    @Published var joinableGuilds:[GuildSummary] = []
+    @Published var selectedGuildSum:GuildSummary?
+    @Published var selectedGuildObj:GuildFullContent?
+    
+    
+    
+    
     
     @Published var fetchedString:String?
+    
+    /// A list of things to load
+    @Published var loadedList:[String] = []
+    
+    @Published var stationSceneLoaded:Bool = false
     
     init() {
         
@@ -42,7 +55,7 @@ class GameSettingsController:ObservableObject {
             playerName = player.name
             hasChanges = false
             savedChanges = true
-            user = SKNUser(player: player)
+//            user = SKNUserPost(player: player)
             viewState = GameSettingsTab.Loading
         } else {
             let newPlayer = SKNPlayer()
@@ -54,15 +67,54 @@ class GameSettingsController:ObservableObject {
             savedChanges = false
             viewState = GameSettingsTab.EditingPlayer
         }
+        
+        self.updateLoadedList()
     }
     
-    /// Creates a player **Locally**
-    func createPlayer() {
-        player.name = playerName
-        if LocalDatabase.shared.savePlayer(player: player) {
-            savedChanges = true
-            hasChanges = false
+    func updateLoadedList() {
+        var items:[String] = []
+        if let player = LocalDatabase.shared.player {
+            items.append("★ Loaded Player \(player.name)")
+            if let pid = player.serverID {
+                items.append("L-PID \(pid.uuidString)")
+            }
+            if let gid = player.guildID {
+                items.append("L-GID \(gid.uuidString.prefix(8))")
+            }
+            if let cid = player.cityID {
+                items.append("L-CID \(cid.uuidString.prefix(8))")
+            }
+            
+            // Scene Loaded
+            if stationSceneLoaded {
+                items.append("★ Station loaded: \(stationSceneLoaded)")
+            } else {
+                items.append("Loading station")
+            }
+            
+            // Server Data Loaded
+            if let user = user {
+                if let pid = user.serverID {
+                    items.append("U-PID \(pid.uuidString)")
+                } else {
+                    items.append("< No server ID >")
+                }
+//                if let gid = user.guildID {
+//                    items.append("U-GID \(gid.uuidString)")
+//                } else {
+//                    items.append("< No Guild ID >")
+//                }
+//                if let cid = user.cityID {
+//                    items.append("U-CID \(cid.uuidString)")
+//                } else {
+//                    items.append("< No City ID >")
+//                }
+            } else {
+                items.append("User not connected")
+            }
+            
         }
+        self.loadedList = items
     }
     
     func savePlayer() {
@@ -84,26 +136,6 @@ class GameSettingsController:ObservableObject {
         self.viewState = .EditingPlayer
     }
     
-    func requestInfo() {
-        SKNS.getSimpleData { (data, error) in
-            if let data = data {
-                print("We got data: \(data.count)")
-                if let string = String(data: data, encoding: .utf8) {
-                    self.fetchedString = string
-                    return
-                }
-                let decoder = JSONDecoder()
-                if let a = try? decoder.decode([SKNUser].self, from: data) {
-                    self.fetchedString = "Users CT: \(a.count)"
-                } else {
-                    self.fetchedString = "Somthing else happened"
-                }
-            } else {
-                print("Could not get data. Reason: \(error?.localizedDescription ?? "n/a")")
-            }
-        }
-    }
-    
     func fetchUser() {
         
         guard let user = user else {
@@ -114,44 +146,54 @@ class GameSettingsController:ObservableObject {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .secondsSince1970
         
-        SKNS.fetchPlayer(id: self.player.id) { (sknUser, error) in
-            if let user = sknUser {
+        SKNS.resolveLogin { (userPost, error) in
+            if let sknUser = userPost {
                 print("Found user: \(user.id)")
-                self.user = user
+                self.user = sknUser
             } else {
-                // Create
-                if let error = error {
-                    print("Error: \(error.localizedDescription)")
-                    return
-                } else {
-                    print("No User. Creating...")
-                    SKNS.createPlayer(localPlayer: user) { (data, error) in
-                        if let data = data, let newUser = try? decoder.decode(SKNUser.self, from: data) {
-                            print("We got a new user !!!")
-                            self.user = newUser
-                        }
-                    }
-                }
+                print("Did not find user")
             }
         }
+        
     }
     
     func createGuild() {
-        guard let user = user else {
-            print("No user")
-            return
-        }
-        
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .secondsSince1970
-        
-        SKNS.createGuild(localPlayer: user, guildName: "Test Guild") { (data, error) in
-            if let data = data, let guild = try? decoder.decode(Guild.self, from: data) {
-                print("We got a Guild: \(guild.name)")
-                self.guild = guild
+//        guard let user = user else {
+//            print("No user")
+//            return
+//        }
+//
+//        let decoder = JSONDecoder()
+//        decoder.dateDecodingStrategy = .secondsSince1970
+//
+////        SKNS.createGuild(localPlayer: user, guildName: "Test Guild") { (data, error) in
+////            if let data = data, let guild = try? decoder.decode(Guild.self, from: data) {
+////                print("We got a Guild: \(guild.name)")
+////                self.guild = guild
+////            } else {
+////                print("Failed creating guild. Reason: \(error?.localizedDescription ?? "n/a")")
+////            }
+////        }
+    }
+    
+    func fetchGuilds() {
+//        news = "Fetching Guilds..."
+        SKNS.browseGuilds { (guilds, error) in
+            if let array = guilds {
+                print("Updating Guilds")
+                self.joinableGuilds = array
+//                self.highlightedGuild = array.first
+//                self.news = "Here are the guilds"
             } else {
-                print("Failed creating guild. Reason: \(error?.localizedDescription ?? "n/a")")
+                if let error = error {
+                    print("Error: \(error.localizedDescription)")
+//                    self.news = error.localizedDescription
+                } else {
+//                    self.news = "Something else happened. Not an error, but no Guilds"
+                    print("Something else happened. Not an error, but no Guilds")
+                }
             }
+            
         }
     }
     
@@ -177,9 +219,9 @@ class GameSettingsController:ObservableObject {
     }
     
     func loadGameData() {
+        
         let builder = LocalDatabase.shared.stationBuilder
         if let station = LocalDatabase.shared.station {
-//            let accountingLoops = station.accountingTimeSheet()
             DispatchQueue(label: "Accounting").async {
                 station.accountingLoop(recursive: true) { comments in
                     for comment in comments {
@@ -189,14 +231,41 @@ class GameSettingsController:ObservableObject {
                         builder.prepareScene(station: station) { loadedScene in
                             builder.scene = loadedScene
                             LocalDatabase.shared.saveStation(station: station)
+                            self.stationSceneLoaded = true
+                            self.updateLoadedList()
+                            self.loadServerData()
                             print("⚠️ Are we finally ready? 🏆")
                             print("Enable buttons now ???")
                         }
                     }
                 }
             }
+        }
+    }
+    
+    func loadServerData() {
+        
+        SKNS.resolveLogin { (userPost, error) in
             
-//            builder.build(station:station)
+            if let upost = userPost {
+                
+                print("Incoming User...")
+                print("ID: \(upost.id)")
+                print("LID: \(upost.localID)")
+//                upost.serverID = upost.id
+                print("SID: \(upost.serverID?.uuidString ?? "< No server ID >")")
+//                print("GID: \(upost.guildID?.uuidString ?? "< No Guild ID >")")
+//                print("PID: \(upost.cityID?.uuidString ?? "< No City ID > ")")
+
+                self.user = upost
+                // Update UI
+                self.updateLoadedList()
+                // Save User?
+                
+            } else {
+                // No server?
+                print("No Server info")
+            }
         }
     }
     

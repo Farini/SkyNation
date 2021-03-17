@@ -104,13 +104,16 @@ Items being worked on
 - [X] Post Launch Scene
 - [X] Server SpaceVehicle
 - [X] Bring Scene in - Desktop:SpaceVehilce2.dae
-
 - [X] Model Upgrade
 - [X] Player -> Avatar
 - [X] Player. var avatar (required)
 - [X] Skin -> convert from String to Skin type
 - [X] Accounting (problems + notes)
 - [X] SpaceVehicle. var boxes (required)
+- [X] Fix Server Tab View
+- [X] Fix Settings Tab View
+- [X] Delete Person from GameGenerator after hiring
+- [X] Increase the chances of generating a .handy `person`
 
 - [X] LSS View -> Fix peripheral Selection bug
 - [X] LSS View -> Empty Tanks and Boxes must have a way to define type.
@@ -125,11 +128,9 @@ Items being worked on
 
 - [ ] Game Store Improvements
 - [ ] GameMessages showing strange dates
-- [ ] Delete Person from GameGenerator after hiring
 - [ ] Use Fibonacci for Peripheral Upgrades
-- [ ] Increase the chances of generating a .handy `person`
 
-- [ ] Person var stress?
+
 - [ ] Activity name enum?
 - [ ] BioBox DNA enum
         
@@ -218,6 +219,7 @@ Features that are requested, but are not required to launch the game
 - [ ] Rebake Garage Skin x 2 (Choices)
 - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
 - [ ] Plugins
+- [ ] Person var stress?
 
 ## 📝 To Do - Future
 Grab things from this list as you go along.

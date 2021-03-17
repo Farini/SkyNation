@@ -25,7 +25,8 @@ protocol GameNavDelegate {
     func didSelectShopping()
     
     // Mars
-    func openCityView(position:Vector3D, name:String?)
+    func openCityView(posdex:Posdex, city:DBCity?)
+    func openOutpostView(posdex:Posdex, outpost:DBOutpost)
 }
 
 enum GameSceneType {
@@ -53,6 +54,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     var gameNavDelegate:GameNavDelegate?
     var modules:[Module] = []
     var station:Station?
+    var mars:MarsBuilder?
     
     // MARK: - Control
     
@@ -68,87 +70,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         if let node = sceneRenderer.overlaySKScene?.nodes(at: converted).first {
             print("Overlay Results !!!! \(node.description)")
             self.hitNode2D(node: node)
-            
-//            // Images
-//            if let sprite = sceneResults as? SKSpriteNode {
-//
-//                // Life support systems (Air Control)
-//                if sprite.name == "Air Control" {
-//                    gameNavDelegate?.didSelectAir()
-//                    return
-//                }
-//
-//                // Camera Rotations
-//                if sprite.name == "rotate.left" {
-////                    self.cameraNode?.eulerAngles.y += 15 * (.pi / 180)
-//                    self.switchToBackCamera()
-//                    return
-//                }
-//
-//                if sprite.name == "rotate.right" {
-////                    self.cameraNode?.eulerAngles.y += -15 * (.pi / 180)
-//                    self.switchToFrontCamera()
-//                    return
-//                }
-//
-//                if sprite.name == "CameraIcon" {
-//                    print("Clicked on camera.")
-//                    print("Use this function to pull a camera menu")
-//                    print("In that menu, the user is supposed to control the camera")
-//                    print("it should have a slider (to control camera's Z position)")
-//                    print("it should also have 2 buttons for rotation (along the Y axis)")
-//                    print("and another button to see the garage (if scene == .station)")
-//                    print("[End of Camera menu]\n---- ")
-//                    camToggle.toggle()
-//                }
-//
-//                // Buttons Underneath Player
-//                // Tutorial button
-//                if sprite.name == "tutorial" {
-//                    print("🎓 HIT TUTORIAL NODE")
-//                    self.stationOverlay.showTutorial()
-//                    return
-//                }
-//                if sprite.name == "settings" {
-//                    print("⚙️ HIT SETTINGS NODE")
-//                    gameNavDelegate?.didSelectSettings()
-//                    return
-//                }
-//                if sprite.name == "ShopButton" {
-//                    print("⚙️ Lets go shopping")
-//                    gameNavDelegate?.didSelectShopping()
-//                    return
-//                }
-//
-//                // Side Menu Buttons
-//                if sprite.name == "LightsButton" {
-//                    print("⚙️ Lets play with some lights!")
-//                    return
-//                }
-//                if sprite.name == "ChatButton" {
-//                    print("⚙️ Lets chat!")
-//                    gameNavDelegate?.didSelectMessages()
-//                    return
-//                }
-//
-//                if sprite.name == "MarsButton" {
-//                    print("⚙️ Lets go to Mars!")
-//                    // Player should have GuildID
-//                    // Otherwise, load prospect guild selector, or prospect terrain selector?
-//
-//                    let mars = MarsBuilder()
-//                    if let newScene = mars.loadScene() {
-//                        sceneRenderer.present(newScene, with: .doorsCloseVertical(withDuration: 1.25), incomingPointOfView: nil) {
-//                            self.scene = newScene
-//                            print("Mars Scene Loaded :)")
-//                            self.gameScene = .MarsColony
-//                        }
-//                    }
-//                    return
-//
-//                }
-//
-//            }
         }
         
         // Check 3D Scene
@@ -166,14 +87,29 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                             print("Go to city: \(modName)")
                             // get position
                             let posScene = result.node.position
-                            let posvec = Vector3D(x: Double(posScene.x), y: Double(posScene.y), z: Double(posScene.z))
-                            gameNavDelegate?.openCityView(position: posvec, name: modName)
-                            print("pos: \(posvec)")
+//                            let posvec = Vector3D(x: Double(posScene.x), y: Double(posScene.y), z: Double(posScene.z))
+                            for posdex in Posdex.allCases {
+                                if posdex.sceneName == modName || posdex.sceneName == parent.name {
+                                    print("Found City! Posdex:\(posdex.rawValue) \(posdex.sceneName)")
+                                    if let city = self.mars?.didTap(city: posdex) {
+                                        // Open City View
+                                        gameNavDelegate?.openCityView(posdex: posdex, city: city)
+                                    } else {
+                                        gameNavDelegate?.openCityView(posdex: posdex, city: nil)
+                                    }
+                                }
+                            }
+//                            if let city = self.mars?.didTap(city: posde)
+//                            gameNavDelegate?.openCityView(position: posvec, name: modName)
+//                            print("pos: \(posvec)")
                         } else if parent.name == "Outposts" || parent.parent?.name == "Outposts"{
                             print("Go to outpost: \(modName)")
                             for posdex in Posdex.allCases {
                                 if posdex.sceneName == modName || posdex.sceneName == parent.name {
                                     print("Found Outpost! Posdex:\(posdex.rawValue) \(posdex.sceneName)")
+                                    if let outpost = self.mars?.didTap(on: posdex) {
+                                        gameNavDelegate?.openOutpostView(posdex: posdex, outpost: outpost)
+                                    }
                                     
                                 }
                             }
@@ -339,6 +275,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         self.scene = newScene
                         print("Mars Scene Loaded :)")
                         self.gameScene = .MarsColony
+                        self.mars = mars
                     }
                 }
                 return
