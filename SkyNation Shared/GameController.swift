@@ -269,15 +269,15 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 // Player should have GuildID
                 // Otherwise, load prospect guild selector, or prospect terrain selector?
                 
-                let mars = MarsBuilder()
-                if let newScene = mars.loadScene() {
-                    sceneRenderer.present(newScene, with: .doorsCloseVertical(withDuration: 1.25), incomingPointOfView: nil) {
-                        self.scene = newScene
+                let mars = MarsBuilder.shared
+//                if let newScene = mars.loadScene() {
+                sceneRenderer.present(mars.scene, with: .doorsCloseVertical(withDuration: 1.25), incomingPointOfView: nil) {
+                    self.scene = mars.scene
                         print("Mars Scene Loaded :)")
                         self.gameScene = .MarsColony
                         self.mars = mars
                     }
-                }
+//                }
                 return
                 
             }

@@ -132,6 +132,7 @@ struct GuildFullContent:Codable {
     
     var citizens:[PlayerContent]
     
+    
     var isOpen:Bool
     
     /// Election Date (To change President)

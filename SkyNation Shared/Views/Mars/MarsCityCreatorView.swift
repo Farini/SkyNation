@@ -9,17 +9,20 @@ import SwiftUI
 
 struct MarsCityCreatorView: View {
     
-//    @State var name:String = ""
-//    @State var position:Vector3D = .zero
-    
     @State var posdex:Posdex
     @State var city:DBCity?
+    @ObservedObject var controller = CityController()
     
     var body: some View {
         
         VStack {
             
-            Text("City View").font(.title)
+            if controller.isMyCity {
+                Text("My City").font(.title).foregroundColor(.green)
+            } else {
+                Text("City View").font(.title)
+            }
+            
             Divider()
             
             
@@ -62,6 +65,10 @@ struct MarsCityCreatorView: View {
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
             }
             .padding()
+            .onAppear() {
+                self.controller.loadAt(posdex: posdex)
+            }
+            
         }
         
     }

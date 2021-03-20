@@ -397,7 +397,7 @@ class LocalDatabase {
         return url
     }
     
-    init() {
+    private init() {
         
         // Player
         if let player = LocalDatabase.loadPlayer() {

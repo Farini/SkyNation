@@ -367,14 +367,14 @@ class Person:Codable, Identifiable, Equatable {
                 if activity.activityName == "Workout" {
                     
                     // Workout
-                    GameMessageBoard.shared.newAchievement(type: .experience, message: "\(name) finished a workout 💪") //newAchievement(type: .experience, qtty: nil, message: "\(name) finished a workout!")
+                    GameMessageBoard.shared.newAchievement(type: .experience, message: "\(name) finished a workout 💪")
                     self.healthPhysical = min(100, healthPhysical + 3)
                     self.activity = nil
                     
                 } else if activity.activityName == "Medicating" {
                     
                     // Doctor Medicating
-                    GameMessageBoard.shared.newAchievement(type: .experience, message: "\(name) cured someone!")//newAchievement(type: .experience, qtty: nil, message: "\(name) cured someone!")
+                    GameMessageBoard.shared.newAchievement(type: .experience, message: "\(name) cured someone!")
                     self.activity = nil
                     
                 } else if activity.activityName == "Healing" {
@@ -387,7 +387,7 @@ class Person:Codable, Identifiable, Equatable {
                     
                     // Learning Skill
                     print("\(name) learned a new skill!")
-                    GameMessageBoard.shared.newAchievement(type: .learning(skill: education), message: "\(name) learned a new skill!")//newAchievement(type: .learning(skill:education), qtty: nil, message: "\(name) learned a new skill!")
+                    GameMessageBoard.shared.newAchievement(type: .learning(skill: education), message: "\(name) learned a new skill!")
                     
                     self.learnNewSkill(type: education)
                     self.activity = nil

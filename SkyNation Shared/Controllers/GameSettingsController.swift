@@ -35,9 +35,6 @@ class GameSettingsController:ObservableObject {
     @Published var selectedGuildObj:GuildFullContent?
     
     
-    
-    
-    
     @Published var fetchedString:String?
     
     /// A list of things to load
@@ -136,6 +133,7 @@ class GameSettingsController:ObservableObject {
         self.viewState = .EditingPlayer
     }
     
+    // MARK: - Server Tab
     func fetchUser() {
         
         guard let user = user else {
@@ -194,6 +192,25 @@ class GameSettingsController:ObservableObject {
                 }
             }
             
+        }
+    }
+    
+    func joinGuild(sum:GuildSummary) {
+        
+        guard player.guildID == nil else {
+            print("Error: Player already has a guild")
+            return
+        }
+        
+        SKNS.joinGuildPetition(guildID: sum.id) { (newGuildSum, error) in
+            if let newGuild = newGuildSum {
+                print("Player joined new guild! Success.")
+                self.player.guildID = newGuild.id
+                DispatchQueue.main.async {
+                    let save = LocalDatabase.shared.savePlayer(player: self.player)
+                    print("Saved Player: \(save)")
+                }
+            }
         }
     }
     

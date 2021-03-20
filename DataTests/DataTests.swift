@@ -96,6 +96,91 @@ class DataTests: XCTestCase {
         
     }
     
+    func testOutposts() throws {
+        print("\n\n\t Outpost Test -----\n.")
+        
+        print("ENERGY:")
+        let op1 = Outpost(type: .Energy, posdex: .power1, guild:nil)
+        while let job = op1.getNextJob() {
+            print("Next Job @lvl: \(op1.level)")
+            print("Ingredients")
+            print(job.wantedIngredients)
+            print("Skills")
+            print(job.wantedSkills)
+            print("Output: \(op1.energy()) KW/h \n")
+            op1.level += 1
+        }
+        
+        print("\n\nWATER:")
+        let op2 = Outpost(type: .Water, posdex: .mining2, guild: nil)
+        while let job = op2.getNextJob() {
+            print("Next Job @lvl: \(op2.level)")
+            print("Ingredients")
+//            print(job.wantedIngredients)
+            for (ing, val) in job.wantedIngredients {
+                print("\t \(ing.rawValue):\(val)")
+            }
+            print("Skills")
+            for (sk, lvl) in job.wantedSkills {
+                print("\t \(sk.rawValue):\(lvl)")
+            }
+            print("Energy: \(op2.energy()) KW/h")
+            print("Output")
+            for (k, v) in op2.produceIngredients() {
+                print("\t\(k.rawValue):\(v)")
+            }
+            
+            op2.level += 1
+        }
+        
+        print("\n\nSILICA:")
+        let op3 = Outpost(type: .Silica, posdex: .mining1, guild: nil)
+        while let job = op3.getNextJob() {
+            print("Next Job @lvl: \(op3.level)")
+            print("Ingredients")
+            //            print(job.wantedIngredients)
+            for (ing, val) in job.wantedIngredients {
+                print("\t \(ing.rawValue):\(val)")
+            }
+            print("Skills")
+            for (sk, lvl) in job.wantedSkills {
+                print("\t \(sk.rawValue):\(lvl)")
+            }
+            print("Energy: \(op3.energy()) KW/h")
+            print("Output")
+            for (k, v) in op3.produceIngredients() {
+                print("\t\(k.rawValue):\(v)")
+            }
+            
+            op3.level += 1
+        }
+        
+        print("\n\nBIO:")
+        let op4 = Outpost(type: .Biosphere, posdex: .biosphere1, guild: nil)
+        while let job = op4.getNextJob() {
+            print("Next Job @lvl: \(op4.level)")
+            print("Ingredients")
+            //            print(job.wantedIngredients)
+            for (ing, val) in job.wantedIngredients {
+                print("\t \(ing.rawValue):\(val)")
+            }
+            print("Skills")
+            for (sk, lvl) in job.wantedSkills {
+                print("\t \(sk.rawValue):\(lvl)")
+            }
+            print("Energy: \(op4.energy()) KW/h")
+            print("Output")
+            for (k, v) in op4.produceIngredients() {
+                print("\t\(k.rawValue):\(v)")
+            }
+            
+            op4.level += 1
+        }
+        
+        
+        
+    }
+    
     // MARK: - Humans
     
     func testWillingnessToStudy() {

@@ -11,6 +11,7 @@ import Foundation
 
 enum OutpostType:String, CaseIterable, Codable {
     
+    case HQ
     case Water          // OK Produces Water
     case Silica         // OK Produces Silica
     case Energy         // OK Produces Energy
@@ -24,10 +25,11 @@ enum OutpostType:String, CaseIterable, Codable {
     
     var productionBase: [Ingredient:Int] {
         switch self {
+            case .HQ: return [:]
             case .Water: return [.Water:20]
             case .Silica: return [.Silica:10]
             case .Energy: return [.Battery:20]
-            case .Biosphere: return [.Food:100]
+            case .Biosphere: return [.Food:25]
             case .Titanium: return [.Iron:5, .Aluminium:10]
             case .Observatory: return [:]
             case .Antenna: return [:]
@@ -40,6 +42,7 @@ enum OutpostType:String, CaseIterable, Codable {
     /// Happiness Production
     var happyDelta:Int {
         switch self {
+            case .HQ: return 0
             case .Energy: return 0
             case .Water: return 0
             case .Silica: return -1
@@ -56,6 +59,7 @@ enum OutpostType:String, CaseIterable, Codable {
     /// Energy production (Consumed as negative)
     var energyDelta:Int {
         switch self {
+            case .HQ: return 0
             case .Energy: return 100
             case .Water: return -20
             case .Silica: return -25
@@ -73,21 +77,15 @@ enum OutpostType:String, CaseIterable, Codable {
 class Outpost:Codable {
     
     var id:UUID
-    var guild:UUID
+    var guild:[String:UUID?]?
     
     var model:String = ""
-//    var position:Vector3D
     var posdex:Posdex
     
     var type:OutpostType
-//    var job:OutpostJob
-    var level:Int = 0
     
-//    func createAnOutpostJobPair() {
-//        let job = OutpostJob(wantedSkills: [.Biologic:5, .Medic:3, .SystemOS:5, .Handy:12],
-//                             wantedIngredients: [.Aluminium:1, .Fertilizer:80, .Food:25])
-//        self.job = job
-//    }
+    var level:Int = 0
+    var collected:Date?
     
     func getNextJob() -> OutpostJob? {
         switch posdex {
@@ -114,8 +112,26 @@ class Outpost:Codable {
                                               wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:52])
                     default: return nil
                 }
-            case .mining2: return nil
-            case .mining3: return nil
+            case .mining2:
+                switch level {
+                    case 0: return OutpostJob(wantedSkills: [.Datacomm:1, .Mechanic:1],
+                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:7])
+                    case 1: return OutpostJob(wantedSkills: [.Biologic:1, .Mechanic:1],
+                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:21])
+                    case 2: return OutpostJob(wantedSkills: [.Biologic:1, .Mechanic:1],
+                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:52])
+                    default: return nil
+                }
+            case .mining3:
+                switch level {
+                    case 0: return OutpostJob(wantedSkills: [.Datacomm:1, .Mechanic:1],
+                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:7])
+                    case 1: return OutpostJob(wantedSkills: [.Biologic:1, .Mechanic:1],
+                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:21])
+                    case 2: return OutpostJob(wantedSkills: [.Biologic:1, .Mechanic:1],
+                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:52])
+                    default: return nil
+                }
                 
             // Energy
             case .power1, .power2:
@@ -162,11 +178,11 @@ class Outpost:Codable {
                 
             default: return nil
         }
-        
     }
     
     func makeModel() {
         switch type {
+            case .HQ: print("hq")
             case .Water: print("Make Water")
                 switch level {
                     case 0...5: print("Low Level")
@@ -185,13 +201,74 @@ class Outpost:Codable {
             case .ETEC: print("Make ETEC")
         }
     }
+    
+    // Outpost type has production base
+    func produceIngredients() -> [Ingredient:Int] {
+        
+        var baseAdjust:[Ingredient:Int] = [:]
+        
+        for (k, v) in type.productionBase {
+            // Level * percentage * fibo * baseValue(v)
+            let fiboValue = GameLogic.fibonnaci(index: self.level)
+            let fiboMatters:Double = 0.5 // (% influence)
+            let calc = v + Int(fiboMatters * Double(fiboValue) * Double(v))
+            baseAdjust[k] = calc
+        }
+        return baseAdjust
+    }
+    
+    func produceTanks() -> [TankType:Int] {
+        return [:]
+    }
+    
+    // Happy
+    func happy() -> Int {
+        return type.happyDelta
+    }
+    
+    // Energy
+    func energy() -> Int {
+        let fiboValue = GameLogic.fibonnaci(index: self.level + 1)
+        let fiboMatters:Double = 0.5
+        let calc = Int(fiboMatters * Double(fiboValue) * Double(type.energyDelta))
+        return calc
+    }
+    
+    init(type:OutpostType, posdex:Posdex, guild:UUID?) {
+        self.id = UUID()
+        self.guild = nil
+        self.posdex = posdex
+        self.type = type
+        self.level = 0
+    }
+    
+    // Lineup
+    var lineup:[Person] = []
+    var materials:[Ingredient:Int] = [:]
+    var contribPPl:[UUID:Int] = [:]        // Player.id vs peopleskills
+    var contribIng:[UUID:Int] = [:]        // Player.id vs ingredients
+    
+    // Building up to here, an outpost has an OutpostJob, which sets the Level of the Outpost
+    // For a job. There is a lineup of people, and materials. Each one tracking back to Players
+    // When a job is ready to be executed (covered skills and ingredients), each person gets an Activity
+    // and there should be a trigger for setting the level up of the outpost
+    var activity:LabActivity?
+    
+    func lockModel() {
+        // 1. Check if all ingredients are covered
+        // 2. Check if all skills are covered
+        // 3. Update 'Contributing'
+        // 4. Setup Activity
+    }
 }
 
-struct OutpostJob: Codable {
-    
-    var wantedSkills:[Skills:Int] // [String:Int]
-    var wantedIngredients:[Ingredient:Int] // [String:Int]
-    
+/// Its calculated. Doesn't need to be `Codable` type
+struct OutpostJob {
+    var wantedSkills:[Skills:Int]
+    var wantedIngredients:[Ingredient:Int]
+    // Wanted Tanks
+    // Wanted Peripherals
+    // Time
 }
 
 struct DBOutpost:Codable {

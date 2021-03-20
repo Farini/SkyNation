@@ -402,7 +402,7 @@ class SKNS {
             return
         }
         
-        let url = URL(string: "\(baseAddress)/guilds/load")!
+        let url = URL(string: "\(baseAddress)/guilds/load/\(gid)")!
         let session = URLSession.shared
         var request = URLRequest(url: url)
         request.httpMethod = HTTPMethod.GET.rawValue // (Post): HTTPMethod.POST.rawValue // (Get): HTTPMethod.GET.rawValue
@@ -441,6 +441,7 @@ class SKNS {
     }
     
     // Deprecate (loadGuild resolves it)
+    /*
     static func guildInfo(user:SKNUserPost, completion:((GuildFullContent?, Error?) -> ())?) {
         
         guard let gid = user.serverID else {
@@ -485,6 +486,7 @@ class SKNS {
         }
         task.resume()
     }
+    */
     
     static func browseGuilds(completion:(([GuildSummary]?, Error?) -> ())?) {
         
@@ -620,6 +622,10 @@ class SKNS {
         let url = URL(string: "\(baseAddress)/guilds/city/claim/\(posdex.rawValue)")!
 //        let url = URL(string: "\(baseAddress)/claim_city/\(posdex.rawValue)")!
         
+        
+        guard let player = LocalDatabase.shared.player else { fatalError() }
+        
+        
         let session = URLSession.shared
         var request = URLRequest(url: url)
         
@@ -630,7 +636,8 @@ class SKNS {
         
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .secondsSince1970
-        if let data = try? encoder.encode(user) {
+        
+        if let data = try? encoder.encode(player) {
             print("Adding Data")
             request.httpBody = data
             let dataString = String(data:data, encoding: .utf8) ?? "n/a"

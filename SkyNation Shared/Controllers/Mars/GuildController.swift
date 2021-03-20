@@ -7,6 +7,8 @@
 
 import Foundation
 
+
+
 class GuildController:ObservableObject {
     
     @Published var news:String

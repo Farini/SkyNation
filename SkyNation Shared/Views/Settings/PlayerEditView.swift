@@ -184,6 +184,7 @@ struct SettingsServerTab:View {
                         // Make a Guild view with the full object
                         Text("G: \(guild.name)")
                     } else if let guild = controller.selectedGuildSum {
+                        
                         GuildView(guild: guild, style: .largeSummary, closeAction: closeviewaction, flipAction: closeviewaction)
                     } else if let guild = controller.selectedGuildObj {
                         // Make another view for full object
@@ -265,7 +266,9 @@ struct SettingsServerTab:View {
     }
     
     func closeviewaction() {
-        print("closeviewaction")
+        print("Join Guild Action")
+        controller.joinGuild(sum: controller.selectedGuildSum!)
+        
     }
 }
 

@@ -10,22 +10,26 @@ import SceneKit
 
 class MarsBuilder {
     
+    static var shared:MarsBuilder = MarsBuilder()
+    
     var cities:[DBCity] = []
     var outposts:[DBOutpost] = []
     var players:[PlayerContent] = []
     
     var guild:GuildFullContent?
-    var scene:SCNScene?
+    var scene:SCNScene
     
-    init() {
+    private init() {
         print("Initting Mars Director")
+        guard let scene = MarsBuilder.loadScene() else { fatalError() }
+        self.scene = scene
         getServerInfo()
     }
     
     // Load Scene
-    func loadScene() -> SCNScene? {
+    class func loadScene() -> SCNScene? {
         let nextScene = SCNScene(named: "Art.scnassets/Mars/GuildMap.scn")
-        self.scene = nextScene
+//        self.scene = nextScene
         return nextScene
     }
     
@@ -42,8 +46,7 @@ class MarsBuilder {
             return
         }
         
-        SKNS.guildInfo(user: SKNUserPost(player: player)) { (guild, error) in
-            
+        SKNS.loadGuild { (guild, error) in
             if let guild:GuildFullContent = guild {
                 print("**********************")
                 print("Guild Result: \(guild.name)")
@@ -55,7 +58,6 @@ class MarsBuilder {
                 
                 for outpost:DBOutpost in guild.outposts {
                     print("OutPost: \(outpost.type)")
-                    
                 }
                 self.outposts = guild.outposts
                 
@@ -71,6 +73,35 @@ class MarsBuilder {
                 }
             }
         }
+        
+//        SKNS.guildInfo(user: SKNUserPost(player: player)) { (guild, error) in
+//
+//            if let guild:GuildFullContent = guild {
+//                print("**********************")
+//                print("Guild Result: \(guild.name)")
+//                print("**********************")
+//                for city:DBCity in guild.cities {
+//                    print("City: Posdex:\(city.posdex), \(city.name)")
+//                }
+//                self.cities = guild.cities
+//
+//                for outpost:DBOutpost in guild.outposts {
+//                    print("OutPost: \(outpost.type)")
+//                }
+//                self.outposts = guild.outposts
+//
+//                for player:PlayerContent in guild.citizens {
+//                    print("Player Content: \(player.name)")
+//                }
+//                self.players = guild.citizens
+//
+//            } else {
+//                print("No guild in result")
+//                if let error = error {
+//                    print("Error: \(error.localizedDescription)")
+//                }
+//            }
+//        }
               
     }
     
@@ -78,6 +109,8 @@ class MarsBuilder {
     func loadSceneObjects() {
         
     }
+    
+    // Selection
     
     func didTap(on posdex:Posdex) -> DBOutpost? {
         

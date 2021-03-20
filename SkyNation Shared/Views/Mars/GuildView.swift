@@ -63,6 +63,7 @@ struct GuildView: View {
                         if guild.citizens.count <= 20 {
                             Button("Join") {
                                 //                    controller.requestJoinGuild(guild: guild)
+                                closeAction()
                             }
                             .buttonStyle(NeumorphicButtonStyle(bgColor: .green))
                             Divider()
