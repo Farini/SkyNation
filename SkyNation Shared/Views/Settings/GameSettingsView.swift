@@ -107,14 +107,26 @@ struct GameSettingsView: View {
                             Text("Online: \(GameFormatters.dateFormatter.string(from:controller.player.lastSeen))")
                                 .foregroundColor(.green)
                             HStack(alignment:.center) {
+                                #if os(macOS)
                                 Image(nsImage:GameImages.tokenImage)
                                     .resizable()
                                     .frame(width:32, height:32)
+                                #else
+                                Image(uiImage:GameImages.tokenImage)
+                                    .resizable()
+                                    .frame(width:32, height:32)
+                                #endif
                                 Text("x\(controller.player.timeTokens.count)")
                                 Divider()
+                                #if os(macOS)
                                 Image(nsImage:GameImages.currencyImage)
                                     .resizable()
                                     .frame(width:32, height:32)
+                                #else
+                                Image(uiImage: GameImages.currencyImage)
+                                    .resizable()
+                                    .frame(width:32, height:32)
+                                #endif
                                 Text("\(controller.player.money)")
                             }
                             .frame(height:36)
@@ -225,36 +237,77 @@ struct GameSettingsView: View {
                     inverter.setValue(output, forKey:"inputImage")
                     
                     if let invertedOutput = inverter.outputImage {
+                        #if os(macOS)
                         let rep = NSCIImageRep(ciImage: invertedOutput)
                         let nsImage = NSImage(size: rep.size)
                         nsImage.addRepresentation(rep)
                         return Image(nsImage:nsImage)
+                        #else
+                        let uiImage = UIImage(ciImage: invertedOutput)
+                        return Image(uiImage: uiImage)
+                        #endif
                     }
                     
                 } else {
+                    #if os(macOS)
                     let rep = NSCIImageRep(ciImage: output)
                     let nsImage = NSImage(size: rep.size)
                     nsImage.addRepresentation(rep)
-                    
                     return Image(nsImage:nsImage)
+                    #else
+                    let uiimage = UIImage(ciImage: output)
+                    return Image(uiImage: uiimage)
+                    #endif
                 }
-                
-                
             }
-            
-            
-//            return NSImage(ciImage: filter.outputImage)
-//            let transform = CGAffineTransform(scaleX: 3, y: 3)
-//            let out = filter.outputImage?.transformed(by:transform)
-//
-//            if let output = filter.outputImage?.transformed(by: transform) {
-//                let image = NSImage(ciImage:output)
-//                return image
-//            }
         }
         
         return nil
     }
+    
+//    func generateBarcode(from uuid: UUID) -> Image? {
+//        let data = uuid.uuidString.prefix(8).data(using: String.Encoding.ascii)
+//
+//        if let filter = CIFilter(name: "CICode128BarcodeGenerator") {
+//            filter.setValue(data, forKey: "inputMessage")
+//
+//            if let output:CIImage = filter.outputImage {
+//
+//                if let inverter = CIFilter(name:"CIColorInvert") {
+//
+//                    inverter.setValue(output, forKey:"inputImage")
+//
+//                    if let invertedOutput = inverter.outputImage {
+//                        let rep = NSCIImageRep(ciImage: invertedOutput)
+//                        let nsImage = NSImage(size: rep.size)
+//                        nsImage.addRepresentation(rep)
+//                        return Image(nsImage:nsImage)
+//                    }
+//
+//                } else {
+//                    let rep = NSCIImageRep(ciImage: output)
+//                    let nsImage = NSImage(size: rep.size)
+//                    nsImage.addRepresentation(rep)
+//
+//                    return Image(nsImage:nsImage)
+//                }
+//
+//
+//            }
+//
+//
+////            return NSImage(ciImage: filter.outputImage)
+////            let transform = CGAffineTransform(scaleX: 3, y: 3)
+////            let out = filter.outputImage?.transformed(by:transform)
+////
+////            if let output = filter.outputImage?.transformed(by: transform) {
+////                let image = NSImage(ciImage:output)
+////                return image
+////            }
+//        }
+//
+//        return nil
+//    }
     
 }
 

@@ -69,15 +69,25 @@ struct GameShoppingView: View {
                         // Stack
                         VStack(alignment:.leading) {
                             HStack {
+                                #if os(macOS)
                                 Image(nsImage: GameImages.tokenImage)
                                     .resizable()
                                     .frame(width: 32, height: 32, alignment: .center)
+                                #else
+                                Image(uiImage: GameImages.tokenImage)
+                                    .resizable()
+                                    .frame(width: 32, height: 32, alignment: .center)
+                                #endif
                                 
                                 Text(" x\(package.tokenAmount)")
                                     .font(.headline)
                             }
                             HStack {
+                                #if os(macOS)
                                 Image(nsImage: GameImages.currencyImage)
+                                #else
+                                Image(uiImage: GameImages.currencyImage)
+                                #endif
                                 Text("$ \(GameFormatters.numberFormatter.string(from: NSNumber(value:package.moneyAmount))!)")
                                     .font(.headline)
                                 
@@ -168,6 +178,47 @@ struct GameShoppingView: View {
                     inverter.setValue(output, forKey:"inputImage")
                     
                     if let invertedOutput = inverter.outputImage {
+                        #if os(macOS)
+                        let rep = NSCIImageRep(ciImage: invertedOutput)
+                        let nsImage = NSImage(size: rep.size)
+                        nsImage.addRepresentation(rep)
+                        return Image(nsImage:nsImage)
+                        #else
+                        let uiImage = UIImage(ciImage: invertedOutput)
+                        return Image(uiImage: uiImage)
+                        #endif
+                    }
+                    
+                } else {
+                    #if os(macOS)
+                    let rep = NSCIImageRep(ciImage: output)
+                    let nsImage = NSImage(size: rep.size)
+                    nsImage.addRepresentation(rep)
+                    return Image(nsImage:nsImage)
+                    #else
+                    let uiimage = UIImage(ciImage: output)
+                    return Image(uiImage: uiimage)
+                    #endif
+                }
+            }
+        }
+        
+        return nil
+    }
+    /*
+    func generateBarcode(from uuid: UUID) -> Image? {
+        let data = uuid.uuidString.prefix(8).data(using: String.Encoding.ascii)
+        
+        if let filter = CIFilter(name: "CICode128BarcodeGenerator") {
+            filter.setValue(data, forKey: "inputMessage")
+            
+            if let output:CIImage = filter.outputImage {
+                
+                if let inverter = CIFilter(name:"CIColorInvert") {
+                    
+                    inverter.setValue(output, forKey:"inputImage")
+                    
+                    if let invertedOutput = inverter.outputImage {
                         let rep = NSCIImageRep(ciImage: invertedOutput)
                         let nsImage = NSImage(size: rep.size)
                         nsImage.addRepresentation(rep)
@@ -198,6 +249,7 @@ struct GameShoppingView: View {
         
         return nil
     }
+ */
 }
 
 struct GameShoppingView_Previews: PreviewProvider {

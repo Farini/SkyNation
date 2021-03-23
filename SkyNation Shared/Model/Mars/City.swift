@@ -96,8 +96,8 @@ struct City {
 struct CityData:Codable, Identifiable {
     
     var id:UUID
-    var owner:SKNUserPost
-    var position:Vector3D
+    var owner:SKNUserPost?
+    var position:Vector3D?
     
     // Modules
     

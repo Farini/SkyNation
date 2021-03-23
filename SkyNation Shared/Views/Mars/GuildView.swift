@@ -128,32 +128,29 @@ struct GuildView: View {
                     inverter.setValue(output, forKey:"inputImage")
                     
                     if let invertedOutput = inverter.outputImage {
+                        #if os(macOS)
                         let rep = NSCIImageRep(ciImage: invertedOutput)
                         let nsImage = NSImage(size: rep.size)
                         nsImage.addRepresentation(rep)
                         return Image(nsImage:nsImage)
+                        #else
+                        let uiImage = UIImage(ciImage: invertedOutput)
+                        return Image(uiImage: uiImage)
+                        #endif
                     }
                     
                 } else {
+                    #if os(macOS)
                     let rep = NSCIImageRep(ciImage: output)
                     let nsImage = NSImage(size: rep.size)
                     nsImage.addRepresentation(rep)
-                    
                     return Image(nsImage:nsImage)
+                    #else
+                    let uiimage = UIImage(ciImage: output)
+                    return Image(uiImage: uiimage)
+                    #endif
                 }
-                
-                
             }
-            
-            
-            //            return NSImage(ciImage: filter.outputImage)
-            //            let transform = CGAffineTransform(scaleX: 3, y: 3)
-            //            let out = filter.outputImage?.transformed(by:transform)
-            //
-            //            if let output = filter.outputImage?.transformed(by: transform) {
-            //                let image = NSImage(ciImage:output)
-            //                return image
-            //            }
         }
         
         return nil

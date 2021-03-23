@@ -342,10 +342,17 @@ struct BuildingBioBoxView: View {
                     
                     HStack {
                         Spacer()
+                        #if os(macOS)
                         Image(nsImage: GameImages.tokenImage)
                             .resizable()
                             .frame(width: 22, height: 22, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                             .aspectRatio(contentMode: .fill)
+                        #else
+                        Image(uiImage: GameImages.tokenImage)
+                            .resizable()
+                            .frame(width:22, height:22, alignment:.center)
+                            .aspectRatio(contentMode: .fill)
+                        #endif
                         Text("Tokens 2")
                         Spacer()
                     }

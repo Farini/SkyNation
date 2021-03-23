@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct MarsCityCreatorView: View {
     
     @State var posdex:Posdex
@@ -17,31 +18,72 @@ struct MarsCityCreatorView: View {
         
         VStack {
             
-            if controller.isMyCity {
-                Text("My City").font(.title).foregroundColor(.green)
-            } else {
-                Text("City View").font(.title)
+            HStack {
+                if controller.isMyCity {
+                    Text("My City").font(.title).foregroundColor(.green)
+                } else {
+                    Text("City View").font(.title)
+                }
+                Spacer()
+                Button("X") {
+                    NotificationCenter.default.post(name: .closeView, object: self)
+                }
+                .buttonStyle(SmallCircleButtonStyle(backColor: .blue))
             }
+            .padding(.horizontal, 8)
             
             Divider()
+            switch controller.viewState {
+                case .loading:
+                    Text("Loading")
+                case .unclaimed:
+                    Text("Unclaimed")
+                case .mine(let cData):
+                    Text("My city \(cData.id)")
+                default:
+                    Text("Other")
+            }
             
-            
-            if let city = city {
-                Text("Occupied City").foregroundColor(.red).padding()
-                Text("City name: \(city.name)")
-                Text("A: \(city.name)")
+            if let city:DBCity = city {
+                
+                Group {
+                    Text("Occupied City").foregroundColor(.red).padding()
+                    Text("City name: \(city.name)")
+                    Text("A: \(city.name)")
+                    
+                    if controller.cityData != nil {
+                        Text("City Data").foregroundColor(.orange)
+                        Text("Boxes: \(controller.cityData!.boxes.debugDescription)")
+                        Text("Batteries: \(controller.cityData!.batteries.debugDescription)")
+                        Text("Peripherals: \(controller.cityData!.peripherals.debugDescription)")
+                        Text("Tanks: \(controller.cityData!.tanks.debugDescription)")
+                    }
+                }
+                
+                Group {
+                    Text("Vehicles").foregroundColor(.orange).font(.title3)
+                    ForEach(controller.allVehicles, id:\.id) { vehicle in // SpaceVehicleContent
+                        Text("\(vehicle.engine): \(vehicle.status)")
+                            .onTapGesture {
+                                controller.unpackVehicle(vehicle: vehicle)
+                            }
+                    }
+                }
+                
                 
             } else {
                 
                 Text("Unclaimed City").foregroundColor(.gray)
-                Text("DEX: \(posdex.rawValue) \(posdex.sceneName)")
+                Text("Posdex: \(posdex.rawValue) \(posdex.sceneName)")
                 
             }
             
             Divider()
             
+            // Buttons
             HStack {
-                Text("Claim this city")
+//                Text("Claim this city")
+                
                 Button("Claim city") {
                     print("Should claim it")
                     SKNS.claimCity(user: SKNUserPost(player: LocalDatabase.shared.player!), posdex: posdex) { (city, error) in

@@ -189,6 +189,47 @@ struct TankView: View {
         if let filter = CIFilter(name: "CICode128BarcodeGenerator") {
             filter.setValue(data, forKey: "inputMessage")
             
+            if let output:CIImage = filter.outputImage {
+                
+                if let inverter = CIFilter(name:"CIColorInvert") {
+                    
+                    inverter.setValue(output, forKey:"inputImage")
+                    
+                    if let invertedOutput = inverter.outputImage {
+                        #if os(macOS)
+                        let rep = NSCIImageRep(ciImage: invertedOutput)
+                        let nsImage = NSImage(size: rep.size)
+                        nsImage.addRepresentation(rep)
+                        return Image(nsImage:nsImage)
+                        #else
+                        let uiImage = UIImage(ciImage: invertedOutput)
+                        return Image(uiImage: uiImage)
+                        #endif
+                    }
+                    
+                } else {
+                    #if os(macOS)
+                    let rep = NSCIImageRep(ciImage: output)
+                    let nsImage = NSImage(size: rep.size)
+                    nsImage.addRepresentation(rep)
+                    return Image(nsImage:nsImage)
+                    #else
+                    let uiimage = UIImage(ciImage: output)
+                    return Image(uiImage: uiimage)
+                    #endif
+                }
+            }
+        }
+        
+        return nil
+    }
+    /*
+    func generateBarcode(from uuid: UUID) -> Image? {
+        let data = uuid.uuidString.prefix(8).data(using: String.Encoding.ascii)
+        
+        if let filter = CIFilter(name: "CICode128BarcodeGenerator") {
+            filter.setValue(data, forKey: "inputMessage")
+            
             let transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             let smallBarCode = filter.outputImage?.transformed(by:transform)
             
@@ -217,6 +258,7 @@ struct TankView: View {
         
         return nil
     }
+ */
 }
 
 struct TankOrderView: View {

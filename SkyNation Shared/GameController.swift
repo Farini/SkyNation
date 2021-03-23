@@ -706,6 +706,15 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         sceneRenderer.delegate = self
         sceneRenderer.scene = scene
         
+        // Post Init
+        if let source = SCNAudioSource(fileNamed: "SKN Track1.m4a") {
+            print("found audio file")
+            let action = SCNAction.playAudio(source, waitForCompletion: false)
+            scene.rootNode.runAction(action)
+        } else {
+            print("cannot find audio file")
+        }
+        
     }
     
     /// Loads the **Station** Scene

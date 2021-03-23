@@ -13,8 +13,14 @@ class MarsBuilder {
     static var shared:MarsBuilder = MarsBuilder()
     
     var cities:[DBCity] = []
+    var myDBCity:DBCity?
+    var myCityData:CityData?
+    
     var outposts:[DBOutpost] = []
     var players:[PlayerContent] = []
+    
+    /// Vehicles stationed in Guild
+    var guildGarage:[SpaceVehicleContent] = []
     
     var guild:GuildFullContent?
     var scene:SCNScene
@@ -29,7 +35,6 @@ class MarsBuilder {
     // Load Scene
     class func loadScene() -> SCNScene? {
         let nextScene = SCNScene(named: "Art.scnassets/Mars/GuildMap.scn")
-//        self.scene = nextScene
         return nextScene
     }
     
@@ -48,11 +53,18 @@ class MarsBuilder {
         
         SKNS.loadGuild { (guild, error) in
             if let guild:GuildFullContent = guild {
+                self.guild = guild
                 print("**********************")
                 print("Guild Result: \(guild.name)")
                 print("**********************")
                 for city:DBCity in guild.cities {
                     print("City: Posdex:\(city.posdex), \(city.name)")
+                    if let cid = city.owner?["id"] {
+                        if cid != nil && cid == player.cityID {
+                            print("This city is mine!")
+                            self.myDBCity = city
+                        }
+                    }
                 }
                 self.cities = guild.cities
                 
@@ -66,6 +78,8 @@ class MarsBuilder {
                 }
                 self.players = guild.citizens
                 
+                self.getArrivedVehicles()
+                
             } else {
                 print("No guild in result")
                 if let error = error {
@@ -73,36 +87,45 @@ class MarsBuilder {
                 }
             }
         }
+    }
+    
+    /// Gets all vehicles that arrived
+    func getArrivedVehicles() {
+        print("Getting Arrived Vehicles")
+        SKNS.arrivedVehiclesInGuildFile { gVehicles, error in
+            if let gVehicles = gVehicles {
+                print("Guild garage vehicles: \(gVehicles.count)")
+                self.guildGarage = gVehicles
+                for vehicle in gVehicles {
+                    if vehicle.owner == LocalDatabase.shared.player?.playerID {
+                        print("Vehicle is mine: \(vehicle.engine)")
+                        print("Contents (count): \(vehicle.boxes.count + vehicle.tanks.count + vehicle.batteries.count + vehicle.passengers.count + vehicle.peripherals.count)")
+                        
+                        // Bring contents to city
+                        // Update City
+                        // Post city update
+                    }
+                }
+            } else {
+                print("⚠️ Error: Could not get arrived vehicles. error -> \(error?.localizedDescription ?? "n/a")")
+            }
+        }
+    }
+    
+    // Request My City
+    func getMyCityInfo() {
         
-//        SKNS.guildInfo(user: SKNUserPost(player: player)) { (guild, error) in
-//
-//            if let guild:GuildFullContent = guild {
-//                print("**********************")
-//                print("Guild Result: \(guild.name)")
-//                print("**********************")
-//                for city:DBCity in guild.cities {
-//                    print("City: Posdex:\(city.posdex), \(city.name)")
-//                }
-//                self.cities = guild.cities
-//
-//                for outpost:DBOutpost in guild.outposts {
-//                    print("OutPost: \(outpost.type)")
-//                }
-//                self.outposts = guild.outposts
-//
-//                for player:PlayerContent in guild.citizens {
-//                    print("Player Content: \(player.name)")
-//                }
-//                self.players = guild.citizens
-//
-//            } else {
-//                print("No guild in result")
-//                if let error = error {
-//                    print("Error: \(error.localizedDescription)")
-//                }
-//            }
-//        }
-              
+        if let myCity = myDBCity {
+            SKNS.loadCity(posdex: Posdex(rawValue:myCity.posdex)!) { (cityData, error) in
+                if let cityData = cityData {
+                    print("Updating my CityData object")
+                    self.myCityData = cityData
+                } else {
+                    print("Could not update my citydata. Error: \(error?.localizedDescription ?? "n/a")")
+                    self.myCityData = nil
+                }
+            }
+        }
     }
     
     // Load objects that represent outposts, cities, etc.
@@ -151,5 +174,6 @@ class MarsBuilder {
         
         return nil
     }
+    
     
 }

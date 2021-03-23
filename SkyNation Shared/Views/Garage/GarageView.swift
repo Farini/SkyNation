@@ -412,6 +412,7 @@ struct GarageView: View {
                     ScrollView {
                         TravellingVehicleView(controller: controller)
                     }
+                    
                 }
                 
             // Making a new Vehicle
@@ -420,7 +421,10 @@ struct GarageView: View {
                 switch stage {
                     
                     case .Engine:       // Selecting Engine
-                        BuildingVehicleView(garageController: controller)
+                        ScrollView {
+                            BuildingVehicleView(garageController: controller)
+                        }
+                        
                         
                     case .Inventory:    // Adding Tanks, Batteries, and Solar array
                         VehicleInventoryView(controller: controller)
@@ -582,7 +586,7 @@ struct TravellingVehicleView: View {
                     .padding()
                 
                 switch vehicle.status {
-                    case .Mars:
+                    case .Mars: // Travelling to Mars
                         Text("Timing")
                         Text("Destination: \(vehicle.status.rawValue)")
                         Text("Time: \(GameFormatters.dateFormatter.string(from: vehicle.dateTravelStarts ?? Date()))")
@@ -606,6 +610,10 @@ struct TravellingVehicleView: View {
                                 controller.cancelSelection()
                             }
                             .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
+                            
+                            Button("Registration") {
+                                print("Check vehicle registration (SKNS)")
+                            }
                         }
                         .padding()
                         
@@ -640,13 +648,14 @@ struct TravellingVehicleView: View {
                             }
                             .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                             
-                            if vehicle.engine != .Hex6 {
+                            // FIXME: - Uncomment the following commented code
+//                            if vehicle.engine != .Hex6 {
                                 Button("Begin EDL") {
                                     print("Beginning Entry, Descent and Landing")
-//                                    controller.cancelSelection()
+                                    controller.performEntryDescentAndLanding(vehicle: vehicle)
                                 }
                                 .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                            }
+//                            }
                             
                             if let bot = vehicle.marsBot {
                                 switch bot {

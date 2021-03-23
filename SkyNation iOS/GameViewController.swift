@@ -57,9 +57,12 @@ class GameViewController: UIViewController {
     }
     
     @objc func closeView(_ notification:Notification) {
+        
         print("Should Close Notification Received")
-        openedView?.removeFromSuperview()
-        openedView = nil
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.15) {
+            self.openedView?.removeFromSuperview()
+            self.openedView = nil
+        }
     }
     
     override var shouldAutorotate: Bool {
@@ -77,9 +80,17 @@ class GameViewController: UIViewController {
     // MARK: - Control
     
     @objc func handleTap(_ gestureRecognizer: UIGestureRecognizer) {
-        // Highlight the tapped nodes
-        let p = gestureRecognizer.location(in: gameView)
-        gameController.highlightNodes(atPoint: p)
+        
+        if openedView != nil {
+            print("view is open")
+            return
+        } else {
+            // Highlight the tapped nodes
+            let p = gestureRecognizer.location(in: gameView)
+            gameController.highlightNodes(atPoint: p)
+            return
+        }
+        
     }
     
     func clearInterface() {
@@ -93,6 +104,38 @@ class GameViewController: UIViewController {
 // MARK: - Delegate
 
 extension GameViewController:GameNavDelegate {
+    func openCityView(posdex: Posdex, city: DBCity?) {
+        
+        clearInterface()
+        
+        let newHost = UIHostingController(rootView:MarsCityCreatorView(posdex: posdex, city: city, controller: CityController()))
+        
+        newHost.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(newHost.view)
+        newHost.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        newHost.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        newHost.didMove(toParent: self)
+        self.openedView = newHost.view
+    }
+    
+    func openOutpostView(posdex: Posdex, outpost: DBOutpost) {
+        clearInterface()
+        
+        let newHost = UIHostingController(rootView:OutpostView(posdex: posdex, outpost: outpost))
+        newHost.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(newHost.view)
+        newHost.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        newHost.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        newHost.didMove(toParent: self)
+        self.openedView = newHost.view
+    }
+    
     
     func didChooseModule(name: String) {
         print("Module View")
@@ -271,5 +314,7 @@ extension GameViewController:GameNavDelegate {
         newHost.didMove(toParent: self)
         self.openedView = newHost.view
     }
+    
+    
     
 }

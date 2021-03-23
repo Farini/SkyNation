@@ -17,8 +17,6 @@ enum GarageStatus {
     case simulating
 }
 
-
-
 enum VehicleBuildingStage {
     case Engine     // Selecting Engine
     case Inventory  // Adding Tanks, Batteries, and Solar array
@@ -149,16 +147,6 @@ class GarageViewModel:ObservableObject {
             print("Not implemented - Edit code here")
         }
     }
-    
-    /// Sets the Vehicle to start building
-//    func startBuilding(vehicle:SpaceVehicle) {
-//
-//        station.garage.startBuildingVehicle(vehicle: vehicle)
-//        self.buildingVehicles.append(vehicle)
-//        selectedVehicle = vehicle
-//        garageStatus = .idle
-//
-//    }
     
     /// Returns whether its (not) possible to build a certain Engine Type
     func disabledEngine(type:EngineType) -> Bool {
@@ -406,12 +394,10 @@ class GarageViewModel:ObservableObject {
         }
     }
     
-    /// `Descent` inventory
+    /// `EDL` inventory
     func setupDescentInventory() {
         self.garageStatus = .planning(stage: .Descent)
     }
-    
-    
     
     func finishedDescentInventory(vehicle:SpaceVehicle, cargo:[StorageBox], devices:[PeripheralObject]) {
         // Needs to implement...
@@ -435,6 +421,70 @@ class GarageViewModel:ObservableObject {
         
         // Register Vehicle in Server
         
+//        guard let player = LocalDatabase.shared.player else {
+//            fatalError()
+//        }
+//        let user = SKNUserPost(player: player)
+//        SKNS.registerSpace(vehicle: vehicle, player: user) { (data, error) in
+//            if let data = data {
+//                let decoder = JSONDecoder()
+//                decoder.dateDecodingStrategy = .secondsSince1970
+//                if let vehicleModel = try? decoder.decode(SpaceVehicleModel.self, from: data) {
+//                    print("We got a Vehicle ! \(vehicleModel.engine)")
+//                } else {
+//                    print("No vehicle model")
+//                }
+//            } else {
+//                print("No data. Error: \(error?.localizedDescription ?? "n/a")")
+//            }
+//        }
+        
+        // FIXME: - Registration
+        // Move registration to MarsBuilder?
+        // Move remaining code to bracket under "vModel", so it can be executed only when registered ???
+        // Discussion: Should we alllow vehicle to start travelling only when registered?
+        
+        self.registerVehicle(vehicle: vehicle) { (vModel, error) in
+            
+            if let vModel = vModel {
+                print("Registered Successfully. Engine:\(vModel.engine) Owner: \(vModel.owner)")
+                
+                // Back to main thread
+                DispatchQueue.main.async {
+                    
+                    // Set Vehicle to start travelling
+                    vehicle.startTravelling()
+                    
+                    // Remove from Garage
+                    self.garage.buildingVehicles.removeAll(where: { $0.id == vehicle.id })
+                    
+                    // Add to Array of travelling vehicles
+                    LocalDatabase.shared.vehicles.append(vehicle)
+                    self.travellingVehicles.append(vehicle)
+                    
+                    // XP
+                    self.garage.xp += 1
+                    
+                    // Save
+                    LocalDatabase.shared.saveVehicles()
+                    LocalDatabase.shared.saveStation(station: self.station)
+                    
+                    // Update View
+                    self.garageStatus = .planning(stage: .Launching)
+                    // self.cancelSelection()
+                }
+                
+            } else if let error = error {
+                print("Could not register vehicle: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    // MARK: - Server
+    
+    func registerVehicle(vehicle:SpaceVehicle, completion:((SpaceVehicleModel?, Error?) -> ())?) {
+        print("Registering Vehicle in Server")
+        
         guard let player = LocalDatabase.shared.player else {
             fatalError()
         }
@@ -444,7 +494,15 @@ class GarageViewModel:ObservableObject {
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .secondsSince1970
                 if let vehicleModel = try? decoder.decode(SpaceVehicleModel.self, from: data) {
+                    
                     print("We got a Vehicle ! \(vehicleModel.engine)")
+                    // -------
+                    // Update Vehicle ID, and save. VERY IMPORTANT !!!
+                    // -------
+                    
+                    vehicle.id = vehicleModel.id!
+                    LocalDatabase.shared.saveStation(station: self.station)
+                    
                 } else {
                     print("No vehicle model")
                 }
@@ -452,31 +510,23 @@ class GarageViewModel:ObservableObject {
                 print("No data. Error: \(error?.localizedDescription ?? "n/a")")
             }
         }
-        
-        // Set Vehicle to start travelling
-        vehicle.startTravelling()
-        
-        // Remove from Garage
-        garage.buildingVehicles.removeAll(where: { $0.id == vehicle.id })
-        
-        // Add to Array of travelling vehicles
-        LocalDatabase.shared.vehicles.append(vehicle)
-        self.travellingVehicles.append(vehicle)
-        
-        // XP
-        garage.xp += 1
-        
-        // Save
-        LocalDatabase.shared.saveVehicles()
-        LocalDatabase.shared.saveStation(station: self.station)
-        
-        // Update View
-        self.garageStatus = .planning(stage: .Launching)
-        // self.cancelSelection()
- 
     }
     
-    // FIXME: - Token Use
+    /// Sends a Vehicle to the `GuildData` file
+    func performEntryDescentAndLanding(vehicle:SpaceVehicle) {
+        
+        SKNS.orbitMarsWith(vehicle: vehicle) { (vContent, error) in
+            if let vContent = vContent {
+                // Vehicle
+                print("Performed EDL? Vehicle ID: \(vContent.id?.uuidString ?? "n/a")")
+            } else {
+                // Error
+                print("Could not perform EDL - \(error?.localizedDescription ?? "n/a")")
+            }
+        }
+    }
+    
+    // MARK: - Token Use
     
     /// Uses a Token from Player to reduce 1hr in building time
     func useToken(vehicle:SpaceVehicle) {
@@ -506,7 +556,6 @@ class GarageViewModel:ObservableObject {
 import SceneKit
 
 class LaunchSceneController:ObservableObject {
-    
     
     @Published var scene:SCNScene
     @Published var vehicleNode:SpaceVehicleNode
@@ -547,9 +596,6 @@ class LaunchSceneController:ObservableObject {
         
         
     }
-    
-//    func move
-    
 }
 
 class LaunchSceneRendererMan:NSObject, SCNSceneRendererDelegate {

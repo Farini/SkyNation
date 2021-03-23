@@ -114,6 +114,7 @@ Items being worked on
 - [X] Fix Settings Tab View
 - [X] Delete Person from GameGenerator after hiring
 - [X] Increase the chances of generating a .handy `person`
+- [X] iPad multi-touch bug fixed
 
 - [X] LSS View -> Fix peripheral Selection bug
 - [X] LSS View -> Empty Tanks and Boxes must have a way to define type.
@@ -129,6 +130,7 @@ Items being worked on
 - [ ] Game Store Improvements
 - [ ] GameMessages showing strange dates
 - [ ] Use Fibonacci for Peripheral Upgrades
+- [ ] Antenna not making more money in higher levels
 
 
 - [ ] Activity name enum?

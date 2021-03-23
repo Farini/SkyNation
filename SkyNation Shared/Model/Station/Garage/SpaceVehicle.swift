@@ -430,7 +430,6 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     
 }
 
-
 struct SpaceVehicleModel:Codable {
     
     var id:UUID?
@@ -445,5 +444,34 @@ struct SpaceVehicleModel:Codable {
         self.owner = player.id
         self.engine = spaceVehicle.engine.rawValue
         self.status = spaceVehicle.status.rawValue
+    }
+}
+
+struct SpaceVehicleContent:Codable {
+    
+    var id:UUID?
+    var eta:Date
+    var owner:UUID
+    var engine:String
+    var status:String
+    
+    var boxes:[StorageBox]
+    var tanks:[Tank]
+    var peripherals:[PeripheralObject]
+    var batteries:[Battery]
+    var passengers:[Person]
+    
+    /// Makes a `SpaceVehicleContent` instance of a SpaceVehicle
+    init(with vehicle:SpaceVehicle) {
+        self.id = vehicle.id
+        self.eta = vehicle.arriveDate()
+        owner = LocalDatabase.shared.player?.playerID ?? UUID()
+        engine = vehicle.engine.rawValue
+        status = vehicle.status.rawValue
+        boxes = vehicle.boxes
+        tanks = vehicle.tanks
+        peripherals = vehicle.peripherals
+        batteries = vehicle.batteries
+        passengers = vehicle.passengers
     }
 }

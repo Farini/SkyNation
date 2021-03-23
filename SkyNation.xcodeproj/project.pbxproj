@@ -52,6 +52,9 @@
 		8517EE632605DC8800C34C54 /* CityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE622605DC8800C34C54 /* CityController.swift */; };
 		8517EE642605DC8800C34C54 /* CityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE622605DC8800C34C54 /* CityController.swift */; };
 		8517EE652605DC8800C34C54 /* CityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE622605DC8800C34C54 /* CityController.swift */; };
+		8517EE6C26093C6200C34C54 /* SKN Track1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8517EE6B26093C6200C34C54 /* SKN Track1.m4a */; };
+		8517EE6D26093C6200C34C54 /* SKN Track1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8517EE6B26093C6200C34C54 /* SKN Track1.m4a */; };
+		8517EE6E26093C6200C34C54 /* SKN Track1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8517EE6B26093C6200C34C54 /* SKN Track1.m4a */; };
 		8523338C25D76A9B004CB638 /* AirCompositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8523338B25D76A9B004CB638 /* AirCompositionView.swift */; };
 		8523338D25D76A9B004CB638 /* AirCompositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8523338B25D76A9B004CB638 /* AirCompositionView.swift */; };
 		8523338E25D76A9B004CB638 /* AirCompositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8523338B25D76A9B004CB638 /* AirCompositionView.swift */; };
@@ -492,6 +495,7 @@
 		8517EE4925FC245D00C34C54 /* OutpostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutpostView.swift; sourceTree = "<group>"; };
 		8517EE5125FE8C9C00C34C54 /* ServerDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerDatabase.swift; sourceTree = "<group>"; };
 		8517EE622605DC8800C34C54 /* CityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityController.swift; sourceTree = "<group>"; };
+		8517EE6B26093C6200C34C54 /* SKN Track1.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SKN Track1.m4a"; sourceTree = "<group>"; };
 		8523338B25D76A9B004CB638 /* AirCompositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirCompositionView.swift; sourceTree = "<group>"; };
 		8536F2B5258D330200B509D2 /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
 		8536F2B6258D330200B509D2 /* Art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Art.scnassets; sourceTree = "<group>"; };
@@ -685,6 +689,14 @@
 			path = "3D Nodes";
 			sourceTree = "<group>";
 		};
+		8517EE6A26093C4100C34C54 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				8517EE6B26093C6200C34C54 /* SKN Track1.m4a */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
 		8536F2AF258D330200B509D2 = {
 			isa = PBXGroup;
 			children = (
@@ -847,6 +859,7 @@
 				8536F45D258D481700B509D2 /* Overlays */,
 				8569A302259F7F7A0057A518 /* Shaders */,
 				8536F46A258D481700B509D2 /* ParticleEmitters */,
+				8517EE6A26093C4100C34C54 /* Sounds */,
 				8536F464258D481700B509D2 /* TravelersScene.swift */,
 			);
 			path = Scenes;
@@ -1308,6 +1321,7 @@
 				8569A337259F81110057A518 /* RectanglesMoving.fsh in Resources */,
 				8569A334259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
 				8569A319259F81110057A518 /* CutionStripesColored.fsh in Resources */,
+				8517EE6C26093C6200C34C54 /* SKN Track1.m4a in Resources */,
 				8569A31F259F81110057A518 /* TransitionShader.fsh in Resources */,
 				8569A32B259F81110057A518 /* CautionStripes.fsh in Resources */,
 				8536F489258D481700B509D2 /* StationOverlay.sks in Resources */,
@@ -1336,6 +1350,7 @@
 				8569A338259F81110057A518 /* RectanglesMoving.fsh in Resources */,
 				8569A335259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
 				8569A31A259F81110057A518 /* CutionStripesColored.fsh in Resources */,
+				8517EE6D26093C6200C34C54 /* SKN Track1.m4a in Resources */,
 				8569A320259F81110057A518 /* TransitionShader.fsh in Resources */,
 				8569A32C259F81110057A518 /* CautionStripes.fsh in Resources */,
 				8536F48A258D481700B509D2 /* StationOverlay.sks in Resources */,
@@ -1364,6 +1379,7 @@
 				8569A306259F7F990057A518 /* dissolve.fragment.txt in Resources */,
 				8569A32D259F81110057A518 /* CautionStripes.fsh in Resources */,
 				8569A327259F81110057A518 /* RadarShader.fsh in Resources */,
+				8517EE6E26093C6200C34C54 /* SKN Track1.m4a in Resources */,
 				8569A330259F81110057A518 /* MapShapeGradient.fsh in Resources */,
 				8536F497258D481700B509D2 /* SparkEmitter.sks in Resources */,
 				8536F473258D481700B509D2 /* CamControl.sks in Resources */,
