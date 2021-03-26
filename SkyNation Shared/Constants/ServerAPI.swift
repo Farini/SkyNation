@@ -32,6 +32,24 @@ class SKNS {
     /// Keep a record of the queries performed, so we don't keep repeating the same queries.
     var queries:[Routes:Date] = [:] // Queries should have *route, *date, *objectRetrieved, *
     
+//    var encoder:JSONEncoder {
+//        get {
+//            let encoder = JSONEncoder()
+//            encoder.dateEncodingStrategy = .secondsSince1970
+//            return encoder
+//        }
+//    }
+//
+//    var decoder:JSONDecoder {
+//        get {
+//            let decoder = JSONDecoder()
+//            decoder.dateDecodingStrategy = .secondsSince1970
+//            return decoder
+//        }
+//    }
+    
+    
+    
     static let baseAddress = "http://127.0.0.1:8080"
     
     // MARK: - User, Login
@@ -182,57 +200,6 @@ class SKNS {
         }
         task.resume()
     }
-    
-    /*
-    static func fetchPlayer(id:UUID, completion:((SKNUserPost?, Error?) -> ())?) {
-        
-        print("Fetching Player")
-        
-        let url = URL(string: "\(baseAddress)/users")!
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = HTTPMethod.GET.rawValue
-        request.setValue(id.uuidString, forHTTPHeaderField: "playerid")
-        
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .secondsSince1970
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                print("Got Data")
-                if let user = try? decoder.decode([SKNUserPost].self, from: data).first {
-                    DispatchQueue.main.async {
-                        print("Data returning")
-                        completion?(user, nil)
-                    }
-                } else {
-                    print("Data is not a user")
-                    
-                    do {
-                        let string = try decoder.decode([String].self, from: data)
-                        print("String: \(string)")
-                        completion?(nil, error)
-                    } catch {
-                        print("Caught error: \(error.localizedDescription)")
-                        completion?(nil, error)
-                    }
-                    //                    if let string = try? decoder.decode(String.self, from: data) {
-                    //                        print("Data String: \(string)")
-                    //                    }
-                }
-                
-                
-            } else if let error = error {
-                print("Error returning")
-                DispatchQueue.main.async {
-                    completion?(nil, error)
-                }
-            }
-        }
-        task.resume()
-    }
-     */
     
     static func updatePlayer(object:PlayerContent, completion:((PlayerContent?, Error?) -> ())?) {
         
@@ -664,6 +631,72 @@ class SKNS {
     
     static func saveCity(city:CityData, completion:((CityData?, Error?) -> ())?) {
         
+//        let url = URL(string: "\(baseAddress)/guild/city/update")!
+        guard
+              let player = LocalDatabase.shared.player,
+              let pid = player.playerID,
+              let gid = player.guildID,
+            
+            let url = URL(string: "\(baseAddress)/guilds/city/update/\(pid.uuidString)/\(gid.uuidString)/\(city.id.uuidString)")
+        else {
+            fatalError()
+        }
+        
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        
+        request.httpMethod = HTTPMethod.POST.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request.setValue(pid.uuidString, forHTTPHeaderField: "pid")
+        request.setValue(gid.uuidString, forHTTPHeaderField: "gid")
+        
+        
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        encoder.outputFormatting = .prettyPrinted
+        
+        // Data
+//        let vehicleModel:SpaceVehicleModel = SpaceVehicleModel(spaceVehicle: vehicle, player: player)
+        if let data = try? encoder.encode(city) {
+            print("Adding Data")
+            request.httpBody = data
+            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
+            print("DS: \(dataString)")
+        }
+        
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .secondsSince1970
+        
+        print("Updating City")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                DispatchQueue.main.async {
+                    print("Data returning")
+                    if let dCity = try? decoder.decode(CityData.self, from: data) {
+                        completion?(dCity, nil)
+                        return
+                    } else {
+                        if let string = String(data:data, encoding: .utf8) {
+                            print("SR: \(string)")
+                        }
+                        
+                        print("No data")
+                        completion?(nil, nil)
+                        return
+                    }
+                }
+                
+            } else if let error = error {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                    return
+                }
+            }
+        }
+        task.resume()
     }
     
     // MARK: - Space Vehicle

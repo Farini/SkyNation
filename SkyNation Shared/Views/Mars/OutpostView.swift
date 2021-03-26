@@ -14,24 +14,34 @@ struct OutpostView: View {
     
     var body: some View {
         VStack {
-            Text("Outpost").font(.title)
+            
+            HStack {
+                Text("Outpost").font(.title)
+                Spacer()
+                Button("X") {
+                    NotificationCenter.default.post(name: .closeView, object: self)
+                }
+                .buttonStyle(SmallCircleButtonStyle(backColor: .blue))
+            }
+            .padding(.horizontal, 8)
+            
             
             Divider()
             
             Group {
-                Text("Scene: \(posdex.sceneName)").foregroundColor(.orange)
-                Text("Outpost description")
-                Text("Position: \(Int(posdex.position.x)), \(Int(posdex.position.y)), \(Int(posdex.position.z))")
+                Text("\(posdex.sceneName)").foregroundColor(.orange)
                 
                 Text("Outpost data").foregroundColor(.blue).padding(.top)
                 Text("Level: \(outpost.level)")
                 
-                Text("Model: \(outpost.model)")
+                Text("Model: \(outpost.model)").foregroundColor(.gray)
                 Text("Posdex: \(outpost.posdex)")
                 Text("Date: \(GameFormatters.dateFormatter.string(from:outpost.accounting))")
             }
             
+            Divider()
             
+            Text("Outpost Job").foregroundColor(.orange)
             if let nextJob = outpost.getNextJob() {
                 VStack {
                     Text("Next Job - Upgrade to \(outpost.level + 1)").font(.title2)
@@ -40,6 +50,8 @@ struct OutpostView: View {
                 }
                 .foregroundColor(.green)
                 .padding()
+            } else {
+                Text("< No upgrades >").foregroundColor(.gray)
             }
             
             Divider()
@@ -55,6 +67,7 @@ struct OutpostView: View {
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
             }
+            .padding()
             
             
         }

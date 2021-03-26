@@ -21,7 +21,7 @@ The contributors to these projects shall have a **fair** share of the game, and 
 
 - [X] Test Project created: "SkyTestSceneKit" - Farini on 7/30/20.
 - [X] SkyNation Project created: 12/18/2020
-- [ ] Server Project SKNServer - A server for this game written in Vapor.
+- [X] Server Project SKNServer - A server for this game written in Vapor.
 - [ ] Apple Store Product Registration
 - [ ] Product Version 1.0
 
@@ -115,6 +115,7 @@ Items being worked on
 - [X] Delete Person from GameGenerator after hiring
 - [X] Increase the chances of generating a .handy `person`
 - [X] iPad multi-touch bug fixed
+- [X] Antenna bug: not making more money in higher levels
 
 - [X] LSS View -> Fix peripheral Selection bug
 - [X] LSS View -> Empty Tanks and Boxes must have a way to define type.
@@ -124,18 +125,24 @@ Items being worked on
 - [X] LSS View -> Resources need Icon
 - [X] LSS View -> Make Peripheral `Power Off` button
 - [ ] LSS View -> Better Station Accounting & Reporting + Accounting Bug Fix
-
-
+- [ ] LSS View -> Account & Reporting inside a ScrollView
 
 - [ ] Game Store Improvements
 - [ ] GameMessages showing strange dates
 - [ ] Use Fibonacci for Peripheral Upgrades
-- [ ] Antenna not making more money in higher levels
-
+- [ ] Make sure that Air adjustments AND Oxygen adjustments are working - Accounting)
+- [ ] Make all Tutorial points (Questionmarks) work.
 
 - [ ] Activity name enum?
 - [ ] BioBox DNA enum
-        
+
+- [ ] 1/8 Soundtrack + FX
+- [X] Add 1 Melody for Soundtrack
+- [ ] Have 3 Background music
+- [ ] Add a couple of SoundFX
+- [ ] GameSettings -> Sound
+- [ ] Gamesettings -> SoundFX
+
 - [ ] Icons
     - [X] Water Filter
     - [X] biosolids

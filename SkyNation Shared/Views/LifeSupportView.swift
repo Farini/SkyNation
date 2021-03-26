@@ -255,8 +255,8 @@ struct LifeSupportView: View {
                                         
                                         let mot = controller.station.truss.moneyFromAntenna()
                                         let pot = LocalDatabase.shared.player?.money ?? 0
-                                        Text("📡 Antenna + 🪙 \(mot)")
-                                        Text("\(Int(Double(mot)/Double(pot)) * 100) %")
+                                        Text("📡 lvl \(controller.station.truss.antenna.level) + 🪙 \(mot)")
+                                        Text("\(Int((Double(mot)/Double(pot) * 100.0))) %")
                                         Text("Total: \(GameFormatters.numberFormatter.string(from:NSNumber(value:pot)) ?? "---")")
                                     }
                                     .padding()

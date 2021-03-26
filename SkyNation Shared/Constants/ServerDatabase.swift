@@ -15,30 +15,41 @@ class ServerDatabase {
     var player:SKNPlayer
     
     var guild:Guild?
+    // guildCities
+    // guildOutposts
+    
     var city:CityData?
     
-    // Init from local database, after Player
-    init(player:SKNPlayer) {
+    // incomingVehicles // All arriving vehicles from Guild
+    // playerVehicles   // arriving vehicles from Player
+    
+    /// Singleton initializers are lazy.
+    static let shared = ServerDatabase()
+    init() {
+        guard let player = LocalDatabase.shared.player
+            else {
+            fatalError()
+        }
+        let user = SKNUserPost(player: player)
         self.player = player
-        self.user = SKNUserPost(player: player)
-        // Start Fetching
-        self.start()
+        self.user = user
     }
     
-    func start() {
-//        SKNS.resolveLogin { (loggedUser, error) in
-//            if let logUser = loggedUser {
-//                self.user = logUser
-////                if logUser.guildID != nil {
-////                    self.fetchGuild()
-////                }
-//            } else {
-//
-//            }
-//        }
+    // In order...?
+    
+    func login() {
+        
     }
     
     func fetchGuild() {
+        
+    }
+    
+    func fetchCity() {
+        
+    }
+    
+    func fetchVehicles() {
         
     }
 }

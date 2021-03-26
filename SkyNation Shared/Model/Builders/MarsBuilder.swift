@@ -25,18 +25,6 @@ class MarsBuilder {
     var guild:GuildFullContent?
     var scene:SCNScene
     
-    private init() {
-        print("Initting Mars Director")
-        guard let scene = MarsBuilder.loadScene() else { fatalError() }
-        self.scene = scene
-        getServerInfo()
-    }
-    
-    // Load Scene
-    class func loadScene() -> SCNScene? {
-        let nextScene = SCNScene(named: "Art.scnassets/Mars/GuildMap.scn")
-        return nextScene
-    }
     
     // Request Guild Details
     func getServerInfo() {
@@ -173,6 +161,21 @@ class MarsBuilder {
         }
         
         return nil
+    }
+    
+    // MARK: - Initialize
+    
+    private init() {
+        print("Initting Mars Director")
+        guard let scene = MarsBuilder.loadScene() else { fatalError() }
+        self.scene = scene
+        getServerInfo()
+    }
+    
+    // Load Scene
+    class func loadScene() -> SCNScene? {
+        let nextScene = SCNScene(named: "Art.scnassets/Mars/GuildMap.scn")
+        return nextScene
     }
     
     

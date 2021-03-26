@@ -226,7 +226,7 @@ class LabViewModel: ObservableObject {
                     return
                 }
                 
-                GameMessageBoard.shared.newAchievement(type: .tech(item: tech), message: nil) //newAchievement(type: .tech(item: tech), qtty: nil, message: nil)
+                GameMessageBoard.shared.newAchievement(type: .tech(item: tech), message: nil)
                 print("New Game Message")
 //                print("Found tech item")
 //                LocalDatabase.shared.builder.upgradeTech(item: techItem)
@@ -236,6 +236,8 @@ class LabViewModel: ObservableObject {
                 
                 // Check if this is a recipe
                 switch techItem {
+                    case .AU1, .AU2, .AU3, .AU4, .AntennaUp:
+                        self.station.truss.antenna.level += 1
                     case .recipeMethane:
                         self.station.unlockedRecipes.append(Recipe.Methanizer)
                     case .recipeScrubber:

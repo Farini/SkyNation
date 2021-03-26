@@ -383,7 +383,7 @@ class LocalDatabase {
     // MARK: - In Memory (Fetched)
     // ===========================
     
-    var city:City?
+//    var city:City?
     
     // Accounting Problems
     var accountingProblems:[String] = []    // Set by Station.runAccounting

@@ -14,6 +14,10 @@ struct MarsCityCreatorView: View {
     @State var city:DBCity?
     @ObservedObject var controller = CityController()
     
+    // --- Use Tabs?
+    // LSS -> Reuse LSS View
+    // 
+    
     var body: some View {
         
         VStack {
@@ -54,9 +58,29 @@ struct MarsCityCreatorView: View {
                     if controller.cityData != nil {
                         Text("City Data").foregroundColor(.orange)
                         Text("Boxes: \(controller.cityData!.boxes.debugDescription)")
+                        LazyVStack {
+                            ForEach(controller.cityData!.boxes) { box in
+                                IngredientView(ingredient: box.type, hasIngredient: true, quantity: box.current)
+                            }
+                        }
                         Text("Batteries: \(controller.cityData!.batteries.debugDescription)")
+//                        LazyVStack {
+//                            ForEach(controller.cityData!.batteries) { battery in
+                                BatteryCollectionView(controller.cityData!.batteries)
+//                            }
+//                        }
                         Text("Peripherals: \(controller.cityData!.peripherals.debugDescription)")
+                        LazyVStack {
+                            ForEach(controller.cityData!.peripherals) { peripheral in
+                                PeripheralSmallView(peripheral: peripheral)
+                            }
+                        }
                         Text("Tanks: \(controller.cityData!.tanks.debugDescription)")
+                        LazyVStack {
+                            ForEach(controller.cityData!.tanks) { tank in
+                                TankRow(tank: tank)
+                            }
+                        }
                     }
                 }
                 
@@ -65,6 +89,7 @@ struct MarsCityCreatorView: View {
                     ForEach(controller.allVehicles, id:\.id) { vehicle in // SpaceVehicleContent
                         Text("\(vehicle.engine): \(vehicle.status)")
                             .onTapGesture {
+                                print("Unpacking")
                                 controller.unpackVehicle(vehicle: vehicle)
                             }
                     }

@@ -148,7 +148,14 @@ class CityController:ObservableObject {
         self.cityData = cCopy
         
         // Update city to server
-        
+        SKNS.saveCity(city: cCopy) { (cData, error) in
+            if let cData:CityData = cData {
+                print("Got cData! Updated.")
+                self.cityData = cData
+            } else {
+                print("Error: \(error?.localizedDescription ?? "n/a")")
+            }
+        }
         
         
         switch self.viewState {

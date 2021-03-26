@@ -81,16 +81,18 @@ class DataTests: XCTestCase {
     func testAntennaLevel() throws {
         
         let antenna = PeripheralObject(peripheral: .Antenna)
-        let level = antenna.level
-        //        let money = GameLogic.fibonnaci(index: level)
+//        let level = antenna.level
         
         let fixedProfits:Int = 300
-        let variableProfits:Int = 100 * GameLogic.fibonnaci(index: antenna.level)
-        let totalProfits = fixedProfits + variableProfits
         
         print("\n\n\t Antenna Profits ======== ")
+        
         while antenna.level < 5 {
-            print("Antenna level:\(level)\t = \(fixedProfits) + \(variableProfits) = \(totalProfits)")
+            
+            let variableProfits:Int = 80 * GameLogic.fibonnaci(index: antenna.level + 1)
+            let totalProfits = fixedProfits + variableProfits
+            
+            print("Antenna level:\(antenna.level)\t = \(fixedProfits) + \(variableProfits) = \(totalProfits)")
             antenna.level += 1
         }
         

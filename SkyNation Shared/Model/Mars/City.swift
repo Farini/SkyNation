@@ -7,37 +7,9 @@
 
 import Foundation
 
-
-struct Terrain:Codable {
-    
-    var id:UUID
-    var model:String
-    var guild:UUID
-    var type:GuildTerrainType
-    
-    var cities:[DBCity]         // Each city with its own file, but generally from this level, we want the basic city (database)
-    var outposts:[Outpost]
-    
-    // Incoming Vehicles?
-    
-    init() {
-        self.id = UUID()
-        self.model = Terrain.randomName()
-        self.guild = UUID()
-        self.type = .Terrain1
-        self.cities = []
-        self.outposts = []
-    }
-    
-    static func randomName() -> String {
-        return ["Name A", "Name B", "Name C"].randomElement()!
-    }
-}
-
-
-
 // MARK: - City
 
+/** Server's Database representation of  `CityData` */
 struct DBCity:Codable {
     
     var id:UUID
@@ -53,51 +25,12 @@ struct DBCity:Codable {
     var posdex:Int
 }
 
-struct City {
-    
-    var owner:UUID?
-    var name:String = ""
-    var posdex:Posdex
-    
-    var position:Vector3D
-    var habs:[CityHab] // this will have to be an object, like HabModule
-    
-    // Resources
-    var air:AirComposition
-    var boxes:[StorageBox]
-    var tanks:[Tank]
-    var batteries:[Battery]
-    var bioBoxes:[BioBox]
-    
-    // Tech
-    var cityTech:[CityTech]
-    
-    var bots:[MarsBot]?
-    
-    init(user:SKNUserPost, posdex:Posdex) {
-        self.owner = user.localID
-        self.position = posdex.position
-        self.habs = [CityHab(id: UUID(), capacity: 4, inhabitants: [], name: "untitled", skin: "skin", position: .zero)]
-        self.air = AirComposition(amount: 200)
-        self.boxes = []
-        self.tanks = []
-        self.batteries = []
-        self.bioBoxes = []
-        self.cityTech = [.HQ]
-        self.posdex = posdex
-    }
-    
-    func keepInMemory() {
-        LocalDatabase.shared.city = self
-    }
-}
 
 /// The Complete City Data
 struct CityData:Codable, Identifiable {
     
     var id:UUID
-    var owner:SKNUserPost?
-    var position:Vector3D?
+    var posdex:Posdex
     
     // Modules
     
@@ -121,18 +54,24 @@ struct CityData:Codable, Identifiable {
     
     // Robots, or Vehicles
     var vehicles:[String]?
-}
-
-
-struct CityHab:Codable {
     
-    var id:UUID
-    var capacity:Int            // Limit of people
-    var inhabitants:[Person]    // People
-    var name:String             // any name given
-    var skin:String             // If we decide so...
-    var position:Vector3D
+    // To add:
+    // + accounting + report
+    // + airComposition
+    // + bioBoxes?
+    // + CityTech?
 }
+
+
+//struct CityHab:Codable {
+//
+//    var id:UUID
+//    var capacity:Int            // Limit of people
+//    var inhabitants:[Person]    // People
+//    var name:String             // any name given
+//    var skin:String             // If we decide so...
+//    var position:Vector3D
+//}
 
 enum CityTech:String, Codable, CaseIterable {
     
