@@ -11,6 +11,7 @@ struct OutpostView: View {
     
     @State var posdex:Posdex
     @State var outpost:DBOutpost
+    @ObservedObject var controller = OutpostController()
     
     var body: some View {
         VStack {
@@ -37,6 +38,17 @@ struct OutpostView: View {
                 Text("Model: \(outpost.model)").foregroundColor(.gray)
                 Text("Posdex: \(outpost.posdex)")
                 Text("Date: \(GameFormatters.dateFormatter.string(from:outpost.accounting))")
+            }
+            
+            if let cityData = controller.myCity {
+                Group {
+                    Text("City: \(cityData.id.uuidString)").foregroundColor(.green).font(.title3)
+                    ForEach(cityData.boxes, id:\.id) { box in
+                        Text("\(box.type.rawValue): \(box.current)/\(box.capacity)")
+                    }
+                }
+            } else {
+                Text("No city").foregroundColor(.gray).font(.title3)
             }
             
             Divider()

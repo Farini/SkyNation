@@ -39,12 +39,19 @@ class SKNPlayer:Codable, Identifiable {
     var keyPass:String?
     
     init() {
+        
+        let tokenAmount = 15
+        var givenTokens:[UUID] = []
+        for _ in 1...tokenAmount {
+            givenTokens.append(UUID())
+        }
+        
         self.id = UUID()
         self.localID = UUID()
         self.serverID = nil
         self.guildID = nil
         self.deliveryTokens = [UUID(), UUID(), UUID()]
-        self.timeTokens = [UUID(), UUID()]
+        self.timeTokens = givenTokens
         self.purchases = []
         
         self.name = "Test Player"

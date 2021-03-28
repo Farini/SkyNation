@@ -34,7 +34,6 @@ class GameSettingsController:ObservableObject {
     @Published var selectedGuildSum:GuildSummary?
     @Published var selectedGuildObj:GuildFullContent?
     
-    
     @Published var fetchedString:String?
     
     /// A list of things to load
@@ -124,16 +123,20 @@ class GameSettingsController:ObservableObject {
     
     /// Choosing Avatar
     func didSelectAvatar(card:AvatarCard) {
+        
         self.player.avatar = card.name
+        self.player.name = playerName
         
         if LocalDatabase.shared.savePlayer(player: player) {
             savedChanges = true
             hasChanges = false
         }
+        
         self.viewState = .EditingPlayer
     }
     
     // MARK: - Server Tab
+    
     func fetchUser() {
         
         guard let user = user else {

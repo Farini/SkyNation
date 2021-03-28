@@ -111,17 +111,19 @@ class Person:Codable, Identifiable, Equatable {
     var intelligence:Int
     
     var healthPhysical:Int
-//    var healthInfection:Int
     
-    // New (2020)
     // + happiness
     var happiness:Int = 50
+    
     // + teamwork
     var teamWork:Int = 50
+    
     // + fix attempts
     var fixAttempts:Int = 0
+    
     // + life expectancy
     var lifeExpectancy:Int = 75
+    
     // + food eaten recently?
     var foodEaten:[String] = []
     
@@ -148,7 +150,6 @@ class Person:Codable, Identifiable, Equatable {
             return "Idle"
         }
     }
-    
     
     /// Sets a random mood
     func randomMood(tech:[TechItems]) {
@@ -219,7 +220,7 @@ class Person:Codable, Identifiable, Equatable {
                 let dHappy = max(0, happiness - 2)
                 happiness = dHappy
             case .Lethal:
-                let dHealth = max(0, healthPhysical - 8)
+                let dHealth = max(0, healthPhysical - 6)
                 healthPhysical = dHealth
         }
         
@@ -369,6 +370,14 @@ class Person:Codable, Identifiable, Equatable {
                     // Workout
                     GameMessageBoard.shared.newAchievement(type: .experience, message: "\(name) finished a workout 💪")
                     self.healthPhysical = min(100, healthPhysical + 3)
+                    
+                    /// Randomgly get happy
+                    if Bool.random() {
+                        let happyGain = Int.random(in:1...3)
+                        let happy = min(100, happiness + happyGain)
+                        self.happiness = happy
+                    }
+                    
                     self.activity = nil
                     
                 } else if activity.activityName == "Medicating" {
@@ -431,7 +440,17 @@ class Person:Codable, Identifiable, Equatable {
         // Skills
         self.skills = []
         if Bool.random() == true && Bool.random() == true {
-            let randSkill:Skills = Skills.allCases.randomElement()!
+            
+            var avSkills:[Skills] = [Skills.Mechanic, Skills.Electric, Skills.Material]
+            if Bool.random() {
+                avSkills.append(contentsOf:[.Datacomm, .Biologic])
+                if Bool.random() {
+                    avSkills.append(contentsOf:[.Medic, .SystemOS])
+                }
+            }
+            
+            let randSkill:Skills = avSkills.randomElement()!
+            
             let skset = SkillSet(skill: randSkill, level: 1)
             self.skills.append(skset)
         } else {
@@ -448,7 +467,6 @@ class Person:Codable, Identifiable, Equatable {
         self.intelligence = newInteligence
         
         self.healthPhysical = 100
-//        self.healthInfection = 0
         
         // After init
         
@@ -478,65 +496,6 @@ class Person:Codable, Identifiable, Equatable {
     
     static func == (lhs: Person, rhs: Person) -> Bool {
         return lhs.id == rhs.id
-    }
-}
-
-class PersonGenerator {
-    
-    static var shared = PersonGenerator()
-    
-    var generated:[Person]
-    var dateGenerated:Date
-    
-    private init() {
-        
-        var generation:[Person] = []
-        for idx in 0...12 {
-            let newPerson = Person(random:true)
-            generation.append(newPerson)
-            print("Person \(idx): \(newPerson.name) generated.")
-        }
-        self.generated = generation
-        self.dateGenerated = Date()
-    }
-    
-    // Every hour, generate 12 new people?
-    func requestPeople(_ amount:Int) -> [Person] {
-        let timee = Date().timeIntervalSince(dateGenerated)
-        if timee > 3600 {
-            // Generate new
-            let newArray:[Person] = generateNew()
-            generated = newArray
-        }
-        guard amount > 0 else { return [] }
-        
-        var generation:[Person] = []
-        for idx in 1...amount {
-            print("Person # \(idx): requested.")
-            if !generated.isEmpty {
-                let newPerson = generated.last!
-                generation.append(newPerson)
-                generated.removeLast()
-            } else {
-                print("Generating New Person (not from array)")
-                let newPerson = Person(random: true)
-                generation.append(newPerson)
-            }
-            
-        }
-        return generation
-    }
-    
-    private func generateNew() -> [Person] {
-        var generation:[Person] = []
-        for idx in 0...12 {
-            let newPerson = Person(random:true)
-            generation.append(newPerson)
-            print("Person \(idx): \(newPerson.name) generated.")
-        }
-        self.generated = generation
-        self.dateGenerated = Date()
-        return generation
     }
 }
 
@@ -596,7 +555,9 @@ class HumanGenerator:NSObject{
                                                    NameGenderPair(name: "Maura Pizani", gender: .female),
                                                    NameGenderPair(name: "Jeff Johnson", gender: .male),
                                                    NameGenderPair(name: "Carl Hikken", gender: .male),
-                                                   NameGenderPair(name: "Albert Fritz", gender: .male)
+                                                   NameGenderPair(name: "Albert Fritz", gender: .male),
+                                                   NameGenderPair(name: "Candice Bril", gender: .female),
+                                                   NameGenderPair(name: "Biance Green", gender: .female)
                 ]
         return allNameGenderPairs.randomElement()!
     }
@@ -605,6 +566,7 @@ class HumanGenerator:NSObject{
         case male;
         case female;
     }
+    
     struct NameGenderPair{
         var name:String
         var gender:Gender
@@ -621,18 +583,19 @@ class HumanGenerator:NSObject{
     
     // Age
     func randomStartingAge() -> Int{
-        let lower = 18
+        let lower = 21
         let upper = 40
         return lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
     }
     
-    // + happiness
+    // Happiness
     func randomHappiness() -> Int {
         let lower = 45
-        let upper = 70
+        let upper = 75
         return lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
     }
     
+    // Teamwork
     func randomTeamWorkAdaptability() -> Int {
         let lower = 25
         let upper = 99

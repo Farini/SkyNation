@@ -420,6 +420,9 @@
 		85960B9725D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
 		85960B9825D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
 		85960B9925D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
+		85969836260E8FD400BF1860 /* OutpostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85969835260E8FD400BF1860 /* OutpostController.swift */; };
+		85969837260E8FD400BF1860 /* OutpostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85969835260E8FD400BF1860 /* OutpostController.swift */; };
+		85969838260E8FD400BF1860 /* OutpostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85969835260E8FD400BF1860 /* OutpostController.swift */; };
 		8597BBAA25BF40AB00C705A0 /* StartingWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8597BBA925BF40AB00C705A0 /* StartingWindow.swift */; };
 		859D683225DD8B9F005DD42C /* GameMessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683125DD8B9F005DD42C /* GameMessagesView.swift */; };
 		859D683325DD8B9F005DD42C /* GameMessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683125DD8B9F005DD42C /* GameMessagesView.swift */; };
@@ -619,6 +622,7 @@
 		8592824225EC74FD001233BE /* GuildView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildView.swift; sourceTree = "<group>"; };
 		8592824F25EED6EF001233BE /* SpaceVehicleNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceVehicleNode.swift; sourceTree = "<group>"; };
 		85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EDLInventoryView.swift; sourceTree = "<group>"; };
+		85969835260E8FD400BF1860 /* OutpostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutpostController.swift; sourceTree = "<group>"; };
 		8597BBA925BF40AB00C705A0 /* StartingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingWindow.swift; sourceTree = "<group>"; };
 		859D683125DD8B9F005DD42C /* GameMessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameMessagesView.swift; sourceTree = "<group>"; };
 		859D683925DD91DB005DD42C /* GameShoppingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameShoppingView.swift; sourceTree = "<group>"; };
@@ -718,8 +722,6 @@
 				8536F339258D41BA00B509D2 /* Views */,
 				8536F338258D41A500B509D2 /* Model */,
 				8536F33A258D41CB00B509D2 /* Scenes */,
-				8536F2B5258D330200B509D2 /* GameController.swift */,
-				8536F4A1258D484B00B509D2 /* SceneDirector.swift */,
 				8536F2B7258D330300B509D2 /* Assets.xcassets */,
 				8536F2B6258D330200B509D2 /* Art.scnassets */,
 			);
@@ -851,6 +853,8 @@
 		8536F33A258D41CB00B509D2 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				8536F2B5258D330200B509D2 /* GameController.swift */,
+				8536F4A1258D484B00B509D2 /* SceneDirector.swift */,
 				858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */,
 				8536F465258D481700B509D2 /* Space Station */,
 				8592824E25EED6C6001233BE /* SpaceVehicle */,
@@ -1143,6 +1147,7 @@
 			children = (
 				8592823525EC4DD3001233BE /* GuildController.swift */,
 				8517EE622605DC8800C34C54 /* CityController.swift */,
+				85969835260E8FD400BF1860 /* OutpostController.swift */,
 			);
 			path = Mars;
 			sourceTree = "<group>";
@@ -1416,6 +1421,7 @@
 				8579750F259B9E70004C54D2 /* FlipView.swift in Sources */,
 				8569A34B25A3D9590057A518 /* AirComposition.swift in Sources */,
 				8536F39A258D475D00B509D2 /* TechTree.swift in Sources */,
+				85969836260E8FD400BF1860 /* OutpostController.swift in Sources */,
 				8559201525959A4300CF5467 /* SideMenuNode.swift in Sources */,
 				8536F46D258D481700B509D2 /* CamControlNode.swift in Sources */,
 				8504A52E25C6872B00739C58 /* Tanks.swift in Sources */,
@@ -1630,6 +1636,7 @@
 				8536F417258D47D000B509D2 /* GarageView.swift in Sources */,
 				8536F35F258D475D00B509D2 /* Ingredients.swift in Sources */,
 				8536F2D1258D330300B509D2 /* AppDelegate.swift in Sources */,
+				85969837260E8FD400BF1860 /* OutpostController.swift in Sources */,
 				8504A52F25C6872B00739C58 /* Tanks.swift in Sources */,
 				8569A3C925A624A30057A518 /* LoaderView.swift in Sources */,
 				8536F44A258D47EA00B509D2 /* VehicleBuilderViewModel.swift in Sources */,
@@ -1647,6 +1654,7 @@
 				85797511259B9E70004C54D2 /* FlipView.swift in Sources */,
 				8569A34D25A3D9590057A518 /* AirComposition.swift in Sources */,
 				8536F39C258D475D00B509D2 /* TechTree.swift in Sources */,
+				85969838260E8FD400BF1860 /* OutpostController.swift in Sources */,
 				8559201725959A4300CF5467 /* SideMenuNode.swift in Sources */,
 				8536F46F258D481700B509D2 /* CamControlNode.swift in Sources */,
 				8504A53025C6872B00739C58 /* Tanks.swift in Sources */,

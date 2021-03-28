@@ -535,100 +535,38 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         //    let dbo4 = SCNDebugOptions.showLightInfluences
         //    sceneRenderer.debugOptions = [dbo2, dbo4]
         
-        var oldSchool:Bool = true
-        if let builtScene = LocalDatabase.shared.stationBuilder.scene {
-            print("--- INIT WITH BUILDER")
-            self.scene = builtScene
+        guard let builtScene = LocalDatabase.shared.stationBuilder.scene else { fatalError() }
+        
+        print("--- INIT WITH RENDERER. Size: \(sceneRenderer.currentViewport.size)")
+        
+        self.scene = builtScene
+        
+        // Camera
+        if let camera = scene.rootNode.childNode(withName: "Camera", recursively: false) as? GameCamera {
+            self.cameraNode = camera
+            renderer.pointOfView = camera.camNode
             
-            // Camera
-            if let camera = scene.rootNode.childNode(withName: "Camera", recursively: false) as? GameCamera {
-                self.cameraNode = camera
-                renderer.pointOfView = camera.camNode
-                
-                let centralNode = SCNNode()
-                centralNode.position = SCNVector3(x: 0, y: -5, z: 0)
-                camera.camNode.look(at: centralNode.position)
-                    
-                let constraint = SCNLookAtConstraint(target:centralNode)
-                constraint.isGimbalLockEnabled = true
-                constraint.influenceFactor = 0.1
-                
-                SCNTransaction.begin()
-                SCNTransaction.animationDuration = 3.0
-                camera.camNode.constraints = [constraint]
-                SCNTransaction.commit()
-                
-                let waiter = SCNAction.wait(duration: 4.0)
-                let rotate = SCNAction.rotate(by: CGFloat(Double.pi / 8), around: SCNVector3(x: 0, y: 1, z: 0), duration: 2)
-                rotate.timingMode = .easeOut
-                let sequence = SCNAction.sequence([waiter, rotate])
-                
-                camera.runAction(sequence) { // cam.runAction(sequence) {
-                    print("Action complete")
-//                    print("CamChild Angles: \(self.cameraNode!.eulerAngles)") // print("CamChild Angles: \(camChild.eulerAngles)")
-                    //                print("CamOrbit Angles: \(cam.eulerAngles)")
-                    //                camChild.look(at: SCNVector3(0, -5, 0))
-                    print("CamChild LOOK @ \(camera.eulerAngles)") // print("CamChild LOOK @ \(camChild.eulerAngles)")
-                }
-            }
-            
-            /*
-            let cam = scene.rootNode.childNode(withName: "cameraOrbit", recursively: false)!
-            self.cameraNode = cam
-            let camChild = cam.childNodes.first!
-            
-            renderer.pointOfView = camChild
-            camChild.look(at: SCNVector3(0, -5, 0))
-            
-            print("CamChild Angles: \(camChild.eulerAngles)")
-            print("CamOrbit Angles: \(self.cameraNode!.eulerAngles)")
-            
-            
-            // --- SMOOTH LOOK AT TARGET
-            // https://stackoverflow.com/questions/47973953/animating-scnconstraint-lookat-for-scnnode-in-scenekit-game-to-make-the-transi
-            // influenceFactor and animationDuration work somehow together
             let centralNode = SCNNode()
             centralNode.position = SCNVector3(x: 0, y: -5, z: 0)
+            camera.camNode.look(at: centralNode.position)
+            
             let constraint = SCNLookAtConstraint(target:centralNode)
             constraint.isGimbalLockEnabled = true
             constraint.influenceFactor = 0.1
             
             SCNTransaction.begin()
             SCNTransaction.animationDuration = 3.0
-            camChild.constraints = [constraint]
+            camera.camNode.constraints = [constraint]
             SCNTransaction.commit()
-            */
             
-            // Great, now you can start the scene in the front view, go to camera 2 and the constraint will still be there.
-            // we dont need a parent node for the camera anymore
-            // just move it to any position in world cordinates, recalculate the constraints (depending on z axis, or camera number)
+            let waiter = SCNAction.wait(duration: 4.0)
+            let rotate = SCNAction.rotate(by: CGFloat(Double.pi / 8), around: SCNVector3(x: 0, y: 1, z: 0), duration: 2)
+            rotate.timingMode = .easeOut
+            let sequence = SCNAction.sequence([waiter, rotate])
             
-            // end smooth look
-            
-//            let waiter = SCNAction.wait(duration: 8.0)
-//            let rotate = SCNAction.rotate(by: CGFloat(Double.pi / 8), around: SCNVector3(x: 0, y: 1, z: 0), duration: 3.0)
-//            rotate.timingMode = .easeOut
-//            let sequence = SCNAction.sequence([waiter, rotate])
-//
-//            cameraNode?.runAction(sequence) { // cam.runAction(sequence) {
-//                print("Action complete")
-//                print("CamChild Angles: \(self.cameraNode!.eulerAngles)") // print("CamChild Angles: \(camChild.eulerAngles)")
-////                print("CamOrbit Angles: \(cam.eulerAngles)")
-////                camChild.look(at: SCNVector3(0, -5, 0))
-//                print("CamChild LOOK @ \(self.cameraNode!.eulerAngles)") // print("CamChild LOOK @ \(camChild.eulerAngles)")
-//            }
-            
-            oldSchool = false
-            
-            
-            
-        } else {
-            print("--- INIT THE OLD WAY")
-            scene = SCNScene(named: "Art.scnassets/SpaceStation/SpaceStation.scn")!
-            
-            // Camera
-            let _ = scene.rootNode.childNode(withName: "Camera", recursively: false)!
-//            self.cameraNode = cam
+            camera.runAction(sequence) { // cam.runAction(sequence) {
+                print("CamChild LOOK @ \(camera.eulerAngles)") // print("CamChild LOOK @ \(camChild.eulerAngles)")
+            }
         }
         
         
@@ -643,64 +581,53 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
         self.modules = station?.modules ?? []
         
-        if oldSchool {
-            // Load the scene
-            self.loadStationScene()
-        } else {
-            
-            // New Way
-            
-            // NEWS
-            // Check Activities
-            var newsLines:[String] = []
-            if gameScene == .SpaceStation {
-                if let labs = station?.labModules {
-                    for lab in labs {
-                        print("*** Found lab: \(lab.id)")
-                        if let activity = lab.activity {
-                            print("*** Found Activity: \(activity.activityName)")
-                            if activity.dateEnds.compare(Date()) == .orderedAscending {
-                                let descriptor = "🔬 Completed Lab activities. Check Lab Modules."
-                                GameMessageBoard.shared.newAchievement(type: .experience, message: "🔬 Completed Lab activitiy: \(activity.activityName)")
-                                //newAchievement(type: .experience, qtty: 2, message: "🔬 Completed Lab activitiy \(activity.activityName)")
-                                newsLines.append(descriptor)
-                            } else {
-                                let descriptor = "⏱ In progress... Lab activity \(activity.activityName). \(activity.dateEnds.timeIntervalSince(Date()))"
-                                newsLines.append(descriptor)
-                            }
-                        }
-                    }
-                }
-                if let habs = station?.habModules {
-                    let people = habs.flatMap({$0.inhabitants})
-                    for person in people {
-                        if let activity = person.activity {
-                            if activity.dateEnds.compare(Date()) == .orderedAscending {
-                                let moji = person.gender == "male" ? "🙋‍♂️":"🙋‍♀️"
-                                let descriptor = "\(moji) \(person.name) completed activity \(activity.activityName)."
-                                GameMessageBoard.shared.newAchievement(type: .experience, message: descriptor) //newAchievement(type: .experience, qtty: 1, message: descriptor)
-                                newsLines.append(descriptor)
-                            }
+        // NEWS
+        // Check Activities
+        var newsLines:[String] = []
+        if gameScene == .SpaceStation {
+            if let labs = station?.labModules {
+                for lab in labs {
+                    print("*** Found lab: \(lab.id)")
+                    if let activity = lab.activity {
+                        print("*** Found Activity: \(activity.activityName)")
+                        if activity.dateEnds.compare(Date()) == .orderedAscending {
+                            let descriptor = "🔬 Completed Lab activity - Check Lab Modules."
+                            newsLines.append(descriptor)
+                        } else {
+                            let descriptor = "⏱ Lab: \(activity.activityName). \(Int(activity.dateEnds.timeIntervalSince(Date()))) s"
+                            newsLines.append(descriptor)
                         }
                     }
                 }
             }
-            
-            var newsDelay = 3.0
-            if !newsLines.isEmpty {
-                for line in newsLines {
-                    print("*** NEWS ***  (\(newsLines.count)")
-                    let timeDelay = DispatchTime.now() + newsDelay
-                    DispatchQueue.main.asyncAfter(deadline: timeDelay) {
-                        self.stationOverlay.generateNews(string: line)
+            if let habs = station?.habModules {
+                let people = habs.flatMap({$0.inhabitants})
+                for person in people {
+                    if let activity = person.activity {
+                        if activity.dateEnds.compare(Date()) == .orderedAscending {
+                            let moji = person.gender == "male" ? "🙋‍♂️":"🙋‍♀️"
+                            let descriptor = "\(moji) \(person.name) completed activity \(activity.activityName)."
+                            newsLines.append(descriptor)
+                        }
                     }
-                    newsDelay += 5.0
                 }
             }
-            
-            // Tell SceneDirector that scene is loaded
-            SceneDirector.shared.controllerDidLoadScene(controller: self)
         }
+        
+        var newsDelay = 3.0
+        if !newsLines.isEmpty {
+            for line in newsLines {
+                print("*** NEWS ***  (\(newsLines.count)")
+                let timeDelay = DispatchTime.now() + newsDelay
+                DispatchQueue.main.asyncAfter(deadline: timeDelay) {
+                    self.stationOverlay.generateNews(string: line)
+                }
+                newsDelay += 5.0
+            }
+        }
+        
+        // Tell SceneDirector that scene is loaded
+        SceneDirector.shared.controllerDidLoadScene(controller: self)
         
         
         sceneRenderer.delegate = self
@@ -714,10 +641,10 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         } else {
             print("cannot find audio file")
         }
-        
     }
     
     /// Loads the **Station** Scene
+    /*
     func loadStationScene() {
         
          //builder.modules //builder.modules
@@ -855,6 +782,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         // Tell SceneDirector that scene is loaded
         SceneDirector.shared.controllerDidLoadScene(controller: self)
     }
+    */
     
     func loadLastBuildItem() {
         print("Loading last build item")

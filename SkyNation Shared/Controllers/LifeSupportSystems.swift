@@ -52,10 +52,7 @@ class LSSModel:ObservableObject {
     @Published var consumptionModules:Int
     /// Energy Produced
     @Published var energyProduction:Int
-    
-    
-    
-    
+  
     // Accounting
     
     @Published var accountDate:Date
@@ -100,7 +97,8 @@ class LSSModel:ObservableObject {
         }
         
         // Peripherals
-        self.peripherals = myStation.peripherals
+        self.peripherals = myStation.peripherals.sorted(by: { $0.peripheral.rawValue.compare($1.peripheral.rawValue) == .orderedAscending })
+        
         let workingPeripherals = myStation.peripherals.filter({ $0.isBroken == false && $0.powerOn == true })
         let energyFromPeripherals:Int = workingPeripherals.map({$0.peripheral.energyConsumption}).reduce(0, +)
         self.consumptionPeripherals = energyFromPeripherals
@@ -111,14 +109,12 @@ class LSSModel:ObservableObject {
         // Modules Consumption
         let modulesCount = myStation.labModules.count + myStation.habModules.count + myStation.bioModules.count
         
-        // FIXME: - Module Consumption (Update)
         let modulesConsume = modulesCount * GameLogic.energyPerModule
         self.consumptionModules = modulesConsume
         deltaZ -= modulesConsume
         
         self.batteriesDelta = deltaZ
         
-        // FIXME: - Adjust Air variables (Update)
         // Air
         let reqAir = station.calculateNeededAir()
         self.requiredAir = reqAir
@@ -132,13 +128,12 @@ class LSSModel:ObservableObject {
         self.levelCO2 = (Double(theAir.co2) / Double(theAir.getVolume())) * 100
         
         // Tanks + Water
-        self.tanks = myStation.truss.tanks
+        self.tanks = myStation.truss.tanks.sorted(by: { $0.type.rawValue.compare($1.type.rawValue) == .orderedAscending })
         let waterTanks:[Tank] = myStation.truss.tanks.filter({ $0.type == .h2o })
-        
         self.liquidWater = waterTanks.map({ $0.current }).reduce(0, +)
         
         // Ingredients (Boxes)
-        self.boxes = myStation.truss.extraBoxes
+        self.boxes = myStation.truss.extraBoxes.sorted(by: { $0.type.rawValue.compare($1.type.rawValue) == .orderedAscending })
         
         // People
         self.inhabitants = myStation.habModules.map({ $0.inhabitants.count }).reduce(0, +) //myStation.people.count
@@ -521,10 +516,8 @@ class LSSModel:ObservableObject {
     /// Runs the accounting (don't save)
     func runAccounting() {
         print("Going to run accounting...")
-        station.runAccounting()
         updateDisplayVars()
         accountingProblems = LocalDatabase.shared.accountingProblems
-//        accountingReport = station.accounting
     }
     
     /// Save Station

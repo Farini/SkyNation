@@ -143,15 +143,17 @@ class LocalDatabase {
         
         if !FileManager.default.fileExists(atPath: finalUrl.path){
             print("File doesn't exist")
-//            return nil
             return []
         }
+        
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .secondsSince1970
         
         do{
             let theData = try Data(contentsOf: finalUrl)
             
-            do{
-                let localData:[GameMessage] = try JSONDecoder().decode([GameMessage].self, from: theData)
+            do {
+                let localData:[GameMessage] = try decoder.decode([GameMessage].self, from: theData)
                 return localData
                 
             }catch{
@@ -318,9 +320,11 @@ class LocalDatabase {
     // MARK: - Player
     private static let playerFile = "Player.json"
     func savePlayer(player:SKNPlayer) -> Bool {
-        print("Save player not yet implemented")
+        
+        self.player = player
         
         let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
         encoder.outputFormatting = .prettyPrinted
         
         guard let encodedData:Data = try? encoder.encode(player) else { fatalError() }
@@ -331,7 +335,7 @@ class LocalDatabase {
         bcf.countStyle = .file
         
         let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
-        print("Saving Vehicles Size: \(dataSize)")
+        print("Saving Player Size: \(dataSize)")
         
         let fileUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.playerFile)
         
@@ -383,10 +387,8 @@ class LocalDatabase {
     // MARK: - In Memory (Fetched)
     // ===========================
     
-//    var city:City?
-    
     // Accounting Problems
-    var accountingProblems:[String] = []    // Set by Station.runAccounting
+    var accountingProblems:[String] = []
     
     // MARK: - Data Handling
     
@@ -418,6 +420,7 @@ class LocalDatabase {
             self.station = Station(stationBuilder: sBuilder)
         }
         
+        // Messages
         self.gameMessages = LocalDatabase.loadMessages()
         
         // Vehicles

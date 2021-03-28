@@ -56,6 +56,7 @@ class CityController:ObservableObject {
                             self.cityData = cData
                             self.viewState = .mine(cityData: cData)
                             self.getArrivedVehicles()
+                            MarsBuilder.shared.myCityData = cData
                         } else {
                             print("⚠️ Error: \(error?.localizedDescription ?? "n/a")")
                         }

@@ -43,19 +43,16 @@ class GameMessageBoard {
         messages = LocalDatabase.shared.gameMessages
     }
     
-    // func newAchievement(type:GameAchievementType, qtty:Int?, message:String?) {
     func newAchievement(type:GameAchievementType, message:String?) {
-        
-        self.messages = LocalDatabase.shared.gameMessages
-        
+
         let theMessage = message ?? "Achievement \(type.preString())."
-        let newMessage = GameMessage(type: .Achievement, message: theMessage, rewards: nil) //GameMessage(type: .Achievement, date: Date(), message: theMessage, ingredientRewards: [.Food:10])
-        messages.append(newMessage)
-        
+        let newMessage = GameMessage(type: .Achievement, message: theMessage, rewards: nil)
+        self.messages.append(newMessage)
+
         // Save
-        LocalDatabase.shared.gameMessages = messages
+        LocalDatabase.shared.gameMessages = self.messages
         LocalDatabase.shared.saveMessages()
-        
+
         // Increase Player XP
         if let player = LocalDatabase.shared.player {
             player.experience += 1

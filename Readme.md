@@ -92,131 +92,80 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - Difficulty Count: 152
 - Done Difficulty: 52/152 = 34.21%
 
-#  Backlog
-Items being worked on
-
 ## 📝 Doing - Present
 
-
-- [ ] Remake Bio View
-
-- [ ] Garage simulation button -> Person activity -> Garage xp
-- [X] Post Launch Scene
-- [X] Server SpaceVehicle
-- [X] Bring Scene in - Desktop:SpaceVehilce2.dae
-- [X] Model Upgrade
-- [X] Player -> Avatar
-- [X] Player. var avatar (required)
-- [X] Skin -> convert from String to Skin type
-- [X] Accounting (problems + notes)
-- [X] SpaceVehicle. var boxes (required)
-- [X] Fix Server Tab View
-- [X] Fix Settings Tab View
-- [X] Delete Person from GameGenerator after hiring
-- [X] Increase the chances of generating a .handy `person`
-- [X] iPad multi-touch bug fixed
-- [X] Antenna bug: not making more money in higher levels
-
-- [X] LSS View -> Fix peripheral Selection bug
-- [X] LSS View -> Empty Tanks and Boxes must have a way to define type.
-- [X] LSS View -> Let wasteWater, and wasteSolid be an **orderable** product (empty)
-- [X] 8/8 Recoding Accounting system
-- [X] Make sure Solid Waste and Liquid Waste come in empty
-- [X] LSS View -> Resources need Icon
-- [X] LSS View -> Make Peripheral `Power Off` button
-- [ ] LSS View -> Better Station Accounting & Reporting + Accounting Bug Fix
-- [ ] LSS View -> Account & Reporting inside a ScrollView
-
+- [X] GameMessages showing strange dates
 - [ ] Game Store Improvements
-- [ ] GameMessages showing strange dates
 - [ ] Use Fibonacci for Peripheral Upgrades
 - [ ] Make sure that Air adjustments AND Oxygen adjustments are working - Accounting)
 - [ ] Make all Tutorial points (Questionmarks) work.
-
+- [ ] New Modules not fully available after Tech research. 
 - [ ] Activity name enum?
 - [ ] BioBox DNA enum
+- [ ] Bio View - DNA animation
+- [ ] Garage simulation button -> Person activity -> Garage xp || OR || just delete it
+- [ ] Mars Button -> Display Guild Settings, or Server down, if there is no info. Only a Player that has a SpaceVehicle built
 
 - [ ] 1/8 Soundtrack + FX
-- [X] Add 1 Melody for Soundtrack
 - [ ] Have 3 Background music
 - [ ] Add a couple of SoundFX
 - [ ] GameSettings -> Sound
 - [ ] Gamesettings -> SoundFX
+- [ ] Display Person's recently eaten
 
 - [ ] Icons
-    - [X] Water Filter
-    - [X] biosolids
-    - [X] app (game) icon
-    - [X] electrolizer
-    - [X] waste water
-    - [X] waste solid
-    - [X] silica
     - [ ] SpaceVehicle engine icons
+    - [ ] iOS app icon
 
 - [ ] 13/21 (Feb.17) Station Scene Improvements - Started: 02/08/2021
-    - [X] Truss View creation
-    - [X] Solar Panel positions
-    - [X] Control where each solar panel goes
-    - [X] 1/3 Notify scene when tech is ready (not working)
-    - [X] Update Scene
-    - [X] Scene is showing Serial builder ahead of time. Check isUnlocked vs isResearched
-    - [X] Roboarm animation
-    - [X] Unbuild Module
-    - [X] Choose Skin + Persistency
-    - [X] GameCamera: A better camera control
-    - [X] Build Dock 3D Model
-    - [X] Control where each Radiator goes
-    - [X] Straighten Radiator
-    - [X] Restore Delivery Animations
-    - [X] Implement Dock 3d model
-    - [X] 5 Models of Antenna
-    - [X] Show  News
     - [ ] Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
     - [ ] Improve Background HDRI image
     - [ ] Make the Earth bright again?
     - [ ] Add TechItems updates to StationBuilder
     
-    
 - [ ] 6/13 Scene Overlay
-    - [X] Player
-    - [X] Camera Control
-    - [X] LSS - Air Control
-    - [X] Improve Player View 
-    - [X] Mars
-    - [X] Vehicles Table
-    - [X] Better framing
-    - [X] Slider that controls Scene camera's X axis
-    - [X] News (Centered)
-    - [X] Fix iOS Colors
-    - [X] Coin Icon
-    - [X] Bring Regular Camera Closer to Scene
-    - [X] Helmet Icon - Time Token
     - [ ] Add colors / shaders
+    - [ ] Fix buttons getting green and not returning to white
     - [ ] 1/3 Camera options + animations
-        - [X] Perspective view
-        - [X] Garage View - CameraBack
-        - [X] Front View - CameraFront
-        - [X] LOOK@ Camera constraints
         - [ ] Adjust camera LOOK@ constraints
         
 - [ ] 7/8 Garage View Improvements
-    - [X] Time to create SpaceVehicle
-    - [X] Circular progress View
-    - [X] Transfer Building Vehicles to Built Vehicles automatically
-    - [X] Vehicle Row improvements
-    - [X] Better Vehicle Assembly
-    - [X] Post Launch View
-    - [X] GameButtons
-    - [X] Descent Inventory View
-    - [X] Add StorageBox to Vehicle Data
-    - [X] Post Launch Scene
     - [ ] Space Vehicle Registration (when launch)
     - [ ] Space Vehicle Validation (when arriving (orbit))
     
-
 - [ ] 12/13 Basic Views
     - [ ] Error messages
     
+## 📝 To Do - Future
+Grab things from this list as you go along.
+
+- [X] 5/8 Accounting
+    - [ ] Vehicle Accounting
+    - [ ] Vehicle Accounting View
+    - [ ] Mars Accounting
+
+- [ ] 8/21 Server
+    - [X] Server test address
+    - [X] Player Object(s)
+    - [X] Guilds
+    - [ ] Free Deliveries
+    - [ ] Available Humans for delivery
+    - [ ] Token Validation
+
+- [ ] 8/13 Data Model
+    - [ ] 0/8 Mars Model
+    - [ ] 5/8 TechTree improvements (Tree improved, Add Antenna upgrades, Charge ingredients, electricity, Select Humans, Fix Time)
+        - [X] 22 Items
+        - [ ] Antenna Updates
+        - [ ] Improve and use PlayerObject
+        
+- [ ] 1/3 iOS View Presentation
+    - [X] Test iPhone View sizes
+    - [ ] Adjust iPhone View sizes
+
+- [ ] 1/13 Mars Scene
+- [ ] 0/21 Mars Views & Controllers
+
 ## Wishlist
 Features that are requested, but are not required to launch the game
 
@@ -229,47 +178,6 @@ Features that are requested, but are not required to launch the game
 - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
 - [ ] Plugins
 - [ ] Person var stress?
-
-## 📝 To Do - Future
-Grab things from this list as you go along.
-
-- [X] 5/8 Accounting
-    - [X] Basic Accounting (testable)
-    - [X] Person's happiness (if cuppola, airlock, etc.)
-    - [X] View Accounting Problems
-    - [X] Accounting Problems
-    - [X] Accounting Report object
-    - [ ] Vehicle Accounting View
-
-- [ ] 0/21 Server
-    - [ ] Server test address
-    - [ ] Player Object(s)
-    - [ ] Free Deliveries
-    - [ ] Available Humans for delivery
-    - [ ] Guilds
-    - [ ] Token Validation
-
-- [ ] 8/13 Data Model
-    - [X] Accounting Adjustments
-    - [ ] 0/8 Mars Model
-    - [ ] 5/8 TechTree improvements (Tree improved, Add Antenna upgrades, Charge ingredients, electricity, Select Humans, Fix Time)
-        - [X] 22 Items
-        - [ ] Antenna Updates
-        - [ ] Improve and use PlayerObject
-        
-
-        
-- [ ] 1/3 iOS View Presentation
-    - [X] Present view on iPad
-    - [X] View dismissal
-    - [X] Test iPhone View sizes
-    - [ ] Adjust iPhone View sizes
-
-
-- [ ] 1/13 Create Mars Scene
-- [ ] 0/21 Mars Views & Controllers
-- [ ] 0/13 Create Server
-- [ ] 0/3 Create Loading initial screen
 
 
 ## 📝 Done - Past
@@ -380,3 +288,91 @@ Grab things from this list as you go along.
 - [X] People generator - every hour. Pay for more. And generate Materials engineer first
 - [X] Freebies Generator
 - [X] Where to display freebies? -> Accounting, add new game message (not achievement)
+
+[3/1/2021 - 3/28/2021]
+
+- [X] Post Launch Scene
+- [X] Server SpaceVehicle
+- [X] Bring Scene in - Desktop:SpaceVehilce2.dae
+- [X] Model Upgrade
+- [X] Player -> Avatar
+- [X] Player. var avatar (required)
+- [X] Skin -> convert from String to Skin type
+- [X] Accounting (problems + notes)
+- [X] SpaceVehicle. var boxes (required)
+- [X] Fix Server Tab View
+- [X] Fix Settings Tab View
+- [X] Delete Person from GameGenerator after hiring
+- [X] Increase the chances of generating a .handy `person`
+- [X] iPad multi-touch bug fixed
+- [X] Antenna bug: not making more money in higher levels
+- [X] LSS View -> Fix peripheral Selection bug
+- [X] LSS View -> Empty Tanks and Boxes must have a way to define type.
+- [X] LSS View -> Let wasteWater, and wasteSolid be an **orderable** product (empty)
+- [X] 8/8 Recoding Accounting system
+- [X] Make sure Solid Waste and Liquid Waste come in empty
+- [X] LSS View -> Resources need Icon
+- [X] LSS View -> Make Peripheral `Power Off` button
+- [X] LSS View -> Better Station Accounting & Reporting + Accounting Bug Fix
+- [X] LSS View -> Sort Tanks and Boxes by type
+- [X] LSS View -> Tutorial View
+- [X] LSS View -> Account & Reporting inside a ScrollView
+- [X] Icons - Water Filter
+- [X] Icons - biosolids
+- [X] Icons - app (game) icon
+- [X] Icons - electrolizer
+- [X] Icons - waste water
+- [X] Icons - waste solid
+- [X] Icons - silica
+- [X] Add 1 Melody for Soundtrack
+- [X] Truss View creation
+- [X] Solar Panel positions
+- [X] Control where each solar panel goes
+- [X] 1/3 Notify scene when tech is ready (not working)
+- [X] Update Scene
+- [X] Scene is showing Serial builder ahead of time. Check isUnlocked vs isResearched
+- [X] Roboarm animation
+- [X] Unbuild Module
+- [X] Choose Skin + Persistency
+- [X] GameCamera: A better camera control
+- [X] Build Dock 3D Model
+- [X] Control where each Radiator goes
+- [X] Straighten Radiator
+- [X] Restore Delivery Animations
+- [X] Implement Dock 3d model
+- [X] 5 Models of Antenna
+- [X] Show  News
+- [X] Player
+- [X] Camera Control
+- [X] LSS - Air Control
+- [X] Improve Player View 
+- [X] Mars
+- [X] Vehicles Table
+- [X] Better framing
+- [X] Slider that controls Scene camera's X axis
+- [X] News (Centered)
+- [X] Fix iOS Colors
+- [X] Coin Icon
+- [X] Bring Regular Camera Closer to Scene
+- [X] Helmet Icon - Time Token
+- [X] Perspective view
+- [X] Garage View - CameraBack
+- [X] Front View - CameraFront
+- [X] LOOK@ Camera constraints
+- [X] Time to create SpaceVehicle
+- [X] Circular progress View
+- [X] Transfer Building Vehicles to Built Vehicles automatically
+- [X] Vehicle Row improvements
+- [X] Better Vehicle Assembly
+- [X] Post Launch View
+- [X] GameButtons
+- [X] Descent Inventory View
+- [X] Add StorageBox to Vehicle Data
+- [X] Post Launch Scene
+- [X] Basic Accounting (testable)
+- [X] Person's happiness (if cuppola, airlock, etc.)
+- [X] View Accounting Problems
+- [X] Accounting Problems
+- [X] Accounting Report object
+- [X] Present view on iPad
+- [X] iPad View dismissal

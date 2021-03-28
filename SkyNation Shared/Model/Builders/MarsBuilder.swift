@@ -101,20 +101,20 @@ class MarsBuilder {
     }
     
     // Request My City
-    func getMyCityInfo() {
-        
-        if let myCity = myDBCity {
-            SKNS.loadCity(posdex: Posdex(rawValue:myCity.posdex)!) { (cityData, error) in
-                if let cityData = cityData {
-                    print("Updating my CityData object")
-                    self.myCityData = cityData
-                } else {
-                    print("Could not update my citydata. Error: \(error?.localizedDescription ?? "n/a")")
-                    self.myCityData = nil
-                }
-            }
-        }
-    }
+//    func getMyCityInfo() {
+//
+//        if let myCity = myDBCity {
+//            SKNS.loadCity(posdex: Posdex(rawValue:myCity.posdex)!) { (cityData, error) in
+//                if let cityData = cityData {
+//                    print("Updating my CityData object")
+//                    self.myCityData = cityData
+//                } else {
+//                    print("Could not update my citydata. Error: \(error?.localizedDescription ?? "n/a")")
+//                    self.myCityData = nil
+//                }
+//            }
+//        }
+//    }
     
     // Load objects that represent outposts, cities, etc.
     func loadSceneObjects() {
@@ -177,6 +177,5 @@ class MarsBuilder {
         let nextScene = SCNScene(named: "Art.scnassets/Mars/GuildMap.scn")
         return nextScene
     }
-    
     
 }

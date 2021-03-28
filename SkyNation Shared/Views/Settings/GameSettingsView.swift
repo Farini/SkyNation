@@ -142,14 +142,6 @@ struct GameSettingsView: View {
                     }
                     
                     Group {
-//                        HStack {
-//                            Text("Enter name: ")
-//                            TextField("Name:", text: $controller.playerName)
-//                                .textFieldStyle(DefaultTextFieldStyle())
-//                                .padding(4)
-//                                .frame(width: 100)
-//                                .cornerRadius(8)
-//                        }
                         
                         ForEach(controller.loadedList, id:\.self) { litem in
                             Text(litem).foregroundColor(.gray)
@@ -180,24 +172,19 @@ struct GameSettingsView: View {
             
             // Buttons Bar
             HStack {
-                if controller.isNewPlayer {
-                    Button("Create Player") {
-//                        controller.createPlayer()
-                        print("command deprecated")
-                    }
-                    .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
-                } else {
-//                    if controller.hasChanges {
-                        Button("Save Player") {
-                            controller.savePlayer()
-                        }
-                        .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
-                        .disabled(!controller.hasChanges)
+//                if controller.isNewPlayer {
+//                    Button("Create Player") {
+////                        controller.createPlayer()
+//                        print("command deprecated")
 //                    }
-                    
-                }
-                
-                
+//                    .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
+//                } else {
+//                        Button("Save Player") {
+//                            controller.savePlayer()
+//                        }
+//                        .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
+//                        .disabled(!controller.hasChanges)
+//                }
                 if (!inGame) {
                     Button("Start Game") {
                         let note = Notification(name: .startGame)
@@ -205,9 +192,13 @@ struct GameSettingsView: View {
                     }
                     .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
                     .disabled(controller.startGameDisabled())
+                } else {
+                    Button("Save") {
+                        controller.savePlayer()
+                    }
+                    .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
+                    .disabled(!controller.hasChanges)
                 }
-                
-                
             }
         }
         .padding()
@@ -264,50 +255,6 @@ struct GameSettingsView: View {
         
         return nil
     }
-    
-//    func generateBarcode(from uuid: UUID) -> Image? {
-//        let data = uuid.uuidString.prefix(8).data(using: String.Encoding.ascii)
-//
-//        if let filter = CIFilter(name: "CICode128BarcodeGenerator") {
-//            filter.setValue(data, forKey: "inputMessage")
-//
-//            if let output:CIImage = filter.outputImage {
-//
-//                if let inverter = CIFilter(name:"CIColorInvert") {
-//
-//                    inverter.setValue(output, forKey:"inputImage")
-//
-//                    if let invertedOutput = inverter.outputImage {
-//                        let rep = NSCIImageRep(ciImage: invertedOutput)
-//                        let nsImage = NSImage(size: rep.size)
-//                        nsImage.addRepresentation(rep)
-//                        return Image(nsImage:nsImage)
-//                    }
-//
-//                } else {
-//                    let rep = NSCIImageRep(ciImage: output)
-//                    let nsImage = NSImage(size: rep.size)
-//                    nsImage.addRepresentation(rep)
-//
-//                    return Image(nsImage:nsImage)
-//                }
-//
-//
-//            }
-//
-//
-////            return NSImage(ciImage: filter.outputImage)
-////            let transform = CGAffineTransform(scaleX: 3, y: 3)
-////            let out = filter.outputImage?.transformed(by:transform)
-////
-////            if let output = filter.outputImage?.transformed(by: transform) {
-////                let image = NSImage(ciImage:output)
-////                return image
-////            }
-//        }
-//
-//        return nil
-//    }
     
 }
 

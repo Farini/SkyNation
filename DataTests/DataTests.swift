@@ -41,37 +41,16 @@ class DataTests: XCTestCase {
         
         print("\n --- Accounting Start ---")
         
-        
         GameSettings.shared.debugAccounting = true
         let station = LocalDatabase.shared.station
         
         // Part 1 (Validation)
         XCTAssertNotNil(station)
         
-        //        let tsResult = station!.acc
-        //        print("Timesheet result: \(tsResult.loops)")
-        
         station?.accountingLoop(recursive: true) { errors in
             print("Errors: \(errors)")
             print("code completion")
         }
-        
-        //        station?.runAccounting()
-        //
-        //        let report = station?.accounting
-        //        print("\n [Accounting report] ")
-        //        for item in report?.problems ?? [] {
-        //            print(" +⚠️ \(item)")
-        //        }
-        //        for item in report?.notes ?? [] {
-        //            print(" +[N] \(item)")
-        //        }
-        //        for item in report?.humanNotes ?? [] {
-        //            print(" +[H] \(item)")
-        //        }
-        //        for item in report?.peripheralNotes ?? [] {
-        //            print(" +[P] \(item)")
-        //        }
         
         print("\n --- Accounting End ---")
     }
@@ -81,21 +60,14 @@ class DataTests: XCTestCase {
     func testAntennaLevel() throws {
         
         let antenna = PeripheralObject(peripheral: .Antenna)
-//        let level = antenna.level
-        
         let fixedProfits:Int = 300
-        
         print("\n\n\t Antenna Profits ======== ")
-        
         while antenna.level < 5 {
-            
             let variableProfits:Int = 80 * GameLogic.fibonnaci(index: antenna.level + 1)
             let totalProfits = fixedProfits + variableProfits
-            
             print("Antenna level:\(antenna.level)\t = \(fixedProfits) + \(variableProfits) = \(totalProfits)")
             antenna.level += 1
         }
-        
     }
     
     func testOutposts() throws {
@@ -118,7 +90,7 @@ class DataTests: XCTestCase {
         while let job = op2.getNextJob() {
             print("Next Job @lvl: \(op2.level)")
             print("Ingredients")
-//            print(job.wantedIngredients)
+
             for (ing, val) in job.wantedIngredients {
                 print("\t \(ing.rawValue):\(val)")
             }
@@ -140,7 +112,7 @@ class DataTests: XCTestCase {
         while let job = op3.getNextJob() {
             print("Next Job @lvl: \(op3.level)")
             print("Ingredients")
-            //            print(job.wantedIngredients)
+
             for (ing, val) in job.wantedIngredients {
                 print("\t \(ing.rawValue):\(val)")
             }
@@ -162,7 +134,7 @@ class DataTests: XCTestCase {
         while let job = op4.getNextJob() {
             print("Next Job @lvl: \(op4.level)")
             print("Ingredients")
-            //            print(job.wantedIngredients)
+
             for (ing, val) in job.wantedIngredients {
                 print("\t \(ing.rawValue):\(val)")
             }
@@ -178,14 +150,11 @@ class DataTests: XCTestCase {
             
             op4.level += 1
         }
-        
-        
-        
     }
     
     // MARK: - Humans
     
-    func testWillingnessToStudy() {
+    func testWillingnessToStudy() throws {
         
         for idx in 0...25 {
             let p1 = Person(random: true)
