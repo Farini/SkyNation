@@ -51,10 +51,12 @@ class LocalDatabase {
     }
     static func saveGenerators(gameGen:GameGenerators) {
         
+        // Encode to JSON file
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .secondsSince1970
         encoder.outputFormatting = .prettyPrinted
         
+        // Use Base64 to add a layer of security
         guard let encodedData:Data = try? encoder.encode(gameGen).base64EncodedData() else { fatalError() }
         
         let bcf = ByteCountFormatter()
@@ -64,7 +66,7 @@ class LocalDatabase {
         let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
         print("Saving Game Size: \(dataSize)")
         
-        let fileUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.generatorsFile)
+        let fileUrl = LocalDatabase.folder.appendingPathComponent(generatorsFile)
         
         if !FileManager.default.fileExists(atPath: fileUrl.path) {
             FileManager.default.createFile(atPath: fileUrl.path, contents: encodedData, attributes: nil)

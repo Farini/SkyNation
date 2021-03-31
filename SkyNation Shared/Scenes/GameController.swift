@@ -195,8 +195,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     func hitNode2D(node:SKNode) {
         
-        let glow = SKAction.colorize(with: SCNColor.systemRed, colorBlendFactor: 0.5, duration: 1.0)
-        let fade = glow.reversed()
+        let glow = SKAction.colorize(with: SCNColor.systemRed, colorBlendFactor: 0.75, duration: 0.5)
+        let fade = SKAction.colorize(with: SCNColor.white, colorBlendFactor: 1.0, duration: 0.5)
         let sequence = SKAction.sequence([glow, fade])
         
         // Images
@@ -225,13 +225,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             }
             
             if sprite.name == "CameraIcon" {
-                print("Clicked on camera.")
-                print("Use this function to pull a camera menu")
-                print("In that menu, the user is supposed to control the camera")
-                print("it should have a slider (to control camera's Z position)")
-                print("it should also have 2 buttons for rotation (along the Y axis)")
-                print("and another button to see the garage (if scene == .station)")
-                print("[End of Camera menu]\n---- ")
                 camToggle.toggle()
             }
             
@@ -270,16 +263,18 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 // Otherwise, load prospect guild selector, or prospect terrain selector?
                 
                 let mars = MarsBuilder.shared
-//                if let newScene = mars.loadScene() {
-                sceneRenderer.present(mars.scene, with: .doorsCloseVertical(withDuration: 1.25), incomingPointOfView: nil) {
-                    self.scene = mars.scene
+                if let guild = mars.guild {
+                    print("Found Guild: \(guild.name)")
+                    sceneRenderer.present(mars.scene, with: .doorsCloseVertical(withDuration: 1.25), incomingPointOfView: nil) {
+                        self.scene = mars.scene
                         print("Mars Scene Loaded :)")
                         self.gameScene = .MarsColony
                         self.mars = mars
                     }
-//                }
+                } else {
+                    self.stationOverlay.generateNews(string: "⚠️ Could not connect to the server")
+                }
                 return
-                
             }
             
         }

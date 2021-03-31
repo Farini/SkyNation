@@ -20,6 +20,8 @@ class ServerDatabase {
     
     var city:CityData?
     
+    var errorMessage:String = ""
+    
     // incomingVehicles // All arriving vehicles from Guild
     // playerVehicles   // arriving vehicles from Player
     
@@ -36,9 +38,28 @@ class ServerDatabase {
     }
     
     // In order...?
-    
+    var lastLogin:Date?
     func login() {
-        
+        // Check last login. Avoid redundant updates
+        if let log = lastLogin, Date().timeIntervalSince(log) < 60 {
+            return
+        }
+        SKNS.resolveLogin { (player, error) in
+            if let player = player {
+                DispatchQueue.main.async {
+                    self.player = player
+                    self.lastLogin = Date()
+                    self.user = SKNUserPost(player: player)
+                    if let _ = player.guildID {
+                        self.fetchGuild()
+                    }
+                }
+                
+            } else {
+                // Error
+                self.errorMessage = error?.localizedDescription ?? "Could not connect to serer"
+            }
+        }
     }
     
     func fetchGuild() {

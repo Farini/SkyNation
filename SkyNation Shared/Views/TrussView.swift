@@ -20,13 +20,31 @@ struct TrussLayoutView: View {
     
     @ObservedObject var controller:TrussLayoutController = TrussLayoutController()
     @State var selectedComponent:TrussComponent?
+    @State var popTutorial:Bool = false
     
     var body: some View {
         VStack {
             
-            Text("Truss Arrangement")
-                .font(.largeTitle)
-                .padding([.top])
+            HStack {
+                Text("Truss Arrangement")
+                    .font(.largeTitle)
+                    .padding([.top])
+                Spacer()
+                // Tutorial
+                Button(action: {
+                    print("Question ?")
+                    popTutorial.toggle()
+                }, label: {
+                    Image(systemName: "questionmark.circle")
+                        .font(.title2)
+                })
+                .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
+                .popover(isPresented: $popTutorial) {
+                    TutorialView(tutType: .Truss)
+                }
+            }
+            .padding(.horizontal, 6)
+            
             
             Text("Tap, or click an item (origin), and then a destination to move it.")
                 .foregroundColor(.gray)
@@ -92,6 +110,8 @@ struct TrussLayoutView: View {
             }
             .padding()
         }
+        .frame(minWidth: 400, maxWidth: 900, minHeight: 420, idealHeight: 500, maxHeight: 500, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        
     }
     
     func didSelect(item:TrussComponent) {

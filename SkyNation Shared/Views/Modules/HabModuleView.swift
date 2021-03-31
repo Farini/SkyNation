@@ -159,8 +159,6 @@ struct HabModuleView: View {
     }
 }
 
-
-
 struct HabModuleHeaderView: View {
     
     var module:HabModule
@@ -191,8 +189,6 @@ struct HabModuleHeaderView: View {
     }
 }
 
-
-
 // MARK: - Previews
 
 struct HeaderView_Previews: PreviewProvider {
@@ -212,10 +208,3 @@ struct HabModuleView_Previews: PreviewProvider {
         return HabModuleView(module: habModule)
     }
 }
-
-//struct SkinPopup_Previews: PreviewProvider {
-//
-//    static var previews: some View {
-//        SkinPopupPicker()
-//    }
-//}

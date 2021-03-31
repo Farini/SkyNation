@@ -255,11 +255,27 @@ struct PersonDetail:View {
                 Divider()
                 
                 Text("Conditions").font(.title2).foregroundColor(.green)
-//                Text("Life Expectancy: \(person.lifeExpectancy)")
-//                    .padding()
-                ProgressView("Life Expectancy: \(person.lifeExpectancy)", value: Float(person.age), total: Float(person.lifeExpectancy))
-                    .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                    .padding(.top, 4)
+                
+                HStack(spacing:12) {
+                    ProgressView("Life Expectancy: \(person.lifeExpectancy)", value: Float(person.age), total: Float(person.lifeExpectancy))
+                        .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                        .padding(.top, 4)
+                    Divider()
+                    VStack(alignment:.leading) {
+                        Text("Recently eaten")
+                        HStack {
+                            ForEach(person.foodEaten, id:\.self) { rawFood in
+                                if let dna = PerfectDNAOption(rawValue: rawFood) {
+                                    Text(dna.emoji)
+                                }
+                            }
+                        }
+                        .padding(.top, 2)
+                    }
+                    
+                }
+
+                
                 
                 HStack(spacing:12) {
                     FixedLevelBar(min: 0, max: 100, current: Double(person.happiness), title: "Happiness", color: .green)

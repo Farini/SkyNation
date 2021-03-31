@@ -16,8 +16,11 @@ struct BioView: View {
     @ObservedObject var controller:BioModController
     @ObservedObject var model = DNAMatcherModel(fitString: "BANANA")
     
-    @State var started:Bool = false
+    // Popovers
     @State var menuPopover:Bool = false
+    @State var popoverTutorial:Bool = false
+    
+    @State var started:Bool = false
     @State var dnaChoice:PerfectDNAOption = PerfectDNAOption.banana
     @State var trimSelection:[String] = []
     
@@ -62,11 +65,15 @@ struct BioView: View {
                     // Tutorial
                     Button(action: {
                         print("Question ?")
+                        popoverTutorial.toggle()
                     }, label: {
                         Image(systemName: "questionmark.circle")
                             .font(.title2)
                     })
                     .buttonStyle(SmallCircleButtonStyle(backColor: .blue))
+                    .popover(isPresented: $popoverTutorial, content: {
+                        TutorialView(tutType: .BioView)
+                    })
                     
                     // Settings
                     Button(action: {

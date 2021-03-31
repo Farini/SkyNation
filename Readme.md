@@ -95,23 +95,29 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 ## 📝 Doing - Present
 
 - [X] GameMessages showing strange dates
-- [ ] Game Store Improvements
-- [ ] Use Fibonacci for Peripheral Upgrades
-- [ ] Make sure that Air adjustments AND Oxygen adjustments are working - Accounting)
-- [ ] Make all Tutorial points (Questionmarks) work.
-- [ ] New Modules not fully available after Tech research. 
-- [ ] Activity name enum?
-- [ ] BioBox DNA enum
-- [ ] Bio View - DNA animation
-- [ ] Garage simulation button -> Person activity -> Garage xp || OR || just delete it
-- [ ] Mars Button -> Display Guild Settings, or Server down, if there is no info. Only a Player that has a SpaceVehicle built
+- [X] Mars Button -> Display Guild Settings, or Server down, if there is no info. Only a Player that has a SpaceVehicle built
+- [X] Make all Tutorial points (Questionmarks).
+- [X] Display Person's recently eaten
 
+- [ ] Game Store Improvements
+- [ ] Make sure that Air adjustments AND Oxygen adjustments are working - Accounting)
+- [ ] New Modules not fully available after Tech research. 
+- [ ] Bio View - DNA animation
 - [ ] 1/8 Soundtrack + FX
 - [ ] Have 3 Background music
 - [ ] Add a couple of SoundFX
 - [ ] GameSettings -> Sound
 - [ ] Gamesettings -> SoundFX
-- [ ] Display Person's recently eaten
+- [ ] Scene Alert (News) -> Low Oxygen
+- [ ] Scene Alert (News) -> Bad AirQualities
+- [ ] Animate Satellite Opening Solar Panel (if there is one)
+
+- [ ] Oupost View
+    - [ ] My City Resources
+    - [ ] Contribute Resources
+    - [ ] Update Database
+    - [ ] OutpostData
+        - [ ] Contributors
 
 - [ ] Icons
     - [ ] SpaceVehicle engine icons
@@ -124,8 +130,8 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
     - [ ] Add TechItems updates to StationBuilder
     
 - [ ] 6/13 Scene Overlay
+    - [X] Fix buttons getting green and not returning to white
     - [ ] Add colors / shaders
-    - [ ] Fix buttons getting green and not returning to white
     - [ ] 1/3 Camera options + animations
         - [ ] Adjust camera LOOK@ constraints
         
@@ -135,6 +141,14 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
     
 - [ ] 12/13 Basic Views
     - [ ] Error messages
+    
+### Questionable items
+
+- [ ] Use Fibonacci for Peripheral Upgrades
+- [ ] Activity name enum?
+- [ ] BioBox DNA enum
+- [ ] Garage simulation button -> Person activity -> Garage xp || OR || just delete it
+
     
 ## 📝 To Do - Future
 Grab things from this list as you go along.
@@ -152,13 +166,6 @@ Grab things from this list as you go along.
     - [ ] Available Humans for delivery
     - [ ] Token Validation
 
-- [ ] 8/13 Data Model
-    - [ ] 0/8 Mars Model
-    - [ ] 5/8 TechTree improvements (Tree improved, Add Antenna upgrades, Charge ingredients, electricity, Select Humans, Fix Time)
-        - [X] 22 Items
-        - [ ] Antenna Updates
-        - [ ] Improve and use PlayerObject
-        
 - [ ] 1/3 iOS View Presentation
     - [X] Test iPhone View sizes
     - [ ] Adjust iPhone View sizes

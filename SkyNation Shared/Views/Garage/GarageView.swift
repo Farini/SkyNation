@@ -10,7 +10,9 @@ import SwiftUI
 
 struct GarageView: View {
     
+    // Popovers
     @State var popoverGarage:Bool = false
+    @State var popoverTutorial:Bool = false
     
     @State var selectedEngine:EngineType?
     @State var vehicle:SpaceVehicle?
@@ -36,12 +38,26 @@ struct GarageView: View {
                 // Tutorial
                 Button(action: {
                     print("Question ?")
-                    popoverGarage.toggle()
+                    popoverTutorial.toggle()
                 }, label: {
                     Image(systemName: "questionmark.circle")
                         .font(.title2)
                 })
                 .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
+                .popover(isPresented: $popoverTutorial, arrowEdge: Edge.bottom, content: {
+                    // Easy Tutorial View
+                    TutorialView(tutType: .Garage)
+                })
+                
+                // Settings
+                Button(action: {
+                    print("Question ?")
+                    popoverGarage.toggle()
+                }, label: {
+                    Image(systemName: "ellipsis.circle")
+                        .font(.title2)
+                })
+                .buttonStyle(SmallCircleButtonStyle(backColor: .blue))
                 .popover(isPresented: $popoverGarage, content: {
                     VStack {
                         HStack {

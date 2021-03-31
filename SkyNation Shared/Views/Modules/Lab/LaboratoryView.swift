@@ -51,6 +51,7 @@ struct LaboratoryView: View {
                 Spacer()
                 
                 Group {
+                    
                     // Tutorial
                     Button(action: {
                         popTutorial.toggle()

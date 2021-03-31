@@ -11,6 +11,8 @@ struct OutpostView: View {
     
     @State var posdex:Posdex
     @State var outpost:DBOutpost
+    @State var popTutorial:Bool = false
+    
     @ObservedObject var controller = OutpostController()
     
     var body: some View {
@@ -19,12 +21,31 @@ struct OutpostView: View {
             HStack {
                 Text("Outpost").font(.title)
                 Spacer()
-                Button("X") {
-                    NotificationCenter.default.post(name: .closeView, object: self)
-                }
+                // Tutorial
+                Button(action: {
+                    popTutorial.toggle()
+                }, label: {
+                    Image(systemName: "questionmark.circle")
+                        .font(.title2)
+                })
                 .buttonStyle(SmallCircleButtonStyle(backColor: .blue))
+                .popover(isPresented: $popTutorial, attachmentAnchor: .point(.bottom),   // here !
+                         arrowEdge: .bottom) {
+                    TutorialView(tutType:.LabView)
+                }
+                
+                // Close
+                Button(action: {
+                    print("Close action")
+                    NotificationCenter.default.post(name: .closeView, object: self)
+                }, label: {
+                    Image(systemName: "xmark.circle")
+                        .font(.title2)
+                })
+                .buttonStyle(SmallCircleButtonStyle(backColor: .pink))
+                .padding(.trailing, 6)
             }
-            .padding(.horizontal, 8)
+            .padding(8)
             
             
             Divider()

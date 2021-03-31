@@ -11,7 +11,10 @@ import SwiftUI
 struct EarthRequestView: View {
     
     @ObservedObject var controller:EarthRequestController = EarthRequestController()
+    
     @State var infoPopover:Bool = false
+    @State var popoverTutorial:Bool = false
+    
     @State var alertRenewPeople:Bool = false
     
     private var ingredientColumns: [GridItem] = [
@@ -38,12 +41,15 @@ struct EarthRequestView: View {
                 
                 // Tutorial
                 Button(action: {
-                    print("Question ?")
+                    popoverTutorial.toggle()
                 }, label: {
                     Image(systemName: "questionmark.circle")
                         .font(.title2)
                 })
                 .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
+                .popover(isPresented: $popoverTutorial, content: {
+                    TutorialView(tutType: .OrderView)
+                })
                 
                 // Close
                 Button(action: {

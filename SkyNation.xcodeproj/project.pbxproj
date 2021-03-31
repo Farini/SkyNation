@@ -95,10 +95,6 @@
 		8536F363258D475D00B509D2 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F345258D475D00B509D2 /* Person.swift */; };
 		8536F364258D475D00B509D2 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F345258D475D00B509D2 /* Person.swift */; };
 		8536F365258D475D00B509D2 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F345258D475D00B509D2 /* Person.swift */; };
-		8536F36A258D475D00B509D2 /* Tutorial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F348258D475D00B509D2 /* Tutorial.swift */; };
-		8536F36B258D475D00B509D2 /* Tutorial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F348258D475D00B509D2 /* Tutorial.swift */; };
-		8536F36C258D475D00B509D2 /* Tutorial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F348258D475D00B509D2 /* Tutorial.swift */; };
-		8536F36D258D475D00B509D2 /* Tutorial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F348258D475D00B509D2 /* Tutorial.swift */; };
 		8536F36E258D475D00B509D2 /* SceneHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F349258D475D00B509D2 /* SceneHelpers.swift */; };
 		8536F36F258D475D00B509D2 /* SceneHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F349258D475D00B509D2 /* SceneHelpers.swift */; };
 		8536F370258D475D00B509D2 /* SceneHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F349258D475D00B509D2 /* SceneHelpers.swift */; };
@@ -529,7 +525,6 @@
 		8536F32A258D412600B509D2 /* LocalDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalDatabase.swift; sourceTree = "<group>"; };
 		8536F343258D475D00B509D2 /* Ingredients.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ingredients.swift; sourceTree = "<group>"; };
 		8536F345258D475D00B509D2 /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
-		8536F348258D475D00B509D2 /* Tutorial.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tutorial.swift; sourceTree = "<group>"; };
 		8536F349258D475D00B509D2 /* SceneHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneHelpers.swift; sourceTree = "<group>"; };
 		8536F34A258D475D00B509D2 /* Persistance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistance.swift; sourceTree = "<group>"; };
 		8536F34C258D475D00B509D2 /* Peripherals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Peripherals.swift; sourceTree = "<group>"; };
@@ -880,7 +875,6 @@
 		8536F347258D475D00B509D2 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				8536F348258D475D00B509D2 /* Tutorial.swift */,
 				8536F349258D475D00B509D2 /* SceneHelpers.swift */,
 				8536F34A258D475D00B509D2 /* Persistance.swift */,
 			);
@@ -1463,7 +1457,6 @@
 				8504A53B25C6875000739C58 /* Energy.swift in Sources */,
 				8569A3DA25A799840057A518 /* LaunchingVehicleView.swift in Sources */,
 				8536F3E6258D47D000B509D2 /* HabModuleView.swift in Sources */,
-				8536F36A258D475D00B509D2 /* Tutorial.swift in Sources */,
 				8517EE632605DC8800C34C54 /* CityController.swift in Sources */,
 				8536F3F6258D47D000B509D2 /* TankViews.swift in Sources */,
 				8536F445258D47EA00B509D2 /* LabViewModel.swift in Sources */,
@@ -1578,7 +1571,6 @@
 				8536F413258D47D000B509D2 /* Parafernalia.swift in Sources */,
 				8569A3DB25A799840057A518 /* LaunchingVehicleView.swift in Sources */,
 				8536F3E7258D47D000B509D2 /* HabModuleView.swift in Sources */,
-				8536F36B258D475D00B509D2 /* Tutorial.swift in Sources */,
 				8536F3F7258D47D000B509D2 /* TankViews.swift in Sources */,
 				859281FD25E9529C001233BE /* TutorialView.swift in Sources */,
 				8536F446258D47EA00B509D2 /* LabViewModel.swift in Sources */,
@@ -1696,7 +1688,6 @@
 				8504A53D25C6875000739C58 /* Energy.swift in Sources */,
 				8569A3DC25A799840057A518 /* LaunchingVehicleView.swift in Sources */,
 				8536F3E8258D47D000B509D2 /* HabModuleView.swift in Sources */,
-				8536F36C258D475D00B509D2 /* Tutorial.swift in Sources */,
 				8517EE652605DC8800C34C54 /* CityController.swift in Sources */,
 				8536F3F8258D47D000B509D2 /* TankViews.swift in Sources */,
 				8536F447258D47EA00B509D2 /* LabViewModel.swift in Sources */,
@@ -1809,7 +1800,6 @@
 				85F6676225AF7CAB00E5003B /* RoboarmNode.swift in Sources */,
 				8536F440258D47EA00B509D2 /* GarageViewModel.swift in Sources */,
 				8536F37D258D475D00B509D2 /* Recipes.swift in Sources */,
-				8536F36D258D475D00B509D2 /* Tutorial.swift in Sources */,
 				8517EE2E25F7C3AB00C34C54 /* MarsBuilder.swift in Sources */,
 				8536F385258D475D00B509D2 /* Truss.swift in Sources */,
 				8536F379258D475D00B509D2 /* Peripherals.swift in Sources */,
