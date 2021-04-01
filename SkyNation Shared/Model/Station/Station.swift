@@ -269,7 +269,6 @@ class Station:Codable {
             // Energy
             let randomEnergy:Int = [1,2,3].randomElement()!
             person.consumedEnergy(success: truss.consumeEnergy(amount: randomEnergy))
-//            report.humanNotes.append("Consumed \(randomEnergy) energy")
             
             // Food
             if let lastFood:String = food.last {

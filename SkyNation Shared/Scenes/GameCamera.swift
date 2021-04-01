@@ -42,17 +42,21 @@ class GameCamera:SCNNode {
             
             let lenghtZ = maxZ - minZ
             
+            
+            
             let camZ = self.position.z - minZ
             
             let partial = lenghtZ / 3
             let partial2 = partial * 2
             
             #if os(iOS)
-            position.z = Float(CGFloat(z))
+//            position.z = Float(CGFloat(z))
+            let move = SCNAction.move(to: SCNVector3(position.x, position.y, Float(CGFloat(z))), duration: 1)
             #else
-            position.z = CGFloat(z)
+            // position.z = CGFloat(z)
+            let move = SCNAction.move(to: SCNVector3(position.x, position.y, CGFloat(z)), duration: 1)
             #endif
-            
+            self.runAction(move)
             
             
             let targetNode:SCNNode = SCNNode()

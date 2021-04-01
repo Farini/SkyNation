@@ -98,11 +98,17 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [X] Mars Button -> Display Guild Settings, or Server down, if there is no info. Only a Player that has a SpaceVehicle built
 - [X] Make all Tutorial points (Questionmarks).
 - [X] Display Person's recently eaten
+- [X] Bugfix: Humans dying too quickly
+- [X] Fix buttons getting green and not returning to white
+- [X] 1/3 Camera options + animations
+- [X] Adjust camera LOOK@ constraints
 
-- [ ] Game Store Improvements
-- [ ] Make sure that Air adjustments AND Oxygen adjustments are working - Accounting)
-- [ ] New Modules not fully available after Tech research. 
+- [ ] Biobox still not saving when done
 - [ ] Bio View - DNA animation
+
+- [ ] Make sure that Air adjustments AND Oxygen adjustments are working - Accounting)
+- [ ] Game Store Improvements
+- [ ] New Modules not fully available after Tech research. 
 - [ ] 1/8 Soundtrack + FX
 - [ ] Have 3 Background music
 - [ ] Add a couple of SoundFX
@@ -111,6 +117,7 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [ ] Scene Alert (News) -> Low Oxygen
 - [ ] Scene Alert (News) -> Bad AirQualities
 - [ ] Animate Satellite Opening Solar Panel (if there is one)
+- [ ] Adjust quantities shown in Earth Order
 
 - [ ] Oupost View
     - [ ] My City Resources
@@ -128,16 +135,12 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
     - [ ] Improve Background HDRI image
     - [ ] Make the Earth bright again?
     - [ ] Add TechItems updates to StationBuilder
-    
-- [ ] 6/13 Scene Overlay
-    - [X] Fix buttons getting green and not returning to white
-    - [ ] Add colors / shaders
-    - [ ] 1/3 Camera options + animations
-        - [ ] Adjust camera LOOK@ constraints
         
 - [ ] 7/8 Garage View Improvements
     - [ ] Space Vehicle Registration (when launch)
     - [ ] Space Vehicle Validation (when arriving (orbit))
+    - [ ] Engines Images
+    - [ ] Add Solar Panel, Robot, Bioboxes
     
 - [ ] 12/13 Basic Views
     - [ ] Error messages

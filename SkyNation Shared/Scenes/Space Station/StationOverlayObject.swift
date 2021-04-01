@@ -168,6 +168,7 @@ class StationOverlay:NSObject, SKSceneDelegate {
         // Find a good spot to make the camera @lookAt
         // 0 = -300
         // 1 = 75
+        
         if let x = x {
             print("Moving Camera to: \(x) | Position:\(sceneCamera.position.z)")
             #if os(macOS)

@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import SceneKit
 
 // Left View: BioBoxes
 // Right View - Manage
@@ -496,63 +497,68 @@ struct BioBoxDetailView:View {
     
     @ObservedObject var controller:BioModController
     var bioBox:BioBox
+    var scene = SCNScene(named: "Art.scnassets/ParticleEmitters/DNAModel.scn")!
     
     var body: some View {
         
         VStack {
             
-            Group {
-                
-                Group {
-                    Text("Bio Box")
-                        .font(.title)
-                        .padding()
+            HStack {
+                SceneView(scene: scene, pointOfView: scene.rootNode.childNode(withName: "Camera", recursively: false)!, options: .allowsCameraControl, preferredFramesPerSecond: 45, antialiasingMode: .multisampling4X, delegate: nil, technique: nil)
+                    .frame(maxWidth: 100, minHeight: 200, maxHeight: 500, alignment: .top)
+                VStack {
+                    Group {
+                        Text("Bio Box")
+                            .font(.title)
+                            .padding()
+                        
+                        Text("\(bioBox.convertToDNA().emoji)").font(.largeTitle)
+                        Text("\(bioBox.convertToDNA().rawValue)")
+                        
+                        Divider()
+                        
+                        Text("Mode  \(bioBox.mode.rawValue)")
+                            .font(.headline)
+                            .foregroundColor(.blue)
+                        //                        .padding()
+                        
+                        Text("Energy: \(controller.availableEnergy)")
+                            .foregroundColor(.green)
+                        //                        .padding()
+                    }
                     
-                    Text("\(bioBox.convertToDNA().emoji)").font(.largeTitle)
-                    Text("\(bioBox.convertToDNA().rawValue)")
+                    Group {
+                        
+                        Text("Generations \(controller.geneticLoops)")
+                        Text("Score: \(controller.geneticScore) %")
+                        Text("Population: \(controller.selectedPopulation.count) / \(bioBox.populationLimit)")
+                        
+                        ProgressView("Growth", value: Float(bioBox.population.count), total: Float(bioBox.populationLimit))
+                            .frame(width:200)
+                        
+                        Text("Date")
+                        Text(GameFormatters.dateFormatter.string(from:bioBox.dateAccount))
+                        
+                        Text("🏆 Best fit")
+                            .font(.title)
+                            .padding(.top, 8)
+                        
+                        Text(controller.geneticFitString)
+                            .foregroundColor(.orange)
+                        
+                        if let error = controller.errorMessage {
+                            Text(error)
+                                .foregroundColor(.red)
+                        }
+                        if let positive = controller.positiveMessage {
+                            Text(positive)
+                                .foregroundColor(.green)
+                        }
+                    }
                     
                     Divider()
-                    
-                    Text("Mode  \(bioBox.mode.rawValue)")
-                        .font(.headline)
-                        .foregroundColor(.blue)
-//                        .padding()
-                    
-                    Text("Energy: \(controller.availableEnergy)")
-                        .foregroundColor(.green)
-//                        .padding()
                 }
                 
-                Group {
-                    
-                    Text("Generations \(controller.geneticLoops)")
-                    Text("Score: \(controller.geneticScore) %")
-                    Text("Population: \(controller.selectedPopulation.count) / \(bioBox.populationLimit)")
-                    
-                    ProgressView("Growth", value: Float(bioBox.population.count), total: Float(bioBox.populationLimit))
-                        .frame(width:200)
-                    
-                    Text("Date")
-                    Text(GameFormatters.dateFormatter.string(from:bioBox.dateAccount))
-                    
-                    Text("🏆 Best fit")
-                        .font(.title)
-                        .padding(.top, 8)
-                    
-                    Text(controller.geneticFitString)
-                        .foregroundColor(.orange)
-                    
-                    if let error = controller.errorMessage {
-                        Text(error)
-                            .foregroundColor(.red)
-                    }
-                    if let positive = controller.positiveMessage {
-                        Text(positive)
-                            .foregroundColor(.green)
-                    }
-                }
-                
-                Divider()
             }
             
             

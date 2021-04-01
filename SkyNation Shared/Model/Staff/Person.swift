@@ -241,8 +241,8 @@ class Person:Codable, Identifiable, Equatable {
         
         // No food
         if new.isEmpty {
-            self.healthPhysical = min(0, healthPhysical - 3)
-            self.happiness = min(0, happiness - 2)
+            self.healthPhysical = max(0, healthPhysical - 4)
+            self.happiness = max(0, happiness - 2)
             return
         }
         

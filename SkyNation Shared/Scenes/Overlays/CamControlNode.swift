@@ -112,6 +112,8 @@ class CamControlNode:SKNode {
         knob.position.x = knobX
     }
     
+    /// The position the camera needs to go to
+    var camNormalizedPosition:CGFloat?
     #if os(macOS)
     override func mouseDragged(with event: NSEvent) {
         
@@ -131,8 +133,16 @@ class CamControlNode:SKNode {
         knob.position.x = knobX
         
         let normalizedPosition = 1 - knobX / maxWidth
-        overlay.moveCamera(x: normalizedPosition)
+        self.camNormalizedPosition = normalizedPosition
+//        overlay.moveCamera(x: normalizedPosition)
         
+    }
+    
+    override func mouseUp(with event: NSEvent) {
+        if let normalizedPosition = camNormalizedPosition {
+            overlay.moveCamera(x: normalizedPosition)
+            self.camNormalizedPosition = nil
+        }
     }
     #endif
     
