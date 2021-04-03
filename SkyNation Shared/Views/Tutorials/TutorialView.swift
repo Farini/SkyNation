@@ -63,6 +63,7 @@ struct TutorialView: View {
                         Divider()
                         Text("You may order Boxes of Ingredients, Tanks, and hire people here.")
                         Text("The list of candidates is renewed every hour.")
+                        Text("If you hire more people than you can host, they will be rejected because there is no room for them. Make sure you have enough Hab modules before hiring new staff.")
                         Text("Take your time, and plan ahead. Look and analyze how much your resources are going to last. Running out of oxygen (O2) may be deadly to your staff.")
                     }
                     .fixedSize(horizontal: false, vertical: true)

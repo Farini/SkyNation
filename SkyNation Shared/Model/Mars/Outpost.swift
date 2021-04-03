@@ -12,7 +12,7 @@ import Foundation
 enum OutpostType:String, CaseIterable, Codable {
     
     case HQ
-    case Water          // OK Produces Water
+    case Water          // Produces Water
     case Silica         // OK Produces Silica
     case Energy         // OK Produces Energy
     case Biosphere      // OK Produces Food
@@ -87,6 +87,7 @@ class Outpost:Codable {
     var level:Int = 0
     var collected:Date?
     
+    /// Gets the job to perform to level up
     func getNextJob() -> OutpostJob? {
         switch posdex {
             
@@ -180,6 +181,7 @@ class Outpost:Codable {
         }
     }
     
+    // Just prints info
     func makeModel() {
         switch type {
             case .HQ: print("hq")
@@ -240,6 +242,13 @@ class Outpost:Codable {
         self.posdex = posdex
         self.type = type
         self.level = 0
+    }
+    
+    /// Makes an example data. **Delete** it upon launch
+    static func exampleFromDatabase(dbData:DBOutpost) -> Outpost {
+        let newOutpost = Outpost(type: dbData.type, posdex: Posdex(rawValue:dbData.posdex)!, guild: nil)
+        newOutpost.collected = dbData.accounting
+        return newOutpost
     }
     
     // Lineup

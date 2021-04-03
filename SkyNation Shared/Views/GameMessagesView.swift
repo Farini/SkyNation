@@ -73,7 +73,7 @@ struct GameMessagesView: View {
     var tabPicker: some View {
         HStack(spacing:0) {
             ForEach(GameMessageType.allCases, id:\.self) { mType in
-                let selected = self.tab == mType
+                let selected:Bool = self.tab == mType
                 let myGradient = selected ? Gradient(colors: [Color.red.opacity(0.6), Color.blue.opacity(0.7)]):Gradient(colors: [Color.red.opacity(0.3), Color.blue.opacity(0.3)])
                 ZStack (alignment:.bottomTrailing) {
                     Text(mType.emoji)
