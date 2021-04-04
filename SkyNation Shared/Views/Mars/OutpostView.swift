@@ -133,11 +133,24 @@ struct OutpostView: View {
                 
                 switch controller.viewTab {
                     case .ingredients:
-                        LazyVGrid(columns: [GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 8, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/, content: {
-                            ForEach(controller.myCity.boxes, id:\.id) { box in
-                                IngredientView(ingredient: box.type, hasIngredient: true, quantity: box.current)
+                        Group {
+                            // Required
+                            let kkeys = (controller.opData.remaining() ?? [:]).map{$0.key}
+                            let kvals = (controller.opData.remaining() ?? [:]).map{$0.value}
+                            HStack {
+                                ForEach(kkeys.indices) { index in
+                                    IngredientSmallReqView(ingredient: kkeys[index], required: kvals[index], available: controller.opData.materials[kkeys[index]] ?? 0)
+                                    Divider()
+                                }
                             }
-                        })
+                            // Available
+                            LazyVGrid(columns: [GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 8, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/, content: {
+                                ForEach(controller.myCity.boxes, id:\.id) { box in
+                                    IngredientView(ingredient: box.type, hasIngredient: true, quantity: box.current)
+                                }
+                            })
+                        }
+                        
                         
                     case .people:
                         LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 8, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/, content: {

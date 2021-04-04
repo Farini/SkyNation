@@ -75,6 +75,36 @@ struct IngredientSufficiencyView:View {
     }
 }
 
+struct IngredientSmallReqView:View {
+    var ingredient:Ingredient
+    var required:Int
+    var available:Int
+    var image:Image = Image(systemName: "questionmark")
+    
+    init(ingredient:Ingredient, required:Int, available:Int) {
+        self.ingredient = ingredient
+        self.required = required
+        self.available = available
+        if let img = ingredient.image() {
+            self.image = img
+        }
+    }
+    var body: some View {
+        HStack {
+            image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 38, height: 38)
+            
+    
+            Text("x\(required) of \(available)")
+                .foregroundColor(available >= required ? .green:.red)
+                .font(.title3)
+            
+        }
+    }
+}
+
 struct StorageBoxDetailView:View {
     
     var box:StorageBox
@@ -168,8 +198,6 @@ struct IngredientView_Previews_2: PreviewProvider {
                 IngredientView(ingredient: Ingredient.Aluminium, hasIngredient: nil, quantity: 10)
                 IngredientView(ingredient: Ingredient.Copper, hasIngredient: true, quantity: 8)
                 IngredientView(ingredient: Ingredient.CarbonFiber, hasIngredient: nil, quantity: nil)
-                
-                
                 IngredientView(ingredient: Ingredient.Sensor, hasIngredient: nil, quantity: nil)
                 IngredientView(ingredient: Ingredient.SolarCell, hasIngredient: nil, quantity: nil)
                 
@@ -178,11 +206,8 @@ struct IngredientView_Previews_2: PreviewProvider {
                 IngredientView(ingredient: Ingredient.Ceramic, hasIngredient: nil, quantity: nil)
                 IngredientView(ingredient: Ingredient.Circuitboard, hasIngredient: nil, quantity: nil)
                 IngredientView(ingredient: Ingredient.DCMotor, hasIngredient: nil, quantity: nil)
-                
                 IngredientView(ingredient: Ingredient.Food, hasIngredient: nil, quantity: nil)
-                
                 IngredientView(ingredient: Ingredient.Lithium, hasIngredient: nil, quantity: nil)
-                
             }
             
             VStack {
@@ -193,8 +218,6 @@ struct IngredientView_Previews_2: PreviewProvider {
                 IngredientView(ingredient: Ingredient.Polimer, hasIngredient: nil, quantity: nil)
             }
         }
-        
-        
     }
 }
 
@@ -203,6 +226,15 @@ struct IngredientSufficiency_Preview:PreviewProvider {
         VStack {
             IngredientSufficiencyView(ingredient: .Aluminium, required: 20, available: 30)
             IngredientSufficiencyView(ingredient: .DCMotor, required: 8, available: 4)
+        }
+    }
+}
+
+struct IngredientSmall_Preview:PreviewProvider {
+    static var previews: some View {
+        VStack {
+            IngredientSmallReqView(ingredient: .Aluminium, required: 20, available: 30)
+            IngredientSmallReqView(ingredient: .DCMotor, required: 8, available: 4)
         }
     }
 }

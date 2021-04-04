@@ -421,31 +421,20 @@ class LSSModel:ObservableObject {
         self.levelZCap = Double(totalCapacity)
     }
     
-    func recharge() {
-        print("Recharge is being deprecated")
-//        for item in station.truss.solarPanels {
-//            bloop: for battery in batteries {
-//                if battery.charge() == true {
-//                    print("Charged from max current \(item.maxCurrent())")
-//                    break bloop
-//                }
-//            }
-//        }
-    }
-    
     // MARK: - Peripheral Control
     
     /// Powering a Peripheral On/Off
     func powerToggle(peripheral:PeripheralObject) {
         print("Toggling Power on peripheral: \(peripheral.peripheral.rawValue)")
         peripheral.powerOn.toggle()
+        saveStation()
     }
     
     /// Fix a Peripheral Object
     func fixBroken(peripheral:PeripheralObject) {
         peripheral.isBroken.toggle()
         peripheral.lastFixed = Date()
-        saveAccounting()
+        saveStation()
         self.didSelect(utility: peripheral)
         
     }
@@ -513,20 +502,9 @@ class LSSModel:ObservableObject {
     
     // MARK: - Accounting
     
-    /// Runs the accounting (don't save)
-    func runAccounting() {
-        print("Going to run accounting...")
-        updateDisplayVars()
-        accountingProblems = LocalDatabase.shared.accountingProblems
-    }
-    
     /// Save Station
-    func saveAccounting() {
+    func saveStation() {
         LocalDatabase.shared.saveStation(station: station)
     }
     
-    
-    deinit {
-//        timer.invalidate()
-    }
 }

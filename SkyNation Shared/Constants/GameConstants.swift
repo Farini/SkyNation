@@ -256,7 +256,6 @@ public typealias SCNColor = UIColor
 
 #if os(iOS)
 extension UIImage {
-    
     public func maskWithColor(color: UIColor) -> UIImage {
         
         UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
@@ -274,9 +273,15 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return resultImage
     }
-    
 }
 #endif
+
+// SOUNDS
+enum Soundtrack:String, CaseIterable {
+    case SKN_T1
+    case SKN_T2
+    case SKN_T3
+}
 
 // MARK: - Notifications
 

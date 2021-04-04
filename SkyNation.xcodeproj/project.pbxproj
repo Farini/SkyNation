@@ -52,9 +52,6 @@
 		8517EE632605DC8800C34C54 /* CityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE622605DC8800C34C54 /* CityController.swift */; };
 		8517EE642605DC8800C34C54 /* CityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE622605DC8800C34C54 /* CityController.swift */; };
 		8517EE652605DC8800C34C54 /* CityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE622605DC8800C34C54 /* CityController.swift */; };
-		8517EE6C26093C6200C34C54 /* SKN Track1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8517EE6B26093C6200C34C54 /* SKN Track1.m4a */; };
-		8517EE6D26093C6200C34C54 /* SKN Track1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8517EE6B26093C6200C34C54 /* SKN Track1.m4a */; };
-		8517EE6E26093C6200C34C54 /* SKN Track1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8517EE6B26093C6200C34C54 /* SKN Track1.m4a */; };
 		8523338C25D76A9B004CB638 /* AirCompositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8523338B25D76A9B004CB638 /* AirCompositionView.swift */; };
 		8523338D25D76A9B004CB638 /* AirCompositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8523338B25D76A9B004CB638 /* AirCompositionView.swift */; };
 		8523338E25D76A9B004CB638 /* AirCompositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8523338B25D76A9B004CB638 /* AirCompositionView.swift */; };
@@ -413,6 +410,15 @@
 		8592828825F176C1001233BE /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2B5258D330200B509D2 /* GameController.swift */; };
 		8592828D25F176F4001233BE /* GameCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */; };
 		8592829225F17721001233BE /* StationOverlayObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F466258D481700B509D2 /* StationOverlayObject.swift */; };
+		8595402926197A18001D9040 /* SKN_T2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8595402626197A17001D9040 /* SKN_T2.m4a */; };
+		8595402A26197A18001D9040 /* SKN_T2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8595402626197A17001D9040 /* SKN_T2.m4a */; };
+		8595402B26197A18001D9040 /* SKN_T2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8595402626197A17001D9040 /* SKN_T2.m4a */; };
+		8595402C26197A18001D9040 /* SKN_T1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8595402726197A17001D9040 /* SKN_T1.m4a */; };
+		8595402D26197A18001D9040 /* SKN_T1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8595402726197A17001D9040 /* SKN_T1.m4a */; };
+		8595402E26197A18001D9040 /* SKN_T1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8595402726197A17001D9040 /* SKN_T1.m4a */; };
+		8595402F26197A18001D9040 /* SKN_T3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8595402826197A17001D9040 /* SKN_T3.m4a */; };
+		8595403026197A18001D9040 /* SKN_T3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8595402826197A17001D9040 /* SKN_T3.m4a */; };
+		8595403126197A18001D9040 /* SKN_T3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8595402826197A17001D9040 /* SKN_T3.m4a */; };
 		85960B9725D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
 		85960B9825D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
 		85960B9925D9B3F000AC9592 /* EDLInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */; };
@@ -494,7 +500,6 @@
 		8517EE4925FC245D00C34C54 /* OutpostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutpostView.swift; sourceTree = "<group>"; };
 		8517EE5125FE8C9C00C34C54 /* ServerDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerDatabase.swift; sourceTree = "<group>"; };
 		8517EE622605DC8800C34C54 /* CityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityController.swift; sourceTree = "<group>"; };
-		8517EE6B26093C6200C34C54 /* SKN Track1.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SKN Track1.m4a"; sourceTree = "<group>"; };
 		8523338B25D76A9B004CB638 /* AirCompositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirCompositionView.swift; sourceTree = "<group>"; };
 		8536F2B5258D330200B509D2 /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
 		8536F2B6258D330200B509D2 /* Art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Art.scnassets; sourceTree = "<group>"; };
@@ -616,6 +621,9 @@
 		8592823525EC4DD3001233BE /* GuildController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildController.swift; sourceTree = "<group>"; };
 		8592824225EC74FD001233BE /* GuildView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildView.swift; sourceTree = "<group>"; };
 		8592824F25EED6EF001233BE /* SpaceVehicleNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceVehicleNode.swift; sourceTree = "<group>"; };
+		8595402626197A17001D9040 /* SKN_T2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = SKN_T2.m4a; sourceTree = "<group>"; };
+		8595402726197A17001D9040 /* SKN_T1.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = SKN_T1.m4a; sourceTree = "<group>"; };
+		8595402826197A17001D9040 /* SKN_T3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = SKN_T3.m4a; sourceTree = "<group>"; };
 		85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EDLInventoryView.swift; sourceTree = "<group>"; };
 		85969835260E8FD400BF1860 /* OutpostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutpostController.swift; sourceTree = "<group>"; };
 		8597BBA925BF40AB00C705A0 /* StartingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingWindow.swift; sourceTree = "<group>"; };
@@ -691,7 +699,9 @@
 		8517EE6A26093C4100C34C54 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
-				8517EE6B26093C6200C34C54 /* SKN Track1.m4a */,
+				8595402726197A17001D9040 /* SKN_T1.m4a */,
+				8595402626197A17001D9040 /* SKN_T2.m4a */,
+				8595402826197A17001D9040 /* SKN_T3.m4a */,
 			);
 			path = Sounds;
 			sourceTree = "<group>";
@@ -1318,11 +1328,13 @@
 				8536F479258D481700B509D2 /* MarsMapScene.sks in Resources */,
 				8569A328259F81110057A518 /* HexagonShader.fsh in Resources */,
 				8569A337259F81110057A518 /* RectanglesMoving.fsh in Resources */,
+				8595402F26197A18001D9040 /* SKN_T3.m4a in Resources */,
 				8569A334259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
+				8595402926197A18001D9040 /* SKN_T2.m4a in Resources */,
 				8569A319259F81110057A518 /* CutionStripesColored.fsh in Resources */,
-				8517EE6C26093C6200C34C54 /* SKN Track1.m4a in Resources */,
 				8569A31F259F81110057A518 /* TransitionShader.fsh in Resources */,
 				8569A32B259F81110057A518 /* CautionStripes.fsh in Resources */,
+				8595402C26197A18001D9040 /* SKN_T1.m4a in Resources */,
 				8536F489258D481700B509D2 /* StationOverlay.sks in Resources */,
 				8536F47D258D481700B509D2 /* MapIndicators.sks in Resources */,
 				8536F491258D481700B509D2 /* Assets.xcassets in Resources */,
@@ -1347,11 +1359,13 @@
 				8536F47A258D481700B509D2 /* MarsMapScene.sks in Resources */,
 				8569A329259F81110057A518 /* HexagonShader.fsh in Resources */,
 				8569A338259F81110057A518 /* RectanglesMoving.fsh in Resources */,
+				8595403026197A18001D9040 /* SKN_T3.m4a in Resources */,
 				8569A335259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
+				8595402A26197A18001D9040 /* SKN_T2.m4a in Resources */,
 				8569A31A259F81110057A518 /* CutionStripesColored.fsh in Resources */,
-				8517EE6D26093C6200C34C54 /* SKN Track1.m4a in Resources */,
 				8569A320259F81110057A518 /* TransitionShader.fsh in Resources */,
 				8569A32C259F81110057A518 /* CautionStripes.fsh in Resources */,
+				8595402D26197A18001D9040 /* SKN_T1.m4a in Resources */,
 				8536F48A258D481700B509D2 /* StationOverlay.sks in Resources */,
 				8536F47E258D481700B509D2 /* MapIndicators.sks in Resources */,
 				8536F492258D481700B509D2 /* Assets.xcassets in Resources */,
@@ -1376,11 +1390,13 @@
 				8569A339259F81110057A518 /* RectanglesMoving.fsh in Resources */,
 				8536F2EF258D330300B509D2 /* Art.scnassets in Resources */,
 				8569A306259F7F990057A518 /* dissolve.fragment.txt in Resources */,
+				8595403126197A18001D9040 /* SKN_T3.m4a in Resources */,
 				8569A32D259F81110057A518 /* CautionStripes.fsh in Resources */,
+				8595402B26197A18001D9040 /* SKN_T2.m4a in Resources */,
 				8569A327259F81110057A518 /* RadarShader.fsh in Resources */,
-				8517EE6E26093C6200C34C54 /* SKN Track1.m4a in Resources */,
 				8569A330259F81110057A518 /* MapShapeGradient.fsh in Resources */,
 				8536F497258D481700B509D2 /* SparkEmitter.sks in Resources */,
+				8595402E26197A18001D9040 /* SKN_T1.m4a in Resources */,
 				8536F473258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F47B258D481700B509D2 /* MarsMapScene.sks in Resources */,
 				8536F493258D481700B509D2 /* Assets.xcassets in Resources */,

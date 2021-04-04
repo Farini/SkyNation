@@ -8,13 +8,11 @@
 import Foundation
 
 enum OutpostViewTab:String, Codable, CaseIterable {
-    
     case ingredients
     case people
     case other
     case contributions
     case management
-    // Images: Box, User, Questionmark?, Arrow, Authority?
 }
 
 class OutpostController:ObservableObject {

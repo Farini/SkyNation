@@ -93,60 +93,43 @@ class Outpost:Codable {
             
             case .hq:
                 switch level {
-                    case 0: return OutpostJob(wantedSkills: [.SystemOS:3, .Datacomm:2, .Handy:8],
-                                              wantedIngredients: [.Iron:15, .Aluminium:200, .Polimer:20, .Circuitboard:12])
-                    case 1: return OutpostJob(wantedSkills: [.SystemOS:8, .Datacomm:6, .Handy:16],
-                                              wantedIngredients: [.Polimer:600, .Aluminium:200, .Silica:80, .Water:80, .Battery:80])
-                    case 2: return OutpostJob(wantedSkills: [.SystemOS:20, .Material:12, .Electric:8, .Handy:20],
-                                              wantedIngredients: [.Polimer:1200, .Aluminium:500, .Silica:260, .Water:120, .Battery:80])
+                    case 0: return OutpostJob(wantedIngredients: [.Iron:15, .Aluminium:200, .Polimer:20, .Circuitboard:12], wantedSkills: [.SystemOS:3, .Datacomm:2, .Handy:8])
+                    case 1: return OutpostJob(wantedIngredients: [.Polimer:600, .Aluminium:200, .Silica:80, .Water:80, .Battery:80], wantedSkills: [.SystemOS:8, .Datacomm:6, .Handy:16])
+                    case 2: return OutpostJob(wantedIngredients: [.Polimer:1200, .Aluminium:500, .Silica:260, .Water:120, .Battery:80], wantedSkills: [.SystemOS:20, .Material:12, .Electric:8, .Handy:20])
                     default: return nil
                 }
                 
             // Mining
             case .mining1:
                 switch level {
-                    case 0: return OutpostJob(wantedSkills: [.Datacomm:1, .Mechanic:1],
-                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:7])
-                    case 1: return OutpostJob(wantedSkills: [.Biologic:1, .Mechanic:1],
-                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:21])
-                    case 2: return OutpostJob(wantedSkills: [.Biologic:1, .Mechanic:1],
-                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:52])
+                    case 0: return OutpostJob(wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:7], wantedSkills: [.Datacomm:1, .Mechanic:1])
+                    case 1: return OutpostJob(wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:21], wantedSkills: [.Biologic:1, .Mechanic:1])
+                    case 2: return OutpostJob(wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:52], wantedSkills: [.Biologic:1, .Mechanic:1])
                     default: return nil
                 }
             case .mining2:
                 switch level {
-                    case 0: return OutpostJob(wantedSkills: [.Datacomm:1, .Mechanic:1],
-                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:7])
-                    case 1: return OutpostJob(wantedSkills: [.Biologic:1, .Mechanic:1],
-                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:21])
-                    case 2: return OutpostJob(wantedSkills: [.Biologic:1, .Mechanic:1],
-                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:52])
+                    case 0: return OutpostJob(wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:7], wantedSkills: [.Datacomm:1, .Mechanic:1])
+                    case 1: return OutpostJob(wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:21], wantedSkills: [.Biologic:1, .Mechanic:1])
+                    case 2: return OutpostJob(wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:52], wantedSkills: [.Biologic:1, .Mechanic:1])
                     default: return nil
                 }
             case .mining3:
                 switch level {
-                    case 0: return OutpostJob(wantedSkills: [.Datacomm:1, .Mechanic:1],
-                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:7])
-                    case 1: return OutpostJob(wantedSkills: [.Biologic:1, .Mechanic:1],
-                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:21])
-                    case 2: return OutpostJob(wantedSkills: [.Biologic:1, .Mechanic:1],
-                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:52])
+                    case 0: return OutpostJob(wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:7], wantedSkills: [.Datacomm:1, .Mechanic:1])
+                    case 1: return OutpostJob(wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:21], wantedSkills: [.Biologic:1, .Mechanic:1])
+                    case 2: return OutpostJob(wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:52], wantedSkills: [.Biologic:1, .Mechanic:1])
                     default: return nil
                 }
                 
             // Energy
             case .power1, .power2:
                 switch level {
-                    case 0: return OutpostJob(wantedSkills: [.Electric:10, .Material:4, .Handy:18],
-                                              wantedIngredients: [.Polimer:50, .Aluminium:20, .SolarCell:200, .Circuitboard:8])
-                    case 1: return OutpostJob(wantedSkills: [.Electric:15, .Material:12, .Handy:22],
-                                              wantedIngredients: [.Polimer:150, .Aluminium:360, .SolarCell:900, .Circuitboard:54, .Sensor:12])
-                    case 2: return OutpostJob(wantedSkills: [.Electric:21, .Material:14, .Handy:30, .Mechanic:8],
-                                              wantedIngredients: [.Polimer:320, .Aluminium:450, .SolarCell:1600, .Circuitboard:32, .Sensor:64])
-                    case 3: return OutpostJob(wantedSkills: [.Electric:32, .Material:24, .Handy:32, .Mechanic:18, .SystemOS:8],
-                                              wantedIngredients: [.Polimer:680, .Aluminium:750, .SolarCell:2500, .Circuitboard:64, .Sensor:128])
-                    case 4: return OutpostJob(wantedSkills: [.Electric:40, .Material:30, .Handy:50, .Mechanic:15, .Datacomm:8, .SystemOS:12],
-                                              wantedIngredients: [.Polimer:1200, .Aluminium:600, .SolarCell:4000, .Circuitboard:128, .Sensor:256])
+                    case 0: return OutpostJob(wantedIngredients: [.Polimer:50, .Aluminium:20, .SolarCell:200, .Circuitboard:8], wantedSkills: [.Electric:10, .Material:4, .Handy:18])
+                    case 1: return OutpostJob(wantedIngredients: [.Polimer:150, .Aluminium:360, .SolarCell:900, .Circuitboard:54, .Sensor:12], wantedSkills: [.Electric:15, .Material:12, .Handy:22])
+                    case 2: return OutpostJob(wantedIngredients: [.Polimer:320, .Aluminium:450, .SolarCell:1600, .Circuitboard:32, .Sensor:64], wantedSkills: [.Electric:21, .Material:14, .Handy:30, .Mechanic:8])
+                    case 3: return OutpostJob(wantedIngredients: [.Polimer:680, .Aluminium:750, .SolarCell:2500, .Circuitboard:64, .Sensor:128], wantedSkills: [.Electric:32, .Material:24, .Handy:32, .Mechanic:18, .SystemOS:8])
+                    case 4: return OutpostJob(wantedIngredients: [.Polimer:1200, .Aluminium:600, .SolarCell:4000, .Circuitboard:128, .Sensor:256], wantedSkills: [.Electric:40, .Material:30, .Handy:50, .Mechanic:15, .Datacomm:8, .SystemOS:12])
                     default: return nil
                 }
                 
@@ -155,14 +138,11 @@ class Outpost:Codable {
             // Bio
             case .biosphere1:
                 switch level {
-                    case 0: return OutpostJob(wantedSkills: [.Biologic:10, .Medic:4, .Handy:10],
-                                              wantedIngredients: [.Fertilizer:100, .Aluminium:50, .Polimer:22, .Silica:8, .Battery:4])
+                    case 0: return OutpostJob(wantedIngredients: [.Fertilizer:100, .Aluminium:50, .Polimer:22, .Silica:8, .Battery:4], wantedSkills: [.Biologic:10, .Medic:4, .Handy:10])
                         
-                    case 1: return OutpostJob(wantedSkills: [.Biologic:16, .Medic:8, .Handy:20, .SystemOS:3],
-                                              wantedIngredients: [.Fertilizer:250, .Aluminium:80, .Polimer:32, .Silica:16, .Battery:12, .Circuitboard:5])
+                    case 1: return OutpostJob(wantedIngredients: [.Fertilizer:250, .Aluminium:80, .Polimer:32, .Silica:16, .Battery:12, .Circuitboard:5], wantedSkills: [.Biologic:16, .Medic:8, .Handy:20, .SystemOS:3])
                         
-                    case 2: return OutpostJob(wantedSkills: [.Biologic:26, .Medic:18, .Handy:22, .SystemOS:6, .Datacomm:2],
-                                              wantedIngredients: [.Fertilizer:450, .Aluminium:120, .Polimer:80, .Battery:50, .Silica:20, .Circuitboard:15])
+                    case 2: return OutpostJob(wantedIngredients: [.Fertilizer:450, .Aluminium:120, .Polimer:80, .Battery:50, .Silica:20, .Circuitboard:15], wantedSkills: [.Biologic:26, .Medic:18, .Handy:22, .SystemOS:6, .Datacomm:2])
                         
                     default: return nil
                 }
@@ -204,6 +184,11 @@ class Outpost:Codable {
         }
     }
     
+    // TODO: FIX FOLLOWING
+    // PRODUCTION IS SAME TYPE AS SUPPLY, SO WE CAN RETURN A SUPPLY FUNCTION HERE?
+    func production() -> OutpostSupply {
+        return OutpostSupply(ingredients: [], skills: [], tanks: [], peripherals: [], bioBoxes: [], players: [:])
+    }
     // Outpost type has production base
     func produceIngredients() -> [Ingredient:Int] {
         
@@ -218,10 +203,13 @@ class Outpost:Codable {
         }
         return baseAdjust
     }
-    
     func produceTanks() -> [TankType:Int] {
         return [:]
     }
+    // The above 2 functions should be private
+    
+    
+    
     
     // Happy
     func happy() -> Int {
@@ -248,12 +236,18 @@ class Outpost:Codable {
     static func exampleFromDatabase(dbData:DBOutpost) -> Outpost {
         let newOutpost = Outpost(type: dbData.type, posdex: Posdex(rawValue:dbData.posdex)!, guild: nil)
         newOutpost.collected = dbData.accounting
+        newOutpost.materials = [.SolarCell:30, .Circuitboard:170, .Polimer:20, .Aluminium:30]
         return newOutpost
     }
     
     // Lineup
     var lineup:[Person] = []
+    
+    // DEPRECATE - SUBSTITUTE OUTPOSTSUPPLY
     var materials:[Ingredient:Int] = [:]
+    
+    var supplied:OutpostSupply?
+    
     var contribPPl:[UUID:Int] = [:]        // Player.id vs peopleskills
     var contribIng:[UUID:Int] = [:]        // Player.id vs ingredients
     
@@ -263,22 +257,69 @@ class Outpost:Codable {
     // and there should be a trigger for setting the level up of the outpost
     var activity:LabActivity?
     
-    func lockModel() {
-        // 1. Check if all ingredients are covered
-        // 2. Check if all skills are covered
-        // 3. Update 'Contributing'
-        // 4. Setup Activity
+    /// DEPRECATE -> WORKS HORRIBLY
+    func remaining() -> [Ingredient:Int]? {
+        guard let job = getNextJob() else { return nil }
+        
+        var willRemain:[Ingredient:Int] = [:]
+        
+        for req in job.wantedIngredients {
+            let iWant:Int = req.value
+            let iHave:Int = materials[req.key] ?? 0
+            if iWant - iHave > 0 {
+                willRemain[req.key] = iWant - iHave
+            } else {
+                willRemain[req.key] = 0
+            }
+        }
+        
+        return willRemain
     }
+    
+    // TODO: iHave vs iWant
+//    func sufficiency() -> (ing:Ingredient, have:Int, need:Int) {
+////        let stb = StorageBox(ingType: .SolarCell, current: 170)
+//        
+//    }
 }
 
 /// Its calculated. Doesn't need to be `Codable` type
 struct OutpostJob {
-    var wantedSkills:[Skills:Int]
+    // Ingredients
     var wantedIngredients:[Ingredient:Int]
-    // Wanted Tanks
-    // Wanted Peripherals
-    // Time
+    // Skills
+    var wantedSkills:[Skills:Int]
+    // Tanks
+    var wanterTanks:[TankType:Int]?
+    // Peripherals
+    var wantedPeripherals:[PeripheralType:Int]?
+    // Bioboxes
+    var wantedBio:[PerfectDNAOption:Int]?
 }
+
+/// The stuff being supplied to the outpost Job. Notice there are different objects
+struct OutpostSupply:Codable {
+    var ingredients:[StorageBox]
+    var skills:[Person] // Will need a reference later, to make busy
+    // Bsides skills (people), everything else is consumable.
+    
+    var tanks:[Tank]
+    var peripherals:[PeripheralObject]
+    var bioBoxes:[BioBox]
+    var players:[UUID:Int] // Player ID + Supplied points
+}
+
+/**
+    Helps to display data structured in `Views`
+ */
+struct BoxPetition {
+    
+    var id:UUID = UUID()
+    var ingredient:Ingredient
+    var wanted:Int
+    var current:Int
+}
+
 
 struct DBOutpost:Codable {
     
@@ -298,24 +339,18 @@ struct DBOutpost:Codable {
             
             case .hq:
                 switch level {
-                    case 0: return OutpostJob(wantedSkills: [.SystemOS:3, .Datacomm:2, .Handy:8],
-                                              wantedIngredients: [.Iron:15, .Aluminium:200, .Polimer:20, .Circuitboard:12])
-                    case 1: return OutpostJob(wantedSkills: [.SystemOS:8, .Datacomm:6, .Handy:16],
-                                              wantedIngredients: [.Polimer:600, .Aluminium:200, .Silica:80, .Water:80, .Battery:80])
-                    case 2: return OutpostJob(wantedSkills: [.SystemOS:20, .Material:12, .Electric:8, .Handy:20],
-                                              wantedIngredients: [.Polimer:1200, .Aluminium:500, .Silica:260, .Water:120, .Battery:80])
+                    case 0: return OutpostJob(wantedIngredients: [.Iron:15, .Aluminium:200, .Polimer:20, .Circuitboard:12], wantedSkills: [.SystemOS:3, .Datacomm:2, .Handy:8])
+                    case 1: return OutpostJob(wantedIngredients: [.Polimer:600, .Aluminium:200, .Silica:80, .Water:80, .Battery:80], wantedSkills: [.SystemOS:8, .Datacomm:6, .Handy:16])
+                    case 2: return OutpostJob(wantedIngredients: [.Polimer:1200, .Aluminium:500, .Silica:260, .Water:120, .Battery:80], wantedSkills: [.SystemOS:20, .Material:12, .Electric:8, .Handy:20])
                     default: return nil
                 }
                 
             // Mining
             case .mining1:
                 switch level {
-                    case 0: return OutpostJob(wantedSkills: [.Datacomm:1, .Mechanic:1],
-                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:7])
-                    case 1: return OutpostJob(wantedSkills: [.Biologic:1, .Mechanic:1],
-                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:21])
-                    case 2: return OutpostJob(wantedSkills: [.Biologic:1, .Mechanic:1],
-                                              wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:52])
+                    case 0: return OutpostJob(wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:7], wantedSkills: [.Datacomm:1, .Mechanic:1])
+                    case 1: return OutpostJob(wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:21], wantedSkills: [.Biologic:1, .Mechanic:1])
+                    case 2: return OutpostJob(wantedIngredients: [.Iron:5, .Aluminium:2, .DCMotor:12, .Sensor:52], wantedSkills: [.Biologic:1, .Mechanic:1])
                     default: return nil
                 }
             case .mining2: return nil
@@ -324,16 +359,11 @@ struct DBOutpost:Codable {
             // Energy
             case .power1, .power2:
                 switch level {
-                    case 0: return OutpostJob(wantedSkills: [.Electric:10, .Material:4, .Handy:18],
-                                              wantedIngredients: [.Polimer:50, .Aluminium:20, .SolarCell:200, .Circuitboard:8])
-                    case 1: return OutpostJob(wantedSkills: [.Electric:15, .Material:12, .Handy:22],
-                                              wantedIngredients: [.Polimer:150, .Aluminium:360, .SolarCell:900, .Circuitboard:54, .Sensor:12])
-                    case 2: return OutpostJob(wantedSkills: [.Electric:21, .Material:14, .Handy:30, .Mechanic:8],
-                                              wantedIngredients: [.Polimer:320, .Aluminium:450, .SolarCell:1600, .Circuitboard:32, .Sensor:64])
-                    case 3: return OutpostJob(wantedSkills: [.Electric:32, .Material:24, .Handy:32, .Mechanic:18, .SystemOS:8],
-                                              wantedIngredients: [.Polimer:680, .Aluminium:750, .SolarCell:2500, .Circuitboard:64, .Sensor:128])
-                    case 4: return OutpostJob(wantedSkills: [.Electric:40, .Material:30, .Handy:50, .Mechanic:15, .Datacomm:8, .SystemOS:12],
-                                              wantedIngredients: [.Polimer:1200, .Aluminium:600, .SolarCell:4000, .Circuitboard:128, .Sensor:256])
+                    case 0: return OutpostJob(wantedIngredients: [.Polimer:50, .Aluminium:20, .SolarCell:200, .Circuitboard:8], wantedSkills: [.Electric:10, .Material:4, .Handy:18])
+                    case 1: return OutpostJob(wantedIngredients: [.Polimer:150, .Aluminium:360, .SolarCell:900, .Circuitboard:54, .Sensor:12], wantedSkills: [.Electric:15, .Material:12, .Handy:22])
+                    case 2: return OutpostJob(wantedIngredients: [.Polimer:320, .Aluminium:450, .SolarCell:1600, .Circuitboard:32, .Sensor:64], wantedSkills: [.Electric:21, .Material:14, .Handy:30, .Mechanic:8])
+                    case 3: return OutpostJob(wantedIngredients: [.Polimer:680, .Aluminium:750, .SolarCell:2500, .Circuitboard:64, .Sensor:128], wantedSkills: [.Electric:32, .Material:24, .Handy:32, .Mechanic:18, .SystemOS:8])
+                    case 4: return OutpostJob(wantedIngredients: [.Polimer:1200, .Aluminium:600, .SolarCell:4000, .Circuitboard:128, .Sensor:256], wantedSkills: [.Electric:40, .Material:30, .Handy:50, .Mechanic:15, .Datacomm:8, .SystemOS:12])
                     default: return nil
                 }
                 
@@ -342,14 +372,11 @@ struct DBOutpost:Codable {
             // Bio
             case .biosphere1:
                 switch level {
-                    case 0: return OutpostJob(wantedSkills: [.Biologic:10, .Medic:4, .Handy:10],
-                                              wantedIngredients: [.Fertilizer:100, .Aluminium:50, .Polimer:22, .Silica:8, .Battery:4])
+                    case 0: return OutpostJob(wantedIngredients: [.Fertilizer:100, .Aluminium:50, .Polimer:22, .Silica:8, .Battery:4], wantedSkills: [.Biologic:10, .Medic:4, .Handy:10])
                         
-                    case 1: return OutpostJob(wantedSkills: [.Biologic:16, .Medic:8, .Handy:20, .SystemOS:3],
-                                              wantedIngredients: [.Fertilizer:250, .Aluminium:80, .Polimer:32, .Silica:16, .Battery:12, .Circuitboard:5])
+                    case 1: return OutpostJob(wantedIngredients: [.Fertilizer:250, .Aluminium:80, .Polimer:32, .Silica:16, .Battery:12, .Circuitboard:5], wantedSkills: [.Biologic:16, .Medic:8, .Handy:20, .SystemOS:3])
                         
-                    case 2: return OutpostJob(wantedSkills: [.Biologic:26, .Medic:18, .Handy:22, .SystemOS:6, .Datacomm:2],
-                                              wantedIngredients: [.Fertilizer:450, .Aluminium:120, .Polimer:80, .Battery:50, .Silica:20, .Circuitboard:15])
+                    case 2: return OutpostJob(wantedIngredients: [.Fertilizer:450, .Aluminium:120, .Polimer:80, .Battery:50, .Silica:20, .Circuitboard:15], wantedSkills: [.Biologic:26, .Medic:18, .Handy:22, .SystemOS:6, .Datacomm:2])
                         
                     default: return nil
                 }
@@ -360,11 +387,9 @@ struct DBOutpost:Codable {
             case .antenna:
                 switch level {
                     case 0:
-                        return OutpostJob(wantedSkills: [.Biologic:10, .Medic:4, .Handy:10],
-                                          wantedIngredients: [.Fertilizer:100, .Aluminium:50, .Polimer:22, .Silica:8, .Battery:4])
+                        return OutpostJob(wantedIngredients: [.Fertilizer:100, .Aluminium:50, .Polimer:22, .Silica:8, .Battery:4], wantedSkills: [.Biologic:10, .Medic:4, .Handy:10])
                     case 1:
-                        return  OutpostJob(wantedSkills: [.Biologic:10, .Medic:4, .Handy:10],
-                                           wantedIngredients: [.Fertilizer:100, .Aluminium:50, .Polimer:22, .Silica:8, .Battery:4])
+                        return  OutpostJob(wantedIngredients: [.Fertilizer:100, .Aluminium:50, .Polimer:22, .Silica:8, .Battery:4], wantedSkills: [.Biologic:10, .Medic:4, .Handy:10])
                     default: return nil
                 }
                 

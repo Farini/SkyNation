@@ -629,7 +629,10 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         sceneRenderer.scene = scene
         
         // Post Init
-        if let source = SCNAudioSource(fileNamed: "SKN Track1.m4a") {
+        
+        // Play a random track
+        let track = Soundtrack.allCases.randomElement()
+        if let source = SCNAudioSource(fileNamed: "\(track?.rawValue ?? "na").m4a") {
             print("found audio file")
             let action = SCNAction.playAudio(source, waitForCompletion: false)
             scene.rootNode.runAction(action)
@@ -638,146 +641,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         }
     }
     
-    /// Loads the **Station** Scene
-    /*
-    func loadStationScene() {
-        
-         //builder.modules //builder.modules
-        
-        // FIXME: - ⚠️ Tech Modifications
-        
-        // Load TechItem scene node, if any
-        for tech in station?.unlockedTechItems ?? [] {
-            var modex:ModuleIndex?
-            switch tech {
-                case .module7: modex = .mod7
-                case .module8: modex = .mod8
-                case .module9: modex = .mod9
-                default: print("Not a module")
-            }
-            if let node = tech.loadToScene() {
-                if let moduleIndex = modex {
-                    for module in station!.modules {
-                        if module.moduleDex == moduleIndex {
-                            print("Module Index Found both Scene and Model: \(moduleIndex.rawValue)")
-                            node.name = module.id.uuidString
-                        }
-                    }
-                }
-                scene.rootNode.addChildNode(node)
-            }
-        }
-        
-        // Antenna
-        if let oldAntenna = scene.rootNode.childNode(withName: "Antenna", recursively: false) {
-            oldAntenna.removeFromParentNode()
-        }
-        let antenna = Antenna3DNode(peripheral: station!.truss.antenna)
-        antenna.position = SCNVector3(22.0, 1.5, 0.0)
-        scene.rootNode.addChildNode(antenna)
-        
-        // Truss (Solar Panels, Radiator, and Roboarm)
-        updateTrussLayout()
-        
-        // Station Builder
-        let stationBuilder = LocalDatabase.shared.stationBuilder
-        // ⚠️ You may add an empty node for Nodes, and nother for Modules
-        // Do it here, if you want to simplify the scene
-        for buildPart in stationBuilder.buildList {
-            print("Build part type: \(buildPart.type.rawValue)")
-            if let newNode = buildPart.loadFromScene() {
-                scene.rootNode.addChildNode(newNode)
-            }
-        }
-        
-        // Earth or ship
-        if let order = station?.earthOrder {
-            
-            // Load Ship
-            print("We have an order! Delivered: \(order.delivered)")
-            
-            var ship:DeliveryVehicleNode? = DeliveryVehicleNode()
-            ship?.position.z = -50
-            ship?.position.y = -50 // -17.829
-            scene.rootNode.addChildNode(ship!)
-            
-            #if os(macOS)
-            ship?.eulerAngles = SCNVector3(x:90.0 * (.pi/180.0), y:0, z:0)
-            #else
-            ship?.eulerAngles = SCNVector3(x:90.0 * (Float.pi/180.0), y:0, z:0)
-            #endif
-            
-            // Move
-            let move = SCNAction.move(by: SCNVector3(0, 30, 50), duration: 12.0)
-            move.timingMode = .easeInEaseOut
-            
-            // Kill Engines
-            let killWaiter = SCNAction.wait(duration: 6)
-            let killAction = SCNAction.run { shipNode in
-                print("Kill Waiter")
-                ship?.killEngines()
-            }
-            let killSequence = SCNAction.sequence([killWaiter, killAction])
-            
-            let rotate = SCNAction.rotateBy(x: -90.0 * (.pi/180.0), y: 0, z: 0, duration: 5.0)
-            let group = SCNAction.group([move, rotate, killSequence])
-            
-            ship?.runAction(group, completionHandler: {
-                print("Ship arrived at location")
-                for child in ship?.childNodes ?? [] {
-                    child.particleSystems?.first?.birthRate = 0
-                }
-            })
-        }else{
-            if let ship = scene.rootNode.childNode(withName: "Ship", recursively: false) {
-                ship.removeFromParentNode()
-            }
-            
-            // Load Earth
-            let earth = SCNScene(named: "Art.scnassets/Earth.scn")!.rootNode.childNode(withName: "Earth", recursively: true)!.clone()
-            earth.position = SCNVector3(0, -18, 0)
-            
-            scene.rootNode.addChildNode(earth)
-        }
-        
-        // NEWS
-        // Check Activities
-        var newsLines:[String] = []
-        if gameScene == .SpaceStation {
-            if let labs = station?.labModules {
-                for lab in labs {
-                    print("*** Found lab: \(lab.id)")
-                    if let activity = lab.activity {
-                        print("*** Found Activity: \(activity.activityName)")
-                        if activity.dateEnds.compare(Date()) == .orderedAscending {
-                            let descriptor = "🔬 Completed Lab activities. Check Lab Modules."
-                            newsLines.append(descriptor)
-                        } else {
-                            let descriptor = "⏱ In progress... Lab activity \(activity.activityName). \(activity.dateEnds.timeIntervalSince(Date()))"
-                            newsLines.append(descriptor)
-                        }
-                    }
-                }
-            }
-            
-        }
-        
-        var newsDelay = 3.0
-        if !newsLines.isEmpty {
-            for line in newsLines {
-                print("*** NEWS ***  (\(newsLines.count)")
-                let timeDelay = DispatchTime.now() + newsDelay
-                DispatchQueue.main.asyncAfter(deadline: timeDelay) {
-                    self.stationOverlay.generateNews(string: line)
-                }
-                newsDelay += 3.0
-            }
-        }
-        
-        // Tell SceneDirector that scene is loaded
-        SceneDirector.shared.controllerDidLoadScene(controller: self)
-    }
-    */
     
     func loadLastBuildItem() {
         print("Loading last build item")
@@ -817,9 +680,9 @@ extension TechItems {
         switch self {
             // Need to get the models
             case .garage:
-                let garageScene = SCNScene(named: "Art.scnassets/Garage.scn")!
+                let garageScene = SCNScene(named: "Art.scnassets/SpaceStation/Garage4.scn")!
                 if let garageObj = garageScene.rootNode.childNode(withName:"Garage", recursively: true)?.clone() {
-                    let pos = Vector3D(x: 0, y: 0, z: -46)
+                    let pos = Vector3D(x: 0, y: 0, z: -42)
                     #if os(macOS)
                     garageObj.position = SCNVector3(x: CGFloat(pos.x), y: CGFloat(pos.y), z: CGFloat(pos.z))
                     #else

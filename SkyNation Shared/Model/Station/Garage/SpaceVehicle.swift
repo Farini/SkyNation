@@ -117,9 +117,6 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     var tanks:[Tank] = []           // Recommended 1 Methane + 1 Oxygen
     var batteries:[Battery] = []
     var peripherals:[PeripheralObject] = []
-    
-    // Updating boxes...
-    // ⚠️ Change back to empty array (required)
     var boxes:[StorageBox] = []
     
     var solar:[SolarPanel] = []
@@ -134,9 +131,6 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     var dateTravelStarts:Date?      // Date ref
     var travelTime:TimeInterval?    // Time?
     var dateAccount:Date?
-    
-    // CHANGES
-    // ADD SOLAR POWER (INTERFACE)
     
     init(engine:EngineType) {
         self.engine = engine
@@ -273,7 +267,7 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
             // weight += 1
         }
         
-        for _ in boxes ?? [] {
+        for _ in boxes {
             weight += 1
         }
         

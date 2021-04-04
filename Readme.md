@@ -102,6 +102,7 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [X] Fix buttons getting green and not returning to white
 - [X] 1/3 Camera options + animations
 - [X] Adjust camera LOOK@ constraints
+- [X] Remodel Garage (Garage4.scn)
 
 - [ ] Biobox still not saving when done
 - [ ] Bio View - DNA animation
@@ -119,6 +120,7 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [ ] Animate Satellite Opening Solar Panel (if there is one)
 - [ ] Adjust quantities shown in Earth Order
 
+
 - [ ] Oupost View
     - [ ] My City Resources
     - [ ] Contribute Resources
@@ -130,11 +132,12 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
     - [ ] SpaceVehicle engine icons
     - [ ] iOS app icon
 
-- [ ] 13/21 (Feb.17) Station Scene Improvements - Started: 02/08/2021
+- [ ] 16/21 (Feb.17) Station Scene Improvements - Started: 02/08/2021
     - [ ] Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
     - [ ] Improve Background HDRI image
     - [ ] Make the Earth bright again?
     - [ ] Add TechItems updates to StationBuilder
+    
         
 - [ ] 7/8 Garage View Improvements
     - [ ] Space Vehicle Registration (when launch)

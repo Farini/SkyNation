@@ -432,8 +432,6 @@ extension StationBuilder {
         completion(scene)
     }
     
-    
-    
 }
 
 /**
@@ -445,8 +443,6 @@ class StationBuildItem:Codable {
     var rotation:Vector3D
     var type:BuildComponent //(node, module)
     
-    // (Not needed)
-    // var researched:Bool
     var skin:ModuleSkin? //String?
     var modex:String?
     // static func makeFromTech
@@ -468,7 +464,6 @@ class StationBuildItem:Codable {
         self.skin = ModuleSkin.allCases.randomElement()! //"ModuleColor"
         self.modex = modex.rawValue
     }
-    
     
 }
 

@@ -50,17 +50,6 @@ class VehicleBuilderViewModel:ObservableObject {
         self.buildStage = .pickEngineers(type: type)
     }
     
-    /// Engineer to build the engine
-//    func addEngineerToBuild(person:Person) {
-//        workersArray.append(person)
-//        updateStaffList()
-//        if self.hasSkills == true {
-//            print("Bingo")
-//        }else{
-//            print("Still needs more skills")
-//        }
-//    }
-    
     func updateStaffList() {
         
         if let skillsRequired = selectedEngine?.skills {
