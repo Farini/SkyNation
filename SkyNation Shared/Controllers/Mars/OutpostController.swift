@@ -8,9 +8,15 @@
 import Foundation
 
 enum OutpostViewTab:String, Codable, CaseIterable {
+    
+    case info // String? or Deprecate
+    
     case ingredients
+    case tanks
+    case bioboxes
+    case peripherals
     case people
-    case other
+    
     case contributions
     case management
 }
@@ -66,9 +72,6 @@ class OutpostController:ObservableObject {
         // if HAS updates
         //      Someone else already contributed
         //      Update outpost (locally)
-        
-        
-        
         // save city
         // save Outpost
     }
@@ -82,9 +85,13 @@ extension OutpostViewTab {
         switch self {
             case .ingredients: return "archivebox"
             case .people: return "person.2"
-            case .other: return "questionmark.diamond"
-            case .contributions: return "control"
+            case .bioboxes: return "leaf"
+            case .tanks: return "gauge"
+            case .peripherals: return "gearshape.2.fill"
+            case .info: return "info.circle.fill"
+            case .contributions: return "person.fill.checkmark"
             case .management: return "externaldrive"
+//            default: return "questionmark"
         }
     }
     
@@ -93,9 +100,10 @@ extension OutpostViewTab {
         switch self {
             case .ingredients: return "Ingredients"
             case .people: return "People"
-            case .other: return "Unknown"
+            case .info: return "Info"
             case .contributions: return "Contribution"
             case .management: return "Management"
+            default: return self.rawValue.capitalized
         }
     }
     

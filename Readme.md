@@ -103,15 +103,16 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [X] 1/3 Camera options + animations
 - [X] Adjust camera LOOK@ constraints
 - [X] Remodel Garage (Garage4.scn)
+- [X] Have 3 Background music
+- [X] Person Workout not incrementing health
 
-- [ ] Biobox still not saving when done
-- [ ] Bio View - DNA animation
+- [ ] Biobox still not saving when done (needs testing)
+- [ ] Bio View - DNA animation (needs testing)
 
 - [ ] Make sure that Air adjustments AND Oxygen adjustments are working - Accounting)
 - [ ] Game Store Improvements
 - [ ] New Modules not fully available after Tech research. 
 - [ ] 1/8 Soundtrack + FX
-- [ ] Have 3 Background music
 - [ ] Add a couple of SoundFX
 - [ ] GameSettings -> Sound
 - [ ] Gamesettings -> SoundFX
@@ -119,7 +120,7 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [ ] Scene Alert (News) -> Bad AirQualities
 - [ ] Animate Satellite Opening Solar Panel (if there is one)
 - [ ] Adjust quantities shown in Earth Order
-
+- [ ] LSS View -> Let player sort Ingredients, Tanks, etc. as they wish
 
 - [ ] Oupost View
     - [ ] My City Resources
@@ -178,6 +179,15 @@ Grab things from this list as you go along.
 
 - [ ] 1/13 Mars Scene
 - [ ] 0/21 Mars Views & Controllers
+
+### Characters prompt lines:
+1. When hired: "Yay", "Thank you", "Here we go", etc.
+2. When fired: "Boo"
+3. When unhappy: *crying*
+4. When unhealthy: *blerg*
+5. Bad air quality: "I can't breathe"
+6. When going to Mars: "Woohoo"
+7. Tech research: "alright!"
 
 ## Wishlist
 Features that are requested, but are not required to launch the game

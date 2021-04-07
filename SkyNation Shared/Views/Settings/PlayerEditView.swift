@@ -29,20 +29,16 @@ struct PlayerEditView: View {
         self.allNames = HumanGenerator().female_avatar_names + HumanGenerator().male_avatar_names
         self.controller = controller
         
+        // Build the image options (avatars)
         var newCards:[AvatarCard] = []
-//        var selCard:AvatarCard?
-        
         for name in allNames {
             let card = AvatarCard(name: name)
             newCards.append(card)
             if controller.player.avatar == name {
-//                selCard = card
-//                card.selected = true
             }
         }
         
         self.cards = newCards
-//        self.selectedCard = selCard
     }
     
     var body: some View {
@@ -78,7 +74,7 @@ struct PlayerEditView: View {
                     
                     Spacer()
                     
-                    ScrollView {
+//                    ScrollView {
                         LazyVGrid(columns: [GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96))], alignment: .center, spacing: 8, pinnedViews: [], content: {
                             ForEach(cards) { avtCard in
                                 ZStack(alignment: .bottom) {
@@ -97,19 +93,10 @@ struct PlayerEditView: View {
                                 }
                             }
                         })
-                    }
-                    .frame(minHeight:140, maxHeight:250)
+//                    }
+                    .frame(minHeight:140)
                     .background(LinearGradient(gradient: Gradient(colors: [Color.red.opacity(0.1), Color.blue.opacity(0.1)]), startPoint: .topLeading, endPoint: .bottomTrailing))
                     
-                    // About
-//                    VStack(alignment:.leading) {
-//                        TextField("About", text: $about)
-//                            .padding(.horizontal)
-//                            .lineLimit(3)
-//                            .cornerRadius(8)
-                    
-//                    Spacer(minLength: 8)
-//                }
             }
             .onAppear() {
                 self.selectedCard = cards.first(where: { $0.name == controller.player.avatar })
@@ -127,8 +114,6 @@ struct PlayerEditView: View {
                 self.selectedCard = card
             }
         }
-//        let newCards = cards.sorted(by: { $0.id.uuidString < $1.id.uuidString })
-//        self.cards = newCards
     }
     
 }
@@ -151,6 +136,7 @@ struct LoadingGameTab: View {
     }
 }
 
+// SERVER
 struct SettingsServerTab:View {
     
     @ObservedObject var controller:GameSettingsController
@@ -272,6 +258,7 @@ struct SettingsServerTab:View {
     }
 }
 
+// SETTINGS
 struct GameSettingsTabView: View {
     
     var settings:GameSettings
@@ -280,24 +267,47 @@ struct GameSettingsTabView: View {
     @State var useCloudData:Bool = GameSettings.shared.useCloud
     @State var showLights:Bool = GameSettings.shared.showLights
     @State var clearTanks:Bool = GameSettings.shared.clearEmptyTanks
+    @State var startingScene:GameSceneType = GameSettings.shared.startingScene
+    
+    @State var musicOn:Bool = GameSettings.shared.musicOn
+    @State var soundFXOn:Bool = GameSettings.shared.soundFXOn
     
     init() {
         self.settings = GameSettings.shared
     }
     
     var body:some View {
-        ScrollView{
+        ScrollView {
             VStack(alignment:.leading) {
                 
                 Text("Graphics").font(.title)
                 Toggle("Show Lights", isOn:$showLights)
                 
                 Divider()
-                Group {
-                    Text("Gameplay").font(.title)
-                    Toggle("Clear empty tanks", isOn:$clearTanks)
-                    Toggle("Show Tutorial", isOn:$showTutorial)
-                    Toggle("Use iCloud", isOn:$useCloudData)
+                
+                HStack(alignment:.top) {
+                    VStack(alignment: .leading) {
+                        Text("Gameplay").font(.title)
+                        Picker(selection: $startingScene, label: Text("Main Scene")) {
+                            ForEach(GameSceneType.allCases, id:\.self) { sceneCase in
+                                Text(sceneCase.rawValue)
+                                    .onTapGesture {
+                                        print("Set another scene")
+                                    }
+                            }
+                        }
+                        .frame(maxWidth: 200)
+                        Toggle("Clear empty tanks", isOn:$clearTanks)
+                        Toggle("Show Tutorial", isOn:$showTutorial)
+                    }
+                    Spacer()
+                    VStack(alignment: .leading) {
+                        Text("Sounds").font(.title)
+                        Toggle("Music", isOn:$musicOn)
+                        Toggle("Sound FX", isOn:$soundFXOn)
+                        Toggle("Dialogue", isOn:$soundFXOn)
+                    }
+                    Spacer()
                 }
                 
                 Divider()

@@ -118,6 +118,13 @@ class HabModuleController: ObservableObject {
         let workoutActivity = LabActivity(time: 60, name: "Workout")
         selected.activity = workoutActivity
         print("Person working out")
+        if person.healthPhysical < 80 {
+            person.healthPhysical += 2
+            if Bool.random() { person.healthPhysical += 1 }
+        } else if person.healthPhysical > 95 {
+            person.happiness += 1
+        }
+        
         // Needs to save
         save()
         didSelect(person: person)

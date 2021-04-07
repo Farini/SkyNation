@@ -374,6 +374,9 @@ class BioModController: ObservableObject {
             // 4. Charge Fertilizers
             let payment = station.truss.payForResources(ingredients: [.Fertilizer:fertilizer])
             
+            // Save
+            LocalDatabase.shared.saveStation(station: station)
+            
             print("Consumed Energy: \(consumption)")
             print("Paid for resources: \(payment)")
             
@@ -410,13 +413,18 @@ class BioModController: ObservableObject {
                     print("Skills Verified - Charging Tokens")
                     
                     // Charge Player
-                    LocalDatabase.shared.player?.timeTokens.removeFirst(tokens)
+                    let player = LocalDatabase.shared.player!
+                    player.timeTokens.removeFirst(tokens)
                     
                     // Make people busy
                     let activity = LabActivity(time: 3600, name: "Planting life")
                     for person in selectedPeople {
                         person.activity = activity
                     }
+                    
+                    LocalDatabase.shared.saveStation(station: station)
+                    let pRes = LocalDatabase.shared.savePlayer(player: player)
+                    print("Saved player: \(pRes)")
                 }
                 
             } else {
@@ -478,6 +486,7 @@ class BioModController: ObservableObject {
             self.selectedBioBox!.population = sender.populationStrings
             self.selectedBioBox!.currentGeneration += sender.counter
             self.geneticFitString = self.selectedBioBox?.getBestFitDNA() ?? ""
+            saveStation()
         }
     }
     

@@ -512,6 +512,7 @@ class HumanGenerator:NSObject{
                                                    NameGenderPair(name: "Kevin Burke", gender: .male),
                                                    NameGenderPair(name: "Edwin Greene", gender: .male),
                                                    NameGenderPair(name: "Judith Parks", gender: .female),
+                                                   
                                                    NameGenderPair(name: "Nettie Miles", gender: .male),
                                                    NameGenderPair(name: "Janis Ramirez", gender: .female),
                                                    NameGenderPair(name: "Suzanne Brady", gender: .female),
@@ -520,8 +521,9 @@ class HumanGenerator:NSObject{
                                                    NameGenderPair(name: "Sadie Lopez", gender: .female),
                                                    NameGenderPair(name: "Boyd Collier", gender: .male),
                                                    NameGenderPair(name: "Levi Rogers", gender: .male),
-                                                   NameGenderPair(name: "Rachael Wells", gender: .female),
+                                                   NameGenderPair(name: "Rachel Wells", gender: .female),
                                                    NameGenderPair(name: "William Parks", gender: .male),
+                                                   
                                                    NameGenderPair(name: "Timothy Lyons", gender: .male),
                                                    NameGenderPair(name: "Charlie Walsh", gender: .female),
                                                    NameGenderPair(name: "Misty Swanson", gender: .female),
@@ -532,6 +534,7 @@ class HumanGenerator:NSObject{
                                                    NameGenderPair(name: "Rene Goodwin", gender: .female),
                                                    NameGenderPair(name: "Shannon Cross", gender: .female),
                                                    NameGenderPair(name: "Trevor Baker", gender: .male),
+                                                   
                                                    NameGenderPair(name: "Giovanni Piza", gender: .male),
                                                    NameGenderPair(name: "Yuri Bobov", gender: .male),
                                                    NameGenderPair(name: "Marko Trapuya", gender: .male),
@@ -542,22 +545,29 @@ class HumanGenerator:NSObject{
                                                    NameGenderPair(name: "Guta Gonzales", gender: .female),
                                                    NameGenderPair(name: "Masha Ivanov", gender: .female),
                                                    NameGenderPair(name: "Lauren Gucci", gender: .female),
+                                                   
                                                    NameGenderPair(name: "Miranda Burke", gender: .female),
                                                    NameGenderPair(name: "Amanda Shultz", gender: .female),
                                                    NameGenderPair(name: "Dima Vasiliev", gender: .male),
                                                    NameGenderPair(name: "Gene Rossi", gender: .male),
-                                                   NameGenderPair(name: "Jimmy Ferrari", gender: .male),
+                                                   NameGenderPair(name: "John Ferrari", gender: .male),
                                                    NameGenderPair(name: "John Ballak", gender: .male),
                                                    NameGenderPair(name: "David Mazzol", gender: .male),
                                                    NameGenderPair(name: "Rick Shultz", gender: .male),
                                                    NameGenderPair(name: "Rod Shimura", gender: .male),
                                                    NameGenderPair(name: "Jena Thomson", gender: .female),
+                                                   
                                                    NameGenderPair(name: "Maura Pizani", gender: .female),
                                                    NameGenderPair(name: "Jeff Johnson", gender: .male),
                                                    NameGenderPair(name: "Carl Hikken", gender: .male),
                                                    NameGenderPair(name: "Albert Fritz", gender: .male),
                                                    NameGenderPair(name: "Candice Bril", gender: .female),
-                                                   NameGenderPair(name: "Biance Green", gender: .female)
+                                                   NameGenderPair(name: "Bianca Green", gender: .female),
+                                                   NameGenderPair(name: "Gina Capricci", gender: .female),
+                                                   NameGenderPair(name: "Owen Walters", gender: .male),
+                                                   NameGenderPair(name: "Mark Sapporo", gender: .male),
+                                                   NameGenderPair(name: "Carl Collier", gender: .male)
+                                                   
                 ]
         return allNameGenderPairs.randomElement()!
     }
@@ -591,13 +601,13 @@ class HumanGenerator:NSObject{
     // Happiness
     func randomHappiness() -> Int {
         let lower = 45
-        let upper = 75
+        let upper = 95
         return lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
     }
     
     // Teamwork
     func randomTeamWorkAdaptability() -> Int {
-        let lower = 25
+        let lower = 35
         let upper = 99
         return lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
     }

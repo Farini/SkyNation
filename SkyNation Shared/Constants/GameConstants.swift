@@ -7,22 +7,33 @@ import SwiftUI
 
 class GameSettings {
     
-    /// Bring up tutorial when game starts
-    var showTutorial:Bool
+    static let shared = GameSettings()
     
-    /// Whether to render more expensive lights
-    var showLights:Bool = true
+    // MARK: - Data
     
     /// To save in Cloud
     var useCloud:Bool = false
     
-    var startingScene:GameSceneType
     
     // MARK: - Game Logic
+    
+    /// The scene that starts the game
+    var startingScene:GameSceneType
+    
+    /// Bring up tutorial when game starts
+    var showTutorial:Bool
     
     /// Wether the game should automatically clear empty tanks
     var clearEmptyTanks:Bool = false
     
+    /// Whether to render more expensive lights
+    var showLights:Bool = true
+    
+    // MARK: - Sounds
+    
+    var musicOn:Bool
+    var soundFXOn:Bool
+    var dialogueOn:Bool
     
     // MARK: - Debugging
     
@@ -30,34 +41,50 @@ class GameSettings {
     var debugScene:Bool = false
     var debugAccounting:Bool = false
     
-    static let shared = GameSettings()
-    
     private init () {
         
+        // Tutorial
         var shouldShowTutorial:Bool = true
-        if let station = LocalDatabase.shared.station {
-            if let mod = station.habModules.first {
-                if mod.inhabitants.isEmpty {
-                    print("No Inhabitants")
-                } else {
-                    // Disable Tutorial
-                    shouldShowTutorial = false
+        if let theVal = UserDefaults.standard.value(forKey: "showTutorial") as? Bool {
+            shouldShowTutorial = theVal
+        } else {
+            if let station = LocalDatabase.shared.station {
+                if let mod = station.habModules.first {
+                    if mod.inhabitants.isEmpty {
+                        print("No Inhabitants")
+                    } else {
+                        // Disable Tutorial
+                        shouldShowTutorial = false
+                    }
                 }
             }
         }
         
+        // Gameplay
         self.showTutorial = shouldShowTutorial
         self.startingScene = .SpaceStation
+        self.showLights = UserDefaults.standard.value(forKey: "showLights") as? Bool ?? true
+        self.clearEmptyTanks = UserDefaults.standard.value(forKey: "clearEmptyTanks") as? Bool ?? false
         
-        // self.showLights = UserDefaults().bool(forKey: "showLights")
-        let clear = UserDefaults.standard.bool(forKey: "clearEmptyTanks")
-        self.clearEmptyTanks = clear
+        // Sounds
+        self.musicOn = UserDefaults.standard.value(forKey: "musicOn") as? Bool ?? true
+        self.soundFXOn = UserDefaults.standard.value(forKey: "soundFXOn") as? Bool ?? true
+        self.dialogueOn = UserDefaults.standard.value(forKey: "dialogueOn") as? Bool ?? true
         
     }
     
+    /// Saves the User `Settings`, or Preferences
     func save() {
+        UserDefaults.standard.setValue(self.showTutorial, forKey: "showTutorial")
+        UserDefaults.standard.setValue(self.useCloud, forKey: "useCloud")
+        // Gameplay
+        UserDefaults.standard.setValue(self.startingScene, forKey: "startingScene")
         UserDefaults.standard.setValue(self.clearEmptyTanks, forKey: "clearEmptyTanks")
-        
+        UserDefaults.standard.setValue(self.showLights, forKey: "showLights")
+        // Sounds
+        UserDefaults.standard.setValue(self.musicOn, forKey: "musicOn")
+        UserDefaults.standard.setValue(self.soundFXOn, forKey: "soundFXOn")
+        UserDefaults.standard.setValue(self.dialogueOn, forKey: "dialogueOn")
     }
 }
 

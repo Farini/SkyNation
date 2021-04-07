@@ -223,42 +223,7 @@ struct TankView: View {
         
         return nil
     }
-    /*
-    func generateBarcode(from uuid: UUID) -> Image? {
-        let data = uuid.uuidString.prefix(8).data(using: String.Encoding.ascii)
-        
-        if let filter = CIFilter(name: "CICode128BarcodeGenerator") {
-            filter.setValue(data, forKey: "inputMessage")
-            
-            let transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-            let smallBarCode = filter.outputImage?.transformed(by:transform)
-            
-            if let output:CIImage = smallBarCode {
-                
-                if let inverter = CIFilter(name:"CIColorInvert") {
-                    
-                    inverter.setValue(output, forKey:"inputImage")
-                    
-                    if let invertedOutput = inverter.outputImage {
-                        let rep = NSCIImageRep(ciImage: invertedOutput)
-                        let nsImage = NSImage(size: rep.size)
-                        nsImage.addRepresentation(rep)
-                        return Image(nsImage:nsImage)
-                    }
-                    
-                } else {
-                    let rep = NSCIImageRep(ciImage: output)
-                    let nsImage = NSImage(size: rep.size)
-                    nsImage.addRepresentation(rep)
-                    
-                    return Image(nsImage:nsImage)
-                }
-            }
-        }
-        
-        return nil
-    }
- */
+    
 }
 
 struct TankOrderView: View {

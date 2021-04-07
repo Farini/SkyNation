@@ -74,6 +74,11 @@ enum OutpostType:String, CaseIterable, Codable {
     }
 }
 
+// Building up to here, an outpost has an OutpostJob, which sets the Level of the Outpost
+// For a job. There is a lineup of people, and materials. Each one tracking back to Players
+// When a job is ready to be executed (covered skills and ingredients), each person gets an Activity
+// and there should be a trigger for setting the level up of the outpost
+
 class Outpost:Codable {
     
     var id:UUID
@@ -86,6 +91,82 @@ class Outpost:Codable {
     
     var level:Int = 0
     var collected:Date?
+    
+    // Just prints info
+    func debugInfo() {
+        switch type {
+            case .HQ: print("hq")
+            case .Water: print("Make Water")
+                switch level {
+                    case 0...5: print("Low Level")
+                    case 6...10: print("Mid Level")
+                    case 11...15: print("Advanced")
+                    default:print("ERROR")
+                }
+            case .Silica: print("Make Silica")
+            case .Energy: print("Make Energy")
+            case .Biosphere: print("Make Biosphere")
+            case .Titanium: print("Make Titanium")
+            case .Observatory: print("Make Observatory")
+            case .Antenna: print("Make Antenna")
+            case .Launchpad: print("Make Launchpad")
+            case .Arena: print("Make Arena")
+            case .ETEC: print("Make ETEC")
+        }
+    }
+    
+    // MARK: - Production
+    
+    func production() -> OutpostSupply {
+        return OutpostSupply(ingredients: [], tanks: [], peripherals: [], bioBoxes: [])
+    }
+    
+    // Outpost type has production base
+    func produceIngredients() -> [Ingredient:Int] {
+        
+        var baseAdjust:[Ingredient:Int] = [:]
+        
+        for (k, v) in type.productionBase {
+            // Level * percentage * fibo * baseValue(v)
+            let fiboValue = GameLogic.fibonnaci(index: self.level)
+            let fiboMatters:Double = 0.5 // (% influence)
+            let calc = v + Int(fiboMatters * Double(fiboValue) * Double(v))
+            baseAdjust[k] = calc
+        }
+        return baseAdjust
+    }
+    func produceTanks() -> [TankType:Int] {
+        return [:]
+    }
+    // The above 2 functions should be private
+    
+    // Happy
+    func happy() -> Int {
+        return type.happyDelta
+    }
+    
+    // Energy
+    func energy() -> Int {
+        let fiboValue = GameLogic.fibonnaci(index: self.level + 1)
+        let fiboMatters:Double = 0.5
+        let calc = Int(fiboMatters * Double(fiboValue) * Double(type.energyDelta))
+        return calc
+    }
+    
+    // MARK: - Supplied
+    
+    // DEPRECATE - SUBSTITUTE OUTPOSTSUPPLY
+    var materials:[Ingredient:Int] = [:]
+    
+    /// Stuff supplied so far
+    var supplied:OutpostSupply
+    
+    /// `Player.id` vs `points`
+    var contributed:[UUID:Int] = [:]
+    
+    // MARK: - Updates
+    
+    var activity:LabActivity?
     
     /// Gets the job to perform to level up
     func getNextJob() -> OutpostJob? {
@@ -161,102 +242,6 @@ class Outpost:Codable {
         }
     }
     
-    // Just prints info
-    func makeModel() {
-        switch type {
-            case .HQ: print("hq")
-            case .Water: print("Make Water")
-                switch level {
-                    case 0...5: print("Low Level")
-                    case 6...10: print("Mid Level")
-                    case 11...15: print("Advanced")
-                    default:print("ERROR")
-                }
-            case .Silica: print("Make Silica")
-            case .Energy: print("Make Energy")
-            case .Biosphere: print("Make Biosphere")
-            case .Titanium: print("Make Titanium")
-            case .Observatory: print("Make Observatory")
-            case .Antenna: print("Make Antenna")
-            case .Launchpad: print("Make Launchpad")
-            case .Arena: print("Make Arena")
-            case .ETEC: print("Make ETEC")
-        }
-    }
-    
-    // TODO: FIX FOLLOWING
-    // PRODUCTION IS SAME TYPE AS SUPPLY, SO WE CAN RETURN A SUPPLY FUNCTION HERE?
-    func production() -> OutpostSupply {
-        return OutpostSupply(ingredients: [], skills: [], tanks: [], peripherals: [], bioBoxes: [], players: [:])
-    }
-    // Outpost type has production base
-    func produceIngredients() -> [Ingredient:Int] {
-        
-        var baseAdjust:[Ingredient:Int] = [:]
-        
-        for (k, v) in type.productionBase {
-            // Level * percentage * fibo * baseValue(v)
-            let fiboValue = GameLogic.fibonnaci(index: self.level)
-            let fiboMatters:Double = 0.5 // (% influence)
-            let calc = v + Int(fiboMatters * Double(fiboValue) * Double(v))
-            baseAdjust[k] = calc
-        }
-        return baseAdjust
-    }
-    func produceTanks() -> [TankType:Int] {
-        return [:]
-    }
-    // The above 2 functions should be private
-    
-    
-    
-    
-    // Happy
-    func happy() -> Int {
-        return type.happyDelta
-    }
-    
-    // Energy
-    func energy() -> Int {
-        let fiboValue = GameLogic.fibonnaci(index: self.level + 1)
-        let fiboMatters:Double = 0.5
-        let calc = Int(fiboMatters * Double(fiboValue) * Double(type.energyDelta))
-        return calc
-    }
-    
-    init(type:OutpostType, posdex:Posdex, guild:UUID?) {
-        self.id = UUID()
-        self.guild = nil
-        self.posdex = posdex
-        self.type = type
-        self.level = 0
-    }
-    
-    /// Makes an example data. **Delete** it upon launch
-    static func exampleFromDatabase(dbData:DBOutpost) -> Outpost {
-        let newOutpost = Outpost(type: dbData.type, posdex: Posdex(rawValue:dbData.posdex)!, guild: nil)
-        newOutpost.collected = dbData.accounting
-        newOutpost.materials = [.SolarCell:30, .Circuitboard:170, .Polimer:20, .Aluminium:30]
-        return newOutpost
-    }
-    
-    // Lineup
-    var lineup:[Person] = []
-    
-    // DEPRECATE - SUBSTITUTE OUTPOSTSUPPLY
-    var materials:[Ingredient:Int] = [:]
-    
-    var supplied:OutpostSupply?
-    
-    var contribPPl:[UUID:Int] = [:]        // Player.id vs peopleskills
-    var contribIng:[UUID:Int] = [:]        // Player.id vs ingredients
-    
-    // Building up to here, an outpost has an OutpostJob, which sets the Level of the Outpost
-    // For a job. There is a lineup of people, and materials. Each one tracking back to Players
-    // When a job is ready to be executed (covered skills and ingredients), each person gets an Activity
-    // and there should be a trigger for setting the level up of the outpost
-    var activity:LabActivity?
-    
     /// DEPRECATE -> WORKS HORRIBLY
     func remaining() -> [Ingredient:Int]? {
         guard let job = getNextJob() else { return nil }
@@ -281,6 +266,26 @@ class Outpost:Codable {
 ////        let stb = StorageBox(ingType: .SolarCell, current: 170)
 //        
 //    }
+    
+    // MARK: - Init
+    
+    init(type:OutpostType, posdex:Posdex, guild:UUID?) {
+        self.id = UUID()
+        self.guild = nil
+        self.posdex = posdex
+        self.type = type
+        self.level = 0
+        self.supplied = OutpostSupply()
+    }
+    
+    /// Makes an example data. **Delete** this upon launch
+    static func exampleFromDatabase(dbData:DBOutpost) -> Outpost {
+        let newOutpost = Outpost(type: dbData.type, posdex: Posdex(rawValue:dbData.posdex)!, guild: nil)
+        newOutpost.collected = dbData.accounting
+        newOutpost.materials = [.SolarCell:30, .Circuitboard:170, .Polimer:20, .Aluminium:30]
+        newOutpost.supplied = OutpostSupply()
+        return newOutpost
+    }
 }
 
 /// Its calculated. Doesn't need to be `Codable` type
@@ -298,27 +303,56 @@ struct OutpostJob {
 }
 
 /// The stuff being supplied to the outpost Job. Notice there are different objects
-struct OutpostSupply:Codable {
+class OutpostSupply:Codable {
+    
     var ingredients:[StorageBox]
+    var tanks:[Tank]
+    
     var skills:[Person] // Will need a reference later, to make busy
     // Bsides skills (people), everything else is consumable.
     
-    var tanks:[Tank]
     var peripherals:[PeripheralObject]
     var bioBoxes:[BioBox]
     var players:[UUID:Int] // Player ID + Supplied points
+    
+    init() {
+        self.ingredients = []
+        self.tanks = []
+        self.skills = []
+        self.peripherals = []
+        self.bioBoxes = []
+        self.players = [:]
+    }
+    
+    /// For Production use -> No players, no skills(People) are produced
+    init(ingredients:[StorageBox], tanks: [Tank], peripherals: [PeripheralObject], bioBoxes: [BioBox]) {
+        self.ingredients = ingredients
+        self.tanks = tanks
+        self.peripherals = peripherals
+        self.bioBoxes = bioBoxes
+        
+        self.skills = []
+        self.players = [:]
+    }
+    
+    func contrib(box:StorageBox) {
+        ingredients.append(box)
+    }
+    func contrib(tank:Tank) {
+        tanks.append(tank)
+    }
 }
 
 /**
     Helps to display data structured in `Views`
  */
-struct BoxPetition {
-    
-    var id:UUID = UUID()
-    var ingredient:Ingredient
-    var wanted:Int
-    var current:Int
-}
+//struct BoxPetition {
+//
+//    var id:UUID = UUID()
+//    var ingredient:Ingredient
+//    var wanted:Int
+//    var current:Int
+//}
 
 
 struct DBOutpost:Codable {
@@ -410,4 +444,32 @@ struct DBOutpost:Codable {
     }
 }
 
+/**
+ Energy, Water, Oxygen, Food
+ */
+struct Ewolf {
+    
+    var energy:Int
+    var water:Int
+    var oxygen:Int
+    var food:Int
+    
+    init?(array:[Int]) {
+        
+        self.energy = 0
+        self.water = 0
+        self.food = 0
+        self.oxygen = 0
+        
+        for idx in 0...3 {
+            switch idx {
+                case 0: self.energy = array[idx]
+                case 1: self.water = array[idx]
+                case 2: self.oxygen = array[idx]
+                case 3: self.food = array[idx]
+                default: print("Ewolf array count should be 4")
+            }
+        }
+    }
+}
 
