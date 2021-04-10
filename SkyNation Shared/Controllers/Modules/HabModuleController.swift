@@ -157,9 +157,9 @@ class HabModuleController: ObservableObject {
         guard let selected = selectedPerson, selected == person else { fatalError() }
         
         // Check if there is medication
-        var medicine:[PerfectDNAOption] = []
+        var medicine:[DNAOption] = []
         for food in station.food {
-            if let dna = PerfectDNAOption(rawValue: food) {
+            if let dna = DNAOption(rawValue: food) {
                 if dna.isMedication == true {
                     medicine.append(dna)
                 }

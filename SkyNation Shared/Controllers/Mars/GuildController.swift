@@ -111,7 +111,7 @@ class GuildController:ObservableObject {
     }
     
     func requestJoinGuild(guild:GuildSummary) {
-        let summary = guild
+//        let summary = guild
         
         SKNS.joinGuildPetition(guildID: guild.id) { (guildSum, error) in
             if let guildSum = guildSum {

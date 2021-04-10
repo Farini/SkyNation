@@ -22,7 +22,7 @@ struct BioView: View {
     @State var popoverTutorial:Bool = false
     
     @State var started:Bool = false
-    @State var dnaChoice:PerfectDNAOption = PerfectDNAOption.banana
+    @State var dnaChoice:DNAOption = DNAOption.banana
     @State var trimSelection:[String] = []
     
     var module:BioModule
@@ -174,7 +174,7 @@ struct BioView: View {
                                     .foregroundColor(controller.selectedBioBox?.id ?? UUID() == box.id ? Color.orange:Color.white)
                                     .onTapGesture {
                                         controller.didSelect(box: box)
-                                        if let dna = PerfectDNAOption(rawValue: box.perfectDNA) {
+                                        if let dna = DNAOption(rawValue: box.perfectDNA) {
                                             self.dnaChoice = dna
                                         }else{
                                             self.dnaChoice = .banana
@@ -270,12 +270,14 @@ struct BuildingBioBoxView: View {
     
     @ObservedObject var controller:BioModController
     
-    @State var chosenDNA:PerfectDNAOption = .banana     // The DNA chosen
+    @State var chosenDNA:DNAOption = DNAOption.allCases.filter({ $0.isAnimal == false }).randomElement()!     // The DNA chosen
     @State var sliderValue:Double = 0.0                 // The population Size
     @State var productionCost:[Ingredient:Int] = [.Fertilizer:0]
     @State var productionEnergyCost:Int = 0
     @State var productionWaterCost:Int = 0
     @State var problems:[String] = []
+    
+    let dnaOptions:[DNAOption] = DNAOption.allCases.filter({ $0.isAnimal == false })
     
     let minimumLimit:Int = 5
     
@@ -309,7 +311,7 @@ struct BuildingBioBoxView: View {
                     HStack {
                         Text("Box DNA").padding(.leading, 6)
                         Picker(selection: $chosenDNA, label: Text("")){
-                            ForEach(PerfectDNAOption.allCases, id:\.self) { dna in
+                            ForEach(self.dnaOptions, id:\.self) { dna in
                                 Text("\(dna.emoji) | \(dna.rawValue)")
                             }
                         }

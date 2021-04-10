@@ -52,8 +52,12 @@ class CityData:Codable, Identifiable {
     // SolarPanels
     var solarPanels:[SolarPanel]
     
+    var bioBoxes:[BioBox]
+    
     // Robots, or Vehicles
     var vehicles:[String]?
+    
+//    var dateAccounting:Date
     
     // To add:
     // + accounting + report
@@ -69,9 +73,9 @@ class CityData:Codable, Identifiable {
         print("Boxes after taking: \(boxes.count)")
     }
     
-    func takeIngredients(ingredients:[Ingredient:Int]) {
-        
-    }
+//    func takeIngredients(ingredients:[Ingredient:Int]) {
+//
+//    }
     
     // MARK: - Initializers
     
@@ -116,6 +120,12 @@ class CityData:Codable, Identifiable {
         let peri3 = PeripheralObject(peripheral: .Radiator)
         let peri4 = PeripheralObject(peripheral: .ScrubberCO2)
         self.peripherals = [peri1, peri2, peri3, peri4]
+        
+        // Bioboxes
+        let randomDNA = DNAOption.allCases.randomElement()!
+        let bbox = BioBox(chosen: randomDNA, size: 20)
+        bbox.population = Array(repeating: randomDNA.rawValue, count: 20)
+        self.bioBoxes = [bbox]
         
         // Solar?
         self.solarPanels = []

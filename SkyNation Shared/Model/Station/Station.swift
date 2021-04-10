@@ -103,8 +103,8 @@ class Station:Codable {
         var water:Int = truss.getAvailableWater()
         let currentAir = air
         
-        let peeSewage = truss.getAvailableRoom(for: .wasteLiquid)   // Amount of urine left over from capacity of boxes
-        let pooSewage = truss.getAvailableRoom(for: .wasteSolid)    // Amount of poop left over from capacity of boxes
+        let _ = truss.getAvailableRoom(for: .wasteLiquid)   // Amount of urine left over from capacity of boxes
+        let _ = truss.getAvailableRoom(for: .wasteSolid)    // Amount of poop left over from capacity of boxes
         var producedPee:Int = 0
         var producedPoo:Int = 0
         
@@ -646,7 +646,7 @@ class Station:Codable {
         // Initial food (10 items)
         var tmpFood:[String] = []
         for _ in 0...10 {
-            let dna = PerfectDNAOption.allCases.randomElement()!
+            let dna = DNAOption.allCases.filter{$0.orderable}.randomElement()!
             tmpFood.append(dna.rawValue)
         }
         food = tmpFood

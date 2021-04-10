@@ -307,6 +307,8 @@ class Person:Codable, Identifiable, Equatable {
         }
     }
     
+    // MARK: - Skills
+    
     func sumOfSkills() -> Int {
         var counter:Int = 0
         for skset in skills {
@@ -358,6 +360,10 @@ class Person:Codable, Identifiable, Equatable {
         if let newSkill = newSkill {
             skills.append(newSkill)
         }
+    }
+    
+    func levelFor(skill:Skills) -> Int {
+        return self.skills.filter({ $0.skill == skill }).first?.level ?? 0
     }
     
     func clearActivity() {

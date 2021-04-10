@@ -97,7 +97,7 @@ struct VehicleTrunkView: View {
                     }
                     .foregroundColor(.red)
                 }
-                if addedIngredients.isEmpty && (vehicle.boxes ?? []).isEmpty {
+                if addedIngredients.isEmpty && vehicle.boxes.isEmpty {
                     Text("< No boxes >").foregroundColor(.gray)
                 }
             }

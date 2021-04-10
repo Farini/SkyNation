@@ -156,7 +156,7 @@ class Outpost:Codable {
     // MARK: - Supplied
     
     // DEPRECATE - SUBSTITUTE OUTPOSTSUPPLY
-    var materials:[Ingredient:Int] = [:]
+//    var materials:[Ingredient:Int] = [:]
     
     /// Stuff supplied so far
     var supplied:OutpostSupply
@@ -243,6 +243,7 @@ class Outpost:Codable {
     }
     
     /// DEPRECATE -> WORKS HORRIBLY
+    /*
     func remaining() -> [Ingredient:Int]? {
         guard let job = getNextJob() else { return nil }
         
@@ -260,12 +261,30 @@ class Outpost:Codable {
         
         return willRemain
     }
+    */
     
-    // TODO: iHave vs iWant
-//    func sufficiency() -> (ing:Ingredient, have:Int, need:Int) {
-////        let stb = StorageBox(ingType: .SolarCell, current: 170)
-//        
-//    }
+    func calculateRemaining() -> [String:Int] {
+        
+        var missingOut:[String:Int] = [:]
+        
+        // Ingredients & Boxes
+        let iNeedBox:[Ingredient:Int] = getNextJob()?.wantedIngredients ?? [:]
+        for (needKey, needVal) in iNeedBox {
+            let current = supplied.ingredients.filter({ $0.type == needKey }).compactMap({$0.current}).reduce(0, +)
+            if current >= needVal {
+                // passed
+            } else {
+                missingOut[needKey.rawValue] = needVal - current
+            }
+        }
+        
+        // Tanks & Tanks
+        // Peripherals & Type
+        // People & Skills
+        // Bioboxes & DNAOption
+        
+        return missingOut
+    }
     
     // MARK: - Init
     
@@ -280,10 +299,18 @@ class Outpost:Codable {
     
     /// Makes an example data. **Delete** this upon launch
     static func exampleFromDatabase(dbData:DBOutpost) -> Outpost {
+        
         let newOutpost = Outpost(type: dbData.type, posdex: Posdex(rawValue:dbData.posdex)!, guild: nil)
         newOutpost.collected = dbData.accounting
-        newOutpost.materials = [.SolarCell:30, .Circuitboard:170, .Polimer:20, .Aluminium:30]
         newOutpost.supplied = OutpostSupply()
+        
+        // Pre-populate Supplied
+        let solcel = StorageBox(ingType: .SolarCell, current: Ingredient.SolarCell.boxCapacity())
+        let cirb = StorageBox(ingType: .Circuitboard, current: Ingredient.Circuitboard.boxCapacity())
+        let cirb2 = StorageBox(ingType: .Circuitboard, current: Ingredient.Circuitboard.boxCapacity())
+        let poli = StorageBox(ingType: .Polimer, current: Ingredient.Polimer.boxCapacity())
+        newOutpost.supplied.ingredients = [solcel, cirb, cirb2, poli]
+        
         return newOutpost
     }
 }
@@ -295,11 +322,11 @@ struct OutpostJob {
     // Skills
     var wantedSkills:[Skills:Int]
     // Tanks
-    var wanterTanks:[TankType:Int]?
+    var wantedTanks:[TankType:Int]?
     // Peripherals
     var wantedPeripherals:[PeripheralType:Int]?
     // Bioboxes
-    var wantedBio:[PerfectDNAOption:Int]?
+    var wantedBio:[DNAOption:Int]?
 }
 
 /// The stuff being supplied to the outpost Job. Notice there are different objects
@@ -342,18 +369,6 @@ class OutpostSupply:Codable {
         tanks.append(tank)
     }
 }
-
-/**
-    Helps to display data structured in `Views`
- */
-//struct BoxPetition {
-//
-//    var id:UUID = UUID()
-//    var ingredient:Ingredient
-//    var wanted:Int
-//    var current:Int
-//}
-
 
 struct DBOutpost:Codable {
     
@@ -473,3 +488,12 @@ struct Ewolf {
     }
 }
 
+/**
+ Key, Value `name`, `iNeed`, `iHave`
+ */
+struct Kevnii:Codable, Identifiable {
+    var id = UUID()
+    var name:String
+    var iNeed:Int
+    var iHave:Int
+}

@@ -137,7 +137,7 @@ class CityController:ObservableObject {
 //            return
 //        }
         
-        var cCopy = cityData!
+        let cCopy = cityData!
         
 //        print("Unpacking vehicle. id: \(vid)")
         cCopy.boxes.append(contentsOf: vehicle.boxes)

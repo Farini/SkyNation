@@ -96,67 +96,7 @@ struct GameSettingsView: View {
             switch controller.viewState {
                 
                 case .Loading:
-                    
-                    HStack {
-                        Image("\(controller.player.avatar)")
-                            .resizable()
-                            .frame(width:82, height:82)
-                        VStack(alignment:.leading) {
-                            Text(controller.player.name)
-                            Text("XP: \(controller.player.experience)")
-                            Text("Online: \(GameFormatters.dateFormatter.string(from:controller.player.lastSeen))")
-                                .foregroundColor(.green)
-                            HStack(alignment:.center) {
-                                #if os(macOS)
-                                Image(nsImage:GameImages.tokenImage)
-                                    .resizable()
-                                    .frame(width:32, height:32)
-                                #else
-                                Image(uiImage:GameImages.tokenImage)
-                                    .resizable()
-                                    .frame(width:32, height:32)
-                                #endif
-                                Text("x\(controller.player.timeTokens.count)")
-                                Divider()
-                                #if os(macOS)
-                                Image(nsImage:GameImages.currencyImage)
-                                    .resizable()
-                                    .frame(width:32, height:32)
-                                #else
-                                Image(uiImage: GameImages.currencyImage)
-                                    .resizable()
-                                    .frame(width:32, height:32)
-                                #endif
-                                Text("\(controller.player.money)")
-                            }
-                            .frame(height:36)
-                        }
-                        Spacer()
-                        generateBarcode(from:controller.player.id)
-                    }
-                    
-                    if controller.isNewPlayer {
-                        Text("New Player")
-                            .foregroundColor(.orange)
-                            .font(.headline)
-                    }
-                    
-                    Group {
-                        
-                        ForEach(controller.loadedList, id:\.self) { litem in
-                            Text(litem).foregroundColor(.gray)
-                        }
-                        
-                        if let string = controller.fetchedString {
-                            Text("Fetched:\n\(string)")
-                        }
-                        
-                        if let loggedUser = controller.user {
-                            Text("Fetched User: \(loggedUser.name)")
-                        }
-                        
-                        Spacer(minLength: 8)
-                    }
+                    GameLoadingTab(controller: controller)
                     
                 case .EditingPlayer:
                     PlayerEditView(controller: controller)
@@ -172,19 +112,6 @@ struct GameSettingsView: View {
             
             // Buttons Bar
             HStack {
-//                if controller.isNewPlayer {
-//                    Button("Create Player") {
-////                        controller.createPlayer()
-//                        print("command deprecated")
-//                    }
-//                    .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
-//                } else {
-//                        Button("Save Player") {
-//                            controller.savePlayer()
-//                        }
-//                        .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
-//                        .disabled(!controller.hasChanges)
-//                }
                 if (!inGame) {
                     Button("Start Game") {
                         let note = Notification(name: .startGame)
@@ -282,11 +209,9 @@ struct GameTabs_Previews: PreviewProvider {
                 .tabItem {
                     Text("Settings")
                 }
+
             // Game
-            LoadingGameTab()
-                .tabItem {
-                    Text("Game")
-                }
+            GameLoadingTab(controller: GameSettingsController())
             
             // Player
             PlayerEditView(controller:GameSettingsController())

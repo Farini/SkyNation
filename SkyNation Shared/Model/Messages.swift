@@ -14,7 +14,7 @@ enum GameAchievementType {
     case vehicleBuilt(type:EngineType)
     case vehicleLanding(vehicle:SpaceVehicle)
     
-    case newDNA(dna:PerfectDNAOption)
+    case newDNA(dna:DNAOption)
     case learning(skill:Skills)
     case deliveryXP
     case experience

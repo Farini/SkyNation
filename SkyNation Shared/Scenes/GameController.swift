@@ -86,7 +86,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         if parent.name == "Cities" || parent.parent?.name == "Cities" {
                             print("Go to city: \(modName)")
                             // get position
-                            let posScene = result.node.position
+//                            let posScene = result.node.position
 //                            let posvec = Vector3D(x: Double(posScene.x), y: Double(posScene.y), z: Double(posScene.z))
                             for posdex in Posdex.allCases {
                                 if posdex.sceneName == modName || posdex.sceneName == parent.name {
@@ -130,7 +130,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 for mod in modules {
                     if mod.id.uuidString == modName {
                         if let lab = station?.lookupModule(id: mod.id) as? LabModule {
-//                            LocalDatabase.shared.saveStation(station: station!)
                             print("Lab: \(lab.name)")
                             gameNavDelegate?.didSelectLab(module: lab)
                         }else if let hab = station?.lookupModule(id: mod.id) as? HabModule {
@@ -287,7 +286,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     // MARK: - Camera
     
     func didSetCamZ(value: Double) {
-        print("DIDCAMZ")
+        print("CAM.POS Z: \(value)")
         let originalPosition = cameraNode!.position
         
         #if os(macOS)
@@ -296,13 +295,11 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         let destination = SCNVector3(x: originalPosition.x, y: originalPosition.y, z: Float(value))
         #endif
         
-//        let destination = SCNVector3(x: originalPosition.x, y: originalPosition.y, z: CGFloat(value))
         cameraNode?.position = destination
     }
     
     func showCameraMenu() {
         print("Should be showing camera menu")
-        
         stationOverlay.toggleCamControl()
     }
     
@@ -312,9 +309,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     }
     
     func switchToFrontCamera() {
-        print("Moving camera ???????")
         if let front = scene.rootNode.childNode(withName: "CameraFront", recursively: false) {
-            print("Found Camera Front")
             let position = front.position
             let euler = front.eulerAngles
             let moveAction = SCNAction.move(to: position, duration: 2.2)
@@ -325,16 +320,13 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             #endif
             let moveGroup = SCNAction.group([moveAction, rotateAction])
             cameraNode?.runAction(moveGroup) {
-//                self.cameraNode?.camera?.usesOrthographicProjection = false
-                print("Camera Finished Moving")
+                print("Camera >> Front")
             }
         }
     }
     
     func switchToBackCamera() {
-        print("Moving camera ???????")
         if let front = scene.rootNode.childNode(withName: "CameraBack", recursively: false) {
-            print("Found Camera Front")
             let position = front.position
             let euler = front.eulerAngles
             let moveAction = SCNAction.move(to: position, duration: 2.2)
@@ -345,8 +337,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             #endif
             let moveGroup = SCNAction.group([moveAction, rotateAction])
             cameraNode?.runAction(moveGroup) {
-//                self.cameraNode?.camera?.usesOrthographicProjection = false
-                print("Camera Finished Moving")
+                print("Camera >> Back")
             }
         }
     }
@@ -630,17 +621,19 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
         // Post Init
         
-        // Play a random track
-        let track = Soundtrack.allCases.randomElement()
-        if let source = SCNAudioSource(fileNamed: "\(track?.rawValue ?? "na").m4a") {
-            print("found audio file")
-            let action = SCNAction.playAudio(source, waitForCompletion: false)
-            scene.rootNode.runAction(action)
-        } else {
-            print("cannot find audio file")
+        // Music
+        if GameSettings.shared.musicOn {
+            // Play a random track
+            let track = Soundtrack.allCases.randomElement()
+            if let source = SCNAudioSource(fileNamed: "\(track?.rawValue ?? "na").m4a") {
+                print("found audio file")
+                let action = SCNAction.playAudio(source, waitForCompletion: false)
+                scene.rootNode.runAction(action)
+            } else {
+                print("cannot find audio file")
+            }
         }
     }
-    
     
     func loadLastBuildItem() {
         print("Loading last build item")
@@ -661,7 +654,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             for child in node.childNodes {
                 print("\t [+] Child \(child.name ?? "unnamed")")
                 for grandChild in child.childNodes {
-                    print("\t\t [-] GrandKid \(grandChild.name ?? "unnamed")")
+                    print("\t\t [-] GrandKid \(grandChild.name ?? "unnamed") Plus \(grandChild.childNodes.count) descendants.")
                 }
             }
         }
@@ -748,12 +741,6 @@ extension StationBuildItem {
                 let moduleScene = SCNScene(named: "Art.scnassets/Module.scn")!
                 if let nodeObj = moduleScene.rootNode.childNode(withName: "Module", recursively: false)?.clone() {
                     
-//                    var modSkin:ModuleSkin!
-//                    if let skin = skin {
-//                        modSkin = mSkin
-//                    } else {
-//                        modSkin = ModuleSkin.allCases.randomElement()!
-//                    }
                     let uvMapName = "\(skin?.uvMapName ?? ModuleSkin.allCases.randomElement()!.uvMapName).png"
                     
                     // MATERIAL | SKIN
@@ -790,7 +777,7 @@ extension StationBuildItem {
                     // Change name to id
                     nodeObj.name = id.uuidString
                     
-                    let vec = rotation //modelInfo.orientation.vector
+                    let vec = rotation
                     let sceneVec = SCNVector3(vec.x, vec.y, vec.z)
                     nodeObj.eulerAngles = sceneVec
                     

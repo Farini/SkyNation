@@ -300,7 +300,7 @@ class EarthRequestController:ObservableObject {
             } else if ingredientBox.type == .Food {
                 // Food
                 for _ in 0...ingredientBox.type.boxCapacity() {
-                    let dna = PerfectDNAOption.allCases.randomElement()!
+                    let dna = DNAOption.allCases.filter({$0.orderable == true}).randomElement()!
                     station.food.append(dna.rawValue)
                 }
             } else if ingredientBox.type == .Water {

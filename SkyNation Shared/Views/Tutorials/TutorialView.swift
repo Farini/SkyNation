@@ -145,7 +145,7 @@ struct TutorialView: View {
                 }
                 .frame(maxWidth: 400, maxHeight: 600, alignment: .top)
             
-            default: Text("Other Tutorial")
+//            default: Text("Other Tutorial")
         }
         
         

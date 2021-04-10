@@ -29,7 +29,7 @@ class BioModController: ObservableObject {
     @Published var positiveMessage:String?
     
     @Published var choosingDNA:Bool = false // Is choosing perfect DNA
-    @Published var dnaOption:PerfectDNAOption
+    @Published var dnaOption:DNAOption
     
     /// Available slots for new Box
     @Published var availableSlots:Int
@@ -84,7 +84,7 @@ class BioModController: ObservableObject {
     // MARK: - Selection
     
     /// Selected **DNA**
-    func didSelect(dna:PerfectDNAOption) {
+    func didSelect(dna:DNAOption) {
         self.dnaOption = dna
         if let box = selectedBioBox {
             if box.population.count > 0 {
@@ -101,7 +101,7 @@ class BioModController: ObservableObject {
     func didSelect(box:BioBox) {
         self.selectedBioBox = box
         self.selection = .selected(box: box)
-        guard let dna = PerfectDNAOption(rawValue: box.perfectDNA) else {
+        guard let dna = DNAOption(rawValue: box.perfectDNA) else {
             return
         }
         self.dnaOption = dna
@@ -439,7 +439,7 @@ class BioModController: ObservableObject {
     }
     
     /// Creates a new box
-    func createNewBox(dna:PerfectDNAOption, size:Int) {
+    func createNewBox(dna:DNAOption, size:Int) {
         print("Creating New Box. DNA: \(dna)")
         let box = BioBox(chosen: dna, size: size)
         module.boxes.append(box)
@@ -548,7 +548,7 @@ class DNAGenerator {
     }
     
     /// Generates population. Pass the Chosen DNA and the size of the box. Return the Population (Strings)
-    static func populate(dnaChoice:PerfectDNAOption, popSize:Int) -> [String] {
+    static func populate(dnaChoice:DNAOption, popSize:Int) -> [String] {
         
         let letters : [UInt8] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_|-.@0123456789".asciiArray
         let len = UInt32(letters.count)
@@ -779,7 +779,7 @@ class DNAMatcherModel:ObservableObject {
     }
     
     /// Generates population. Pass the Chosen DNA and the size of the box. Return the Population (Strings)
-    static func populate(dnaChoice:PerfectDNAOption, popSize:Int) -> [String] {
+    static func populate(dnaChoice:DNAOption, popSize:Int) -> [String] {
         let letters : [UInt8] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_|-.@0123456789".asciiArray
         let len = UInt32(letters.count)
         

@@ -79,19 +79,20 @@ enum VehicleStatus:String, CaseIterable, Codable, Hashable {
     case Creating   // Creating Vehicle - Engine, Satellite
     case Created    // Creation Ready - May add Stuff (Payload, Tanks, etc.)
     
-    case Mars       // Travelling to Mars
-    case Station    // Travelling back home
+    case Mars           // Travelling to Mars
+    case MarsOrbit      // Vehicle Arrived on mars and is in orbit. Register in SQL
+    // Add these:
+    // EDL              // Entry Descent and landing -> Store Data in GuildFile. Remove from SQL
+    // waitingArea      // Add contents to CityData, Remove from GuildFile
+    // marsHome         // Arrived in city
     
-    case MarsOrbit      // Vehicle Arrived on mars and is in orbit
-    // Stay in orbit (satellite)
-    // Try to land (rover, or transporter)
+    // Deprecate
+    // case Exploring      // Vehicle Arrived on mars and is exploring (rover)
+    // case Station        // Travelling back home
     
-    case Exploring        // Vehicle Arrived on mars and is exploring (rover)
     case Settled          // [DELETE VEHICLE] Vehicle has arrived on mars, and brought things to the base
-    
     case Diying           // [DELETE VEHICLE] Vehicle has crashed either before, or after arriving
     case OutOfFuel        // [delete vehicle] Vehicle is out of fuel
-    
 }
 
 /// Mars Tech Equipped in SpaceVehicle
@@ -100,10 +101,7 @@ enum MarsBot:String, Codable, CaseIterable, Hashable {
     case Rover          // Settles the city. Explores environment. Pictures from NASA?
     case Transporter    // Bring stuff in - first one settles the colony (Must have a pass (spent $10, or invited))
     case Terraformer    // Edit Terrain
-    case GrandMaster    // Can do the job of .handy?
-    
-    // case Settler ?   // Estabilishes the first city
-    // case Builder ?   // Builds things without humans
+    // case GrandMaster    // Can do the job of .handy?
 }
 
 class SpaceVehicle:Codable, Identifiable, Equatable {
@@ -118,13 +116,15 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     var batteries:[Battery] = []
     var peripherals:[PeripheralObject] = []
     var boxes:[StorageBox] = []
+    var passengers:[Person] = []
+    var air:AirComposition?
+    
+    // Bioboxes
+    
     
     var solar:[SolarPanel] = []
     var antenna:PeripheralObject?
 
-    var passengers:[Person] = []
-    var air:AirComposition?
-    
     // Travel Info
     var name:String = "Untitled"    // name it
     var simulation:Int = 0          // hours simulating

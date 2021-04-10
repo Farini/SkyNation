@@ -7,12 +7,80 @@
 
 import SwiftUI
 
-// MARK: - 4 Tabs
-
 // MARK: - Tab1: Loading
+
+struct GameLoadingTab: View {
+    
+    var controller:GameSettingsController
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Image("\(controller.player.avatar)")
+                    .resizable()
+                    .frame(width:82, height:82)
+                VStack(alignment:.leading) {
+                    Text(controller.player.name)
+                    Text("XP: \(controller.player.experience)")
+                    Text("Online: \(GameFormatters.dateFormatter.string(from:controller.player.lastSeen))")
+                        .foregroundColor(.green)
+                    HStack(alignment:.center) {
+                        #if os(macOS)
+                        Image(nsImage:GameImages.tokenImage)
+                            .resizable()
+                            .frame(width:32, height:32)
+                        #else
+                        Image(uiImage:GameImages.tokenImage)
+                            .resizable()
+                            .frame(width:32, height:32)
+                        #endif
+                        Text("x\(controller.player.timeTokens.count)")
+                        Divider()
+                        #if os(macOS)
+                        Image(nsImage:GameImages.currencyImage)
+                            .resizable()
+                            .frame(width:32, height:32)
+                        #else
+                        Image(uiImage: GameImages.currencyImage)
+                            .resizable()
+                            .frame(width:32, height:32)
+                        #endif
+                        Text("\(controller.player.money)")
+                    }
+                    .frame(height:36)
+                }
+                Spacer()
+                GameImages.generateBarcode(from:controller.player.id)
+            }
+            
+            if controller.isNewPlayer {
+                Text("New Player")
+                    .foregroundColor(.orange)
+                    .font(.headline)
+            }
+            
+            Group {
+                
+                ForEach(controller.loadedList, id:\.self) { litem in
+                    Text(litem).foregroundColor(.gray)
+                }
+                
+                if let string = controller.fetchedString {
+                    Text("Fetched:\n\(string)")
+                }
+                
+                if let loggedUser = controller.user {
+                    Text("Fetched User: \(loggedUser.name)")
+                }
+                
+                Spacer(minLength: 8)
+            }
+        }
+        
+    }
+}
+
 // MARK: - Tab2: Player
-// MARK: - Tab3: Server
-// MARK: - Tab4: Settings
 
 struct PlayerEditView: View {
     
@@ -74,36 +142,34 @@ struct PlayerEditView: View {
                     
                     Spacer()
                     
-//                    ScrollView {
-                        LazyVGrid(columns: [GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96))], alignment: .center, spacing: 8, pinnedViews: [], content: {
-                            ForEach(cards) { avtCard in
-                                ZStack(alignment: .bottom) {
-                                    Image(avtCard.name)
-                                        .resizable()
-                                        .frame(width: 82, height: 82, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                                }
-                                .padding(.vertical)
-                                .background(self.selectedCard?.name == avtCard.name ? Color.red:Color.black)
-                                .cornerRadius(8)
-                                .onTapGesture {
-                                    // Set the new avatar
-                                    self.selectedCard = avtCard
-                                    controller.didSelectAvatar(card: avtCard)
-                                    highlightCard()
-                                }
+                    LazyVGrid(columns: [GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96))], alignment: .center, spacing: 8, pinnedViews: [], content: {
+                        ForEach(cards) { avtCard in
+                            ZStack(alignment: .bottom) {
+                                Image(avtCard.name)
+                                    .resizable()
+                                    .frame(width: 82, height: 82, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                             }
-                        })
-//                    }
+                            .padding(.vertical)
+                            .background(self.selectedCard?.name == avtCard.name ? Color.red:Color.black)
+                            .cornerRadius(8)
+                            .onTapGesture {
+                                // Set the new avatar
+                                self.selectedCard = avtCard
+                                controller.didSelectAvatar(card: avtCard)
+                                highlightCard()
+                            }
+                        }
+                    })
                     .frame(minHeight:140)
                     .background(LinearGradient(gradient: Gradient(colors: [Color.red.opacity(0.1), Color.blue.opacity(0.1)]), startPoint: .topLeading, endPoint: .bottomTrailing))
                     
+                }
+                .onAppear() {
+                    self.selectedCard = cards.first(where: { $0.name == controller.player.avatar })
+                    self.about = controller.player.about
+                }
             }
-            .onAppear() {
-                self.selectedCard = cards.first(where: { $0.name == controller.player.avatar })
-                self.about = controller.player.about
-            }
-        }
-        
+            
         }
     }
     
@@ -118,25 +184,9 @@ struct PlayerEditView: View {
     
 }
 
-// MARK: - Other Tabs
 
-struct LoadingGameTab: View {
-    var body: some View {
-        VStack {
-            Text("Loading game")
-            Text("Game, blah...")
-            Spacer()
-            Divider()
-            Button("Start Game") {
-//                controller.createGuild()
-            }
-            .foregroundColor(.red)
-            .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
-        }
-    }
-}
+// MARK: - Tab3: Server
 
-// SERVER
 struct SettingsServerTab:View {
     
     @ObservedObject var controller:GameSettingsController
@@ -258,7 +308,7 @@ struct SettingsServerTab:View {
     }
 }
 
-// SETTINGS
+// MARK: - Tab4: Settings
 struct GameSettingsTabView: View {
     
     var settings:GameSettings
@@ -339,7 +389,7 @@ struct GameSettingsTabView: View {
 
 struct PlayerEditView_Previews: PreviewProvider {
     static var previews: some View {
-//        PlayerEditView(controller: GameSettingsController())
+        //        PlayerEditView(controller: GameSettingsController())
         SettingsServerTab(controller:GameSettingsController())
     }
 }
@@ -353,7 +403,7 @@ struct GameTabs_Previews2: PreviewProvider {
                     Label("Settings", systemImage:"gamecontroller")
                 }
             // Game
-            LoadingGameTab()
+            GameLoadingTab(controller:GameSettingsController())
                 .tabItem {
                     Label("Game", systemImage:"gamecontroller")
                 }
@@ -370,9 +420,6 @@ struct GameTabs_Previews2: PreviewProvider {
                     Label("Player", systemImage:"gamecontroller")
                 }
         }
-        
-        
-        
     }
 }
 

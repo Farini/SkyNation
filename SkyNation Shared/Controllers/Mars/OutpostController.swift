@@ -34,46 +34,173 @@ class OutpostController:ObservableObject {
     // Guild
     // GuildData?
     // View State
-    @Published var viewTab:OutpostViewTab = .ingredients
+    @Published var viewTab:OutpostViewTab = .info
+    
+    /// A KV pair for the items missing for outpost upgrades
+    @Published var remains:[String:Int]
     
     init() {
         guard let player = LocalDatabase.shared.player else { fatalError() }
         self.player = player
         
-        // self.myCity = MarsBuilder.shared.myCityData
+        // MARK: - FIX THIS BEFORE LAUNCH
+        // FIXME: - TEST EXAMPLES
+        
         let dbData = DBOutpost.example()
         opData = Outpost.exampleFromDatabase(dbData: dbData)
-        
+        self.remains = Outpost.exampleFromDatabase(dbData: dbData).calculateRemaining()
     }
     
     func selected(tab:OutpostViewTab) {
         self.viewTab = tab
     }
     
-    func contributeWith(box:StorageBox) {
+    func makeContribution(object:Codable) {
         
-        print("Contributing with: \(box.type)")
-        myCity.takeBox(box: box)
-        
-        if let prev = opData.materials[box.type] {
-            print("Contribution going. Prev: \(prev) + Curr:\(box.current)")
-            opData.materials[box.type]! += box.current
-        } else {
-            opData.materials[box.type] = box.current //= [box.type:box.current]
+        guard let pid = LocalDatabase.shared.player?.serverID else {
+            print("No player id, or wrong id")
+            return
         }
         
-        // Logic Layout
-        // Get city
-        // Get outpost info
-        // if outpost does NOT have updates
-        //      Take ingredients from city
-        //      Add Ingredients to outpost
-        //      Add contribution to outpost
-        // if HAS updates
-        //      Someone else already contributed
-        //      Update outpost (locally)
-        // save city
-        // save Outpost
+        print("Contributing...")
+        
+        if let box = object as? StorageBox {
+            opData.supplied.ingredients.append(box)
+        } else if let tank = object as? Tank {
+            opData.supplied.tanks.append(tank)
+        } else if let peripheral = object as? PeripheralObject {
+            opData.supplied.peripherals.append(peripheral)
+        } else if let bioBox = object as? BioBox {
+            opData.supplied.bioBoxes.append(bioBox)
+        } else if let person = object as? Person {
+            opData.supplied.skills.append(person)
+        } else {
+            print("⚠️ REVISE THIS OBJECT: \(object)")
+            print("⚠️ ERROR OBJECT INVALID")
+        }
+        
+        // Contribution
+        if let _ = opData.contributed[pid] {
+            opData.contributed[pid]! += 1
+        } else {
+            opData.contributed[pid] = 1
+        }
+        
+        // Check if fullfilled
+        let remaining = opData.calculateRemaining()
+        print("Remaining...")
+        for (k, v) in remaining {
+            print("\t \(k) \(v)")
+        }
+        self.remains = remaining
+        
+        // Save
+        
+    }
+    
+    func wantsIngredients() -> [Kevnii] {
+        var array:[Kevnii] = []
+        if let job = opData.getNextJob() {
+            print("Job: \(job.wantedIngredients.count)")
+            
+            for (k, v) in opData.getNextJob()?.wantedIngredients ?? [:] {
+                
+                let have = myCity.boxes.filter({ $0.type == k }).compactMap({ $0.current }).reduce(0, +)
+                let opHave = opData.supplied.ingredients.filter({ $0.type == k }).compactMap({ $0.current }).reduce(0, +)
+                
+                print("i need: \(v)")
+                print("i have: \(have)")
+                print("op has: \(opHave)")
+                
+                let kev = Kevnii(name: k.rawValue, iNeed: v, iHave: opHave)
+                array.append(kev)
+            }
+        }
+        return array
+    }
+    
+    func wantsTanks() -> [Kevnii] {
+        var array:[Kevnii] = []
+        if let job = opData.getNextJob() {
+            print("Job: \(job.wantedTanks?.count ?? 0)")
+            
+            for (k, v) in opData.getNextJob()?.wantedTanks ?? [:] {
+                
+                let have = myCity.tanks.filter({ $0.type == k }).compactMap({ $0.current }).reduce(0, +)
+                let opHave = opData.supplied.tanks.filter({ $0.type == k }).compactMap({ $0.current }).reduce(0, +)
+                
+                print("i need: \(v)")
+                print("i have: \(have)")
+                print("op has: \(opHave)")
+                
+                let kev = Kevnii(name: k.rawValue, iNeed: v, iHave: opHave)
+                array.append(kev)
+            }
+        }
+        return array
+    }
+    
+    func wantsSkills() -> [Kevnii] {
+        var array:[Kevnii] = []
+        if let job = opData.getNextJob() {
+            print("Job: \(job.wantedSkills.count)")
+            
+            for (k, v) in opData.getNextJob()?.wantedSkills ?? [:] {
+                
+                let have = myCity.inhabitants.compactMap({$0.levelFor(skill: k)}).reduce(0, +)
+                let opHave = opData.supplied.skills.compactMap({$0.levelFor(skill: k)}).reduce(0, +)
+                
+                print("i need: \(v)")
+                print("i have: \(have)")
+                print("op has: \(opHave)")
+                
+                let kev = Kevnii(name: k.rawValue, iNeed: v, iHave: opHave)
+                array.append(kev)
+            }
+        }
+        return array
+    }
+    
+    func wantsPeripherals() -> [Kevnii] {
+        var array:[Kevnii] = []
+        if let job = opData.getNextJob() {
+            print("Job: \(job.wantedPeripherals?.count ?? 0)")
+            
+            for (k, v) in opData.getNextJob()?.wantedPeripherals ?? [:] {
+                
+                let have = myCity.peripherals.filter({ $0.peripheral == k }).count
+                let opHave = opData.supplied.peripherals.filter({ $0.peripheral == k }).count
+                
+                print("i need: \(v)")
+                print("i have: \(have)")
+                print("op has: \(opHave)")
+                
+                let kev = Kevnii(name: k.rawValue, iNeed: v, iHave: opHave)
+                array.append(kev)
+            }
+        }
+        return array
+    }
+    
+    func wantsBio() -> [Kevnii] {
+        var array:[Kevnii] = []
+        if let job = opData.getNextJob() {
+            print("Job: \(job.wantedBio?.count ?? 0)")
+            
+            for (k, v) in opData.getNextJob()?.wantedBio ?? [:] {
+                
+                let have = myCity.bioBoxes.filter({ $0.perfectDNA == k.rawValue }).count
+                let opHave = opData.supplied.bioBoxes.filter({ $0.perfectDNA == k.rawValue }).count
+                
+                print("i need: \(v)")
+                print("i have: \(have)")
+                print("op has: \(opHave)")
+                
+                let kev = Kevnii(name: k.rawValue, iNeed: v, iHave: opHave)
+                array.append(kev)
+            }
+        }
+        return array
     }
     
 }

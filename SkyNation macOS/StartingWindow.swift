@@ -19,6 +19,7 @@ class StartingWindow: NSWindowController, NSWindowDelegate {
         self.window!.setFrameAutosaveName("SUI Window")
         self.window!.contentView = NSHostingView(rootView: GameSettingsView())
         self.window!.makeKeyAndOrderFront(nil)
+        window?.title = "SkyNation"
         
         // Add Notification
         NotificationCenter.default.addObserver(self, selector: #selector(startGame(_:)), name: .startGame, object: nil)

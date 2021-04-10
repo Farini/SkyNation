@@ -265,7 +265,7 @@ struct PersonDetail:View {
                         Text("Recently eaten")
                         HStack {
                             ForEach(person.foodEaten, id:\.self) { rawFood in
-                                if let dna = PerfectDNAOption(rawValue: rawFood) {
+                                if let dna = DNAOption(rawValue: rawFood) {
                                     Text(dna.emoji)
                                 }
                             }

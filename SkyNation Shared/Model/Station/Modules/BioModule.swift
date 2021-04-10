@@ -24,7 +24,7 @@ enum BioBoxMode:String, Codable, CaseIterable, Hashable {
 }
 
 /// What plants produces as Food, or Medicine
-enum PerfectDNAOption:String, Codable, CaseIterable, Hashable {
+enum DNAOption:String, Codable, CaseIterable, Hashable {
     
     case apple = "APPLE"        // 5
     case banana = "BANANA"      // 6
@@ -51,6 +51,9 @@ enum PerfectDNAOption:String, Codable, CaseIterable, Hashable {
     case aspirin = "ASPIRIN"
     case vitaminC = "VITAMIN_@C"
     
+    // Animals
+    case piggie = "PIGGIE"
+    
     /// The equivalent emoji
     var emoji:String {
         switch self {
@@ -72,6 +75,7 @@ enum PerfectDNAOption:String, Codable, CaseIterable, Hashable {
             case .acetaminophen: return "💊"
             case .aspirin: return "💊"
             case .vitaminC: return "💊"
+            case .piggie: return "🐖"
         }
     }
     
@@ -82,6 +86,19 @@ enum PerfectDNAOption:String, Codable, CaseIterable, Hashable {
             default:
                 return false
         }
+    }
+    
+    /// Animals (can only be made in mars)
+    var isAnimal:Bool {
+        switch self {
+            case .piggie: return true
+            default: return false
+        }
+    }
+    
+    /// Items that can be ordered
+    var orderable:Bool {
+        return !isMedication && !isAnimal
     }
     
 }
@@ -133,10 +150,7 @@ class BioBox:Codable, Identifiable {
     var currentGeneration:Int = 0
     var mutationChance:Int = 100    // Chances to mutate?
     
-    //    var dnaSize:Int // can calculate
-    //    var popCount:Int // can calculate
-    
-    init(chosen:PerfectDNAOption, size:Int) {
+    init(chosen:DNAOption, size:Int) {
         
         perfectDNA = chosen.rawValue
         
@@ -177,8 +191,8 @@ class BioBox:Codable, Identifiable {
         return bestFitString
     }
     
-    func convertToDNA() -> PerfectDNAOption {
-        return PerfectDNAOption(rawValue: perfectDNA)!
+    func convertToDNA() -> DNAOption {
+        return DNAOption(rawValue: perfectDNA)!
     }
 }
 
