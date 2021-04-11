@@ -432,6 +432,7 @@
 		859D683A25DD91DB005DD42C /* GameShoppingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683925DD91DB005DD42C /* GameShoppingView.swift */; };
 		859D683B25DD91DB005DD42C /* GameShoppingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683925DD91DB005DD42C /* GameShoppingView.swift */; };
 		859D683C25DD91DB005DD42C /* GameShoppingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683925DD91DB005DD42C /* GameShoppingView.swift */; };
+		85A62F0C26222AA400D7B7C8 /* LifeSupportSystems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F437258D47EA00B509D2 /* LifeSupportSystems.swift */; };
 		85A658FA25E2251B008AA9BA /* PlayerEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A658F925E2251B008AA9BA /* PlayerEditView.swift */; };
 		85A658FB25E2251B008AA9BA /* PlayerEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A658F925E2251B008AA9BA /* PlayerEditView.swift */; };
 		85A658FC25E2251B008AA9BA /* PlayerEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A658F925E2251B008AA9BA /* PlayerEditView.swift */; };
@@ -808,12 +809,11 @@
 			isa = PBXGroup;
 			children = (
 				85A6590525E4178F008AA9BA /* GameSettingsController.swift */,
-				85C798D625F46B290028AE49 /* Modules */,
-				8592823425EC4D9B001233BE /* Mars */,
-				8536F434258D47EA00B509D2 /* EarthRequestController.swift */,
 				8536F437258D47EA00B509D2 /* LifeSupportSystems.swift */,
-				8536F433258D47EA00B509D2 /* GarageViewModel.swift */,
-				8536F436258D47EA00B509D2 /* VehicleBuilderViewModel.swift */,
+				8536F434258D47EA00B509D2 /* EarthRequestController.swift */,
+				85C798D625F46B290028AE49 /* Modules */,
+				85A62F0B26222A9800D7B7C8 /* Garage */,
+				8592823425EC4D9B001233BE /* Mars */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1172,6 +1172,15 @@
 				85960B9625D9B3F000AC9592 /* EDLInventoryView.swift */,
 			);
 			path = Building;
+			sourceTree = "<group>";
+		};
+		85A62F0B26222A9800D7B7C8 /* Garage */ = {
+			isa = PBXGroup;
+			children = (
+				8536F436258D47EA00B509D2 /* VehicleBuilderViewModel.swift */,
+				8536F433258D47EA00B509D2 /* GarageViewModel.swift */,
+			);
+			path = Garage;
 			sourceTree = "<group>";
 		};
 		85A658F825E224C1008AA9BA /* Settings */ = {
@@ -1788,6 +1797,7 @@
 				8536F415258D47D000B509D2 /* Parafernalia.swift in Sources */,
 				8592828825F176C1001233BE /* GameController.swift in Sources */,
 				8536F361258D475D00B509D2 /* Ingredients.swift in Sources */,
+				85A62F0C26222AA400D7B7C8 /* LifeSupportSystems.swift in Sources */,
 				8536F32E258D412600B509D2 /* LocalDatabase.swift in Sources */,
 				8536F309258D355C00B509D2 /* DataTests.swift in Sources */,
 				85F6675925AF7BBE00E5003B /* DeliveryVehicleNode.swift in Sources */,

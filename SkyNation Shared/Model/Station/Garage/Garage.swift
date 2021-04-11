@@ -36,7 +36,7 @@ class Garage:Codable {
         vehicle.status = .Creating
         vehicle.dateTravelStarts = Date()
         vehicle.travelTime = Double(time)
-        vehicle.antenna = PeripheralObject(peripheral: .Antenna)
+//        vehicle.antenna = PeripheralObject(peripheral: .Antenna)
         
         self.buildingVehicles.append(vehicle)
     }

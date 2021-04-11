@@ -105,6 +105,7 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [X] Remodel Garage (Garage4.scn)
 - [X] Have 3 Background music
 - [X] Person Workout not incrementing health
+- [X] GameSettings -> Sound
 
 - [ ] Biobox still not saving when done (needs testing)
 - [ ] Bio View - DNA animation (needs testing)
@@ -114,7 +115,6 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [ ] New Modules not fully available after Tech research. 
 - [ ] 1/8 Soundtrack + FX
 - [ ] Add a couple of SoundFX
-- [ ] GameSettings -> Sound
 - [ ] Gamesettings -> SoundFX
 - [ ] Scene Alert (News) -> Low Oxygen
 - [ ] Scene Alert (News) -> Bad AirQualities

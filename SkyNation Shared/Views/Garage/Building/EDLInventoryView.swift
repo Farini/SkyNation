@@ -16,16 +16,37 @@ struct EDLInventoryView: View {
     enum DescentSegment:String, CaseIterable {
         case ingredients
         case peripherals
-        case botTech
+        
+        case tanks
+        case passengers
+        case bioboxes
         
         var prettyName:String {
             switch self {
                 case .ingredients: return "Ingredients"
                 case .peripherals: return "Peripherals"
-                case .botTech: return "Bot Tech"
+//                case .botTech: return "Bot Tech"
+                case .tanks: return "Tanks"
+                case .passengers: return "Passengers"
+                case .bioboxes: return "Bio Boxes"
+            }
+        }
+        
+        func imageName() -> String {
+            switch self {
+                case .ingredients: return "archivebox"
+                case .passengers: return "person.2"
+                case .bioboxes: return "leaf"
+                case .tanks: return "gauge"
+                case .peripherals: return "gearshape.2.fill"
+//                case .info: return "info.circle.fill"
+//                case .contributions: return "person.fill.checkmark"
+//                case .management: return "externaldrive"
+                default: return "questionmark"
             }
         }
     }
+    
     @State var segment:DescentSegment = .peripherals
     
     // Inventory
@@ -34,11 +55,50 @@ struct EDLInventoryView: View {
     // Selection
     @State var ingredientsSelected:[StorageBox] = []
     @State var peripheralsSelected:[PeripheralObject] = []
+    @State var tanksSelected:[Tank] = []
+    @State var passengers:[Person] = []
+    @State var bioboxes:[BioBox] = []
+    @State var batteries:[Battery] = []
+    
     @State var bottechSelected:[String] = []
     
     @State var vehicle:SpaceVehicle
     
     // Adding Ingredients, Peripherals, and BotTech
+    var tabber: some View {
+        // Tabs
+        VStack {
+        
+            let myGradient = Gradient(colors: [Color.red.opacity(0.6), Color.blue.opacity(0.7)])
+            let unseGradient = Gradient(colors: [Color.red.opacity(0.3), Color.blue.opacity(0.3)])
+            let selLinear = LinearGradient(gradient: myGradient, startPoint: .topLeading, endPoint: .bottomTrailing)
+            let unselinear = LinearGradient(gradient: unseGradient, startPoint: .topLeading, endPoint: .bottomTrailing)
+            
+            HStack {
+                ForEach(DescentSegment.allCases, id:\.self) { aTab in
+                    Image(systemName: aTab.imageName()).padding(6).frame(height: 32, alignment: .center)
+                        .background(segment == aTab ? selLinear:unselinear)
+                        .onTapGesture {
+//                            controller.selected(tab: aTab)
+                            self.segment = aTab
+                            print("Tapp")
+                        }
+                        .cornerRadius(4)
+                        .clipped()
+                        .border(segment == aTab ? Color.blue:Color.clear, width: 1)
+                        .cornerRadius(6)
+                        .help(aTab.prettyName)
+                }
+                
+                Spacer()
+//                Text("\(aTab.prettyName)")
+            }
+            .padding(.horizontal, 6)
+            .font(.title3)
+            
+            Divider()
+        }
+    }
     
     var body: some View {
         VStack {
@@ -54,6 +114,8 @@ struct EDLInventoryView: View {
                 let count = vehicle.calculateWeight() + ingredientsSelected.count + bottechSelected.count
                 
                 Spacer()
+                
+                // Payload Mass Indicator (PMI)
                 VStack {
                     HStack {
                         Image(systemName: "scalemass")
@@ -67,8 +129,10 @@ struct EDLInventoryView: View {
                     .background(Color.white.opacity(0.1))
                     .cornerRadius(4.0)
                 }
-                //.foregroundColor(.blue)
+                
                 Spacer()
+                
+                // Trunk Button
                 HStack {
                     Button("Inventory") {
                         popTrunk.toggle()
@@ -91,13 +155,15 @@ struct EDLInventoryView: View {
             Divider()
             
             // Segment Picker
-            Picker("", selection: $segment) {
-                ForEach(DescentSegment.allCases, id:\.self) { dSegment in
-                    Text(dSegment.prettyName)
-                }
-            }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding([.leading, .trailing])
+//            Picker("", selection: $segment) {
+//                ForEach(DescentSegment.allCases, id:\.self) { dSegment in
+//                    Text(dSegment.prettyName)
+//                }
+//            }
+//            .pickerStyle(SegmentedPickerStyle())
+//            .padding([.leading, .trailing])
+            
+            tabber
             
             ScrollView {
                 switch segment {
@@ -118,31 +184,42 @@ struct EDLInventoryView: View {
                                 // Peripheral View
                                 PeripheralSmallView(peripheral: peripheral)
                                     .foregroundColor(peripheralsSelected.contains(peripheral) ? Color.red:Color.white)
-                                    
                                     .onTapGesture {
                                         self.toggleSelection(peripheral: peripheral)
                                         print("select peripheral")
                                     }
                             }
-                            
                         }
-                    case .botTech:
+                        
+                    // Tanks
+                    case .tanks:
                         LazyVGrid(columns: [GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 4, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
-                            ForEach(controller.ingredients.sorted(by: { $0.type.rawValue.compare($1.type.rawValue) == .orderedAscending })) { ingredient in
-                                IngredientView(ingredient: ingredient.type, hasIngredient: true, quantity: nil)
-                                    .onTapGesture {
-                                        self.toggleSelection(ingredient: ingredient)
-                                    }
+                            ForEach(controller.tanks.sorted(by: { $0.type.rawValue.compare($1.type.rawValue) == .orderedAscending })) { tank in
+                                TankViewSmall(tank: tank)
                             }
-                            
+                        }
+                    case .passengers:
+                        LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 4, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
+                            ForEach(controller.availablePeople) { person in
+                                PersonSmallView(person: person)
+                                
+                            }
+                        }
+                        
+                    case .bioboxes:
+                        LazyVGrid(columns: [GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 4, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
+                            ForEach(controller.bioBoxes) { biobox in
+                                VStack {
+                                    Text("DNA \(biobox.perfectDNA)")
+                                    Text("x \(biobox.population.count)")
+                                }
+                            }
                         }
                 }
             }
             .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: 500, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             
         }
-//        .padding()
-        
     }
     
     func toggleSelection(ingredient:StorageBox) {

@@ -496,7 +496,7 @@ struct SpaceVehicleRow: View {
     var body: some View {
         
         // Total
-        let ttlCount = vehicle.tanks.count + vehicle.batteries.count + (vehicle.antenna != nil ? 1:0)
+        let ttlCount = vehicle.calculateWeight() //vehicle.tanks.count + vehicle.batteries.count + 1 //(vehicle.antenna != nil ? 1:0)
         
         HStack {
             Text(selected ? "●":"○")
@@ -517,15 +517,11 @@ struct SpaceVehicleRow: View {
                         let progress = vehicle.calculateProgress() ?? 0
                         ProgressView("Travel", value: progress)
                     }
-                    
-                    
                 }
                 .foregroundColor(ttlCount == vehicle.engine.payloadLimit ? .orange:.gray)
             }
         }
-        
     }
-    
 }
 
 // MARK: - Vehicles Selected

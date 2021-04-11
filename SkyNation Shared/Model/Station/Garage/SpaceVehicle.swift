@@ -81,14 +81,11 @@ enum VehicleStatus:String, CaseIterable, Codable, Hashable {
     
     case Mars           // Travelling to Mars
     case MarsOrbit      // Vehicle Arrived on mars and is in orbit. Register in SQL
+    
     // Add these:
     // EDL              // Entry Descent and landing -> Store Data in GuildFile. Remove from SQL
     // waitingArea      // Add contents to CityData, Remove from GuildFile
     // marsHome         // Arrived in city
-    
-    // Deprecate
-    // case Exploring      // Vehicle Arrived on mars and is exploring (rover)
-    // case Station        // Travelling back home
     
     case Settled          // [DELETE VEHICLE] Vehicle has arrived on mars, and brought things to the base
     case Diying           // [DELETE VEHICLE] Vehicle has crashed either before, or after arriving
@@ -101,7 +98,15 @@ enum MarsBot:String, Codable, CaseIterable, Hashable {
     case Rover          // Settles the city. Explores environment. Pictures from NASA?
     case Transporter    // Bring stuff in - first one settles the colony (Must have a pass (spent $10, or invited))
     case Terraformer    // Edit Terrain
-    // case GrandMaster    // Can do the job of .handy?
+    
+    func ingredients() -> [Ingredient:Int] {
+        switch self {
+            case .Satellite: return [.Circuitboard:1, .Copper:3]
+            case .Rover: return [.Circuitboard:2, .Copper:2, .Aluminium:8]
+            case .Transporter: return [.Circuitboard:2, .DCMotor:2, .Aluminium:8]
+            case .Terraformer: return [.Circuitboard:4, .DCMotor:6, .Aluminium:8, .Copper:4]
+        }
+    }
 }
 
 class SpaceVehicle:Codable, Identifiable, Equatable {
@@ -120,10 +125,9 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     var air:AirComposition?
     
     // Bioboxes
-    
-    
+    var bioBoxes:[BioBox]?
     var solar:[SolarPanel] = []
-    var antenna:PeripheralObject?
+//    var antenna:PeripheralObject?
 
     // Travel Info
     var name:String = "Untitled"    // name it
@@ -131,6 +135,7 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     var dateTravelStarts:Date?      // Date ref
     var travelTime:TimeInterval?    // Time?
     var dateAccount:Date?
+    var registration:UUID?
     
     init(engine:EngineType) {
         self.engine = engine
@@ -275,10 +280,10 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
             weight += 1
         }
         
-        if let antenna = antenna {
-            print("Antenna level: \(antenna.level)")
-            weight += 1
-        }
+//        if let antenna = antenna {
+//            print("Antenna level: \(antenna.level)")
+//            weight += 1
+//        }
         
         return weight
     }

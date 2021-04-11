@@ -10,11 +10,11 @@ import Foundation
 
 enum SVBuildStage {
     case engineType
+    case solarPanels        // solar panels
+    case marsBot            // bot tech
     case pickEngineers(type:EngineType)
     case pickMaterials(type:EngineType)
     case namingVehicle(vehicle:SpaceVehicle)
-//    case timing(vehicle:SpaceVehicle)
-    
 }
 
 
@@ -32,6 +32,9 @@ class VehicleBuilderViewModel:ObservableObject {
     @Published var hasSkills:Bool = false
     @Published var hasIngredients:Bool = false
     
+    @Published var ingredients:[Ingredient:Int] = [:]
+    @Published var lackIngredients:[Ingredient] = []
+    
     init() {
         // Load Station
         let station = LocalDatabase.shared.station!
@@ -47,7 +50,43 @@ class VehicleBuilderViewModel:ObservableObject {
         let newVehicle = SpaceVehicle(engine: type)
         self.vehicle = newVehicle
         self.selectedEngine = type
-        self.buildStage = .pickEngineers(type: type)
+        self.ingredients = type.ingredients
+        self.buildStage = .solarPanels //.pickEngineers(type: type)
+    }
+    
+    // solarChoice
+    func solarChoice(solar quantity:Int) {
+        let sol = SolarPanel(with: .smallVehicle)
+        vehicle?.solar = Array(repeating: sol, count: quantity)
+        self.ingredients[.SolarCell] = quantity * 5
+        if quantity > 0 {
+            if let prev = self.ingredients[.Polimer] {
+                self.ingredients[.Polimer] = prev + (quantity * 3)
+            } else {
+                self.ingredients[.Polimer] = quantity * 3
+            }
+        }
+        
+        // Update UI
+        self.buildStage = .marsBot
+    }
+    
+    // bot choice
+    func robotChoice(robot:MarsBot?) {
+        vehicle?.marsBot = robot
+        if let botIngredients = robot?.ingredients() {
+            for (k, v) in botIngredients {
+                if let prev = self.ingredients[k] {
+                    self.ingredients[k] = prev + v
+                } else {
+                    self.ingredients[k] = v
+                }
+            }
+        }
+        
+        // Update UI
+        guard let etype = selectedEngine else { fatalError() }
+        buildStage = .pickEngineers(type: etype)
     }
     
     func updateStaffList() {
@@ -89,13 +128,16 @@ class VehicleBuilderViewModel:ObservableObject {
     func checkIngredients(engine:EngineType) {
         
         self.buildStage = .pickMaterials(type: engine)
-        let required = engine.ingredients
+        
+        let required = self.ingredients
         
         let lacking = station.truss.validateResources(ingredients:required)
         if lacking.isEmpty {
             self.hasIngredients = true
+            self.lackIngredients = []
         } else {
             self.hasIngredients = false
+            self.lackIngredients = lacking
         }
     }
     
@@ -106,7 +148,7 @@ class VehicleBuilderViewModel:ObservableObject {
         print("Charge ingredients...")
         
         // Charge Ingredients
-        let result = station.truss.payForResources(ingredients: vehicle.engine.ingredients)
+        let result = station.truss.payForResources(ingredients: self.ingredients)
         if result == false {
             print("ERROR: Could not pay for resources")
         }
@@ -118,7 +160,6 @@ class VehicleBuilderViewModel:ObservableObject {
     func didNameVehicle(_ name:String) {
         guard let vehicle = vehicle else { fatalError() }
         vehicle.name = name
-//        self.buildStage = .timing(vehicle: vehicle)
     }
     
     /// The state of each `Create engine` Button

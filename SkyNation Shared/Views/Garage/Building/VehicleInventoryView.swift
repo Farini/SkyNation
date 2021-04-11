@@ -159,12 +159,12 @@ struct VehicleInventoryView: View {
                             .padding([.trailing])
                         
                         // Antenna
-                        if vehicle.antenna != nil {
-                            Text("Antenna level \(vehicle.antenna!.level)")
-                        } else {
-                            Text("Antenna: none")
-                                .foregroundColor(.red)
-                        }
+//                        if vehicle.antenna != nil {
+//                            Text("Antenna level \(vehicle.antenna!.level)")
+//                        } else {
+//                            Text("Antenna: none")
+//                                .foregroundColor(.red)
+//                        }
                     }
                     
                     Divider()

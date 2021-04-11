@@ -24,6 +24,7 @@ enum VehicleBuildingStage {
     case Crew       // Selecting Passengers
     case PrepLaunch // Preparing for launch
     case Launching  //
+    
 }
 
 class GarageViewModel:ObservableObject {
@@ -50,6 +51,8 @@ class GarageViewModel:ObservableObject {
     @Published var peripherals:[PeripheralObject] = []
     @Published var ingredients:[StorageBox]
     @Published var availablePeople:[Person]
+    @Published var bioBoxes:[BioBox]
+    
     
     init() {
         // Load Station
@@ -87,6 +90,10 @@ class GarageViewModel:ObservableObject {
         
         travellingVehicles = LocalDatabase.shared.vehicles
         availablePeople = station.getPeople().filter { $0.isBusy() == false }
+
+        // Bio boxes
+        let bboxes = station.bioModules.flatMap({ $0.boxes })
+        self.bioBoxes = bboxes
         
         // After init
         

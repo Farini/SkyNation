@@ -21,12 +21,12 @@ struct BuildingVehicleView: View {
             Text("Building Vehicle")
                 .font(.title)
                 .foregroundColor(.orange)
-                .padding()
             
             switch builderController.buildStage {
                 case .engineType:
-                    Spacer()
+                    
                     Text("Choose Engine Type").font(.title)
+                        .padding(.top)
                     HStack {
                         LazyHGrid(rows: [GridItem(.flexible(minimum: 180, maximum: 250))], alignment: .top, spacing: /*@START_MENU_TOKEN@*/nil/*@END_MENU_TOKEN@*/, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
                             ForEach(EngineType.allCases, id:\.self) { engine in
@@ -36,8 +36,13 @@ struct BuildingVehicleView: View {
                                     Text("Payload \(engine.payloadLimit)")
                                     Text(engine.about)
                                         .foregroundColor(.gray)
-                                        .lineLimit(nil)
+                                        .lineLimit(6)
                                         .frame(maxWidth:130, maxHeight:.infinity)
+                                        .padding(4)
+                                    Text("XP > \(engine.requiredXP)")
+                                        .foregroundColor(.gray)
+                                        .lineLimit(nil)
+                                        .frame(maxWidth:130, maxHeight:20)
                                         .padding(4)
                                     Button("Build") {
                                         print("Making some")
@@ -47,22 +52,26 @@ struct BuildingVehicleView: View {
                                     .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                                     .padding([.bottom])
                                 }
-                                
                                 .background(Color.black)
                                 .cornerRadius(12)
+                                .frame(height: 250, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                             }
                         }
                     }
-                    Spacer()
+                
+                case .solarPanels:
+                    VehicleSolarChoice(controller: builderController, engine: builderController.selectedEngine!)
+                    
+                case .marsBot:
+                    VehicleBotTech(controller: builderController, engine: builderController.selectedEngine!)
+                    
                 case .pickEngineers(let engine):
                     
                     // Skills and People
-//                    ScrollView {
                         ActivityStaffView(staff: builderController.availablePeople, selected: [], requiredSkills: engine.skills, chooseWithReturn: { (selectedPeople) in
                             builderController.workersArray = selectedPeople
                             builderController.updateStaffList()
                         }, title: "Engine Skills Required", issue: "", message: "")
-//                    }
                     
                     
                     Divider()
@@ -89,12 +98,19 @@ struct BuildingVehicleView: View {
                 case .pickMaterials(let engine):
                     
                     // Ingredients
-                    let dicSort = engine.ingredients.sorted(by: {$0.key.rawValue < $1.key.rawValue })
+//                    let dicSort = engine.ingredients.sorted(by: {$0.key.rawValue < $1.key.rawValue })
+                    let dicSort = builderController.ingredients.sorted(by: {$0.key.rawValue < $1.key.rawValue })
+                    Text("Engine \(engine.rawValue)")
+                    
                     Text("Ingredients Required")
-                    ForEach(dicSort, id:\.key) { (key, value) in
-                        Text("K:\(key.rawValue):\(value)")
-                            .foregroundColor(builderController.hasIngredients ? .green:.red)
-                    }
+                    LazyVGrid(columns: [GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 8, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/, content: {
+                        ForEach(dicSort, id:\.key) { (key, value) in
+                            let lacker:Bool = builderController.lackIngredients.contains(key)
+                            IngredientSufficiencyView(ingredient: key, required: value, available: lacker ? 0:value)
+                        }
+                    })
+                    
+                    
                     HStack {
                         
                         Button("Cancel") {
@@ -116,16 +132,78 @@ struct BuildingVehicleView: View {
                         garageController.didSetupEngine(vehicle: vehicle, workers:builderController.workersArray)
                     }, controller: builderController)
                     
-                
-                // DEPRECATE
-//                case .timing(let vehicle):
-//
-//                    Text("Timing: \(vehicle.name)")
-//                    Text("Timing started")
-                    
             }
         }
         .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: .center)
+    }
+}
+
+struct VehicleSolarChoice: View {
+    
+    @ObservedObject var controller:VehicleBuilderViewModel
+    @State var engine:EngineType
+    
+    var body: some View {
+        VStack {
+            Text("If you want to keep your batteries charged, you should use a solr panel")
+            HStack {
+                Button("Add 1") {
+                    // Add solar
+                    controller.solarChoice(solar: 1)
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                Button("Add 2") {
+                    // Add solar
+                    controller.solarChoice(solar: 2)
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                Button("Continue") {
+                    // no solar
+                    controller.solarChoice(solar: 0)
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+            }
+        }
+    }
+}
+
+struct VehicleBotTech: View {
+    
+    @ObservedObject var controller:VehicleBuilderViewModel
+    @State var engine:EngineType
+    
+    var body: some View {
+        VStack {
+            Text("Add Bot?")
+            HStack {
+                Button("Skip") {
+                    controller.robotChoice(robot: nil)
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                if engine == EngineType.Hex6 {
+                    Button("Satellite lid") {
+                        controller.robotChoice(robot: .Satellite)
+                    }
+                    .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                }
+                if engine == EngineType.T12 {
+                    Button("Rover") {
+                        controller.robotChoice(robot: .Rover)
+                    }
+                    .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                }
+                if engine == EngineType.T18 || engine == EngineType.T22 {
+                    Button("Terraformer") {
+                        controller.robotChoice(robot: .Terraformer)
+                    }
+                    .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                    Button("Transporter") {
+                        controller.robotChoice(robot: .Transporter)
+                    }
+                    .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                }
+            }
+        }
     }
 }
 
