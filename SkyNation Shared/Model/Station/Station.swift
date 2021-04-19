@@ -75,7 +75,6 @@ class Station:Codable {
      - completion:  A completion block with an array of possible messages . */
     func accountingLoop(recursive:Bool, completion:(_ errors:[String]) -> ()) {
         
-//        print("Run accounting")
         let accountingSheet = accountingTimeSheet()
         var loops = recursive ? accountingSheet.loops:min(accountingSheet.loops, 1) // when not recursive, just one loop (unless accounting has nothing)
         var nextDate = accountingSheet.date

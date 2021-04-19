@@ -138,7 +138,7 @@ class BioModule:Codable, Identifiable {
 
 class BioBox:Codable, Identifiable {
     
-    var id = UUID()
+    var id:UUID
     var dateAccount = Date()
     var mode:BioBoxMode = .grow
     
@@ -151,7 +151,7 @@ class BioBox:Codable, Identifiable {
     var mutationChance:Int = 100    // Chances to mutate?
     
     init(chosen:DNAOption, size:Int) {
-        
+        self.id = UUID()
         perfectDNA = chosen.rawValue
         
         // Initial Population
@@ -193,6 +193,12 @@ class BioBox:Codable, Identifiable {
     
     func convertToDNA() -> DNAOption {
         return DNAOption(rawValue: perfectDNA)!
+    }
+}
+
+extension BioBox: Equatable {
+    static func == (lhs: BioBox, rhs: BioBox) -> Bool {
+        return lhs.id == rhs.id
     }
 }
 

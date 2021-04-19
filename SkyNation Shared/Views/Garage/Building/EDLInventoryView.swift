@@ -16,7 +16,7 @@ struct EDLInventoryView: View {
     enum DescentSegment:String, CaseIterable {
         case ingredients
         case peripherals
-        
+        case batteries
         case tanks
         case passengers
         case bioboxes
@@ -25,7 +25,7 @@ struct EDLInventoryView: View {
             switch self {
                 case .ingredients: return "Ingredients"
                 case .peripherals: return "Peripherals"
-//                case .botTech: return "Bot Tech"
+                case .batteries: return "Batteries"
                 case .tanks: return "Tanks"
                 case .passengers: return "Passengers"
                 case .bioboxes: return "Bio Boxes"
@@ -39,9 +39,7 @@ struct EDLInventoryView: View {
                 case .bioboxes: return "leaf"
                 case .tanks: return "gauge"
                 case .peripherals: return "gearshape.2.fill"
-//                case .info: return "info.circle.fill"
-//                case .contributions: return "person.fill.checkmark"
-//                case .management: return "externaldrive"
+                case .batteries: return "bolt.fill.batteryblock"
                 default: return "questionmark"
             }
         }
@@ -155,14 +153,6 @@ struct EDLInventoryView: View {
             Divider()
             
             // Segment Picker
-//            Picker("", selection: $segment) {
-//                ForEach(DescentSegment.allCases, id:\.self) { dSegment in
-//                    Text(dSegment.prettyName)
-//                }
-//            }
-//            .pickerStyle(SegmentedPickerStyle())
-//            .padding([.leading, .trailing])
-            
             tabber
             
             ScrollView {
@@ -190,30 +180,70 @@ struct EDLInventoryView: View {
                                     }
                             }
                         }
+                    case .batteries:
+                        LazyVGrid(columns: [GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 4, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
+                            ForEach(controller.batteries.sorted(by: { $0.current > $1.current })) { battery in
+                                VStack {
+                                    Image("carBattery")
+                                        .renderingMode(.template)
+                                        .resizable()
+                                        .colorMultiply(.red)
+                                        .frame(width: 32.0, height: 32.0)
+                                        .padding([.top, .bottom], 8)
+                                    ProgressView("\(battery.current) of \(battery.capacity)", value: Float(battery.current), total: Float(battery.capacity))
+                                }
+                                .frame(width:100)
+                                .padding([.leading, .trailing, .bottom], 6)
+                                .background(Color.black)
+                                .cornerRadius(12)
+                                .onTapGesture {
+                                    self.toggleSelection(battery: battery)
+                                }
+                            }
+                        }
                         
                     // Tanks
                     case .tanks:
                         LazyVGrid(columns: [GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 4, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
                             ForEach(controller.tanks.sorted(by: { $0.type.rawValue.compare($1.type.rawValue) == .orderedAscending })) { tank in
                                 TankViewSmall(tank: tank)
+                                    .onTapGesture {
+                                        self.toggleSelection(tank: tank)
+                                    }
                             }
                         }
                     case .passengers:
-                        LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 4, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
-                            ForEach(controller.availablePeople) { person in
-                                PersonSmallView(person: person)
-                                
+                        if [EngineType.T22, EngineType.T18].contains(vehicle.engine) {
+                            LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 4, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
+                                ForEach(controller.availablePeople) { person in
+                                    PersonSmallView(person: person)
+                                        .onTapGesture {
+                                            self.toggleSelection(person: person)
+                                        }
+                                }
                             }
+                        } else {
+                            Text("A better engine is needed to carry passengers.")
+                                .foregroundColor(.gray)
                         }
                         
+                        
                     case .bioboxes:
+                        if [EngineType.T22, EngineType.T18, EngineType.T12].contains(vehicle.engine) {
                         LazyVGrid(columns: [GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 4, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
                             ForEach(controller.bioBoxes) { biobox in
                                 VStack {
                                     Text("DNA \(biobox.perfectDNA)")
                                     Text("x \(biobox.population.count)")
                                 }
+                                .onTapGesture {
+                                    self.toggleSelection(biobox: biobox)
+                                }
                             }
+                        }
+                        }else{
+                            Text("A better engine is needed to carry Bioboxes.")
+                                .foregroundColor(.gray)
                         }
                 }
             }
@@ -231,13 +261,43 @@ struct EDLInventoryView: View {
     }
     
     func toggleSelection(peripheral:PeripheralObject) {
-        
         if peripheralsSelected.contains(peripheral) {
             peripheralsSelected.removeAll(where: { $0.id == peripheral.id })
         } else {
             peripheralsSelected.append(peripheral)
         }
-        
+    }
+    
+    func toggleSelection(person:Person) {
+        if passengers.contains(person) {
+            passengers.removeAll(where: { $0.id == person.id })
+        } else {
+            passengers.append(person)
+        }
+    }
+    
+    func toggleSelection(tank:Tank) {
+        if tanksSelected.contains(tank) {
+            tanksSelected.removeAll(where: { $0.id == tank.id })
+        } else {
+            tanksSelected.append(tank)
+        }
+    }
+    
+    func toggleSelection(battery:Battery) {
+        if batteries.contains(battery) {
+            batteries.removeAll(where: { $0.id == battery.id })
+        } else {
+            batteries.append(battery)
+        }
+    }
+    
+    func toggleSelection(biobox:BioBox) {
+        if bioboxes.contains(biobox) {
+            bioboxes.removeAll(where: { $0.id == biobox.id })
+        } else {
+            bioboxes.append(biobox)
+        }
     }
 }
 

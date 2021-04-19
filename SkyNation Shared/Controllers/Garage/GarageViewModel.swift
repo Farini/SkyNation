@@ -328,13 +328,19 @@ class GarageViewModel:ObservableObject {
         // Make sure this is selected vehicle
         guard selectedVehicle != nil && selectedVehicle == vehicle else { fatalError() }
         
+        // Inventory
+        let limit = vehicle.engine.payloadLimit
+        let weight = vehicle.calculateWeight()
+        print("Vehicle Weight: \(weight)")
+        if weight > limit {
+            print("⚠️ Vehicle Overweight !!!")
+            return
+        }
+        
         // Status
         let vehicleStatus = vehicle.status
         print("Vehicle Status (Data): \(vehicleStatus)")
         
-        // Inventory
-        let weight = vehicle.calculateWeight()
-        print("Vehicle Weight: \(weight)")
         
         // Prepare for Launch
         
@@ -366,8 +372,12 @@ class GarageViewModel:ObservableObject {
                 inventoryBool = false
             }
         }
-        // 2.d Boxes
-        // FIXME: - Add Boxes to Space Vehicle
+        
+        // FIXME: - To Add
+        // 2. Boxes (Ingredients)
+        // 3. Passengers (Person)
+        // 4. Bioboxes
+        
         
         // Check if inventory was successful
         if inventoryBool {

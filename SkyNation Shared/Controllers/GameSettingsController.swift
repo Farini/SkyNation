@@ -254,6 +254,11 @@ class GameSettingsController:ObservableObject {
                             self.stationSceneLoaded = true
                             self.updateLoadedList()
                             self.loadServerData()
+                            LocalDatabase.shared.saveStation(station: station)
+                            if let player = LocalDatabase.shared.player {
+                                let pres = LocalDatabase.shared.savePlayer(player: player)
+                                print("Station saved. Player: \(pres)")
+                            }
                             print("⚠️ Are we finally ready? 🏆")
                             print("Enable buttons now ???")
                         }

@@ -627,8 +627,10 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             let track = Soundtrack.allCases.randomElement()
             if let source = SCNAudioSource(fileNamed: "\(track?.rawValue ?? "na").m4a") {
                 print("found audio file")
-                let action = SCNAction.playAudio(source, waitForCompletion: false)
-                scene.rootNode.runAction(action)
+                let action = SCNAction.playAudio(source, waitForCompletion: true)
+                scene.rootNode.runAction(action) {
+                    print("Music Finished")
+                }
             } else {
                 print("cannot find audio file")
             }
