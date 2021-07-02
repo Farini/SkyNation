@@ -604,6 +604,7 @@
 		8569A3D025A6353C0057A518 /* GameActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameActivityView.swift; sourceTree = "<group>"; };
 		8569A3D925A799840057A518 /* LaunchingVehicleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchingVehicleView.swift; sourceTree = "<group>"; };
 		8569A3E225A8D7870057A518 /* BoosterDiagramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoosterDiagramView.swift; sourceTree = "<group>"; };
+		85761806268EC2680024233D /* DataPlan.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = DataPlan.md; sourceTree = "<group>"; };
 		8579750E259B9E70004C54D2 /* FlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipView.swift; sourceTree = "<group>"; };
 		85797517259BD394004C54D2 /* ItemCollectionViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCollectionViews.swift; sourceTree = "<group>"; };
 		857D9A1825BF42CB00626884 /* Entry.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Entry.storyboard; sourceTree = "<group>"; };
@@ -1131,6 +1132,7 @@
 				8517EE3325FC11EF00C34C54 /* Guild.swift */,
 				8592821125EA3287001233BE /* City.swift */,
 				8517EE4025FC124200C34C54 /* Outpost.swift */,
+				85761806268EC2680024233D /* DataPlan.md */,
 			);
 			path = Mars;
 			sourceTree = "<group>";
