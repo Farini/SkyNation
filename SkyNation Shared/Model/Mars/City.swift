@@ -32,8 +32,6 @@ class CityData:Codable, Identifiable {
     var id:UUID
     var posdex:Posdex
     
-    // Modules
-    
     // Ingredients
     var boxes:[StorageBox]
     
@@ -52,18 +50,19 @@ class CityData:Codable, Identifiable {
     // SolarPanels
     var solarPanels:[SolarPanel]
     
-    var bioBoxes:[BioBox]
+    var bioBoxes:[BioBox]?
     
     // Robots, or Vehicles
     var vehicles:[String]?
+    
+    // Tech?
+    var tech:[String]?
     
 //    var dateAccounting:Date
     
     // To add:
     // + accounting + report
     // + airComposition
-    // + bioBoxes?
-    // + CityTech?
     
     
     // MARK: - Methods

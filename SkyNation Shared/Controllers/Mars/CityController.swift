@@ -58,7 +58,7 @@ class CityController:ObservableObject {
                             self.getArrivedVehicles()
                             MarsBuilder.shared.myCityData = cData
                         } else {
-                            print("⚠️ Error: \(error?.localizedDescription ?? "n/a")")
+                            print("⚠️ CityData: \(error?.localizedDescription ?? "n/a")")
                         }
                     }
                     
@@ -75,7 +75,6 @@ class CityController:ObservableObject {
         }
         
     }
-    
     
     @Published var allVehicles:[SpaceVehicleContent] = []
     @Published var cityVehicles:[SpaceVehicleContent] = []
@@ -171,5 +170,56 @@ class CityController:ObservableObject {
         // Updated city. Now needs to update server
         // Updated server. Delete Vehicle
         //
+    }
+    
+    
+    // Development Helper
+    func addSomethingToCity() {
+        
+        if cityData == nil {
+            print("!! City data is nil !!!")
+        }
+        
+        var willAddBatteries:Bool = Bool.random()
+        var willAddTanks:Bool = Bool.random()
+        var willAddBoxes:Bool = Bool.random()
+        
+        if cityData?.batteries.isEmpty == false {
+            willAddBatteries = false
+        }
+        if cityData?.tanks.isEmpty == false {
+            willAddTanks = false
+        }
+        if cityData?.boxes.isEmpty == false {
+            willAddBoxes = false
+        }
+        
+        if willAddBatteries {
+            for _ in 0..<5 {
+                let newBattery = Battery(shopped: true)
+                cityData?.batteries.append(newBattery)
+            }
+            print("Added 5 batteries")
+            
+        }
+        
+        if willAddBoxes {
+            for _ in 0..<10 {
+                let newBoxType = Ingredient.allCases.randomElement()!
+                let nb = StorageBox(ingType: newBoxType, current: newBoxType.boxCapacity())
+                cityData?.boxes.append(nb)
+            }
+            print("Added 10 ingredients")
+        }
+        
+        if willAddTanks {
+            for _ in 0..<10 {
+            
+                let ttype = TankType.allCases.randomElement()!
+                let tank = Tank(type: ttype, full: true)
+                cityData?.tanks.append(tank)
+            }
+            print("Added 10 tanks")
+        }
     }
 }

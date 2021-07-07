@@ -70,6 +70,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         if let node = sceneRenderer.overlaySKScene?.nodes(at: converted).first {
             print("Overlay Results !!!! \(node.description)")
             self.hitNode2D(node: node)
+            
+            return
         }
         
         // Check 3D Scene
@@ -206,7 +208,17 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             
             // Life support systems (Air Control)
             if sprite.name == "Air Control" {
-                gameNavDelegate?.didSelectAir()
+                switch gameScene {
+                    case .SpaceStation:
+                        gameNavDelegate?.didSelectAir()
+                    case .MarsColony:
+                        if let city = mars?.didSelectAirButton() {
+                            print("Show city status here. \(city.posdex)")
+                        } else {
+                            self.stationOverlay.generateNews(string: "You need to claim a city to view LSS report.")
+                        }
+                }
+                
                 return
             }
             
@@ -257,23 +269,13 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             }
             
             if sprite.name == "MarsButton" {
-                print("⚙️ Lets go to Mars!")
+                
+                // print("⚙️ Lets go to Mars!")
+                
                 // Player should have GuildID
                 // Otherwise, load prospect guild selector, or prospect terrain selector?
                 
-                let mars = MarsBuilder.shared
-                if let guild = mars.guild {
-                    print("Found Guild: \(guild.name)")
-                    sceneRenderer.present(mars.scene, with: .doorsCloseVertical(withDuration: 1.25), incomingPointOfView: nil) {
-                        self.scene = mars.scene
-                        print("Mars Scene Loaded :)")
-                        self.gameScene = .MarsColony
-                        self.mars = mars
-                    }
-                } else {
-                    self.stationOverlay.generateNews(string: "⚠️ Could not connect to the server")
-                }
-                return
+                self.switchScene()
             }
             
         }
@@ -504,6 +506,46 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         }
     }
     
+    // MARK: - Scene Transitions
+    
+    func switchScene() {
+        switch gameScene {
+            
+            // Loading Mars from Space Station
+            case .SpaceStation:
+                print("We are in Space Station. Load Mars")
+                MarsBuilder.shared.requestMarsInfo { guildFC, guildState in
+                    
+                    print("Guild Loading State: \(guildState)")
+                    
+                    if let gfc:GuildFullContent = guildFC {
+                        
+                        // Guild Loaded. Load scene
+                        print("Found Guild: \(gfc.name)")
+                        
+                        // Present Scene
+                        DispatchQueue.main.async {
+                            self.sceneRenderer.present(MarsBuilder.shared.scene, with: .doorsCloseVertical(withDuration: 1.25), incomingPointOfView: nil) {
+                                self.scene = MarsBuilder.shared.scene
+                                print("Mars Scene Loaded :)")
+                                self.gameScene = .MarsColony
+                                self.mars = MarsBuilder.shared
+                            }
+                        }
+                        
+                    } else {
+                        print("Error: \(guildState)")
+                        self.stationOverlay.generateNews(string: "⚠️ Could not connect to the server \(guildState)")
+                    }
+                }
+                
+            // Loading Space Station from Mars
+            case .MarsColony:
+                print("We are in Mars. Load Space Station")
+                
+        }
+    }
+    
     // MARK: - Initializer and Setup
     
     init(sceneRenderer renderer: SCNSceneRenderer) {
@@ -662,6 +704,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         }
         print("End Scene Debug ------\n")
     }
+    
+    
 
 }
 

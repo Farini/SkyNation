@@ -234,7 +234,7 @@ struct OutpostView: View {
                                 }
                                 
                                 LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: [], content: {
-                                    ForEach(controller.myCity.bioBoxes, id:\.id) { bioBox in
+                                    ForEach(controller.myCity.bioBoxes ?? [], id:\.id) { bioBox in
                                         Text("\(DNAOption(rawValue:bioBox.perfectDNA)!.emoji) x \(bioBox.population.count)").font(.title)
                                             .onTapGesture {
                                                 controller.makeContribution(object: bioBox)

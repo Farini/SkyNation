@@ -67,13 +67,15 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
  - [ ] ★★★☆☆ Action Icons - Buy, Cancel, Cheat, Tokens, etc.
  - [ ] ★★☆☆☆ Icons - App Icon
  
+ Audio
+ - [ ] ☆☆☆☆☆ Sound Effects
+ - [ ] ★☆☆☆☆ Music / Soudtrack
+ 
  3D Scenes
  - [ ] ★★★☆☆ Space Station
  - [ ] ★★★★☆ Delivery Vehicle
  - [ ] ★☆☆☆☆ Mars Colony
  - [ ] ★★★☆☆ Space Vehicle
- - [ ] ☆☆☆☆☆ Sound Effects
- - [ ] ☆☆☆☆☆ Music / Soudtrack
  
  ## Total Completeness
  Example calculation of **fair share**
@@ -110,7 +112,7 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [ ] Biobox still not saving when done (needs testing)
 - [ ] Bio View - DNA animation (needs testing)
 
-- [ ] Make sure that Air adjustments AND Oxygen adjustments are working - Accounting)
+- [ ] Make sure that Air adjustments AND Oxygen adjustments are working - Accounting
 - [ ] Game Store Improvements
 - [ ] New Modules not fully available after Tech research. 
 - [ ] 1/8 Soundtrack + FX

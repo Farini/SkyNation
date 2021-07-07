@@ -14,9 +14,7 @@ struct MarsCityCreatorView: View {
     @State var city:DBCity?
     @ObservedObject var controller = CityController()
     
-    // --- Use Tabs?
     // LSS -> Reuse LSS View
-    // 
     
     var body: some View {
         
@@ -25,6 +23,10 @@ struct MarsCityCreatorView: View {
             HStack {
                 if controller.isMyCity {
                     Text("My City").font(.title).foregroundColor(.green)
+//                    Text("My city \(cData.id)")
+                    Button("Add Something") {
+                        controller.addSomethingToCity()
+                    }
                 } else {
                     Text("City View").font(.title)
                 }
@@ -37,6 +39,7 @@ struct MarsCityCreatorView: View {
             .padding(.horizontal, 8)
             
             Divider()
+            
             switch controller.viewState {
                 case .loading:
                     Text("Loading")
@@ -44,6 +47,9 @@ struct MarsCityCreatorView: View {
                     Text("Unclaimed")
                 case .mine(let cData):
                     Text("My city \(cData.id)")
+                    Button("Add Something") {
+                        controller.addSomethingToCity()
+                    }
                 default:
                     Text("Other")
             }

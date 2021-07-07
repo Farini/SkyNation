@@ -189,7 +189,7 @@ class OutpostController:ObservableObject {
             
             for (k, v) in opData.getNextJob()?.wantedBio ?? [:] {
                 
-                let have = myCity.bioBoxes.filter({ $0.perfectDNA == k.rawValue }).count
+                let have = myCity.bioBoxes?.filter({ $0.perfectDNA == k.rawValue }).count ?? 0
                 let opHave = opData.supplied.bioBoxes.filter({ $0.perfectDNA == k.rawValue }).count
                 
                 print("i need: \(v)")

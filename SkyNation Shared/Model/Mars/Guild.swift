@@ -85,7 +85,6 @@ struct Guild:Codable {
     
     var id: UUID
     
-    //    @Field(key: "name")
     var name: String
     
     var president:[String:UUID?]?
@@ -95,7 +94,6 @@ struct Guild:Codable {
     var isOpen:Bool
     
     /// Election Date (To change President)
-    //    @Field(key: "election")
     var election:Date
     
     var terrain:String?

@@ -607,6 +607,7 @@
 		85761806268EC2680024233D /* DataPlan.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = DataPlan.md; sourceTree = "<group>"; };
 		8579750E259B9E70004C54D2 /* FlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipView.swift; sourceTree = "<group>"; };
 		85797517259BD394004C54D2 /* ItemCollectionViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCollectionViews.swift; sourceTree = "<group>"; };
+		857A3562269607300020ADF2 /* Scene Assets.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "Scene Assets.md"; sourceTree = "<group>"; };
 		857D9A1825BF42CB00626884 /* Entry.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Entry.storyboard; sourceTree = "<group>"; };
 		857D9A2225BF5E6D00626884 /* PeripheralDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralDetailView.swift; sourceTree = "<group>"; };
 		857D9A2825C0820200626884 /* StartingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingViewController.swift; sourceTree = "<group>"; };
@@ -871,6 +872,7 @@
 				8536F46A258D481700B509D2 /* ParticleEmitters */,
 				8517EE6A26093C4100C34C54 /* Sounds */,
 				8536F464258D481700B509D2 /* TravelersScene.swift */,
+				857A3562269607300020ADF2 /* Scene Assets.md */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
