@@ -136,8 +136,8 @@ class LocalDatabase {
     }
     
     // MARK: - Game Messages
-    static let gameMessagesFile = "GameMessages.json"
     var gameMessages:[GameMessage] = []
+    static let gameMessagesFile = "GameMessages.json"
     private static func loadMessages() -> [GameMessage] {
         
         print("Loading Messages")
@@ -330,7 +330,7 @@ class LocalDatabase {
         encoder.outputFormatting = .prettyPrinted
         
         guard let encodedData:Data = try? encoder.encode(player) else { fatalError() }
-        print("Saving Travelling Vehicles")
+        print("Saving Player")
         
         let bcf = ByteCountFormatter()
         bcf.allowedUnits = [.useKB]
@@ -389,6 +389,71 @@ class LocalDatabase {
     // MARK: - In Memory (Fetched)
     // ===========================
     
+    // Server file
+    var serverData:ServerData?
+    private static let serverDataFile = "SKNSData.json"
+    func saveServerData(skn:ServerData) -> Bool {
+        
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        encoder.outputFormatting = .prettyPrinted
+        
+        guard let encodedData:Data = try? encoder.encode(skn) else { fatalError() }
+        print("Saving Server Data Vehicles")
+        
+        let bcf = ByteCountFormatter()
+        bcf.allowedUnits = [.useKB]
+        bcf.countStyle = .file
+        
+        let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
+        print("Saving Server Data Size: \(dataSize)")
+        
+        let fileUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.serverDataFile)
+        
+        if !FileManager.default.fileExists(atPath: fileUrl.path) {
+            FileManager.default.createFile(atPath: fileUrl.path, contents: encodedData, attributes: nil)
+            print("File created")
+            return true
+        } else {
+            do {
+                try encodedData.write(to: fileUrl, options: .atomic)
+                print("Saved Server Data locally")
+                return true
+            }catch{
+                print("Error writting data to local url: \(error)")
+                return false
+            }
+        }
+    }
+    func loadServerData() -> ServerData? {
+        
+        print("Loading Server data")
+        let finalUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.serverDataFile)
+        
+        if !FileManager.default.fileExists(atPath: finalUrl.path){
+            print("File doesn't exist")
+            return nil
+        }
+        
+        do {
+            let theData = try Data(contentsOf: finalUrl)
+            
+            do {
+                let localServer:ServerData = try JSONDecoder().decode(ServerData.self, from: theData)
+                return localServer
+                
+            }catch{
+                // Decode JSON Error
+                print("Error Decoding JSON: \(error)")
+                return nil
+            }
+        }catch{
+            // First Do - let data error
+            print("Error getting Server Data from URL. \(error)")
+            return nil
+        }
+    }
+    
     // Accounting Problems
     var accountingProblems:[String] = []
     
@@ -432,6 +497,22 @@ class LocalDatabase {
         // Generators
         if let gg:GameGenerators = LocalDatabase.loadGameGenerators() {
             self.gameGenerators = gg
+        }
+        
+        // Server Database
+        if let servData = loadServerData() {
+            print("Server data loaded from disk")
+            let newData = ServerData(localData: servData)
+            self.serverData = newData
+        } else {
+            if let p1 = player {
+                let newData = ServerData(with: p1)
+                self.serverData = newData
+                if self.saveServerData(skn: newData) == true {
+                    print("New server data saved")
+                }
+            }
+            print("Server data not written locally")
         }
     }
 }

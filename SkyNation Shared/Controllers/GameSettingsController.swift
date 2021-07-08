@@ -139,20 +139,21 @@ class GameSettingsController:ObservableObject {
     
     func fetchUser() {
         
-        guard let user = user else {
-            print("No user")
-            return
-        }
+//        guard let user = user else {
+//            print("No user")
+//            return
+//        }
         
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .secondsSince1970
+//        let decoder = JSONDecoder()
+//        decoder.dateDecodingStrategy = .secondsSince1970
         
-        SKNS.resolveLogin { (userPost, error) in
-            if let sknUser = userPost {
-                print("Found user: \(user.id)")
-                self.user = sknUser
-            } else {
-                print("Did not find user")
+        ServerManager.shared.inquireLogin { player, error in
+            DispatchQueue.main.async {
+                if let player = player {
+                    self.user = player
+                } else {
+                    print("Did not find user. \(error?.localizedDescription ?? "")")
+                }
             }
         }
         
@@ -270,28 +271,18 @@ class GameSettingsController:ObservableObject {
     
     func loadServerData() {
         
-        SKNS.resolveLogin { (userPost, error) in
-            
-            if let upost = userPost {
-                
-                print("Incoming User...")
-                print("ID: \(upost.id)")
-                print("LID: \(upost.localID)")
-//                upost.serverID = upost.id
-                print("SID: \(upost.serverID?.uuidString ?? "< No server ID >")")
-//                print("GID: \(upost.guildID?.uuidString ?? "< No Guild ID >")")
-//                print("PID: \(upost.cityID?.uuidString ?? "< No City ID > ")")
-
-                self.user = upost
-                // Update UI
-                self.updateLoadedList()
-                // Save User?
-                
-            } else {
-                // No server?
-                print("No Server info")
+        ServerManager.shared.inquireLogin { player, error in
+            DispatchQueue.main.async {
+                if let player = player {
+                    print("Player login: ID:\(player.id.uuidString), LID: \(player.localID), SID: \(player.serverID?.uuidString ?? "< No server ID >")")
+                    self.user = player
+                    self.updateLoadedList()
+                } else {
+                    print("Did not find user. \(error?.localizedDescription ?? "")")
+                }
             }
         }
+        
     }
     
 }

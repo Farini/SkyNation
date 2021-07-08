@@ -123,7 +123,6 @@ class Station:Codable {
                 
                 let trussResult = truss.consumeEnergy(amount: useResult)
                 if trussResult && peripheral.isBroken == false {
-                    // Now it can work
                     
                     let production = peripheral.getConsumables()
                     var didFail:Bool = false
@@ -152,22 +151,22 @@ class Station:Codable {
                                 report.peripheralNotes.append("\(peripheral.peripheral.rawValue) produced: \(value) \(tank.rawValue)")
                             }
                         } else if key == "vapor" {
-                            
+                            // vapor in air
                             if air.h2o < abs(value) {
                                 report.problems.append("Not enough vapor for \(peripheral.peripheral.rawValue)")
                                 didFail = true
                             } else {
-                                self.air.h2o += value // this actually subtracts
+                                self.air.h2o -= abs(value) // this actually subtracts
                                 report.peripheralNotes.append("\(peripheral.peripheral.rawValue) produced: \(value) vapor")
                             }
-                            // vapor in air
+                            
                         } else if key == "oxygen" {
                             // oxygen in air, not tank
                             if air.o2 < abs(value) {
                                 report.problems.append("Not enough oxygen for \(peripheral.peripheral.rawValue)")
                                 didFail = true
                             } else {
-                                self.air.o2 += value // this actually subtracts
+                                self.air.o2 -= abs(value) // this actually subtracts
                                 report.peripheralNotes.append("\(peripheral.peripheral.rawValue) produced: \(value) oxygen")
                             }
                         } else if key == "CarbDiox" {

@@ -45,10 +45,10 @@
 		8517EE4A25FC245D00C34C54 /* OutpostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE4925FC245D00C34C54 /* OutpostView.swift */; };
 		8517EE4B25FC245D00C34C54 /* OutpostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE4925FC245D00C34C54 /* OutpostView.swift */; };
 		8517EE4C25FC245D00C34C54 /* OutpostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE4925FC245D00C34C54 /* OutpostView.swift */; };
-		8517EE5225FE8C9C00C34C54 /* ServerDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE5125FE8C9C00C34C54 /* ServerDatabase.swift */; };
-		8517EE5325FE8C9C00C34C54 /* ServerDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE5125FE8C9C00C34C54 /* ServerDatabase.swift */; };
-		8517EE5425FE8C9C00C34C54 /* ServerDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE5125FE8C9C00C34C54 /* ServerDatabase.swift */; };
-		8517EE5525FE8C9C00C34C54 /* ServerDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE5125FE8C9C00C34C54 /* ServerDatabase.swift */; };
+		8517EE5225FE8C9C00C34C54 /* ServerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE5125FE8C9C00C34C54 /* ServerData.swift */; };
+		8517EE5325FE8C9C00C34C54 /* ServerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE5125FE8C9C00C34C54 /* ServerData.swift */; };
+		8517EE5425FE8C9C00C34C54 /* ServerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE5125FE8C9C00C34C54 /* ServerData.swift */; };
+		8517EE5525FE8C9C00C34C54 /* ServerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE5125FE8C9C00C34C54 /* ServerData.swift */; };
 		8517EE632605DC8800C34C54 /* CityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE622605DC8800C34C54 /* CityController.swift */; };
 		8517EE642605DC8800C34C54 /* CityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE622605DC8800C34C54 /* CityController.swift */; };
 		8517EE652605DC8800C34C54 /* CityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE622605DC8800C34C54 /* CityController.swift */; };
@@ -502,7 +502,7 @@
 		8517EE3325FC11EF00C34C54 /* Guild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Guild.swift; sourceTree = "<group>"; };
 		8517EE4025FC124200C34C54 /* Outpost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Outpost.swift; sourceTree = "<group>"; };
 		8517EE4925FC245D00C34C54 /* OutpostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutpostView.swift; sourceTree = "<group>"; };
-		8517EE5125FE8C9C00C34C54 /* ServerDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerDatabase.swift; sourceTree = "<group>"; };
+		8517EE5125FE8C9C00C34C54 /* ServerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerData.swift; sourceTree = "<group>"; };
 		8517EE622605DC8800C34C54 /* CityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityController.swift; sourceTree = "<group>"; };
 		8523338B25D76A9B004CB638 /* AirCompositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirCompositionView.swift; sourceTree = "<group>"; };
 		8536F2B5258D330200B509D2 /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
@@ -804,7 +804,7 @@
 			children = (
 				8536F315258D361100B509D2 /* GameConstants.swift */,
 				8536F32A258D412600B509D2 /* LocalDatabase.swift */,
-				8517EE5125FE8C9C00C34C54 /* ServerDatabase.swift */,
+				8517EE5125FE8C9C00C34C54 /* ServerData.swift */,
 				85E6ECF725C9D92B00229E18 /* ServerAPI.swift */,
 				8592820725EA2D91001233BE /* Generators.swift */,
 			);
@@ -1560,7 +1560,7 @@
 				858D7C5425D60FA300A45CF9 /* GameButtons.swift in Sources */,
 				8536F449258D47EA00B509D2 /* VehicleBuilderViewModel.swift in Sources */,
 				8536F481258D481700B509D2 /* TravelersScene.swift in Sources */,
-				8517EE5225FE8C9C00C34C54 /* ServerDatabase.swift in Sources */,
+				8517EE5225FE8C9C00C34C54 /* ServerData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1632,7 +1632,7 @@
 				858D7C4825D4F0AD00A45CF9 /* GameCamera.swift in Sources */,
 				8536F393258D475D00B509D2 /* BioModule.swift in Sources */,
 				8536F3FF258D47D000B509D2 /* IngredientView.swift in Sources */,
-				8517EE5325FE8C9C00C34C54 /* ServerDatabase.swift in Sources */,
+				8517EE5325FE8C9C00C34C54 /* ServerData.swift in Sources */,
 				8536F41B258D47D000B509D2 /* VehicleInventoryView.swift in Sources */,
 				8569A3D225A6353C0057A518 /* GameActivityView.swift in Sources */,
 				857DDEC825E4DCAD00E64752 /* Messages.swift in Sources */,
@@ -1793,7 +1793,7 @@
 				858D7C5625D60FA300A45CF9 /* GameButtons.swift in Sources */,
 				8536F44B258D47EA00B509D2 /* VehicleBuilderViewModel.swift in Sources */,
 				8536F483258D481700B509D2 /* TravelersScene.swift in Sources */,
-				8517EE5425FE8C9C00C34C54 /* ServerDatabase.swift in Sources */,
+				8517EE5425FE8C9C00C34C54 /* ServerData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1859,7 +1859,7 @@
 				8536F470258D481700B509D2 /* CamControlNode.swift in Sources */,
 				8536F444258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				8504A52025C6845200739C58 /* StationBuilder.swift in Sources */,
-				8517EE5525FE8C9C00C34C54 /* ServerDatabase.swift in Sources */,
+				8517EE5525FE8C9C00C34C54 /* ServerData.swift in Sources */,
 				8536F381258D475D00B509D2 /* Station.swift in Sources */,
 				8536F405258D47D000B509D2 /* TechTreeDiagram.swift in Sources */,
 				8536F391258D475D00B509D2 /* LabModule.swift in Sources */,

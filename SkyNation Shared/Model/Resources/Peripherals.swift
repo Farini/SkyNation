@@ -220,7 +220,7 @@ class PeripheralObject:Codable, Identifiable, Equatable {
         
         switch peripheral {
             case .ScrubberCO2: return [TankType.co2.rawValue: 3, "CarbDiox":-3]
-            case .Condensator: return [TankType.h2o.rawValue: 2, "vapor": -2]
+            case .Condensator: return [TankType.h2o.rawValue: 3, "vapor": -3]
             case .Electrolizer: return [TankType.h2o.rawValue: -2, "oxygen":2, TankType.h2.rawValue:4]
             case .Methanizer: return ["CarbDiox":-4, TankType.h2.rawValue:-4, TankType.ch4.rawValue:4, TankType.o2.rawValue:4]
             case .WaterFilter: return [Ingredient.wasteLiquid.rawValue: -2, TankType.h2o.rawValue:2]
