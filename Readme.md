@@ -112,14 +112,24 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [ ] Biobox still not saving when done (needs testing)
 - [ ] Bio View - DNA animation (needs testing)
 
+
+- [X] Resources View Example (Copy from `EDLInventoryView`)
+- [X] Resources Tab
+- [X] Resources Selection + Callback
+- [ ] Resources Collections - Similar size items
+
+- [ ] News should be an array of strings (show for 5s, wait 1s, show next)
+- [ ] Scene Alert (News) -> Low Oxygen
+- [ ] Scene Alert (News) -> Bad AirQualities
+- [ ] Scene Alert (News) -> Low Water
+
 - [ ] Make sure that Air adjustments AND Oxygen adjustments are working - Accounting
 - [ ] Game Store Improvements
 - [ ] New Modules not fully available after Tech research. 
 - [ ] 1/8 Soundtrack + FX
 - [ ] Add a couple of SoundFX
 - [ ] Gamesettings -> SoundFX
-- [ ] Scene Alert (News) -> Low Oxygen
-- [ ] Scene Alert (News) -> Bad AirQualities
+
 - [ ] Animate Satellite Opening Solar Panel (if there is one)
 - [ ] Adjust quantities shown in Earth Order
 - [ ] LSS View -> Let player sort Ingredients, Tanks, etc. as they wish

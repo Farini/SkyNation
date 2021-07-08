@@ -357,6 +357,9 @@
 		85797519259BD394004C54D2 /* ItemCollectionViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85797517259BD394004C54D2 /* ItemCollectionViews.swift */; };
 		8579751A259BD394004C54D2 /* ItemCollectionViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85797517259BD394004C54D2 /* ItemCollectionViews.swift */; };
 		8579751B259BD394004C54D2 /* ItemCollectionViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85797517259BD394004C54D2 /* ItemCollectionViews.swift */; };
+		857A35652696AE500020ADF2 /* RSSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857A35642696AE500020ADF2 /* RSSView.swift */; };
+		857A35662696AE500020ADF2 /* RSSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857A35642696AE500020ADF2 /* RSSView.swift */; };
+		857A35672696AE500020ADF2 /* RSSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857A35642696AE500020ADF2 /* RSSView.swift */; };
 		857D9A1925BF42CB00626884 /* Entry.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 857D9A1825BF42CB00626884 /* Entry.storyboard */; };
 		857D9A2325BF5E6D00626884 /* PeripheralDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D9A2225BF5E6D00626884 /* PeripheralDetailView.swift */; };
 		857D9A2925C0820200626884 /* StartingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D9A2825C0820200626884 /* StartingViewController.swift */; };
@@ -608,6 +611,7 @@
 		8579750E259B9E70004C54D2 /* FlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipView.swift; sourceTree = "<group>"; };
 		85797517259BD394004C54D2 /* ItemCollectionViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCollectionViews.swift; sourceTree = "<group>"; };
 		857A3562269607300020ADF2 /* Scene Assets.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "Scene Assets.md"; sourceTree = "<group>"; };
+		857A35642696AE500020ADF2 /* RSSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSView.swift; sourceTree = "<group>"; };
 		857D9A1825BF42CB00626884 /* Entry.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Entry.storyboard; sourceTree = "<group>"; };
 		857D9A2225BF5E6D00626884 /* PeripheralDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralDetailView.swift; sourceTree = "<group>"; };
 		857D9A2825C0820200626884 /* StartingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingViewController.swift; sourceTree = "<group>"; };
@@ -981,6 +985,7 @@
 		8536F3BD258D47CF00B509D2 /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
+				857A35632696AE1F0020ADF2 /* RSS */,
 				858D7C6425D6169E00A45CF9 /* UI Components */,
 				858D7C5F25D6161000A45CF9 /* Object Views */,
 				858D7C5225D60F5C00A45CF9 /* Buttons */,
@@ -1087,6 +1092,14 @@
 				8569A310259F81110057A518 /* TransitionShader.fsh */,
 			);
 			path = FSH;
+			sourceTree = "<group>";
+		};
+		857A35632696AE1F0020ADF2 /* RSS */ = {
+			isa = PBXGroup;
+			children = (
+				857A35642696AE500020ADF2 /* RSSView.swift */,
+			);
+			path = RSS;
 			sourceTree = "<group>";
 		};
 		858D7C5225D60F5C00A45CF9 /* Buttons */ = {
@@ -1521,6 +1534,7 @@
 				8536F3D2258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */,
 				8569A3E325A8D7870057A518 /* BoosterDiagramView.swift in Sources */,
 				8536F485258D481700B509D2 /* StationOverlayObject.swift in Sources */,
+				857A35652696AE500020ADF2 /* RSSView.swift in Sources */,
 				8536F48D258D481700B509D2 /* MarsColonyScene.swift in Sources */,
 				85A6590625E4178F008AA9BA /* GameSettingsController.swift in Sources */,
 				8536F3E2258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */,
@@ -1583,6 +1597,7 @@
 				8536F41F258D47D000B509D2 /* BuildingVehicleView.swift in Sources */,
 				8592824425EC74FD001233BE /* GuildView.swift in Sources */,
 				8536F3A7258D475D00B509D2 /* Player.swift in Sources */,
+				857A35662696AE500020ADF2 /* RSSView.swift in Sources */,
 				8536F43E258D47EA00B509D2 /* GarageViewModel.swift in Sources */,
 				8536F3FB258D47D000B509D2 /* PersonViews.swift in Sources */,
 				8536F39F258D475D00B509D2 /* TechTreeDisplay.swift in Sources */,
@@ -1752,6 +1767,7 @@
 				8569A3E525A8D7870057A518 /* BoosterDiagramView.swift in Sources */,
 				8536F487258D481700B509D2 /* StationOverlayObject.swift in Sources */,
 				8536F48F258D481700B509D2 /* MarsColonyScene.swift in Sources */,
+				857A35672696AE500020ADF2 /* RSSView.swift in Sources */,
 				8536F3E4258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */,
 				85A6590825E4178F008AA9BA /* GameSettingsController.swift in Sources */,
 				8536F3F0258D47D000B509D2 /* TrussView.swift in Sources */,
