@@ -12,6 +12,9 @@ In Mars, the players will be able to build their own cities, and cooperate with 
 - [ ] LandingPad: Where Space Vehicles land
 - [ ] Entertainment Center: Keep people happy
 
+- Antenna
+- Power-01, Power-02, Power-03, Power-04
+
 ### Mars Tech
 Additional `Ingredients` and resources should be available on Mars. Some tech work should only be doable here.
 

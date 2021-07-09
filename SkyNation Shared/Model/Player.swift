@@ -74,6 +74,19 @@ class SKNPlayer:Codable, Identifiable {
         print("Saving Player result: \(result)")
     }
     
+    /// Random Data generation
+    static func randomPlayers(_ amt:Int) -> [SKNPlayer] {
+        
+        var players:[SKNPlayer] = []
+        let randomNames = ["Test", "Player One", "MarZ", "Moogle", "Rocketman", "Rocketgal", "Marizza", "⌘🤓.😬"]
+        for _ in 1...amt {
+            let newPlayer = SKNPlayer()
+            newPlayer.name = randomNames.randomElement()!
+            players.append(newPlayer)
+        }
+        return players
+    }
+    
 }
 
 /// `Public` information about a `Player`
@@ -123,6 +136,10 @@ struct PlayerContent:Codable {
         self.beganGame = player.beganGame
         self.lastSeen = Date()
     }
+    
+//    static func randomPlayer() -> PlayerContent {
+//
+//    }
     
 }
 

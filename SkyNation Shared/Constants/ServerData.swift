@@ -65,6 +65,16 @@ class ServerManager {
         }
     }
     
+    /// Gets the Full Guild Content
+    func inquireFullGuild(completion:@escaping(GuildFullContent?, Error?) -> ()) {
+        guard let serverData:ServerData = serverData else {
+            completion(nil, ServerDataError.noFile)
+            return
+        }
+        serverData.fetchFullGuild { fullGuild, error in
+            completion(fullGuild, error)
+        }
+    }
     
 }
 
@@ -172,27 +182,22 @@ class ServerData:Codable {
         }
     }
     
-    var lastCitiesFetched:Date?
+    var lastFullGuildFetch:Date?
     
-    // ====================
-    // *** CONTINUE
-    // This will fetch the cities, partners and guild full content
-    // change this to return the data we want
-    // be specific
-    // ---------------------
-    func fetchCities(completion:@escaping([DBCity], Error?) -> ()) {
+    /// My Guild (Full Content)
+    func fetchFullGuild(completion:@escaping(GuildFullContent?, Error?) -> ()) {
         
         // Seconds until next fetch
         let delay:TimeInterval = 60.0
         
-        if let log = lastCitiesFetched, Date().timeIntervalSince(log) < delay {
-            completion(self.cities, nil)
+        if let log = lastFullGuildFetch, Date().timeIntervalSince(log) < delay {
+            completion(self.guildfc, nil)
             return
         }
         
         SKNS.loadGuild { gfc, error in
             
-            completion(gfc?.cities ?? [], error)
+            completion(gfc, error)
             
             if let gfc:GuildFullContent = gfc {
                 let cities:[DBCity] = gfc.cities
@@ -200,7 +205,7 @@ class ServerData:Codable {
                 self.guildfc = gfc
                 self.cities = cities
                 self.partners = citizens
-                self.lastCitiesFetched = Date()
+                self.lastFullGuildFetch = Date()
                 self.status = .online
                 
                 // Save

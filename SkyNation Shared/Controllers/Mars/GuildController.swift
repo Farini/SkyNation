@@ -66,22 +66,6 @@ class GuildController:ObservableObject {
             }
         }
         
-//        SKNS.resolveLogin { (loggedUser, error) in
-//
-//            if let loguser = loggedUser {
-//
-//                print("** LOGIN     >> \(loguser.name)")
-//                print("** LOCAL     >> \(loguser.localID.uuidString)")
-//                print("** SERVER    >> \(loguser.serverID?.uuidString ?? "[]")")
-////                print("** GUILD     >> \(loguser.guildID?.uuidString ?? "[]")")
-////                print("** CITY      >> \(loguser.cityID?.uuidString ?? "[]")")
-//                
-//                self.user = loguser
-//            } else {
-//                print("Could not log in user. Reason: \(error?.localizedDescription ?? "n/a")")
-//            }
-//        }
-        
     }
     
     func fetchGuilds() {

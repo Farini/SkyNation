@@ -864,6 +864,7 @@
 		8536F33A258D41CB00B509D2 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				857A3562269607300020ADF2 /* Scene Assets.md */,
 				8536F2B5258D330200B509D2 /* GameController.swift */,
 				8536F4A1258D484B00B509D2 /* SceneDirector.swift */,
 				858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */,
@@ -876,7 +877,6 @@
 				8536F46A258D481700B509D2 /* ParticleEmitters */,
 				8517EE6A26093C4100C34C54 /* Sounds */,
 				8536F464258D481700B509D2 /* TravelersScene.swift */,
-				857A3562269607300020ADF2 /* Scene Assets.md */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";

@@ -454,8 +454,21 @@ struct DBOutpost:Codable {
         
     }
     
+    /// Random Data
     static func example() -> DBOutpost {
-        return DBOutpost(id: UUID(), model: "model", guild: nil, type: .Energy, level: 0, accounting: Date(), posdex: Posdex.power1.rawValue)
+        return DBOutpost(gid: UUID(), type: OutpostType.allCases.randomElement()!, posdex: Posdex(rawValue: Int.random(in: 10...22))!)
+        //return DBOutpost(id: UUID(), model: "model", guild: ["outpost":nil], type: .Energy, level: 0, accounting: Date(), posdex: Posdex.power1.rawValue)
+    }
+    
+    /// Random Data
+    init(gid:UUID, type:OutpostType, posdex:Posdex) {
+        self.id = UUID()
+        self.model = "model"
+        self.guild = ["guild":gid]
+        self.type = type
+        self.level = Bool.random() ? 0:1
+        self.accounting = Date().addingTimeInterval(Double.random(in: 20...652))
+        self.posdex = posdex.rawValue
     }
 }
 

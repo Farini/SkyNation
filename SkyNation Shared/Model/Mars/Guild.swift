@@ -21,7 +21,7 @@ enum Posdex:Int, Codable, CaseIterable {
     case city7
     case city8
     case city9
-    case antenna
+    case antenna // 10
     case arena
     case biosphere1
     case biosphere2
@@ -33,7 +33,7 @@ enum Posdex:Int, Codable, CaseIterable {
     case power1
     case power2
     case power3
-    case power4
+    case power4 // 22
     
     /// Position on the map
     var position:Vector3D {
@@ -143,6 +143,52 @@ struct GuildFullContent:Codable {
     
     // Outposts
     var outposts:[DBOutpost]
+    
+    // MARK: - Data Generation
+    
+//    func makeExample() -> GuildFullContent {
+//        let gid = UUID()
+//        let gName = "Test Guild"
+//        let players = SKNPlayer.randomPlayers(5)
+//        let open = Bool.random()
+//
+//    }
+    
+    /// Random Data
+    init(data random:Bool = true) {
+        let gid = UUID()
+        self.id = gid
+        let randomGuildNames = ["CryptoMars","Venusians","Planetarium","Sky Alliance"]
+        self.name = randomGuildNames.randomElement()!
+        self.president = nil
+        let players = SKNPlayer.randomPlayers(5)
+        var pCitizens:[PlayerContent] = []
+        for p in players {
+            let c = PlayerContent(player: p)
+            pCitizens.append(c)
+        }
+        self.citizens = pCitizens
+        self.isOpen = Bool.random()
+        self.election = Date().addingTimeInterval(Double.random(in: 35...8956))
+        self.terrain = .Terrain1
+        
+        // Cities
+        var tmpCities:[DBCity] = []
+        for pidx in 0...4 {
+            let owner = pidx < players.count ? players[pidx]:nil
+            let newCity = DBCity.generate(gid: gid, owner: owner, posdex: Posdex(rawValue: pidx + 1)!)
+            tmpCities.append(newCity)
+        }
+        self.cities = tmpCities
+        
+        // Outposts
+        var ops:[DBOutpost] = []
+        for opdex in 10...22 {
+            let op = DBOutpost(gid: gid, type: OutpostType.allCases.randomElement()!, posdex: Posdex(rawValue: opdex)!)
+            ops.append(op)
+        }
+        self.outposts = ops
+    }
     
 }
 

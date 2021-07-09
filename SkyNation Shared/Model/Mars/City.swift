@@ -23,6 +23,14 @@ struct DBCity:Codable {
     var owner:[String:UUID?]?
     
     var posdex:Int
+    
+    /// Generates a random city
+    static func generate(gid:UUID, owner:SKNPlayer?, posdex:Posdex) -> DBCity {
+        let cityNames = ["Mortadella", "Elysium", "Moyses", "Drakula"]
+        let oid:[String:UUID?]? = owner != nil ? [owner!.name:owner!.id]:nil
+        let newCity = DBCity(id: UUID(), guild: ["guild":gid], name: cityNames.randomElement()!, accounting: Date(), owner: oid, posdex: posdex.rawValue)
+        return newCity
+    }
 }
 
 

@@ -112,55 +112,71 @@ class MarsBuilder {
     }
     
     // Request Guild Details
-    func getServerInfo() {
+    func getServerInfo(randomize:Bool) {
         
-        print("Getting Server Info")
-        guard let player = LocalDatabase.shared.player else {
-            print("No Player")
-            return
-        }
-        guard let _ = player.guildID else {
-            print("No Guild ID for player: \(player.name)")
-            return
-        }
-        
-        SKNS.loadGuild { (guild, error) in
+        // Not random
+        if !randomize {
             
-            if let guild:GuildFullContent = guild {
-                self.guild = guild
-                print("\n**********************")
-                print("Guild Result: \(guild.name)")
-                print("**********************")
-                for city:DBCity in guild.cities {
-                    print("City: Pos:\(city.posdex) >> \(city.name)")
-                    if let cid = city.owner?["id"] {
-                        if cid != nil && cid == player.cityID {
-                            print("This city is mine!")
-                            self.myDBCity = city
+            print("Getting Server Info")
+            
+            guard let player = LocalDatabase.shared.player else {
+                print("No Player")
+                return
+            }
+            guard let _ = player.guildID else {
+                print("No Guild ID for player: \(player.name)")
+                return
+            }
+            
+            SKNS.loadGuild { (guild, error) in
+                
+                if let guild:GuildFullContent = guild {
+                    self.guild = guild
+                    print("\n**********************")
+                    print("Guild Result: \(guild.name)")
+                    print("**********************")
+                    for city:DBCity in guild.cities {
+                        print("City: Pos:\(city.posdex) >> \(city.name)")
+                        if let cid = city.owner?["id"] {
+                            if cid != nil && cid == player.cityID {
+                                print("This city is mine!")
+                                self.myDBCity = city
+                            }
                         }
                     }
-                }
-                self.cities = guild.cities
-                
-                for outpost:DBOutpost in guild.outposts {
-                    print("OutPost: \(outpost.type)")
-                }
-                self.outposts = guild.outposts
-                
-                for player:PlayerContent in guild.citizens {
-                    print("Player Content: \(player.name)")
-                }
-                self.players = guild.citizens
-                
-                self.getArrivedVehicles()
-                
-            } else {
-                print("No guild in result")
-                if let error = error {
-                    print("Error: \(error.localizedDescription)")
+                    self.cities = guild.cities
+                    
+                    for outpost:DBOutpost in guild.outposts {
+                        print("OutPost: \(outpost.type)")
+                    }
+                    self.outposts = guild.outposts
+                    
+                    for player:PlayerContent in guild.citizens {
+                        print("Player Content: \(player.name)")
+                    }
+                    self.players = guild.citizens
+                    
+                    self.getArrivedVehicles()
+                    
+                } else {
+                    print("No guild in result")
+                    if let error = error {
+                        print("Error: \(error.localizedDescription)")
+                    }
                 }
             }
         }
+        
+        // Random
+        else {
+            let randomGuild = GuildFullContent()
+            self.cities = randomGuild.cities
+            self.outposts = randomGuild.outposts
+            self.players = randomGuild.citizens
+            self.guild = randomGuild
+        }
+        
+        
     }
     
     /// Gets all vehicles that arrived
@@ -203,9 +219,10 @@ class MarsBuilder {
 //    }
     
     // Load objects that represent outposts, cities, etc.
-    func loadSceneObjects() {
+    /* func loadSceneObjects() {
         
-    }
+    } */
+    
     
     // Selection
     
@@ -272,13 +289,80 @@ class MarsBuilder {
         print("Initting Mars Director")
         guard let scene = MarsBuilder.loadScene() else { fatalError() }
         self.scene = scene
-        getServerInfo()
+        
+        getServerInfo(randomize: true)
     }
     
     // Load Scene
     class func loadScene() -> SCNScene? {
         let nextScene = SCNScene(named: "Art.scnassets/Mars/GuildMap.scn")
         return nextScene
+    }
+    
+}
+
+// MARK: - Scene
+
+extension MarsBuilder {
+    
+    func populateScene() {
+        
+        print("\n * GUILD SCENE\n-----------------")
+        let root:SCNNode = scene.rootNode
+        for child in root.childNodes {
+            print("Root child: \(child.name ?? "<untitled>")")
+        }
+        // Terrain
+        
+        // Outposts
+        print("\n { OUTPOSTS } ")
+        let outpostsParent = root.childNode(withName: "Outposts", recursively: false)!
+        for child in outpostsParent.childNodes {
+            let opNodeName = child.name ?? "unknown"
+            if let pp:Posdex = Posdex.allCases.filter({ $0.sceneName == opNodeName }).first {
+                if let outpost = outposts.filter({ $0.posdex == pp.rawValue }).first {
+                    print("Outpost | \(pp.sceneName), type: \(outpost.type.rawValue), lvl:\(outpost.level)")
+                } else {
+                    print("Outpost (unbuilt) | \(pp.sceneName)")
+                }
+            }
+        }
+        
+        
+        // Light
+        
+        // Cities
+        print("\n { CITIES } ")
+        let citiesParent = root.childNode(withName: "Cities", recursively: false)!
+        for tmpCity in citiesParent.childNodes {
+            
+            let cityNodeName = tmpCity.name ?? "unknown"
+            if let pp:Posdex = Posdex.allCases.filter({ $0.sceneName == cityNodeName }).first {
+                if let city = cities.filter({ $0.posdex == pp.rawValue }).first {
+                    var ownerString:String = "unowned"
+                    if let ownID = city.owner?.values.first { ownerString = ownID!.uuidString }
+                    let userOwner = players.filter({ $0.id.uuidString == ownerString }).first?.name ?? "unowned"
+                    print("City Node | \(pp.sceneName), owner:\(userOwner)")
+                    
+                    // Build gate
+                    
+                } else {
+                    
+                    // Free slot >> Diamond
+                    print("- Unowned \(pp.sceneName), posdex:\(pp.rawValue)")
+                    let gateScene = SCNScene(named: "Art.scnassets/Mars/Gate.scn")!
+                    let diamond = gateScene.rootNode.childNode(withName: "DiamondH", recursively: false)!.clone()
+                    var dPos = tmpCity.position
+                    dPos.y += 5
+                    diamond.position = dPos
+                    citiesParent.addChildNode(diamond)
+                    
+                }
+            }
+        }
+        
+        // Camera
+        
     }
     
 }

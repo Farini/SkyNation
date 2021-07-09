@@ -514,6 +514,19 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             // Loading Mars from Space Station
             case .SpaceStation:
                 print("We are in Space Station. Load Mars")
+                
+                let mBuilder = MarsBuilder.shared
+                mBuilder.populateScene()
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                    self.sceneRenderer.present(mBuilder.scene, with: .doorsCloseVertical(withDuration: 2.25), incomingPointOfView: nil) { // pass a node for point of view
+                        self.scene = mBuilder.scene
+                        print("Mars Scene Loaded :)")
+                        self.gameScene = .MarsColony
+                        self.mars = mBuilder
+                    }
+                }
+                
+                /*
                 MarsBuilder.shared.requestMarsInfo { guildFC, guildState in
                     
                     print("Guild Loading State: \(guildState)")
@@ -538,6 +551,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         self.stationOverlay.generateNews(string: "⚠️ Could not connect to the server \(guildState)")
                     }
                 }
+             */
                 
             // Loading Space Station from Mars
             case .MarsColony:
