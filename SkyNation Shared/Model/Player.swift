@@ -141,6 +141,12 @@ struct PlayerContent:Codable {
 //
 //    }
     
+    /// Returns `LastSeen`
+    func activity() -> String {
+        let df = GameFormatters.dateFormatter
+        return df.string(from: lastSeen)
+    }
+    
 }
 
 /**

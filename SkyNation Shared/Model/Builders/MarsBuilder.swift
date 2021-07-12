@@ -112,6 +112,9 @@ class MarsBuilder {
     }
     
     // Request Guild Details
+    /**
+        Populates the data. Use `randomize` to populate randomly (create a example/sample)
+     */
     func getServerInfo(randomize:Bool) {
         
         // Not random
@@ -169,11 +172,24 @@ class MarsBuilder {
         
         // Random
         else {
-            let randomGuild = GuildFullContent()
+            var randomGuild = GuildFullContent()
             self.cities = randomGuild.cities
             self.outposts = randomGuild.outposts
             self.players = randomGuild.citizens
             self.guild = randomGuild
+            
+            // Populate my city:
+            // var myDBCity:DBCity?
+            // var myCityData:CityData?
+            let mc:DBCity = DBCity(id: UUID(), guild: ["guild":randomGuild.id], name: "Fariland", accounting: Date(), owner: ["id":LocalDatabase.shared.player!.playerID], posdex: Posdex.city9.rawValue)
+            let cd = CityData(example: true, id:mc.id)
+            // add city
+            randomGuild.cities.append(mc)
+            self.cities.append(mc)
+            
+            self.myDBCity = mc
+            self.myCityData = cd
+            
         }
         
         

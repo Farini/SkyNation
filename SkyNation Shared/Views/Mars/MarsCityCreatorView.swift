@@ -20,16 +20,18 @@ struct MarsCityCreatorView: View {
         
         VStack {
             
+            // Title
             HStack {
+                
+                Text(controller.cityTitle).font(.title)
+                
                 if controller.isMyCity {
-                    Text("My City").font(.title).foregroundColor(.green)
-//                    Text("My city \(cData.id)")
-                    Button("Add Something") {
-                        controller.addSomethingToCity()
-                    }
-                } else {
-                    Text("City View").font(.title)
+                    CityMenu()
+//                    Button("Add Something") {
+//                        controller.addSomethingToCity()
+//                    }
                 }
+                
                 Spacer()
                 Button("X") {
                     NotificationCenter.default.post(name: .closeView, object: self)
@@ -44,76 +46,84 @@ struct MarsCityCreatorView: View {
                 case .loading:
                     Text("Loading")
                 case .unclaimed:
-                    Text("Unclaimed")
-                case .mine(let cData):
-                    Text("My city \(cData.id)")
-                    Button("Add Something") {
-                        controller.addSomethingToCity()
-                    }
-                default:
-                    Text("Other")
-            }
-            
-            if let city:DBCity = city {
-                
-                Group {
-                    Text("Occupied City").foregroundColor(.red).padding()
-                    Text("City name: \(city.name)")
-                    Text("A: \(city.name)")
                     
-                    if controller.cityData != nil {
+                    Image(systemName: "mappin.and.ellipse").font(.title)
+                    Text("Unclaimed City").foregroundColor(.gray)
+                    Text("Posdex: \(posdex.rawValue) \(posdex.sceneName)").padding()
+                    Text("If you don't have a city yet, you may claim this one to get started.").foregroundColor(.gray)
+                    
+                case .mine(let cData):
+                    
+                    ScrollView(.vertical, showsIndicators: true) {
                         Text("City Data").foregroundColor(.orange)
-                        Text("Boxes: \(controller.cityData!.boxes.debugDescription)")
-                        LazyVStack {
+                        // Text("Boxes: \(cData.boxes.debugDescription)")
+                        
+                        // Boxes
+                        LazyVGrid(columns: [GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100))], alignment: .center, spacing: 8, pinnedViews: [], content: {
+                            
                             ForEach(controller.cityData!.boxes) { box in
                                 IngredientView(ingredient: box.type, hasIngredient: true, quantity: box.current)
                             }
-                        }
-                        Text("Batteries: \(controller.cityData!.batteries.debugDescription)")
-//                        LazyVStack {
-//                            ForEach(controller.cityData!.batteries) { battery in
-                                BatteryCollectionView(controller.cityData!.batteries)
-//                            }
-//                        }
-                        Text("Peripherals: \(controller.cityData!.peripherals.debugDescription)")
-                        LazyVStack {
+                        })
+                        
+                        Text("Batteries: \(cData.batteries.debugDescription)")
+                        //BatteryCollectionView(controller.cityData!.batteries)
+                        LazyVGrid(columns: [GridItem(.fixed(120)), GridItem(.fixed(120)), GridItem(.fixed(120))], alignment: .center, spacing: 8, pinnedViews: [], content: {
+                            ForEach(controller.cityData!.batteries) { battery in
+                                VStack {
+                                    Image("carBattery")
+                                        .renderingMode(.template)
+                                        .resizable()
+                                        .colorMultiply(.red)
+                                        .frame(width: 32.0, height: 32.0)
+                                        .padding([.top, .bottom], 8)
+                                    ProgressView("\(battery.current) of \(battery.capacity)", value: Float(battery.current), total: Float(battery.capacity))
+                                }
+                                .frame(width:100)
+                                .padding([.leading, .trailing, .bottom], 6)
+                                .background(Color.black)
+                                .cornerRadius(12)
+                            }
+                        })
+                        
+                        Text("Peripherals: \(cData.peripherals.debugDescription)")
+                        LazyVGrid(columns: [GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100))], alignment: .center, spacing: 8, pinnedViews: [], content: {
                             ForEach(controller.cityData!.peripherals) { peripheral in
+                                
                                 PeripheralSmallView(peripheral: peripheral)
                             }
-                        }
-                        Text("Tanks: \(controller.cityData!.tanks.debugDescription)")
-                        LazyVStack {
+                        })
+                        
+                        Text("Tanks: \(cData.tanks.debugDescription)")
+                        LazyVGrid(columns: [GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))], alignment: .center, spacing: 8, pinnedViews: [], content: {
                             ForEach(controller.cityData!.tanks) { tank in
                                 TankRow(tank: tank)
                             }
+                        })
+                    }
+                case .foreign(let pid):
+                    
+                    Text("Foreign")
+                    if let pp = MarsBuilder.shared.players.filter({ $0.id == pid }).first {
+                        Text("Other Player")
+                        Group {
+                            Text(pp.name)
+                            Image(pp.avatar)
+                                .resizable()
+                                .frame(width:64, height:64)
+                            Text(pp.activity())
+                        }
+                        Group {
+                            Text("Occupied City").foregroundColor(.red).padding()
+                            Text("City name: \(controller.city!.name)")
                         }
                     }
-                }
-                
-                Group {
-                    Text("Vehicles").foregroundColor(.orange).font(.title3)
-                    ForEach(controller.allVehicles, id:\.id) { vehicle in // SpaceVehicleContent
-                        Text("\(vehicle.engine): \(vehicle.status)")
-                            .onTapGesture {
-                                print("Unpacking")
-                                controller.unpackVehicle(vehicle: vehicle)
-                            }
-                    }
-                }
-                
-                
-            } else {
-                
-                Text("Unclaimed City").foregroundColor(.gray)
-                Text("Posdex: \(posdex.rawValue) \(posdex.sceneName)")
-                
             }
             
             Divider()
             
             // Buttons
             HStack {
-//                Text("Claim this city")
                 
                 Button("Claim city") {
                     print("Should claim it")
@@ -143,12 +153,76 @@ struct MarsCityCreatorView: View {
             }
             
         }
+        .frame(minWidth: 500, minHeight: 300, alignment: .center)
         
     }
 }
 
+enum CityMenuItem:Int, CaseIterable {
+    case hab
+    case lab
+    case rss
+    case rocket
+    
+    var string:String {
+        switch self {
+            case .hab: return "🏠"
+            case .lab: return "🔬"
+            case .rss: return "♻️"
+            case .rocket: return "🚀"
+        }
+    }
+}
+
+struct CityMenu: View {
+    
+    @State var menuItem:CityMenuItem = .hab
+    
+    var body: some View {
+        HStack {
+            
+            ForEach(CityMenuItem.allCases, id:\.self) { mitem in
+                ZStack {
+                    Circle()
+                        .strokeBorder(menuItem == mitem ? Color.red:Color.gray, lineWidth: 2, antialiased: false)
+                        .frame(width: 32, height: 32, alignment: .center)
+                    Text(mitem.string)
+                }
+                .onTapGesture {
+                    self.menuItem = mitem
+                }
+            }
+        }
+        .font(.title)
+        .padding(.horizontal)
+        .padding(.vertical, 4)
+    }
+}
+
+// City Types
+// 1. Unclaimed (free)
+//  1a. Player does NOT have a city (can claim)
+//  1b. Player has a city (cannot claim)
+// 2. Ocupied
+//      Player Content
+//      DBCity data
+//      if (president) - 🥾👢Evict
+// 3. Mine
+
+
 struct MarsCityCreatorView_Previews: PreviewProvider {
+    
+    // My City: .city9
+    // Other: .city1
+    // Unclaimed: .city8
+    
     static var previews: some View {
-        MarsCityCreatorView(posdex: .city1, city: nil)
+        MarsCityCreatorView(posdex: .city9, city: nil)
+    }
+}
+
+struct CityMenu_Previews: PreviewProvider {
+    static var previews: some View {
+        CityMenu()
     }
 }

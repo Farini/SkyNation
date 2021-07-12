@@ -27,8 +27,8 @@ struct DBCity:Codable {
     /// Generates a random city
     static func generate(gid:UUID, owner:SKNPlayer?, posdex:Posdex) -> DBCity {
         let cityNames = ["Mortadella", "Elysium", "Moyses", "Drakula"]
-        let oid:[String:UUID?]? = owner != nil ? [owner!.name:owner!.id]:nil
-        let newCity = DBCity(id: UUID(), guild: ["guild":gid], name: cityNames.randomElement()!, accounting: Date(), owner: oid, posdex: posdex.rawValue)
+        let oid:[String:UUID?]? = owner != nil ? ["id":owner!.id]:nil
+        let newCity = DBCity(id: UUID(), guild: ["id":gid], name: cityNames.randomElement()!, accounting: Date(), owner: oid, posdex: posdex.rawValue)
         return newCity
     }
 }
@@ -86,10 +86,11 @@ class CityData:Codable, Identifiable {
     
     // MARK: - Initializers
     
-    init(example:Bool) {
+    init(example:Bool, id:UUID? = nil) {
         
-        self.id = UUID()
-        self.posdex = Posdex.power1
+        self.id = id ?? UUID()
+        self.posdex = Posdex.city9
+        
         // Boxes
         let box1 = StorageBox(ingType: .Aluminium, current: 20)
         let box2 = StorageBox(ingType: .Copper, current: 20)
@@ -137,6 +138,9 @@ class CityData:Codable, Identifiable {
         // Solar?
         self.solarPanels = []
         self.vehicles = []
+        
+        // Tech
+        self.tech = []
     }
     
     /// An example filled with data
@@ -145,17 +149,6 @@ class CityData:Codable, Identifiable {
         return instance
     }
 }
-
-
-//struct CityHab:Codable {
-//
-//    var id:UUID
-//    var capacity:Int            // Limit of people
-//    var inhabitants:[Person]    // People
-//    var name:String             // any name given
-//    var skin:String             // If we decide so...
-//    var position:Vector3D
-//}
 
 enum CityTech:String, Codable, CaseIterable {
     

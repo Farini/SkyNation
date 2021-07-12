@@ -517,12 +517,32 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 
                 let mBuilder = MarsBuilder.shared
                 mBuilder.populateScene()
+                
+                let camParent = mBuilder.scene.rootNode.childNode(withName: "OtherCams", recursively: false)!
+                let pov = camParent.childNode(withName: "TopCam", recursively: false)!
+                let pov2 = camParent.childNodes.filter({ $0.name != "TopCam" && $0.name != "Diag3" }).randomElement()!
+                
+                // Cons
+                let constraint = SCNLookAtConstraint(target: mBuilder.scene.rootNode.childNode(withName: "Terrain", recursively: false)!)
+                pov.constraints = [constraint]
+                
+                let destPos = pov2.position
+                let destAng = pov2.eulerAngles
+                
+                let move = SCNAction.move(to: destPos, duration: 2)
+                let rota = SCNAction.rotateTo(x: destAng.x, y: destAng.y, z: destAng.z, duration: 2)
+                let seq2 = SCNAction.sequence([rota])
+                let anime = SCNAction.group([move, seq2])
+                
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-                    self.sceneRenderer.present(mBuilder.scene, with: .doorsCloseVertical(withDuration: 2.25), incomingPointOfView: nil) { // pass a node for point of view
+                    self.sceneRenderer.present(mBuilder.scene, with: .doorsCloseVertical(withDuration: 2.25), incomingPointOfView: pov) { // pass a node for point of view
                         self.scene = mBuilder.scene
                         print("Mars Scene Loaded :)")
                         self.gameScene = .MarsColony
                         self.mars = mBuilder
+                        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                            pov.runAction(anime)
+                        }
                     }
                 }
                 

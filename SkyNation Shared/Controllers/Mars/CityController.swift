@@ -10,7 +10,7 @@ import Foundation
 enum MarsCityStatus {
     case loading                    // Data not loaded yet
     case unclaimed                  // City has no owner
-    case foreign                     // Belongs to someone else
+    case foreign(pid:UUID)          // Belongs to someone else
     case mine(cityData:CityData)    // Belongs to Player
 }
 
@@ -18,6 +18,8 @@ class CityController:ObservableObject {
     
     var builder:MarsBuilder
     @Published var player:SKNPlayer
+    
+    @Published var cityTitle:String = "Unclaimed City"
     
     @Published var city:DBCity?
     @Published var cityData:CityData?
@@ -38,18 +40,42 @@ class CityController:ObservableObject {
     /// Loads the city at the correct `Posdex`
     func loadAt(posdex:Posdex) {
         
-        if let theCity = builder.cities.filter({ $0.posdex == posdex.rawValue }).first {
+        if let theCity:DBCity = builder.cities.filter({ $0.posdex == posdex.rawValue }).first {
             print("The City: \(theCity.name)")
             self.city = theCity
-            let cityOwner = theCity.owner ?? [:]
+            self.cityTitle = theCity.name
             
+            let cityOwner = theCity.owner ?? [:]
             
             if let ownerID = cityOwner["id"] as? UUID {
                 print("Owner ID: \(ownerID)")
                 if player.playerID == ownerID {
-                    print("PLAYR OWNS IT !!!!")
+                    print("PLAYER OWNS IT !!!!")
                     isMyCity = true
                     
+                    // Load City (New Method)
+                    if let cityData:CityData = MarsBuilder.shared.myCityData {
+                        if let localCity:CityData = LocalDatabase.shared.city {
+                            self.cityData = localCity
+                        } else {
+                            
+                            print("Try to save city")
+//                            do {
+//                                try LocalDatabase.shared.saveCity(cityData)
+//                            } catch {
+//                                print("⚠️ ERROR loading city data")
+//                            }
+                        }
+                        
+                        self.cityData = cityData
+                        self.viewState = .mine(cityData: cityData)
+                        // self.getArrivedVehicles()
+                        
+                    }
+                    
+                    
+                    // Load city from Server
+                    /*
                     SKNS.loadCity(posdex: Posdex(rawValue: theCity.posdex)!) { (cityData, error) in
                         if let cData = cityData {
                             print("Loaded City Data. Ready.")
@@ -61,17 +87,24 @@ class CityController:ObservableObject {
                             print("⚠️ CityData: \(error?.localizedDescription ?? "n/a")")
                         }
                     }
+                     */
                     
                 } else {
-                    // Also get city data from server (not editable)
+                    
+                    // City Belongs to someone else
                     isMyCity = false
-                    self.viewState = .foreign
+                    
+                    
+                    self.viewState = .foreign(pid:ownerID)
+                    // let citizen = MarsBuilder.shared.players.filter({ $0.id == ownerID })
+                    
                 }
             }
         } else {
             print("This is an unclaimed city")
             isMyCity = false
             isClaimedCity = false
+            viewState = .unclaimed
         }
         
     }
