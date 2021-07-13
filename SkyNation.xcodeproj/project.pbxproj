@@ -393,9 +393,6 @@
 		8592821325EA3287001233BE /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592821125EA3287001233BE /* City.swift */; };
 		8592821425EA3287001233BE /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592821125EA3287001233BE /* City.swift */; };
 		8592821525EA3287001233BE /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592821125EA3287001233BE /* City.swift */; };
-		8592822025EABD5B001233BE /* MarsCityCreatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592821F25EABD5B001233BE /* MarsCityCreatorView.swift */; };
-		8592822125EABD5B001233BE /* MarsCityCreatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592821F25EABD5B001233BE /* MarsCityCreatorView.swift */; };
-		8592822225EABD5B001233BE /* MarsCityCreatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592821F25EABD5B001233BE /* MarsCityCreatorView.swift */; };
 		8592822D25EC44F7001233BE /* GuildExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592822C25EC44F7001233BE /* GuildExplorerView.swift */; };
 		8592822E25EC44F7001233BE /* GuildExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592822C25EC44F7001233BE /* GuildExplorerView.swift */; };
 		8592822F25EC44F7001233BE /* GuildExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592822C25EC44F7001233BE /* GuildExplorerView.swift */; };
@@ -460,6 +457,15 @@
 		85CD46B025D20B42000D9C64 /* ModulePopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CD46AF25D20B42000D9C64 /* ModulePopView.swift */; };
 		85CD46B125D20B42000D9C64 /* ModulePopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CD46AF25D20B42000D9C64 /* ModulePopView.swift */; };
 		85CD46B225D20B42000D9C64 /* ModulePopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CD46AF25D20B42000D9C64 /* ModulePopView.swift */; };
+		85D3BAAA269DF75000B6AA36 /* MarsCityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BAA9269DF75000B6AA36 /* MarsCityView.swift */; };
+		85D3BAAB269DF75000B6AA36 /* MarsCityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BAA9269DF75000B6AA36 /* MarsCityView.swift */; };
+		85D3BAAC269DF75000B6AA36 /* MarsCityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BAA9269DF75000B6AA36 /* MarsCityView.swift */; };
+		85D3BAAE269DF78500B6AA36 /* MyCityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BAAD269DF78500B6AA36 /* MyCityView.swift */; };
+		85D3BAAF269DF78500B6AA36 /* MyCityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BAAD269DF78500B6AA36 /* MyCityView.swift */; };
+		85D3BAB0269DF78500B6AA36 /* MyCityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BAAD269DF78500B6AA36 /* MyCityView.swift */; };
+		85D3BAB2269DF79800B6AA36 /* ForeignCityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BAB1269DF79800B6AA36 /* ForeignCityView.swift */; };
+		85D3BAB3269DF79800B6AA36 /* ForeignCityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BAB1269DF79800B6AA36 /* ForeignCityView.swift */; };
+		85D3BAB4269DF79800B6AA36 /* ForeignCityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BAB1269DF79800B6AA36 /* ForeignCityView.swift */; };
 		85E6ECF825C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECF925C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECFA25C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
@@ -623,7 +629,6 @@
 		859281FB25E9529C001233BE /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		8592820725EA2D91001233BE /* Generators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Generators.swift; sourceTree = "<group>"; };
 		8592821125EA3287001233BE /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
-		8592821F25EABD5B001233BE /* MarsCityCreatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarsCityCreatorView.swift; sourceTree = "<group>"; };
 		8592822C25EC44F7001233BE /* GuildExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildExplorerView.swift; sourceTree = "<group>"; };
 		8592823525EC4DD3001233BE /* GuildController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildController.swift; sourceTree = "<group>"; };
 		8592824225EC74FD001233BE /* GuildView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildView.swift; sourceTree = "<group>"; };
@@ -643,6 +648,9 @@
 		85C34196259139D800BF82F9 /* GameSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSettingsView.swift; sourceTree = "<group>"; };
 		85CD46A625D1199A000D9C64 /* EarthNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthNode.swift; sourceTree = "<group>"; };
 		85CD46AF25D20B42000D9C64 /* ModulePopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModulePopView.swift; sourceTree = "<group>"; };
+		85D3BAA9269DF75000B6AA36 /* MarsCityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarsCityView.swift; sourceTree = "<group>"; };
+		85D3BAAD269DF78500B6AA36 /* MyCityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCityView.swift; sourceTree = "<group>"; };
+		85D3BAB1269DF79800B6AA36 /* ForeignCityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForeignCityView.swift; sourceTree = "<group>"; };
 		85E6ECF725C9D92B00229E18 /* ServerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAPI.swift; sourceTree = "<group>"; };
 		85E6ED1C25CF518500229E18 /* BackendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendView.swift; sourceTree = "<group>"; };
 		85F6674C25AF7B9C00E5003B /* RadiatorNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadiatorNode.swift; sourceTree = "<group>"; };
@@ -1155,7 +1163,7 @@
 		8592821E25EABD27001233BE /* Mars */ = {
 			isa = PBXGroup;
 			children = (
-				8592821F25EABD5B001233BE /* MarsCityCreatorView.swift */,
+				85D3BAA8269DF70200B6AA36 /* City Views */,
 				8592822C25EC44F7001233BE /* GuildExplorerView.swift */,
 				8592824225EC74FD001233BE /* GuildView.swift */,
 				8517EE4925FC245D00C34C54 /* OutpostView.swift */,
@@ -1218,6 +1226,16 @@
 				8536F438258D47EA00B509D2 /* BioModController.swift */,
 			);
 			path = Modules;
+			sourceTree = "<group>";
+		};
+		85D3BAA8269DF70200B6AA36 /* City Views */ = {
+			isa = PBXGroup;
+			children = (
+				85D3BAA9269DF75000B6AA36 /* MarsCityView.swift */,
+				85D3BAAD269DF78500B6AA36 /* MyCityView.swift */,
+				85D3BAB1269DF79800B6AA36 /* ForeignCityView.swift */,
+			);
+			path = "City Views";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1471,6 +1489,7 @@
 				8592823625EC4DD3001233BE /* GuildController.swift in Sources */,
 				859D683225DD8B9F005DD42C /* GameMessagesView.swift in Sources */,
 				85CD46B025D20B42000D9C64 /* ModulePopView.swift in Sources */,
+				85D3BAAA269DF75000B6AA36 /* MarsCityView.swift in Sources */,
 				8536F3F2258D47D000B509D2 /* ProgressViews.swift in Sources */,
 				85C3418E2591078700BF82F9 /* PlayerCardNode.swift in Sources */,
 				8517EE4A25FC245D00C34C54 /* OutpostView.swift in Sources */,
@@ -1478,6 +1497,7 @@
 				8523338C25D76A9B004CB638 /* AirCompositionView.swift in Sources */,
 				8536F406258D47D000B509D2 /* EarthRequestView.swift in Sources */,
 				8536F40A258D47D000B509D2 /* MarsMapView.swift in Sources */,
+				85D3BAB2269DF79800B6AA36 /* ForeignCityView.swift in Sources */,
 				850A1B0F25ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */,
 				8536F3EA258D47D000B509D2 /* PersonControl.swift in Sources */,
 				8536F41E258D47D000B509D2 /* BuildingVehicleView.swift in Sources */,
@@ -1503,8 +1523,8 @@
 				8536F3F6258D47D000B509D2 /* TankViews.swift in Sources */,
 				8536F445258D47EA00B509D2 /* LabViewModel.swift in Sources */,
 				857D9A3925C0B69800626884 /* HabModuleController.swift in Sources */,
+				85D3BAAE269DF78500B6AA36 /* MyCityView.swift in Sources */,
 				8592821225EA3287001233BE /* City.swift in Sources */,
-				8592822025EABD5B001233BE /* MarsCityCreatorView.swift in Sources */,
 				8536F376258D475D00B509D2 /* Peripherals.swift in Sources */,
 				858D7C4725D4F0AD00A45CF9 /* GameCamera.swift in Sources */,
 				8536F475258D481700B509D2 /* MarsMapScene.swift in Sources */,
@@ -1598,6 +1618,7 @@
 				8592824425EC74FD001233BE /* GuildView.swift in Sources */,
 				8536F3A7258D475D00B509D2 /* Player.swift in Sources */,
 				857A35662696AE500020ADF2 /* RSSView.swift in Sources */,
+				85D3BAB3269DF79800B6AA36 /* ForeignCityView.swift in Sources */,
 				8536F43E258D47EA00B509D2 /* GarageViewModel.swift in Sources */,
 				8536F3FB258D47D000B509D2 /* PersonViews.swift in Sources */,
 				8536F39F258D475D00B509D2 /* TechTreeDisplay.swift in Sources */,
@@ -1637,6 +1658,7 @@
 				8569A3D225A6353C0057A518 /* GameActivityView.swift in Sources */,
 				857DDEC825E4DCAD00E64752 /* Messages.swift in Sources */,
 				8536F317258D361100B509D2 /* GameConstants.swift in Sources */,
+				85D3BAAF269DF78500B6AA36 /* MyCityView.swift in Sources */,
 				85960B9825D9B3F000AC9592 /* EDLInventoryView.swift in Sources */,
 				85797519259BD394004C54D2 /* ItemCollectionViews.swift in Sources */,
 				8536F2EB258D330300B509D2 /* GameController.swift in Sources */,
@@ -1655,9 +1677,9 @@
 				8592822E25EC44F7001233BE /* GuildExplorerView.swift in Sources */,
 				8536F3EF258D47D000B509D2 /* TrussView.swift in Sources */,
 				8536F40F258D47D000B509D2 /* AnimationsTest.swift in Sources */,
-				8592822125EABD5B001233BE /* MarsCityCreatorView.swift in Sources */,
 				8536F43A258D47EA00B509D2 /* ModulesViewModel.swift in Sources */,
 				85F6675725AF7BBE00E5003B /* DeliveryVehicleNode.swift in Sources */,
+				85D3BAAB269DF75000B6AA36 /* MarsCityView.swift in Sources */,
 				8592825125EED6EF001233BE /* SpaceVehicleNode.swift in Sources */,
 				8536F32C258D412600B509D2 /* LocalDatabase.swift in Sources */,
 				8536F387258D475D00B509D2 /* HabModule.swift in Sources */,
@@ -1704,6 +1726,7 @@
 				8592823825EC4DD3001233BE /* GuildController.swift in Sources */,
 				859D683425DD8B9F005DD42C /* GameMessagesView.swift in Sources */,
 				85CD46B225D20B42000D9C64 /* ModulePopView.swift in Sources */,
+				85D3BAAC269DF75000B6AA36 /* MarsCityView.swift in Sources */,
 				8536F3F4258D47D000B509D2 /* ProgressViews.swift in Sources */,
 				85C341902591078700BF82F9 /* PlayerCardNode.swift in Sources */,
 				8517EE4C25FC245D00C34C54 /* OutpostView.swift in Sources */,
@@ -1711,6 +1734,7 @@
 				8523338E25D76A9B004CB638 /* AirCompositionView.swift in Sources */,
 				8536F408258D47D000B509D2 /* EarthRequestView.swift in Sources */,
 				8536F40C258D47D000B509D2 /* MarsMapView.swift in Sources */,
+				85D3BAB4269DF79800B6AA36 /* ForeignCityView.swift in Sources */,
 				850A1B1125ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */,
 				8536F3EC258D47D000B509D2 /* PersonControl.swift in Sources */,
 				8536F420258D47D000B509D2 /* BuildingVehicleView.swift in Sources */,
@@ -1736,8 +1760,8 @@
 				8536F3F8258D47D000B509D2 /* TankViews.swift in Sources */,
 				8536F447258D47EA00B509D2 /* LabViewModel.swift in Sources */,
 				857D9A3B25C0B69800626884 /* HabModuleController.swift in Sources */,
+				85D3BAB0269DF78500B6AA36 /* MyCityView.swift in Sources */,
 				8592821425EA3287001233BE /* City.swift in Sources */,
-				8592822225EABD5B001233BE /* MarsCityCreatorView.swift in Sources */,
 				8536F378258D475D00B509D2 /* Peripherals.swift in Sources */,
 				858D7C4925D4F0AD00A45CF9 /* GameCamera.swift in Sources */,
 				8536F477258D481700B509D2 /* MarsMapScene.swift in Sources */,

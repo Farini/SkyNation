@@ -134,6 +134,11 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [ ] Adjust quantities shown in Earth Order
 - [ ] LSS View -> Let player sort Ingredients, Tanks, etc. as they wish
 
+- [ ] City Views
+    - [X] My City
+    - [X] Other Cities
+    - [X] Unclaimed City
+
 - [ ] Oupost View
     - [ ] My City Resources
     - [ ] Contribute Resources

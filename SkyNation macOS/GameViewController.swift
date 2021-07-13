@@ -322,7 +322,7 @@ extension GameViewController: GameNavDelegate {
        
 //        print("Should open city view at (x): \(position.x)")
         
-        let controller = NSHostingController(rootView: MarsCityCreatorView(posdex: posdex, city: city)) //MarsCityCreatorView(name: name ?? "", position: position))
+        let controller = NSHostingController(rootView: MarsCityView(posdex: posdex)) //MarsCityCreatorView(posdex: posdex)) //MarsCityCreatorView(name: name ?? "", position: position))
         
         controller.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(controller.view)
