@@ -137,14 +137,14 @@ struct PlayerContent:Codable {
         self.lastSeen = Date()
     }
     
-//    static func randomPlayer() -> PlayerContent {
-//
-//    }
-    
     /// Returns `LastSeen`
     func activity() -> String {
         let df = GameFormatters.dateFormatter
         return df.string(from: lastSeen)
+    }
+    
+    func timeSinceOnline() -> Double {
+        return Date().timeIntervalSince(lastSeen)
     }
     
 }

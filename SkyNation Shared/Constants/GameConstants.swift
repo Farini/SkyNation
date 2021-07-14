@@ -4,7 +4,9 @@
 
 import SwiftUI
 
-
+/**
+ General Settings with vars stored in UserDefauls
+ */
 class GameSettings {
     
     static let shared = GameSettings()
@@ -114,7 +116,7 @@ struct GameLogic {
     /// Cost of building a `BioBox` (Energy)
     static let bioBoxEnergyConsumption:Int = 7
     
-    // MARK: - Funtions
+    // MARK: - Functions
     
     static func radiansFrom(_ degrees:Double) -> Double {
         return degrees * .pi/180
