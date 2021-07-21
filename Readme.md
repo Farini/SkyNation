@@ -108,7 +108,7 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [X] Have 3 Background music
 - [X] Person Workout not incrementing health
 - [X] GameSettings -> Sound
-
+- [X] iOS Force Dark Mode
 - [ ] Biobox still not saving when done (needs testing)
 - [ ] Bio View - DNA animation (needs testing)
 

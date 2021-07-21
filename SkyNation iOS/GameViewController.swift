@@ -108,7 +108,8 @@ extension GameViewController:GameNavDelegate {
         
         clearInterface()
         
-        let newHost = UIHostingController(rootView:MarsCityCreatorView(posdex: posdex, city: city, controller: CityController()))
+//        let newHost = UIHostingController(rootView:MarsCityCreatorView(posdex: posdex, city: city, controller: CityController()))
+        let newHost = UIHostingController(rootView:MarsCityView(posdex: posdex))
         
         newHost.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(newHost.view)

@@ -530,7 +530,12 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 let destAng = pov2.eulerAngles
                 
                 let move = SCNAction.move(to: destPos, duration: 2)
+                #if os(iOS)
+                let rota = SCNAction.rotateTo(x: CGFloat(destAng.x), y: CGFloat(destAng.y), z: CGFloat(destAng.z), duration: 2)
+                #else
                 let rota = SCNAction.rotateTo(x: destAng.x, y: destAng.y, z: destAng.z, duration: 2)
+                #endif
+                
                 let seq2 = SCNAction.sequence([rota])
                 let anime = SCNAction.group([move, seq2])
                 
