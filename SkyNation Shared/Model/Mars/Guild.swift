@@ -151,7 +151,7 @@ struct GuildFullContent:Codable {
 //        let gName = "Test Guild"
 //        let players = SKNPlayer.randomPlayers(5)
 //        let open = Bool.random()
-//
+    
 //    }
     
     /// Random Data
@@ -203,3 +203,13 @@ struct GuildSummary:Codable {
     var outposts:[UUID]
 }
 
+// Guild Buildables
+/*
+ 1. Roads
+ 2. Transport (Energy, Water)
+ 3. Trading Center?
+ 4. Hotel?
+ 5. Bank?
+ 6. Entertainment (other)
+ 7. Science Missions + rewards
+ */

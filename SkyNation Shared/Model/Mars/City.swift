@@ -152,44 +152,53 @@ class CityData:Codable, Identifiable {
 
 enum CityTech:String, Codable, CaseIterable {
     
-    case Gate
-    case Elevator
-    
-    case HQ
-    case HQ1
-    case HQ2
-    
-    // Hab
-    /*
-     Each hab has 9 people (4 + 3 + 2)
-     3 habs inside = 27 people.
-     2 habs outside = 45 people total */
+    // Habs
     case Hab1
     case Hab2
     case Hab3
-    case HabOut1
-    case HabOut2
-    case HabOut3
+    case Hab4
+    case Hab5
+    case Hab6
     
-    // case Lab1
+    case OutsideDome1
     
-    case Bio1
-    case Bio2
-    case BioOut1
+    case VehicleRoom1
+    case VehicleRoom2
+    case VehicleRoom3
+    case VehicleRoom4
     
-    case Cement
-    case Foundry        // Melt metals found in mines
-    case ChargedGlass   // Expose to sunlight, without problems
-    case Biocell        // A cell used for Bio Outposts
-    
-    case OutsideBio
-    case OutsidePark
-    case OutsideHab
-    
-    /*
-     
-     */
+    // Recipes
+    case recipeCement
+    case recipeGlass
+    case recipeVehicle          // Can be split in different resources
+    case recipeAirTrap          // Can be split
+    case recipeBig
+    case recipeWaterSanitizer
+    case recipeAlloy
     
 }
+
+enum MarsRecipe:String, Codable, CaseIterable {
+    
+    case Cement     // Any Structure
+    case Glass      // Any Structure
+    case Alloy      // Any Structure
+    
+    case SolarCell
+    case Polimer
+    
+    case MegaTank
+    case MegaBox
+    
+    case EVehicle   // Extract Silica, Iron, Lithium, Crystals
+}
+
+// Extra Peripherals
+/*
+ 1. Air Trap
+ 2. Water Sanitizer
+ 3. Vehicle
+ */
+
 
 

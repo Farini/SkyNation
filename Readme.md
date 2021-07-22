@@ -111,7 +111,7 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [X] iOS Force Dark Mode
 - [ ] Biobox still not saving when done (needs testing)
 - [ ] Bio View - DNA animation (needs testing)
-
+- [ ] When station doesn't have people -> Don't make money
 
 - [X] Resources View Example (Copy from `EDLInventoryView`)
 - [X] Resources Tab
