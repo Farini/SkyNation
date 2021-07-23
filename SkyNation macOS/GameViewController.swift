@@ -337,7 +337,7 @@ extension GameViewController: GameNavDelegate {
     
     func openOutpostView(posdex: Posdex, outpost:DBOutpost) {
         
-        let controller = NSHostingController(rootView: OutpostView(posdex: posdex, outpost: outpost))
+        let controller = NSHostingController(rootView: OutpostView(controller: OutpostController(dbOutpost: outpost)))
         
         controller.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(controller.view)

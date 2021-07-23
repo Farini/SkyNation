@@ -15,7 +15,7 @@ enum OutpostViewTab:String, Codable, CaseIterable {
     case tanks
     case bioboxes
     case peripherals
-    case people
+    case peopleSkills
     
     case contributions
     case management
@@ -28,33 +28,69 @@ class OutpostController:ObservableObject {
     @Published var player:SKNPlayer
     @Published var myCity:CityData = CityData.example()
     
+    // Posdex
+    @Published var posdex:Posdex
+    
     // DBOutpost
+    @Published var dbOutpost:DBOutpost
+    
     // OutpostData
     @Published var opData:Outpost
+    
     // Guild
-    // GuildData?
-    // View State
+    // Player Cards
+    
+    // Tab
     @Published var viewTab:OutpostViewTab = .info
     
     /// A KV pair for the items missing for outpost upgrades
     @Published var remains:[String:Int]
     
-    init() {
+    init(dbOutpost:DBOutpost) {
         guard let player = LocalDatabase.shared.player else { fatalError() }
         self.player = player
         
         // MARK: - FIX THIS BEFORE LAUNCH
         // FIXME: - TEST EXAMPLES
         
-        let dbData = DBOutpost.example()
-        opData = Outpost.exampleFromDatabase(dbData: dbData)
-        self.remains = Outpost.exampleFromDatabase(dbData: dbData).calculateRemaining()
+        // Data needed:         Preview Origin          Prod. Origin
+        // 1. my CityData       [example]               [json file]
+        // 2. DBOutpost         [example]               [server]
+        //  a. posdex
+        // 3. Outpost object    [example]               [server]
+        //  a. supplied
+        // 4. Guild Players     [none]                  [server]
+        
+        self.dbOutpost = dbOutpost
+        self.posdex = Posdex(rawValue: dbOutpost.posdex)!
+        let outPostData = Outpost.exampleFromDatabase(dbData: dbOutpost)
+        
+        opData = outPostData
+        self.remains = outPostData.calculateRemaining()
     }
     
+    /// Initializer for Previews
+    init(random:Bool = true) {
+        
+        guard let player = LocalDatabase.shared.player else { fatalError() }
+        self.player = player
+        
+        let op:DBOutpost = DBOutpost.example()
+        self.dbOutpost = op
+        
+        let outPostData = Outpost.exampleFromDatabase(dbData: op)
+        self.posdex = Posdex(rawValue: op.posdex)!
+        
+        opData = outPostData
+        self.remains = outPostData.calculateRemaining()
+    }
+    
+    /// Selecting a Tab
     func selected(tab:OutpostViewTab) {
         self.viewTab = tab
     }
     
+    /// Called every time user taps on a resource. Adds it to supplied
     func makeContribution(object:Codable) {
         
         guard let pid = LocalDatabase.shared.player?.serverID else {
@@ -94,12 +130,14 @@ class OutpostController:ObservableObject {
         }
         self.remains = remaining
         
-        // Save
+        // Update Server, and Save
         
     }
     
-    func wantsIngredients() -> [Kevnii] {
-        var array:[Kevnii] = []
+    // MARK: - Requirements
+    
+    func wantsIngredients() -> [KeyvalComparator] {
+        var array:[KeyvalComparator] = []
         if let job = opData.getNextJob() {
             print("Job: \(job.wantedIngredients.count)")
             
@@ -112,15 +150,15 @@ class OutpostController:ObservableObject {
                 print("i have: \(have)")
                 print("op has: \(opHave)")
                 
-                let kev = Kevnii(name: k.rawValue, iNeed: v, iHave: opHave)
+                let kev = KeyvalComparator(name: k.rawValue, needs: v, supplied: opHave)
                 array.append(kev)
             }
         }
         return array
     }
     
-    func wantsTanks() -> [Kevnii] {
-        var array:[Kevnii] = []
+    func wantsTanks() -> [KeyvalComparator] {
+        var array:[KeyvalComparator] = []
         if let job = opData.getNextJob() {
             print("Job: \(job.wantedTanks?.count ?? 0)")
             
@@ -133,15 +171,15 @@ class OutpostController:ObservableObject {
                 print("i have: \(have)")
                 print("op has: \(opHave)")
                 
-                let kev = Kevnii(name: k.rawValue, iNeed: v, iHave: opHave)
+                let kev = KeyvalComparator(name: k.rawValue, needs: v, supplied: opHave)
                 array.append(kev)
             }
         }
         return array
     }
     
-    func wantsSkills() -> [Kevnii] {
-        var array:[Kevnii] = []
+    func wantsSkills() -> [KeyvalComparator] {
+        var array:[KeyvalComparator] = []
         if let job = opData.getNextJob() {
             print("Job: \(job.wantedSkills.count)")
             
@@ -154,15 +192,15 @@ class OutpostController:ObservableObject {
                 print("i have: \(have)")
                 print("op has: \(opHave)")
                 
-                let kev = Kevnii(name: k.rawValue, iNeed: v, iHave: opHave)
+                let kev = KeyvalComparator(name: k.rawValue, needs: v, supplied: opHave)
                 array.append(kev)
             }
         }
         return array
     }
     
-    func wantsPeripherals() -> [Kevnii] {
-        var array:[Kevnii] = []
+    func wantsPeripherals() -> [KeyvalComparator] {
+        var array:[KeyvalComparator] = []
         if let job = opData.getNextJob() {
             print("Job: \(job.wantedPeripherals?.count ?? 0)")
             
@@ -175,15 +213,15 @@ class OutpostController:ObservableObject {
                 print("i have: \(have)")
                 print("op has: \(opHave)")
                 
-                let kev = Kevnii(name: k.rawValue, iNeed: v, iHave: opHave)
+                let kev = KeyvalComparator(name: k.rawValue, needs: v, supplied: opHave)
                 array.append(kev)
             }
         }
         return array
     }
     
-    func wantsBio() -> [Kevnii] {
-        var array:[Kevnii] = []
+    func wantsBio() -> [KeyvalComparator] {
+        var array:[KeyvalComparator] = []
         if let job = opData.getNextJob() {
             print("Job: \(job.wantedBio?.count ?? 0)")
             
@@ -196,13 +234,23 @@ class OutpostController:ObservableObject {
                 print("i have: \(have)")
                 print("op has: \(opHave)")
                 
-                let kev = Kevnii(name: k.rawValue, iNeed: v, iHave: opHave)
+                let kev = KeyvalComparator(name: k.rawValue, needs: v, supplied: opHave)
                 array.append(kev)
             }
         }
         return array
     }
     
+    /* Continue... */
+    // Notes:
+    // Needs more logic when contributing (server request)
+    // Check if contribution went through
+    
+    // Outpost State
+    // 1. Working (upgradable)
+    // 2. NoLevel (not upgradable)
+    // 3. Locked (computing)
+    // 4. Upgrading
 }
 
 extension OutpostViewTab {
@@ -211,7 +259,7 @@ extension OutpostViewTab {
     func imageName() -> String {
         switch self {
             case .ingredients: return "archivebox"
-            case .people: return "person.2"
+            case .peopleSkills: return "person.2"
             case .bioboxes: return "leaf"
             case .tanks: return "gauge"
             case .peripherals: return "gearshape.2.fill"
@@ -226,7 +274,7 @@ extension OutpostViewTab {
     func tabName() -> String {
         switch self {
             case .ingredients: return "Ingredients"
-            case .people: return "People"
+            case .peopleSkills: return "People"
             case .info: return "Info"
             case .contributions: return "Contribution"
             case .management: return "Management"
@@ -235,3 +283,47 @@ extension OutpostViewTab {
     }
     
 }
+
+
+
+/**
+ Compares Keys and values for requirements vs supplied.
+ */
+struct KeyvalComparator:Identifiable {
+    
+    var id = UUID()
+    var name:String
+    
+    /// Amount required
+    var needs:Int
+    
+    /// Amount supplied
+    var supplied:Int
+    
+    var missing:Int {
+        return supplied - needs
+    }
+    
+    
+}
+
+/*
+/// Compares Keys and values for requirements vs supplied.
+struct KeyValComparer:Identifiable {
+    
+    var id = UUID()
+    var name:String
+    var needs:Int
+    var supplied:Int
+    
+    init(name:String, needs:Int, supplied:Int) {
+        self.name = name
+        self.needs = needs
+        self.supplied = supplied
+    }
+    
+    var missing:Int {
+        return supplied - needs
+    }
+}
+*/

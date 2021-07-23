@@ -14,6 +14,13 @@ enum MarsCityStatus {
     case mine(cityData:CityData)    // Belongs to Player
 }
 
+enum MarsCityTab {
+    case Hab
+    case Lab
+    case RSS
+    case EVs // Electric Vehicles
+}
+
 class CityController:ObservableObject {
     
     var builder:MarsBuilder
@@ -29,6 +36,7 @@ class CityController:ObservableObject {
     @Published var isClaimedCity:Bool = true
     
     @Published var viewState:MarsCityStatus
+    @Published var cityTab:MarsCityTab = .Hab
     
     init() {
         guard let player = LocalDatabase.shared.player else { fatalError() }

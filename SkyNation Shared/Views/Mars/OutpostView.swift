@@ -13,11 +13,11 @@ import SwiftUI
  */
 struct OutpostView: View {
     
-    @State var posdex:Posdex
-    @State var outpost:DBOutpost
-    @State var popTutorial:Bool = false
+    @ObservedObject var controller:OutpostController
     
-    @ObservedObject var controller = OutpostController()
+//    @State var posdex:Posdex
+//    @State var outpost:DBOutpost
+    @State var popTutorial:Bool = false
     
     // Tabs
     // 1 - Ingredient Picker
@@ -113,164 +113,47 @@ struct OutpostView: View {
                     Group {
                         switch controller.viewTab {
                         case .ingredients:
-                            Group {
-                                let array = controller.wantsIngredients()
-                                HStack {
-                                    if array.isEmpty {
-                                        Text("No Requirements").foregroundColor(.gray)
-                                    }
-                                    ForEach(array) { kevii in
-                                        IngredientSmallReqView(ingredient: Ingredient(rawValue:kevii.name)!, required: kevii.iNeed, available: kevii.iHave)
-                                        Divider()
-                                    }
-                                }
-                                // Available
-                                LazyVGrid(columns: [GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100))], alignment: .center, spacing: 8, pinnedViews: [], content: {
-                                    ForEach(controller.myCity.boxes, id:\.id) { box in
-                                        IngredientView(ingredient: box.type, hasIngredient: true, quantity: box.current)
-                                            .onTapGesture {
-                                                controller.makeContribution(object: box)
-                                            }
-                                    }
-                                })
-                            }
-                        case .people:
-                            Group {
-                                let array = controller.wantsSkills()
-                                HStack {
-                                    if array.isEmpty {
-                                        Text("No Requirements").foregroundColor(.gray)
-                                    }
-                                    ForEach(array) { kevii in
-                                        VStack {
-                                            GameImages.imageForSkill(skill:Skills(rawValue:kevii.name)!)
-                                                .resizable()
-                                                .frame(width:32, height:32)
-                                            Text("\(kevii.iNeed)")
-                                            Text("\(kevii.iHave)")
-                                        }
-                                        Divider()
-                                    }
-                                }
-                                
-                                LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: [], content: {
-                                    ForEach(controller.myCity.inhabitants, id:\.id) { person in
-                                        PersonSmallView(person:person)
-                                            .onTapGesture {
-                                                controller.makeContribution(object: person)
-                                            }
-                                    }
-                                })
-                            }
+                            OutpostSectionView(controller:controller, tab:.ingredients)
+                        case .peopleSkills:
+                            OutpostSectionView(controller:controller, tab:.peopleSkills)
                         case .tanks:
-                            Group {
-                                let array = controller.wantsTanks()
-                                HStack {
-                                    if array.isEmpty {
-                                        Text("No Requirements").foregroundColor(.gray)
-                                    }
-                                    ForEach(array) { kevii in
-                                        VStack {
-                                            Text("\(kevii.name)")
-                                            Text("\(kevii.iNeed)")
-                                            Text("\(kevii.iHave)")
-                                        }
-
-                                        Divider()
-                                    }
-                                }
-                                
-                                LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: [], content: {
-                                    ForEach(controller.myCity.tanks, id:\.id) { tank in
-                                        TankViewSmall(tank:tank)
-                                            .onTapGesture {
-                                                controller.makeContribution(object: tank)
-                                            }
-                                    }
-                                })
-                            }
+                            OutpostSectionView(controller:controller, tab:.tanks)
                         case .peripherals:
-                            Group {
-                                
-                                let array = controller.wantsPeripherals()
-                                HStack {
-                                    ForEach(array) { kevii in
-                                        VStack {
-                                            Text("\(kevii.name)")
-                                            Text("\(kevii.iNeed)")
-                                            Text("\(kevii.iHave)")
-                                        }
-
-                                        Divider()
-                                    }
-                                }
-                                
-                                LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: [], content: {
-                                    ForEach(controller.myCity.peripherals, id:\.id) { peripheral in
-                                        peripheral.getImage()!
-                                            .resizable()
-                                            .frame(width:32, height:32)
-                                            .onTapGesture {
-                                                controller.makeContribution(object: peripheral)
-                                            }
-                                    }
-                                })
-                            }
+                            OutpostSectionView(controller:controller, tab:.peripherals)
                         case .bioboxes:
-                            Group {
-                                let bbxes = controller.wantsBio()
-                                HStack {
-                                    if bbxes.isEmpty {
-                                        Text("No Requirements").foregroundColor(.gray)
-                                    } else {
-                                        ForEach(bbxes) { kevii in
-                                            VStack {
-                                                Text("\(kevii.name)")
-                                                Text("\(kevii.iNeed)")
-                                                Text("\(kevii.iHave)")
-                                            }
-                                        }
-                                    }
-                                }
-                                
-                                LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: [], content: {
-                                    ForEach(controller.myCity.bioBoxes ?? [], id:\.id) { bioBox in
-                                        Text("\(DNAOption(rawValue:bioBox.perfectDNA)!.emoji) x \(bioBox.population.count)").font(.title)
-                                            .onTapGesture {
-                                                controller.makeContribution(object: bioBox)
-                                            }
-                                    }
-                                })
-                            }
+                            OutpostSectionView(controller:controller, tab:.bioboxes)
+                            
                         case .info:
-                            // Antenna and job
                             Group {
                                 HStack {
                                     VStack(alignment:.leading) {
-                                        Text("\(posdex.sceneName)").foregroundColor(.orange)
+                                        Text("\(controller.posdex.sceneName)").foregroundColor(.orange)
+                                        Text("\(controller.opData.type.explanation)").foregroundColor(.gray)
                                         
-                                        Text("DBOutpost P.: \(outpost.posdex)").foregroundColor(.blue).padding(.top, 6)
-                                        Text("Level: \(outpost.level)")
+                                        Text("Posdex: \(controller.dbOutpost.posdex)").foregroundColor(.blue).padding(.top, 6)
+                                        Text("Level: \(controller.dbOutpost.level)")
                                         //                    Text("Model: \(outpost.model)").foregroundColor(.gray)
-                                        Text("Date: \(GameFormatters.dateFormatter.string(from:outpost.accounting))")
+                                        Text("Date: \(GameFormatters.dateFormatter.string(from:controller.dbOutpost.accounting))")
                                     }
                                     
                                     Spacer()
                                     
-                                    if let nextJob = outpost.getNextJob() {
+                                    if let nextJob = controller.opData.getNextJob() {
                                         VStack(alignment:.leading) {
                                             Text("Outpost Job").foregroundColor(.orange)
                                                 .padding(.bottom, 6)
                                             
-                                            Text("🔄 Upgrade to \(outpost.level + 1)").font(.title2)
-                                            let kkeys = nextJob.wantedSkills.map{$0.key}
-                                            let kvals = nextJob.wantedSkills.map{$0.value}
-                                            HStack {
-                                                ForEach(kkeys.indices) { index in
-                                                    Text("\(kkeys[index].rawValue) | \(kvals[index])")
-                                                }
-                                            }
-                                            Text("Ingredients: \(nextJob.wantedIngredients.count) QTTY: \(nextJob.wantedIngredients.compactMap({$0.value}).reduce(0, +))")
+                                            Text("🔄 Upgrade to \(controller.dbOutpost.level + 1)").font(.title2)
+                                            Text("Max: \(nextJob.maxScore())")
+                                            
+//                                            let kkeys = nextJob.wantedSkills.map{$0.key}
+//                                            let kvals = nextJob.wantedSkills.map{$0.value}
+//                                            HStack {
+//                                                ForEach(kkeys.indices) { index in
+//                                                    Text("\(kkeys[index].rawValue) | \(kvals[index])")
+//                                                }
+//                                            }
+//                                            Text("Ingredients: \(nextJob.wantedIngredients.count) QTTY: \(nextJob.wantedIngredients.compactMap({$0.value}).reduce(0, +))")
                                         }
                                         .foregroundColor(.green)
                                         .padding(.trailing, 8)
@@ -280,14 +163,30 @@ struct OutpostView: View {
                                 }
                                 .padding(.horizontal, 8)
                                 
-                                Text("Remains").font(.title3).foregroundColor(.orange)
-                                    .padding(.top, 6)
+                                // Remaining
+                                Group {
+                                    Text("Remains").font(.title3).foregroundColor(.orange)
+                                        .padding(.top, 6)
+                                    
+                                    Text(controller.remains.description)
+                                    
+                                    Divider()
+                                }
                                 
-                                Text(controller.remains.description)
+                                // Supplied
+                                Group {
+                                    Text("Supplied").font(.title3).foregroundColor(.orange)
+                                        .padding(.top, 6)
+                                    Text("\(controller.opData.supplied.supplyScore()) of \(controller.opData.getNextJob()?.maxScore() ?? 0)")
+                                    
+                                }
+                                
+                                
                             }
+                            
                         case .contributions:
                             Group {
-                                Text(" Contributions").font(.title3).foregroundColor(.orange)
+                                Text("Contributions").font(.title3).foregroundColor(.orange)
                                 let kkeys = controller.remains.map{$0.key}
                                 let kvals = controller.remains.map{$0.value}
                                 ForEach(kkeys.indices) { index in
@@ -301,7 +200,8 @@ struct OutpostView: View {
                             }
                         }
                     }
-                    
+                    // Buttons
+                    /*
                     Group {
                         
                         Divider()
@@ -319,15 +219,237 @@ struct OutpostView: View {
                         }
                         .padding()
                     }
+                    */
                 }// vstack
             } // scroll
         } // vstack
     }
 }
 
-struct OutpostView_Previews: PreviewProvider {
-    static var previews: some View {
-        OutpostView(posdex: .antenna, outpost: DBOutpost.example())
-            .frame(width: 600, height: 500, alignment: .top)
+// Breaking down the views
+/*
+ Each supply type (Ingredients, Tanks, Batteries, Skills, Biobox) needs:
+ 1. Requirements (or none)
+ 2. Supplied, (and suppliers)
+ 3. if fully supplied, show a dimmed view
+ 4. if none required, show an empty view
+ 5. If needs supply, show CityData's contents
+ */
+
+struct OutpostSectionView: View {
+    
+    var controller:OutpostController
+    var tab:OutpostViewTab
+    
+    var body: some View {
+        VStack {
+            
+            let comparators:[KeyvalComparator] = getComparators()
+            
+            // Requirements
+            Group {
+                HStack {
+                    Text("Required \(rssName)")
+                        .modifier(GameTypography())
+                        .foregroundColor(.gray)
+                    Spacer()
+                }
+                .padding(.horizontal, 6)
+                
+                Divider()
+                
+                // Requirements Content
+                // end content
+                if comparators.isEmpty {
+                    Text("< No Requirements >").foregroundColor(.gray).padding()
+                } else {
+                    switch tab {
+                        case .ingredients:
+                            LazyVGrid(columns: [GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100))], alignment: .center, spacing: 8, pinnedViews: []) {
+                                ForEach(comparators) { comparator in
+                                    IngredientSmallReqView(ingredient: Ingredient(rawValue:comparator.name)!, required: comparator.needs, available: comparator.supplied)
+                                }
+                            }
+                        case .tanks:
+                            LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: []) {
+                                ForEach(comparators) { comparator in
+                                    VStack {
+                                        Text("\(comparator.name)")
+                                        Text("\(comparator.needs)")
+                                        Text("\(comparator.supplied)")
+                                    }
+                                }
+                            }
+                        case .peripherals:
+                            LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: []) {
+                                ForEach(comparators) { comparator in
+                                    VStack {
+                                        Text("\(comparator.name)")
+                                        Text("\(comparator.needs)")
+                                        Text("\(comparator.supplied)")
+                                    }
+                                }
+                            }
+                        case .bioboxes:
+                            LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: []) {
+                                ForEach(comparators) { comparator in
+                                    VStack {
+                                        Text("\(comparator.name)")
+                                        Text("\(comparator.needs)")
+                                        Text("\(comparator.supplied)")
+                                    }
+                                }
+                            }
+                            
+                        case .peopleSkills:
+                            
+                            LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: []) {
+                                ForEach(comparators) { comparator in
+                                    VStack {
+                                        GameImages.imageForSkill(skill:Skills(rawValue:comparator.name)!)
+                                            .resizable()
+                                            .frame(width:32, height:32)
+                                        Text(comparator.name)
+                                        Text("\(comparator.needs)")
+                                        Text("\(comparator.supplied)")
+                                    }
+                                }
+                            }
+                            
+                        default: Text("Invalid")
+                    }
+                }
+                
+            }
+            
+            // My available supplies
+            Group {
+                HStack {
+                    Text("Available \(rssName)")
+                        .modifier(GameTypography())
+                        .foregroundColor(.gray)
+                    Spacer()
+                }
+                .padding(.horizontal, 6)
+                
+                Divider()
+                
+                if comparators.isEmpty {
+                    Text("Not Needed").foregroundColor(.gray).padding()
+                } else {
+                    switch tab {
+                        case .ingredients:
+                            // Available
+                            LazyVGrid(columns: [GridItem(.fixed(120)), GridItem(.fixed(120)), GridItem(.fixed(120)), GridItem(.fixed(120))], alignment: .center, spacing: 8, pinnedViews: []) {
+                                ForEach(controller.myCity.boxes, id:\.id) { box in
+                                    IngredientView(ingredient: box.type, hasIngredient: true, quantity: box.current)
+                                        .onTapGesture {
+                                            controller.makeContribution(object: box)
+                                        }
+                                }
+                            }
+                        case .tanks:
+                            LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: []) {
+                                ForEach(controller.myCity.tanks, id:\.id) { tank in
+                                    TankViewSmall(tank:tank)
+                                        .onTapGesture {
+                                            controller.makeContribution(object: tank)
+                                        }
+                                }
+                            }
+                        case .peripherals:
+                            LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: [], content: {
+                                ForEach(controller.myCity.peripherals, id:\.id) { peripheral in
+                                    peripheral.getImage()!
+                                        .resizable()
+                                        .frame(width:32, height:32)
+                                        .onTapGesture {
+                                            controller.makeContribution(object: peripheral)
+                                        }
+                                }
+                            })
+                        
+                        case .peopleSkills:
+                            LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: [], content: {
+                                ForEach(controller.myCity.inhabitants, id:\.id) { person in
+                                    PersonSmallView(person:person)
+                                        .onTapGesture {
+                                            controller.makeContribution(object: person)
+                                        }
+                                }
+                            })
+                            
+                        case .bioboxes:
+                            LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: [], content: {
+                                ForEach(controller.myCity.bioBoxes ?? [], id:\.id) { bioBox in
+                                    Text("\(DNAOption(rawValue:bioBox.perfectDNA)!.emoji) x \(bioBox.population.count)").font(.title)
+                                        .onTapGesture {
+                                            controller.makeContribution(object: bioBox)
+                                        }
+                                }
+                            })
+                            
+                        default:Text("Invalid")
+                    }
+                }
+                
+                // City Data (relevant) Content
+                // end content
+            }
+            
+            if !comparators.isEmpty {
+                Text("ℹ️ Tap, or click on an item to contribute.")
+            }
+            
+            Spacer()
+        }
+    }
+    
+    var rssName:String {
+        switch tab {
+            case .ingredients: return "Ingredients"
+            case .bioboxes: return "Bio boxes"
+            case .peopleSkills: return "Skills"
+            case .peripherals: return "Peripherals"
+            case .tanks: return "Tanks"
+            
+            default: return "Invalid"
+        }
+    }
+    
+    func getComparators() -> [KeyvalComparator] {
+        switch tab {
+            case .ingredients: return controller.wantsIngredients()
+            case .bioboxes: return controller.wantsBio()
+            case .peopleSkills: return controller.wantsSkills()
+            case .peripherals: return controller.wantsPeripherals()
+            case .tanks: return controller.wantsTanks()
+                
+            default: return []
+        }
     }
 }
+
+extension KeyvalComparator {
+    var color: Color {
+        if missing < 1 {
+            return Color.green
+        } else {
+            return Color.orange
+        }
+    }
+}
+
+struct OutpostView_Previews: PreviewProvider {
+    
+    static let controller = OutpostController(random: true)
+    
+    static var previews: some View {
+        OutpostView(controller: controller)
+            .frame(width: 600, height: 500, alignment: .top)
+        
+        OutpostSectionView(controller: controller, tab:.ingredients)
+    }
+}
+
+

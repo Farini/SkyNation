@@ -72,6 +72,40 @@ enum OutpostType:String, CaseIterable, Codable {
             case .ETEC: return -20
         }
     }
+    
+    /// Explains what the outpost does
+    var explanation:String {
+        switch self {
+            case .HQ: return "The Headquarters of this Guild."
+            case .Water: return "Extracts ice from the soil."
+            case .Silica: return "Extracts silica from the soil."
+            case .Energy: return "Produces energy."
+            case .Biosphere: return "Responsible for producing food from plants and animals."
+            case .Titanium: return "Extracts Titanium from the soil."
+            case .Observatory: return "Enables scientific experiments."
+            case .Antenna: return "Communication."
+            case .Launchpad: return "Receives Space Vehicles."
+            case .Arena: return "Gives entertainment to people."
+            case .ETEC: return "Entertainment center provides entertainment."
+//            default: return ""
+        }
+    }
+    
+    var validPosDexes:[Posdex] {
+        switch self {
+            case .HQ: return [Posdex.hq]
+            case .Water: return [Posdex.mining1]
+            case .Silica: return [Posdex.mining2]
+            case .Energy: return [Posdex.power1, Posdex.power2, Posdex.power3, Posdex.power4]
+            case .Biosphere: return [Posdex.biosphere1, Posdex.biosphere2]
+            case .Titanium: return [Posdex.mining3]
+            case .Observatory: return [Posdex.observatory]
+            case .Antenna: return [Posdex.antenna]
+            case .Launchpad: return [Posdex.launchPad]
+            case .Arena: return [Posdex.arena]
+            case .ETEC: return [Posdex.arena]
+        }
+    }
 }
 
 // Building up to here, an outpost has an OutpostJob, which sets the Level of the Outpost
@@ -229,8 +263,6 @@ class Outpost:Codable {
                 }
             case .biosphere2: return nil
                 
-                
-                
             case .antenna: return nil
             case .arena: return nil
             case .launchPad: return nil
@@ -327,6 +359,17 @@ struct OutpostJob {
     var wantedPeripherals:[PeripheralType:Int]?
     // Bioboxes
     var wantedBio:[DNAOption:Int]?
+    
+    /// Sum of all resources needed
+    func maxScore() -> Int {
+        let ing = wantedIngredients.values.reduce(0, +)
+        let ski = wantedSkills.values.reduce(0, +)
+        let tan = wantedTanks?.values.reduce(0, +) ?? 0
+        let per = wantedPeripherals?.values.reduce(0, +) ?? 0
+        let bio = wantedBio?.values.reduce(0, +) ?? 0
+        
+        return ing + ski + tan + per + bio
+    }
 }
 
 /// The stuff being supplied to the outpost Job. Notice there are different objects
@@ -340,6 +383,8 @@ class OutpostSupply:Codable {
     
     var peripherals:[PeripheralObject]
     var bioBoxes:[BioBox]
+    
+    
     var players:[UUID:Int] // Player ID + Supplied points
     
     init() {
@@ -367,6 +412,11 @@ class OutpostSupply:Codable {
     }
     func contrib(tank:Tank) {
         tanks.append(tank)
+    }
+    
+    /// Returns the count of all resources
+    func supplyScore() -> Int {
+        return ingredients.count + tanks.count + skills.count + peripherals.count + bioBoxes.count
     }
 }
 
@@ -456,8 +506,10 @@ struct DBOutpost:Codable {
     
     /// Random Data
     static func example() -> DBOutpost {
-        return DBOutpost(gid: UUID(), type: OutpostType.allCases.randomElement()!, posdex: Posdex(rawValue: Int.random(in: 10...22))!)
-        //return DBOutpost(id: UUID(), model: "model", guild: ["outpost":nil], type: .Energy, level: 0, accounting: Date(), posdex: Posdex.power1.rawValue)
+        let randomType = OutpostType.allCases.randomElement()!
+        let vPosdex = randomType.validPosDexes.randomElement()!
+        
+        return DBOutpost(gid: UUID(), type: randomType, posdex: vPosdex)
     }
     
     /// Random Data
@@ -501,12 +553,3 @@ struct Ewolf {
     }
 }
 
-/**
- Key, Value `name`, `iNeed`, `iHave`
- */
-struct Kevnii:Codable, Identifiable {
-    var id = UUID()
-    var name:String
-    var iNeed:Int
-    var iHave:Int
-}
