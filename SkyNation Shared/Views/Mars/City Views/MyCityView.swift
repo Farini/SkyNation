@@ -56,13 +56,34 @@ struct MyCityView: View {
     
     @ObservedObject var controller:CityController
     @State var cityData:CityData
+    @Binding var cityTab:CityMenuItem
     
     var body: some View {
         VStack {
-            Text("City Data")
-                .font(.title)
-                .foregroundColor(.orange)
+//            Text("City Data")
+//                .font(.title)
+//                .foregroundColor(.orange)
+            switch cityTab {
+                case .hab:
+                    CityHabView(people: $cityData.inhabitants, selection: nil)
+                case .lab:
+                    CityLabView()
+                case .rss:
+                    HStack {
+                        Spacer()
+                        Text("Resources")
+                        Spacer()
+                    }
+                    
+                case .rocket:
+                    HStack {
+                        Spacer()
+                        Text("Rockets")
+                        Spacer()
+                    }
+            }
             
+            /*
             // Boxes
             Group {
                 Divider()
@@ -121,6 +142,7 @@ struct MyCityView: View {
                     }
                 })
             }
+            */
         }
     }
 }
@@ -129,7 +151,7 @@ struct MyCityView: View {
 
 struct MyCityView_Previews: PreviewProvider {
     static var previews: some View {
-        MyCityView(controller:CityController(), cityData: MarsBuilder.shared.myCityData!)
+        MyCityView(controller:CityController(), cityData: MarsBuilder.shared.myCityData!, cityTab: .constant(.hab))
             .frame(height:900)
     }
 }

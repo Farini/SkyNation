@@ -211,7 +211,7 @@ struct LaboratoryView: View {
                 switch controller.selection {
                 case .NoSelection:
                     // Show Tech Tree
-                    ScrollView([.vertical, .horizontal], showsIndicators: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/) {
+                    ScrollView([.vertical, .horizontal], showsIndicators: true) {
                         VStack {
                             Spacer()
                             Text("Tech Tree").font(.largeTitle)
@@ -238,7 +238,7 @@ struct LaboratoryView: View {
                 }
             }
         }
-        .frame(minWidth: 800, minHeight: 600, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        .frame(minWidth: 800, minHeight: 600, alignment: .center)
     }
 }
 

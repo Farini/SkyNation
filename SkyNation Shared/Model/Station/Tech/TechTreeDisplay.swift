@@ -68,7 +68,6 @@ struct TechnologyTree {
         // Node 2
         var nod2 = Tree(TechItems.node2)
         nod2.children.append(mod4) // (child: mod4)
-        //        nod2.children.append(scrubber) // (child: scrubber)
         nod2.children.append(mod7)
         
         // Finalize

@@ -68,6 +68,9 @@ enum PeripheralType:String, Codable, CaseIterable {
     /// Makes money for the station
     case Antenna
     
+    // EVBot (E-Vehicle)
+    // AirTrapper
+    
     
     // MARK: - Calculated Variables
     

@@ -49,7 +49,6 @@ struct MarsCityView: View {
     
     var body: some View {
         
-        
         VStack {
             // Header
             header
@@ -94,7 +93,7 @@ struct MarsCityView: View {
                         
                         case .mine(let cityData):
                             
-                            MyCityView(controller: controller, cityData: cityData)
+                            MyCityView(controller: controller, cityData: cityData, cityTab: $cityMenuItem)
                             
                         case .foreign(let pid):
                             

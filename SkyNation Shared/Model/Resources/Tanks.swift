@@ -104,6 +104,4 @@ class Tank:Codable, Identifiable, Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
-    
 }

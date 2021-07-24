@@ -62,20 +62,6 @@ enum TechItems:String, Codable, CaseIterable, Identifiable {
     case AU3
     case AU4
     
-    // FIXME: - Modifications
-    /* ⚠️ Needs to add:
-    ⚠️ Important: Update Serial Builder after modifying this enum, or see below (loadItem) for buildables... */
-    
-    /**
-     ⚠️ Needs Implementation:
-     Initializes a new `SCNNode` to be added to the scene
-     
-     - Parameters:
-     - peripheral: A `PeripheralObject` containing var model:`Model3d` (Optional). Overrides the loading.
-     
-     - Returns: The `Model3D` info to be added to the scene
-     */
-    
     
     // MARK: - Requirements
     
@@ -450,13 +436,12 @@ extension TechTree: CustomStringConvertible {
     }
 }
 
-extension TimeInterval{
+extension TimeInterval {
     
     func stringFromTimeInterval() -> String {
         
         let time = NSInteger(self)
         
-//        let ms = Int((self.truncatingRemainder(dividingBy: 1)) * 1000)
         let seconds = time % 60
         let minutes = (time / 60) % 60
         let hours = (time / 3600)

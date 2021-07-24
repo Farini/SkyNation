@@ -63,8 +63,8 @@ class CityData:Codable, Identifiable {
     // Robots, or Vehicles
     var vehicles:[String]?
     
-    // Tech?
-    var tech:[String]?
+    // Tech Tree
+    var tech:[CityTech] = [.Hab1]
     
 //    var dateAccounting:Date
     
@@ -72,8 +72,22 @@ class CityData:Codable, Identifiable {
     // + accounting + report
     // + airComposition
     
+    // + unlockedRecipes
+    // + labActivity
+    // + food
+    // + garage (Vehicles)
+    
+    // + dateAccounting
+    // + accountingReport
     
     // MARK: - Methods
+    
+    // To add
+    // + accounting
+    // + collectRecipe
+    // + removeItem(peripheral, box, etc?)
+    // + roomsAvailable
+    
     func takeBox(box:StorageBox) {
         print("Taking box from city: \(box.type). Total boxes: \(boxes.count)")
         boxes.removeAll(where: { $0.id == box.id })
@@ -150,7 +164,12 @@ class CityData:Codable, Identifiable {
     }
 }
 
-enum CityTech:String, Codable, CaseIterable {
+enum CityTech:String, Codable, CaseIterable, Identifiable {
+    
+    /// Conveniently identifies this item versus others
+    var id: String {
+        return self.rawValue
+    }
     
     // Habs
     case Hab1
@@ -176,6 +195,79 @@ enum CityTech:String, Codable, CaseIterable {
     case recipeWaterSanitizer
     case recipeAlloy
     
+    // MARK: - Logic
+    
+    /// Determines whether this tech can be researched. See CityData.tech, if the unlockedBy tech has been discovered, then this tech can be researched.
+    var unlockedBy:CityTech? {
+        switch self {
+            case .Hab2: return .Hab1
+            case .Hab3: return .Hab2
+            case .Hab4: return .Hab3
+            case .Hab5: return .Hab4
+            case .Hab6: return .Hab5
+            
+            case .VehicleRoom4: return .VehicleRoom3
+            case .VehicleRoom3: return .VehicleRoom2
+            case .VehicleRoom2: return .VehicleRoom1
+            case .VehicleRoom1: return .recipeVehicle
+                
+            case .recipeAirTrap: return .Hab3
+            case .recipeGlass: return .Hab4
+            case .recipeCement: return .Hab2
+            case .recipeAlloy: return .VehicleRoom2
+                
+            default: return nil
+        }
+    }
+//    var unlocks:[CityTech] {
+//        switch self {
+//            case .Hab1: return [.Hab2, .recipeVehicle]
+//            default: return []
+//        }
+//    }
+    
+    // MARK: - Display
+    
+    var shortName:String {
+        switch self {
+            case .Hab1, .Hab2, .Hab3, .Hab4, .Hab5, .Hab6: return "Hab Module"
+            default: return "Short"
+        }
+    }
+    
+    var elaborated:String {
+        switch self {
+            case .Hab1, .Hab2, .Hab3, .Hab4, .Hab5, .Hab6: return "Adds room for more people"
+            default: return "Tech description goes here"
+        }
+    }
+    
+    // MARK: - Requirements
+    
+    /// Ingredients required to research this tech
+    var ingredients:[Ingredient:Int] {
+        switch self {
+            case .Hab1: return [.Iron:10, .Ceramic:5]
+            case .Hab2: return [.Iron:14, .Ceramic:8, .DCMotor:1]
+            case .Hab3: return [.Iron:20, .Ceramic:16, .Silica:2]
+            default: return [:]
+        }
+    }
+    
+    /// Amount of seconds it takes to complete this tech research
+    var duration:Int {
+        switch self {
+            default: return 1
+        }
+    }
+    
+    /// `Human` Skills required to research this tech
+    var skillSet:[Skills:Int] {
+        switch self {
+            default: return [.Material:2]
+        }
+    }
+    
 }
 
 enum MarsRecipe:String, Codable, CaseIterable {
@@ -193,12 +285,34 @@ enum MarsRecipe:String, Codable, CaseIterable {
     case EVehicle   // Extract Silica, Iron, Lithium, Crystals
 }
 
-// Extra Peripherals
-/*
- 1. Air Trap
- 2. Water Sanitizer
- 3. Vehicle
- */
 
-
-
+struct CityTechTree {
+    var uniqueTree:Tree<Unique<CityTech>>
+    
+    init() {
+        
+        let cement = Tree(CityTech.recipeCement)
+        let glass = Tree(CityTech.recipeGlass)
+        let airTrap = Tree(CityTech.recipeAirTrap)
+        let alloy = Tree(CityTech.recipeAlloy)
+        
+        let hab6 = Tree(CityTech.Hab6)
+        let hab5 = Tree(CityTech.Hab5, children:[hab6])
+        let hab4 = Tree(CityTech.Hab4, children:[hab5, glass])
+        let hab3 = Tree(CityTech.Hab3, children:[hab4, airTrap])
+        let hab2 = Tree(CityTech.Hab2, children:[hab3, cement])
+        
+        let vr4 = Tree(CityTech.VehicleRoom4)
+        let vr3 = Tree(CityTech.VehicleRoom3, children:[vr4])
+        let vr2 = Tree(CityTech.VehicleRoom2, children:[alloy, vr3])
+        let vr1 = Tree(CityTech.VehicleRoom1, children:[vr2])
+        
+        let recVehicle = Tree(CityTech.recipeVehicle, children:[vr1])
+        
+        // Finalize
+        let binaryTree = Tree<CityTech>(CityTech.Hab1, children: [hab2, recVehicle])
+        
+        let uniqueTree:Tree<Unique<CityTech>> = binaryTree.map(Unique.init)
+        self.uniqueTree = uniqueTree
+    }
+}

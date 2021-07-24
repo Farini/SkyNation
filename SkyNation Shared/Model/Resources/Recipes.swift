@@ -29,6 +29,20 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
     case WaterFilter      // Transforms part of wasteLiquid back into water (or water vapor, to be easier)
     case BioSolidifier    // Transforms wasteSolid into fertilizer?
     
+    // Cement           puzzlepiece
+    case Cement
+    // ChargedGlass     plus.circle
+    case ChargedGlass
+    // Alloy            triangle.circle
+    case Alloy
+    
+    // E-Vehicle        bolt.car
+    
+    // MegaTank?        capsule.portrait
+    
+    // Polimer?         [see ingred.]
+    // Solar Cell?      [see ingred.]
+    
     /// Gets the ingredients for recipe
     func ingredients() -> [Ingredient:Int] {
         switch self {
@@ -46,6 +60,10 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
             case .Roboarm: return [.Circuitboard:4, .DCMotor:3, .Aluminium:8, .Polimer:16]
             case .WaterFilter: return [.Ceramic:3, .Copper:4, .Lithium:2, .Iron:2]
             case .BioSolidifier: return [.Ceramic:2, .Copper:4, .Sensor:1, .Iron:2]
+                
+            case .Cement: return [.Silica:4, .Polimer:2]
+            case .ChargedGlass: return [.Polimer:10, .Silica:5, .Ceramic:4, .Lithium:4, .Sensor:3]
+            case .Alloy: return [.Iron:10, .Aluminium:3, .CarbonFiber:5, .Lithium:2, .Copper:4]
         }
     }
     
@@ -82,15 +100,15 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
     }
     
     /// Returns null if doesn't require
-    func requiresTechTreePass() -> String? {
-        switch self {
-            case .ScrubberCO2: return self.rawValue
-            case .Methanizer: return self.rawValue
-            case .Roboarm: return self.rawValue
-                
-            default: return nil
-        }
-    }
+//    func requiresTechTreePass() -> String? {
+//        switch self {
+//            case .ScrubberCO2: return self.rawValue
+//            case .Methanizer: return self.rawValue
+//            case .Roboarm: return self.rawValue
+//
+//            default: return nil
+//        }
+//    }
     
     /// The time until the recipe is ready
     func getDuration() -> Int {
@@ -111,6 +129,10 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
             case .Condensator: return 60 * 5        // 5m
             case .Electrolizer: return 60 * 10      // 10m
             case .tank: return 60 * 60 * 2          // 2h
+            
+            case .Cement: return 60 * 2 // 2m
+            case .ChargedGlass: return 60 * 60 // 1h
+            case .Alloy: return 60 * 3 // 3m
         }
     }
     
@@ -138,7 +160,21 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
             case .tank: return Image("Tank")
             case .WaterFilter: return PeripheralObject(peripheral: .WaterFilter).getImage()!
             case .BioSolidifier: return PeripheralObject(peripheral: .BioSolidifier).getImage()!
+                
+            case .Cement: return Recipe.Cement.image
+            case .ChargedGlass: return Recipe.ChargedGlass.image
+                
             default: return Image(systemName: "questionmark")
         }
+    }
+}
+
+extension Recipe {
+    
+    static var marsCases:[Recipe] {
+        // Recipes not included in Mars
+        let excluded:Set<Recipe> = Set([Recipe.Module, Recipe.Node, Recipe.Roboarm])
+        
+        return Array(Set(Recipe.allCases).subtracting(excluded))
     }
 }

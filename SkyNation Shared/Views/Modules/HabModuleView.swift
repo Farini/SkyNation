@@ -131,10 +131,6 @@ struct HabModuleView: View {
                                 .onTapGesture(count: 1, perform: {
                                     controller.didSelect(person: person)
                                 })
-//                            PersonRow(person: person, selected: person == controller.selectedPerson)
-//                                .onTapGesture(count: 1, perform: {
-//                                    controller.didSelect(person: person)
-//                                })
                         }
                         .frame(minWidth: 150, maxWidth: 230, maxHeight: .infinity, alignment: .leading)
                         

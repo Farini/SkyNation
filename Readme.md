@@ -134,17 +134,28 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [ ] Adjust quantities shown in Earth Order
 - [ ] LSS View -> Let player sort Ingredients, Tanks, etc. as they wish
 
-- [ ] City Views
-    - [X] My City
-    - [X] Other Cities
-    - [X] Unclaimed City
+- [ ] 0/21 Mars Views & Controllers
+    - [ ] City Views
+        - [X] My City
+        - [X] Other Cities
+        - [X] Unclaimed City
 
-- [ ] Oupost View
-    - [ ] My City Resources
-    - [ ] Contribute Resources
-    - [ ] Update Database
-    - [ ] OutpostData
+    - [ ] Oupost View
+        - [ ] My City Resources
+        - [ ] Contribute Resources
+        - [ ] Update Database
+        - [ ] OutpostData
         - [ ] Contributors
+        
+- [ ] 1/13 Mars Scene
+    - [ ] Gate Config (to layout scene)
+    - [ ] Outposts with Levels
+    
+- [ ] Mars Model
+    - [X] City Tech (Model)
+    - [ ] E-Vehicle/Bot
+    - [ ] City Accounting
+    - [ ] Outpost Collecting
 
 - [ ] Icons
     - [ ] SpaceVehicle engine icons
@@ -155,7 +166,6 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
     - [ ] Improve Background HDRI image
     - [ ] Make the Earth bright again?
     - [ ] Add TechItems updates to StationBuilder
-    
         
 - [ ] 7/8 Garage View Improvements
     - [ ] Space Vehicle Registration (when launch)
@@ -194,8 +204,7 @@ Grab things from this list as you go along.
     - [X] Test iPhone View sizes
     - [ ] Adjust iPhone View sizes
 
-- [ ] 1/13 Mars Scene
-- [ ] 0/21 Mars Views & Controllers
+
 
 ### Characters prompt lines:
 1. When hired: "Yay", "Thank you", "Here we go", etc.

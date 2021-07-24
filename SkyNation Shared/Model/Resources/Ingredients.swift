@@ -38,11 +38,19 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
     
     // ⚠️ Write modifications here
     
+    // + Cement
+    case Cement
+    // + Glass
+    case Glass
+    // + Alloy
+    case Alloy
+    
     /// Whether a Player can order this item
     var orderable:Bool {
         switch self {
 //            case .wasteSolid, .wasteLiquid, .Silica: return false
-                
+            case .Silica: return false
+            case .Cement, .Glass, .Alloy: return false
             case .CarbonFiber : return false // Deprecating
             default: return true
         }
@@ -107,6 +115,13 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
             case .wasteLiquid: return Image("WasteLiquidBox")
             case .Silica: return Image("Silica")
             case .Fertilizer: return Image("Fertilizer")
+                
+            // Cement           puzzlepiece
+            // ChargedGlass     plus.circle
+            // Alloy            triangle.circle
+            case .Cement: return Image(systemName: "puzzlepiece")
+            case .Glass: return Image(systemName: "plus.circle")
+            case .Alloy: return Image(systemName: "triangle.circle")
         }
     }
 }

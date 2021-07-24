@@ -30,7 +30,6 @@ struct DiagramContent: View {
                         .font(.caption)
                         .foregroundColor(.gray)
 //                        .padding([.bottom], /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
-                        //.background(LocalDatabase.shared.station!.unlockedTechItems.contains(value.value) ? Color.blue:value.invention ? Color.orange:Color.black)
                         
                 }
                 .background(value.isUnlocked(station:station) ? Color.blue:Color.black)

@@ -469,6 +469,15 @@
 		85D3BB1726AB24F700B6AA36 /* GameDialogueModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB1626AB24F700B6AA36 /* GameDialogueModifiers.swift */; };
 		85D3BB1826AB24F800B6AA36 /* GameDialogueModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB1626AB24F700B6AA36 /* GameDialogueModifiers.swift */; };
 		85D3BB1926AB24F800B6AA36 /* GameDialogueModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB1626AB24F700B6AA36 /* GameDialogueModifiers.swift */; };
+		85D3BB1B26AC771D00B6AA36 /* CityLabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB1A26AC771D00B6AA36 /* CityLabView.swift */; };
+		85D3BB1C26AC771D00B6AA36 /* CityLabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB1A26AC771D00B6AA36 /* CityLabView.swift */; };
+		85D3BB1D26AC771D00B6AA36 /* CityLabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB1A26AC771D00B6AA36 /* CityLabView.swift */; };
+		85D3BB1F26AC84CA00B6AA36 /* CityHabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB1E26AC84CA00B6AA36 /* CityHabView.swift */; };
+		85D3BB2026AC84CA00B6AA36 /* CityHabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB1E26AC84CA00B6AA36 /* CityHabView.swift */; };
+		85D3BB2126AC84CA00B6AA36 /* CityHabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB1E26AC84CA00B6AA36 /* CityHabView.swift */; };
+		85D3BB2326AC9C9800B6AA36 /* CityTechDiagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB2226AC9C9800B6AA36 /* CityTechDiagram.swift */; };
+		85D3BB2426AC9C9800B6AA36 /* CityTechDiagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB2226AC9C9800B6AA36 /* CityTechDiagram.swift */; };
+		85D3BB2526AC9C9800B6AA36 /* CityTechDiagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB2226AC9C9800B6AA36 /* CityTechDiagram.swift */; };
 		85E6ECF825C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECF925C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECFA25C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
@@ -655,6 +664,9 @@
 		85D3BAAD269DF78500B6AA36 /* MyCityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCityView.swift; sourceTree = "<group>"; };
 		85D3BAB1269DF79800B6AA36 /* ForeignCityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForeignCityView.swift; sourceTree = "<group>"; };
 		85D3BB1626AB24F700B6AA36 /* GameDialogueModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDialogueModifiers.swift; sourceTree = "<group>"; };
+		85D3BB1A26AC771D00B6AA36 /* CityLabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityLabView.swift; sourceTree = "<group>"; };
+		85D3BB1E26AC84CA00B6AA36 /* CityHabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityHabView.swift; sourceTree = "<group>"; };
+		85D3BB2226AC9C9800B6AA36 /* CityTechDiagram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityTechDiagram.swift; sourceTree = "<group>"; };
 		85E6ECF725C9D92B00229E18 /* ServerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAPI.swift; sourceTree = "<group>"; };
 		85E6ED1C25CF518500229E18 /* BackendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendView.swift; sourceTree = "<group>"; };
 		85F6674C25AF7B9C00E5003B /* RadiatorNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadiatorNode.swift; sourceTree = "<group>"; };
@@ -1239,6 +1251,9 @@
 				85D3BAA9269DF75000B6AA36 /* MarsCityView.swift */,
 				85D3BAAD269DF78500B6AA36 /* MyCityView.swift */,
 				85D3BAB1269DF79800B6AA36 /* ForeignCityView.swift */,
+				85D3BB1A26AC771D00B6AA36 /* CityLabView.swift */,
+				85D3BB1E26AC84CA00B6AA36 /* CityHabView.swift */,
+				85D3BB2226AC9C9800B6AA36 /* CityTechDiagram.swift */,
 			);
 			path = "City Views";
 			sourceTree = "<group>";
@@ -1516,6 +1531,7 @@
 				8536F3EA258D47D000B509D2 /* PersonControl.swift in Sources */,
 				8536F41E258D47D000B509D2 /* BuildingVehicleView.swift in Sources */,
 				8536F3A6258D475D00B509D2 /* Player.swift in Sources */,
+				85D3BB2326AC9C9800B6AA36 /* CityTechDiagram.swift in Sources */,
 				8536F43D258D47EA00B509D2 /* GarageViewModel.swift in Sources */,
 				8536F3FA258D47D000B509D2 /* PersonViews.swift in Sources */,
 				8536F39E258D475D00B509D2 /* TechTreeDisplay.swift in Sources */,
@@ -1529,12 +1545,14 @@
 				85C34197259139D800BF82F9 /* GameSettingsView.swift in Sources */,
 				8536F3A2258D475D00B509D2 /* SpaceVehicle.swift in Sources */,
 				85F6675F25AF7CAB00E5003B /* RoboarmNode.swift in Sources */,
+				85D3BB1B26AC771D00B6AA36 /* CityLabView.swift in Sources */,
 				8536F412258D47D000B509D2 /* Parafernalia.swift in Sources */,
 				8504A53B25C6875000739C58 /* Energy.swift in Sources */,
 				8569A3DA25A799840057A518 /* LaunchingVehicleView.swift in Sources */,
 				8536F3E6258D47D000B509D2 /* HabModuleView.swift in Sources */,
 				8517EE632605DC8800C34C54 /* CityController.swift in Sources */,
 				8536F3F6258D47D000B509D2 /* TankViews.swift in Sources */,
+				85D3BB1F26AC84CA00B6AA36 /* CityHabView.swift in Sources */,
 				8536F445258D47EA00B509D2 /* LabViewModel.swift in Sources */,
 				857D9A3925C0B69800626884 /* HabModuleController.swift in Sources */,
 				85D3BAAE269DF78500B6AA36 /* MyCityView.swift in Sources */,
@@ -1660,6 +1678,7 @@
 				85E6ED1E25CF518500229E18 /* BackendView.swift in Sources */,
 				8536F476258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				8536F38F258D475D00B509D2 /* LabModule.swift in Sources */,
+				85D3BB1C26AC771D00B6AA36 /* CityLabView.swift in Sources */,
 				85927D9625DB1D800071D98B /* VehicleTrunkView.swift in Sources */,
 				8517EE4225FC124200C34C54 /* Outpost.swift in Sources */,
 				8536F3DF258D47D000B509D2 /* LaboratoryView.swift in Sources */,
@@ -1677,9 +1696,11 @@
 				85960B9825D9B3F000AC9592 /* EDLInventoryView.swift in Sources */,
 				85797519259BD394004C54D2 /* ItemCollectionViews.swift in Sources */,
 				8536F2EB258D330300B509D2 /* GameController.swift in Sources */,
+				85D3BB2426AC9C9800B6AA36 /* CityTechDiagram.swift in Sources */,
 				8504A51525C5D3B800739C58 /* CautionStripes.swift in Sources */,
 				8536F37F258D475D00B509D2 /* Station.swift in Sources */,
 				8536F427258D47D000B509D2 /* LifeSupportView.swift in Sources */,
+				85D3BB2026AC84CA00B6AA36 /* CityHabView.swift in Sources */,
 				8536F4B0258D49C900B509D2 /* TravelersView.swift in Sources */,
 				8504A51E25C6845200739C58 /* StationBuilder.swift in Sources */,
 				8536F373258D475D00B509D2 /* Persistance.swift in Sources */,
@@ -1755,6 +1776,7 @@
 				8536F3EC258D47D000B509D2 /* PersonControl.swift in Sources */,
 				8536F420258D47D000B509D2 /* BuildingVehicleView.swift in Sources */,
 				8536F3A8258D475D00B509D2 /* Player.swift in Sources */,
+				85D3BB2526AC9C9800B6AA36 /* CityTechDiagram.swift in Sources */,
 				8536F43F258D47EA00B509D2 /* GarageViewModel.swift in Sources */,
 				8536F3FC258D47D000B509D2 /* PersonViews.swift in Sources */,
 				8536F3A0258D475D00B509D2 /* TechTreeDisplay.swift in Sources */,
@@ -1768,12 +1790,14 @@
 				85C34199259139D800BF82F9 /* GameSettingsView.swift in Sources */,
 				8536F3A4258D475D00B509D2 /* SpaceVehicle.swift in Sources */,
 				85F6676125AF7CAB00E5003B /* RoboarmNode.swift in Sources */,
+				85D3BB1D26AC771D00B6AA36 /* CityLabView.swift in Sources */,
 				8536F414258D47D000B509D2 /* Parafernalia.swift in Sources */,
 				8504A53D25C6875000739C58 /* Energy.swift in Sources */,
 				8569A3DC25A799840057A518 /* LaunchingVehicleView.swift in Sources */,
 				8536F3E8258D47D000B509D2 /* HabModuleView.swift in Sources */,
 				8517EE652605DC8800C34C54 /* CityController.swift in Sources */,
 				8536F3F8258D47D000B509D2 /* TankViews.swift in Sources */,
+				85D3BB2126AC84CA00B6AA36 /* CityHabView.swift in Sources */,
 				8536F447258D47EA00B509D2 /* LabViewModel.swift in Sources */,
 				857D9A3B25C0B69800626884 /* HabModuleController.swift in Sources */,
 				85D3BAB0269DF78500B6AA36 /* MyCityView.swift in Sources */,
