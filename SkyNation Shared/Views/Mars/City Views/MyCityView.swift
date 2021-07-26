@@ -42,7 +42,9 @@ struct CityMenu: View {
                 .onTapGesture {
                     self.menuItem = mitem
                 }
+                .modifier(Badged())
             }
+            
         }
         .font(.title)
         .padding(.horizontal)
@@ -79,6 +81,12 @@ struct MyCityView: View {
                     HStack {
                         Spacer()
                         Text("Rockets")
+                        ForEach(controller.arrivedVehicles) { vehicle in
+                            SpaceVehicleRow(vehicle: vehicle)
+                        }
+                        if controller.arrivedVehicles.isEmpty {
+                            Text("No Vehicles arrived").foregroundColor(.gray)
+                        }
                         Spacer()
                     }
             }

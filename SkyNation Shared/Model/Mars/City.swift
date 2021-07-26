@@ -64,21 +64,27 @@ class CityData:Codable, Identifiable {
     var vehicles:[String]?
     
     // Tech Tree
-    var tech:[CityTech] = [.Hab1]
+    var tech:[CityTech]
     
-//    var dateAccounting:Date
+    // MARK: - To add:
     
-    // To add:
-    // + accounting + report
     // + airComposition
+    var air:AirComposition
     
     // + unlockedRecipes
-    // + labActivity
-    // + food
-    // + garage (Vehicles)
+    var unlockedRecipes:[Recipe]
     
+    // + labActivity
+    var labActivity:LabActivity?
+    
+    // + garage (Vehicles)
+    var garage:Garage
+    
+    // + accounting + report
     // + dateAccounting
     // + accountingReport
+    
+    // + food (String, or DNA ?)
     
     // MARK: - Methods
     
@@ -93,10 +99,6 @@ class CityData:Codable, Identifiable {
         boxes.removeAll(where: { $0.id == box.id })
         print("Boxes after taking: \(boxes.count)")
     }
-    
-//    func takeIngredients(ingredients:[Ingredient:Int]) {
-//
-//    }
     
     // MARK: - Initializers
     
@@ -154,7 +156,16 @@ class CityData:Codable, Identifiable {
         self.vehicles = []
         
         // Tech
-        self.tech = []
+        self.tech = [.Hab1]
+        
+        // Air
+        self.air = AirComposition(mars: true)
+        
+        // Recipes
+        self.unlockedRecipes = LocalDatabase.shared.station?.unlockedRecipes ?? []
+        
+        // Garage
+        self.garage = Garage()
     }
     
     /// An example filled with data

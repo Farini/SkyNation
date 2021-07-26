@@ -99,17 +99,6 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
         }
     }
     
-    /// Returns null if doesn't require
-//    func requiresTechTreePass() -> String? {
-//        switch self {
-//            case .ScrubberCO2: return self.rawValue
-//            case .Methanizer: return self.rawValue
-//            case .Roboarm: return self.rawValue
-//
-//            default: return nil
-//        }
-//    }
-    
     /// The time until the recipe is ready
     func getDuration() -> Int {
         

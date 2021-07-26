@@ -60,17 +60,16 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     func highlightNodes(atPoint point: CGPoint) {
         
-        print("Touched: \(point)")
+//        print("Touched: \(point)")
         
         // Convert the point to the Overlay Scene
         let converted:CGPoint = sceneRenderer.overlaySKScene!.convertPoint(fromView: point)
-        print("Point In Overlay Scene: \(converted)")
+//        print("Point In Overlay Scene: \(converted)")
+        print("Touch Overlay: X:\(Int(converted.x)), Y:\(Int(converted.y)) \t Point: X:\(Int(point.x)), Y:\(Int(point.y))")
         
         // Check Overlay First
         if let node = sceneRenderer.overlaySKScene?.nodes(at: converted).first {
-            print("Overlay Results !!!! \(node.description)")
             self.hitNode2D(node: node)
-            
             return
         }
         
@@ -142,9 +141,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                             print("It is indeed a crude module: [\(lab.type)]")
                             gameNavDelegate?.didChooseModule(name: modName)
                         }
-                        
-                    }else{
-                        print("not a module")
                     }
                 }
                 
@@ -351,20 +347,20 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         let rounded = time.rounded() // 10.0
         if time < 5 { return }
         
-        if rounded.truncatingRemainder(dividingBy: 10) == 0 {
-//            print("acc")
+        if rounded.truncatingRemainder(dividingBy: 20) == 0 {
+            
             // 97 is the largest prime before 100
             if shouldUpdateScene {
                 shouldUpdateScene = false
                 
                 switch self.gameScene {
                     case .SpaceStation:
-                    print("⏱ Should update scene: \(time)")
-                    //  station?.runAccounting()
+                        print("⏱ Scene Update: \(rounded)")
+                        
                         station?.accountingLoop(recursive: false) { (messages) in
-                            print("Accounting message: \(messages.first ?? "n/a")")
+                            print("\(messages.first ?? "n/a")")
                         }
-                    stationOverlay.updatePlayerCard()
+                        stationOverlay.updatePlayerCard()
                         
                     case .MarsColony:
                         // print("Update Mars Colony Scene")
@@ -834,7 +830,7 @@ extension StationBuildItem {
                     if let bun = Bundle.main.url(forResource: "Art", withExtension: ".scnassets") {
                         let pp = bun.appendingPathComponent("/UV Images/ModuleSkins/\(uvMapName)")
                         if let image = SKNImage(contentsOfFile: pp.path) {
-                            print("Found Image")
+//                            print("Found Image")
                             skinImage = image
                         } else {
                             print("\n\t ⚠️ Error: Could not find Skin Image!")

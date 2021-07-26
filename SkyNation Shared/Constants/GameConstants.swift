@@ -116,6 +116,8 @@ struct GameLogic {
     /// Cost of building a `BioBox` (Energy)
     static let bioBoxEnergyConsumption:Int = 7
     
+    static let vehicleTravelTime:Double = 60.0 * 60.0 * 24 * 3
+    
     // MARK: - Functions
     
     static func radiansFrom(_ degrees:Double) -> Double {

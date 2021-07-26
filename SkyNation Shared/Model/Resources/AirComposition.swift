@@ -84,17 +84,6 @@ class AirComposition:Codable {
     func getVolume() -> Int {
         return o2 + co2 + n2 + h2 + ch4
     }
-
-    
-    
-    // To filter CO2, it changes the volume
-//    func filterCO2(qtty:Int) {
-//
-//        // there must be enough
-//        if co2 > (qtty * 10) {
-//            co2 -= qtty
-//        }
-//    }
     
     /// Adds an amount of air to this air
     func mergeWith(newAirAmount:Int) {
@@ -105,8 +94,6 @@ class AirComposition:Codable {
         self.n2 += nitroAmount
         self.o2 += oxygenAmount
     }
-    
-    
     
     /// Returns the exact amount of oxygen needed
     func needsOxygen() -> Int {
@@ -121,8 +108,7 @@ class AirComposition:Codable {
     
     /// Initializes - pass ammount if a Tank, or nil to start
     init(amount:Int? = GameLogic.airPerModule * 4) {
-        guard let amt = amount else { fatalError() }
-//        self.volume = amt
+        let amt = amount ?? GameLogic.airPerModule * 4
         let totalAir = Double(amt)
         self.o2 = Int(totalAir * 0.21)
         if amt <= 300 {
@@ -134,7 +120,21 @@ class AirComposition:Codable {
         self.h2o = Int(totalAir * 0.01)
         self.h2 = 0
         self.ch4 = 0
-        //        self.tanks = [:]
+    }
+    
+    init(mars helper:Bool = true) {
+        let amt:Int = GameLogic.airPerModule
+        let totalAir = Double(amt)
+        self.o2 = Int(totalAir * 0.21)
+        if amt <= 300 {
+            self.co2 = 1 // Int(totalAir * 0.0003)
+        }else{
+            self.co2 = 0
+        }
+        self.n2 = Int(totalAir * 0.78)
+        self.h2o = Int(totalAir * 0.01)
+        self.h2 = 0
+        self.ch4 = 0
     }
     
     /// Describes the air, with quality

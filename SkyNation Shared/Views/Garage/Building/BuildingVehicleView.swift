@@ -34,6 +34,7 @@ struct BuildingVehicleView: View {
                                     Text("Engine \(engine.rawValue)").font(.headline)
                                         .padding([.top])
                                     Text("Payload \(engine.payloadLimit)")
+                                    Image(systemName: engine.imageSName).font(.title)
                                     Text(engine.about)
                                         .foregroundColor(.gray)
                                         .lineLimit(6)

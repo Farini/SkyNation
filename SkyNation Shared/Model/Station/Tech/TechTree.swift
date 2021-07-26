@@ -368,12 +368,10 @@ class TechTree: Equatable, Identifiable, Hashable {
     
     func getCompletedItemsFrom(node:TechTree, collected:[TechTree] = []) -> [TechTree] {
         
-        print("Check Completed \(node.value): \(node.isFinishedResearch())")
+//        print("Check Completed \(node.value): \(node.isFinishedResearch())")
         var builder:[TechTree] = collected
-//        var visited:[TechTree] = []
         
         if node.isFinishedResearch() {
-//            builder.append(node)
             for child in children.filter({$0.isFinishedResearch()}) {
                 builder.append(contentsOf: child.getCompletedItemsFrom(node: child, collected: builder))
             }

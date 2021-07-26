@@ -109,9 +109,13 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [X] Person Workout not incrementing health
 - [X] GameSettings -> Sound
 - [X] iOS Force Dark Mode
+
+- [X] Accounting: waste (pee, and poop) not subtracting when Peripheral is working
+- [X] Accounting: When station doesn't have people -> Don't make money
+- [ ] Make sure that Air adjustments AND Oxygen adjustments are working - Accounting
+
 - [ ] Biobox still not saving when done (needs testing)
 - [ ] Bio View - DNA animation (needs testing)
-- [ ] When station doesn't have people -> Don't make money
 
 - [X] Resources View Example (Copy from `EDLInventoryView`)
 - [X] Resources Tab
@@ -123,22 +127,22 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [ ] Scene Alert (News) -> Bad AirQualities
 - [ ] Scene Alert (News) -> Low Water
 
-- [ ] Make sure that Air adjustments AND Oxygen adjustments are working - Accounting
 - [ ] Game Store Improvements
 - [ ] New Modules not fully available after Tech research. 
+
 - [ ] 1/8 Soundtrack + FX
-- [ ] Add a couple of SoundFX
-- [ ] Gamesettings -> SoundFX
+    - [ ] Add a couple of SoundFX
+    - [X] Gamesettings -> SoundFX
 
 - [ ] Animate Satellite Opening Solar Panel (if there is one)
-- [ ] Adjust quantities shown in Earth Order
 - [ ] LSS View -> Let player sort Ingredients, Tanks, etc. as they wish
 
-- [ ] 0/21 Mars Views & Controllers
+- [ ] 3/21 Mars Views & Controllers
     - [ ] City Views
         - [X] My City
         - [X] Other Cities
         - [X] Unclaimed City
+        - [ ] Garage (Receiving Vehicles)
 
     - [ ] Oupost View
         - [ ] My City Resources
@@ -153,13 +157,15 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
     
 - [ ] Mars Model
     - [X] City Tech (Model)
+    - [ ] Test Mars City in `LocalDatabase`
     - [ ] E-Vehicle/Bot
     - [ ] City Accounting
     - [ ] Outpost Collecting
 
 - [ ] Icons
-    - [ ] SpaceVehicle engine icons
+    - [X] SpaceVehicle engine icons
     - [ ] iOS app icon
+    - [ ] Guild Icons
 
 - [ ] 16/21 (Feb.17) Station Scene Improvements - Started: 02/08/2021
     - [ ] Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
@@ -168,29 +174,22 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
     - [ ] Add TechItems updates to StationBuilder
         
 - [ ] 7/8 Garage View Improvements
-    - [ ] Space Vehicle Registration (when launch)
-    - [ ] Space Vehicle Validation (when arriving (orbit))
-    - [ ] Engines Images
+    - [X] Engines Images
+    - [X] Reduce Travel Time
+    - [ ] Test Vehicle Arrival (Mars City)
+    - [ ] [DEPRECATE] Space Vehicle Registration (when launch)
+    - [ ] [DEPRECATE] Space Vehicle Validation (when arriving (orbit))
     - [ ] Add Solar Panel, Robot, Bioboxes
     
 - [ ] 12/13 Basic Views
     - [ ] Error messages
     
-### Questionable items
-
-- [ ] Use Fibonacci for Peripheral Upgrades
-- [ ] Activity name enum?
-- [ ] BioBox DNA enum
-- [ ] Garage simulation button -> Person activity -> Garage xp || OR || just delete it
-
-    
 ## 📝 To Do - Future
 Grab things from this list as you go along.
 
 - [X] 5/8 Accounting
-    - [ ] Vehicle Accounting
-    - [ ] Vehicle Accounting View
     - [ ] Mars Accounting
+    - [ ] Test Accounting Fix (pee and poop should be lower than max)
 
 - [ ] 8/21 Server
     - [X] Server test address
@@ -204,8 +203,6 @@ Grab things from this list as you go along.
     - [X] Test iPhone View sizes
     - [ ] Adjust iPhone View sizes
 
-
-
 ### Characters prompt lines:
 1. When hired: "Yay", "Thank you", "Here we go", etc.
 2. When fired: "Boo"
@@ -215,7 +212,7 @@ Grab things from this list as you go along.
 6. When going to Mars: "Woohoo"
 7. Tech research: "alright!"
 
-## Wishlist
+## Wishlist + Questionable
 Features that are requested, but are not required to launch the game
 
 - [ ] Free Supply Drop-offs -> Pay for more 
@@ -228,6 +225,10 @@ Features that are requested, but are not required to launch the game
 - [ ] Plugins
 - [ ] Person var stress?
 
+- [ ] Peripheral Upgrades
+- [ ] Activity name enum?
+- [ ] BioBox DNA enum
+- [ ] Garage simulation button -> Person activity -> Garage xp || OR || just delete it
 
 ## 📝 Done - Past
 - [X] Project created: "SkyTestSceneKit" - Farini on 7/30/20.

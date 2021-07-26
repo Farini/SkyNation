@@ -77,7 +77,7 @@ class CityController:ObservableObject {
                         
                         self.cityData = cityData
                         self.viewState = .mine(cityData: cityData)
-                        // self.getArrivedVehicles()
+                        self.getArrivedVehicles()
                         
                     }
                     
@@ -119,6 +119,7 @@ class CityController:ObservableObject {
     
     @Published var allVehicles:[SpaceVehicleContent] = []
     @Published var cityVehicles:[SpaceVehicleContent] = []
+    @Published var arrivedVehicles:[SpaceVehicle] = []
     
     /// Gets all vehicles that arrived
     func getArrivedVehicles() {
@@ -133,11 +134,37 @@ class CityController:ObservableObject {
             default:break
         }
         
-        
         allVehicles = []
         cityVehicles = []
         
         print("Getting Arrived Vehicles")
+        
+        var travellingVehicles = LocalDatabase.shared.vehicles
+        // Loop through Vehicles to see if any one arrived
+        var transferringVehicles:[SpaceVehicle] = []
+        for vehicle in travellingVehicles {
+            if let arrivalDate = vehicle.dateTravelStarts?.addingTimeInterval(GameLogic.vehicleTravelTime) {
+                if Date().compare(arrivalDate) == .orderedDescending {
+                    // Arrived
+                    // Change vehicle destination to either [MarsOrbit, or Exploring, or Settled]
+                    // If already at those destinations, see SpaceVehicle object to continue
+                    // Will need to transform SpaceVehicle into other objects
+                    transferringVehicles.append(vehicle)
+                }
+            }
+        }
+        for vehicle in transferringVehicles {
+            if let city = cityData {
+                travellingVehicles.removeAll(where: { $0.id == vehicle.id })
+                city.garage.vehicles.append(vehicle)
+                // Achievement
+                GameMessageBoard.shared.newAchievement(type: .vehicleLanding(vehicle: vehicle), message: nil)
+            }
+        }
+        LocalDatabase.shared.vehicles = travellingVehicles
+        self.arrivedVehicles = cityData?.garage.vehicles ?? []
+        
+        /*
         SKNS.arrivedVehiclesInGuildFile { gVehicles, error in
             if let gVehicles:[SpaceVehicleContent] = gVehicles {
                 self.allVehicles = gVehicles
@@ -164,6 +191,8 @@ class CityController:ObservableObject {
                 print("⚠️ Error: Could not get arrived vehicles. error -> \(error?.localizedDescription ?? "n/a")")
             }
         }
+        */
+        
     }
     
     func unpackVehicle(vehicle:SpaceVehicleContent) {

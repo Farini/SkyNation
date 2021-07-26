@@ -206,6 +206,7 @@ class Truss:Codable {
     - ingredients: a key value of ingredient and quantity
     - Returns: An array of missing Ingredients (empty if none) */
     func validateResources(ingredients:[Ingredient:Int]) -> [Ingredient] {
+        
         var lacking:[Ingredient] = []
         for (ingr, qtty) in ingredients {
             let relevantBoxes = extraBoxes.filter({ $0.type == ingr })  // Filter

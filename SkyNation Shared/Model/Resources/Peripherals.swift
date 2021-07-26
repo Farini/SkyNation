@@ -219,6 +219,7 @@ class PeripheralObject:Codable, Identifiable, Equatable {
         return peripheral.energyConsumption
     }
     
+    /// Key Value for `Peripheral` consumption.
     func getConsumables() -> [String:Int] {
         
         switch peripheral {

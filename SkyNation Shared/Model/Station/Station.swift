@@ -136,7 +136,7 @@ class Station:Codable {
                                 report.problems.append("Not enough ingredients for peripheral \(peripheral.peripheral.rawValue)")
                                 didFail = true
                             } else {
-                                let payment = truss.payForResources(ingredients: [ingredient:value])
+                                let payment = truss.payForResources(ingredients: [ingredient:abs(value)])
                                 report.peripheralNotes.append("\(peripheral.peripheral.rawValue) produced: \(value) \(ingredient.rawValue)")
                                 print("Account Pay: \(payment)")
                             }
@@ -207,7 +207,6 @@ class Station:Codable {
                             self.air.o2 += value
                         }
                     }
-                    
                 }
                 
             } else { continue }
@@ -399,9 +398,14 @@ class Station:Codable {
         let antennaMoney = truss.moneyFromAntenna()
         print("\n 🤑 Antenna Money: \(antennaMoney)")
         if let player = LocalDatabase.shared.player {
-            player.money += antennaMoney
-            print(" 💵 Player money: \(player.money)")
-            report.addNote(string: "💵 \(player.money) (📡 + \(antennaMoney))")
+            if getPeople().count > 0 {
+                player.money += antennaMoney
+                print(" 💵 Player money: \(player.money)")
+                report.addNote(string: "💵 \(player.money) (📡 + \(antennaMoney))")
+            } else {
+                print("No people -> No money")
+                report.addNote(string: "💵 No inhabitants, no money 🥺")
+            }
         } else {
             print("No Player, no money")
         }
@@ -633,7 +637,7 @@ class Station:Codable {
         labModules = []
         habModules = []
         bioModules = []
-        air = AirComposition()
+        air = AirComposition(amount: nil)
         truss = Truss()
         
         unlockedRecipes = [.Condensator, .Electrolizer, .SolarPanel, .Radiator, .tank, .Battery]

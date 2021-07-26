@@ -72,6 +72,15 @@ enum EngineType:String, Codable, CaseIterable, Hashable {
             case .T22: return "Payloads and Passengers can fit here"
         }
     }
+    
+    var imageSName:String {
+        switch self {
+            case .Hex6: return "aqi.low"
+            case .T12: return "aqi.medium"
+            case .T18: return "aqi.high"
+            case .T22: return "snow"
+        }
+    }
 }
 
 enum VehicleStatus:String, CaseIterable, Codable, Hashable {
@@ -154,12 +163,12 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     func startTravelling() {
         status = .Mars
         dateTravelStarts = Date()
-        travelTime = 60 * 60 * 24 * 7
+        travelTime = GameLogic.vehicleTravelTime //60 * 60 * 24 * 7
     }
     
     func arriveDate() -> Date {
         let startDate = dateTravelStarts!
-        let arriveDate = startDate.addingTimeInterval(travelTime ?? 0)
+        let arriveDate = startDate.addingTimeInterval(GameLogic.vehicleTravelTime)
         return arriveDate
     }
     
@@ -390,7 +399,7 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
         vehicle.tanks = [t1, t2]
         vehicle.batteries = [b1, b2]
         vehicle.status = .Mars
-        vehicle.travelTime = 604800
+        vehicle.travelTime = GameLogic.vehicleTravelTime
         vehicle.simulation = 2
         vehicle.name = "Tester"
         
@@ -415,7 +424,7 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
         vehicle.batteries = [b1, b2]
 //        vehicle.heatshield = .eighteen
         vehicle.status = .Mars
-        vehicle.travelTime = 604800
+        vehicle.travelTime = GameLogic.vehicleTravelTime
         vehicle.simulation = 2
         vehicle.name = "Tester T18"
         

@@ -271,7 +271,7 @@ struct AirView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             Text("Test")
-            AirCompositionView(air: AirComposition())
+            AirCompositionView(air: AirComposition(amount: nil))
         }
         .preferredColorScheme(.dark)
         

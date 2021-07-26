@@ -267,7 +267,7 @@ extension StationBuilder {
         
         // 1. Modules + Nodes
         for buildPart in buildList {
-            print("Build SCNNode: \(buildPart.type.rawValue)")
+            print("Build: \(buildPart.type.rawValue)")
             if buildPart.position.x == 0 && buildPart.position.y == -12 && buildPart.position.z == 0 {
                 let dock = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Dock.scn")!
                 let node = dock.rootNode.childNode(withName: "Dock", recursively: false)!

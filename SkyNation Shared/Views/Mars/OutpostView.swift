@@ -46,7 +46,7 @@ struct OutpostView: View {
                 
                 // Close
                 Button(action: {
-                    print("Close action")
+//                    print("Close action")
                     NotificationCenter.default.post(name: .closeView, object: self)
                 }, label: {
                     Image(systemName: "xmark.circle")
@@ -242,6 +242,7 @@ struct OutpostSectionView: View {
     var tab:OutpostViewTab
     
     var body: some View {
+        
         VStack {
             
             let comparators:[KeyvalComparator] = getComparators()
@@ -250,7 +251,7 @@ struct OutpostSectionView: View {
             Group {
                 HStack {
                     Text("Required \(rssName)")
-                        .modifier(GameTypography())
+                        .modifier(GameTypography.init(GameFont.title))
                         .foregroundColor(.gray)
                     Spacer()
                 }
@@ -326,7 +327,7 @@ struct OutpostSectionView: View {
             Group {
                 HStack {
                     Text("Available \(rssName)")
-                        .modifier(GameTypography())
+                        .modifier(GameTypography(.title))
                         .foregroundColor(.gray)
                     Spacer()
                 }

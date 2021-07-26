@@ -136,7 +136,7 @@ struct BioView: View {
                     
                     // Close
                     Button(action: {
-                        print("Close action")
+//                        print("Close action")
                         NotificationCenter.default.post(name: .closeView, object: self)
                     }, label: {
                         Image(systemName: "xmark.circle")

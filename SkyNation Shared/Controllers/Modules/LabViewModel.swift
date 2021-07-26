@@ -681,7 +681,7 @@ class LabActivityViewModel: ObservableObject {
     var timer = Timer()
     
     func incrementCounter() {
-        print("Counter going \(counter)")
+//        print("Counter going \(counter)")
         self.counter += 1
         let tr = activity.dateEnds.timeIntervalSince(Date())
         self.timeRemaining = Int(tr)

@@ -98,6 +98,7 @@ class GarageViewModel:ObservableObject {
         // After init
         
         // Loop through Vehicles to see if any one arrived
+        var transferringVehicles:[SpaceVehicle] = []
         for vehicle in travellingVehicles {
             if let arrivalDate = vehicle.dateTravelStarts?.addingTimeInterval(vehicle.travelTime ?? 604800) {
                 if Date().compare(arrivalDate) == .orderedDescending {
@@ -105,7 +106,16 @@ class GarageViewModel:ObservableObject {
                     // Change vehicle destination to either [MarsOrbit, or Exploring, or Settled]
                     // If already at those destinations, see SpaceVehicle object to continue
                     // Will need to transform SpaceVehicle into other objects
+                    transferringVehicles.append(vehicle)
                 }
+            }
+        }
+        for vehicle in transferringVehicles {
+            if let city = LocalDatabase.shared.city {
+                travellingVehicles.removeAll(where: { $0.id == vehicle.id })
+                city.garage.vehicles.append(vehicle)
+                // Achievement
+                GameMessageBoard.shared.newAchievement(type: .vehicleLanding(vehicle: vehicle), message: nil)
             }
         }
     }
@@ -460,7 +470,7 @@ class GarageViewModel:ObservableObject {
         // Move registration to MarsBuilder?
         // Move remaining code to bracket under "vModel", so it can be executed only when registered ???
         // Discussion: Should we alllow vehicle to start travelling only when registered?
-        
+        /*
         self.registerVehicle(vehicle: vehicle) { (vModel, error) in
             
             if let vModel = vModel {
@@ -495,6 +505,29 @@ class GarageViewModel:ObservableObject {
                 print("Could not register vehicle: \(error.localizedDescription)")
             }
         }
+        */
+        
+        // Set Vehicle to start travelling
+        vehicle.startTravelling()
+            
+        // Remove from Garage
+        self.garage.buildingVehicles.removeAll(where: { $0.id == vehicle.id })
+            
+        // Add to Array of travelling vehicles
+        LocalDatabase.shared.vehicles.append(vehicle)
+        self.travellingVehicles.append(vehicle)
+            
+        // XP
+        self.garage.xp += 1
+            
+        // Save
+        LocalDatabase.shared.saveVehicles()
+        LocalDatabase.shared.saveStation(station: self.station)
+            
+        // Update View
+        self.garageStatus = .planning(stage: .Launching)
+        // self.cancelSelection()
+        
     }
     
     // MARK: - Server

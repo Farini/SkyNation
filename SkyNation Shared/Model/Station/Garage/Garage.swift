@@ -12,7 +12,6 @@ class Garage:Codable {
     var xp:Int
     var vehicles:[SpaceVehicle]
     var buildingVehicles:[SpaceVehicle]
-//    var destination:String?
     var botTech:Int
     var simulator:Int
     var simulationXP:Int
@@ -36,7 +35,6 @@ class Garage:Codable {
         vehicle.status = .Creating
         vehicle.dateTravelStarts = Date()
         vehicle.travelTime = Double(time)
-//        vehicle.antenna = PeripheralObject(peripheral: .Antenna)
         
         self.buildingVehicles.append(vehicle)
     }

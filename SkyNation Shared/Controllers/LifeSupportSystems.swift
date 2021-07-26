@@ -8,6 +8,29 @@
 
 import Foundation
 
+enum LSSTab:String, CaseIterable {
+    case Air
+    case Resources
+    case Machinery
+    case Power
+    case System
+}
+
+enum LSSViewState {
+    case Air
+    case Resources(type:RSSType)
+    case Machinery(object:PeripheralObject?)
+    case Energy
+    case Systems
+}
+
+enum RSSType {
+    case Peripheral(object:PeripheralObject)
+    case Tank(object:Tank)
+    case Box(object:StorageBox)
+    case None
+}
+
 class LSSModel:ObservableObject {
     
     var station:Station
