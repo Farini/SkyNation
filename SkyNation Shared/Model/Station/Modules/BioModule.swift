@@ -45,7 +45,7 @@ enum DNAOption:String, Codable, CaseIterable, Hashable {
     case greenalgae = "GREENALGAE"  // 10
     
     // meds
-    case addItAll = "ADD_IT@_ALL"   // 11
+    case addItAll = "ADD_IN_ALL"   // 11
     case ibuprofen = "IBUPROFEN"    // 9
     case acetaminophen = "ACETAMINOPHEN"    //
     case aspirin = "ASPIRIN"
@@ -95,6 +95,11 @@ enum DNAOption:String, Codable, CaseIterable, Hashable {
             default: return false
         }
     }
+    
+//    static var bioLabCases:[DNAOption] {
+//        let notInclude:[DNAOption] = [.addItAll, .ibuprofen]
+//        //return DNAOption.allCases.filter({})
+//    }
     
     /// Items that can be ordered
     var orderable:Bool {

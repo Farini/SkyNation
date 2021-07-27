@@ -117,11 +117,9 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [X] Scene Alert (News) -> Low Oxygen
 - [X] Scene Alert (News) -> Bad AirQualities
 - [X] Scene Alert (News) -> Low Water
+- [X] Biobox still not saving when done (needs testing)
+- [X] Bio View - DNA animation (needs testing)
 
-- [ ] Biobox still not saving when done (needs testing)
-- [ ] Bio View - DNA animation (needs testing)
-- [ ] Show only 'Station' cases
-- [ ] Text with "Needs a biologist, or doctor"
 
 - [X] Resources View Example (Copy from `EDLInventoryView`)
 - [X] Resources Tab
@@ -133,6 +131,9 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 
 - [ ] LSS View -> Let player sort Ingredients, Tanks, etc. as they wish
 
+- [ ] HabModule -> Person Detail View -> Finish Activity with tokens.
+- [ ] Game Settings -> BioBox -> Source of food (Bool) -> Station Accounting
+- [ ] Test why settings is crashing when save
 
 - [ ] 3/21 Mars Views & Controllers
     - [ ] City Views

@@ -50,6 +50,7 @@ class BioModController: ObservableObject {
     @Published var geneticRunning:Bool = false
     
     init(module:BioModule) {
+        
         self.module = module
         self.selection = .notSelected
         

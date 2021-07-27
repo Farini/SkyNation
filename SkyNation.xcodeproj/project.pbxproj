@@ -484,6 +484,12 @@
 		85D3BB2B26AF244400B6AA36 /* SFXSelected.wav in Resources */ = {isa = PBXBuildFile; fileRef = 85D3BB2726AF244400B6AA36 /* SFXSelected.wav */; };
 		85D3BB2C26AF244400B6AA36 /* SFXSelected.wav in Resources */ = {isa = PBXBuildFile; fileRef = 85D3BB2726AF244400B6AA36 /* SFXSelected.wav */; };
 		85D3BB2D26AF244400B6AA36 /* SFXSelected.wav in Resources */ = {isa = PBXBuildFile; fileRef = 85D3BB2726AF244400B6AA36 /* SFXSelected.wav */; };
+		85D3BB3026AFD28100B6AA36 /* BioBoxDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB2F26AFD28100B6AA36 /* BioBoxDetailView.swift */; };
+		85D3BB3126AFD28100B6AA36 /* BioBoxDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB2F26AFD28100B6AA36 /* BioBoxDetailView.swift */; };
+		85D3BB3226AFD28100B6AA36 /* BioBoxDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB2F26AFD28100B6AA36 /* BioBoxDetailView.swift */; };
+		85D3BB3426AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */; };
+		85D3BB3526AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */; };
+		85D3BB3626AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */; };
 		85E6ECF825C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECF925C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECFA25C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
@@ -675,6 +681,8 @@
 		85D3BB2226AC9C9800B6AA36 /* CityTechDiagram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityTechDiagram.swift; sourceTree = "<group>"; };
 		85D3BB2626AF244400B6AA36 /* SFXClose.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SFXClose.wav; sourceTree = "<group>"; };
 		85D3BB2726AF244400B6AA36 /* SFXSelected.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SFXSelected.wav; sourceTree = "<group>"; };
+		85D3BB2F26AFD28100B6AA36 /* BioBoxDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BioBoxDetailView.swift; sourceTree = "<group>"; };
+		85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingBioBoxView.swift; sourceTree = "<group>"; };
 		85E6ECF725C9D92B00229E18 /* ServerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAPI.swift; sourceTree = "<group>"; };
 		85E6ED1C25CF518500229E18 /* BackendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendView.swift; sourceTree = "<group>"; };
 		85F6674C25AF7B9C00E5003B /* RadiatorNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadiatorNode.swift; sourceTree = "<group>"; };
@@ -998,9 +1006,9 @@
 		8536F3B2258D47CF00B509D2 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				85D3BB2E26AFD22600B6AA36 /* Bio */,
 				8536F3B9258D47CF00B509D2 /* SelectModuleTypeView.swift */,
 				8536F3BA258D47CF00B509D2 /* HabModuleView.swift */,
-				8536F3B3258D47CF00B509D2 /* BioView.swift */,
 				8536F3B4258D47CF00B509D2 /* Lab */,
 			);
 			path = Modules;
@@ -1274,6 +1282,16 @@
 				85D3BB1626AB24F700B6AA36 /* GameDialogueModifiers.swift */,
 			);
 			path = Modifiers;
+			sourceTree = "<group>";
+		};
+		85D3BB2E26AFD22600B6AA36 /* Bio */ = {
+			isa = PBXGroup;
+			children = (
+				8536F3B3258D47CF00B509D2 /* BioView.swift */,
+				85D3BB2F26AFD28100B6AA36 /* BioBoxDetailView.swift */,
+				85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */,
+			);
+			path = Bio;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1564,6 +1582,7 @@
 				85D3BB1B26AC771D00B6AA36 /* CityLabView.swift in Sources */,
 				8536F412258D47D000B509D2 /* Parafernalia.swift in Sources */,
 				8504A53B25C6875000739C58 /* Energy.swift in Sources */,
+				85D3BB3426AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */,
 				8569A3DA25A799840057A518 /* LaunchingVehicleView.swift in Sources */,
 				8536F3E6258D47D000B509D2 /* HabModuleView.swift in Sources */,
 				8517EE632605DC8800C34C54 /* CityController.swift in Sources */,
@@ -1576,6 +1595,7 @@
 				8536F376258D475D00B509D2 /* Peripherals.swift in Sources */,
 				858D7C4725D4F0AD00A45CF9 /* GameCamera.swift in Sources */,
 				8536F475258D481700B509D2 /* MarsMapScene.swift in Sources */,
+				85D3BB3026AFD28100B6AA36 /* BioBoxDetailView.swift in Sources */,
 				8536F38E258D475D00B509D2 /* LabModule.swift in Sources */,
 				8536F3DE258D47D000B509D2 /* LaboratoryView.swift in Sources */,
 				85CD46A725D1199A000D9C64 /* EarthNode.swift in Sources */,
@@ -1686,6 +1706,7 @@
 				8569A3DB25A799840057A518 /* LaunchingVehicleView.swift in Sources */,
 				8536F3E7258D47D000B509D2 /* HabModuleView.swift in Sources */,
 				8536F3F7258D47D000B509D2 /* TankViews.swift in Sources */,
+				85D3BB3126AFD28100B6AA36 /* BioBoxDetailView.swift in Sources */,
 				859281FD25E9529C001233BE /* TutorialView.swift in Sources */,
 				8536F446258D47EA00B509D2 /* LabViewModel.swift in Sources */,
 				8536F377258D475D00B509D2 /* Peripherals.swift in Sources */,
@@ -1739,6 +1760,7 @@
 				85C3418625905A7500BF82F9 /* TutorialNode.swift in Sources */,
 				8517EE2C25F7C3AB00C34C54 /* MarsBuilder.swift in Sources */,
 				8536F37B258D475D00B509D2 /* Recipes.swift in Sources */,
+				85D3BB3526AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */,
 				859D683325DD8B9F005DD42C /* GameMessagesView.swift in Sources */,
 				8504A54925C6884600739C58 /* Garage.swift in Sources */,
 				8536F452258D47EA00B509D2 /* BioModController.swift in Sources */,
@@ -1809,6 +1831,7 @@
 				85D3BB1D26AC771D00B6AA36 /* CityLabView.swift in Sources */,
 				8536F414258D47D000B509D2 /* Parafernalia.swift in Sources */,
 				8504A53D25C6875000739C58 /* Energy.swift in Sources */,
+				85D3BB3626AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */,
 				8569A3DC25A799840057A518 /* LaunchingVehicleView.swift in Sources */,
 				8536F3E8258D47D000B509D2 /* HabModuleView.swift in Sources */,
 				8517EE652605DC8800C34C54 /* CityController.swift in Sources */,
@@ -1821,6 +1844,7 @@
 				8536F378258D475D00B509D2 /* Peripherals.swift in Sources */,
 				858D7C4925D4F0AD00A45CF9 /* GameCamera.swift in Sources */,
 				8536F477258D481700B509D2 /* MarsMapScene.swift in Sources */,
+				85D3BB3226AFD28100B6AA36 /* BioBoxDetailView.swift in Sources */,
 				8536F390258D475D00B509D2 /* LabModule.swift in Sources */,
 				8536F3E0258D47D000B509D2 /* LaboratoryView.swift in Sources */,
 				85CD46A925D1199A000D9C64 /* EarthNode.swift in Sources */,
