@@ -478,6 +478,12 @@
 		85D3BB2326AC9C9800B6AA36 /* CityTechDiagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB2226AC9C9800B6AA36 /* CityTechDiagram.swift */; };
 		85D3BB2426AC9C9800B6AA36 /* CityTechDiagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB2226AC9C9800B6AA36 /* CityTechDiagram.swift */; };
 		85D3BB2526AC9C9800B6AA36 /* CityTechDiagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB2226AC9C9800B6AA36 /* CityTechDiagram.swift */; };
+		85D3BB2826AF244400B6AA36 /* SFXClose.wav in Resources */ = {isa = PBXBuildFile; fileRef = 85D3BB2626AF244400B6AA36 /* SFXClose.wav */; };
+		85D3BB2926AF244400B6AA36 /* SFXClose.wav in Resources */ = {isa = PBXBuildFile; fileRef = 85D3BB2626AF244400B6AA36 /* SFXClose.wav */; };
+		85D3BB2A26AF244400B6AA36 /* SFXClose.wav in Resources */ = {isa = PBXBuildFile; fileRef = 85D3BB2626AF244400B6AA36 /* SFXClose.wav */; };
+		85D3BB2B26AF244400B6AA36 /* SFXSelected.wav in Resources */ = {isa = PBXBuildFile; fileRef = 85D3BB2726AF244400B6AA36 /* SFXSelected.wav */; };
+		85D3BB2C26AF244400B6AA36 /* SFXSelected.wav in Resources */ = {isa = PBXBuildFile; fileRef = 85D3BB2726AF244400B6AA36 /* SFXSelected.wav */; };
+		85D3BB2D26AF244400B6AA36 /* SFXSelected.wav in Resources */ = {isa = PBXBuildFile; fileRef = 85D3BB2726AF244400B6AA36 /* SFXSelected.wav */; };
 		85E6ECF825C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECF925C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECFA25C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
@@ -667,6 +673,8 @@
 		85D3BB1A26AC771D00B6AA36 /* CityLabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityLabView.swift; sourceTree = "<group>"; };
 		85D3BB1E26AC84CA00B6AA36 /* CityHabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityHabView.swift; sourceTree = "<group>"; };
 		85D3BB2226AC9C9800B6AA36 /* CityTechDiagram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityTechDiagram.swift; sourceTree = "<group>"; };
+		85D3BB2626AF244400B6AA36 /* SFXClose.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SFXClose.wav; sourceTree = "<group>"; };
+		85D3BB2726AF244400B6AA36 /* SFXSelected.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SFXSelected.wav; sourceTree = "<group>"; };
 		85E6ECF725C9D92B00229E18 /* ServerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAPI.swift; sourceTree = "<group>"; };
 		85E6ED1C25CF518500229E18 /* BackendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendView.swift; sourceTree = "<group>"; };
 		85F6674C25AF7B9C00E5003B /* RadiatorNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadiatorNode.swift; sourceTree = "<group>"; };
@@ -730,6 +738,8 @@
 		8517EE6A26093C4100C34C54 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				85D3BB2626AF244400B6AA36 /* SFXClose.wav */,
+				85D3BB2726AF244400B6AA36 /* SFXSelected.wav */,
 				8595402726197A17001D9040 /* SKN_T1.m4a */,
 				8595402626197A17001D9040 /* SKN_T2.m4a */,
 				8595402826197A17001D9040 /* SKN_T3.m4a */,
@@ -1391,6 +1401,7 @@
 				8536F2C5258D330300B509D2 /* Main.storyboard in Resources */,
 				8536F2C8258D330300B509D2 /* LaunchScreen.storyboard in Resources */,
 				8569A32E259F81110057A518 /* MapShapeGradient.fsh in Resources */,
+				85D3BB2826AF244400B6AA36 /* SFXClose.wav in Resources */,
 				8536F2F0258D330300B509D2 /* Assets.xcassets in Resources */,
 				8536F471258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F495258D481700B509D2 /* SparkEmitter.sks in Resources */,
@@ -1402,6 +1413,7 @@
 				8569A337259F81110057A518 /* RectanglesMoving.fsh in Resources */,
 				8595402F26197A18001D9040 /* SKN_T3.m4a in Resources */,
 				8569A334259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
+				85D3BB2B26AF244400B6AA36 /* SFXSelected.wav in Resources */,
 				8595402926197A18001D9040 /* SKN_T2.m4a in Resources */,
 				8569A319259F81110057A518 /* CutionStripesColored.fsh in Resources */,
 				8569A31F259F81110057A518 /* TransitionShader.fsh in Resources */,
@@ -1422,6 +1434,7 @@
 				8536F2D6258D330300B509D2 /* Main.storyboard in Resources */,
 				8536F2D9258D330300B509D2 /* LaunchScreen.storyboard in Resources */,
 				8569A32F259F81110057A518 /* MapShapeGradient.fsh in Resources */,
+				85D3BB2926AF244400B6AA36 /* SFXClose.wav in Resources */,
 				8536F2F1258D330300B509D2 /* Assets.xcassets in Resources */,
 				8536F472258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F496258D481700B509D2 /* SparkEmitter.sks in Resources */,
@@ -1433,6 +1446,7 @@
 				8569A338259F81110057A518 /* RectanglesMoving.fsh in Resources */,
 				8595403026197A18001D9040 /* SKN_T3.m4a in Resources */,
 				8569A335259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
+				85D3BB2C26AF244400B6AA36 /* SFXSelected.wav in Resources */,
 				8595402A26197A18001D9040 /* SKN_T2.m4a in Resources */,
 				8569A31A259F81110057A518 /* CutionStripesColored.fsh in Resources */,
 				8569A320259F81110057A518 /* TransitionShader.fsh in Resources */,
@@ -1453,6 +1467,7 @@
 				8569A32A259F81110057A518 /* HexagonShader.fsh in Resources */,
 				8569A31E259F81110057A518 /* InterlaceShader.fsh in Resources */,
 				8536F2E7258D330300B509D2 /* Main.storyboard in Resources */,
+				85D3BB2A26AF244400B6AA36 /* SFXClose.wav in Resources */,
 				8569A321259F81110057A518 /* TransitionShader.fsh in Resources */,
 				8536F2F2258D330300B509D2 /* Assets.xcassets in Resources */,
 				8569A336259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
@@ -1464,6 +1479,7 @@
 				8569A306259F7F990057A518 /* dissolve.fragment.txt in Resources */,
 				8595403126197A18001D9040 /* SKN_T3.m4a in Resources */,
 				8569A32D259F81110057A518 /* CautionStripes.fsh in Resources */,
+				85D3BB2D26AF244400B6AA36 /* SFXSelected.wav in Resources */,
 				8595402B26197A18001D9040 /* SKN_T2.m4a in Resources */,
 				8569A327259F81110057A518 /* RadarShader.fsh in Resources */,
 				8569A330259F81110057A518 /* MapShapeGradient.fsh in Resources */,

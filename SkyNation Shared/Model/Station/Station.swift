@@ -365,7 +365,6 @@ class Station:Codable {
         // Air Adjustments
         let airNeeded = calculateNeededAir()
         let currentVolume = self.air.getVolume()
-        
         if airNeeded > currentVolume {
             let delta = airNeeded - currentVolume
             if let airTank = truss.tanks.filter({ $0.type == .air }).first {
@@ -394,7 +393,7 @@ class Station:Codable {
         }
         truss.mergeTanks()
         
-        // + Antenna -> + Money
+        // Antenna & Money
         let antennaMoney = truss.moneyFromAntenna()
         print("\n 🤑 Antenna Money: \(antennaMoney)")
         if let player = LocalDatabase.shared.player {

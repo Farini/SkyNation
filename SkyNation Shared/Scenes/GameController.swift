@@ -60,15 +60,19 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     func highlightNodes(atPoint point: CGPoint) {
         
-//        print("Touched: \(point)")
-        
         // Convert the point to the Overlay Scene
         let converted:CGPoint = sceneRenderer.overlaySKScene!.convertPoint(fromView: point)
-//        print("Point In Overlay Scene: \(converted)")
         print("Touch Overlay: X:\(Int(converted.x)), Y:\(Int(converted.y)) \t Point: X:\(Int(point.x)), Y:\(Int(point.y))")
         
         // Check Overlay First
         if let node = sceneRenderer.overlaySKScene?.nodes(at: converted).first {
+            
+            // Sound
+            if GameSettings.shared.soundFXOn {
+                let action = SKAction.playSoundFileNamed("SFXSelected.wav", waitForCompletion: false)
+                node.run(action)
+            }
+            
             self.hitNode2D(node: node)
             return
         }
@@ -648,6 +652,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         // Check Activities
         var newsLines:[String] = []
         if gameScene == .SpaceStation {
+            // Lab activities
             if let labs = station?.labModules {
                 for lab in labs {
                     print("*** Found lab: \(lab.id)")
@@ -663,6 +668,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     }
                 }
             }
+            // Hab Activities
             if let habs = station?.habModules {
                 let people = habs.flatMap({$0.inhabitants})
                 for person in people {
@@ -674,6 +680,17 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         }
                     }
                 }
+            }
+            
+            if station?.truss.getAvailableWater() ?? 0 < 20 {
+                newsLines.append("Water running low")
+            }
+            if station?.air.needsOxygen() ?? 0 > 5 {
+                newsLines.append("Oxygen running low")
+            }
+            let qt:[AirQuality] = [.Lethal, .Bad]
+            if qt.contains(station?.air.airQuality() ?? .Good) {
+                newsLines.append("Air quality is bad. Check air components.")
             }
         }
         
@@ -817,6 +834,7 @@ extension StationBuildItem {
                     print("404 not found")
                     return nil
                 }
+                
             case .Module:
 
                 let moduleScene = SCNScene(named: "Art.scnassets/Module.scn")!

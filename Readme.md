@@ -109,33 +109,30 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [X] Person Workout not incrementing health
 - [X] GameSettings -> Sound
 - [X] iOS Force Dark Mode
-
 - [X] Accounting: waste (pee, and poop) not subtracting when Peripheral is working
 - [X] Accounting: When station doesn't have people -> Don't make money
-- [ ] Make sure that Air adjustments AND Oxygen adjustments are working - Accounting
+- [X] Make sure that Air adjustments AND Oxygen adjustments are working - Accounting
+- [X] LSS View -> Define Tank not working properly (remove scrollview)
+- [X] Animate Satellite Opening Solar Panel (if there is one)
+- [X] Scene Alert (News) -> Low Oxygen
+- [X] Scene Alert (News) -> Bad AirQualities
+- [X] Scene Alert (News) -> Low Water
 
 - [ ] Biobox still not saving when done (needs testing)
 - [ ] Bio View - DNA animation (needs testing)
+- [ ] Show only 'Station' cases
+- [ ] Text with "Needs a biologist, or doctor"
 
 - [X] Resources View Example (Copy from `EDLInventoryView`)
 - [X] Resources Tab
 - [X] Resources Selection + Callback
 - [ ] Resources Collections - Similar size items
 
-- [ ] News should be an array of strings (show for 5s, wait 1s, show next)
-- [ ] Scene Alert (News) -> Low Oxygen
-- [ ] Scene Alert (News) -> Bad AirQualities
-- [ ] Scene Alert (News) -> Low Water
-
 - [ ] Game Store Improvements
 - [ ] New Modules not fully available after Tech research. 
 
-- [ ] 1/8 Soundtrack + FX
-    - [ ] Add a couple of SoundFX
-    - [X] Gamesettings -> SoundFX
-
-- [ ] Animate Satellite Opening Solar Panel (if there is one)
 - [ ] LSS View -> Let player sort Ingredients, Tanks, etc. as they wish
+
 
 - [ ] 3/21 Mars Views & Controllers
     - [ ] City Views
@@ -154,6 +151,7 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [ ] 1/13 Mars Scene
     - [ ] Gate Config (to layout scene)
     - [ ] Outposts with Levels
+    - [ ] Infinite floor
     
 - [ ] Mars Model
     - [X] City Tech (Model)
@@ -186,6 +184,12 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
     
 ## 📝 To Do - Future
 Grab things from this list as you go along.
+
+- [ ] 2/8 Soundtrack + FX
+    - [X] Add a couple of SoundFX
+    - [X] Gamesettings -> SoundFX
+    - [ ] 2 more Sound FXs (Vehicle departing, News appearing)
+    - [ ] 2 more music (better ones)
 
 - [X] 5/8 Accounting
     - [ ] Mars Accounting

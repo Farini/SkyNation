@@ -168,12 +168,25 @@ struct TankView: View {
                 })
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
                 .popover(isPresented: $popTankType) {
-                    List(TankType.allCases, id:\.self) { tanktype in
-                        Text("\(tanktype.name) \(tanktype.rawValue.uppercased()) Cap:\(tanktype.capacity)")
+                    VStack {
+                        ForEach(TankType.allCases, id:\.self) { tanktype in
+                            HStack {
+                                Text("\(tanktype.name) \(tanktype.rawValue.uppercased()) Cap:\(tanktype.capacity)")
+                                    .padding(6)
+                                Spacer()
+                            }
+                            .frame(maxWidth:200)
                             .onTapGesture {
                                 self.viewModel.defineType(tank, type: tanktype)
                             }
+                        }
                     }
+//                    List(TankType.allCases, id:\.self) { tanktype in
+//                        Text("\(tanktype.name) \(tanktype.rawValue.uppercased()) Cap:\(tanktype.capacity)")
+//                            .onTapGesture {
+//                                self.viewModel.defineType(tank, type: tanktype)
+//                            }
+//                    }
                 }
             }
             .padding()

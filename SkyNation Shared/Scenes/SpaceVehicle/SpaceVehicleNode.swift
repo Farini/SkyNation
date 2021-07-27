@@ -68,13 +68,11 @@ class SpaceVehicleNode:SCNNode {
 //        crewBody.isHidden = false
         self.crewBody = crewBody
         
-        
-        
-        
         super.init()
         
-        parentScene.rootNode.addChildNode(self)
+        // Post Init
         
+        parentScene.rootNode.addChildNode(self)
         
         self.addChildNode(rocketBooster)
         self.addChildNode(satellite)
@@ -90,6 +88,26 @@ class SpaceVehicleNode:SCNNode {
         let group = SCNAction.sequence([wait, move])
         self.runAction(group) {
             print("Finished anime")
+        }
+    }
+    
+    func openSolarPanels() {
+        if let sp1 = satellite.childNode(withName: "SP1-003", recursively: false) {
+            let turn = SCNAction.rotate(by: CGFloat(GameLogic.radiansFrom(-90)), around: SCNVector3(0, 0, 1), duration: 1.5)
+            sp1.runAction(turn)
+            if let sp2 = sp1.childNodes.first {
+                let turn2 = SCNAction.rotate(by: CGFloat(GameLogic.radiansFrom(-180)), around: SCNVector3(0, 0, 1), duration: 1.5)
+                sp2.runAction(turn2)
+            }
+        }
+        
+        if let sp3 = satellite.childNode(withName: "SP1-001", recursively: false) {
+            let turn = SCNAction.rotate(by: CGFloat(GameLogic.radiansFrom(90)), around: SCNVector3(0, 0, 1), duration: 1.5)
+            sp3.runAction(turn)
+            if let sp4 = sp3.childNodes.first {
+                let turn2 = SCNAction.rotate(by: CGFloat(GameLogic.radiansFrom(180)), around: SCNVector3(0, 0, 1), duration: 1.5)
+                sp4.runAction(turn2)
+            }
         }
     }
     
