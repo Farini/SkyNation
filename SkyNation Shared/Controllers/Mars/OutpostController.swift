@@ -21,6 +21,10 @@ enum OutpostViewTab:String, Codable, CaseIterable {
     case management
 }
 
+enum ContributionType {
+    case box, tank, person, machine, bioBox
+}
+
 class OutpostController:ObservableObject {
     
     var builder:MarsBuilder = MarsBuilder.shared
@@ -37,8 +41,21 @@ class OutpostController:ObservableObject {
     // OutpostData
     @Published var opData:Outpost
     
+    // DEPRECATE 3 BELOW
+    
+    /// Current Supplied
+    @Published var supply:OutpostSupply?
+    
+    /// Requirements for next job
+    @Published var job:OutpostJob?
+    
+    @Published var fake:String = ""
+    
     // Guild
+    
     // Player Cards
+    
+    
     
     // Tab
     @Published var viewTab:OutpostViewTab = .info
@@ -67,6 +84,9 @@ class OutpostController:ObservableObject {
         
         opData = outPostData
         self.remains = outPostData.calculateRemaining()
+        
+        self.job = outPostData.getNextJob()
+        self.supply = outPostData.supplied
     }
     
     /// Initializer for Previews
@@ -83,6 +103,12 @@ class OutpostController:ObservableObject {
         
         opData = outPostData
         self.remains = outPostData.calculateRemaining()
+        
+        // Post Init
+        if let job = outPostData.getNextJob() {
+            self.job = job
+        }
+        self.supply = outPostData.supplied
     }
     
     /// Selecting a Tab
@@ -91,7 +117,7 @@ class OutpostController:ObservableObject {
     }
     
     /// Called every time user taps on a resource. Adds it to supplied
-    func makeContribution(object:Codable) {
+    func makeContribution(object:Codable, type:ContributionType) {
         
         guard let pid = LocalDatabase.shared.player?.serverID else {
             print("No player id, or wrong id")
@@ -99,28 +125,66 @@ class OutpostController:ObservableObject {
         }
         
         print("Contributing...")
+        fake += "Contributing"
+        
+        // Notes: The idea is to check whether we contributed (with the server)
+        // and with the server's response, remove item from city (or make person busy)
+        // See the comment on "box" below
+        
+        switch type {
+            case .box:
+                
+                guard let box = object as? StorageBox else { return }
+                print("Contribute a box \(box.type)")
+                
+                // SKNS.contributionRequest(box:box) { response in
+            
+            default:break
+        }
         
         if let box = object as? StorageBox {
+            fake += " + box"
+            
+            // SKNS.contributionRequest(box:box) { response in
             opData.supplied.ingredients.append(box)
+            opData.supplied.players[pid, default:0] += box.current
+            
+            myCity.boxes.removeAll(where: { $0.id == box.id })
+            
         } else if let tank = object as? Tank {
+            
             opData.supplied.tanks.append(tank)
+            myCity.tanks.removeAll(where: { $0.id == tank.id })
+            
         } else if let peripheral = object as? PeripheralObject {
+            
             opData.supplied.peripherals.append(peripheral)
+            myCity.peripherals.removeAll(where: { $0.id == peripheral.id })
+            
         } else if let bioBox = object as? BioBox {
+            
             opData.supplied.bioBoxes.append(bioBox)
+            myCity.bioBoxes?.removeAll(where: { $0.id == bioBox.id })
+            
         } else if let person = object as? Person {
+            
             opData.supplied.skills.append(person)
+            if let person = myCity.inhabitants.first(where: { $0.id == person.id }) {
+                let newActivity = LabActivity(time: 1000, name: "Working at Outpost")
+                person.activity = newActivity
+            }
+            
         } else {
             print("⚠️ REVISE THIS OBJECT: \(object)")
             print("⚠️ ERROR OBJECT INVALID")
         }
         
         // Contribution
-        if let _ = opData.contributed[pid] {
-            opData.contributed[pid]! += 1
-        } else {
-            opData.contributed[pid] = 1
-        }
+        
+            opData.contributed[pid, default:0] += 1
+        
+            //opData.contributed[pid] = 1
+        
         
         // Check if fullfilled
         let remaining = opData.calculateRemaining()
@@ -284,8 +348,6 @@ extension OutpostViewTab {
     
 }
 
-
-
 /**
  Compares Keys and values for requirements vs supplied.
  */
@@ -303,27 +365,4 @@ struct KeyvalComparator:Identifiable {
     var missing:Int {
         return supplied - needs
     }
-    
-    
 }
-
-/*
-/// Compares Keys and values for requirements vs supplied.
-struct KeyValComparer:Identifiable {
-    
-    var id = UUID()
-    var name:String
-    var needs:Int
-    var supplied:Int
-    
-    init(name:String, needs:Int, supplied:Int) {
-        self.name = name
-        self.needs = needs
-        self.supplied = supplied
-    }
-    
-    var missing:Int {
-        return supplied - needs
-    }
-}
-*/

@@ -699,6 +699,27 @@ class SKNS {
         task.resume()
     }
     
+    // MARK: - Outpost
+    
+    static func contributionRequest(object:Codable, type:ContributionType, outpost:Outpost) {
+        
+        let url = URL(string: "\(baseAddress)/guilds/outpost/contribute/\(outpost.id.uuidString)")!
+        
+        
+        // Request will need:
+        // 1. SKNUserPost (user + pass)
+        // 2. Outpost ID
+        // 3. Object Type (type here)
+        // 4. Object being contributed Optional (key, val)
+        
+        // Response:
+        // 0. In Server, fetch outpostID.json, then add contribution by (key, val)
+        // 1. Yes, or No (Contribution Successful)
+        
+        // After response:
+        // 1. Update Server to let it know if Outpost State is UPGRADING
+    }
+    
     // MARK: - Space Vehicle
     
     /// Register Vehicle in Server

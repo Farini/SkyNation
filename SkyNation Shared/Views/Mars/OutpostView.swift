@@ -14,9 +14,6 @@ import SwiftUI
 struct OutpostView: View {
     
     @ObservedObject var controller:OutpostController
-    
-//    @State var posdex:Posdex
-//    @State var outpost:DBOutpost
     @State var popTutorial:Bool = false
     
     // Tabs
@@ -46,7 +43,6 @@ struct OutpostView: View {
                 
                 // Close
                 Button(action: {
-//                    print("Close action")
                     NotificationCenter.default.post(name: .closeView, object: self)
                 }, label: {
                     Image(systemName: "xmark.circle")
@@ -181,7 +177,7 @@ struct OutpostView: View {
                                     
                                 }
                                 
-                                
+                                Text("Fake: \(controller.fake)")
                             }
                             
                         case .contributions:
@@ -269,6 +265,7 @@ struct OutpostSectionView: View {
                             LazyVGrid(columns: [GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100))], alignment: .center, spacing: 8, pinnedViews: []) {
                                 ForEach(comparators) { comparator in
                                     IngredientSmallReqView(ingredient: Ingredient(rawValue:comparator.name)!, required: comparator.needs, available: comparator.supplied)
+                                        
                                 }
                             }
                         case .tanks:
@@ -345,7 +342,7 @@ struct OutpostSectionView: View {
                                 ForEach(controller.myCity.boxes, id:\.id) { box in
                                     IngredientView(ingredient: box.type, hasIngredient: true, quantity: box.current)
                                         .onTapGesture {
-                                            controller.makeContribution(object: box)
+                                            controller.makeContribution(object: box, type:.box)
                                         }
                                 }
                             }
@@ -354,7 +351,7 @@ struct OutpostSectionView: View {
                                 ForEach(controller.myCity.tanks, id:\.id) { tank in
                                     TankViewSmall(tank:tank)
                                         .onTapGesture {
-                                            controller.makeContribution(object: tank)
+                                            controller.makeContribution(object: tank, type:.tank)
                                         }
                                 }
                             }
@@ -365,17 +362,17 @@ struct OutpostSectionView: View {
                                         .resizable()
                                         .frame(width:32, height:32)
                                         .onTapGesture {
-                                            controller.makeContribution(object: peripheral)
+                                            controller.makeContribution(object: peripheral, type:.machine)
                                         }
                                 }
                             })
                         
                         case .peopleSkills:
                             LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: [], content: {
-                                ForEach(controller.myCity.inhabitants, id:\.id) { person in
+                                ForEach(controller.myCity.inhabitants.filter({$0.isBusy() == false}), id:\.id) { person in
                                     PersonSmallView(person:person)
                                         .onTapGesture {
-                                            controller.makeContribution(object: person)
+                                            controller.makeContribution(object: person, type:.person)
                                         }
                                 }
                             })
@@ -385,7 +382,7 @@ struct OutpostSectionView: View {
                                 ForEach(controller.myCity.bioBoxes ?? [], id:\.id) { bioBox in
                                     Text("\(DNAOption(rawValue:bioBox.perfectDNA)!.emoji) x \(bioBox.population.count)").font(.title)
                                         .onTapGesture {
-                                            controller.makeContribution(object: bioBox)
+                                            controller.makeContribution(object: bioBox, type:.bioBox)
                                         }
                                 }
                             })

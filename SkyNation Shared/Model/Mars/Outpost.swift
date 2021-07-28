@@ -108,6 +108,12 @@ enum OutpostType:String, CaseIterable, Codable {
     }
 }
 
+enum OutpostState:String, CaseIterable, Codable {
+    case Ready      // Can be upgraded
+    case Upgrading  // Upgrading (time)
+    case Maxed      // No more upgrades
+}
+
 // Building up to here, an outpost has an OutpostJob, which sets the Level of the Outpost
 // For a job. There is a lineup of people, and materials. Each one tracking back to Players
 // When a job is ready to be executed (covered skills and ingredients), each person gets an Activity
@@ -387,6 +393,8 @@ class OutpostSupply:Codable {
     
     var players:[UUID:Int] // Player ID + Supplied points
     
+    // MARK: - Initializers
+    
     init() {
         self.ingredients = []
         self.tanks = []
@@ -407,6 +415,8 @@ class OutpostSupply:Codable {
         self.players = [:]
     }
     
+    // MARK: - Contributions
+    
     func contrib(box:StorageBox) {
         ingredients.append(box)
     }
@@ -414,9 +424,25 @@ class OutpostSupply:Codable {
         tanks.append(tank)
     }
     
+    func contribute(with box:StorageBox, player:SKNPlayer) {
+        ingredients.append(box)
+        guard let pid = player.serverID else { return }
+        var pScore:Int = players[pid, default:0]
+        pScore += 1
+        players[pid] = pScore
+    }
+    
     /// Returns the count of all resources
     func supplyScore() -> Int {
-        return ingredients.count + tanks.count + skills.count + peripherals.count + bioBoxes.count
+        let ing = ingredients.map({ $0.current }).reduce(0, +)
+        let tnk = tanks.map({ $0.current }).reduce(0, +)
+        let skls = skills.flatMap({ $0.skills })
+        let sumskills = skls.map({ $0.level }).reduce(0, +)
+        let per = peripherals.count
+        let bio = bioBoxes.map({ $0.population.count }).reduce(0, +)
+        
+        return ing + tnk + sumskills + per + bio
+            // ingredients.count + tanks.count + skills.count + peripherals.count + bioBoxes.count
     }
 }
 
@@ -506,7 +532,7 @@ struct DBOutpost:Codable {
     
     /// Random Data
     static func example() -> DBOutpost {
-        let randomType = OutpostType.allCases.randomElement()!
+        let randomType = OutpostType.Energy//allCases.randomElement()!
         let vPosdex = randomType.validPosDexes.randomElement()!
         
         return DBOutpost(gid: UUID(), type: randomType, posdex: vPosdex)
