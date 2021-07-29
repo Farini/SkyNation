@@ -527,11 +527,90 @@ struct GamePackage {
     var tanks:[Tank]
     var staff:[Person]
     
+    enum Kit {
+        case SurvivalKit
+        case BotanistGarden
+        case BuildersTech
+        case Humanitarian
+        
+        /// Returns the Resources that this Kit has
+        func makeResources(level:StorePrice) -> [RSSType] {
+            var resources:[RSSType] = []
+            switch self {
+                case .SurvivalKit:
+                    for _ in 0...level.multiplier {
+                        resources.append(.Tank(object: Tank(type: .o2, full: true)))
+                        resources.append(.Tank(object: Tank(type: .o2, full: true)))
+                        resources.append(.Tank(object: Tank(type: .h2o, full: true)))
+                        resources.append(.Tank(object: Tank(type: .h2o, full: true)))
+                        if Bool.random() == true {
+                            resources.append(.Peripheral(object: PeripheralObject(peripheral: .ScrubberCO2)))
+                        } else {
+                            resources.append(.Peripheral(object: PeripheralObject(peripheral: .Electrolizer)))
+                        }
+                    }
+                case .BotanistGarden:
+                    for _ in 0...level.multiplier {
+                        resources.append(.Box(object: StorageBox(ingType: .Fertilizer, current: Ingredient.Fertilizer.boxCapacity())))
+                        resources.append(.Box(object: StorageBox(ingType: .Fertilizer, current: Ingredient.Fertilizer.boxCapacity())))
+                        resources.append(.Box(object: StorageBox(ingType: .wasteSolid, current: 0)))
+                        resources.append(.Box(object: StorageBox(ingType: .Food, current: Ingredient.Food.boxCapacity())))
+                        resources.append(.Tank(object: Tank(type: .h2o, full: true)))
+                    }
+                case .BuildersTech:
+                    for _ in 0...level.multiplier {
+                        resources.append(.Box(object: StorageBox(ingType: .Aluminium, current: Ingredient.Aluminium.boxCapacity())))
+                        resources.append(.Box(object: StorageBox(ingType: .Copper, current: Ingredient.Copper.boxCapacity())))
+                        resources.append(.Box(object: StorageBox(ingType: .Circuitboard, current: Ingredient.Circuitboard.boxCapacity())))
+                        if Bool.random() == true {
+                            resources.append(.Peripheral(object: PeripheralObject(peripheral: .Methanizer)))
+                        } else {
+                            resources.append(.Peripheral(object: PeripheralObject(peripheral: .WaterFilter)))
+                        }
+                    }
+                default: break
+            }
+            return resources
+                    
+        }
+        
+        /// Makes a Gifted person (only if self is .Humanitarian)
+        func makePerson(level:StorePrice) -> Person? {
+            guard self == .Humanitarian else { return nil }
+            
+            let extraSkills = level == .five ? 2:level == .ten ? 3:5
+            let person = Person(random:true)
+            let learnable:[Skills] = [.Biologic, .Datacomm, .Electric, .Material, .Mechanic, .Medic, .SystemOS]
+            person.name = "The One"
+            for _ in 0...extraSkills {
+                person.learnNewSkill(type: learnable.randomElement()!)
+            }
+            return person
+        }
+        
+    }
+    
+    enum StorePrice {
+        case five
+        case ten
+        case twenty
+        
+        var multiplier:Int {
+            switch self {
+                case .five: return 3
+                case .ten: return 7
+                case .twenty: return 16
+            }
+        }
+    }
+    
     static func makePackage(price:Int) -> GamePackage {
-        let new = GamePackage(id: UUID(), tokens: price, money: price * 1000, boxes: [], tanks: [], staff: [])
+        let new = GamePackage(id: UUID(), tokens: price * 3, money: price * 1000, boxes: [], tanks: [], staff: [])
         return new
     }
     
+    
+    
 }
 
-// EDL - Entry Descent and Landing
+

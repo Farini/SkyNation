@@ -137,7 +137,7 @@ class OutpostController:ObservableObject {
                 guard let box = object as? StorageBox else { return }
                 print("Contribute a box \(box.type)")
                 
-                // SKNS.contributionRequest(box:box) { response in
+                SKNS.contributionRequest(object: box, type: type, outpost: opData)
             
             default:break
         }
