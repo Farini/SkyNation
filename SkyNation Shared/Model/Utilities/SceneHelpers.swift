@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SceneKit
 
 /// An object that defines `SCNNode`(name), Vector3D` (position), `Orientation3D` (EulerAngles)
 struct Model3D:Codable {
@@ -54,6 +55,11 @@ struct Vector3D:Codable {
     
     static var zero:Vector3D {
         return Vector3D(x: 0, y: 0, z: 0)
+    }
+    
+    /// SceneKit vector
+    func sceneKitVector() -> SCNVector3 {
+        return SCNVector3(x, y, z)
     }
 }
 

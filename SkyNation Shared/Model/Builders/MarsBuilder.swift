@@ -328,27 +328,28 @@ extension MarsBuilder {
         for child in root.childNodes {
             print("Root child: \(child.name ?? "<untitled>")")
         }
+        
         // Terrain
+        // Camera
+        // Light
         
         // Outposts
-        print("\n { OUTPOSTS } ")
+        print("\n [ OUTPOSTS ] ")
         let outpostsParent = root.childNode(withName: "Outposts", recursively: false)!
         for child in outpostsParent.childNodes {
             let opNodeName = child.name ?? "unknown"
             if let pp:Posdex = Posdex.allCases.filter({ $0.sceneName == opNodeName }).first {
                 if let outpost = outposts.filter({ $0.posdex == pp.rawValue }).first {
-                    print("Outpost | \(pp.sceneName), type: \(outpost.type.rawValue), lvl:\(outpost.level)")
+                    print("\(pp.sceneName) | \(outpost.type.rawValue), lvl:\(outpost.level)")
+                    
                 } else {
                     print("Outpost (unbuilt) | \(pp.sceneName)")
                 }
             }
         }
         
-        
-        // Light
-        
         // Cities
-        print("\n { CITIES } ")
+        print("\n [ CITIES ] ")
         let citiesParent = root.childNode(withName: "Cities", recursively: false)!
         for tmpCity in citiesParent.childNodes {
             
@@ -361,6 +362,16 @@ extension MarsBuilder {
                     print("City Node | \(pp.sceneName), owner:\(userOwner)")
                     
                     // Build gate
+                    if let model:SCNNode = pp.extractModel()?.clone() {
+                        print("Model: \(String(describing: model.name)). Replacing.")
+                        
+                        model.position = pp.position.sceneKitVector()
+                        model.eulerAngles = pp.eulerAngles.sceneKitVector()
+                        model.name = pp.sceneName
+
+                        tmpCity.removeFromParentNode()
+                        citiesParent.addChildNode(model)
+                    }
                     
                 } else {
                     
@@ -375,10 +386,32 @@ extension MarsBuilder {
                     
                 }
             }
+            
+//            print("Pos: \(tmpCity.position), Angles: \(tmpCity.eulerAngles)")
         }
-        
-        // Camera
-        
     }
+}
+
+extension Posdex {
     
+    func extractModel() -> SCNNode? {
+        switch self {
+            case .city1, .city2, .city3, .city4, .city5, .city6, .city7, .city8, .city9:
+                return SCNScene(named: "Art.scnassets/Mars/Gate2.scn")!.rootNode.childNodes.first!
+            case .power1, .power2, .power3, .power4:
+                return SCNScene(named: "Art.scnassets/Mars/Outposts/PowerPlant.scn")!.rootNode
+            case .mining1, .mining2, .mining3:
+                return nil
+            case .biosphere1, .biosphere2:
+                return SCNScene(named: "Art.scnassets/Mars/Outposts/Biosphere.scn")!.rootNode
+            case .antenna:
+                return SCNScene(named: "Art.scnassets/Mars/Outposts/OPAntenna.scn")!.rootNode
+            case .launchPad:
+                return SCNScene(named: "Art.scnassets/Mars/Outposts/LandingPad.scn")!.rootNode
+            case .arena: return nil
+            case .hq: return nil
+            case .observatory: return nil
+//            default: return nil
+        }
+    }
 }
