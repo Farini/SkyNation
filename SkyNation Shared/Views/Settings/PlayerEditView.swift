@@ -371,10 +371,22 @@ struct GameSettingsTabView: View {
                 
                 Button("Save") {
                     print("Save Settings")
-                    settings.showTutorial = self.showTutorial
+                    
+                    // Data
                     settings.useCloud = self.useCloudData
+                    
+                    // Graphics
                     settings.showLights = self.showLights
+                    
+                    // Logic preferences
                     settings.clearEmptyTanks = self.clearTanks
+                    settings.showTutorial = self.showTutorial
+                    
+                    // Sounds
+                    settings.musicOn = self.musicOn
+                    settings.soundFXOn = self.soundFXOn
+                    settings.dialogueOn = self.soundFXOn
+                    
                     settings.save()
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))

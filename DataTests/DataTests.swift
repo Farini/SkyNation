@@ -17,22 +17,97 @@ class DataTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
     
-    func testGameGenerators() {
+    func testTokens() {
+        let myPID:UUID = UUID()
+        let store = Shopped(lid: myPID)
+        print("My Store")
+        print("Token count: \(store.tokens.count)")
         
-        print("\n Game Generators --- ")
+        for t in store.tokens {
+            print("Token \(t.origin), pid:\(t.user), TokenID:\(t.id)")
+        }
+        for i in 1...5 {
+            if let token = store.getAToken() {
+                let result = store.useToken(token: token)
+                print("Using token #\(i): \(result)")
+            }
+        }
+        if store.timeToGenerateNextFreebie() < 1.0 {
+            let dict = store.generateFreebie()
+            print("Free dic.: \(dict.description)")
+        }
+        let time = store.timeToGenerateNextFreebie()
+        print("Next Freebie Generation in \(time) seconds")
+        XCTAssert(time > 0)
         
-        print("\n[] People")
-        let delta = Date().timeIntervalSince(LocalDatabase.shared.gameGenerators!.datePeople)
-        let oo = Calendar.current.dateComponents([.minute, .second], from: LocalDatabase.shared.gameGenerators!.datePeople, to: Date())
-        print("Time (seconds) since last generation: \(delta)")
-        print("Time 2: \(oo.minute ?? 0)m \(oo.second ?? 0)s")
+        print("Making Purchase")
+        store.makePurchase(cart: Purchase(product: .five, kit: .SurvivalKit, receipt: "ABCD"))
+        print("Count after purchase: \(store.tokens.count)")
+        print("Valid Tokens: \(store.getSpendableTokens().count)")
+    }
+    
+    /** Tests if there is common strings between tanktype, ingredient, DNAOption and Skills,
+     If this test fails, it makes building this game much harder. */
+    func testModelTypesNames() {
         
-        print("\n[] Freebie")
-        let dFree = Date().timeIntervalSince(LocalDatabase.shared.gameGenerators!.dateFreebies)
-        let tFree = Calendar.current.dateComponents([.minute, .second], from: LocalDatabase.shared.gameGenerators!.datePeople, to: Date())
-        print("Time (seconds) since last generation: \(dFree)")
-        print("Time 2: \(tFree.minute ?? 0)m \(tFree.second ?? 0)s")
-        print("\n\n")
+        let allTanks = TankType.allCases
+        let allIngredients = Ingredient.allCases
+        let dnas = DNAOption.allCases
+        
+        var array:[String] = []
+        
+        print("\n\n Testing Model Types Names...")
+        
+        print("\n\t Tank Types:")
+        for t in allTanks {
+            print(t.rawValue)
+            array.append(t.rawValue)
+        }
+        
+        print("\n\t Ingredient Types:")
+        for i in allIngredients {
+            print(i.rawValue)
+            array.append(i.rawValue)
+        }
+        
+        print("\n\t DNA Types:")
+        for d in dnas {
+            print(d.rawValue)
+            array.append(d.rawValue)
+        }
+        
+        print("\n\t Peripheral Types:")
+        for p in PeripheralType.allCases {
+            print(p.rawValue)
+            array.append(p.rawValue)
+        }
+        
+        // Skills
+        print("\n\t Skills Types:")
+        for s in Skills.allCases {
+            print(s.rawValue)
+            array.append(s.rawValue)
+        }
+        
+        // Tech
+//        print("\n Tech Types:")
+//        for t in TechItems.allCases {
+//            print(t.rawValue)
+//        }
+        
+//        for s in array {
+//            print(s)
+//        }
+        print("\n---- results  -----")
+        print("Array Count: \(array.count)")
+        
+        let aSet = Set(array)
+        print("Set Count: \(aSet.count)")
+        print("---- results end  -----\n\n")
+        
+        XCTAssert(array.count == aSet.count)
+        
+        
     }
     
     // MARK: - Accounting

@@ -7,15 +7,14 @@ import SwiftUI
 /**
  General Settings with vars stored in UserDefauls
  */
-class GameSettings {
+class GameSettings:Codable {
     
-    static let shared = GameSettings()
+    static let shared = GameSettings.load()
     
     // MARK: - Data
     
     /// To save in Cloud
     var useCloud:Bool = false
-    
     
     // MARK: - Game Logic
     
@@ -65,28 +64,37 @@ class GameSettings {
         // Gameplay
         self.showTutorial = shouldShowTutorial
         self.startingScene = .SpaceStation
-        self.showLights = UserDefaults.standard.value(forKey: "showLights") as? Bool ?? true
-        self.clearEmptyTanks = UserDefaults.standard.value(forKey: "clearEmptyTanks") as? Bool ?? false
+        self.showLights = true //UserDefaults.standard.value(forKey: "showLights") as? Bool ?? true
+        self.clearEmptyTanks = false//UserDefaults.standard.value(forKey: "clearEmptyTanks") as? Bool ?? false
         
         // Sounds
-        self.musicOn = UserDefaults.standard.value(forKey: "musicOn") as? Bool ?? true
-        self.soundFXOn = UserDefaults.standard.value(forKey: "soundFXOn") as? Bool ?? true
-        self.dialogueOn = UserDefaults.standard.value(forKey: "dialogueOn") as? Bool ?? true
+        self.musicOn = true //UserDefaults.standard.value(forKey: "musicOn") as? Bool ?? true
+        self.soundFXOn = true //UserDefaults.standard.value(forKey: "soundFXOn") as? Bool ?? true
+        self.dialogueOn = true //UserDefaults.standard.value(forKey: "dialogueOn") as? Bool ?? true
         
+    }
+    static private func load() -> GameSettings {
+        return LocalDatabase.loadSettings()
+    }
+    
+    static func create() -> GameSettings {
+//        var newSettings:GameSettings
+        return GameSettings()
     }
     
     /// Saves the User `Settings`, or Preferences
     func save() {
-        UserDefaults.standard.setValue(self.showTutorial, forKey: "showTutorial")
-        UserDefaults.standard.setValue(self.useCloud, forKey: "useCloud")
-        // Gameplay
-        UserDefaults.standard.setValue(self.startingScene, forKey: "startingScene")
-        UserDefaults.standard.setValue(self.clearEmptyTanks, forKey: "clearEmptyTanks")
-        UserDefaults.standard.setValue(self.showLights, forKey: "showLights")
-        // Sounds
-        UserDefaults.standard.setValue(self.musicOn, forKey: "musicOn")
-        UserDefaults.standard.setValue(self.soundFXOn, forKey: "soundFXOn")
-        UserDefaults.standard.setValue(self.dialogueOn, forKey: "dialogueOn")
+//        UserDefaults.standard.setValue(self.showTutorial, forKey: "showTutorial")
+//        UserDefaults.standard.setValue(self.useCloud, forKey: "useCloud")
+//        // Gameplay
+//        UserDefaults.standard.setValue(self.startingScene, forKey: "startingScene")
+//        UserDefaults.standard.setValue(self.clearEmptyTanks, forKey: "clearEmptyTanks")
+//        UserDefaults.standard.setValue(self.showLights, forKey: "showLights")
+//        // Sounds
+//        UserDefaults.standard.setValue(self.musicOn, forKey: "musicOn")
+//        UserDefaults.standard.setValue(self.soundFXOn, forKey: "soundFXOn")
+//        UserDefaults.standard.setValue(self.dialogueOn, forKey: "dialogueOn")
+        LocalDatabase.shared.saveSettings(newSettings: self)
     }
 }
 

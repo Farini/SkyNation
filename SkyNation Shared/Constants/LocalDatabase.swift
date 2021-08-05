@@ -83,6 +83,58 @@ class LocalDatabase {
 //    }
 //    var gameGenerators:GameGenerators?
     
+    // MARK: - Game Settings
+    static let settingsFile = "GameSettings.json"
+    var gameSettings:GameSettings
+    static func loadSettings() -> GameSettings {
+        // create if doesn't exist
+        let finalUrl = LocalDatabase.folder.appendingPathComponent(settingsFile)
+        
+        if !FileManager.default.fileExists(atPath: finalUrl.path){
+            print("File doesn't exist")
+            return GameSettings.create()
+        }
+        
+        
+        if let theData:Data = try? Data(contentsOf: finalUrl),
+           let lSettings:GameSettings = try? JSONDecoder().decode(GameSettings.self, from: theData) {
+            
+            return lSettings
+            
+        } else {
+            // no data found
+            return GameSettings.create()
+        }
+    }
+    func saveSettings(newSettings:GameSettings) {
+        let fileUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.settingsFile)
+        
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        
+        guard let encodedData:Data = try? encoder.encode(newSettings) else { fatalError() }
+        
+        let bcf = ByteCountFormatter()
+        bcf.allowedUnits = [.useKB]
+        bcf.countStyle = .file
+        
+        let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
+        print("Saving Game Size: \(dataSize)")
+        
+        if !FileManager.default.fileExists(atPath: fileUrl.path) {
+            FileManager.default.createFile(atPath: fileUrl.path, contents: encodedData, attributes: nil)
+            print("File created")
+            return
+        }
+        
+        do{
+            try encodedData.write(to: fileUrl, options: .atomic)
+            print("Saved Settings locally")
+        }catch{
+            print("Error writting data to local url: \(error)")
+        }
+    }
+    
     // MARK: - Builder
     static let stationBuilderFile = "StationBuilder.json"
     /// Initializes `StationBuilder` with the `Station` object, or none if this is a new game.
@@ -568,6 +620,9 @@ class LocalDatabase {
 //        if let gg:GameGenerators = LocalDatabase.loadGameGenerators() {
 //            self.gameGenerators = gg
 //        }
+        
+        // Settings
+        self.gameSettings = LocalDatabase.loadSettings()
         
         // Server Database
         if let servData = loadServerData() {

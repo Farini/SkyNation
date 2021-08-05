@@ -307,7 +307,24 @@ class OutpostController:ObservableObject {
     // Notes:
     // Needs more logic when contributing (server request)
     // Check if contribution went through
-    
+    func checkUpgrades() {
+        let previous = opData.state
+        
+        do {
+            let next = try opData.eligibleForState()
+            if previous != next {
+                do {
+                    try opData.runUpgrade()
+                } catch {
+                    print("Caught Error! [Upgrading] -> \(error.localizedDescription)")
+                }
+            }
+        } catch {
+            print("Caught Error! [Eligibility] \(error.localizedDescription)")
+            // Update interface with error
+        }
+        
+    }
     // Outpost State
     // 1. Working (upgradable)
     // 2. NoLevel (not upgradable)

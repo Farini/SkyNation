@@ -29,7 +29,7 @@ protocol GameNavDelegate {
     func openOutpostView(posdex:Posdex, outpost:DBOutpost)
 }
 
-enum GameSceneType: String, CaseIterable {
+enum GameSceneType: String, Codable, CaseIterable {
     case SpaceStation
     case MarsColony
 }

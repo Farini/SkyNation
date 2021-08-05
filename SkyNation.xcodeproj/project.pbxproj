@@ -489,6 +489,7 @@
 		85E2C41826B9A960003315F2 /* GuildMakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C41726B9A960003315F2 /* GuildMakerView.swift */; };
 		85E2C41926B9A960003315F2 /* GuildMakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C41726B9A960003315F2 /* GuildMakerView.swift */; };
 		85E2C41A26B9A960003315F2 /* GuildMakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C41726B9A960003315F2 /* GuildMakerView.swift */; };
+		85E2C41B26BB635E003315F2 /* OutpostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85969835260E8FD400BF1860 /* OutpostController.swift */; };
 		85E6ECF825C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECF925C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECFA25C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
@@ -1930,6 +1931,7 @@
 				8536F478258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				8536F319258D361100B509D2 /* GameConstants.swift in Sources */,
 				8592825325EED6EF001233BE /* SpaceVehicleNode.swift in Sources */,
+				85E2C41B26BB635E003315F2 /* OutpostController.swift in Sources */,
 				8592820B25EA2D91001233BE /* Generators.swift in Sources */,
 				8569A34E25A3D9590057A518 /* AirComposition.swift in Sources */,
 				8536F375258D475D00B509D2 /* Persistance.swift in Sources */,

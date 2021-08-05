@@ -119,17 +119,16 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [X] Scene Alert (News) -> Low Water
 - [X] Biobox still not saving when done (needs testing)
 - [X] Bio View - DNA animation (needs testing)
+- [X] Settings in `LocalDatabase`
 
-
-- [X] Resources View Example (Copy from `EDLInventoryView`)
-- [X] Resources Tab
-- [X] Resources Selection + Callback
-- [ ] Resources Collections - Similar size items
 
 - [ ] Game Store Improvements
 - [X] Game Token Object
 - [X] Shopped Object (data for purchased items on `Player`)
 - [ ] Implement `Purchase.Kit` in `GameShoppingView`.
+- [ ] Only get to Mars if player has an `.Entry` type of token, used.
+
+- [ ] Outpost supply method - SKNS request
 
 - [ ] New Modules not fully available after Tech research. 
 
@@ -186,6 +185,11 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
     
 - [ ] 12/13 Basic Views
     - [ ] Error messages
+    
+- [X] Resources View Example (Copy from `EDLInventoryView`)
+    - [X] Resources Tab
+    - [X] Resources Selection + Callback
+    - [ ] Resources Collections - Similar size items
     
 ## 📝 To Do - Future
 Grab things from this list as you go along.
