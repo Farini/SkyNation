@@ -709,11 +709,9 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         // Tell SceneDirector that scene is loaded
         SceneDirector.shared.controllerDidLoadScene(controller: self)
         
-        
         sceneRenderer.delegate = self
         sceneRenderer.scene = scene
         
-        // Post Init
         
         // Music
         if GameSettings.shared.musicOn {

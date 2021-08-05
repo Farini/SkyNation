@@ -65,7 +65,7 @@ class EarthRequestController:ObservableObject {
         }
         
         // Get people from Generator
-        LocalDatabase.shared.gameGenerators?.update()
+//        LocalDatabase.shared.gameGenerators?.update()
     }
     
     /// Updates Variables with the PayloadOrder passed
@@ -331,7 +331,8 @@ class EarthRequestController:ObservableObject {
                 self.errorMessage = "No Room for \(person.name)"
             } else {
                 // Remove person from list of available for hire
-                LocalDatabase.shared.gameGenerators?.didHirePerson(person: person)
+//                LocalDatabase.shared.gameGenerators?.didHirePerson(person: person)
+                LocalDatabase.shared.player?.shopped.didHire(person: person)
             }
         }
         

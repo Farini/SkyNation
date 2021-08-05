@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GameShoppingView: View {
     
-    var packages = GameRawPackage.allCases
+    var packages = GameProductType.allCases//GameRawPackage.allCases
     
     var header: some View {
         
@@ -61,7 +61,8 @@ struct GameShoppingView: View {
                     HStack(spacing: 22) {
                         // Title
                         VStack {
-                            Text(package.rawValue.uppercased()).foregroundColor(.orange)
+                            Text(package.displayName).foregroundColor(.orange)
+//                            Text(package.rawValue.uppercased()).foregroundColor(.orange)
                             Text("$ \(package.moneyAmount)")
                         }
                         
@@ -93,16 +94,17 @@ struct GameShoppingView: View {
                                 
                             }
                             
-                            Text("👤 x \(package.peopleAmount)")
+//                            Text("👤 x \(package.peopleAmount)")
                             Text("Token \(package.tokenAmount)")
-                            Text("Tanks \(package.tanksAmount)")
-                            Text("Boxes \(package.boxesAmount)")
+//                            Text("Tanks \(package.tanksAmount)")
+//                            Text("Boxes \(package.boxesAmount)")
                             
                         }
                         // Button
                         VStack {
                             Button(action: {
-                                self.purchasePackage(package: package)
+//                                self.purchasePackage(package: package)
+                                self.purchaseProduct(product: package)
                             }, label: {
                                 HStack {
                                     Image(systemName: "cart")
@@ -123,13 +125,39 @@ struct GameShoppingView: View {
     }
     
     // Purchase
+    func purchaseProduct(product:GameProductType) {
+        
+        // Deal with money
+        let player = LocalDatabase.shared.player!
+        player.money += product.moneyAmount
+        player.experience += 1
+        
+        // Game Message (if want, has to add another achievement type
+//        GameMessageBoard.shared.newAchievement(type: ., message: <#T##String?#>)
+        
+        // FIXME: - Needs receipt and choice of Kit
+        
+        let newPurchase = Purchase(product: product, kit: .SurvivalKit, receipt: "ABC")
+        player.shopped.makePurchase(cart: newPurchase)
+        
+        // FIXME: - add the kit
+        
+        let result = LocalDatabase.shared.savePlayer(player: player)
+        print("Saved player after purchase.: \(result)")
+        
+    }
+    
+    /*
     func purchasePackage(package:GameRawPackage) {
         let player = LocalDatabase.shared.player!
         player.money += package.moneyAmount
-        for _ in 0..<package.tokenAmount {
-            let new = UUID()
-            player.timeTokens.append(new)
-        }
+        
+        // REPLACE THIS FOR THE NEW OBJECT (Shopped R)
+//        for _ in 0..<package.tokenAmount {
+//            let new = UUID()
+//            player.timeTokens.append(new)
+//        }
+        
         if LocalDatabase.shared.savePlayer(player: player) == true {
             print("Success updating player with new shop")
         }
@@ -162,6 +190,7 @@ struct GameShoppingView: View {
         LocalDatabase.shared.saveStation(station: station)
         
     }
+     */
     
     // Barcode
     

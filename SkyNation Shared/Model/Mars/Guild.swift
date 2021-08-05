@@ -109,9 +109,15 @@ enum GuildTerrainType:String, Codable, CaseIterable {
 
 struct Guild:Codable {
     
-    var id: UUID
+    var id:UUID
     
-    var name: String
+    var name:String
+    
+    // icon
+    var icon:String
+    
+    // color
+    var color:String
     
     var president:[String:UUID?]?
     
@@ -131,15 +137,20 @@ struct Guild:Codable {
     var outposts:[DBOutpost]?
     
     static var example:Guild {
-        let guild = Guild(id: UUID(), name: "Example", president: ["President":UUID()], members: nil, citizens: [UUID(), UUID(), UUID()], isOpen: true, election: Date(), terrain: "Terrain1", cities:nil, outposts: nil)
+        let guild = Guild(id: UUID(), name: "Example", icon:GuildIcon.allCases.randomElement()!.rawValue, color:GuildColor.allCases.randomElement()!.rawValue, president: ["President":UUID()], members: nil, citizens: [UUID(), UUID(), UUID()], isOpen: true, election: Date(), terrain: "Terrain1", cities:nil, outposts: nil)
         return guild
     }
     
     func makeSummary() -> GuildSummary {
         let cityIDs = self.cities?.compactMap({ $0.id })
         let outpostIDs = self.outposts?.compactMap({ $0.id })
-        let summary = GuildSummary(id: self.id, name: self.name, isOpen: self.isOpen, citizens: self.citizens, cities: cityIDs ?? [], outposts: outpostIDs ?? [])
+        let summary = GuildSummary(id: self.id, name: self.name, isOpen: self.isOpen, citizens: self.citizens, cities: cityIDs ?? [], outposts: outpostIDs ?? [], icon: icon, color: color)
         return summary
+    }
+    
+    static func makeGuild(name:String, president:SKNPlayer?, citizens:[UUID] = [], makeCities:Int = 0) -> Guild {
+        let guild = Guild(id: UUID(), name: name, icon:GuildIcon.allCases.randomElement()!.rawValue, color:GuildColor.allCases.randomElement()!.rawValue, president: ["id":president?.serverID ?? nil], members: nil, citizens: citizens, isOpen: Bool.random(), election: Date(), terrain: "Terrain1", cities:nil, outposts: nil)
+        return guild
     }
     
 }
@@ -227,6 +238,12 @@ struct GuildSummary:Codable {
     var citizens:[UUID]
     var cities:[UUID]
     var outposts:[UUID]
+    
+    // icon
+    var icon:String
+    
+    // color
+    var color:String
 }
 
 // Guild Buildables
@@ -239,3 +256,46 @@ struct GuildSummary:Codable {
  6. Entertainment (other)
  7. Science Missions + rewards
  */
+
+// MARK: - UI Variables stored on DB
+
+enum GuildIcon:String, Codable, CaseIterable {
+    
+    case moon
+    case eclipse
+    case club
+    case spade
+    case diamond
+    case star
+    case sunDust
+    
+    var imageName:String {
+        switch self {
+            case .moon: return "moon"
+            case .eclipse: return "circlebadge.2"
+            case .club: return "suit.club"
+            case .spade: return "suit.spade"
+            case .diamond: return "suit.diamond"
+            case .star: return "star"
+            case .sunDust: return "sun.dust"
+        }
+    }
+}
+
+import SwiftUI
+
+enum GuildColor:String, Codable, CaseIterable {
+    case red
+    case blue
+    case green
+    case gray
+    
+    var color:Color {
+        switch self {
+            case .red: return Color.red
+            case .blue: return Color.blue
+            case .green: return Color(.sRGB, red: 0.0, green: 1.0, blue: 0.1, opacity: 1.0)
+            case .gray: return Color.init(.sRGB, white: 0.75, opacity: 1.0)
+        }
+    }
+}

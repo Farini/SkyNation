@@ -55,8 +55,6 @@ class OutpostController:ObservableObject {
     
     // Player Cards
     
-    
-    
     // Tab
     @Published var viewTab:OutpostViewTab = .info
     

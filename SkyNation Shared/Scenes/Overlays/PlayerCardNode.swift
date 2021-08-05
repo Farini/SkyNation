@@ -30,7 +30,7 @@ class PlayerCardNode:SKNode {
     
     init(player:SKNPlayer) {
         
-        let timeTokens = player.timeTokens
+        let timeTokens = player.shopped.getSpendableTokens() //timeTokens
 //        let deliveryTokens = player.deliveryTokens
         let name = player.name
         let money = player.money
@@ -176,7 +176,7 @@ class PlayerCardNode:SKNode {
             nameLabel.text = newPlayer.name
             avatar.texture = SKTexture(imageNamed: newPlayer.avatar)
             moneyLabel.text = "\(GameFormatters.numberFormatter.string(from: NSNumber(value:newPlayer.money)) ?? "---")"
-            tokenLabel.text = "\(newPlayer.timeTokens.count)"
+            tokenLabel.text = "\(newPlayer.shopped.getSpendableTokens().count)"//"\(newPlayer.timeTokens.count)"
         }
     }
     

@@ -403,6 +403,8 @@ extension AddingTrussItemProblem: LocalizedError {
 
 // MARK: - Shopping
 
+/*
+
 enum GameRawPackage:String, Codable, CaseIterable {
     
     case fiveDollars
@@ -609,8 +611,12 @@ struct GamePackage {
         return new
     }
     
-    
-    
+}
+
+ */
+
+extension TimeInterval {
+    static var oneDay:TimeInterval = 60.0 * 60.0 * 24.0
 }
 
 

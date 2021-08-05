@@ -60,20 +60,25 @@ struct GuildExplorerView: View {
                         .padding(.horizontal)
                     }
                     
-                    if controller.highlightedGuild != nil {
-                        GuildView(guild: controller.highlightedGuild!, style: .largeSummary, closeAction: closeviewaction, flipAction: closeviewaction)
+                    if let sGuild = controller.sGuild {
+                        GuildView(guild: sGuild.makeSummary(), style: .largeSummary)
                     }
                 }
                 
                 Divider()
         
                 // Exploring
+                HStack {
+                    Text("Guild List").foregroundColor(.orange).font(.title2)
+                    Spacer()
+                }
+                .padding(.horizontal)
+                
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 130), spacing: 16, alignment: .top)], alignment: .center, spacing: 16) {
-                    ForEach(controller.guilds, id:\.id) { guild in
-                        
-                        GuildView(guild: guild, style: .thumbnail, closeAction: closeviewaction)
+                    ForEach(controller.fGuilds, id:\.id) { guild in
+                        GuildView(guild: guild.makeSummary(), style: .thumbnail)
                             .onTapGesture {
-                                select(guild: guild)
+                                self.didSelect(guild: guild)
                             }
                     }
                 }
@@ -108,6 +113,12 @@ struct GuildExplorerView: View {
         }
     }
     
+    func didSelect(guild:Guild) {
+        withAnimation(.openCard) {
+            controller.sGuild = guild
+        }
+    }
+    
     func closeviewaction() {
         print("closeviewaction")
     }
@@ -115,7 +126,7 @@ struct GuildExplorerView: View {
 
 struct GuildExplorerView_Previews: PreviewProvider {
     static var previews: some View {
-        GuildExplorerView(controller: GuildController(autologin: true))
+        GuildExplorerView(controller: GuildController(autologin: false))
             .previewLayout(.sizeThatFits)
             .frame(height: 700)
     }

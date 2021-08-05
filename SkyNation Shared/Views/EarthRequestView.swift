@@ -186,19 +186,27 @@ struct EarthRequestView: View {
                         switch controller.orderAisle {
                             case .People:
                                 LazyVGrid(columns: ingredientColumns, alignment:.center, spacing:8) {
-                                    ForEach(LocalDatabase.shared.gameGenerators?.people ?? []) { person in
+                                    ForEach(LocalDatabase.shared.player?.shopped.getPeople() ?? []) { person in
                                         PersonOrderView(person: person)
                                             .onTapGesture {
                                                 controller.addToHire(person: person)
                                             }
                                     }
+//                                    ForEach(LocalDatabase.shared.gameGenerators?.people ?? []) { person in
+//                                        PersonOrderView(person: person)
+//                                            .onTapGesture {
+//                                                controller.addToHire(person: person)
+//                                            }
+//                                    }
                                     HStack {
                                         Image(systemName:"clock")
                                             .font(.title)
                                         VStack {
 //                                            let delta = LocalDatabase.shared.gameGenerators!.datePeople.timeIntervalSince(Date())
-                                            let oo = Calendar.current.dateComponents([.minute, .second], from: LocalDatabase.shared.gameGenerators!.datePeople, to: Date())
-                                            Text("Refresh: \(oo.minute ?? 0)m \(oo.second ?? 0)s")
+//                                            let oo = Calendar.current.dateComponents([.minute, .second], from: LocalDatabase.shared.gameGenerators!.datePeople, to: Date())
+                                            let time:Double = LocalDatabase.shared.player?.shopped.timeToGenerateNextPeople().rounded() ?? 0.0
+                                            
+                                            Text("Refresh \(Int(time))s")
                                         }
                                     }
                                     .padding(8)
@@ -212,7 +220,8 @@ struct EarthRequestView: View {
                                               primaryButton: .cancel(),
                                               secondaryButton: .destructive(Text("Yes"), action: {
                                                 
-                                                LocalDatabase.shared.gameGenerators?.spentTokenToUpdate(amt: 1)
+//                                                LocalDatabase.shared.gameGenerators?.spentTokenToUpdate(amt: 1)
+                                                LocalDatabase.shared.player?.shopped.getPeople(true)
                                                 controller.orderAisle = .People
                                                 
                                               }))

@@ -127,6 +127,10 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [ ] Resources Collections - Similar size items
 
 - [ ] Game Store Improvements
+- [X] Game Token Object
+- [X] Shopped Object (data for purchased items on `Player`)
+- [ ] Implement `Purchase.Kit` in `GameShoppingView`.
+
 - [ ] New Modules not fully available after Tech research. 
 
 - [ ] LSS View -> Let player sort Ingredients, Tanks, etc. as they wish

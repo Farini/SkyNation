@@ -34,7 +34,7 @@ struct GameLoadingTab: View {
                             .resizable()
                             .frame(width:32, height:32)
                         #endif
-                        Text("x\(controller.player.timeTokens.count)")
+                        Text("x\(controller.player.shopped.getSpendableTokens().count)") //timeTokens.count)")
                         Divider()
                         #if os(macOS)
                         Image(nsImage:GameImages.currencyImage)
@@ -133,7 +133,7 @@ struct PlayerEditView: View {
                         
                         // Right
                         VStack(alignment:.trailing) {
-                            Text("Tokens \(controller.player.timeTokens.count)")
+                            Text("Tokens \(controller.player.shopped.getSpendableTokens().count)") //timeTokens.count)")
                             Text("Money: \(controller.player.money)")
                             Text("Experience: \(controller.player.experience)")
                         }
@@ -220,8 +220,8 @@ struct SettingsServerTab:View {
                         // Make a Guild view with the full object
                         Text("G: \(guild.name)")
                     } else if let guild = controller.selectedGuildSum {
-                        
-                        GuildView(guild: guild, style: .largeSummary, closeAction: closeviewaction, flipAction: closeviewaction)
+                        Text("Guild \(guild.name)")
+                        GuildView(guild:guild, style:.largeSummary)
                     } else if let guild = controller.selectedGuildObj {
                         // Make another view for full object
                         Text("G: \(guild.name)")
@@ -236,12 +236,13 @@ struct SettingsServerTab:View {
                 
                 // Exploring
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 130), spacing: 16, alignment: .top)], alignment: .center, spacing: 16) {
+                    
                     ForEach(controller.joinableGuilds, id:\.id) { guild in
-                        
-                        GuildView(guild: guild, style: .thumbnail, closeAction: closeviewaction)
+
+                        Text("Guild \(guild.name)").padding(12)
+                        GuildView(guild:guild, style:.thumbnail)
                             .onTapGesture {
-                                print("Selecting: \(guild.name)")
-                                select(guild: guild)
+                                select(guild:guild)
                             }
                     }
                 }

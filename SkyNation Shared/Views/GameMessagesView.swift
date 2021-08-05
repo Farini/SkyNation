@@ -12,7 +12,9 @@ struct GameMessagesView: View {
     var messages:[GameMessage]
     
     @State var tab:GameMessageType = .Achievement
-    @State var generator:GameGenerators? = LocalDatabase.shared.gameGenerators
+    
+//    @State var generator:GameGenerators? = LocalDatabase.shared.gameGenerators
+    
     // Message Types
     // achievement   > all messages seem to be achievement
     // chatmessage
@@ -113,37 +115,37 @@ struct GameMessagesView: View {
                     // Sections?
                     
                     // Freebies
-                    if self.tab == GameMessageType.Freebie, let generator = self.generator {
+                    if self.tab == GameMessageType.Freebie { //, let generator = self.generator {
                         
 //                        let generator = LocalDatabase.shared.gameGenerators!
-                        let dateGenerated = generator.dateFreebies
+                        let dateGenerated = Date().addingTimeInterval(LocalDatabase.shared.player?.shopped.timeToGenerateNextFreebie() ?? 0) //generator.dateFreebies
                         let nextGenerated = dateGenerated.addingTimeInterval(60 * 60 * 12)
                         
                         Text("Freebie of the day").font(.title).foregroundColor(.orange)
-                        Text("Freebie \(GameFormatters.dateFormatter.string(from: generator.dateFreebies))").foregroundColor(.red)
+//                        Text("Freebie \(GameFormatters.dateFormatter.string(from: generator.dateFreebies))").foregroundColor(.red)
                         Text("Now \(GameFormatters.dateFormatter.string(from: Date()))").foregroundColor(.red)
                         
                         if nextGenerated.compare(Date()) == .orderedAscending {
                             Button("Get it!") {
                                 print("Get Freebie")
-                                getMyFreebies()
+//                                getMyFreebies()
                             }
                             .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                         } else {
-                            let lastSpent = max(2, self.generator?.spentOnFreebies ?? 1)
-                            let nextSpent = GameLogic.fibonnaci(index: lastSpent + 1)
+//                            let lastSpent = max(2, self.generator?.spentOnFreebies ?? 1)
+//                            let nextSpent = GameLogic.fibonnaci(index: lastSpent + 1)
                             
                             Text("⏰ \(nextGenerated.timeIntervalSince(Date()))")
-                            Button("\(nextSpent) Tokens") {
+                            Button("Tokens") {
                                 
                                 print("Get Freebie via Tokens (force)")
-                                print("Last Spent: \(lastSpent)")
-                                print("Next Spent (value): \(nextSpent)")
+//                                print("Last Spent: \(lastSpent)")
+//                                print("Next Spent (value): \(nextSpent)")
                                 
-                                self.generator?.spentOnFreebies += 1
+//                                self.generator?.spentOnFreebies += 1
                                 print("Need to save generator")
                                 
-                                getMyFreebies(payTokens: nextSpent)
+//                                getMyFreebies(payTokens: nextSpent)
                             }
                             .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                         }
@@ -178,6 +180,7 @@ struct GameMessagesView: View {
         return Text("\(current)").foregroundColor(current == 0 ? Color.gray:Color.red)
     }
     
+    /*
     func getMyFreebies(payTokens:Int = 0) {
         
         guard let generator = generator, let player = LocalDatabase.shared.player else { return }
@@ -241,6 +244,7 @@ struct GameMessagesView: View {
             
         }
     }
+ */
 }
 
 struct GameMessagesView_Previews: PreviewProvider {

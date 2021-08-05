@@ -74,7 +74,7 @@ class MacMenu:NSObject, NSMenuDelegate {
             backing: .buffered, defer: false)
         window.center()
         window.setFrameAutosaveName("SUI Window")
-        window.contentView = NSHostingView(rootView: BackendView(controller: GuildController()))
+        window.contentView = NSHostingView(rootView: BackendView(controller: GuildController(autologin: true)))
         window.makeKeyAndOrderFront(nil)
     }
     

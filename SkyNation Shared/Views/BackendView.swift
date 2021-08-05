@@ -92,7 +92,7 @@ struct BackendView: View {
 
 struct BackendView_Previews: PreviewProvider {
     static var previews: some View {
-        BackendView(controller:GuildController())
+        BackendView(controller:GuildController(autologin: false))
     }
 }
 

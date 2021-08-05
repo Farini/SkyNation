@@ -7,6 +7,10 @@
 
 import Foundation
 
+// DEPRECATE THIS CLASS
+
+/*
+
 /// To load automatically the People offered and more Freebies - Well Encoded
 class GameGenerators:Codable {
     
@@ -205,3 +209,5 @@ class GameGenerators:Codable {
     }
     
 }
+*/
+

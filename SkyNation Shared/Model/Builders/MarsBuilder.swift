@@ -386,8 +386,6 @@ extension MarsBuilder {
                     
                 }
             }
-            
-//            print("Pos: \(tmpCity.position), Angles: \(tmpCity.eulerAngles)")
         }
     }
 }

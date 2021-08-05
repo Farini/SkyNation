@@ -486,6 +486,9 @@
 		85D3BB3426AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */; };
 		85D3BB3526AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */; };
 		85D3BB3626AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */; };
+		85E2C41826B9A960003315F2 /* GuildMakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C41726B9A960003315F2 /* GuildMakerView.swift */; };
+		85E2C41926B9A960003315F2 /* GuildMakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C41726B9A960003315F2 /* GuildMakerView.swift */; };
+		85E2C41A26B9A960003315F2 /* GuildMakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C41726B9A960003315F2 /* GuildMakerView.swift */; };
 		85E6ECF825C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECF925C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECFA25C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
@@ -678,6 +681,7 @@
 		85D3BB2726AF244400B6AA36 /* SFXSelected.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SFXSelected.wav; sourceTree = "<group>"; };
 		85D3BB2F26AFD28100B6AA36 /* BioBoxDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BioBoxDetailView.swift; sourceTree = "<group>"; };
 		85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingBioBoxView.swift; sourceTree = "<group>"; };
+		85E2C41726B9A960003315F2 /* GuildMakerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildMakerView.swift; sourceTree = "<group>"; };
 		85E6ECF725C9D92B00229E18 /* ServerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAPI.swift; sourceTree = "<group>"; };
 		85E6ED1C25CF518500229E18 /* BackendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendView.swift; sourceTree = "<group>"; };
 		85F6674C25AF7B9C00E5003B /* RadiatorNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadiatorNode.swift; sourceTree = "<group>"; };
@@ -1184,9 +1188,8 @@
 		8592821E25EABD27001233BE /* Mars */ = {
 			isa = PBXGroup;
 			children = (
+				85E2C41626B9A930003315F2 /* Guild */,
 				85D3BAA8269DF70200B6AA36 /* City Views */,
-				8592822C25EC44F7001233BE /* GuildExplorerView.swift */,
-				8592824225EC74FD001233BE /* GuildView.swift */,
 				8517EE4925FC245D00C34C54 /* OutpostView.swift */,
 			);
 			path = Mars;
@@ -1278,6 +1281,16 @@
 				85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */,
 			);
 			path = Bio;
+			sourceTree = "<group>";
+		};
+		85E2C41626B9A930003315F2 /* Guild */ = {
+			isa = PBXGroup;
+			children = (
+				8592822C25EC44F7001233BE /* GuildExplorerView.swift */,
+				8592824225EC74FD001233BE /* GuildView.swift */,
+				85E2C41726B9A960003315F2 /* GuildMakerView.swift */,
+			);
+			path = Guild;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1518,6 +1531,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8504A51425C5D3B800739C58 /* CautionStripes.swift in Sources */,
+				85E2C41826B9A960003315F2 /* GuildMakerView.swift in Sources */,
 				857DDEC725E4DCAD00E64752 /* Messages.swift in Sources */,
 				8536F441258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				8579750F259B9E70004C54D2 /* FlipView.swift in Sources */,
@@ -1653,6 +1667,7 @@
 				8517EE4B25FC245D00C34C54 /* OutpostView.swift in Sources */,
 				8536F4A3258D484B00B509D2 /* SceneDirector.swift in Sources */,
 				8536F397258D475D00B509D2 /* Modules.swift in Sources */,
+				85E2C41926B9A960003315F2 /* GuildMakerView.swift in Sources */,
 				8536F3DB258D47D000B509D2 /* LabActivityView.swift in Sources */,
 				8536F2D3258D330300B509D2 /* GameViewController.swift in Sources */,
 				8592823725EC4DD3001233BE /* GuildController.swift in Sources */,
@@ -1765,6 +1780,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8504A51625C5D3B800739C58 /* CautionStripes.swift in Sources */,
+				85E2C41A26B9A960003315F2 /* GuildMakerView.swift in Sources */,
 				857DDEC925E4DCAD00E64752 /* Messages.swift in Sources */,
 				8536F443258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				85797511259B9E70004C54D2 /* FlipView.swift in Sources */,

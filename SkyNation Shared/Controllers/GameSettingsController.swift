@@ -53,6 +53,7 @@ class GameSettingsController:ObservableObject {
             savedChanges = true
 //            user = SKNUserPost(player: player)
             viewState = GameSettingsTab.Loading
+            
         } else {
             let newPlayer = SKNPlayer()
             self.player = newPlayer
@@ -182,7 +183,7 @@ class GameSettingsController:ObservableObject {
 //        news = "Fetching Guilds..."
         SKNS.browseGuilds { (guilds, error) in
             if let array = guilds {
-                print("Updating Guilds")
+                print("Updating Guilds \(array.count)")
                 self.joinableGuilds = array
 //                self.highlightedGuild = array.first
 //                self.news = "Here are the guilds"

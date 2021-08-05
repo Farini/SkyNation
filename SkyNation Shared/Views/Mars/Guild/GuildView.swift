@@ -11,6 +11,7 @@ struct GuildView: View {
     
     
     var guild:GuildSummary = Guild.example.makeSummary()
+//    var dbGuild:Guild
     
     var style: Style
     enum Style {
@@ -23,44 +24,82 @@ struct GuildView: View {
     }
     var shape = RoundedRectangle(cornerRadius: 16, style: .continuous)
     
+    
+    private enum FaceSide {
+        case citizens, cities, outposts, preferences
+    }
+    @State private var face:FaceSide = .citizens
+    
     var closeAction: () -> Void = {}
     var flipAction: () -> Void = {}
     
+    init(guild:GuildSummary, style:GuildView.Style) {
+//        self.dbGuild = guild
+        self.guild = guild
+        self.style = style
+    }
+    
     var body: some View {
         
-        ZStack {
-            
-            backScene
+        VStack {
             
             VStack {
+                Image(systemName: GuildIcon(rawValue: guild.icon)!.imageName)
+                    .font(.largeTitle)
+                    .foregroundColor(GuildColor(rawValue: guild.color)!.color)
+                    .padding(.bottom, 4)
+                
                 Text("\(guild.name)")
                     .font(.title2)
                     .foregroundColor(.yellow)
                 
+                Divider()
+            }
+            .frame(minWidth: 100, maxWidth: 120, minHeight: 72, maxHeight: 82, alignment: .center)
+            .padding(.top, 8)
+            
+            
+            VStack {
+                
+                
                 if displayingAsCard {
+                    
+                    switch face {
+                        case .citizens:
+                            Text("Citizens: \(guild.citizens.count)")
+                                .foregroundColor(style == .largeDescriptive ? Color.white:Color.yellow)
+                                .font(style == .largeSummary ? .title3:.body)
+                            
+                            ForEach(guild.citizens, id:\.self) { citizenID in
+                                Text(citizenID.uuidString.prefix(6))
+                                    .padding(2)
+                            }
+                            
+                        case .cities:
+                            Text("Cities: \(guild.cities.count)")
+
+                            ForEach(guild.cities, id:\.self) { city in
+                                
+                                Text("City: \(String(city.uuidString.prefix(6)))")
+                                
+                            }
+                            if guild.cities.isEmpty == true {
+                                Text("No Cities were started").foregroundColor(.gray)
+                            }
+                            
+                        case .outposts:
+                            Text("Outposts go here")
+                        case .preferences:
+                            Text("Preferences")
+                            Text("Openness: \(guild.isOpen ? "Yes":"No")")
+                    }
+                    
+                    Spacer()
+                    
                     Divider()
                     
-                    Text("Citizens: \(guild.citizens.count)")
-                        .foregroundColor(style == .largeDescriptive ? Color.white:Color.yellow)
-                        .font(style == .largeSummary ? .title3:.body)
-                    
-                    if style == .largeSummary {
-                        ForEach(guild.citizens, id:\.self) { citid in
-                            Text(citid.uuidString).foregroundColor(.gray)
-                        }
-                    }
-                    
-                    Text("Cities: \(guild.cities.count)")
-                        .foregroundColor(style == .largeDescriptive ? Color.yellow:Color.white)
-                        .font(style == .largeDescriptive ? .title3:.body)
-                    if style == .largeDescriptive {
-                        Text("City A").foregroundColor(.gray)
-                        Text("City B").foregroundColor(.gray)
-                        Text("City C").foregroundColor(.gray)
-                    }
-                    
                     HStack {
-                        if guild.citizens.count <= 20 {
+                        if guild.citizens.count <= 9 {
                             Button("Join") {
                                 //                    controller.requestJoinGuild(guild: guild)
                                 closeAction()
@@ -70,35 +109,41 @@ struct GuildView: View {
                         }
                         Button("Flip") {
                             //                    controller.requestJoinGuild(guild: guild)
+                            self.flipToNext()
                         }
                         .buttonStyle(NeumorphicButtonStyle(bgColor: .green))
                     }
+                    .frame(height:32)
+                    .padding(.bottom, 8)
                     
                     
                     
                 } else {
-                    Text("👤 \(guild.citizens.count)")
-                    Text("🌆 \(guild.cities.count)")
-                    Text("⚙️ \(guild.outposts.count)")
-//                    Text("📆 \(GameFormatters.dateFormatter.string(from: guild.election))")
+                    Text("👤 \(guild.citizens.count)").padding(2)
+                    Text("🌆 \(guild.cities.count)").padding(2)
+                    Text("⚙️ \(guild.outposts.count)").padding(2)
+                    //                    Text("📆 \(GameFormatters.dateFormatter.string(from: guild.election))")
                 }
             }
-            .background(GameColors.transBlack)
             
+            .frame(width: displayingAsCard ? 220:150, height: displayingAsCard ? 300:100, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            .clipShape(shape)
             
-            
+            .accessibilityElement(children: .contain)
         }
-        .frame(width: displayingAsCard ? 300:150, height: displayingAsCard ? 300:100, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/) // .frame(minWidth: 130, maxWidth: 400, maxHeight: 500)
-        .clipShape(shape)
+        .background(GameColors.transBlack)
+        .cornerRadius(16)
         .overlay(
             shape
+                
                 .inset(by: 0.5)
                 .stroke(Color.white.opacity(0.5), lineWidth: 2)
+                
+                
         )
         .contentShape(shape)
-        .accessibilityElement(children: .contain)
-        // .background(Color.black)
-        // .cornerRadius(12)
+        
+        
     }
     
     var backScene: some View {
@@ -113,6 +158,19 @@ struct GuildView: View {
                 .scaleEffect(x: style == .largeDescriptive ? -1 : 1)
         }
         .accessibility(hidden: true)
+    }
+    
+    func flipToNext() {
+        switch face {
+            case .citizens:
+                self.face = .cities
+            case .cities:
+                self.face = .outposts
+            case .outposts:
+                self.face = .preferences
+            case .preferences:
+                self.face = .citizens
+        }
     }
     
     func generateBarcode(from uuid: UUID) -> Image? {
@@ -158,19 +216,22 @@ struct GuildView: View {
 }
 
 struct GuildView_Previews: PreviewProvider {
+    
+    static let rGuild = Guild.example.makeSummary()
+    
     static var previews: some View {
         Group {
-            GuildView(style: .thumbnail)
-                .frame(width: 180, height: 180)
+            GuildView(guild: rGuild, style: .thumbnail)
+                .frame(width: 250, height: 180)
                 .previewDisplayName("Thumbnail")
-            GuildView(style: .largeDescriptive)
+            GuildView(guild: rGuild, style: .largeDescriptive)
                 .aspectRatio(0.75, contentMode: .fit)
                 .frame(width: 500, height: 400)
                 .previewDisplayName("Large Descriptive")
-            GuildView(style: .largeSummary)
-                .aspectRatio(0.75, contentMode: .fit)
-                .frame(width: 500, height: 400)
-                .previewDisplayName("Large Summary")
+//            GuildView(guild: rGuild, style: .largeSummary)
+//                .aspectRatio(0.75, contentMode: .fit)
+//                .frame(width: 500, height: 400)
+//                .previewDisplayName("Large Summary")
         }
         .previewLayout(.sizeThatFits)
     }

@@ -87,11 +87,16 @@ class LabViewModel: ObservableObject {
             return false
         }
         // 2. Tokens
-        let timeTokens = player.timeTokens
-        if timeTokens.isEmpty {
-            print("No time tokens")
+        guard let token = player.shopped.getAToken() else {
+            print("No tokens")
             return false
-        }
+        } //player.timeTokens
+        
+//        if timeTokens == nil {
+//            print("No time tokens")
+//            return false
+//        }
+        
         // 3. Activity
         guard let activity = labModule.activity else {
             print("No activity")
@@ -109,8 +114,15 @@ class LabViewModel: ObservableObject {
         // 5. Save
         LocalDatabase.shared.saveStation(station: station)
         
-        player.timeTokens.removeLast()
-        return LocalDatabase.shared.savePlayer(player: player)
+//        player.timeTokens.removeLast()
+        let result = player.shopped.useToken(token: token)
+        
+        if result == true {
+            return LocalDatabase.shared.savePlayer(player: player)
+        } else {
+            return false
+        }
+        // return LocalDatabase.shared.savePlayer(player: player)
         
     }
     

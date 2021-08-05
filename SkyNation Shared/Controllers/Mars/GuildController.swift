@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-
 class GuildController:ObservableObject {
     
     @Published var news:String
@@ -20,21 +18,13 @@ class GuildController:ObservableObject {
     @Published var highlightedGuild:GuildSummary? // The Guild to display (bigger)
     @Published var joinedGuild:GuildSummary?
     
-    init() {
-        news = "Do somthing first"
-        
-        if let player = LocalDatabase.shared.player {
-            self.player = player
-//            self.user = SKNUserPost(player: player)
-            print("Backend Controller")
-            print("User id:\(player.id)")
-            print("Server: \n (P):\(player.serverID?.uuidString ?? "NO SERVER ID") \n (U):\(user?.id.uuidString ?? "NO SERVER ID")")
-        }
-    }
+    @Published var fGuilds:[Guild] = []
+    @Published var sGuild:Guild? = nil
     
-    // NEW
     
+    /// Autologin should be `true` for inGame, and `false` for previews (no server)
     init(autologin:Bool) {
+        
         news = "Autologin"
         
         if let player = LocalDatabase.shared.player {
@@ -50,6 +40,8 @@ class GuildController:ObservableObject {
             
             // Temporary
             self.fetchGuilds()
+        } else {
+            self.makeRandomData()
         }
     }
     
@@ -121,5 +113,21 @@ class GuildController:ObservableObject {
                 print("⚠️ ERROR: \(error?.localizedDescription ?? "n/a")")
             }
         }
+    }
+    
+    // MARK: - Random Data
+    
+    /// Make Some Random Guilds
+    func makeRandomData() {
+        
+        var newGuilds:[Guild] = []
+        for i in 0...5 {
+            let newGuild = Guild.makeGuild(name: "Guild #\(i)", president: nil)
+            newGuilds.append(newGuild)
+        }
+        
+        self.fGuilds = newGuilds
+        
+        
     }
 }
