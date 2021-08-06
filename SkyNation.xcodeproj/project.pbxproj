@@ -490,6 +490,10 @@
 		85E2C41926B9A960003315F2 /* GuildMakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C41726B9A960003315F2 /* GuildMakerView.swift */; };
 		85E2C41A26B9A960003315F2 /* GuildMakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C41726B9A960003315F2 /* GuildMakerView.swift */; };
 		85E2C41B26BB635E003315F2 /* OutpostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85969835260E8FD400BF1860 /* OutpostController.swift */; };
+		85E2C41D26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 85E2C41C26BCDEF0003315F2 /* SKNConsumable.storekit */; };
+		85E2C41E26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 85E2C41C26BCDEF0003315F2 /* SKNConsumable.storekit */; };
+		85E2C41F26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 85E2C41C26BCDEF0003315F2 /* SKNConsumable.storekit */; };
+		85E2C42026BCDEF0003315F2 /* SKNConsumable.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 85E2C41C26BCDEF0003315F2 /* SKNConsumable.storekit */; };
 		85E6ECF825C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECF925C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECFA25C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
@@ -683,6 +687,7 @@
 		85D3BB2F26AFD28100B6AA36 /* BioBoxDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BioBoxDetailView.swift; sourceTree = "<group>"; };
 		85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingBioBoxView.swift; sourceTree = "<group>"; };
 		85E2C41726B9A960003315F2 /* GuildMakerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildMakerView.swift; sourceTree = "<group>"; };
+		85E2C41C26BCDEF0003315F2 /* SKNConsumable.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = SKNConsumable.storekit; sourceTree = "<group>"; };
 		85E6ECF725C9D92B00229E18 /* ServerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAPI.swift; sourceTree = "<group>"; };
 		85E6ED1C25CF518500229E18 /* BackendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendView.swift; sourceTree = "<group>"; };
 		85F6674C25AF7B9C00E5003B /* RadiatorNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadiatorNode.swift; sourceTree = "<group>"; };
@@ -849,6 +854,7 @@
 				8517EE5125FE8C9C00C34C54 /* ServerData.swift */,
 				85E6ECF725C9D92B00229E18 /* ServerAPI.swift */,
 				8592820725EA2D91001233BE /* Generators.swift */,
+				85E2C41C26BCDEF0003315F2 /* SKNConsumable.storekit */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -1423,6 +1429,7 @@
 				8536F2F0258D330300B509D2 /* Assets.xcassets in Resources */,
 				8536F471258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F495258D481700B509D2 /* SparkEmitter.sks in Resources */,
+				85E2C41D26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
 				8569A304259F7F990057A518 /* dissolve.fragment.txt in Resources */,
 				8569A31C259F81110057A518 /* InterlaceShader.fsh in Resources */,
 				8569A331259F81110057A518 /* HealthShader.fsh in Resources */,
@@ -1456,6 +1463,7 @@
 				8536F2F1258D330300B509D2 /* Assets.xcassets in Resources */,
 				8536F472258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F496258D481700B509D2 /* SparkEmitter.sks in Resources */,
+				85E2C41E26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
 				8569A305259F7F990057A518 /* dissolve.fragment.txt in Resources */,
 				8569A31D259F81110057A518 /* InterlaceShader.fsh in Resources */,
 				8569A332259F81110057A518 /* HealthShader.fsh in Resources */,
@@ -1489,6 +1497,7 @@
 				8569A321259F81110057A518 /* TransitionShader.fsh in Resources */,
 				8536F2F2258D330300B509D2 /* Assets.xcassets in Resources */,
 				8569A336259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
+				85E2C41F26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
 				8569A31B259F81110057A518 /* CutionStripesColored.fsh in Resources */,
 				857D9A1925BF42CB00626884 /* Entry.storyboard in Resources */,
 				8536F47F258D481700B509D2 /* MapIndicators.sks in Resources */,
@@ -1519,6 +1528,7 @@
 				8536F48C258D481700B509D2 /* StationOverlay.sks in Resources */,
 				8536F474258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F480258D481700B509D2 /* MapIndicators.sks in Resources */,
+				85E2C42026BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
 				8536F498258D481700B509D2 /* SparkEmitter.sks in Resources */,
 				8536F494258D481700B509D2 /* Assets.xcassets in Resources */,
 			);
@@ -2155,7 +2165,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.skynationgame.SkyNation;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cfarini.SkyNation;
 				PRODUCT_NAME = SkyNation;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -2176,7 +2186,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.skynationgame.SkyNation;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cfarini.SkyNation;
 				PRODUCT_NAME = SkyNation;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -2246,7 +2256,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.skynationgame.SkyNation;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cfarini.SkyNation;
 				PRODUCT_NAME = SkyNation;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
@@ -2272,7 +2282,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.skynationgame.SkyNation;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cfarini.SkyNation;
 				PRODUCT_NAME = SkyNation;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;

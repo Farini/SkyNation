@@ -45,24 +45,24 @@ class GameSettings:Codable {
     private init () {
         
         // Tutorial
-        var shouldShowTutorial:Bool = true
-        if let theVal = UserDefaults.standard.value(forKey: "showTutorial") as? Bool {
-            shouldShowTutorial = theVal
-        } else {
-            if let station = LocalDatabase.shared.station {
-                if let mod = station.habModules.first {
-                    if mod.inhabitants.isEmpty {
-                        print("No Inhabitants")
-                    } else {
-                        // Disable Tutorial
-                        shouldShowTutorial = false
-                    }
-                }
-            }
-        }
+//        var shouldShowTutorial:Bool = true
+//        if let theVal = UserDefaults.standard.value(forKey: "showTutorial") as? Bool {
+//            shouldShowTutorial = theVal
+//        } else {
+//            if let station = LocalDatabase.shared.station {
+//                if let mod = station.habModules.first {
+//                    if mod.inhabitants.isEmpty {
+//                        print("No Inhabitants")
+//                    } else {
+//                        // Disable Tutorial
+//                        shouldShowTutorial = false
+//                    }
+//                }
+//            }
+//        }
         
         // Gameplay
-        self.showTutorial = shouldShowTutorial
+        self.showTutorial = true
         self.startingScene = .SpaceStation
         self.showLights = true //UserDefaults.standard.value(forKey: "showLights") as? Bool ?? true
         self.clearEmptyTanks = false//UserDefaults.standard.value(forKey: "clearEmptyTanks") as? Bool ?? false
@@ -263,6 +263,10 @@ struct GameImages {
     
     static func imageForTank() -> Image {
         return Image("Tank")
+    }
+    
+    static var boxImage:Image {
+        return Image(systemName: "archivebox")
     }
     
     static func commonSystemImage(name:String) -> SKNImage? {

@@ -308,29 +308,37 @@ class OutpostController:ObservableObject {
     // Needs more logic when contributing (server request)
     // Check if contribution went through
     func checkUpgrades() {
+        
+        // Outpost State
+        // 1. Working (upgradable)
+        // 2. NoLevel (not upgradable)
+        // 3. Locked (computing)
+        // 4. Upgrading
+    
+    
         let previous = opData.state
         
-        do {
-            let next = try opData.eligibleForState()
-            if previous != next {
-                do {
-                    try opData.runUpgrade()
-                } catch {
-                    print("Caught Error! [Upgrading] -> \(error.localizedDescription)")
+        let next = opData.eligibleForState()
+        switch next {
+            case .dateUpgradeShouldBeNil:
+                opData.dateUpgrade = nil
+                self.checkUpgrades()
+            case .needsDateUpgrade:
+                print("Needs date upgrade")
+            case .level(let level):
+                if level == previous {
+                    // same level. Do nothing
+                } else {
+                    // upgraded level
+                    // contact server
                 }
-            }
-        } catch {
-            print("Caught Error! [Eligibility] \(error.localizedDescription)")
-            // Update interface with error
+            case .wrongUpdate:
+                // Show error message
+            print("Error. Wrong update. This shouldn't happen")
         }
-        
     }
-    // Outpost State
-    // 1. Working (upgradable)
-    // 2. NoLevel (not upgradable)
-    // 3. Locked (computing)
-    // 4. Upgrading
 }
+    
 
 extension OutpostViewTab {
     

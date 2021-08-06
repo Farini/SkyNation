@@ -24,64 +24,6 @@ class LocalDatabase {
     var vehicles:[SpaceVehicle] = []    // Vehicles that are travelling
     var stationBuilder:StationBuilder
     
-    // MARK: - Game Generators
-//    static let generatorsFile = "Gamegen.txt"
-//    private static func loadGameGenerators() -> GameGenerators? {
-//        let finalUrl = LocalDatabase.folder.appendingPathComponent(generatorsFile)
-//        if !FileManager.default.fileExists(atPath: finalUrl.path){
-//            print("File doesn't exist")
-//            // return nil
-//            let new = GameGenerators()
-//            LocalDatabase.saveGenerators(gameGen: new)
-//            return new
-//        } else {
-//            do {
-//                let d1 = try Data(contentsOf: finalUrl)
-//                let d2 = Data(base64Encoded: d1)!
-//                let decoder = JSONDecoder()
-//                decoder.dateDecodingStrategy = .secondsSince1970
-//                if let generators = try? decoder.decode(GameGenerators.self, from: d2) {
-//                    return generators
-//                }
-//            }catch{
-//                print("Error - Cant handle data")
-//            }
-//        }
-//        return nil
-//    }
-//    static func saveGenerators(gameGen:GameGenerators) {
-//
-//        // Encode to JSON file
-//        let encoder = JSONEncoder()
-//        encoder.dateEncodingStrategy = .secondsSince1970
-//        encoder.outputFormatting = .prettyPrinted
-//
-//        // Use Base64 to add a layer of security
-//        guard let encodedData:Data = try? encoder.encode(gameGen).base64EncodedData() else { fatalError() }
-//
-//        let bcf = ByteCountFormatter()
-//        bcf.allowedUnits = [.useKB]
-//        bcf.countStyle = .file
-//
-//        let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
-//        print("Saving Game Size: \(dataSize)")
-//
-//        let fileUrl = LocalDatabase.folder.appendingPathComponent(generatorsFile)
-//
-//        if !FileManager.default.fileExists(atPath: fileUrl.path) {
-//            FileManager.default.createFile(atPath: fileUrl.path, contents: encodedData, attributes: nil)
-//            print("File created")
-//            return
-//        }
-//
-//        do{
-//            try encodedData.write(to: fileUrl, options: .atomic)
-//            print("Saved locally")
-//        }catch{
-//            print("Error writting data to local url: \(error)")
-//        }
-//    }
-//    var gameGenerators:GameGenerators?
     
     // MARK: - Game Settings
     static let settingsFile = "GameSettings.json"
@@ -92,7 +34,9 @@ class LocalDatabase {
         
         if !FileManager.default.fileExists(atPath: finalUrl.path){
             print("File doesn't exist")
-            return GameSettings.create()
+            let newSettings = GameSettings.create()
+            
+            return newSettings
         }
         
         
@@ -616,13 +560,11 @@ class LocalDatabase {
         let vehiclesArray = LocalDatabase.loadVehicles()
         self.vehicles = vehiclesArray
         
-        // Generators
-//        if let gg:GameGenerators = LocalDatabase.loadGameGenerators() {
-//            self.gameGenerators = gg
-//        }
-        
         // Settings
-        self.gameSettings = LocalDatabase.loadSettings()
+        print("Loading Settings")
+        let settings = LocalDatabase.loadSettings()
+        self.gameSettings = settings
+        print("Finished Settings")
         
         // Server Database
         if let servData = loadServerData() {

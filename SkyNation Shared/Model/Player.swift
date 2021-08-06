@@ -346,6 +346,14 @@ enum GameProductType:Int, Codable, CaseIterable {
             case .twenty: return "Hude Deal"
         }
     }
+    
+    var fakePrice:Double {
+        switch self {
+            case .five: return 5.0
+            case .ten: return 10.0
+            case .twenty: return 20.0
+        }
+    }
 }
 
 /// Objects represents one Purchase made in the store
@@ -358,10 +366,51 @@ struct Purchase:Codable, Identifiable, Hashable {
     
     /// Kits that can be purchased
     enum Kit:String, Codable, CaseIterable {
+        
         case SurvivalKit
         case BotanistGarden
         case BuildersTech
         case Humanitarian
+        
+        var tanks:[TankType:Int] {
+            switch self {
+                case .SurvivalKit:
+                    return [.o2:15, .h2o:20, .air:3]
+                case .BotanistGarden:
+                    return [.o2:5, .h2o:5, .air:3]
+                case .BuildersTech:
+                    return [.h2o:5, .air:3]
+                case .Humanitarian:
+                    return [:]
+            }
+        }
+        
+        var boxes:[Ingredient:Int] {
+            switch self {
+                case .SurvivalKit:
+                    return [.Food:15]
+                case .BotanistGarden:
+                    return [.Fertilizer:8]
+                case .BuildersTech:
+                    return [.Aluminium:12, .Battery:2]
+                case .Humanitarian:
+                    return [.Food:10]
+            }
+        }
+        
+        var displayName:String {
+            switch self {
+                case .SurvivalKit:
+                    return "Survival Kit"
+                case .BotanistGarden:
+                    return "Bio Garden"
+                case .BuildersTech:
+                    return "Techie Tech"
+                case .Humanitarian:
+                    return "Human Heart"
+            }
+        }
+        
         
         //        var rawKit:[String:Int] {
         //            var baseKit:[String:Int] = [:]
@@ -380,6 +429,7 @@ struct Purchase:Codable, Identifiable, Hashable {
         //        return [:]
         //    }
     }
+    
     var kits:[Purchase.Kit]
     
     var used:Bool = false

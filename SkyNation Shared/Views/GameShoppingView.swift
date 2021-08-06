@@ -7,17 +7,42 @@
 
 import SwiftUI
 
+// Store Steps
+// 1. Choose Product (5, 10, 20)
+// 2. Choose Kit
+// 3. Make Purchase
+// 4. Add to Player + Station
+
+enum ShoppingStep {
+    case product
+    case kit(product:GameProductType)
+    case appStore
+    case receipt
+    
+    var displayName:String {
+        switch self {
+            case .product: return "Product"
+            case .kit(product: _): return "Kit"
+            case .appStore: return "App Store"
+            case .receipt: return "Receipt"
+        }
+    }
+}
+
 struct GameShoppingView: View {
+    
+    @State var step:ShoppingStep = .product
+    @State var promoCode:String = ""
     
     var packages = GameProductType.allCases//GameRawPackage.allCases
     
+    
     var header: some View {
-        
         Group {
             HStack() {
                 
                 VStack(alignment:.leading) {
-                    Text("⚙️ Shopping").font(.largeTitle)
+                    Text("⚙️ Shopping (\(step.displayName))").font(.largeTitle)
                     Text("Details")
                         .foregroundColor(.gray)
                 }
@@ -47,85 +72,95 @@ struct GameShoppingView: View {
             Divider()
                 .offset(x: 0, y: -5)
         }
-        
     }
     
     var body: some View {
         VStack {
+            
             header
+            
             ScrollView {
                 
-                Text("Shopping").font(.title).foregroundColor(.orange)
-                
-                ForEach(packages, id:\.self) { package in
-                    HStack(spacing: 22) {
-                        // Title
-                        VStack {
-                            Text(package.displayName).foregroundColor(.orange)
-//                            Text(package.rawValue.uppercased()).foregroundColor(.orange)
-                            Text("$ \(package.moneyAmount)")
+                switch step {
+                    case .product:
+                        
+                        VStack(alignment:.leading, spacing:4) {
+                            Text("Enter promo code:")
+                            HStack {
+                                TextField("Promo Code", text: $promoCode)
+                                    .padding(.trailing, 20)
+                                Button("Verify") {
+                                    print("Verifying Promo code: \(promoCode)")
+                                }
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
+                            }
                         }
+                        .padding(.horizontal)
                         
                         Divider()
-                        // Stack
-                        VStack(alignment:.leading) {
-                            HStack {
-                                #if os(macOS)
-                                Image(nsImage: GameImages.tokenImage)
-                                    .resizable()
-                                    .frame(width: 32, height: 32, alignment: .center)
-                                #else
-                                Image(uiImage: GameImages.tokenImage)
-                                    .resizable()
-                                    .frame(width: 32, height: 32, alignment: .center)
-                                #endif
-                                
-                                Text(" x\(package.tokenAmount)")
-                                    .font(.headline)
-                            }
-                            HStack {
-                                #if os(macOS)
-                                Image(nsImage: GameImages.currencyImage)
-                                #else
-                                Image(uiImage: GameImages.currencyImage)
-                                #endif
-                                Text("$ \(GameFormatters.numberFormatter.string(from: NSNumber(value:package.moneyAmount))!)")
-                                    .font(.headline)
-                                
-                            }
+                        
+                        ForEach(packages, id:\.self) { package in
                             
-//                            Text("👤 x \(package.peopleAmount)")
-                            Text("Token \(package.tokenAmount)")
-//                            Text("Tanks \(package.tanksAmount)")
-//                            Text("Boxes \(package.boxesAmount)")
-                            
-                        }
-                        // Button
-                        VStack {
-                            Button(action: {
-//                                self.purchasePackage(package: package)
-                                self.purchaseProduct(product: package)
-                            }, label: {
-                                HStack {
-                                    Image(systemName: "cart")
-                                    Text("Buy")
+                            ShopProductRow(product: package)
+                                .onTapGesture {
+                                    self.step = .kit(product: package)
                                 }
-                            })
-                            .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                             
-                            generateBarcode(from: LocalDatabase.shared.player?.id ?? UUID())
+                            Divider()
+                        }
+                        
+                        
+                        
+                        
+                    case .kit(let product):
+                    VStack {
+                        Text("Show the Kits")
+                        ForEach(Purchase.Kit.allCases, id:\.self) { kit in
+                            // Text(kit.rawValue).font(.title)
+                            ShopKitRow(kit: kit, product: product)
+                                .onTapGesture {
+                                    self.purchaseProduct(product: product, kit: kit)
+                                }
+                            
+                            // Color
+                            // Gradient
+                            // Description
+                            // Items
+                            // Image
+                            // Button (select)
                         }
                     }
-                    Divider()
+                        
+                    case .appStore:
+                        VStack {
+                            Text("App Store").font(.largeTitle)
+                            Image(systemName: "creditcard").font(.title)
+                            ProgressView()
+                        }
+                    case .receipt:
+                        VStack {
+                            Text("Receipt").font(.largeTitle)
+                            Image(systemName: "tag.circle").font(.largeTitle)
+                        }
                 }
             }
-            
-            
         }
     }
+    /*
+    func nextStep() {
+        switch step {
+            case .product: self.step = .kit
+            case .kit: self.step = .appStore
+            case .appStore: self.step = .receipt
+            case .receipt: self.step = .product
+        }
+    }
+    */
     
     // Purchase
-    func purchaseProduct(product:GameProductType) {
+    func purchaseProduct(product:GameProductType, kit:Purchase.Kit) {
+        
+        print("Purchase Product Function")
         
         // Deal with money
         let player = LocalDatabase.shared.player!
@@ -135,15 +170,24 @@ struct GameShoppingView: View {
         // Game Message (if want, has to add another achievement type
 //        GameMessageBoard.shared.newAchievement(type: ., message: <#T##String?#>)
         
+        
+        self.step = .appStore
+        
+        // Delay
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+            // Delay
+            self.step = .receipt
+        }
+        
         // FIXME: - Needs receipt and choice of Kit
         
-        let newPurchase = Purchase(product: product, kit: .SurvivalKit, receipt: "ABC")
-        player.shopped.makePurchase(cart: newPurchase)
+        let newPurchase = Purchase(product: product, kit: kit, receipt: "ABC")
+//        player.shopped.makePurchase(cart: newPurchase)
         
         // FIXME: - add the kit
         
-        let result = LocalDatabase.shared.savePlayer(player: player)
-        print("Saved player after purchase.: \(result)")
+//        let result = LocalDatabase.shared.savePlayer(player: player)
+//        print("Saved player after purchase.: \(result)")
         
     }
     
@@ -234,7 +278,172 @@ struct GameShoppingView: View {
         
         return nil
     }
-    /*
+    
+}
+
+struct ShopKitRow:View {
+    
+    var kit:Purchase.Kit
+    var product:GameProductType
+    
+    var body: some View {
+        HStack {
+            VStack {
+//                Text("Kit")
+                ZStack(alignment: .top) {
+                    
+                    Rectangle()
+                        .foregroundColor(.clear)
+                        .background(LinearGradient(gradient: Gradient(colors: [Color.clear, kit.color.opacity(0.5)]), startPoint: .bottom, endPoint: .top))
+                        .frame(height:64)
+                    
+                    HStack {
+                        VStack {
+                            Text(kit.displayName).font(.title)
+                            Image(systemName: kit.imageName)
+                                .font(.largeTitle)
+                        }
+                        .padding()
+                        
+                        Spacer()
+                        
+                        VStack(alignment:.leading) {
+                            
+                            // Tanks
+                            HStack {
+                                GameImages.imageForTank()
+                                    .resizable()
+                                    .frame(width: 20, height: 20, alignment: .center)
+                                ForEach(kit.tanks.sorted(by: {$0.value > $1.value}), id:\.key) { k, v in
+                                    Text("\(k.rawValue.uppercased()): \(v * product.rawValue)")
+                                }
+                            }
+                            
+                            // Ingredients
+                            HStack {
+                                GameImages.boxImage
+                                    .resizable()
+                                    .frame(width:20, height: 20, alignment: .center)
+                                ForEach(kit.boxes.sorted(by: { $0.value > $1.value }), id:\.key) { k, v in
+                                    Text("\(k.rawValue.uppercased()): \(v * product.rawValue)")
+                                }
+                            }
+                            
+                        }
+                        
+                        Spacer()
+                        
+                        HStack {
+                            Text("Next")//.padding(.top, 6)
+                            Image(systemName: "chevron.right").font(.title)
+                            
+                        }
+                        .padding(.trailing, 8)
+                    }
+                    
+                }
+                
+                
+                // Color
+                // Gradient
+                // Description
+                // Items
+                // Image
+                // Button (select)
+            }
+            
+        }
+    }
+}
+
+struct ShopProductRow: View {
+    
+    var product:GameProductType
+    
+    var body: some View {
+        // Product Row
+        HStack(spacing: 22) {
+            
+            // Title
+            VStack {
+                Image(systemName: "bag")
+                    .font(.largeTitle)
+                    .padding(6)
+                
+                Text(product.displayName)
+                    .foregroundColor(.orange)
+                    .font(.title2)
+                
+                //                            Text(package.rawValue.uppercased()).foregroundColor(.orange)
+                //                            Text("$ \(package.moneyAmount)")
+            }
+            .frame(width:120)
+            
+            Divider()
+            
+            // Benefits
+            VStack(alignment:.leading) {
+                
+                // Tokens
+                HStack {
+                    
+                    #if os(macOS)
+                    Image(nsImage: GameImages.tokenImage)
+                        .resizable()
+                        .frame(width: 28, height: 28, alignment: .center)
+                    #else
+                    Image(uiImage: GameImages.tokenImage)
+                        .resizable()
+                        .frame(width: 28, height: 28, alignment: .center)
+                    #endif
+                    
+                    Text("x\(product.tokenAmount) ")
+                        .font(.headline)
+                }
+                
+                // Sky Coins
+                HStack {
+                    #if os(macOS)
+                    Image(nsImage: GameImages.currencyImage)
+                        .resizable()
+                        .frame(width: 28, height: 28, alignment: .center)
+                    #else
+                    Image(uiImage: GameImages.currencyImage)
+                        .resizable()
+                        .frame(width: 28, height: 28, alignment: .center)
+                    #endif
+                    Text("$ \(GameFormatters.numberFormatter.string(from: NSNumber(value:product.moneyAmount))!)")
+                        .font(.headline)
+                    
+                }
+                
+                Text("Token \(product.tokenAmount)")
+            }
+            .frame(width:150)
+            
+            Divider()
+            
+            // Button
+            VStack {
+                //                            Button(action: {
+                ////                                self.purchasePackage(package: package)
+                //                                self.purchaseProduct(product: package)
+                //                            }, label: {
+                //                                HStack {
+                //                                    Image(systemName: "cart")
+                //                                    Text("Buy")
+                //                                }
+                //                            })
+                //                            .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                
+                generateBarcode(from: LocalDatabase.shared.player?.id ?? UUID())
+            }
+            
+            // Chevron
+            Image(systemName: "chevron.right").font(.largeTitle)
+        }
+    }
+    
     func generateBarcode(from uuid: UUID) -> Image? {
         let data = uuid.uuidString.prefix(8).data(using: String.Encoding.ascii)
         
@@ -248,41 +457,58 @@ struct GameShoppingView: View {
                     inverter.setValue(output, forKey:"inputImage")
                     
                     if let invertedOutput = inverter.outputImage {
+                        #if os(macOS)
                         let rep = NSCIImageRep(ciImage: invertedOutput)
                         let nsImage = NSImage(size: rep.size)
                         nsImage.addRepresentation(rep)
                         return Image(nsImage:nsImage)
+                        #else
+                        let uiImage = UIImage(ciImage: invertedOutput)
+                        return Image(uiImage: uiImage)
+                        #endif
                     }
                     
                 } else {
+                    #if os(macOS)
                     let rep = NSCIImageRep(ciImage: output)
                     let nsImage = NSImage(size: rep.size)
                     nsImage.addRepresentation(rep)
-                    
                     return Image(nsImage:nsImage)
+                    #else
+                    let uiimage = UIImage(ciImage: output)
+                    return Image(uiImage: uiimage)
+                    #endif
                 }
-                
-                
             }
-            
-            
-            //            return NSImage(ciImage: filter.outputImage)
-            //            let transform = CGAffineTransform(scaleX: 3, y: 3)
-            //            let out = filter.outputImage?.transformed(by:transform)
-            //
-            //            if let output = filter.outputImage?.transformed(by: transform) {
-            //                let image = NSImage(ciImage:output)
-            //                return image
-            //            }
         }
         
         return nil
     }
- */
 }
 
 struct GameShoppingView_Previews: PreviewProvider {
     static var previews: some View {
         GameShoppingView()
+        ShopKitRow(kit: .SurvivalKit, product: .five)
+    }
+}
+
+extension Purchase.Kit {
+    var imageName:String {
+        switch self {
+            case .SurvivalKit: return "flashlight.on.fill"
+            case .BotanistGarden: return "leaf.fill"
+            case .Humanitarian: return "staroflife.fill"
+            case .BuildersTech: return "wrench.and.screwdriver.fill"
+        }
+    }
+    
+    var color:Color {
+        switch self {
+            case .SurvivalKit: return Color.red
+            case .BotanistGarden: return Color.green
+            case .Humanitarian: return Color.orange
+            case .BuildersTech: return Color.blue
+        }
     }
 }

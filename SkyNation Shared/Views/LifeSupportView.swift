@@ -549,7 +549,9 @@ struct AccountingReportView: View {
                     
                     let wasteSolid = controller.boxes.filter({ $0.type == .wasteSolid }).map({ $0.current }).reduce(0, +)
                     let wasteSolidCap = controller.boxes.filter({ $0.type == .wasteSolid }).map({ $0.capacity }).reduce(0, +)
-                    let wasteSolidPct = Int(Double(wasteSolid)/Double(wasteSolidCap) * 100.0)
+                    let solidPCT:Double = max(1.0, Double(wasteSolid)) / max(1.0, Double(wasteSolidCap))
+                    
+                    let wasteSolidPct = Int(solidPCT) * 100
                     ProgressView("💩 solid |  \(wasteSolid) of \(wasteSolidCap). \(wasteSolidPct)%", value: Float(wasteSolid), total: Float(wasteSolidCap))
                     
                 }
