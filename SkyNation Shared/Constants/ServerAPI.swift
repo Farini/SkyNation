@@ -704,7 +704,9 @@ class SKNS {
     static func contributionRequest(object:Codable, type:ContributionType, outpost:Outpost) {
         
         let url = URL(string: "\(baseAddress)/guilds/outpost/contribute/\(outpost.id.uuidString)")!
+        print("Needs to continue code. Create URL request: \(url)")
         
+        // FIXME: - Contribution Request
         
         // Request will need:
         // 1. SKNUserPost (user + pass)

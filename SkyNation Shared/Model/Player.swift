@@ -354,6 +354,55 @@ enum GameProductType:Int, Codable, CaseIterable {
             case .twenty: return 20.0
         }
     }
+    
+    var storeIdentifier:String {
+        switch self {
+            case .five: return "com.skynation.five"
+            case .ten: return "com.skynation.ten"
+            case .twenty: return "com.skynation.twenty"
+        }
+    }
+}
+
+import StoreKit
+
+struct GameProduct:Identifiable, Hashable {
+    
+    var id:String // The product identifier
+    var type:GameProductType
+    
+    var price:Double
+    var priceString:String
+    
+    var displayName:String {
+        return type.displayName
+    }
+    
+    var storeProduct:SKProduct
+    
+//    extension SKProduct {
+//        /// - returns: The cost of the product formatted in the local currency.
+//        var regularPrice: String? {
+//            let formatter = NumberFormatter()
+//            formatter.numberStyle = .currency
+//            formatter.locale = self.priceLocale
+//            return formatter.string(from: self.price)
+//        }
+//    }
+    
+    init(type:GameProductType, storeProduct:SKProduct) {
+        self.id = storeProduct.productIdentifier
+        self.type = type
+        self.price = Double(truncating: storeProduct.price)
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = storeProduct.priceLocale
+        
+        self.priceString = formatter.string(from: storeProduct.price) ?? "unknown"
+        
+        self.storeProduct = storeProduct
+    }
 }
 
 /// Objects represents one Purchase made in the store
@@ -432,7 +481,9 @@ struct Purchase:Codable, Identifiable, Hashable {
     
     var kits:[Purchase.Kit]
     
-    var used:Bool = false
+    var used:Bool
+    var addedTokens:Bool
+    var addedKit:Bool
     
     init(product:GameProductType, kit:Purchase.Kit, receipt:String) {
         self.id = UUID()
@@ -441,6 +492,9 @@ struct Purchase:Codable, Identifiable, Hashable {
         self.storeProduct = product
         self.used = false
         self.kits = [kit]
+        
+        self.addedTokens = false
+        self.addedKit = false
     }
     
     func getTokens() -> [GameToken] {
@@ -500,6 +554,12 @@ class Shopped:Codable {
         return tokens.filter({ $0.origin != .Entry })
     }
     
+    /// Use this before `useToken` to make sure Player has enough tokens
+    func getAToken() -> GameToken? {
+        return tokens.first(where: { $0.origin != .Entry && $0.usedDate == nil })
+    }
+    
+    /// Use this after `getAToken` to make sure we can charge
     func useToken(token:GameToken) -> Bool {
         if let _ = tokens.first(where: { $0.id == token.id }) {
             tokens.removeAll(where: { $0.id == token.id })
@@ -512,9 +572,6 @@ class Shopped:Codable {
         }
     }
     
-    func getAToken() -> GameToken? {
-        return tokens.first(where: { $0.origin != .Entry && $0.usedDate == nil })
-    }
     
     // MARK: - Purchases
     

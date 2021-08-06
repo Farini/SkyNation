@@ -120,14 +120,15 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [X] Biobox still not saving when done (needs testing)
 - [X] Bio View - DNA animation (needs testing)
 - [X] Settings in `LocalDatabase`
-
-
-- [ ] Game Store Improvements
+- [X] Game Store Improvements
 - [X] Game Token Object
 - [X] Shopped Object (data for purchased items on `Player`)
-- [ ] Implement `Purchase.Kit` in `GameShoppingView`.
-- [ ] Only get to Mars if player has an `.Entry` type of token, used.
+- [X] Implement `Purchase.Kit` in `GameShoppingView`.
 
+
+
+- [ ] Server re-structure (Model)
+- [ ] Guild Task
 - [ ] Outpost supply method - SKNS request
 
 - [ ] New Modules not fully available after Tech research. 
@@ -135,8 +136,13 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [ ] LSS View -> Let player sort Ingredients, Tanks, etc. as they wish
 
 - [ ] HabModule -> Person Detail View -> Finish Activity with tokens.
+
+- [X] GameSettings -> Object in `LocalDatabase`
 - [ ] Game Settings -> BioBox -> Source of food (Bool) -> Station Accounting
-- [ ] Test why settings is crashing when save
+- [ ] GameSettings -> Preferred cameras
+
+- [ ] Player -> convenient function to use token (getAToken, and useToken) -> Copy from `Shopped`
+- [ ] Player -> Mars Entry - Only get to Mars if player has an `.Entry` type of token, used.
 
 - [ ] 3/21 Mars Views & Controllers
     - [ ] City Views

@@ -303,7 +303,8 @@ extension GameViewController: GameNavDelegate {
     }
     
     func didSelectShopping() {
-        let controller = NSHostingController(rootView: GameShoppingView())
+        
+        let controller = NSHostingController(rootView: GameShoppingView(controller: StoreController()))
         controller.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(controller.view)
         controller.view.centerXAnchor.constraint(

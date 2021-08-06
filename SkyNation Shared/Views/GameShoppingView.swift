@@ -13,28 +13,16 @@ import SwiftUI
 // 3. Make Purchase
 // 4. Add to Player + Station
 
-enum ShoppingStep {
-    case product
-    case kit(product:GameProductType)
-    case appStore
-    case receipt
-    
-    var displayName:String {
-        switch self {
-            case .product: return "Product"
-            case .kit(product: _): return "Kit"
-            case .appStore: return "App Store"
-            case .receipt: return "Receipt"
-        }
-    }
-}
+
 
 struct GameShoppingView: View {
     
-    @State var step:ShoppingStep = .product
+    @ObservedObject var controller:StoreController
+    
+//    @State var step:ShoppingStep = .product
     @State var promoCode:String = ""
     
-    var packages = GameProductType.allCases//GameRawPackage.allCases
+//    var packages = GameProductType.allCases//GameRawPackage.allCases
     
     
     var header: some View {
@@ -42,7 +30,7 @@ struct GameShoppingView: View {
             HStack() {
                 
                 VStack(alignment:.leading) {
-                    Text("⚙️ Shopping (\(step.displayName))").font(.largeTitle)
+                    Text("⚙️ Shopping (\(controller.step.displayName))").font(.largeTitle)
                     Text("Details")
                         .foregroundColor(.gray)
                 }
@@ -81,7 +69,7 @@ struct GameShoppingView: View {
             
             ScrollView {
                 
-                switch step {
+                switch controller.step {
                     case .product:
                         
                         VStack(alignment:.leading, spacing:4) {
@@ -99,27 +87,29 @@ struct GameShoppingView: View {
                         
                         Divider()
                         
-                        ForEach(packages, id:\.self) { package in
-                            
-                            ShopProductRow(product: package)
-                                .onTapGesture {
-                                    self.step = .kit(product: package)
-                                }
-                            
-                            Divider()
+                        if controller.gameProducts.isEmpty {
+                            Text("Fetching products from App Store")
+                            ProgressView()
+                        } else {
+                            ForEach(controller.gameProducts, id:\.self) { gameProduct in
+                                ShopProductRow(product: gameProduct.type)
+                                    .onTapGesture {
+                                        controller.didSelectProduct(gameProduct)
+                                    }
+                                
+                                Divider()
+                            }
                         }
-                        
-                        
-                        
                         
                     case .kit(let product):
                     VStack {
                         Text("Show the Kits")
                         ForEach(Purchase.Kit.allCases, id:\.self) { kit in
                             // Text(kit.rawValue).font(.title)
-                            ShopKitRow(kit: kit, product: product)
+                            ShopKitRow(kit: kit, product: product.type)
                                 .onTapGesture {
-                                    self.purchaseProduct(product: product, kit: kit)
+//                                    self.purchaseProduct(product: product, kit: kit)
+                                    controller.didSelectKit(kit)
                                 }
                             
                             // Color
@@ -131,16 +121,44 @@ struct GameShoppingView: View {
                         }
                     }
                         
-                    case .appStore:
+                    case .buying(let product):
+                        
                         VStack {
                             Text("App Store").font(.largeTitle)
                             Image(systemName: "creditcard").font(.title)
+                            
                             ProgressView()
+                            
+                            Divider()
+                            
+                            Text("Product Info:")
+                            Text("ID: \(product.id)")
+                            Text("Price: \(product.priceString)").foregroundColor(.orange)
+                            
+                            HStack {
+                                Button("Buy") {
+                                    controller.confirmPurchase()
+                                }
+                                .disabled(controller.selectedProduct == nil)
+                                
+                                Button("Cancel") {
+                                    controller.cancelPurchase()
+                                }
+                            }
                         }
                     case .receipt:
                         VStack {
                             Text("Receipt").font(.largeTitle)
                             Image(systemName: "tag.circle").font(.largeTitle)
+                        }
+                        
+                    case .error(let message):
+                        VStack {
+                            Text("Error")
+                            Text(message).foregroundColor(Color.red)
+                            Button("Go back") {
+                                controller.cancelPurchase()
+                            }
                         }
                 }
             }
@@ -158,6 +176,7 @@ struct GameShoppingView: View {
     */
     
     // Purchase
+    /*
     func purchaseProduct(product:GameProductType, kit:Purchase.Kit) {
         
         print("Purchase Product Function")
@@ -171,12 +190,12 @@ struct GameShoppingView: View {
 //        GameMessageBoard.shared.newAchievement(type: ., message: <#T##String?#>)
         
         
-        self.step = .appStore
+//        self.step = .appStore
         
         // Delay
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
             // Delay
-            self.step = .receipt
+//            self.step = .receipt
         }
         
         // FIXME: - Needs receipt and choice of Kit
@@ -190,51 +209,7 @@ struct GameShoppingView: View {
 //        print("Saved player after purchase.: \(result)")
         
     }
-    
-    /*
-    func purchasePackage(package:GameRawPackage) {
-        let player = LocalDatabase.shared.player!
-        player.money += package.moneyAmount
-        
-        // REPLACE THIS FOR THE NEW OBJECT (Shopped R)
-//        for _ in 0..<package.tokenAmount {
-//            let new = UUID()
-//            player.timeTokens.append(new)
-//        }
-        
-        if LocalDatabase.shared.savePlayer(player: player) == true {
-            print("Success updating player with new shop")
-        }
-        // station
-        guard let station = LocalDatabase.shared.station else {
-            print("Error. No Station")
-            return
-        }
-        // ppl
-        for _ in 0...package.peopleAmount {
-            let new = Person(random: true)
-            if station.addToStaff(person: new) == true {
-                // success
-            } else {
-                // cant add person
-            }
-        }
-        // tanks
-        for _ in 0...package.tanksAmount {
-            let newType = TankType.allCases.randomElement()!
-            let newTank = Tank(type: newType, full: [TankType.co2, TankType.ch4, TankType.empty].contains(newType) ? false:true)
-            station.truss.tanks.append(newTank)
-        }
-        // ingredients'
-        for _ in 0...package.boxesAmount {
-            let newType = Ingredient.allCases.randomElement()!
-            let newBox = StorageBox(ingType: newType, current: [Ingredient.wasteLiquid, Ingredient.wasteSolid].contains(newType) ? 0:newType.boxCapacity())
-            station.truss.extraBoxes.append(newBox)
-        }
-        LocalDatabase.shared.saveStation(station: station)
-        
-    }
-     */
+    */
     
     // Barcode
     
@@ -488,7 +463,7 @@ struct ShopProductRow: View {
 
 struct GameShoppingView_Previews: PreviewProvider {
     static var previews: some View {
-        GameShoppingView()
+        GameShoppingView(controller: StoreController())
         ShopKitRow(kit: .SurvivalKit, product: .five)
     }
 }

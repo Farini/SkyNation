@@ -40,7 +40,7 @@ struct EDLInventoryView: View {
                 case .tanks: return "gauge"
                 case .peripherals: return "gearshape.2.fill"
                 case .batteries: return "bolt.fill.batteryblock"
-                default: return "questionmark"
+//                default: return "questionmark"
             }
         }
     }

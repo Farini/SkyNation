@@ -220,9 +220,17 @@ struct EarthRequestView: View {
                                               primaryButton: .cancel(),
                                               secondaryButton: .destructive(Text("Yes"), action: {
                                                 
-//                                                LocalDatabase.shared.gameGenerators?.spentTokenToUpdate(amt: 1)
-                                                LocalDatabase.shared.player?.shopped.getPeople(true)
-                                                controller.orderAisle = .People
+                                                if let token = LocalDatabase.shared.player?.shopped.getAToken() {
+                                                    
+                                                    let pplResult = LocalDatabase.shared.player?.shopped.getPeople(true)
+                                                    guard let pResult = pplResult, !pResult.isEmpty else { return }
+                                                    
+                                                    let result = LocalDatabase.shared.player!.shopped.useToken(token: token)
+                                                    print("Used Token: \(result)")
+                                                } else {
+                                                    controller.errorMessage = "Not enough tokens"
+                                                }
+
                                                 
                                               }))
                                     })
