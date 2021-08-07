@@ -124,25 +124,24 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [X] Game Token Object
 - [X] Shopped Object (data for purchased items on `Player`)
 - [X] Implement `Purchase.Kit` in `GameShoppingView`.
-
-
+- [X] App Store products registration
+- [X] LSS View -> Ability to sort tanks from empty to full
+- [X] HabModule -> Person Detail View -> Finish Activity with tokens.
 
 - [ ] Server re-structure (Model)
 - [ ] Guild Task
-- [ ] Outpost supply method - SKNS request
+- [ ] Outpost supply method + SKNS request for `Outpost` upgrades
 
 - [ ] New Modules not fully available after Tech research. 
-
-- [ ] LSS View -> Let player sort Ingredients, Tanks, etc. as they wish
-
-- [ ] HabModule -> Person Detail View -> Finish Activity with tokens.
 
 - [X] GameSettings -> Object in `LocalDatabase`
 - [ ] Game Settings -> BioBox -> Source of food (Bool) -> Station Accounting
 - [ ] GameSettings -> Preferred cameras
 
-- [ ] Player -> convenient function to use token (getAToken, and useToken) -> Copy from `Shopped`
-- [ ] Player -> Mars Entry - Only get to Mars if player has an `.Entry` type of token, used.
+- [X] Player -> convenient function to use token (getAToken, and useToken) -> Copy from `Shopped`
+- [X] Player -> Mars Entry - Only get to Mars if player has an `.Entry` type of token, used. 
+- [ ] Player -> Mars Entry `func marsEntryPass()` and `requestEntryToken` need testing
+- [ ] Player -> Mars Entry  -> Scene Loading When loading Mars Scene, test `marsEntryPass()` and `requestEntryToken`
 
 - [ ] 3/21 Mars Views & Controllers
     - [ ] City Views
@@ -152,16 +151,17 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
         - [ ] Garage (Receiving Vehicles)
 
     - [ ] Oupost View
-        - [ ] My City Resources
-        - [ ] Contribute Resources
-        - [ ] Update Database
-        - [ ] OutpostData
+        - [X] My City Resources
+        - [X] Contribute Resources
+        - [X] OutpostData
+        - [ ] Server Requests
         - [ ] Contributors
         
-- [ ] 1/13 Mars Scene
+- [ ] 3/13 Mars Scene
     - [ ] Gate Config (to layout scene)
     - [ ] Outposts with Levels
     - [ ] Infinite floor
+    - [ ] Animations
     
 - [ ] Mars Model
     - [X] City Tech (Model)

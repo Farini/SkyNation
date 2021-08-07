@@ -332,7 +332,7 @@ class EarthRequestController:ObservableObject {
             } else {
                 // Remove person from list of available for hire
 //                LocalDatabase.shared.gameGenerators?.didHirePerson(person: person)
-                LocalDatabase.shared.player?.shopped.didHire(person: person)
+                LocalDatabase.shared.player?.wallet.didHire(person: person)
             }
         }
         

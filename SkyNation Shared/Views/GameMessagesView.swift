@@ -118,7 +118,7 @@ struct GameMessagesView: View {
                     if self.tab == GameMessageType.Freebie { //, let generator = self.generator {
                         
 //                        let generator = LocalDatabase.shared.gameGenerators!
-                        let dateGenerated = Date().addingTimeInterval(LocalDatabase.shared.player?.shopped.timeToGenerateNextFreebie() ?? 0) //generator.dateFreebies
+                        let dateGenerated = Date().addingTimeInterval(LocalDatabase.shared.player?.wallet.timeToGenerateNextFreebie() ?? 0) //generator.dateFreebies
                         let nextGenerated = dateGenerated.addingTimeInterval(60 * 60 * 12)
                         
                         Text("Freebie of the day").font(.title).foregroundColor(.orange)

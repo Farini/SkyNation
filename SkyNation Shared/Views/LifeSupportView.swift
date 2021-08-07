@@ -118,7 +118,17 @@ struct LifeSupportView: View {
                             // Left View: List of Resources
                             List() {
                                 // Tanks
-                                Section(header: Text("Tanks")) {
+                                Section(header:
+                                            HStack {
+                                                Text("Tanks")
+                                                Spacer()
+                                                Button("⇣") {
+                                                    let tks = self.controller.tanks
+                                                    let tks2 = tks.sorted(by: { $0.current < $1.current })
+                                                    self.controller.tanks = tks2
+                                                }
+                                                .padding(.trailing, 6)
+                                            }) {
                                     ForEach(controller.tanks) { tank in
                                         TankRow(tank: tank)
                                             .onTapGesture(count: 1, perform: {

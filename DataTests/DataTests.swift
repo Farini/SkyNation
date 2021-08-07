@@ -19,16 +19,20 @@ class DataTests: XCTestCase {
     
     func testTokens() {
         let myPID:UUID = UUID()
-        let store = Shopped(lid: myPID)
+        let store = Wallet(lid: myPID)
         print("My Store")
         print("Token count: \(store.tokens.count)")
         
         for t in store.tokens {
             print("Token \(t.origin), pid:\(t.user), TokenID:\(t.id)")
         }
+        guard let player = LocalDatabase.shared.player else {
+            fatalError()
+        }
+        
         for i in 1...5 {
-            if let token = store.getAToken() {
-                let result = store.useToken(token: token)
+            if let token = player.requestToken() {
+                let result = player.spendToken(token: token, save: false)
                 print("Using token #\(i): \(result)")
             }
         }
@@ -43,7 +47,165 @@ class DataTests: XCTestCase {
         print("Making Purchase")
         store.makePurchase(cart: Purchase(product: .five, kit: .SurvivalKit, receipt: "ABCD"))
         print("Count after purchase: \(store.tokens.count)")
-        print("Valid Tokens: \(store.getSpendableTokens().count)")
+        print("Valid Tokens: \(player.countTokens().count)")
+    }
+    
+    
+    func testOutpostContribution() {
+        
+        print("\n\n Testing Outpost Contribution.")
+        guard let player = LocalDatabase.shared.player else {
+            print("Failed test. No Player")
+            return
+        }
+        
+        let outpost = Outpost(type: .Energy, posdex: .power1, guild: UUID())
+        if let job = outpost.getNextJob() {
+            print("Job in.: Max score:\(job.maxScore())")
+            print("\t Ingredients")
+            for (ing, value) in job.wantedIngredients {
+                print("\(ing) : \(value)")
+                let supplied = outpost.supplied.ingredients.filter({ $0.type == ing}).compactMap({$0.current}).reduce(0, +)
+                print("Supplied : \(supplied) of \(value)")
+            }
+        }
+        
+        outpost.supplied.contribute(with: StorageBox(ingType: .SolarCell, current: Ingredient.SolarCell.boxCapacity()), player: player)
+        outpost.supplied.contribute(with: StorageBox(ingType: .SolarCell, current: 186), player: player)
+        outpost.supplied.contribute(with: StorageBox(ingType: .Aluminium, current: 20), player: player)
+        outpost.supplied.contribute(with: StorageBox(ingType: .Circuitboard, current: 20), player: player)
+        outpost.supplied.contribute(with: StorageBox(ingType: .Polimer, current: 50), player: player)
+        
+        let p1 = Person(random: true)
+        p1.name = "Genius"
+        p1.learnNewSkill(type: .Material)
+        p1.learnNewSkill(type: .Material)
+        p1.learnNewSkill(type: .Material)
+        p1.learnNewSkill(type: .Material)
+        p1.learnNewSkill(type: .Material)
+        p1.learnNewSkill(type: .Material)
+        p1.learnNewSkill(type: .Material)
+        p1.learnNewSkill(type: .Handy)
+        p1.learnNewSkill(type: .Handy)
+        p1.learnNewSkill(type: .Handy)
+        p1.learnNewSkill(type: .Handy)
+        p1.learnNewSkill(type: .Handy)
+        p1.learnNewSkill(type: .Handy)
+        p1.learnNewSkill(type: .Handy)
+        p1.learnNewSkill(type: .Handy)
+        p1.learnNewSkill(type: .Handy)
+        p1.learnNewSkill(type: .Handy)
+        p1.learnNewSkill(type: .Handy)
+        p1.learnNewSkill(type: .Handy)
+        p1.learnNewSkill(type: .Handy)
+        p1.learnNewSkill(type: .Handy)
+        p1.learnNewSkill(type: .Handy)
+        p1.learnNewSkill(type: .Handy)
+        p1.learnNewSkill(type: .Handy)
+        
+        p1.learnNewSkill(type: .Handy)
+        
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        p1.learnNewSkill(type: .Electric)
+        
+        outpost.supplied.contribute(with: p1, player: player)
+        
+        print("\n Genius:")
+        for sks in p1.skills {
+            print("\(sks.skill): \(sks.level)")
+        }
+        
+        
+        if let job = outpost.getNextJob() {
+            print("Job in.: Max score:\(job.maxScore())")
+            print("\t Ingredients")
+            for (ing, value) in job.wantedIngredients {
+                print("\(ing) : \(value)")
+                let supplied = outpost.supplied.ingredients.filter({ $0.type == ing}).compactMap({$0.current}).reduce(0, +)
+                print("Supplied : \(supplied) of \(value)")
+            }
+        }
+        
+        print("\nMissing")
+        let missing = outpost.calculateRemaining()
+        print(missing)
+        
+        print("\n Score Card")
+        let scoreCard = outpost.supplied.players
+        print(scoreCard.description)
+        
+        print("\n Upgrade 1")
+        let firstUpgrade = outpost.runUpgrade()
+        switch firstUpgrade {
+            case .noChanges: print("No Changes, Current State: \(outpost.state)")
+            case .dateUpgradeShouldBeNil, .needsDateUpgrade: print("Error")
+            case .nextState(let state): print("Next State >>> \(state)")
+            case .applyForLevelUp(currentLevel: let level): print("Should Apply for level up. Current:\(level), next:\(level + 1)")
+        }
+        
+        print("\n Upgrade 2")
+        let secondUpgrade = outpost.runUpgrade()
+        switch secondUpgrade {
+            case .noChanges: print("No Changes, Current State: \(outpost.state)")
+            case .dateUpgradeShouldBeNil, .needsDateUpgrade: print("Error")
+            case .nextState(let state): print("Next State >>> \(state)")
+            case .applyForLevelUp(currentLevel: let level): print("Should Apply for level up. Current:\(level), next:\(level + 1)")
+        }
+        print("\n Stats ---")
+        print("Current State: \(outpost.state), Level:\(outpost.level)")
+        print("Upgrade: \(firstUpgrade)")
+        
+        if let _ = outpost.getNextJob() {
+            print("Next job. Level:\(outpost.level), State:\(outpost.state)")
+        }
+        
+        
+        let expectation = self.expectation(description: "Async call")
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 8.0) {
+            print("\n Results after wait...")
+            print("Upgrade 3")
+            let upgrade3 = outpost.runUpgrade()
+            switch upgrade3 {
+                case .noChanges: print("No Changes")
+                case .dateUpgradeShouldBeNil, .needsDateUpgrade: print("Error")
+                case .nextState(let state): print("Next State: \(state)")
+                case .applyForLevelUp(currentLevel: let level): print("Should Apply for level up. Current:\(level), next:\(level + 1)")
+//                default: print("Not ready")
+            }
+            
+            print("\n Upgrade 4")
+            let upgrade4 = outpost.runUpgrade()
+            switch upgrade4 {
+                case .noChanges: print("No Changes")
+                case .dateUpgradeShouldBeNil, .needsDateUpgrade: print("Error")
+                case .nextState(let state): print("Next State: \(state)")
+                case .applyForLevelUp(currentLevel: let level): print("Should Apply for level up. Current:\(level), next:\(level + 1)")
+                //                default: print("Not ready")
+            }
+            print("\n")
+            expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 10)
+        
+        
     }
     
     /** Tests if there is common strings between tanktype, ingredient, DNAOption and Skills,

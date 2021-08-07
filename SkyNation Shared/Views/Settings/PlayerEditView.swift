@@ -34,7 +34,7 @@ struct GameLoadingTab: View {
                             .resizable()
                             .frame(width:32, height:32)
                         #endif
-                        Text("x\(controller.player.shopped.getSpendableTokens().count)") //timeTokens.count)")
+                        Text("x\(controller.player.countTokens().count)") //timeTokens.count)")
                         Divider()
                         #if os(macOS)
                         Image(nsImage:GameImages.currencyImage)
@@ -133,7 +133,7 @@ struct PlayerEditView: View {
                         
                         // Right
                         VStack(alignment:.trailing) {
-                            Text("Tokens \(controller.player.shopped.getSpendableTokens().count)") //timeTokens.count)")
+                            Text("Tokens \(controller.player.countTokens().count)") //timeTokens.count)")
                             Text("Money: \(controller.player.money)")
                             Text("Experience: \(controller.player.experience)")
                         }

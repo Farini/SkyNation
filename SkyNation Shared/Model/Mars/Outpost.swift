@@ -109,23 +109,20 @@ enum OutpostType:String, CaseIterable, Codable {
 }
 
 enum OutpostState:String, CaseIterable, Codable {
-    case Filling    // accepting contributions
-    case Ready      // Can be upgraded
-    case Upgrading  // Upgrading (time)
-    case Maxed      // No more upgrades
+    case collecting     // accepting contributions
+    case full           // can upgrade. Set date and proceed to cooldown
+    case cooldown       // wait for the date
+    case finished       // ready for level upgrade
+    case maxed          // no more upgrades
 }
-
-//private enum OutpostLogicError:Error {
-//    case needsDateUpgrade
-//    case dateUpgradeShouldBeNil
-//    case wrongUpdate
-//}
 
 enum OutpostUpgradeResult {
     case needsDateUpgrade
     case dateUpgradeShouldBeNil
-    case wrongUpdate
-    case level(next:OutpostState)
+
+    case noChanges
+    case nextState(_ state:OutpostState)
+    case applyForLevelUp(currentLevel:Int)
 }
 
 // Building up to here, an outpost has an OutpostJob, which sets the Level of the Outpost
@@ -148,28 +145,11 @@ class Outpost:Codable {
     var collected:Date?
     var dateUpgrade:Date?
     
-    // Just prints info
-    func debugInfo() {
-        switch type {
-            case .HQ: print("hq")
-            case .Water: print("Make Water")
-                switch level {
-                    case 0...5: print("Low Level")
-                    case 6...10: print("Mid Level")
-                    case 11...15: print("Advanced")
-                    default:print("ERROR")
-                }
-            case .Silica: print("Make Silica")
-            case .Energy: print("Make Energy")
-            case .Biosphere: print("Make Biosphere")
-            case .Titanium: print("Make Titanium")
-            case .Observatory: print("Make Observatory")
-            case .Antenna: print("Make Antenna")
-            case .Launchpad: print("Make Launchpad")
-            case .Arena: print("Make Arena")
-            case .ETEC: print("Make ETEC")
-        }
-    }
+    /// `Player.id` vs `points`
+    var contributed:[UUID:Int] = [:]
+    
+    /// Stuff supplied so far
+    var supplied:OutpostSupply
     
     // MARK: - Production
     
@@ -209,167 +189,50 @@ class Outpost:Codable {
         return calc
     }
     
-    // MARK: - Supplied
-    
-    // DEPRECATE - SUBSTITUTE OUTPOSTSUPPLY
-//    var materials:[Ingredient:Int] = [:]
-    
-    /// Stuff supplied so far
-    var supplied:OutpostSupply
-    
-    /// `Player.id` vs `points`
-    var contributed:[UUID:Int] = [:]
-    
-    func eligibleForState() -> OutpostUpgradeResult {
-        let previous = self.state
-        switch previous {
-            case .Filling:
-                guard let job:OutpostJob = getNextJob() else {
-                    return OutpostUpgradeResult.level(next: .Maxed)
-                }
-                print("Filling job max score \(job.maxScore())")
-                guard dateUpgrade == nil else {
-                    return OutpostUpgradeResult.dateUpgradeShouldBeNil
-                }
-                let missingOut:[String:Int] = calculateRemaining()
-                if missingOut.isEmpty == true {
-                    return OutpostUpgradeResult.level(next: .Ready)
-                }
-                return OutpostUpgradeResult.level(next: .Filling)
-            case .Ready:
-                if dateUpgrade == nil {
-                    return OutpostUpgradeResult.needsDateUpgrade
-                } else {
-                    return OutpostUpgradeResult.level(next:.Upgrading)
-                }
-            case .Upgrading:
-                guard let upDate = dateUpgrade else { return OutpostUpgradeResult.needsDateUpgrade }
-                if Date().compare(upDate) == .orderedDescending {
-                    return OutpostUpgradeResult.level(next:.Filling)
-                } else  {
-                    return OutpostUpgradeResult.level(next:.Upgrading)
-                }
-            case .Maxed: return OutpostUpgradeResult.level(next:.Maxed)
-        }
-    }
-    
+    /// Upgrades the model, and returns results that may be relevant to upload to the server.
     func runUpgrade() -> OutpostUpgradeResult {
         let previous = self.state
         switch previous {
-            case .Filling:
+            case .collecting:
                 let missingOut:[String:Int] = calculateRemaining()
-                if missingOut.isEmpty == true && getNextJob() != nil {
-                    self.state = .Ready
-                    return OutpostUpgradeResult.level(next: .Ready)
+                if missingOut.isEmpty == true {
+                    self.state = .full
+                    // State full -> Call Server
+                    return .nextState(.full)
                 } else {
-                    if getNextJob() == nil {
-                        self.state = .Maxed
-                        return OutpostUpgradeResult.level(next: .Maxed)
-                    }
-                    return OutpostUpgradeResult.level(next: .Filling)
+                    // return current state (collecting)
+                    return .noChanges
                 }
-                
-            case .Ready:
-                dateUpgrade = Date().addingTimeInterval(TimeInterval.oneDay)
-                self.state = .Upgrading
-                return OutpostUpgradeResult.level(next: .Upgrading)
-                
-            case .Upgrading:
+            case .full:
+                self.dateUpgrade = Date().addingTimeInterval(5) //(TimeInterval.oneDay)
+                self.supplied.clearContents()
+                self.state = .cooldown
+                return .nextState(.cooldown)
+                // next state -> Call server
+            case .cooldown:
                 guard let upDate = dateUpgrade else { return OutpostUpgradeResult.needsDateUpgrade }
                 if Date().compare(upDate) == .orderedDescending {
                     self.dateUpgrade = nil
-                    self.level += 1
-                    self.state = .Filling
-                    return OutpostUpgradeResult.level(next: .Filling)
-                } else  {
-                    // waiting
-                    return OutpostUpgradeResult.level(next: .Upgrading)
+                    self.state = .finished
+                    // Ready for level up -> Call Server
+                    return .nextState(.finished)
                 }
-            case .Maxed: return OutpostUpgradeResult.level(next: .Maxed)
+                return .noChanges
+                
+            case .finished:
+                // Ready for level up. Call Server and apply for next level
+                let currentLevel = self.level
+                // Ready for level up. Call Server and apply for next level
+                return .applyForLevelUp(currentLevel: currentLevel)//.nextState(.collecting)
+                // Before ready for collecting, Server should double-check the validity.
+                // Only the server will upgrade the level property of this outpost.
+            case .maxed:
+                print("maxed")
+                return .noChanges
         }
     }
     
-    /*
-    func checkValidUpgrade() -> OutpostState {
-        
-        let previousState = self.state
-        
-        switch previousState {
-            case .Filling:
-                if let job:OutpostJob = getNextJob(),
-                   dateUpgrade == nil {
-                    
-                    let missingOut:[String:Int] = calculateRemaining()
-                    if missingOut.isEmpty == true {
-                        // Ready for upgrade
-//                        self.state = .Ready
-//                        self.dateUpgrade = Date().addingTimeInterval(TimeInterval.oneDay)
-                        return .Ready
-                    } else {
-                        return .Filling
-                    }
-                } else {
-                    // no next job -> no upgrades
-//                    self.dateUpgrade = nil
-                    return .Maxed
-                }
-            case .Ready:
-                if let upDate = dateUpgrade {
-                    if Date().compare(upDate) == .orderedDescending {
-                        // ready for upgrade
-                        //                        self.state = .Upgrading
-                    }
-                    
-                    return .Upgrading
-                    
-                    
-                } else {
-                    return .Ready
-                }
-            case .Upgrading:
-                print("Upgrading")
-                
-                
-                if let upDate = dateUpgrade {
-                    
-                    if Date().compare(upDate) == .orderedDescending {
-                        // Ready
-//                        self.dateUpgrade = nil
-                        return .Filling
-                    } else  {
-                        return .Upgrading
-                    }
-                    
-                } else {
-                    
-                    if supplied.supplyScore() > 0 {
-                        // There is still supply, which means we haven't cleared the supplies.
-                        // needs to clear supplies before continue
-                        self.supplied.clearContents()
-                    }
-                    return .Upgrading
-//                    self.supplied.clearContributors()
-//                    self.level += 1
-//                    self.dateUpgrade = nil
-//                    self.state = getNextJob() != nil ? .Filling:.Maxed
-
-                }
-                
-            case .Maxed:
-                print("No upgrades")
-                return .Maxed
-        }
-        
-        
-    }
-    */
-    
-//    private func upgradeState() {
-//        if self.state == .Filling {
-//            self.state = .Ready
-//        }
-//    }
-    
+    /// Returns a K,V pair of Remaining items to fullfill upgrades
     func calculateRemaining() -> [String:Int] {
         
         var missingOut:[String:Int] = [:]
@@ -395,7 +258,7 @@ class Outpost:Codable {
         // Peripherals & Type
         let iNeedPeri:[PeripheralType:Int] = getNextJob()?.wantedPeripherals ?? [:]
         for(k, v) in iNeedPeri {
-            let current = supplied.peripherals.count
+            let current = supplied.peripherals.filter({ $0.peripheral == k}).count
             if current < v {
                 missingOut[k.rawValue] = v - current
             }
@@ -409,6 +272,7 @@ class Outpost:Codable {
             
             for p in ppl {
                 let lvl = p.skills.filter({ $0.skill == k }).first?.level ?? 0
+                print("Level for \(k) = \(lvl)")
                 current += lvl
             }
             if current < v {
@@ -426,10 +290,6 @@ class Outpost:Codable {
         }
         return missingOut
     }
-    
-    // MARK: - Updates
-    
-    var activity:LabActivity?
     
     /// Gets the job to perform to level up
     func getNextJob() -> OutpostJob? {
@@ -503,11 +363,32 @@ class Outpost:Codable {
         }
     }
     
-    
-    
+    // Just prints info
+    func debugInfo() {
+        switch type {
+            case .HQ: print("hq")
+            case .Water: print("Make Water")
+                switch level {
+                    case 0...5: print("Low Level")
+                    case 6...10: print("Mid Level")
+                    case 11...15: print("Advanced")
+                    default:print("ERROR")
+                }
+            case .Silica: print("Make Silica")
+            case .Energy: print("Make Energy")
+            case .Biosphere: print("Make Biosphere")
+            case .Titanium: print("Make Titanium")
+            case .Observatory: print("Make Observatory")
+            case .Antenna: print("Make Antenna")
+            case .Launchpad: print("Make Launchpad")
+            case .Arena: print("Make Arena")
+            case .ETEC: print("Make ETEC")
+        }
+    }
     
     // MARK: - Init
     
+    /// Makes an example data. **Delete** this upon launch
     init(type:OutpostType, posdex:Posdex, guild:UUID?) {
         self.id = UUID()
         self.guild = nil
@@ -515,7 +396,7 @@ class Outpost:Codable {
         self.type = type
         self.level = 0
         self.supplied = OutpostSupply()
-        self.state = .Filling
+        self.state = .collecting
     }
     
     /// Makes an example data. **Delete** this upon launch
@@ -566,14 +447,11 @@ class OutpostSupply:Codable {
     
     var ingredients:[StorageBox]
     var tanks:[Tank]
-    
-    var skills:[Person] // Will need a reference later, to make busy
-    // Bsides skills (people), everything else is consumable.
-    
+    var skills:[Person]
     var peripherals:[PeripheralObject]
     var bioBoxes:[BioBox]
     
-    
+    /// Contribution PlayerID vs amount
     var players:[UUID:Int] // Player ID + Supplied points
     
     // MARK: - Initializers
@@ -600,19 +478,22 @@ class OutpostSupply:Codable {
     
     // MARK: - Contributions
     
-    func contrib(box:StorageBox) {
-        ingredients.append(box)
-    }
-    func contrib(tank:Tank) {
-        tanks.append(tank)
-    }
-    
     func contribute(with box:StorageBox, player:SKNPlayer) {
         ingredients.append(box)
         guard let pid = player.serverID else { return }
         var pScore:Int = players[pid, default:0]
         pScore += 1
         players[pid] = pScore
+    }
+    
+    func contribute(with person:Person, player:SKNPlayer) {
+        skills.append(person)
+        guard let pid = player.serverID else { return }
+        var pScore:Int = players[pid, default:0]
+        pScore += 1
+        players[pid] = pScore
+        
+        // FIXME: - Make person busy and Save City (with person)
     }
     
     /// Returns the count of all resources

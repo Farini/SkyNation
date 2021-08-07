@@ -318,23 +318,13 @@ class OutpostController:ObservableObject {
     
         let previous = opData.state
         
-        let next = opData.eligibleForState()
-        switch next {
-            case .dateUpgradeShouldBeNil:
-                opData.dateUpgrade = nil
-                self.checkUpgrades()
-            case .needsDateUpgrade:
-                print("Needs date upgrade")
-            case .level(let level):
-                if level == previous {
-                    // same level. Do nothing
-                } else {
-                    // upgraded level
-                    // contact server
-                }
-            case .wrongUpdate:
-                // Show error message
-            print("Error. Wrong update. This shouldn't happen")
+        let upgrade = opData.runUpgrade()
+        switch upgrade {
+            case .noChanges: print("No Changes")
+            case .dateUpgradeShouldBeNil, .needsDateUpgrade: print("Error")
+            case .nextState(let state): print("Next State: \(state)")
+            case .applyForLevelUp(currentLevel: let level): print("Should Apply for level up. Current:\(level), next:\(level + 1)")
+            //                default: print("Not ready")
         }
     }
 }

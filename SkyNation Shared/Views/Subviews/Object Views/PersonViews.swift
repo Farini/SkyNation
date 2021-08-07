@@ -226,6 +226,31 @@ struct PersonDetail:View {
                     Spacer()
                 }
                 
+                if let activity = person.activity, person.isBusy() {
+                    HStack {
+                        Spacer()
+                        Button("Boost (-1 Token)") {
+                            if let player = LocalDatabase.shared.player,
+                               let token = player.requestToken() {
+                                let result = player.spendToken(token: token, save: true)
+                                if result == true {
+                                    let theDate = activity.dateEnds.addingTimeInterval(-3600)
+                                    activity.dateEnds = theDate
+                                    if !person.isBusy() {
+                                        person.activity = nil
+                                    }
+                                    controller.save()
+                                    
+                                    controller.didSelect(person: person)
+                                }
+                            }
+                            
+                        }
+                        .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
+                        Spacer()
+                    }
+                }
+                
                 
                 
                 ForEach(controller.issues, id:\.self) { issue in

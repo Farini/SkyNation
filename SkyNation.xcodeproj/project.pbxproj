@@ -498,6 +498,18 @@
 		85E2C42326BD8A6E003315F2 /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C42126BD8A6E003315F2 /* StoreManager.swift */; };
 		85E2C42426BD8A6E003315F2 /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C42126BD8A6E003315F2 /* StoreManager.swift */; };
 		85E2C42526BD8A6E003315F2 /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C42126BD8A6E003315F2 /* StoreManager.swift */; };
+		85E2C42826BE56FF003315F2 /* GameToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C42726BE56FF003315F2 /* GameToken.swift */; };
+		85E2C42926BE56FF003315F2 /* GameToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C42726BE56FF003315F2 /* GameToken.swift */; };
+		85E2C42A26BE56FF003315F2 /* GameToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C42726BE56FF003315F2 /* GameToken.swift */; };
+		85E2C42B26BE56FF003315F2 /* GameToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C42726BE56FF003315F2 /* GameToken.swift */; };
+		85E2C42D26BE5733003315F2 /* GameProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C42C26BE5733003315F2 /* GameProduct.swift */; };
+		85E2C42E26BE5733003315F2 /* GameProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C42C26BE5733003315F2 /* GameProduct.swift */; };
+		85E2C42F26BE5733003315F2 /* GameProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C42C26BE5733003315F2 /* GameProduct.swift */; };
+		85E2C43026BE5733003315F2 /* GameProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C42C26BE5733003315F2 /* GameProduct.swift */; };
+		85E2C43226BE5753003315F2 /* Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C43126BE5753003315F2 /* Wallet.swift */; };
+		85E2C43326BE5753003315F2 /* Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C43126BE5753003315F2 /* Wallet.swift */; };
+		85E2C43426BE5753003315F2 /* Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C43126BE5753003315F2 /* Wallet.swift */; };
+		85E2C43526BE5753003315F2 /* Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C43126BE5753003315F2 /* Wallet.swift */; };
 		85E6ECF825C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECF925C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
 		85E6ECFA25C9D92B00229E18 /* ServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6ECF725C9D92B00229E18 /* ServerAPI.swift */; };
@@ -693,6 +705,9 @@
 		85E2C41726B9A960003315F2 /* GuildMakerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildMakerView.swift; sourceTree = "<group>"; };
 		85E2C41C26BCDEF0003315F2 /* SKNConsumable.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = SKNConsumable.storekit; sourceTree = "<group>"; };
 		85E2C42126BD8A6E003315F2 /* StoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
+		85E2C42726BE56FF003315F2 /* GameToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameToken.swift; sourceTree = "<group>"; };
+		85E2C42C26BE5733003315F2 /* GameProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameProduct.swift; sourceTree = "<group>"; };
+		85E2C43126BE5753003315F2 /* Wallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wallet.swift; sourceTree = "<group>"; };
 		85E6ECF725C9D92B00229E18 /* ServerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAPI.swift; sourceTree = "<group>"; };
 		85E6ED1C25CF518500229E18 /* BackendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendView.swift; sourceTree = "<group>"; };
 		85F6674C25AF7B9C00E5003B /* RadiatorNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadiatorNode.swift; sourceTree = "<group>"; };
@@ -881,8 +896,7 @@
 		8536F338258D41A500B509D2 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				8536F35D258D475D00B509D2 /* Player.swift */,
-				857DDEC625E4DCAD00E64752 /* Messages.swift */,
+				85E2C42626BE554C003315F2 /* Player */,
 				8536F34E258D475D00B509D2 /* Station */,
 				8504A51B25C6840300739C58 /* Builders */,
 				8536F34B258D475D00B509D2 /* Resources */,
@@ -1190,10 +1204,10 @@
 		8592821025EA3254001233BE /* Mars */ = {
 			isa = PBXGroup;
 			children = (
+				85761806268EC2680024233D /* DataPlan.md */,
 				8517EE3325FC11EF00C34C54 /* Guild.swift */,
 				8592821125EA3287001233BE /* City.swift */,
 				8517EE4025FC124200C34C54 /* Outpost.swift */,
-				85761806268EC2680024233D /* DataPlan.md */,
 			);
 			path = Mars;
 			sourceTree = "<group>";
@@ -1304,6 +1318,18 @@
 				85E2C41726B9A960003315F2 /* GuildMakerView.swift */,
 			);
 			path = Guild;
+			sourceTree = "<group>";
+		};
+		85E2C42626BE554C003315F2 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				8536F35D258D475D00B509D2 /* Player.swift */,
+				85E2C43126BE5753003315F2 /* Wallet.swift */,
+				857DDEC625E4DCAD00E64752 /* Messages.swift */,
+				85E2C42726BE56FF003315F2 /* GameToken.swift */,
+				85E2C42C26BE5733003315F2 /* GameProduct.swift */,
+			);
+			path = Player;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1551,6 +1577,7 @@
 				85E2C41826B9A960003315F2 /* GuildMakerView.swift in Sources */,
 				857DDEC725E4DCAD00E64752 /* Messages.swift in Sources */,
 				8536F441258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
+				85E2C43226BE5753003315F2 /* Wallet.swift in Sources */,
 				8579750F259B9E70004C54D2 /* FlipView.swift in Sources */,
 				8569A34B25A3D9590057A518 /* AirComposition.swift in Sources */,
 				8536F39A258D475D00B509D2 /* TechTree.swift in Sources */,
@@ -1576,6 +1603,7 @@
 				8536F3CE258D47D000B509D2 /* BioView.swift in Sources */,
 				8523338C25D76A9B004CB638 /* AirCompositionView.swift in Sources */,
 				8536F406258D47D000B509D2 /* EarthRequestView.swift in Sources */,
+				85E2C42826BE56FF003315F2 /* GameToken.swift in Sources */,
 				8536F40A258D47D000B509D2 /* MarsMapView.swift in Sources */,
 				85D3BAB2269DF79800B6AA36 /* ForeignCityView.swift in Sources */,
 				850A1B0F25ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */,
@@ -1610,6 +1638,7 @@
 				85D3BAAE269DF78500B6AA36 /* MyCityView.swift in Sources */,
 				8592821225EA3287001233BE /* City.swift in Sources */,
 				8536F376258D475D00B509D2 /* Peripherals.swift in Sources */,
+				85E2C42D26BE5733003315F2 /* GameProduct.swift in Sources */,
 				858D7C4725D4F0AD00A45CF9 /* GameCamera.swift in Sources */,
 				8536F475258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				85D3BB3026AFD28100B6AA36 /* BioBoxDetailView.swift in Sources */,
@@ -1688,6 +1717,7 @@
 				85E2C41926B9A960003315F2 /* GuildMakerView.swift in Sources */,
 				8536F3DB258D47D000B509D2 /* LabActivityView.swift in Sources */,
 				8536F2D3258D330300B509D2 /* GameViewController.swift in Sources */,
+				85E2C42926BE56FF003315F2 /* GameToken.swift in Sources */,
 				8592823725EC4DD3001233BE /* GuildController.swift in Sources */,
 				8536F3F3258D47D000B509D2 /* ProgressViews.swift in Sources */,
 				85C3418F2591078700BF82F9 /* PlayerCardNode.swift in Sources */,
@@ -1697,6 +1727,7 @@
 				8592821325EA3287001233BE /* City.swift in Sources */,
 				8536F40B258D47D000B509D2 /* MarsMapView.swift in Sources */,
 				85CD46A825D1199A000D9C64 /* EarthNode.swift in Sources */,
+				85E2C43326BE5753003315F2 /* Wallet.swift in Sources */,
 				850A1B1025ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */,
 				8504A53C25C6875000739C58 /* Energy.swift in Sources */,
 				8536F3EB258D47D000B509D2 /* PersonControl.swift in Sources */,
@@ -1711,6 +1742,7 @@
 				8536F44E258D47EA00B509D2 /* LifeSupportSystems.swift in Sources */,
 				8536F403258D47D000B509D2 /* TechTreeDiagram.swift in Sources */,
 				8536F383258D475D00B509D2 /* Truss.swift in Sources */,
+				85E2C42E26BE5733003315F2 /* GameProduct.swift in Sources */,
 				8536F3D7258D47D000B509D2 /* RecipeDetailViews.swift in Sources */,
 				857D9A3325C088AE00626884 /* PeripheralDetailView.swift in Sources */,
 				85F6674E25AF7B9C00E5003B /* RadiatorNode.swift in Sources */,
@@ -1802,6 +1834,7 @@
 				85E2C41A26B9A960003315F2 /* GuildMakerView.swift in Sources */,
 				857DDEC925E4DCAD00E64752 /* Messages.swift in Sources */,
 				8536F443258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
+				85E2C43426BE5753003315F2 /* Wallet.swift in Sources */,
 				85797511259B9E70004C54D2 /* FlipView.swift in Sources */,
 				8569A34D25A3D9590057A518 /* AirComposition.swift in Sources */,
 				8536F39C258D475D00B509D2 /* TechTree.swift in Sources */,
@@ -1827,6 +1860,7 @@
 				8536F3D0258D47D000B509D2 /* BioView.swift in Sources */,
 				8523338E25D76A9B004CB638 /* AirCompositionView.swift in Sources */,
 				8536F408258D47D000B509D2 /* EarthRequestView.swift in Sources */,
+				85E2C42A26BE56FF003315F2 /* GameToken.swift in Sources */,
 				8536F40C258D47D000B509D2 /* MarsMapView.swift in Sources */,
 				85D3BAB4269DF79800B6AA36 /* ForeignCityView.swift in Sources */,
 				850A1B1125ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */,
@@ -1861,6 +1895,7 @@
 				85D3BAB0269DF78500B6AA36 /* MyCityView.swift in Sources */,
 				8592821425EA3287001233BE /* City.swift in Sources */,
 				8536F378258D475D00B509D2 /* Peripherals.swift in Sources */,
+				85E2C42F26BE5733003315F2 /* GameProduct.swift in Sources */,
 				858D7C4925D4F0AD00A45CF9 /* GameCamera.swift in Sources */,
 				8536F477258D481700B509D2 /* MarsMapScene.swift in Sources */,
 				85D3BB3226AFD28100B6AA36 /* BioBoxDetailView.swift in Sources */,
@@ -1939,6 +1974,7 @@
 				8536F44C258D47EA00B509D2 /* VehicleBuilderViewModel.swift in Sources */,
 				85797512259B9E70004C54D2 /* FlipView.swift in Sources */,
 				8536F415258D47D000B509D2 /* Parafernalia.swift in Sources */,
+				85E2C43026BE5733003315F2 /* GameProduct.swift in Sources */,
 				8592828825F176C1001233BE /* GameController.swift in Sources */,
 				8536F361258D475D00B509D2 /* Ingredients.swift in Sources */,
 				85A62F0C26222AA400D7B7C8 /* LifeSupportSystems.swift in Sources */,
@@ -1949,6 +1985,7 @@
 				8569A3CB25A624A30057A518 /* LoaderView.swift in Sources */,
 				85E6ECFB25C9D92B00229E18 /* ServerAPI.swift in Sources */,
 				8536F478258D481700B509D2 /* MarsMapScene.swift in Sources */,
+				85E2C42B26BE56FF003315F2 /* GameToken.swift in Sources */,
 				8536F319258D361100B509D2 /* GameConstants.swift in Sources */,
 				8592825325EED6EF001233BE /* SpaceVehicleNode.swift in Sources */,
 				85E2C41B26BB635E003315F2 /* OutpostController.swift in Sources */,
@@ -1982,6 +2019,7 @@
 				8536F4A5258D484B00B509D2 /* SceneDirector.swift in Sources */,
 				8536F470258D481700B509D2 /* CamControlNode.swift in Sources */,
 				8536F444258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
+				85E2C43526BE5753003315F2 /* Wallet.swift in Sources */,
 				8504A52025C6845200739C58 /* StationBuilder.swift in Sources */,
 				8517EE5525FE8C9C00C34C54 /* ServerData.swift in Sources */,
 				8536F381258D475D00B509D2 /* Station.swift in Sources */,

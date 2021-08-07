@@ -87,7 +87,7 @@ class LabViewModel: ObservableObject {
             return false
         }
         // 2. Tokens
-        guard let token = player.shopped.getAToken() else {
+        guard let token = player.requestToken() else {
             print("No tokens")
             return false
         } //player.timeTokens
@@ -115,7 +115,7 @@ class LabViewModel: ObservableObject {
         LocalDatabase.shared.saveStation(station: station)
         
 //        player.timeTokens.removeLast()
-        let result = player.shopped.useToken(token: token)
+        let result = player.spendToken(token: token, save: false)
         
         if result == true {
             return LocalDatabase.shared.savePlayer(player: player)

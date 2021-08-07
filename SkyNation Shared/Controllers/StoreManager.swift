@@ -238,7 +238,7 @@ class StoreController: ObservableObject, StoreManagerDelegate {
             
             // Add the tokens
             let tokens = purch.getTokens()
-            player.shopped.tokens.append(contentsOf: tokens)
+            player.wallet.tokens.append(contentsOf: tokens)
             
             // FIXME: - add 'invite' token
             // Invite tokens

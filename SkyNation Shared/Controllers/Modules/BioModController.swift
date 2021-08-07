@@ -391,7 +391,7 @@ class BioModController: ObservableObject {
         
         var problems:[String] = []
         
-        if let playerTokens = LocalDatabase.shared.player?.shopped.getSpendableTokens() { //LocalDatabase.shared.player?.timeTokens {
+        if let playerTokens = LocalDatabase.shared.player?.countTokens() { //LocalDatabase.shared.player?.timeTokens {
             if playerTokens.count >= tokens {
                 
                 // Player Has enough tokens - Check if Skills match
@@ -417,8 +417,8 @@ class BioModController: ObservableObject {
                     let player = LocalDatabase.shared.player!
 //                    player.timeTokens.removeFirst(tokens)
                     for _ in 1...tokens {
-                        if let token = player.shopped.getAToken() {
-                            let result = player.shopped.useToken(token: token)
+                        if let token = player.requestToken() {
+                            let result = player.spendToken(token: token, save: true)
                             print("Spent Token result: \(result)")
                         }
                     }

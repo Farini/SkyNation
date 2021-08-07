@@ -82,7 +82,7 @@ class StationOverlay:NSObject, SKSceneDelegate {
             if let card:PlayerCardNode = scene.childNode(withName: "playercard") as? PlayerCardNode {
                 card.nameLabel.text = player.name
                 card.moneyLabel.text = GameFormatters.numberFormatter.string(from: NSNumber(value:player.money))
-                card.tokenLabel.text = "\(player.shopped.getSpendableTokens().count)" //"\(player.timeTokens.count)"
+                card.tokenLabel.text = "\(player.countTokens().count)" //"\(player.timeTokens.count)"
                 
             } else {
                 print("⚠️ Error: Couldnt find PlayerCardNode in Overlay Scene")
