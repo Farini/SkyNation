@@ -12,6 +12,8 @@ import Foundation
 enum Posdex:Int, Codable, CaseIterable {
     
     case hq = 0
+    
+    // 9 Cites
     case city1
     case city2
     case city3
@@ -21,6 +23,8 @@ enum Posdex:Int, Codable, CaseIterable {
     case city7
     case city8
     case city9
+    
+    // 13 Outposts (+ hq = 14)
     case antenna // 10
     case arena
     case biosphere1
@@ -245,17 +249,6 @@ struct GuildSummary:Codable {
     // color
     var color:String
 }
-
-// Guild Buildables
-/*
- 1. Roads
- 2. Transport (Energy, Water)
- 3. Trading Center?
- 4. Hotel?
- 5. Bank?
- 6. Entertainment (other)
- 7. Science Missions + rewards
- */
 
 // MARK: - UI Variables stored on DB
 

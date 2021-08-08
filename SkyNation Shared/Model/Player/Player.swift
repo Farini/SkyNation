@@ -15,6 +15,10 @@ import Foundation
  2. Server (login)          SKNUserPost
  3. ServerDB                PlayerContent -> rename to PlayerCard?
  4. Card (content)          [Deprecated] PlayerCard
+ 
+ Outpost Collection - City Data?
+ 1. Have a table with outpost indexes and date collected?
+ 
  */
 
 /// **Private** information about the `Player`
@@ -224,6 +228,7 @@ struct SKNUserPost:Codable {
 }
 
 /** The Content used to **update**  a `DBPlayer` */
+
 struct PlayerContent:Codable {
     
     var id:UUID
@@ -264,6 +269,50 @@ struct PlayerContent:Codable {
     }
     
 }
+
+struct PlayerPost:Codable {
+    
+    // IDs
+//    var id:UUID
+    var localID:UUID            // id given by local machine
+    var serverID:UUID?          // an ID given by the server (SKNUser)
+    var playerID:UUID?          // an ID for the `DBPlayer` object
+    var gcid:String?            // an ID given by GameCenter
+    var guildID:UUID?           // id of the Guild
+    var cityID:UUID?            // City ID
+    
+    // Constructed
+    var name:String
+    var avatar:String
+    var money:Int
+    var experience:Int
+    
+    // Dates
+    var beganGame:Date
+    var lastSeen:Date
+    
+    // Server Pass
+    var datePass:Date?
+    var keyPass:String?
+    
+    init(player:SKNPlayer) {
+        self.localID = player.localID
+        self.serverID = player.serverID
+        self.playerID = player.playerID
+        self.gcid = player.gcid
+        self.guildID = player.guildID
+        self.cityID = player.cityID
+        self.name = player.name
+        self.avatar = player.avatar
+        self.money = player.money
+        self.experience = player.experience
+        self.beganGame = player.beganGame
+        self.lastSeen = player.lastSeen
+        self.datePass = player.datePass
+        self.keyPass = player.keyPass
+    }
+}
+
 
 /// `Public` information about a `Player`
 /*

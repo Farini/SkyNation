@@ -148,6 +148,7 @@ struct SmallCircleButtonStyle: ButtonStyle {
 // This originated here
 // ABSTRACT: https://sarunw.com/posts/swiftui-buttonstyle/#related-resources
 
+/// The Game's main button style
 struct NeumorphicButtonStyle: ButtonStyle {
     
     var bgColor: Color
@@ -190,24 +191,4 @@ struct NeumorphicButtonStyle: ButtonStyle {
         }
     }
 }
-
-// MARK: - Modifiers
-
-//struct MakeSquareBounds: ViewModifier {
-//
-//    @State var size: CGFloat = 64
-//
-//    func body(content: Content) -> some View {
-//        let c = ZStack {
-//            content.alignmentGuide(HorizontalAlignment.center) { (vd) -> CGFloat in
-//                DispatchQueue.main.async {
-//                    self.size = max(vd.height, vd.width)
-//                }
-//                return vd[HorizontalAlignment.center]
-//            }
-//        }
-//        return c.frame(width: size, height: size)
-//    }
-//}
-
 

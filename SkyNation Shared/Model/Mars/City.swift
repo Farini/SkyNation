@@ -33,6 +33,12 @@ struct DBCity:Codable {
     }
 }
 
+// MARK: - Local Database
+
+/*
+ Outpost Collection - City Data?
+ 1. Have a table with outpost indexes and date collected?
+ */
 
 /// The Complete City Data
 class CityData:Codable, Identifiable {
@@ -295,7 +301,6 @@ enum MarsRecipe:String, Codable, CaseIterable {
     
     case EVehicle   // Extract Silica, Iron, Lithium, Crystals
 }
-
 
 struct CityTechTree {
     var uniqueTree:Tree<Unique<CityTech>>

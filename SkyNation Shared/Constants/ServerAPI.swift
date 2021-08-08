@@ -55,9 +55,10 @@ class SKNS {
     // MARK: - User, Login
     
     /// A function that does `Sign-in`, or `Login` based on what data we have
-    static func resolveLogin(completion:((SKNPlayer?, Error?) -> ())?) {
+    static func resolveLogin(completion:((PlayerPost?, Error?) -> ())?) {
         
         guard let player = LocalDatabase.shared.player else { return }
+        let playerPost = PlayerPost(player: player)
         
         // Build Request
         let address = "\(baseAddress)/users/login" // shouldSignIn ? "\(baseAddress)/users/login"  // sign-in":"\(baseAddress)/users/login"
@@ -68,16 +69,20 @@ class SKNS {
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         
         let encoder = JSONEncoder()
-        if let data = try? encoder.encode(player) {
-            print("Adding Data")
+        encoder.dateEncodingStrategy = .secondsSince1970
+        
+        if let data = try? encoder.encode(playerPost) {
+            print("\n\nAdding Data")
             request.httpBody = data
+            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
+            print("DS: \(dataString)")
         }
         
         let task = session.dataTask(with: request) { (data, response, error) in
             if let data = data {
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .secondsSince1970
-                if let responseUser = try? decoder.decode(SKNPlayer.self, from: data) {
+                if let responseUser = try? decoder.decode(PlayerPost.self, from: data) {
                     
                     print("Response user: \(responseUser.name)")
                     
@@ -243,6 +248,57 @@ class SKNS {
         }
         task.resume()
     }
+    
+    // MARK: - Tokens
+    
+    // Validate
+    static func validateTokenFromTextInput(text:String, completion:((GameToken?, String?) -> ())?) {
+        
+        guard let validID = UUID(uuidString: text) else {
+            completion?(nil, "Invalid Token pass")
+            return
+        }
+        
+        let url = URL(string: "\(baseAddress)/token/validate/\(validID.uuidString)")!
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                DispatchQueue.main.async {
+                    print("Data returning")
+                    
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .secondsSince1970
+                    let string = String(data:data, encoding:.utf8)
+                    
+                    do {
+                        let token = try decoder.decode(GameToken.self, from: data)
+                        completion?(token, nil)
+                        return
+                    }catch{
+                        print("Error decoding: \(error.localizedDescription)")
+                        print("\n\nString:")
+                        print(string ?? "n/a")
+                        
+                        completion?(nil, error.localizedDescription)
+                    }
+                }
+                
+            } else {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error?.localizedDescription)
+                }
+            }
+        }
+        task.resume()
+        
+    }
+    
+    // Make Purchase (push)
+    
     
     // MARK: - Guild
     

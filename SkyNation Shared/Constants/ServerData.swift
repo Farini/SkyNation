@@ -123,9 +123,14 @@ class ServerData:Codable {
             SKNS.resolveLogin { (player, error) in
                 if let player = player {
                     DispatchQueue.main.async {
-                        self.player = player
+                        self.player.keyPass = player.keyPass //= player
+                        if self.player.guildID != player.guildID {
+                            if player.guildID == nil {
+                                self.player.guildID = nil
+                            }
+                        }
                         self.lastLogin = Date()
-                        self.user = SKNUserPost(player: player)
+                        self.user = SKNUserPost(player: self.player)
                         self.status = .online
                         
                         // Save
@@ -139,12 +144,12 @@ class ServerData:Codable {
 //                        }
                         
                         // completion
-                        completion(player, nil)
+                        completion(self.player, nil)
                     }
                     
                 } else {
                     // Error
-                    self.errorMessage = error?.localizedDescription ?? "Could not connect to serer"
+                    self.errorMessage = error?.localizedDescription ?? "Could not connect to server"
                     completion(nil, error)
                 }
             }
@@ -158,21 +163,21 @@ class ServerData:Codable {
     func fetchGuild(completion:@escaping(Guild?, Error?) -> ()) {
         // Seconds until next fetch
         let delay:TimeInterval = 60.0
-        
+
         if let log = lastGuildFetch, Date().timeIntervalSince(log) < delay {
             completion(self.guild, nil)
             return
         }
-        
+
         SKNS.findMyGuild(user: self.user) { myGuild, error in
-            
+
             completion(myGuild, error)
-            
+
             if let myGuild = myGuild {
                 self.guild = myGuild
                 self.lastGuildFetch = Date()
                 self.status = .online
-                
+
                 // Save
                 if LocalDatabase.shared.saveServerData(skn: self) == false {
                     print("could not save")
@@ -183,6 +188,7 @@ class ServerData:Codable {
     }
     
     var lastFullGuildFetch:Date?
+    
     
     /// My Guild (Full Content)
     func fetchFullGuild(completion:@escaping(GuildFullContent?, Error?) -> ()) {
@@ -216,11 +222,12 @@ class ServerData:Codable {
         }
     }
     
+    
     // My City
-    var lastCityFetch:Date?
-    func fetchCity() {
-        
-    }
+//    var lastCityFetch:Date?
+//    func fetchCity() {
+//
+//    }
     
     // Vehicles
     var lastFetchedVehicles:Date?
@@ -242,9 +249,32 @@ class ServerData:Codable {
         SKNS.resolveLogin { (player, error) in
             if let player = player {
                 DispatchQueue.main.async {
-                    self.player = player
+
                     self.lastLogin = Date()
-                    self.user = SKNUserPost(player: player)
+                    
+                    let updatePlayer = self.player
+                    updatePlayer.keyPass = player.keyPass
+                    updatePlayer.lastSeen = Date()
+                    
+                    if player.playerID != updatePlayer.playerID {
+                        print("‼️ Player Getting new 'playerID'")
+                    }
+                    if player.serverID != updatePlayer.serverID {
+                        print("‼️ Player Getting new 'serverID'")
+                    }
+                    if player.guildID != updatePlayer.guildID {
+                        print("‼️ Player Getting new 'guildID'")
+                    }
+                    
+                    self.user = SKNUserPost(player: updatePlayer)
+                    self.status = .online
+                    
+                    // Save
+                    if LocalDatabase.shared.saveServerData(skn: self) == false {
+                        print("could not save")
+                    }
+                    
+                    self.user = SKNUserPost(player: updatePlayer)
 //                    if let _ = player.guildID {
 //                        self.fetchGuild()
 //                    }

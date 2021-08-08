@@ -21,6 +21,8 @@ struct GameShoppingView: View {
     
 //    @State var step:ShoppingStep = .product
     @State var promoCode:String = ""
+    @State private var isValidatingToken:Bool = false
+    @State private var validationMessage:String?
     
 //    var packages = GameProductType.allCases//GameRawPackage.allCases
     
@@ -72,15 +74,24 @@ struct GameShoppingView: View {
                 switch controller.step {
                     case .product:
                         
+                        // Promo Code
                         VStack(alignment:.leading, spacing:4) {
                             Text("Enter promo code:")
                             HStack {
+                                if isValidatingToken {
+                                    ProgressView()
+                                }
                                 TextField("Promo Code", text: $promoCode)
                                     .padding(.trailing, 20)
                                 Button("Verify") {
                                     print("Verifying Promo code: \(promoCode)")
+                                    self.validateToken()
                                 }
                                 .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
+                                .disabled(isValidatingToken)
+                            }
+                            if let msg = self.validationMessage {
+                                Text(msg)
                             }
                         }
                         .padding(.horizontal)
@@ -164,6 +175,7 @@ struct GameShoppingView: View {
             }
         }
     }
+    
     /*
     func nextStep() {
         switch step {
@@ -175,41 +187,44 @@ struct GameShoppingView: View {
     }
     */
     
-    // Purchase
-    /*
-    func purchaseProduct(product:GameProductType, kit:Purchase.Kit) {
+    // Token Validation
+    func validateToken() {
         
-        print("Purchase Product Function")
+        guard !promoCode.isEmpty else { return }
+        self.isValidatingToken = true
         
-        // Deal with money
-        let player = LocalDatabase.shared.player!
-        player.money += product.moneyAmount
-        player.experience += 1
-        
-        // Game Message (if want, has to add another achievement type
-//        GameMessageBoard.shared.newAchievement(type: ., message: <#T##String?#>)
-        
-        
-//        self.step = .appStore
-        
-        // Delay
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
-            // Delay
-//            self.step = .receipt
+        SKNS.validateTokenFromTextInput(text: self.promoCode) { token, errorString in
+            if let token = token {
+                print("Got a token: \(token.id)")
+                guard let player = LocalDatabase.shared.player else {
+                    fatalError()
+                }
+                player.wallet.tokens.append(token)
+                let r = LocalDatabase.shared.savePlayer(player: player)
+                print("Saved Player after getting token: \(r)")
+                DispatchQueue.main.async {
+                    self.validationMessage = "You got an Entry token to Mars !"
+                    self.isValidatingToken = false
+                }
+            } else {
+                print("Could not get a token")
+                if let string = errorString {
+                    DispatchQueue.main.async {
+                        self.validationMessage = "Not a valid token. \(string)"
+                        self.isValidatingToken = false
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.validationMessage = "Invalid token."
+                        self.isValidatingToken = false
+                    }
+                }
+            }
         }
-        
-        // FIXME: - Needs receipt and choice of Kit
-        
-        let newPurchase = Purchase(product: product, kit: kit, receipt: "ABC")
-//        player.shopped.makePurchase(cart: newPurchase)
-        
-        // FIXME: - add the kit
-        
-//        let result = LocalDatabase.shared.savePlayer(player: player)
-//        print("Saved player after purchase.: \(result)")
-        
     }
-    */
+    
+    // Purchase
+    
     
     // Barcode
     

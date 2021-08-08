@@ -35,6 +35,9 @@ class MarsBuilder {
     var guild:GuildFullContent?
     var scene:SCNScene
     
+    /// Warning User has no guild, or been kicked out of previous
+    var hasNoGuild:Bool = false
+    
     // Scene Callback from clicking Mars Icon (Switch Scene)
     func requestMarsInfo(completion:@escaping(GuildFullContent?, MGuildState) -> ()) {
         
@@ -128,11 +131,11 @@ class MarsBuilder {
             }
             guard let _ = player.guildID else {
                 print("No Guild ID for player: \(player.name)")
+                self.hasNoGuild = true
                 return
             }
             
-            SKNS.loadGuild { (guild, error) in
-                
+            ServerManager.shared.inquireFullGuild { guild, error in
                 if let guild:GuildFullContent = guild {
                     self.guild = guild
                     print("\n**********************")
@@ -163,15 +166,22 @@ class MarsBuilder {
                     
                 } else {
                     print("No guild in result")
+                    self.hasNoGuild = true
+                    
                     if let error = error {
                         print("Error: \(error.localizedDescription)")
                     }
                 }
             }
+            
+           
         }
         
         // Random
         else {
+            
+            print("\n *** Random Data *** \n")
+            
             var randomGuild = GuildFullContent()
             self.cities = randomGuild.cities
             self.outposts = randomGuild.outposts
@@ -217,27 +227,6 @@ class MarsBuilder {
             }
         }
     }
-    
-    // Request My City
-//    func getMyCityInfo() {
-//
-//        if let myCity = myDBCity {
-//            SKNS.loadCity(posdex: Posdex(rawValue:myCity.posdex)!) { (cityData, error) in
-//                if let cityData = cityData {
-//                    print("Updating my CityData object")
-//                    self.myCityData = cityData
-//                } else {
-//                    print("Could not update my citydata. Error: \(error?.localizedDescription ?? "n/a")")
-//                    self.myCityData = nil
-//                }
-//            }
-//        }
-//    }
-    
-    // Load objects that represent outposts, cities, etc.
-    /* func loadSceneObjects() {
-        
-    } */
     
     
     // Selection
@@ -302,11 +291,13 @@ class MarsBuilder {
     // MARK: - Initialize
     
     private init() {
-        print("Initting Mars Director")
+        
+        print("Initting Mars Builder")
+        
         guard let scene = MarsBuilder.loadScene() else { fatalError() }
         self.scene = scene
         
-        getServerInfo(randomize: true)
+        getServerInfo(randomize: false)
     }
     
     // Load Scene

@@ -133,7 +133,8 @@ enum OutpostUpgradeResult {
 class Outpost:Codable {
     
     var id:UUID
-    var guild:[String:UUID?]?
+//    var guild:[String:UUID?]?
+    var guild:UUID
     
     var model:String = ""
     var posdex:Posdex
@@ -391,7 +392,7 @@ class Outpost:Codable {
     /// Makes an example data. **Delete** this upon launch
     init(type:OutpostType, posdex:Posdex, guild:UUID?) {
         self.id = UUID()
-        self.guild = nil
+        self.guild = UUID()
         self.posdex = posdex
         self.type = type
         self.level = 0
@@ -524,6 +525,8 @@ class OutpostSupply:Codable {
     }
 }
 
+
+
 struct DBOutpost:Codable {
     
     var id:UUID
@@ -533,6 +536,7 @@ struct DBOutpost:Codable {
     var level:Int
     var accounting:Date
     var posdex:Int
+    var state:OutpostState
     
     func getNextJob() -> OutpostJob? {
         
@@ -625,6 +629,7 @@ struct DBOutpost:Codable {
         self.level = Bool.random() ? 0:1
         self.accounting = Date().addingTimeInterval(Double.random(in: 20...652))
         self.posdex = posdex.rawValue
+        self.state = .collecting
     }
 }
 

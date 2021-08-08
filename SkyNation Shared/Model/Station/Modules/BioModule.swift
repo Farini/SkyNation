@@ -161,11 +161,11 @@ class BioBox:Codable, Identifiable {
         
         // Initial Population
         let populi = DNAMatcherModel.populate(dnaChoice: chosen, popSize: size)
-        print("-- POPULI... ")
-        for p in populi {
-            print(p)
-        }
-        print("---P---")
+//        print("-- POPULI... ")
+//        for p in populi {
+//            print(p)
+//        }
+//        print("---P---")
         population = populi
         populationLimit = size
         

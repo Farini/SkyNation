@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 /// The types of Token, to keep track of where they come from.
 enum TokenType:String, Codable, CaseIterable {
     
@@ -31,7 +30,7 @@ struct GameToken:Codable {
     
     var id:UUID
     var date:Date
-    var user:UUID
+    var dbUser:UUID
     var origin:TokenType
     
     var usedDate:Date?
@@ -41,7 +40,7 @@ struct GameToken:Codable {
     init(free pid:UUID) {
         self.id = UUID()
         self.date = Date()
-        self.user = pid
+        self.dbUser  = pid
         self.origin = .Freebie
     }
     
@@ -50,7 +49,7 @@ struct GameToken:Codable {
         // Validate purchase
         self.id = UUID()
         self.date = Date()
-        self.user = userID
+        self.dbUser = userID
         self.origin = .Purchased
     }
     
@@ -58,7 +57,7 @@ struct GameToken:Codable {
     init(entry pid:UUID) {
         self.id = UUID()
         self.date = Date()
-        self.user = pid
+        self.dbUser = pid
         self.origin = .Entry
     }
     
@@ -66,7 +65,7 @@ struct GameToken:Codable {
     init(beginner pid:UUID) {
         self.id = UUID()
         self.date = Date()
-        self.user = UUID()
+        self.dbUser = UUID()
         self.origin = .Beginner
         
     }
@@ -75,7 +74,7 @@ struct GameToken:Codable {
         if usedDate != nil { return false }
         
         if origin.needsPlayerPass == true {
-            return pid == user
+            return pid == dbUser
         } else {
             return true
         }

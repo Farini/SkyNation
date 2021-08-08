@@ -68,13 +68,13 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
  - [ ] ★★☆☆☆ Icons - App Icon
  
  Audio
- - [ ] ☆☆☆☆☆ Sound Effects
+ - [ ] ★☆☆☆☆ Sound Effects
  - [ ] ★☆☆☆☆ Music / Soudtrack
  
  3D Scenes
  - [ ] ★★★☆☆ Space Station
  - [ ] ★★★★☆ Delivery Vehicle
- - [ ] ★☆☆☆☆ Mars Colony
+ - [ ] ★★☆☆☆ Mars Colony
  - [ ] ★★★☆☆ Space Vehicle
  
  ## Total Completeness

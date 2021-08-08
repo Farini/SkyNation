@@ -51,7 +51,6 @@ class GameSettingsController:ObservableObject {
             playerName = player.name
             hasChanges = false
             savedChanges = true
-//            user = SKNUserPost(player: player)
             viewState = GameSettingsTab.Loading
             
         } else {
@@ -140,20 +139,13 @@ class GameSettingsController:ObservableObject {
     
     func fetchUser() {
         
-//        guard let user = user else {
-//            print("No user")
-//            return
-//        }
-        
-//        let decoder = JSONDecoder()
-//        decoder.dateDecodingStrategy = .secondsSince1970
-        
         ServerManager.shared.inquireLogin { player, error in
             DispatchQueue.main.async {
                 if let player = player {
                     self.user = player
                 } else {
                     print("Did not find user. \(error?.localizedDescription ?? "")")
+                    // serverID CCB3A438-3CEC-44E8-94C5-EC711FBF4ABB
                 }
             }
         }

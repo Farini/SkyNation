@@ -515,7 +515,65 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             case .SpaceStation:
                 print("We are in Space Station. Load Mars")
                 
+                guard let player = LocalDatabase.shared.player else {
+                    return
+                }
+                
+                var enter:Bool = false
+                print("Requesting Player entry...")
+                let entryResult = player.marsEntryPass()
+                if entryResult.result == false {
+                    if let entryToken = entryResult.token {
+                        if let r2 = player.requestEntryToken(token: entryToken) {
+                            print("Found an Entry ticket \(r2.date)")
+                            enter = true
+                        }
+                    }
+                } else {
+                    print("Entry OK: \(entryResult.token?.id.uuidString ?? "n/a")")
+                    enter = true
+                }
+                
+                guard enter == true else {
+                    print("No Entry")
+                    
+                    let line1 = "⚠️ Need and entry ticket to Mars"
+                    let line2 = "🛒 Head to the store and purchase any product."
+                    let line3 = "Or type a coupon password in the store."
+                    let lines:[String] = [line1, line2, line3]
+                    var newsDelay = 1.0
+                    for line in lines {
+                        let timeDelay = DispatchTime.now() + newsDelay
+                        DispatchQueue.main.asyncAfter(deadline: timeDelay) {
+                            self.stationOverlay.generateNews(string: line)
+                        }
+                        newsDelay += 5
+                    }
+                    
+                    return
+                }
+                
+                
+                
                 let mBuilder = MarsBuilder.shared
+                guard mBuilder.hasNoGuild == false else {
+                    print("No Entry")
+                    
+                    let line1 = "⚠️ You have no Guild."
+                    let line2 = "This could happen if you haven't joined a guild"
+                    let line3 = "Or because you were booted 👢"
+                    let lines:[String] = [line1, line2, line3]
+                    var newsDelay = 1.0
+                    for line in lines {
+                        let timeDelay = DispatchTime.now() + newsDelay
+                        DispatchQueue.main.asyncAfter(deadline: timeDelay) {
+                            self.stationOverlay.generateNews(string: line)
+                        }
+                        newsDelay += 5
+                    }
+                    
+                    return
+                }
                 mBuilder.populateScene()
                 
                 let camParent = mBuilder.scene.rootNode.childNode(withName: "OtherCams", recursively: false)!
@@ -551,6 +609,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     }
                 }
                 
+            
                 /*
                 MarsBuilder.shared.requestMarsInfo { guildFC, guildState in
                     
@@ -727,6 +786,10 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 print("cannot find audio file")
             }
         }
+        
+        
+        // Fetch Mars Data?
+        let mBuilder = MarsBuilder.shared
     }
     
     func loadLastBuildItem() {
