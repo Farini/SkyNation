@@ -33,7 +33,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 backing: .buffered, defer: false)
             window.center()
             window.setFrameAutosaveName("SUI Window")
-            window.contentView = NSHostingView(rootView: GameSettingsView())
+            window.contentView = NSHostingView(rootView: GameSettingsView(guildController: GuildController(autologin: true)))
             window.makeKeyAndOrderFront(nil)
         }
         

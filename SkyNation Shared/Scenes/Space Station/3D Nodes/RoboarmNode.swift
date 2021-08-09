@@ -19,7 +19,7 @@ class RoboArmNode:SCNNode {
     func animate() {
         
         // For Debugging, print angles
-        if GameSettings.shared.debugScene {
+        if GameSettings.debugScene {
             print("Animating Roboarm")
             self.debugAnime()
         }
@@ -30,7 +30,7 @@ class RoboArmNode:SCNNode {
         let armSequence = SCNAction.sequence([waiter, rotate])
         
         arm.runAction(armSequence) {
-            if GameSettings.shared.debugScene {
+            if GameSettings.debugScene {
                 print("RoboArm Finished")
                 self.debugAnime()
             }
@@ -45,7 +45,7 @@ class RoboArmNode:SCNNode {
         thirdArm.runAction(forearmSequence) {
             
 //            self.debugAnime()
-            if GameSettings.shared.debugScene {
+            if GameSettings.debugScene {
                 print("Forearm Finished Animating")
                 self.debugAnime()
             }

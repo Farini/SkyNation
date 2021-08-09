@@ -190,6 +190,7 @@ struct PlayerEditView: View {
 struct SettingsServerTab:View {
     
     @ObservedObject var controller:GameSettingsController
+    @ObservedObject var guildController:GuildController
     
     var body: some View {
         
@@ -198,6 +199,7 @@ struct SettingsServerTab:View {
             VStack {
                 
                 HStack(alignment:.top) {
+                    
                     VStack(alignment:.leading, spacing:24) {
                         //                    Text("Player").font(.title)
                         //                    Divider()
@@ -216,12 +218,13 @@ struct SettingsServerTab:View {
                     
                     Spacer()
                     
-                    if let guild = controller.guild {
+                    if let guild = guildController.joinedGuild {
                         // Make a Guild view with the full object
-                        Text("G: \(guild.name)")
+                        Text("Your Guild \(guild.name)")
+                        GuildView(controller:guildController, guild:guild, style:.largeSummary)
                     } else if let guild = controller.selectedGuildSum {
-                        Text("Guild \(guild.name)")
-                        GuildView(guild:guild, style:.largeSummary)
+//                        Text("Guild \(guild.name)")
+                        GuildView(controller: guildController, guild:guild, style:.largeSummary)
                     } else if let guild = controller.selectedGuildObj {
                         // Make another view for full object
                         Text("G: \(guild.name)")
@@ -230,17 +233,13 @@ struct SettingsServerTab:View {
                 }
                 .padding(.horizontal)
                 
-                
-                
-                
-                
                 // Exploring
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 130), spacing: 16, alignment: .top)], alignment: .center, spacing: 16) {
                     
                     ForEach(controller.joinableGuilds, id:\.id) { guild in
 
                         Text("Guild \(guild.name)").padding(12)
-                        GuildView(guild:guild, style:.thumbnail)
+                        GuildView(controller:guildController, guild:guild, style:.thumbnail)
                             .onTapGesture {
                                 select(guild:guild)
                             }
@@ -267,7 +266,8 @@ struct SettingsServerTab:View {
                         .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
                         
                         Button("Fetch Guilds") {
-                            controller.fetchGuilds()
+//                            controller.fetchGuilds()
+                            guildController.fetchGuilds()
                         }
                         .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
                     } else {
@@ -291,6 +291,10 @@ struct SettingsServerTab:View {
                         }
                         .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
                     }
+                }
+                
+                if !guildController.news.isEmpty {
+                    Text(guildController.news)
                 }
             }
         }
@@ -318,7 +322,9 @@ struct GameSettingsTabView: View {
     @State var useCloudData:Bool = GameSettings.shared.useCloud
     @State var showLights:Bool = GameSettings.shared.showLights
     @State var clearTanks:Bool = GameSettings.shared.clearEmptyTanks
+    @State var mergeTanks:Bool = GameSettings.shared.autoMergeTanks
     @State var startingScene:GameSceneType = GameSettings.shared.startingScene
+    
     
     @State var musicOn:Bool = GameSettings.shared.musicOn
     @State var soundFXOn:Bool = GameSettings.shared.soundFXOn
@@ -349,6 +355,7 @@ struct GameSettingsTabView: View {
                         }
                         .frame(maxWidth: 200)
                         Toggle("Clear empty tanks", isOn:$clearTanks)
+                        Toggle("Auto merge Tanks", isOn:$mergeTanks)
                         Toggle("Show Tutorial", isOn:$showTutorial)
                     }
                     Spacer()
@@ -403,7 +410,7 @@ struct GameSettingsTabView: View {
 struct PlayerEditView_Previews: PreviewProvider {
     static var previews: some View {
         //        PlayerEditView(controller: GameSettingsController())
-        SettingsServerTab(controller:GameSettingsController())
+        SettingsServerTab(controller:GameSettingsController(), guildController: GuildController(autologin: false))
     }
 }
 
@@ -421,7 +428,7 @@ struct GameTabs_Previews2: PreviewProvider {
                     Label("Game", systemImage:"gamecontroller")
                 }
             // Server
-            SettingsServerTab(controller:GameSettingsController())
+            SettingsServerTab(controller:GameSettingsController(), guildController: GuildController(autologin: false))
                 .tabItem {
                     Label("Server", systemImage:"gamecontroller")
                 }

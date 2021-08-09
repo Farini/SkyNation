@@ -7,8 +7,7 @@
 
 import Foundation
 
-/**
- The `Position` index of **City**, or **Outpost** */
+/** The `Position` index of **City**, or **Outpost** */
 enum Posdex:Int, Codable, CaseIterable {
     
     case hq = 0
@@ -111,6 +110,7 @@ enum GuildTerrainType:String, Codable, CaseIterable {
     case Terrain3
 }
 
+/// Guild: "a medieval association of craftsmen or merchants, often having considerable power." - in Mars!
 struct Guild:Codable {
     
     var id:UUID
@@ -159,7 +159,7 @@ struct Guild:Codable {
     
 }
 
-/// the guild. Full Content Format
+/// the Guild. Full Content Format, with DBOutposts and DBCities
 struct GuildFullContent:Codable {
     
     var id:UUID
@@ -171,6 +171,11 @@ struct GuildFullContent:Codable {
     
     var citizens:[PlayerContent]
     
+    // icon
+    var icon:String
+    
+    // color
+    var color:String
     
     var isOpen:Bool
     
@@ -229,10 +234,22 @@ struct GuildFullContent:Codable {
             ops.append(op)
         }
         self.outposts = ops
+        
+        self.icon = GuildIcon.allCases.randomElement()!.rawValue
+        self.color = GuildColor.allCases.randomElement()!.rawValue
+        
+    }
+    
+    func makeSummary() -> GuildSummary {
+        let cityIDs = self.cities.compactMap({ $0.id })
+        let outpostIDs = self.outposts.compactMap({ $0.id })
+        let summary = GuildSummary(id: self.id, name: self.name, isOpen: self.isOpen, citizens: self.citizens.compactMap({ $0.id }), cities: cityIDs , outposts: outpostIDs ?? [], icon: icon, color: color)
+        return summary
     }
     
 }
 
+/// A Small representation of Guild object. Convenient for presenting a Guild in the screen
 struct GuildSummary:Codable {
     
     var id:UUID

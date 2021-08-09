@@ -67,6 +67,7 @@ class GameSettingsController:ObservableObject {
         self.updateLoadedList()
     }
     
+    /// Updates the front list showing the loading status of Data
     func updateLoadedList() {
         var items:[String] = []
         if let player = LocalDatabase.shared.player {
@@ -95,16 +96,11 @@ class GameSettingsController:ObservableObject {
                 } else {
                     items.append("< No server ID >")
                 }
-//                if let gid = user.guildID {
-//                    items.append("U-GID \(gid.uuidString)")
-//                } else {
-//                    items.append("< No Guild ID >")
-//                }
-//                if let cid = user.cityID {
-//                    items.append("U-CID \(cid.uuidString)")
-//                } else {
-//                    items.append("< No City ID >")
-//                }
+                if let gid = user.guildID {
+                    items.append("Guild: \(gid.uuidString)")
+                } else {
+                    items.append("< No Guild ID >")
+                }
             } else {
                 items.append("User not connected")
             }
@@ -171,26 +167,25 @@ class GameSettingsController:ObservableObject {
 ////        }
     }
     
+    /*
     func fetchGuilds() {
 //        news = "Fetching Guilds..."
         SKNS.browseGuilds { (guilds, error) in
             if let array = guilds {
                 print("Updating Guilds \(array.count)")
                 self.joinableGuilds = array
-//                self.highlightedGuild = array.first
-//                self.news = "Here are the guilds"
             } else {
                 if let error = error {
                     print("Error: \(error.localizedDescription)")
-//                    self.news = error.localizedDescription
                 } else {
-//                    self.news = "Something else happened. Not an error, but no Guilds"
                     print("Something else happened. Not an error, but no Guilds")
                 }
             }
             
         }
     }
+    */
+    
     
     func joinGuild(sum:GuildSummary) {
         
@@ -207,6 +202,8 @@ class GameSettingsController:ObservableObject {
                     let save = LocalDatabase.shared.savePlayer(player: self.player)
                     print("Saved Player: \(save)")
                 }
+            } else {
+                print("⚠️ Player could not join Guild. \(error?.localizedDescription ?? "")")
             }
         }
     }

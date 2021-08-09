@@ -61,7 +61,7 @@ struct GuildExplorerView: View {
                     }
                     
                     if let sGuild = controller.sGuild {
-                        GuildView(guild: sGuild.makeSummary(), style: .largeSummary)
+                        GuildView(controller: controller, guild: sGuild.makeSummary(), style: .largeSummary)
                     }
                 }
                 
@@ -76,7 +76,7 @@ struct GuildExplorerView: View {
                 
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 130), spacing: 16, alignment: .top)], alignment: .center, spacing: 16) {
                     ForEach(controller.fGuilds, id:\.id) { guild in
-                        GuildView(guild: guild.makeSummary(), style: .thumbnail)
+                        GuildView(controller: controller, guild: guild.makeSummary(), style: .thumbnail)
                             .onTapGesture {
                                 self.didSelect(guild: guild)
                             }

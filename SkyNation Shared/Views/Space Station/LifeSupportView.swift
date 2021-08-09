@@ -553,7 +553,9 @@ struct AccountingReportView: View {
                     
                     let wasteLiquid = controller.boxes.filter({ $0.type == .wasteLiquid }).map({ $0.current }).reduce(0, +)
                     let wasteLiquidCap = controller.boxes.filter({ $0.type == .wasteLiquid }).map({ $0.capacity }).reduce(0, +)
-                    let wasteLiquidPct = Int(Double(wasteLiquid)/Double(wasteLiquidCap) * 100.0)
+                    
+                    let dTop:Double = Double(wasteLiquid) + 0.01 / max(0.1, Double(wasteLiquidCap))
+                    let wasteLiquidPct = Int(dTop * 100.0)
                     
                     ProgressView("💦 liquid | \(wasteLiquid) of \(wasteLiquidCap). \(wasteLiquidPct)%", value: Float(wasteLiquid), total: Float(wasteLiquidCap))
                     

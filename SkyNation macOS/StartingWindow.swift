@@ -17,7 +17,7 @@ class StartingWindow: NSWindowController, NSWindowDelegate {
         
         self.window!.center()
         self.window!.setFrameAutosaveName("SUI Window")
-        self.window!.contentView = NSHostingView(rootView: GameSettingsView())
+        self.window!.contentView = NSHostingView(rootView: GameSettingsView(guildController: GuildController(autologin: true)))
         self.window!.makeKeyAndOrderFront(nil)
         window?.title = "SkyNation"
         

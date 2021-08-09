@@ -42,7 +42,7 @@ class Antenna3DNode:SCNNode {
         
         guard let theNode = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Antenna.scn")?.rootNode.childNode(withName: "Antenna", recursively: true)?.clone() else { fatalError() }
         
-        if GameSettings.shared.debugScene {
+        if GameSettings.debugScene {
             print("Space Station Antenna (Children): \(theNode.childNodes.count)")
             print("Space Station Antenna (Level): \(peripheral.level)")
         }

@@ -6,6 +6,9 @@
 //  Copyright © 2020 Farini. All rights reserved.
 //
 
+/*
+ 
+
 import Foundation
 import SpriteKit
 
@@ -196,3 +199,4 @@ class MarsMapScene:SKScene {
     }
     #endif
 }
+ */

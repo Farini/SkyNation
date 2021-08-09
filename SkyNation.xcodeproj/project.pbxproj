@@ -195,9 +195,6 @@
 		8536F406258D47D000B509D2 /* EarthRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C3258D47D000B509D2 /* EarthRequestView.swift */; };
 		8536F407258D47D000B509D2 /* EarthRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C3258D47D000B509D2 /* EarthRequestView.swift */; };
 		8536F408258D47D000B509D2 /* EarthRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C3258D47D000B509D2 /* EarthRequestView.swift */; };
-		8536F40A258D47D000B509D2 /* MarsMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C4258D47D000B509D2 /* MarsMapView.swift */; };
-		8536F40B258D47D000B509D2 /* MarsMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C4258D47D000B509D2 /* MarsMapView.swift */; };
-		8536F40C258D47D000B509D2 /* MarsMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C4258D47D000B509D2 /* MarsMapView.swift */; };
 		8536F40E258D47D000B509D2 /* AnimationsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C6258D47D000B509D2 /* AnimationsTest.swift */; };
 		8536F40F258D47D000B509D2 /* AnimationsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C6258D47D000B509D2 /* AnimationsTest.swift */; };
 		8536F410258D47D000B509D2 /* AnimationsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C6258D47D000B509D2 /* AnimationsTest.swift */; };
@@ -257,10 +254,6 @@
 		8536F476258D481700B509D2 /* MarsMapScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F461258D481700B509D2 /* MarsMapScene.swift */; };
 		8536F477258D481700B509D2 /* MarsMapScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F461258D481700B509D2 /* MarsMapScene.swift */; };
 		8536F478258D481700B509D2 /* MarsMapScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F461258D481700B509D2 /* MarsMapScene.swift */; };
-		8536F479258D481700B509D2 /* MarsMapScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F462258D481700B509D2 /* MarsMapScene.sks */; };
-		8536F47A258D481700B509D2 /* MarsMapScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F462258D481700B509D2 /* MarsMapScene.sks */; };
-		8536F47B258D481700B509D2 /* MarsMapScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F462258D481700B509D2 /* MarsMapScene.sks */; };
-		8536F47C258D481700B509D2 /* MarsMapScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F462258D481700B509D2 /* MarsMapScene.sks */; };
 		8536F47D258D481700B509D2 /* MapIndicators.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F463258D481700B509D2 /* MapIndicators.sks */; };
 		8536F47E258D481700B509D2 /* MapIndicators.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F463258D481700B509D2 /* MapIndicators.sks */; };
 		8536F47F258D481700B509D2 /* MapIndicators.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F463258D481700B509D2 /* MapIndicators.sks */; };
@@ -291,6 +284,14 @@
 		8536F4AF258D49C900B509D2 /* TravelersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F4AE258D49C900B509D2 /* TravelersView.swift */; };
 		8536F4B0258D49C900B509D2 /* TravelersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F4AE258D49C900B509D2 /* TravelersView.swift */; };
 		8536F4B1258D49C900B509D2 /* TravelersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F4AE258D49C900B509D2 /* TravelersView.swift */; };
+		85487F0C26C0DF6000EBC070 /* OPSupply+Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F0B26C0DF6000EBC070 /* OPSupply+Job.swift */; };
+		85487F0D26C0DF6000EBC070 /* OPSupply+Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F0B26C0DF6000EBC070 /* OPSupply+Job.swift */; };
+		85487F0E26C0DF6000EBC070 /* OPSupply+Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F0B26C0DF6000EBC070 /* OPSupply+Job.swift */; };
+		85487F0F26C0DF6000EBC070 /* OPSupply+Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F0B26C0DF6000EBC070 /* OPSupply+Job.swift */; };
+		85487F1126C0DFB000EBC070 /* OP+Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F1026C0DFB000EBC070 /* OP+Enums.swift */; };
+		85487F1226C0DFB000EBC070 /* OP+Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F1026C0DFB000EBC070 /* OP+Enums.swift */; };
+		85487F1326C0DFB000EBC070 /* OP+Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F1026C0DFB000EBC070 /* OP+Enums.swift */; };
+		85487F1426C0DFB000EBC070 /* OP+Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F1026C0DFB000EBC070 /* OP+Enums.swift */; };
 		8559201525959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
 		8559201625959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
 		8559201725959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
@@ -613,7 +614,6 @@
 		8536F3C1258D47D000B509D2 /* IngredientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IngredientView.swift; sourceTree = "<group>"; };
 		8536F3C2258D47D000B509D2 /* TechTreeDiagram.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TechTreeDiagram.swift; sourceTree = "<group>"; };
 		8536F3C3258D47D000B509D2 /* EarthRequestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EarthRequestView.swift; sourceTree = "<group>"; };
-		8536F3C4258D47D000B509D2 /* MarsMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarsMapView.swift; sourceTree = "<group>"; };
 		8536F3C6258D47D000B509D2 /* AnimationsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationsTest.swift; sourceTree = "<group>"; };
 		8536F3C7258D47D000B509D2 /* Parafernalia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parafernalia.swift; sourceTree = "<group>"; };
 		8536F3C9258D47D000B509D2 /* GarageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GarageView.swift; sourceTree = "<group>"; };
@@ -630,7 +630,6 @@
 		8536F45E258D481700B509D2 /* CamControlNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CamControlNode.swift; sourceTree = "<group>"; };
 		8536F45F258D481700B509D2 /* CamControl.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CamControl.sks; sourceTree = "<group>"; };
 		8536F461258D481700B509D2 /* MarsMapScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarsMapScene.swift; sourceTree = "<group>"; };
-		8536F462258D481700B509D2 /* MarsMapScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MarsMapScene.sks; sourceTree = "<group>"; };
 		8536F463258D481700B509D2 /* MapIndicators.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MapIndicators.sks; sourceTree = "<group>"; };
 		8536F464258D481700B509D2 /* TravelersScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TravelersScene.swift; sourceTree = "<group>"; };
 		8536F466258D481700B509D2 /* StationOverlayObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationOverlayObject.swift; sourceTree = "<group>"; };
@@ -639,6 +638,8 @@
 		8536F46C258D481700B509D2 /* SparkEmitter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SparkEmitter.sks; sourceTree = "<group>"; };
 		8536F4A1258D484B00B509D2 /* SceneDirector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDirector.swift; sourceTree = "<group>"; };
 		8536F4AE258D49C900B509D2 /* TravelersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TravelersView.swift; sourceTree = "<group>"; };
+		85487F0B26C0DF6000EBC070 /* OPSupply+Job.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OPSupply+Job.swift"; sourceTree = "<group>"; };
+		85487F1026C0DFB000EBC070 /* OP+Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OP+Enums.swift"; sourceTree = "<group>"; };
 		8559201425959A4300CF5467 /* SideMenuNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuNode.swift; sourceTree = "<group>"; };
 		8569A303259F7F990057A518 /* dissolve.fragment.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dissolve.fragment.txt; sourceTree = "<group>"; };
 		8569A30E259F81110057A518 /* CutionStripesColored.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CutionStripesColored.fsh; sourceTree = "<group>"; };
@@ -910,13 +911,7 @@
 		8536F339258D41BA00B509D2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				8536F3CD258D47D000B509D2 /* LifeSupportView.swift */,
-				8536F3C3258D47D000B509D2 /* EarthRequestView.swift */,
-				8536F3BC258D47CF00B509D2 /* TrussView.swift */,
-				8536F4AE258D49C900B509D2 /* TravelersView.swift */,
-				8536F3C4258D47D000B509D2 /* MarsMapView.swift */,
-				8536F3B2258D47CF00B509D2 /* Modules */,
-				8536F3C8258D47D000B509D2 /* Garage */,
+				85487F1526C0E86D00EBC070 /* Space Station */,
 				8592821E25EABD27001233BE /* Mars */,
 				8536F3BD258D47CF00B509D2 /* Subviews */,
 				8536F3C5258D47D000B509D2 /* TestViews */,
@@ -1083,6 +1078,7 @@
 				8569A3D925A799840057A518 /* LaunchingVehicleView.swift */,
 				8569A3E225A8D7870057A518 /* BoosterDiagramView.swift */,
 				85927D9425DB1D800071D98B /* VehicleTrunkView.swift */,
+				8536F4AE258D49C900B509D2 /* TravelersView.swift */,
 			);
 			path = Garage;
 			sourceTree = "<group>";
@@ -1103,7 +1099,6 @@
 			isa = PBXGroup;
 			children = (
 				8536F461258D481700B509D2 /* MarsMapScene.swift */,
-				8536F462258D481700B509D2 /* MarsMapScene.sks */,
 				8536F463258D481700B509D2 /* MapIndicators.sks */,
 			);
 			path = "Mars Map";
@@ -1126,6 +1121,28 @@
 				8536F46C258D481700B509D2 /* SparkEmitter.sks */,
 			);
 			path = ParticleEmitters;
+			sourceTree = "<group>";
+		};
+		85487F0A26C0DF2400EBC070 /* Outpost */ = {
+			isa = PBXGroup;
+			children = (
+				8517EE4025FC124200C34C54 /* Outpost.swift */,
+				85487F0B26C0DF6000EBC070 /* OPSupply+Job.swift */,
+				85487F1026C0DFB000EBC070 /* OP+Enums.swift */,
+			);
+			path = Outpost;
+			sourceTree = "<group>";
+		};
+		85487F1526C0E86D00EBC070 /* Space Station */ = {
+			isa = PBXGroup;
+			children = (
+				8536F3CD258D47D000B509D2 /* LifeSupportView.swift */,
+				8536F3C3258D47D000B509D2 /* EarthRequestView.swift */,
+				8536F3BC258D47CF00B509D2 /* TrussView.swift */,
+				8536F3B2258D47CF00B509D2 /* Modules */,
+				8536F3C8258D47D000B509D2 /* Garage */,
+			);
+			path = "Space Station";
 			sourceTree = "<group>";
 		};
 		8569A302259F7F7A0057A518 /* Shaders */ = {
@@ -1206,8 +1223,8 @@
 			children = (
 				85761806268EC2680024233D /* DataPlan.md */,
 				8517EE3325FC11EF00C34C54 /* Guild.swift */,
+				85487F0A26C0DF2400EBC070 /* Outpost */,
 				8592821125EA3287001233BE /* City.swift */,
-				8517EE4025FC124200C34C54 /* Outpost.swift */,
 			);
 			path = Mars;
 			sourceTree = "<group>";
@@ -1465,7 +1482,6 @@
 				8569A304259F7F990057A518 /* dissolve.fragment.txt in Resources */,
 				8569A31C259F81110057A518 /* InterlaceShader.fsh in Resources */,
 				8569A331259F81110057A518 /* HealthShader.fsh in Resources */,
-				8536F479258D481700B509D2 /* MarsMapScene.sks in Resources */,
 				8569A328259F81110057A518 /* HexagonShader.fsh in Resources */,
 				8569A337259F81110057A518 /* RectanglesMoving.fsh in Resources */,
 				8595402F26197A18001D9040 /* SKN_T3.m4a in Resources */,
@@ -1499,7 +1515,6 @@
 				8569A305259F7F990057A518 /* dissolve.fragment.txt in Resources */,
 				8569A31D259F81110057A518 /* InterlaceShader.fsh in Resources */,
 				8569A332259F81110057A518 /* HealthShader.fsh in Resources */,
-				8536F47A258D481700B509D2 /* MarsMapScene.sks in Resources */,
 				8569A329259F81110057A518 /* HexagonShader.fsh in Resources */,
 				8569A338259F81110057A518 /* RectanglesMoving.fsh in Resources */,
 				8595403026197A18001D9040 /* SKN_T3.m4a in Resources */,
@@ -1545,7 +1560,6 @@
 				8536F497258D481700B509D2 /* SparkEmitter.sks in Resources */,
 				8595402E26197A18001D9040 /* SKN_T1.m4a in Resources */,
 				8536F473258D481700B509D2 /* CamControl.sks in Resources */,
-				8536F47B258D481700B509D2 /* MarsMapScene.sks in Resources */,
 				8536F493258D481700B509D2 /* Assets.xcassets in Resources */,
 				8569A333259F81110057A518 /* HealthShader.fsh in Resources */,
 				8536F48B258D481700B509D2 /* StationOverlay.sks in Resources */,
@@ -1556,7 +1570,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8536F47C258D481700B509D2 /* MarsMapScene.sks in Resources */,
 				8536F48C258D481700B509D2 /* StationOverlay.sks in Resources */,
 				8536F474258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F480258D481700B509D2 /* MapIndicators.sks in Resources */,
@@ -1604,7 +1617,7 @@
 				8523338C25D76A9B004CB638 /* AirCompositionView.swift in Sources */,
 				8536F406258D47D000B509D2 /* EarthRequestView.swift in Sources */,
 				85E2C42826BE56FF003315F2 /* GameToken.swift in Sources */,
-				8536F40A258D47D000B509D2 /* MarsMapView.swift in Sources */,
+				85487F1126C0DFB000EBC070 /* OP+Enums.swift in Sources */,
 				85D3BAB2269DF79800B6AA36 /* ForeignCityView.swift in Sources */,
 				850A1B0F25ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */,
 				8536F3EA258D47D000B509D2 /* PersonControl.swift in Sources */,
@@ -1614,6 +1627,7 @@
 				8536F43D258D47EA00B509D2 /* GarageViewModel.swift in Sources */,
 				8536F3FA258D47D000B509D2 /* PersonViews.swift in Sources */,
 				8536F39E258D475D00B509D2 /* TechTreeDisplay.swift in Sources */,
+				85487F0C26C0DF6000EBC070 /* OPSupply+Job.swift in Sources */,
 				8536F44D258D47EA00B509D2 /* LifeSupportSystems.swift in Sources */,
 				8536F402258D47D000B509D2 /* TechTreeDiagram.swift in Sources */,
 				8536F382258D475D00B509D2 /* Truss.swift in Sources */,
@@ -1725,10 +1739,10 @@
 				8536F3CF258D47D000B509D2 /* BioView.swift in Sources */,
 				8536F407258D47D000B509D2 /* EarthRequestView.swift in Sources */,
 				8592821325EA3287001233BE /* City.swift in Sources */,
-				8536F40B258D47D000B509D2 /* MarsMapView.swift in Sources */,
 				85CD46A825D1199A000D9C64 /* EarthNode.swift in Sources */,
 				85E2C43326BE5753003315F2 /* Wallet.swift in Sources */,
 				850A1B1025ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */,
+				85487F0D26C0DF6000EBC070 /* OPSupply+Job.swift in Sources */,
 				8504A53C25C6875000739C58 /* Energy.swift in Sources */,
 				8536F3EB258D47D000B509D2 /* PersonControl.swift in Sources */,
 				8536F41F258D47D000B509D2 /* BuildingVehicleView.swift in Sources */,
@@ -1777,6 +1791,7 @@
 				8517EE5325FE8C9C00C34C54 /* ServerData.swift in Sources */,
 				8536F41B258D47D000B509D2 /* VehicleInventoryView.swift in Sources */,
 				8569A3D225A6353C0057A518 /* GameActivityView.swift in Sources */,
+				85487F1226C0DFB000EBC070 /* OP+Enums.swift in Sources */,
 				857DDEC825E4DCAD00E64752 /* Messages.swift in Sources */,
 				8536F317258D361100B509D2 /* GameConstants.swift in Sources */,
 				85D3BAAF269DF78500B6AA36 /* MyCityView.swift in Sources */,
@@ -1861,7 +1876,7 @@
 				8523338E25D76A9B004CB638 /* AirCompositionView.swift in Sources */,
 				8536F408258D47D000B509D2 /* EarthRequestView.swift in Sources */,
 				85E2C42A26BE56FF003315F2 /* GameToken.swift in Sources */,
-				8536F40C258D47D000B509D2 /* MarsMapView.swift in Sources */,
+				85487F1326C0DFB000EBC070 /* OP+Enums.swift in Sources */,
 				85D3BAB4269DF79800B6AA36 /* ForeignCityView.swift in Sources */,
 				850A1B1125ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */,
 				8536F3EC258D47D000B509D2 /* PersonControl.swift in Sources */,
@@ -1871,6 +1886,7 @@
 				8536F43F258D47EA00B509D2 /* GarageViewModel.swift in Sources */,
 				8536F3FC258D47D000B509D2 /* PersonViews.swift in Sources */,
 				8536F3A0258D475D00B509D2 /* TechTreeDisplay.swift in Sources */,
+				85487F0E26C0DF6000EBC070 /* OPSupply+Job.swift in Sources */,
 				8536F44F258D47EA00B509D2 /* LifeSupportSystems.swift in Sources */,
 				8536F404258D47D000B509D2 /* TechTreeDiagram.swift in Sources */,
 				8536F384258D475D00B509D2 /* Truss.swift in Sources */,
@@ -1966,6 +1982,7 @@
 				8592829225F17721001233BE /* StationOverlayObject.swift in Sources */,
 				8536F365258D475D00B509D2 /* Person.swift in Sources */,
 				8536F399258D475D00B509D2 /* Modules.swift in Sources */,
+				85487F0F26C0DF6000EBC070 /* OPSupply+Job.swift in Sources */,
 				8536F3A1258D475D00B509D2 /* TechTreeDisplay.swift in Sources */,
 				8592821525EA3287001233BE /* City.swift in Sources */,
 				8536F3A5258D475D00B509D2 /* SpaceVehicle.swift in Sources */,
@@ -2018,6 +2035,7 @@
 				8536F411258D47D000B509D2 /* AnimationsTest.swift in Sources */,
 				8536F4A5258D484B00B509D2 /* SceneDirector.swift in Sources */,
 				8536F470258D481700B509D2 /* CamControlNode.swift in Sources */,
+				85487F1426C0DFB000EBC070 /* OP+Enums.swift in Sources */,
 				8536F444258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				85E2C43526BE5753003315F2 /* Wallet.swift in Sources */,
 				8504A52025C6845200739C58 /* StationBuilder.swift in Sources */,

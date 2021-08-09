@@ -76,6 +76,15 @@ class ServerManager {
         }
     }
     
+    func notifyJoinedGuild(guildSum:GuildSummary) {
+        guard let serverData:ServerData = serverData else {
+            return
+        }
+        serverData.fetchFullGuild { fullGuild, error in
+            
+        }
+    }
+    
 }
 
 /** A class that holds all Server variables. Stores information, and manage connections. */

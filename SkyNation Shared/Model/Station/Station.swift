@@ -50,7 +50,7 @@ class Station:Codable {
         
         guard let nextDate = Calendar.current.date(from: m)?.addingTimeInterval(3600) else { fatalError() }
         
-        if GameSettings.shared.debugAccounting {
+        if GameSettings.debugAccounting {
             print("\n 🌎 [STATION ACCOUNTING] \n------")
             print("Last Accounting Date: \(formatter.string(from: lastDate))")
             print("Last date (rounded): \(formatter.string(from: lastDate))")
@@ -58,7 +58,7 @@ class Station:Codable {
         }
         
         if Date().compare(nextDate) == .orderedAscending {
-            if GameSettings.shared.debugAccounting {
+            if GameSettings.debugAccounting {
                 print("Accounting not ready yet")
             }
             return (0, nextDate)
@@ -273,15 +273,17 @@ class Station:Codable {
                 self.food.removeLast()
             } else {
                 // Look for bio boxes
-                let bboxes = bioModules.flatMap({ $0.boxes }).filter({ $0.mode == .multiply && $0.population.count > 3 })
-                if let nextBox = bboxes.sorted(by: { $0.population.count > $1.population.count }).first {
-                    if let nextFood = nextBox.population.last {
-                        nextBox.population.removeLast()
-                        person.consumedFood(nextFood, bio:true)
+                if GameSettings.shared.serveBioBox == true {
+                    let bboxes = bioModules.flatMap({ $0.boxes }).filter({ $0.mode == .multiply && $0.population.count > 3 })
+                    if let nextBox = bboxes.sorted(by: { $0.population.count > $1.population.count }).first {
+                        if let nextFood = nextBox.population.last {
+                            nextBox.population.removeLast()
+                            person.consumedFood(nextFood, bio:true)
+                        }
+                    } else {
+                        // no food
+                        person.consumedFood("")
                     }
-                } else {
-                    // no food
-                    person.consumedFood("")
                 }
             }
             
@@ -387,11 +389,16 @@ class Station:Codable {
             }
         }
         
-        // Remove Empty Tanks - oxygen only
+        // Remove Empty Tanks - oxygen and water only
         if GameSettings.shared.clearEmptyTanks == true {
             truss.tanks.removeAll(where: { $0.current <= 0 && ($0.type == .o2 || $0.type == .h2o) })
         }
-        truss.mergeTanks()
+        
+        // This should be another game setting
+        if GameSettings.shared.autoMergeTanks == true {
+            truss.mergeTanks()
+        }
+        
         
         // Antenna & Money
         let antennaMoney = truss.moneyFromAntenna()

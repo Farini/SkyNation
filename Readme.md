@@ -127,21 +127,26 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [X] App Store products registration
 - [X] LSS View -> Ability to sort tanks from empty to full
 - [X] HabModule -> Person Detail View -> Finish Activity with tokens.
+- [X] Player -> convenient function to use token (getAToken, and useToken) -> Copy from `Shopped`
+- [X] Player -> Mars Entry - Only get to Mars if player has an `.Entry` type of token, used. 
+- [X] Player -> Mars Entry `func marsEntryPass()` and `requestEntryToken` need testing
+- [X] Player -> Mars Entry  -> Scene Loading When loading Mars Scene, test `marsEntryPass()` and `requestEntryToken`
+- [X] Server re-structure (Model)
+- [X] GameSettings -> Object in `LocalDatabase`
+- [X] GameSettings -> Auto merge tanks? See Station.Truss.mergeTanks()
+- [X] Game Settings -> BioBox -> Source of food (Bool) -> Station Accounting
 
-- [ ] Server re-structure (Model)
+- [X] Join a Guild
+- [ ] Display my Guild under 'Server tab'
+
 - [ ] Guild Task
 - [ ] Outpost supply method + SKNS request for `Outpost` upgrades
 
 - [ ] New Modules not fully available after Tech research. 
 
-- [X] GameSettings -> Object in `LocalDatabase`
-- [ ] Game Settings -> BioBox -> Source of food (Bool) -> Station Accounting
-- [ ] GameSettings -> Preferred cameras
 
-- [X] Player -> convenient function to use token (getAToken, and useToken) -> Copy from `Shopped`
-- [X] Player -> Mars Entry - Only get to Mars if player has an `.Entry` type of token, used. 
-- [ ] Player -> Mars Entry `func marsEntryPass()` and `requestEntryToken` need testing
-- [ ] Player -> Mars Entry  -> Scene Loading When loading Mars Scene, test `marsEntryPass()` and `requestEntryToken`
+
+- [ ] Test if wasteLiquid, and wasteSolid are not being removed when empty. Fixed under `Truss.mergeTanks()`
 
 - [ ] 3/21 Mars Views & Controllers
     - [ ] City Views

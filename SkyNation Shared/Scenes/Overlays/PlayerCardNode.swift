@@ -132,7 +132,7 @@ class PlayerCardNode:SKNode {
         backShape.zPosition = 20
         addChild(backShape)
         
-        if GameSettings.shared.debugScene {
+        if GameSettings.debugScene {
             print("Player Card Overlay Node:")
             print("Back Shape: \(backShape)\n \t Size:\(backgroundSize)")
             print("Back Rect: \(backRect)")

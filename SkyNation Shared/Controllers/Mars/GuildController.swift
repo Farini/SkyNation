@@ -35,11 +35,15 @@ class GuildController:ObservableObject {
             print("Server: \n (P):\(player.serverID?.uuidString ?? "NO SERVER ID") \n (U):\(user?.id.uuidString ?? "NO SERVER ID")")
         }
         
-        if autologin {
+        if autologin && GameSettings.onlineStatus {
+            
             self.loginUser()
+            
+            let _ = ServerManager.shared
             
             // Temporary
             self.fetchGuilds()
+            
         } else {
             self.makeRandomData()
         }
@@ -61,27 +65,63 @@ class GuildController:ObservableObject {
     }
     
     func fetchGuilds() {
-        news = "Fetching Guilds..."
-        SKNS.browseGuilds { (guilds, error) in
-            if let array = guilds {
-                print("Updating Guilds")
-                self.guilds = array
-                self.highlightedGuild = array.first
-                self.news = "Here are the guilds"
-            } else {
-                if let error = error {
-                    self.news = error.localizedDescription
+        
+        guard let player = self.player else {
+            return
+        }
+        
+        if let gid = player.guildID {
+            print("Fetching Player's Guild \(gid)")
+            self.findMyGuild()
+            
+        } else {
+            news = "Fetching Guilds..."
+            SKNS.browseGuilds { (guilds, error) in
+                if let array = guilds {
+                    print("Updating Guilds")
+                    self.guilds = array
+                    self.highlightedGuild = array.first
+                    self.news = "Here are the guilds"
                 } else {
-                    self.news = "Something else happened. Not an error, but no Guilds"
-                    print("Something else happened. Not an error, but no Guilds")
+                    if let error = error {
+                        self.news = error.localizedDescription
+                    } else {
+                        self.news = "Something else happened. Not an error, but no Guilds"
+                        print("Something else happened. Not an error, but no Guilds")
+                    }
                 }
             }
-
         }
+        
+        
+        
     }
     
     func findMyGuild() {
         news = "Searching your guild..."
+        
+        if let serverData = ServerManager.shared.serverData,
+           let guild = serverData.guild {
+            
+            // Display information about my Guild
+            self.joinedGuild = guild.makeSummary()
+            
+        } else {
+            print("⚠️ No Guild was found in ServerManager.ServerData")
+            ServerManager.shared.inquireFullGuild { fullGuild, error in
+                if let fullGuild = fullGuild {
+                    DispatchQueue.main.async {
+                        let gs = fullGuild.makeSummary()
+                        self.joinedGuild = gs
+                    }
+                } else {
+                    print("⚠️ Full Guild Inquire wasn't found")
+                    DispatchQueue.main.async {
+                        self.news = "Error. Player has Guild,  but data wasn't found."
+                    }
+                }
+            }
+        }
 //        SKNS.findMyGuild(user: user) { (guild, error) in
 //            if let guild = guild {
 //                print("Found your guild: \(guild.name)")
@@ -98,14 +138,33 @@ class GuildController:ObservableObject {
     }
     
     func requestJoinGuild(guild:GuildSummary) {
-//        let summary = guild
+        
+        guard let player = self.player else {
+            return
+        }
+        
+        if let gid = player.guildID {
+            print("Player has a Guild ID! \(gid)")
+            if joinedGuild?.id == gid {
+                print("The joined Guild is this!")
+                print("ERROR! Player must leave guild first")
+                print("But check if they were kicked out as well.")
+                return
+            }
+        }
         
         SKNS.joinGuildPetition(guildID: guild.id) { (guildSum, error) in
             if let guildSum = guildSum {
-                if guildSum.citizens.contains(self.player?.playerID ?? UUID()) {
+                if guildSum.citizens.contains(player.playerID ?? UUID()) {
                     // accepted
                     print("Accepted")
                     self.joinedGuild = guildSum
+                    
+                    player.guildID = guildSum.id
+                    let res = LocalDatabase.shared.savePlayer(player: player)
+                    print("Saved Player after Guild Join \(res.description)")
+                    
+                    ServerManager.shared.notifyJoinedGuild(guildSum: guildSum)
                 } else {
                     print("not accepted")
                 }

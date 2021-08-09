@@ -23,17 +23,21 @@ enum GameSettingsTab: String, CaseIterable {
 
 struct GameSettingsView: View {
     
+    @ObservedObject var guildController:GuildController
     @ObservedObject var controller = GameSettingsController()
+    
     
     /// When turned on, this shows the "close" button
     private var inGame:Bool = false
     
-    init() {
+    init(guildController:GuildController) {
         print("Initializing Game Settings View")
+        self.guildController = guildController
     }
     
     init(inGame:Bool? = true) {
         self.inGame = true
+        self.guildController = GuildController(autologin: true)
     }
     
     var header: some View {
@@ -102,7 +106,7 @@ struct GameSettingsView: View {
                     PlayerEditView(controller: controller)
                     
                 case .Server:
-                    SettingsServerTab(controller:controller)
+                    SettingsServerTab(controller:controller, guildController: guildController)
                     
                 case .Settings:
                     GameSettingsTabView()
@@ -189,7 +193,7 @@ struct GameSettingsView: View {
 
 struct GameSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        GameSettingsView()
+        GameSettingsView(guildController: GuildController(autologin: false))
     }
 }
 
@@ -199,7 +203,7 @@ struct GameTabs_Previews: PreviewProvider {
         TabView {
             
             // Server
-            SettingsServerTab(controller:GameSettingsController())
+            SettingsServerTab(controller:GameSettingsController(), guildController: GuildController(autologin: false))
                 .tabItem {
                     Text("Server")
                 }

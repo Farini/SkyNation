@@ -55,7 +55,7 @@ class RadiatorNode:SCNNode {
             
             current.runAction(sequence) {
                 // Debug logging
-                if GameSettings.shared.debugScene {
+                if GameSettings.debugScene {
                     print("Radiator Angles: \(current.eulerAngles)")
                 }
             }
@@ -71,7 +71,7 @@ class RadiatorNode:SCNNode {
         
         guard let theNode = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Radiator.scn")?.rootNode.childNode(withName: "Radiator", recursively: true)?.clone() else { fatalError() }
         
-        if GameSettings.shared.debugScene {
+        if GameSettings.debugScene {
             print("Initializing Radiator (Children): \(theNode.childNodes.count)")
         }
         

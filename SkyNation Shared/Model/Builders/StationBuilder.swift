@@ -289,7 +289,7 @@ extension StationBuilder {
                 scene.rootNode.addChildNode(model)
                 
                 // Debug
-                if GameSettings.shared.debugScene {
+                if GameSettings.debugScene {
                     print("Loading Tech Node for: \(item)")
                 }
             }

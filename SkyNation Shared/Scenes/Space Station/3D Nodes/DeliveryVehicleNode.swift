@@ -81,7 +81,7 @@ class DeliveryVehicleNode:SCNNode {
         super.init()
         
         // Debug
-        if GameSettings.shared.debugScene {
+        if GameSettings.debugScene {
             print("Initialized Delivery Vehicle Node. Children: \(childNodes.count)")
         }
         

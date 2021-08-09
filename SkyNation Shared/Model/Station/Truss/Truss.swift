@@ -134,7 +134,9 @@ class Truss:Codable {
                 if lastCapacity >= firstAmount {
                     // Merge Tanks
                     self.tanks.first(where: { $0.id == firstLast.last!.id })!.current += firstAmount
-                    self.tanks.removeAll(where: { $0.id == firstLast.first!.id })
+                    if GameSettings.shared.clearEmptyTanks == true {
+                        self.tanks.removeAll(where: { $0.id == firstLast.first!.id })
+                    }
                 }
             } // else no merge
         }
@@ -328,7 +330,7 @@ class Truss:Codable {
     func powerGeneration() -> Int {
         let panels = solarPanels
         let powerGen:Int = panels.compactMap({ $0.maxCurrent() }).reduce(0, +)
-        if GameSettings.shared.debugAccounting == true {
+        if GameSettings.debugAccounting == true {
             print("Power Generated: \(powerGen)")
         }
         return powerGen

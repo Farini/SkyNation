@@ -9,10 +9,11 @@ import SwiftUI
 
 struct GuildView: View {
     
+    @ObservedObject var controller:GuildController
     
-    var guild:GuildSummary = Guild.example.makeSummary()
-//    var dbGuild:Guild
+    var guild:GuildSummary
     
+    /// Presentation Style
     var style: Style
     enum Style {
         case thumbnail
@@ -33,8 +34,8 @@ struct GuildView: View {
     var closeAction: () -> Void = {}
     var flipAction: () -> Void = {}
     
-    init(guild:GuildSummary, style:GuildView.Style) {
-//        self.dbGuild = guild
+    init(controller:GuildController, guild:GuildSummary, style:GuildView.Style) {
+        self.controller = controller
         self.guild = guild
         self.style = style
     }
@@ -101,14 +102,13 @@ struct GuildView: View {
                     HStack {
                         if guild.citizens.count <= 9 {
                             Button("Join") {
-                                //                    controller.requestJoinGuild(guild: guild)
-                                closeAction()
+                                controller.requestJoinGuild(guild: guild)
                             }
                             .buttonStyle(NeumorphicButtonStyle(bgColor: .green))
+                            .disabled(LocalDatabase.shared.player?.guildID == guild.id)
                             Divider()
                         }
                         Button("Flip") {
-                            //                    controller.requestJoinGuild(guild: guild)
                             self.flipToNext()
                         }
                         .buttonStyle(NeumorphicButtonStyle(bgColor: .green))
@@ -221,10 +221,12 @@ struct GuildView_Previews: PreviewProvider {
     
     static var previews: some View {
         Group {
-            GuildView(guild: rGuild, style: .thumbnail)
+            let controller = GuildController(autologin: false)
+            
+            GuildView(controller: controller, guild: rGuild, style: .thumbnail)
                 .frame(width: 250, height: 180)
                 .previewDisplayName("Thumbnail")
-            GuildView(guild: rGuild, style: .largeDescriptive)
+            GuildView(controller: controller, guild: rGuild, style: .largeDescriptive)
                 .aspectRatio(0.75, contentMode: .fit)
                 .frame(width: 500, height: 400)
                 .previewDisplayName("Large Descriptive")

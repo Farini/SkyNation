@@ -11,12 +11,21 @@ class GameSettings:Codable {
     
     static let shared = GameSettings.load()
     
+    // MARK: - App Modes - Helpers to debug, or run the app with properties
+    
+    /// Whether to debug Scene objects
+    static let debugScene:Bool = false
+    static let debugAccounting:Bool = false
+    
+    /// Whether game should connect to the server, or not
+    static let onlineStatus:Bool = true
+    
     // MARK: - Data
     
     /// To save in Cloud
     var useCloud:Bool = false
     
-    // MARK: - Game Logic
+    // MARK: - Gameplay Options
     
     /// The scene that starts the game
     var startingScene:GameSceneType
@@ -25,10 +34,16 @@ class GameSettings:Codable {
     var showTutorial:Bool
     
     /// Wether the game should automatically clear empty tanks
-    var clearEmptyTanks:Bool = false
+    var clearEmptyTanks:Bool
+    
+    /// in auto-merge Tanks get automatically merged in accounting
+    var autoMergeTanks:Bool
     
     /// Whether to render more expensive lights
-    var showLights:Bool = true
+    var showLights:Bool
+    
+    /// Serves food in biobox to astronauts.. Careful.: This could make you run out of DNA's
+    var serveBioBox:Bool
     
     // MARK: - Sounds
     
@@ -38,39 +53,22 @@ class GameSettings:Codable {
     
     // MARK: - Debugging
     
-    /// Whether to debug Scene objects
-    var debugScene:Bool = false
-    var debugAccounting:Bool = false
+    
     
     private init () {
-        
-        // Tutorial
-//        var shouldShowTutorial:Bool = true
-//        if let theVal = UserDefaults.standard.value(forKey: "showTutorial") as? Bool {
-//            shouldShowTutorial = theVal
-//        } else {
-//            if let station = LocalDatabase.shared.station {
-//                if let mod = station.habModules.first {
-//                    if mod.inhabitants.isEmpty {
-//                        print("No Inhabitants")
-//                    } else {
-//                        // Disable Tutorial
-//                        shouldShowTutorial = false
-//                    }
-//                }
-//            }
-//        }
         
         // Gameplay
         self.showTutorial = true
         self.startingScene = .SpaceStation
-        self.showLights = true //UserDefaults.standard.value(forKey: "showLights") as? Bool ?? true
-        self.clearEmptyTanks = false//UserDefaults.standard.value(forKey: "clearEmptyTanks") as? Bool ?? false
+        self.showLights = true
+        self.clearEmptyTanks = false
+        self.autoMergeTanks = true
+        self.serveBioBox = false
         
         // Sounds
-        self.musicOn = true //UserDefaults.standard.value(forKey: "musicOn") as? Bool ?? true
-        self.soundFXOn = true //UserDefaults.standard.value(forKey: "soundFXOn") as? Bool ?? true
-        self.dialogueOn = true //UserDefaults.standard.value(forKey: "dialogueOn") as? Bool ?? true
+        self.musicOn = true
+        self.soundFXOn = true
+        self.dialogueOn = true
         
     }
     static private func load() -> GameSettings {
@@ -78,22 +76,11 @@ class GameSettings:Codable {
     }
     
     static func create() -> GameSettings {
-//        var newSettings:GameSettings
         return GameSettings()
     }
     
     /// Saves the User `Settings`, or Preferences
     func save() {
-//        UserDefaults.standard.setValue(self.showTutorial, forKey: "showTutorial")
-//        UserDefaults.standard.setValue(self.useCloud, forKey: "useCloud")
-//        // Gameplay
-//        UserDefaults.standard.setValue(self.startingScene, forKey: "startingScene")
-//        UserDefaults.standard.setValue(self.clearEmptyTanks, forKey: "clearEmptyTanks")
-//        UserDefaults.standard.setValue(self.showLights, forKey: "showLights")
-//        // Sounds
-//        UserDefaults.standard.setValue(self.musicOn, forKey: "musicOn")
-//        UserDefaults.standard.setValue(self.soundFXOn, forKey: "soundFXOn")
-//        UserDefaults.standard.setValue(self.dialogueOn, forKey: "dialogueOn")
         LocalDatabase.shared.saveSettings(newSettings: self)
     }
 }
