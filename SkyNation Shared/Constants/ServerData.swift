@@ -66,12 +66,12 @@ class ServerManager {
     }
     
     /// Gets the Full Guild Content
-    func inquireFullGuild(completion:@escaping(GuildFullContent?, Error?) -> ()) {
+    func inquireFullGuild(force:Bool, completion:@escaping(GuildFullContent?, Error?) -> ()) {
         guard let serverData:ServerData = serverData else {
             completion(nil, ServerDataError.noFile)
             return
         }
-        serverData.fetchFullGuild { fullGuild, error in
+        serverData.fetchFullGuild(force: force) { fullGuild, error in
             completion(fullGuild, error)
         }
     }
@@ -80,7 +80,7 @@ class ServerManager {
         guard let serverData:ServerData = serverData else {
             return
         }
-        serverData.fetchFullGuild { fullGuild, error in
+        serverData.fetchFullGuild(force: true) { fullGuild, error in
             
         }
     }
@@ -94,22 +94,25 @@ class ServerData:Codable {
     var user:SKNUserPost
     var player:SKNPlayer
     
-    var partners:[PlayerContent] = []
-    
     // Guild
     var guild:Guild?
     var guildfc:GuildFullContent?
     
-    // cities
+    /// Other Players
+    var partners:[PlayerContent] = []
+    
+    /// Guild's `DBCity` array
     var cities:[DBCity] = []
-    // outposts
-    var outposts:[Outpost] = []
     
     /// City that belongs to this user
     var city:CityData?
     
+    /// Guild's outposts
+    var outposts:[Outpost] = []
+    
     // Vehicles
     var vehicles:[SpaceVehicle] = []
+    var guildVehicles:[SpaceVehicleTicket] = []
     
     // Status
     var status:ServerDatabaseStatus = .offline
@@ -170,6 +173,7 @@ class ServerData:Codable {
     
     /// Fetches MyGuild, Guild object
     func fetchGuild(completion:@escaping(Guild?, Error?) -> ()) {
+        
         // Seconds until next fetch
         let delay:TimeInterval = 60.0
 
@@ -191,6 +195,8 @@ class ServerData:Codable {
                 if LocalDatabase.shared.saveServerData(skn: self) == false {
                     print("could not save")
                 }
+                
+                self.fetchGuildVehicles()
             }
             return
         }
@@ -198,14 +204,15 @@ class ServerData:Codable {
     
     var lastFullGuildFetch:Date?
     
-    
-    /// My Guild (Full Content)
-    func fetchFullGuild(completion:@escaping(GuildFullContent?, Error?) -> ()) {
+    /// My Guild (Full Content). Use force, if you want to fetch anyways
+    func fetchFullGuild(force:Bool, completion:@escaping(GuildFullContent?, Error?) -> ()) {
         
         // Seconds until next fetch
         let delay:TimeInterval = 60.0
         
-        if let log = lastFullGuildFetch, Date().timeIntervalSince(log) < delay {
+        if let log = lastFullGuildFetch,
+           Date().timeIntervalSince(log) < delay,
+           force == false {
             completion(self.guildfc, nil)
             return
         }
@@ -231,17 +238,33 @@ class ServerData:Codable {
         }
     }
     
-    
-    // My City
-//    var lastCityFetch:Date?
-//    func fetchCity() {
-//
-//    }
-    
     // Vehicles
     var lastFetchedVehicles:Date?
-    func fetchVehicles() {
+    func fetchGuildVehicles() {
         
+        // Seconds until next fetch
+        let delay:TimeInterval = 60.0
+        
+        if let log = lastFetchedVehicles, Date().timeIntervalSince(log) < delay {
+            return
+        }
+        
+        print("Getting Arrived Vehicles")
+        SKNS.arrivedVehiclesInGuildMap() { gVehicles, error in
+            if let gVehicles:[SpaceVehicleTicket] = gVehicles {
+                print("Guild garage vehicles: \(gVehicles.count)")
+                self.guildVehicles = gVehicles
+                for vehicle in gVehicles {
+                    if vehicle.owner == LocalDatabase.shared.player?.playerID {
+                        print("Vehicle is mine: \(vehicle.engine)")
+                    } else {
+                        print("Vehicle belongs to: \(vehicle.owner)")
+                    }
+                }
+            } else {
+                print("⚠️ Error: Could not get arrived vehicles. error -> \(error?.localizedDescription ?? "n/a")")
+            }
+        }
     }
     
     // MARK: - Reports and Updates

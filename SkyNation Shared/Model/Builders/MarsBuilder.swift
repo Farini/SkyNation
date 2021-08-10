@@ -30,7 +30,7 @@ class MarsBuilder {
     var players:[PlayerContent] = []
     
     /// Vehicles stationed in Guild
-    var guildGarage:[SpaceVehicleContent] = []
+    var guildGarage:[SpaceVehicleTicket] = []
     
     var guild:GuildFullContent?
     var scene:SCNScene
@@ -135,7 +135,7 @@ class MarsBuilder {
                 return
             }
             
-            ServerManager.shared.inquireFullGuild { guild, error in
+            ServerManager.shared.inquireFullGuild(force:false) { guild, error in
                 if let guild:GuildFullContent = guild {
                     self.guild = guild
                     print("\n**********************")
@@ -191,7 +191,7 @@ class MarsBuilder {
             // Populate my city:
             // var myDBCity:DBCity?
             // var myCityData:CityData?
-            let mc:DBCity = DBCity(id: UUID(), guild: ["guild":randomGuild.id], name: "Fariland", accounting: Date(), owner: ["id":LocalDatabase.shared.player!.playerID], posdex: Posdex.city9.rawValue)
+            let mc:DBCity = DBCity(id: UUID(), guild: ["guild":randomGuild.id], name: "Fariland", accounting: Date(), owner: ["id":LocalDatabase.shared.player!.playerID], posdex: Posdex.city9.rawValue, gateColor: 0, experience:0)
             let cd = CityData(example: true, id:mc.id)
             // add city
             randomGuild.cities.append(mc)
@@ -208,18 +208,13 @@ class MarsBuilder {
     /// Gets all vehicles that arrived
     func getArrivedVehicles() {
         print("Getting Arrived Vehicles")
-        SKNS.arrivedVehiclesInGuildFile { gVehicles, error in
+        SKNS.arrivedVehiclesInGuildMap() { gVehicles, error in
             if let gVehicles = gVehicles {
                 print("Guild garage vehicles: \(gVehicles.count)")
                 self.guildGarage = gVehicles
                 for vehicle in gVehicles {
                     if vehicle.owner == LocalDatabase.shared.player?.playerID {
                         print("Vehicle is mine: \(vehicle.engine)")
-                        print("Contents (count): \(vehicle.boxes.count + vehicle.tanks.count + vehicle.batteries.count + vehicle.passengers.count + vehicle.peripherals.count)")
-                        
-                        // Bring contents to city
-                        // Update City
-                        // Post city update
                     }
                 }
             } else {

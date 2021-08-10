@@ -532,46 +532,23 @@ class GarageViewModel:ObservableObject {
     
     // MARK: - Server
     
-    func registerVehicle(vehicle:SpaceVehicle, completion:((SpaceVehicleModel?, Error?) -> ())?) {
+    func registerVehicle(vehicle:SpaceVehicle, completion:((SpaceVehicleTicket?, Error?) -> ())?) {
         print("Registering Vehicle in Server")
         
         guard let player = LocalDatabase.shared.player else {
             fatalError()
         }
         let user = SKNUserPost(player: player)
-        SKNS.registerSpace(vehicle: vehicle, player: user) { (data, error) in
-            if let data = data {
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .secondsSince1970
-                if let vehicleModel = try? decoder.decode(SpaceVehicleModel.self, from: data) {
-                    
-                    print("We got a Vehicle ! \(vehicleModel.engine)")
-                    // -------
-                    // Update Vehicle ID, and save. VERY IMPORTANT !!!
-                    // -------
-                    
-                    vehicle.id = vehicleModel.id!
-                    LocalDatabase.shared.saveStation(station: self.station)
-                    
-                } else {
-                    print("No vehicle model")
-                }
-            } else {
-                print("No data. Error: \(error?.localizedDescription ?? "n/a")")
-            }
-        }
-    }
-    
-    /// Sends a Vehicle to the `GuildData` file
-    func performEntryDescentAndLanding(vehicle:SpaceVehicle) {
         
-        SKNS.orbitMarsWith(vehicle: vehicle) { (vContent, error) in
-            if let vContent = vContent {
-                // Vehicle
-                print("Performed EDL? Vehicle ID: \(vContent.id?.uuidString ?? "n/a")")
+        SKNS.registerSpace(vehicle: vehicle, player: user) { (ticket, error) in
+            
+            if let ticket = ticket {
+                print("Vehicle Registration Approved! ")
+                vehicle.registration = ticket.id
+                
+                LocalDatabase.shared.saveStation(station: self.station)
             } else {
-                // Error
-                print("Could not perform EDL - \(error?.localizedDescription ?? "n/a")")
+                print("⚠️ Did not get a ticket from Vehicle Registration! \(error?.localizedDescription ?? "")")
             }
         }
     }

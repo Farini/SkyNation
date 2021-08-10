@@ -122,6 +122,7 @@ class AirComposition:Codable {
         self.ch4 = 0
     }
     
+    /// Initializes with a good amount for Mars
     init(mars helper:Bool = true) {
         let amt:Int = GameLogic.airPerModule
         let totalAir = Double(amt)

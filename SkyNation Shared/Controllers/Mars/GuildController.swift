@@ -108,7 +108,7 @@ class GuildController:ObservableObject {
             
         } else {
             print("⚠️ No Guild was found in ServerManager.ServerData")
-            ServerManager.shared.inquireFullGuild { fullGuild, error in
+            ServerManager.shared.inquireFullGuild(force:false) { fullGuild, error in
                 if let fullGuild = fullGuild {
                     DispatchQueue.main.async {
                         let gs = fullGuild.makeSummary()
@@ -122,19 +122,6 @@ class GuildController:ObservableObject {
                 }
             }
         }
-//        SKNS.findMyGuild(user: user) { (guild, error) in
-//            if let guild = guild {
-//                print("Found your guild: \(guild.name)")
-//                self.news = "Your guild is \(guild.name)"
-////                self.user?.guildID = guild.id
-//                LocalDatabase.shared.player?.guildID = guild.id
-////                self.joinedGuild = guild
-//                print("Should save user guild id ???")
-//
-//            } else {
-//                self.news = "Cannot find guild"
-//            }
-//        }
     }
     
     func requestJoinGuild(guild:GuildSummary) {

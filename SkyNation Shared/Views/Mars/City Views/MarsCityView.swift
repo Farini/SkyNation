@@ -74,19 +74,10 @@ struct MarsCityView: View {
                                 // Button to Claim City (if player doesn't have one)
                                 if controller.player.cityID == nil {
                                     Button("Claim City") {
+                                        
                                         print("Should claim it")
-                                        SKNS.claimCity(user: SKNUserPost(player: LocalDatabase.shared.player!), posdex: posdex) { (city, error) in
-                                            if let city = city {
-                                                print("We have a city !!!!")
-                                                print("CID: \(city.id)")
-                                                
-                                                // Reload this city (in controller)
-                                                controller.loadAt(posdex: posdex)
-                                                
-                                            } else {
-                                                print("No City. Error: \(error?.localizedDescription ?? "n/a")")
-                                            }
-                                        }
+                                        controller.claimCity(posdex: posdex)
+                                        
                                     }
                                 }
                             }

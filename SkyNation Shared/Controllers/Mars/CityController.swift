@@ -49,6 +49,7 @@ class CityController:ObservableObject {
     func loadAt(posdex:Posdex) {
         
         if let theCity:DBCity = builder.cities.filter({ $0.posdex == posdex.rawValue }).first {
+            
             print("The City: \(theCity.name)")
             self.city = theCity
             self.cityTitle = theCity.name
@@ -57,6 +58,8 @@ class CityController:ObservableObject {
             
             if let ownerID = cityOwner["id"] as? UUID {
                 print("Owner ID: \(ownerID)")
+                
+                // My City
                 if player.playerID == ownerID {
                     print("PLAYER OWNS IT !!!!")
                     isMyCity = true
@@ -80,35 +83,16 @@ class CityController:ObservableObject {
                         self.getArrivedVehicles()
                         
                     }
-                    
-                    
-                    // Load city from Server
-                    /*
-                    SKNS.loadCity(posdex: Posdex(rawValue: theCity.posdex)!) { (cityData, error) in
-                        if let cData = cityData {
-                            print("Loaded City Data. Ready.")
-                            self.cityData = cData
-                            self.viewState = .mine(cityData: cData)
-                            self.getArrivedVehicles()
-                            MarsBuilder.shared.myCityData = cData
-                        } else {
-                            print("⚠️ CityData: \(error?.localizedDescription ?? "n/a")")
-                        }
-                    }
-                     */
-                    
                 } else {
                     
-                    // City Belongs to someone else
+                    // Other City - Belongs to someone else
                     isMyCity = false
-                    
-                    
                     self.viewState = .foreign(pid:ownerID)
-                    // let citizen = MarsBuilder.shared.players.filter({ $0.id == ownerID })
-                    
+                    // Get Player card from GuildFullContent, in 
                 }
             }
         } else {
+            // Unclaimed
             print("This is an unclaimed city")
             isMyCity = false
             isClaimedCity = false
@@ -117,8 +101,6 @@ class CityController:ObservableObject {
         
     }
     
-    @Published var allVehicles:[SpaceVehicleContent] = []
-    @Published var cityVehicles:[SpaceVehicleContent] = []
     @Published var arrivedVehicles:[SpaceVehicle] = []
     
     /// Gets all vehicles that arrived
@@ -131,15 +113,16 @@ class CityController:ObservableObject {
             case .unclaimed:
                 print("Unclaimed cities don't need vehicles")
                 return
+            case .foreign(_):
+                print("This city is someone else's")
+                return
             default:break
         }
-        
-        allVehicles = []
-        cityVehicles = []
         
         print("Getting Arrived Vehicles")
         
         var travellingVehicles = LocalDatabase.shared.vehicles
+        
         // Loop through Vehicles to see if any one arrived
         var transferringVehicles:[SpaceVehicle] = []
         for vehicle in travellingVehicles {
@@ -147,20 +130,31 @@ class CityController:ObservableObject {
                 if Date().compare(arrivalDate) == .orderedDescending {
                     // Arrived
                     // Change vehicle destination to either [MarsOrbit, or Exploring, or Settled]
-                    // If already at those destinations, see SpaceVehicle object to continue
-                    // Will need to transform SpaceVehicle into other objects
                     transferringVehicles.append(vehicle)
                 }
             }
         }
-        for vehicle in transferringVehicles {
-            if let city = cityData {
+        
+        
+        self.arrivedVehicles = transferringVehicles
+        
+        if let city = cityData {
+            for vehicle in transferringVehicles {
+            
                 travellingVehicles.removeAll(where: { $0.id == vehicle.id })
                 city.garage.vehicles.append(vehicle)
+                
                 // Achievement
                 GameMessageBoard.shared.newAchievement(type: .vehicleLanding(vehicle: vehicle), message: nil)
             }
+            
+            do {
+                try LocalDatabase.shared.saveCity(city)
+            } catch {
+                print("⚠️ Could not save city in LocalDatabase after getting arrived vehicles")
+            }
         }
+        
         LocalDatabase.shared.vehicles = travellingVehicles
         self.arrivedVehicles = cityData?.garage.vehicles ?? []
         
@@ -195,6 +189,7 @@ class CityController:ObservableObject {
         
     }
     
+    /*
     func unpackVehicle(vehicle:SpaceVehicleContent) {
         
         // Testing time
@@ -206,42 +201,91 @@ class CityController:ObservableObject {
 //            return
 //        }
         
-        let cCopy = cityData!
+//        let cCopy = cityData!
+//
+////        print("Unpacking vehicle. id: \(vid)")
+//        cCopy.boxes.append(contentsOf: vehicle.boxes)
+//        cCopy.tanks.append(contentsOf: vehicle.tanks)
+//        cCopy.batteries.append(contentsOf: vehicle.batteries)
+//        cCopy.peripherals.append(contentsOf: vehicle.peripherals)
+//        cCopy.inhabitants.append(contentsOf: vehicle.passengers)
         
-//        print("Unpacking vehicle. id: \(vid)")
-        cCopy.boxes.append(contentsOf: vehicle.boxes)
-        cCopy.tanks.append(contentsOf: vehicle.tanks)
-        cCopy.batteries.append(contentsOf: vehicle.batteries)
-        cCopy.peripherals.append(contentsOf: vehicle.peripherals)
-        cCopy.inhabitants.append(contentsOf: vehicle.passengers)
-        
-        self.cityData = cCopy
-        
-        // Update city to server
-        SKNS.saveCity(city: cCopy) { (cData, error) in
-            if let cData:CityData = cData {
-                print("Got cData! Updated.")
-                self.cityData = cData
-            } else {
-                print("Error: \(error?.localizedDescription ?? "n/a")")
-            }
-        }
-        
-        
-        switch self.viewState {
-            case .mine(let city):
-                self.allVehicles.removeAll(where: { $0.id == vehicle.id })
-                self.viewState = .mine(cityData: city)
-            default:
-                print("not my city")
-                
-        }
+//        self.cityData = cCopy
+//
+//        // Update city to server
+//        SKNS.saveCity(city: cCopy) { (cData, error) in
+//            if let cData:CityData = cData {
+//                print("Got cData! Updated.")
+//                self.cityData = cData
+//            } else {
+//                print("Error: \(error?.localizedDescription ?? "n/a")")
+//            }
+//        }
+//
+//
+//        switch self.viewState {
+//            case .mine(let city):
+////                self.allVehicles.removeAll(where: { $0.id == vehicle.id })
+//                self.viewState = .mine(cityData: city)
+//            default:
+//                print("not my city")
+//
+//        }
         
         // Updated city. Now needs to update server
         // Updated server. Delete Vehicle
         //
     }
+    */
     
+    /// Claims the city for the Player
+    func claimCity(posdex:Posdex) {
+        
+        // FIXME: - Develop this
+        // Save CityData?
+        // the self.loadAt might need updates
+        
+        SKNS.claimCity(user: SKNUserPost(player: LocalDatabase.shared.player!), posdex: posdex) { (city, error) in
+            
+            // This request should return a DBCity instead
+            if let dbCity = city {
+                
+                print("We have a new city !!!! \t \(dbCity.id)")
+                
+                var localCity:CityData!
+                
+                // First, check if player alread has a city in LocalDatabase
+                if let savedCity:CityData = LocalDatabase.shared.loadCity() {
+                    
+                    // We have a local city saved. Update ID
+                    savedCity.id = dbCity.id
+                    localCity = savedCity
+                    
+                } else {
+                    localCity = CityData(dbCity: dbCity)
+                }
+                
+                try? LocalDatabase.shared.saveCity(localCity)
+                
+                let player = self.player
+                player.cityID = dbCity.id
+                
+                let res = LocalDatabase.shared.savePlayer(player: player)
+                
+                print("Claim city results Saved. Player:\(res)")
+                
+                // Get Vehicles from 'Travelling.josn'
+                
+                // Reload GuildFullContent
+//                ServerManager.shared.inquireFullGuild { fullGuild, error in
+//
+//                }
+                
+            } else {
+                print("No City. Error: \(error?.localizedDescription ?? "n/a")")
+            }
+        }
+    }
     
     // Development Helper
     func addSomethingToCity() {

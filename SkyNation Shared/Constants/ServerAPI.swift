@@ -569,11 +569,10 @@ class SKNS {
     
     // MARK: - City
     
-    static func claimCity(user:SKNUserPost, posdex:Posdex, completion:((CityData?, Error?) -> ())?) {
+    static func claimCity(user:SKNUserPost, posdex:Posdex, completion:((DBCity?, Error?) -> ())?) {
         print("Claiming City")
         
         let url = URL(string: "\(baseAddress)/guilds/city/claim/\(posdex.rawValue)")!
-//        let url = URL(string: "\(baseAddress)/claim_city/\(posdex.rawValue)")!
         
         
         guard let player = LocalDatabase.shared.player else { fatalError() }
@@ -603,7 +602,7 @@ class SKNS {
                     print("Data returning")
                     let decoder = JSONDecoder()
                     decoder.dateDecodingStrategy = .secondsSince1970
-                    if let decodedCity = try? decoder.decode(CityData.self, from: data) {
+                    if let decodedCity = try? decoder.decode(DBCity.self, from: data) {
                         print("Decoded City. Save new CID for Player and User !!!")
                         completion?(decodedCity, nil)
                     } else {
@@ -781,7 +780,7 @@ class SKNS {
     // MARK: - Space Vehicle
     
     /// Register Vehicle in Server
-    static func registerSpace(vehicle:SpaceVehicle, player:SKNUserPost, completion:((Data?, Error?) -> ())?) {
+    static func registerSpace(vehicle:SpaceVehicle, player:SKNUserPost, completion:((SpaceVehicleTicket?, Error?) -> ())?) {
         
         let url = URL(string: "\(baseAddress)/register_vehicle")!
         let session = URLSession.shared
@@ -796,20 +795,32 @@ class SKNS {
         encoder.dateEncodingStrategy = .secondsSince1970
         encoder.outputFormatting = .prettyPrinted
         
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .secondsSince1970
+        
         // Data
-        let vehicleModel:SpaceVehicleModel = SpaceVehicleModel(spaceVehicle: vehicle, player: player)
-        if let data = try? encoder.encode(vehicleModel) {
-            print("Adding Data")
+        let postObject:SpaceVehiclePost = SpaceVehiclePost(spaceVehicle: vehicle, player: player)
+        if let data = try? encoder.encode(postObject) {
+            print("Adding Data - Space Vehicle Post")
             request.httpBody = data
             let dataString = String(data:data, encoding: .utf8) ?? "n/a"
             print("DS: \(dataString)")
         }
         
+//        let vehicleModel:SpaceVehicleModel = SpaceVehicleModel(spaceVehicle: vehicle, player: player)
+//        if let data = try? encoder.encode(vehicleModel) {
+//            print("Adding Data")
+//            request.httpBody = data
+//            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
+//            print("DS: \(dataString)")
+//        }
+        
         let task = session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
+            if let data = data,
+               let ticket:SpaceVehicleTicket = try? decoder.decode(SpaceVehicleTicket.self, from: data) {
                 DispatchQueue.main.async {
                     print("Data returning")
-                    completion?(data, nil)
+                    completion?(ticket, nil)
                 }
                 
             } else if let error = error {
@@ -823,6 +834,7 @@ class SKNS {
     }
     
     /// Transfer items from arriving vehicles
+    /*
     static func orbitMarsWith(vehicle:SpaceVehicle, completion:((SpaceVehicleContent?, Error?) -> ())?) {
         
         guard let player = LocalDatabase.shared.player,
@@ -878,9 +890,10 @@ class SKNS {
         task.resume()
         
     }
+    */
     
     /// Search vehicles in Guilds File (arrived)
-    static func arrivedVehiclesInGuildFile(completion:(([SpaceVehicleContent]?, Error?) -> ())?) {
+    static func arrivedVehiclesInGuildMap(completion:(([SpaceVehicleTicket]?, Error?) -> ())?) {
         // URL: /guilds/space_vehicles/arrived/:gid
         // Expects: :gid GuildID
         // Returns: Array of vehicles in Guild file (arrived)
@@ -914,7 +927,7 @@ class SKNS {
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .secondsSince1970
                 
-                if let vResponse = try? decoder.decode([SpaceVehicleContent].self, from: data) {
+                if let vResponse = try? decoder.decode([SpaceVehicleTicket].self, from: data) {
                     DispatchQueue.main.async {
                         print("Data returning")
                         completion?(vResponse, nil)

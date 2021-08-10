@@ -438,14 +438,59 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     
 }
 
-struct SpaceVehicleModel:Codable {
+/*
+ The database sets the ID
+ If we add another UUID to SpaceVehicle, that could be the "Server Ticket" - The Server ID of the vehicle
+ */
+
+/// A copy of `SpaceVehicle` used to Post to the server
+struct SpaceVehiclePost:Codable {
     
-    var id:UUID?
+    // non-identifiable
+    
+    /// The ID of the original SpaceVehicle object.
+    var localID:UUID
+    
     var eta:Date
     var owner:UUID
     var engine:String
     var status:String
     
+    init(spaceVehicle:SpaceVehicle, player:SKNUserPost) {
+        self.localID = spaceVehicle.id
+        self.eta = Date().addingTimeInterval(GameLogic.vehicleTravelTime)
+        self.owner = player.id
+        self.engine = spaceVehicle.engine.rawValue
+        self.status = spaceVehicle.status.rawValue
+    }
+}
+
+/// When Posting `SpaceVehiclePost`, this is the response. Link to Vehicle immediately. This is also the object that the server has
+struct SpaceVehicleTicket:Codable {
+    
+    /// The ID, given by the server
+    var id:UUID
+    
+    /// The ID of the original `SpaceVehicle`
+    var localID:UUID
+    
+    var eta:Date
+    var owner:UUID
+    var engine:String
+    var status:String
+    
+    // No Initializer - Decoded from Server
+}
+
+/*
+struct SpaceVehicleModel:Codable {
+
+    var id:UUID?
+    var eta:Date
+    var owner:UUID
+    var engine:String
+    var status:String
+
     init(spaceVehicle:SpaceVehicle, player:SKNUserPost) {
         self.id = spaceVehicle.id
         self.eta = Date().addingTimeInterval(60 * 60 * 24 * 5)
@@ -483,3 +528,5 @@ struct SpaceVehicleContent:Codable {
         passengers = vehicle.passengers
     }
 }
+*/
+

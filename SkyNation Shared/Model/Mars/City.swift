@@ -24,11 +24,16 @@ struct DBCity:Codable {
     
     var posdex:Int
     
+    var gateConfig:String?
+    
+    var gateColor:Int
+    var experience:Int
+    
     /// Generates a random city
     static func generate(gid:UUID, owner:SKNPlayer?, posdex:Posdex) -> DBCity {
         let cityNames = ["Mortadella", "Elysium", "Moyses", "Drakula"]
         let oid:[String:UUID?]? = owner != nil ? ["id":owner!.id]:nil
-        let newCity = DBCity(id: UUID(), guild: ["id":gid], name: cityNames.randomElement()!, accounting: Date(), owner: oid, posdex: posdex.rawValue)
+        let newCity = DBCity(id: UUID(), guild: ["id":gid], name: cityNames.randomElement()!, accounting: Date(), owner: oid, posdex: posdex.rawValue, gateColor: 0, experience:0)
         return newCity
     }
 }
@@ -107,6 +112,26 @@ class CityData:Codable, Identifiable {
     }
     
     // MARK: - Initializers
+    
+    /// Initialize from a DBCity Object
+    init(dbCity:DBCity) {
+        self.id = dbCity.id
+        guard let pDex = Posdex(rawValue: dbCity.posdex) else { fatalError() }
+        self.posdex = pDex
+        self.boxes = []
+        self.tanks = []
+        self.batteries = []
+        self.inhabitants = []
+        self.peripherals = []
+        self.solarPanels = []
+        self.bioBoxes = []
+        self.vehicles = []
+        self.tech = []
+        self.air = AirComposition(mars: true)
+        self.unlockedRecipes = LocalDatabase.shared.station?.unlockedRecipes ?? []
+        self.garage = Garage()
+        
+    }
     
     init(example:Bool, id:UUID? = nil) {
         

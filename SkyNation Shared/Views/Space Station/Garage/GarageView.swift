@@ -662,11 +662,11 @@ struct TravellingVehicleView: View {
                             
                             // FIXME: - Uncomment the following commented code
 //                            if vehicle.engine != .Hex6 {
-                                Button("Begin EDL") {
-                                    print("Beginning Entry, Descent and Landing")
-                                    controller.performEntryDescentAndLanding(vehicle: vehicle)
-                                }
-                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+//                                Button("Begin EDL") {
+//                                    print("Beginning Entry, Descent and Landing")
+////                                    controller.performEntryDescentAndLanding(vehicle: vehicle)
+//                                }
+//                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
 //                            }
                             
                             if let bot = vehicle.marsBot {
