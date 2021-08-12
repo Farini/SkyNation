@@ -240,10 +240,11 @@ struct GuildFullContent:Codable {
         
     }
     
+    
     func makeSummary() -> GuildSummary {
         let cityIDs = self.cities.compactMap({ $0.id })
         let outpostIDs = self.outposts.compactMap({ $0.id })
-        let summary = GuildSummary(id: self.id, name: self.name, isOpen: self.isOpen, citizens: self.citizens.compactMap({ $0.id }), cities: cityIDs , outposts: outpostIDs ?? [], icon: icon, color: color)
+        let summary = GuildSummary(id: self.id, name: self.name, isOpen: self.isOpen, citizens: self.citizens.compactMap({ $0.id }), cities: cityIDs , outposts: outpostIDs , icon: icon, color: color)
         return summary
     }
     

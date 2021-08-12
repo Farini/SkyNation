@@ -537,6 +537,8 @@ class LocalDatabase {
         // Player
         if let player = LocalDatabase.loadPlayer() {
             self.player = player
+        } else {
+            print("No Player !!!")
         }
         
         // Space Station
@@ -564,7 +566,6 @@ class LocalDatabase {
         print("Loading Settings")
         let settings = LocalDatabase.loadSettings()
         self.gameSettings = settings
-        print("Finished Settings")
         
         // Server Database
         if let servData = loadServerData() {
@@ -572,15 +573,18 @@ class LocalDatabase {
             let newData = ServerData(localData: servData)
             self.serverData = newData
         } else {
-            if let p1 = player {
-                let newData = ServerData(with: p1)
-                self.serverData = newData
-                if self.saveServerData(skn: newData) == true {
-                    print("New server data saved")
-                }
-            }
-            print("Server data not written locally")
+            print("No server data")
+//            if let p1 = player {
+//                let newData = ServerData(player: p1)
+//                self.serverData = newData
+//                if self.saveServerData(skn: newData) == true {
+//                    print("New server data saved")
+//                }
+//            }
+//            print("Server data not written locally")
         }
+        
+        print("LocalDatabase Finished Loading \n\n")
     }
 }
 

@@ -32,46 +32,47 @@ class SKNS {
     /// Keep a record of the queries performed, so we don't keep repeating the same queries.
     var queries:[Routes:Date] = [:] // Queries should have *route, *date, *objectRetrieved, *
     
-//    var encoder:JSONEncoder {
-//        get {
-//            let encoder = JSONEncoder()
-//            encoder.dateEncodingStrategy = .secondsSince1970
-//            return encoder
-//        }
-//    }
-//
-//    var decoder:JSONDecoder {
-//        get {
-//            let decoder = JSONDecoder()
-//            decoder.dateDecodingStrategy = .secondsSince1970
-//            return decoder
-//        }
-//    }
-    
-    
-    
     static let baseAddress = "http://127.0.0.1:8080"
     
     // MARK: - User, Login
     
-    /// A function that does `Sign-in`, or `Login` based on what data we have
-    static func resolveLogin(completion:((PlayerPost?, Error?) -> ())?) {
+    /// Updates pass and GuildID on its own. Errors thrown could be `PlayerLogin`.`LogFail`
+    static func performLogin(completion:((PlayerUpdate?, Error?) -> ())?) {
         
-        guard let player = LocalDatabase.shared.player else { return }
-        let playerPost = PlayerPost(player: player)
+        guard let localPlayer = LocalDatabase.shared.player else { return }
+        var pLogin:PlayerLogin?
+        
+        do {
+            let pUpdate:PlayerLogin = try PlayerLogin.create(player: localPlayer)
+            pLogin = pUpdate
+        } catch {
+            if let logError:PlayerLogin.LogFail = error as? PlayerLogin.LogFail {
+                print("Player Log Error: \(logError.localizedDescription)")
+            }
+            completion?(nil, error)
+            return
+        }
+        
+        /// The object being posted
+        guard let playerLogin:PlayerLogin = pLogin else {
+            fatalError()
+        }
         
         // Build Request
-        let address = "\(baseAddress)/users/login" // shouldSignIn ? "\(baseAddress)/users/login"  // sign-in":"\(baseAddress)/users/login"
+        let address = "\(baseAddress)/player/login"
+        
         guard let url = URL(string: address) else { return }
         let session = URLSession.shared
         var request = URLRequest(url: url)
-        request.httpMethod = HTTPMethod.POST.rawValue // (Post): HTTPMethod.POST.rawValue // (Get): HTTPMethod.GET.rawValue
+        request.httpMethod = HTTPMethod.POST.rawValue
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .secondsSince1970
+        encoder.outputFormatting = .prettyPrinted
         
-        if let data = try? encoder.encode(playerPost) {
+        // Body with `PlayerLogin`
+        if let data = try? encoder.encode(playerLogin) {
             print("\n\nAdding Data")
             request.httpBody = data
             let dataString = String(data:data, encoding: .utf8) ?? "n/a"
@@ -80,174 +81,390 @@ class SKNS {
         
         let task = session.dataTask(with: request) { (data, response, error) in
             if let data = data {
+                
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .secondsSince1970
-                if let responseUser = try? decoder.decode(PlayerPost.self, from: data) {
+                
+                if let responsePlayer:PlayerUpdate = try? decoder.decode(PlayerUpdate.self, from: data) {
                     
-                    print("Response user: \(responseUser.name)")
+                    print("Response user: \(responsePlayer.name)")
                     
                     // Update Player Properties
-                    if let pass = responseUser.keyPass {
-                        print("Pass: \(pass)")
-                        player.keyPass = pass
-                    }
-                    player.serverID = responseUser.serverID
-                    player.playerID = responseUser.playerID
-                    print("Player id: \(player.playerID!)")
-                    if let gid = player.guildID {
-                        print("Guild id: \(gid)")
-                    } else {
-                        print("⚠️ Player doesn't have a Guild")
+                    localPlayer.keyPass = responsePlayer.pass
+                    
+                    // Guild ID
+                    if let oldGuild = localPlayer.guildID,
+                       oldGuild != responsePlayer.guildID {
+                        print("Attention! - Guild ID changing!\n Old Guild:\(oldGuild), New Guild:\(responsePlayer.guildID?.uuidString ?? "none")")
+                        localPlayer.guildID = responsePlayer.guildID
                     }
                     
                     // Save
-                    let res = LocalDatabase.shared.savePlayer(player: player)
+                    let res = LocalDatabase.shared.savePlayer(player: localPlayer)
                     if !res { print("Error: Could not save player") }
                     
                     DispatchQueue.main.async {
-                        completion?(responseUser, nil)
+                        completion?(responsePlayer, nil)
                     }
                     return
-                }
-            }
-            DispatchQueue.main.async {
-                print("Error: \(error?.localizedDescription ?? "n/a")")
-                completion?(nil, error)
-            }
-        }
-        task.resume()
-    }
-    
-    // Deprecate (resolveLogin solves it)
-    static func newLogin(user:SKNUserPost, completion:((SKNUserPost?, Error?) -> ())?) {
-        
-        print("New Login")
-        
-//        if let guild = user.guildID {
-//            // user already has guild
-//            print("* Guild \(guild)")
-//        } else {
-//            // user doesn't have a guild
-//            print("no guild")
-//        }
-        
-        let url = URL(string: "\(baseAddress)/login")!
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = HTTPMethod.POST.rawValue // (Post): HTTPMethod.POST.rawValue // (Get): HTTPMethod.GET.rawValue
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        
-        let encoder = JSONEncoder()
-        if let data = try? encoder.encode(user) {
-            print("Adding Data")
-            request.httpBody = data
-//            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
-//            print("DS: \(dataString)")
-        }
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .secondsSince1970
-                if let responseUser = try? decoder.decode(SKNUserPost.self, from: data) {
-                    DispatchQueue.main.async {
-//                        print("Data returning")
-                        completion?(responseUser, nil)
-                    }
-                    return
-                }
-            }
-            
-            DispatchQueue.main.async {
-                print("Error: \(error?.localizedDescription ?? "n/a")")
-                completion?(nil, error)
-            }
-            
-            
-        }
-        task.resume()
-    }
-    
-    // Deprecate (resolveLogin solves it)
-    static func createPlayer(localPlayer:SKNUserPost, completion:((Data?, Error?) -> ())?) {
-        
-        print("Creating Player")
-        
-        let url = URL(string: "\(baseAddress)/users")!
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = HTTPMethod.POST.rawValue // (Post): HTTPMethod.POST.rawValue // (Get): HTTPMethod.GET.rawValue
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        
-        let encoder = JSONEncoder()
-        if let data = try? encoder.encode(localPlayer) {
-            print("Adding Data")
-            request.httpBody = data
-            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
-            print("DS: \(dataString)")
-        }
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                DispatchQueue.main.async {
-                    print("Data returning")
-                    completion?(data, nil)
-                }
-                
-            } else if let error = error {
-                print("Error returning")
-                DispatchQueue.main.async {
-                    completion?(nil, error)
-                }
-            }
-        }
-        task.resume()
-    }
-    
-    static func updatePlayer(object:PlayerContent, completion:((PlayerContent?, Error?) -> ())?) {
-        
-        print("Creating Player")
-        
-        let url = URL(string: "\(baseAddress)/update_player")!
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = HTTPMethod.POST.rawValue // (Post): HTTPMethod.POST.rawValue // (Get): HTTPMethod.GET.rawValue
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        
-        let encoder = JSONEncoder()
-        if let data = try? encoder.encode(object) {
-            print("Adding Data")
-            request.httpBody = data
-            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
-            print("DS: \(dataString)")
-        }
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                DispatchQueue.main.async {
-                    print("Data returning")
-                    let decoder = JSONDecoder()
-                    decoder.dateDecodingStrategy = .secondsSince1970
-                    if let playerBack = try? decoder.decode(PlayerContent.self, from: data) {
-                        completion?(playerBack, nil)
-                    }else {
-                        print("Data is not formattted to 'PlayerContent' ")
+                } else {
+                    
+                    if let notFound:NotFoundResponse = try? JSONDecoder().decode(NotFoundResponse.self, from: data) {
+                        if notFound.isNotFound() == true {
+                            print("Not Found")
+                            SKNS.newLogin { newPlayerUpdate, newError in
+                                completion?(newPlayerUpdate, newError)
+                            }
+                        }
+                    } else {
+                        // Something else went wrong
+                        print("Could Not get Player Update (Decoding) >> \(error?.localizedDescription ?? "noerror"), R:\(response.debugDescription)")
                         completion?(nil, error)
                     }
+                    
                 }
-                
-            } else if let error = error {
-                print("Error returning")
+            } else {
                 DispatchQueue.main.async {
+                    print("Error: \(error?.localizedDescription ?? "n/a")")
+                    completion?(nil, error)
+                }
+            }
+            
+        }
+        task.resume()
+        
+    }
+    
+    /// NLogin
+    static func newLogin(completion:((PlayerUpdate?, Error?) -> ())?) {
+        
+        guard let localPlayer = LocalDatabase.shared.player else { return }
+        
+        let pCreate:PlayerCreate = PlayerCreate(player: localPlayer)
+        
+        // Build Request
+        let address = "\(baseAddress)/player/create"
+        
+        guard let url = URL(string: address) else { return }
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.POST.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        encoder.outputFormatting = .prettyPrinted
+        
+        // Body with `PlayerCreate`
+        if let data = try? encoder.encode(pCreate) {
+            print("\n\nAdding Data")
+            request.httpBody = data
+            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
+            print("DS: \(dataString)")
+        }
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                
+                if let responsePlayer:PlayerUpdate = try? decoder.decode(PlayerUpdate.self, from: data) {
+                    
+                    print("Response user: \(responsePlayer.name)")
+                    
+                    // Update Player Properties
+                    localPlayer.keyPass = responsePlayer.pass
+                    localPlayer.playerID = responsePlayer.id
+                    
+                    // Save
+                    let res = LocalDatabase.shared.savePlayer(player: localPlayer)
+                    print("Player Created. Saving:\(res)")
+                    
+                    DispatchQueue.main.async {
+                        completion?(responsePlayer, nil)
+                    }
+                    return
+                }
+            }
+            DispatchQueue.main.async {
+                print("Error: \(error?.localizedDescription ?? "n/a")")
+                completion?(nil, error)
+            }
+        }
+        task.resume()
+        
+    }
+    
+    /// Update Player
+    static func updatePlayer(completion:((PlayerUpdate?, Error?) -> ())?) {
+        
+        guard let localPlayer = LocalDatabase.shared.player else { return }
+        var pUpdate:PlayerUpdate?
+        
+        do {
+            pUpdate = try PlayerUpdate.create(player: localPlayer)
+        } catch {
+            completion?(nil, error)
+            return
+        }
+        
+        /// The object being posted
+        guard let playerUpdate:PlayerUpdate = pUpdate else {
+            fatalError()
+        }
+        
+        // Build Request
+        let address = "\(baseAddress)/player/update"
+        
+        guard let url = URL(string: address) else { return }
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.POST.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        encoder.outputFormatting = .prettyPrinted
+        
+        // Body with `PlayerUpdate`
+        if let data = try? encoder.encode(playerUpdate) {
+            print("\n\nAdding Data")
+            request.httpBody = data
+            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
+            print("DS: \(dataString)")
+        }
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                
+                if let responsePlayer:PlayerUpdate = try? decoder.decode(PlayerUpdate.self, from: data) {
+                    
+                    print("Response user: \(responsePlayer.name)")
+                    
+                    // Update Player Properties
+                    localPlayer.keyPass = responsePlayer.pass
+                    
+                    // Guild ID
+                    if let oldGuild = localPlayer.guildID,
+                       oldGuild != responsePlayer.guildID {
+                        print("Attention! - Guild ID changing!\n Old Guild:\(oldGuild), New Guild:\(responsePlayer.guildID?.uuidString ?? "none")")
+                        localPlayer.guildID = responsePlayer.guildID
+                    }
+                    
+                    // Save
+                    let res = LocalDatabase.shared.savePlayer(player: localPlayer)
+                    if !res { print("Error: Could not save player") }
+                    
+                    DispatchQueue.main.async {
+                        completion?(responsePlayer, nil)
+                    }
+                    return
+                }
+            }
+            DispatchQueue.main.async {
+                print("Error: \(error?.localizedDescription ?? "n/a")")
+                completion?(nil, error)
+            }
+        }
+        task.resume()
+        
+    }
+    
+    /// Gets a new passowrd for a Player
+    static func requestNewPass(completion:((PlayerUpdate?, Error?) -> ())?) {
+        
+        guard let localPlayer = LocalDatabase.shared.player else { return }
+        var pUpdate:PlayerUpdate?
+        
+        do {
+            pUpdate = try PlayerUpdate.create(player: localPlayer)
+        } catch {
+            completion?(nil, error)
+            return
+        }
+        
+        /// The object being posted
+        guard let playerUpdate:PlayerUpdate = pUpdate else {
+            fatalError()
+        }
+        
+        // Build Request
+        let address = "\(baseAddress)/player/newpass"
+        
+        guard let url = URL(string: address) else { return }
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.POST.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        encoder.outputFormatting = .prettyPrinted
+        
+        // Body with `PlayerUpdate`
+        if let data = try? encoder.encode(playerUpdate) {
+            print("\n\nAdding Data")
+            request.httpBody = data
+            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
+            print("DS: \(dataString)")
+        }
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                
+                if let responsePlayer:PlayerUpdate = try? decoder.decode(PlayerUpdate.self, from: data) {
+                    
+                    print("Response user: \(responsePlayer.name)")
+                    
+                    // Update Player Properties
+                    localPlayer.keyPass = responsePlayer.pass
+                    
+                    // Guild ID
+//                    if let oldGuild = localPlayer.guildID,
+//                       oldGuild != responsePlayer.guildID {
+//                        print("Attention! - Guild ID changing!\n Old Guild:\(oldGuild), New Guild:\(responsePlayer.guildID?.uuidString ?? "none")")
+//                        localPlayer.guildID = responsePlayer.guildID
+//                    }
+                    
+                    // Save
+                    let res = LocalDatabase.shared.savePlayer(player: localPlayer)
+                    if !res { print("Error: Could not save player") }
+                    
+                    DispatchQueue.main.async {
+                        completion?(responsePlayer, nil)
+                    }
+                    return
+                }
+            }
+            DispatchQueue.main.async {
+                print("Error: \(error?.localizedDescription ?? "n/a")")
+                completion?(nil, error)
+            }
+        }
+        task.resume()
+        
+    }
+    
+    /// Tries to Fetch a player
+    static func findPlayer(pid:UUID, completion:((PlayerCard?, Error?) -> ())?) {
+        
+        let url = URL(string: "\(baseAddress)/player/find/\(pid)")!
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            
+            if let data = data {
+                
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                
+                if let fetchedPlayer:PlayerCard = try? decoder.decode(PlayerCard.self, from: data) {
+                    
+                    print("Fetched Player: \(fetchedPlayer.name)")
+                    DispatchQueue.main.async {
+                        completion?(fetchedPlayer, nil)
+                    }
+                    return
+                    
+                } else {
+                    print("Could not decode Fetched Player. Data: \(String(data:data, encoding:.utf8) ?? "n/a")")
+                    DispatchQueue.main.async {
+                        completion?(nil, error)
+                    }
+                    return
+                }
+            } else {
+                DispatchQueue.main.async {
+                    print("Did not get Data from Find Player Request. Error: \(error?.localizedDescription ?? "n/a")")
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+        
+    }
+    
+    /// Fetches a Guild with a PlayerLogin object
+    static func requestPlayersGuild(completion:((GuildFullContent?, Error?) -> ())?) {
+        
+        guard let localPlayer = LocalDatabase.shared.player else { return }
+        var pLogin:PlayerLogin?
+        
+        do {
+            let pUpdate:PlayerLogin = try PlayerLogin.create(player: localPlayer)
+            pLogin = pUpdate
+        } catch {
+            completion?(nil, error)
+            return
+        }
+        
+        /// The object being posted
+        guard let playerLogin:PlayerLogin = pLogin else {
+            fatalError()
+        }
+        
+        // Build Request
+        let address = "\(baseAddress)/player/guild"
+        
+        guard let url = URL(string: address) else { return }
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.POST.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        encoder.outputFormatting = .prettyPrinted
+        
+        // Body with `PlayerLogin`
+        if let data = try? encoder.encode(playerLogin) {
+            print("\n\nAdding Data")
+            request.httpBody = data
+            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
+            print("DS: \(dataString)")
+        }
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            
+            if let data = data {
+                
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                
+                if let fetchedGuild:GuildFullContent = try? decoder.decode(GuildFullContent.self, from:data) {
+                    print("Fetched Guild: \(fetchedGuild.name)")
+                    DispatchQueue.main.async {
+                        completion?(fetchedGuild, nil)
+                    }
+                    return
+                } else {
+                    print("Could not decode Fetched Guild. Data: \(String(data:data, encoding:.utf8) ?? "n/a")")
+                    DispatchQueue.main.async {
+                        completion?(nil, error)
+                    }
+                    return
+                }
+            } else {
+                DispatchQueue.main.async {
+                    print("Did not get Data from Find Player Request. Error: \(error?.localizedDescription ?? "n/a")")
                     completion?(nil, error)
                 }
             }
         }
         task.resume()
     }
+    
+    // MARK: - Older Methods
     
     // MARK: - Tokens
     
@@ -301,6 +518,51 @@ class SKNS {
     
     
     // MARK: - Guild
+    
+    /// Still Works 8/10/2021
+    static func browseGuilds(completion:(([GuildSummary]?, Error?) -> ())?) {
+        
+        guard let player = LocalDatabase.shared.player,
+              let pid = player.playerID else {
+            print("Something Wrong.")
+            completion?(nil, nil)
+            return
+        }
+        
+        let url = URL(string: "\(baseAddress)/guilds/browse/\(pid)")!
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue // (Post): HTTPMethod.POST.rawValue // (Get): HTTPMethod.GET.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        // Set the playerID if there is one
+        request.setValue(pid.uuidString, forHTTPHeaderField: "pid")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                do {
+                    let guilds:[GuildSummary] = try decoder.decode([GuildSummary].self, from: data)
+                    DispatchQueue.main.async {
+                        print("Data returning")
+                        completion?(guilds, nil)
+                    }
+                } catch {
+                    print("Not Guilds Object. Error:\(error.localizedDescription): \(data)")
+                    if let string = String(data: data, encoding: .utf8) {
+                        print("Not Guilds String: \(string)")
+                    }
+                }
+            } else if let error = error {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+    }
     
     static func joinGuildPetition(guildID:UUID, completion:((GuildSummary?, Error?) -> ())?) {
         
@@ -360,175 +622,10 @@ class SKNS {
         task.resume()
     }
     
-    static func requestJoinGuild(playerID:UUID, guildID:UUID, completion:((Guild?, Error?) -> ())?) {
-        
-        let url = URL(string: "\(baseAddress)/guildjoin/\(playerID.uuidString)/\(guildID.uuidString)")!
-        
-        
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = HTTPMethod.GET.rawValue // (Post): HTTPMethod.POST.rawValue // (Get): HTTPMethod.GET.rawValue
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                DispatchQueue.main.async {
-                    print("Data returning")
-                    let decoder = JSONDecoder()
-                    decoder.dateDecodingStrategy = .secondsSince1970
-                    do {
-                        let guild = try decoder.decode(Guild.self, from: data)
-                        completion?(guild, nil)
-                        return
-                    }catch{
-                        print("Error decoding")
-                        completion?(nil, error)
-                    }
-                }
-                
-            } else {
-                print("Error returning")
-                DispatchQueue.main.async {
-                    completion?(nil, error)
-                }
-            }
-        }
-        task.resume()
-    }
     
-    static func findMyGuild(user:SKNUserPost, completion:((Guild?, Error?) -> ())?) {
-        
-        let url = URL(string: "\(baseAddress)/eagerguild/\(user.id.uuidString)")!
-        
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = HTTPMethod.GET.rawValue // (Post): HTTPMethod.POST.rawValue // (Get): HTTPMethod.GET.rawValue
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                DispatchQueue.main.async {
-                    print("Data returning")
-                    let decoder = JSONDecoder()
-                    decoder.dateDecodingStrategy = .secondsSince1970
-                    let string = String(data:data, encoding:.utf8)
-                    
-                    do {
-                        let guilds = try decoder.decode([Guild].self, from: data)
-                        completion?(guilds.first, nil)
-                        return
-                    }catch{
-                        print("Error decoding: \(error.localizedDescription)")
-//                        if let string = try? String(data:data, encoding:.utf8) {
-                            print("\n\nString:")
-                            print(string ?? "n/a")
-//                        }
-                        completion?(nil, error)
-                    }
-                }
-                
-            } else {
-                print("Error returning")
-                DispatchQueue.main.async {
-                    completion?(nil, error)
-                }
-            }
-        }
-        task.resume()
-    }
     
-    // Load Guild (Using the Guild Router)
-    static func loadGuild(completion:((GuildFullContent?, Error?) -> ())?) {
-        
-        guard let player = LocalDatabase.shared.player,
-              let pid = player.serverID,
-              let gid = player.guildID else {
-            completion?(nil, nil)
-            return
-        }
-        
-        let url = URL(string: "\(baseAddress)/guilds/load/\(gid)")!
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        request.httpMethod = HTTPMethod.GET.rawValue // (Post): HTTPMethod.POST.rawValue // (Get): HTTPMethod.GET.rawValue
-        
-        request.setValue(gid.uuidString, forHTTPHeaderField: "gid")
-        request.setValue(pid.uuidString, forHTTPHeaderField: "pid")
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                DispatchQueue.main.async {
-                    //                    print("Data returning")
-                    let decoder = JSONDecoder()
-                    decoder.dateDecodingStrategy = .secondsSince1970
-                    let string = String(data:data, encoding:.utf8)
-                    
-                    do {
-                        let guild = try decoder.decode(GuildFullContent.self, from: data)
-                        completion?(guild, nil)
-                        return
-                    }catch{
-                        print("Error decoding: \(error.localizedDescription)")
-                        print("\n\nString:")
-                        print(string ?? "n/a")
-                        completion?(nil, error)
-                    }
-                }
-                
-            } else {
-                print("Error returning")
-                DispatchQueue.main.async {
-                    completion?(nil, error)
-                }
-            }
-        }
-        task.resume()
-    }
     
-    static func browseGuilds(completion:(([GuildSummary]?, Error?) -> ())?) {
-        
-        guard let player = LocalDatabase.shared.player,
-              let pid = player.playerID else {
-            print("Something Wrong.")
-            completion?(nil, nil)
-            return
-        }
-        
-        let url = URL(string: "\(baseAddress)/guilds/browse")!
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        request.httpMethod = HTTPMethod.GET.rawValue // (Post): HTTPMethod.POST.rawValue // (Get): HTTPMethod.GET.rawValue
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        
-        // Set the playerID if there is one
-        request.setValue(pid.uuidString, forHTTPHeaderField: "pid")
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .secondsSince1970
-                do {
-                    let guilds:[GuildSummary] = try decoder.decode([GuildSummary].self, from: data)
-                    DispatchQueue.main.async {
-                        print("Data returning")
-                        completion?(guilds, nil)
-                    }
-                } catch {
-                    print("Not Guilds Object. Error:\(error.localizedDescription): \(data)")
-                    if let string = String(data: data, encoding: .utf8) {
-                        print("Not Guilds String: \(string)")
-                    }
-                }
-            } else if let error = error {
-                print("Error returning")
-                DispatchQueue.main.async {
-                    completion?(nil, error)
-                }
-            }
-        }
-        task.resume()
-    }
-    
+    /*
     static func createGuild(localPlayer:SKNUserPost, guildName:String, completion:((Data?, Error?) -> ())?) {
         
         print("Creating Guild")
@@ -566,6 +663,7 @@ class SKNS {
         }
         task.resume()
     }
+    */
     
     // MARK: - City
     
@@ -989,4 +1087,14 @@ class SKNS {
         
     }
     
+}
+
+struct NotFoundResponse:Codable {
+    
+    var error:Bool
+    var reason:String
+    
+    func isNotFound() -> Bool {
+        return reason == "Not Found"
+    }
 }

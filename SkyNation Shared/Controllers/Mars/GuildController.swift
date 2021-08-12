@@ -12,7 +12,9 @@ class GuildController:ObservableObject {
     @Published var news:String
     
     @Published var player:SKNPlayer?
-    @Published var user:SKNPlayer?
+//    @Published var user:SKNPlayer?
+    
+    @Published var upPlayer:PlayerUpdate?
     
     @Published var guilds:[GuildSummary] = []
     @Published var highlightedGuild:GuildSummary? // The Guild to display (bigger)
@@ -29,10 +31,11 @@ class GuildController:ObservableObject {
         
         if let player = LocalDatabase.shared.player {
             self.player = player
-//            self.user = SKNUserPost(player: player)
-            print("Backend Controller")
-            print("User id:\(player.id)")
-            print("Server: \n (P):\(player.serverID?.uuidString ?? "NO SERVER ID") \n (U):\(user?.id.uuidString ?? "NO SERVER ID")")
+            
+            print("Guild Controller")
+            print("Local id:\(player.id)")
+            print("Server id: \(player.playerID?.uuidString ?? "[none]")")
+            
         }
         
         if autologin && GameSettings.onlineStatus {
@@ -53,9 +56,10 @@ class GuildController:ObservableObject {
         
         ServerManager.shared.inquireLogin { player, error in
             DispatchQueue.main.async {
-                if let player = player {
-                    print("Player login: ID:\(player.id.uuidString), LID: \(player.localID), SID: \(player.serverID?.uuidString ?? "< No server ID >")")
-                    self.user = player
+                if let player:PlayerUpdate = player {
+                    print("Player login: ID:\(player.id.uuidString), LID: \(player.localID)")
+//                    self.user = player
+                    self.upPlayer = player
                 } else {
                     print("Did not find user. \(error?.localizedDescription ?? "")")
                 }
@@ -101,7 +105,7 @@ class GuildController:ObservableObject {
         news = "Searching your guild..."
         
         if let serverData = ServerManager.shared.serverData,
-           let guild = serverData.guild {
+           let guild = serverData.guildfc {
             
             // Display information about my Guild
             self.joinedGuild = guild.makeSummary()
@@ -152,6 +156,7 @@ class GuildController:ObservableObject {
                     print("Saved Player after Guild Join \(res.description)")
                     
                     ServerManager.shared.notifyJoinedGuild(guildSum: guildSum)
+                    
                 } else {
                     print("not accepted")
                 }

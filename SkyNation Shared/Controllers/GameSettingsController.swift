@@ -26,7 +26,7 @@ class GameSettingsController:ObservableObject {
     @Published var isNewPlayer:Bool
     @Published var savedChanges:Bool
     
-    @Published var user:SKNPlayer?
+//    @Published var user:SKNPlayer?
     @Published var guild:Guild?
     
     // Guild Selection
@@ -65,47 +65,55 @@ class GameSettingsController:ObservableObject {
         }
         
         self.updateLoadedList()
+        
     }
     
     /// Updates the front list showing the loading status of Data
     func updateLoadedList() {
+        
         var items:[String] = []
-        if let player = LocalDatabase.shared.player {
-            items.append("★ Loaded Player \(player.name)")
-            if let pid = player.serverID {
-                items.append("L-PID \(pid.uuidString)")
-            }
-            if let gid = player.guildID {
-                items.append("L-GID \(gid.uuidString.prefix(8))")
-            }
-            if let cid = player.cityID {
-                items.append("L-CID \(cid.uuidString.prefix(8))")
-            }
-            
-            // Scene Loaded
-            if stationSceneLoaded {
-                items.append("★ Station loaded: \(stationSceneLoaded)")
-            } else {
-                items.append("Loading station")
-            }
-            
-            // Server Data Loaded
-            if let user = user {
-                if let pid = user.serverID {
-                    items.append("U-PID \(pid.uuidString)")
-                } else {
-                    items.append("< No server ID >")
+        
+        if GameSettings.onlineStatus == true {
+            if let player = LocalDatabase.shared.player {
+                items.append("★ Loaded Player \(player.name)")
+                if let pid = player.serverID {
+                    items.append("L-PID \(pid.uuidString)")
                 }
-                if let gid = user.guildID {
-                    items.append("Guild: \(gid.uuidString)")
-                } else {
-                    items.append("< No Guild ID >")
+                if let gid = player.guildID {
+                    items.append("L-GID \(gid.uuidString.prefix(8))")
                 }
-            } else {
-                items.append("User not connected")
+                if let cid = player.cityID {
+                    items.append("L-CID \(cid.uuidString.prefix(8))")
+                }
+                
+                // Scene Loaded
+                if stationSceneLoaded {
+                    items.append("★ Station loaded: \(stationSceneLoaded)")
+                } else {
+                    items.append("Loading station")
+                }
+                
+                // Server Data Loaded
+//                if let user = user {
+//                    if let pid = user.serverID {
+//                        items.append("U-PID \(pid.uuidString)")
+//                    } else {
+//                        items.append("< No server ID >")
+//                    }
+//                    if let gid = user.guildID {
+//                        items.append("Guild: \(gid.uuidString)")
+//                    } else {
+//                        items.append("< No Guild ID >")
+//                    }
+//                } else {
+//                    items.append("User not connected")
+//                }
+                
             }
-            
+        } else {
+            items.append("🚫 Offline Mode")
         }
+        
         self.loadedList = items
     }
     
@@ -135,16 +143,26 @@ class GameSettingsController:ObservableObject {
     
     func fetchUser() {
         
-        ServerManager.shared.inquireLogin { player, error in
-            DispatchQueue.main.async {
-                if let player = player {
-                    self.user = player
-                } else {
-                    print("Did not find user. \(error?.localizedDescription ?? "")")
-                    // serverID CCB3A438-3CEC-44E8-94C5-EC711FBF4ABB
-                }
+        SKNS.performLogin { playerUpdate, error in
+            if let p = playerUpdate {
+                print("Player Update: \(p.id)")
+            } else {
+                print("Error: \(error?.localizedDescription ?? "n/a")")
             }
         }
+        
+        
+//        ServerManager.shared.inquireLogin { player, error in
+//            
+//            DispatchQueue.main.async {
+//                if let player = player {
+////                    self.user = player
+//                } else {
+//                    print("Did not find user. \(error?.localizedDescription ?? "")")
+//                    // serverID CCB3A438-3CEC-44E8-94C5-EC711FBF4ABB
+//                }
+//            }
+//        }
         
     }
     
@@ -262,10 +280,11 @@ class GameSettingsController:ObservableObject {
     func loadServerData() {
         
         ServerManager.shared.inquireLogin { player, error in
+            
             DispatchQueue.main.async {
-                if let player = player {
-                    print("Player login: ID:\(player.id.uuidString), LID: \(player.localID), SID: \(player.serverID?.uuidString ?? "< No server ID >")")
-                    self.user = player
+                if let player:PlayerUpdate = player {
+                    print("Player Update Login: ID:\(player.id.uuidString), LID: \(player.localID)")
+//                    self.user = player
                     self.updateLoadedList()
                 } else {
                     print("Did not find user. \(error?.localizedDescription ?? "")")

@@ -314,6 +314,132 @@ struct PlayerPost:Codable {
 }
 
 
+// MARK: - New, Simpler Method
+
+/// Used for Loging Player in
+struct PlayerLogin: Codable {
+    
+    /// The `id` of `DBPlayer` object
+    var pid:UUID
+    
+    /// The pass given by system (resettable)
+    var pass:String
+    
+    /// Name of Player
+    var name:String
+    
+    /// Ways in which a login can fail
+    enum LogFail:Error {
+        case noID
+        case noPass
+    }
+    
+    /// Tries to create a player. It can fail if player has no `playerID`, or `pass`
+    static func create(player:SKNPlayer) throws -> PlayerLogin {
+        
+        guard let id = player.playerID else { throw LogFail.noID }
+        guard let pass = player.keyPass else { throw LogFail.noPass }
+        
+        return PlayerLogin(pid: id, pass: pass, name: player.name)
+    }
+    
+}
+
+/// Used when creating a DBPlayer
+struct PlayerCreate: Codable {
+    
+    // No ID
+    
+    /// id given by local machine
+    var localID:UUID
+    
+    var name:String
+    var avatar:String
+    var money:Int
+    var experience:Int
+    
+    // Dates
+    var beganGame:Date
+    
+    /// Initialize when creating a DBPlayer
+    init(player:SKNPlayer) {
+        self.localID = player.localID
+        self.name = player.name
+        self.avatar = player.avatar
+        self.experience = player.experience
+        self.money = player.money
+        self.beganGame = player.beganGame
+    }
+}
+
+/// Used when Updating a Player
+struct PlayerUpdate: Codable {
+    
+    /// ID of `DBPlayer`
+    var id:UUID
+    
+    /// id given by local machine
+    var localID:UUID
+    
+    /// id of the Guild (Optional)
+    var guildID:UUID?
+    
+    var name:String
+    var avatar:String
+    var money:Int
+    var experience:Int
+    
+    // Dates
+    var beganGame:Date
+    var pass:String
+    
+    /// Tries to create a player. It can fail if player has no `playerID`, or `pass`
+    static func create(player:SKNPlayer) throws -> PlayerUpdate {
+        
+        guard let id = player.playerID else { throw PlayerLogin.LogFail.noID }
+        guard let pass = player.keyPass else { throw PlayerLogin.LogFail.noPass }
+        
+        return PlayerUpdate(player: player, id: id, pass: pass)
+    }
+    
+    private init(player:SKNPlayer, id:UUID, pass:String) {
+        
+        self.id = id
+        self.pass = pass
+        
+        self.localID = player.localID
+        self.guildID = player.guildID
+        self.name = player.name
+        self.avatar = player.avatar
+        self.money = player.money
+        self.experience = player.experience
+        self.beganGame = player.beganGame
+    }
+}
+
+/// Card representation of Player, to show to other Players
+struct PlayerCard: Codable {
+    
+    /// ID of `DBPlayer`
+    var id:UUID
+    
+    /// id given by local machine
+    var localID:UUID
+    
+    /// id of the Guild (Optional)
+    var guildID:UUID?
+    
+    var name:String
+    var avatar:String
+    var experience:Int
+    
+    var lastSeen:Date
+    
+    // No initializers (Comes from Server)
+    
+}
+
+
 /// `Public` information about a `Player`
 /*
 struct PlayerCard {

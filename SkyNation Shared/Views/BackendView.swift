@@ -28,8 +28,8 @@ struct BackendView: View {
                 VStack(alignment:.leading) {
                     Text("User Info").font(.title).foregroundColor(.blue)
 //                    Text("GID: \(controller.user?.guildID?.uuidString ?? "n/a")")
-                    Text("PID: \(controller.user?.id.uuidString ?? "n/a")")
-                    Text("LID: \(controller.user?.localID.uuidString ?? "n/a")")
+                    Text("PID: \(controller.upPlayer?.id.uuidString ?? "n/a")")
+                    Text("LID: \(controller.upPlayer?.localID.uuidString ?? "n/a")")
 //                    Text("CID: \(controller.user?.cityID?.uuidString ?? "n/a")")
                 }
                 .padding([.top, .bottom])

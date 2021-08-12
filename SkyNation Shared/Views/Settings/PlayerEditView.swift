@@ -69,9 +69,9 @@ struct GameLoadingTab: View {
                     Text("Fetched:\n\(string)")
                 }
                 
-                if let loggedUser = controller.user {
-                    Text("Fetched User: \(loggedUser.name)")
-                }
+//                if let loggedUser = controller.upPlayer {
+//                    Text("Fetched User: \(loggedUser.name)")
+//                }
                 
                 Spacer(minLength: 8)
             }
@@ -249,8 +249,9 @@ struct SettingsServerTab:View {
                 Divider()
                 // Buttons
                 HStack {
+                    
                     // User
-                    if controller.user != nil {
+                    if guildController.upPlayer != nil {
                         Button("Fetch User") {
                             controller.fetchUser()
                         }

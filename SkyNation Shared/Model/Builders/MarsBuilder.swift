@@ -62,6 +62,55 @@ class MarsBuilder {
         // 4. not joined
         // 5. no longer exists
         
+        SKNS.requestPlayersGuild { fullGuild, error in
+            if let guild:GuildFullContent = fullGuild {
+                self.guild = guild
+                print("\n**********************")
+                print("Guild Loaded: \(guild.name)")
+                print("**********************")
+                for city:DBCity in guild.cities {
+                    print("City: Pos:\(city.posdex) >> \(city.name)")
+                    if let cid = city.owner?["id"] {
+                        if cid != nil && cid == player.cityID {
+                            print("This city is mine!")
+                            self.myDBCity = city
+                        }
+                    }
+                }
+                self.cities = guild.cities
+                
+                for outpost:DBOutpost in guild.outposts {
+                    print("OutPost: \(outpost.type)")
+                }
+                self.outposts = guild.outposts
+                
+                for player:PlayerContent in guild.citizens {
+                    print("Player Content: \(player.name)")
+                }
+                self.players = guild.citizens
+                
+                self.getArrivedVehicles()
+                
+                completion(guild, .loaded)
+                return
+                
+            } else {
+                print("No guild in result")
+                if let error = error {
+                    print("Error: \(error.localizedDescription)")
+                    completion(nil, .other(error: error))
+                    return
+                }
+            }
+            
+            // Try to load locally (from LocalDatabase)
+            // if let guild = LocalDatabase.shared.guild...
+            
+            completion(nil, .badRequest)
+            return
+        }
+        
+        /*
         SKNS.loadGuild { (guild, error) in
             
             if let guild:GuildFullContent = guild {
@@ -110,6 +159,7 @@ class MarsBuilder {
             completion(nil, .badRequest)
             return
         }
+        */
         
         completion(nil, .serverDown)
     }
