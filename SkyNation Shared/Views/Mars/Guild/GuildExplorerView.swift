@@ -14,7 +14,8 @@ import SwiftUI
  */
 struct GuildExplorerView: View {
     
-    @ObservedObject var controller:GuildController
+    @ObservedObject var controller:GameSettingsController
+//    @ObservedObject var controller:GuildController
     
     var body: some View {
         ScrollView {
@@ -33,10 +34,10 @@ struct GuildExplorerView: View {
                             Divider()
 //                            Text("GID: \(controller.user?.guildID?.uuidString ?? "n/a")")
 //                                .font(.footnote)
-                            Text("PID: \(controller.upPlayer?.id.uuidString ?? "n/a")")
-                                .font(.footnote)
-                            Text("LID: \(controller.upPlayer?.localID.uuidString ?? "n/a")")
-                                .font(.footnote)
+//                            Text("PID: \(controller.upPlayer?.id.uuidString ?? "n/a")")
+//                                .font(.footnote)
+//                            Text("LID: \(controller.upPlayer?.localID.uuidString ?? "n/a")")
+//                                .font(.footnote)
 //                            Text("CID: \(controller.user?.cityID?.uuidString ?? "n/a")")
 //                                .font(.footnote)
                             
@@ -44,25 +45,27 @@ struct GuildExplorerView: View {
                         .padding(.horizontal)
                         
                         // Guild Info
-                        Group {
-                            if let _ = controller.joinedGuild {
-                                Text("Guild Info").font(.title).foregroundColor(.red)
-                                    .padding(.top)
-                                Divider()
-                                Text("GID: \(controller.joinedGuild!.id.uuidString)")
-                                Text("Name: \(controller.joinedGuild!.name)")
-                                Text("Citizens: \(controller.joinedGuild!.citizens.count)")
-                                ForEach(controller.joinedGuild!.citizens, id:\.self) { citid in
-                                    Text(citid.uuidString).foregroundColor(.gray)
-                                }
-                            }
-                        }
-                        .padding(.horizontal)
+//                        Group {
+//                            if let _ = controller.joinedGuild {
+//                                Text("Guild Info").font(.title).foregroundColor(.red)
+//                                    .padding(.top)
+//                                Divider()
+//                                Text("GID: \(controller.joinedGuild!.id.uuidString)")
+//                                Text("Name: \(controller.joinedGuild!.name)")
+//                                Text("Citizens: \(controller.joinedGuild!.citizens.count)")
+//                                ForEach(controller.joinedGuild!.citizens, id:\.self) { citid in
+//                                    Text(citid.uuidString).foregroundColor(.gray)
+//                                }
+//                            }
+//                        }
+//                        .padding(.horizontal)
                     }
-                    
+                    /*
                     if let sGuild = controller.sGuild {
-                        GuildView(controller: controller, guild: sGuild.makeSummary(), style: .largeSummary)
+//                        GuildView(controller: controller, guild: sGuild.makeSummary(), style: .largeSummary)
+                        Text(sGuild.name)
                     }
+                    */
                 }
                 
                 Divider()
@@ -75,11 +78,12 @@ struct GuildExplorerView: View {
                 .padding(.horizontal)
                 
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 130), spacing: 16, alignment: .top)], alignment: .center, spacing: 16) {
-                    ForEach(controller.fGuilds, id:\.id) { guild in
-                        GuildView(controller: controller, guild: guild.makeSummary(), style: .thumbnail)
-                            .onTapGesture {
-                                self.didSelect(guild: guild)
-                            }
+                    ForEach(controller.joinableGuilds, id:\.id) { guild in
+                        Text("Guild \(guild.name)")
+//                        GuildView(controller: controller, guild: guild, style: .thumbnail)
+//                            .onTapGesture {
+//                                self.didSelect(guild: guild)
+//                            }
                     }
                 }
                 
@@ -87,15 +91,18 @@ struct GuildExplorerView: View {
                 // Buttons
                 HStack {
                     Button("Find Guild") {
-                        controller.findMyGuild()
+                        print("Find")
+//                        controller.findMyGuild()
                     }
                     .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                     Button("Fetch Guilds") {
-                        controller.fetchGuilds()
+                        print("Fetch")
+//                        controller.fetchGuilds()
                     }
                     .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                     Button("New Login") {
-                        controller.loginUser()
+                        print("login")
+//                        controller.loginUser()
                     }
                     .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                 }
@@ -108,15 +115,17 @@ struct GuildExplorerView: View {
     }
     
     func select(guild: GuildSummary) {
-        withAnimation(.openCard) {
-            controller.highlightedGuild = guild
-        }
+        print("select")
+//        withAnimation(.openCard) {
+//            controller.highlightedGuild = guild
+//        }
     }
     
     func didSelect(guild:Guild) {
-        withAnimation(.openCard) {
-            controller.sGuild = guild
-        }
+        print("select")
+//        withAnimation(.openCard) {
+//            controller.sGuild = guild
+//        }
     }
     
     func closeviewaction() {
@@ -126,8 +135,13 @@ struct GuildExplorerView: View {
 
 struct GuildExplorerView_Previews: PreviewProvider {
     static var previews: some View {
-        GuildExplorerView(controller: GuildController(autologin: false))
+        
+        GuildExplorerView(controller: GameSettingsController())
             .previewLayout(.sizeThatFits)
             .frame(height: 700)
+        
+//        GuildExplorerView(controller: GuildController(autologin: false))
+//            .previewLayout(.sizeThatFits)
+//            .frame(height: 700)
     }
 }

@@ -10,7 +10,7 @@ import Foundation
 // MARK: - City
 
 /** Server's Database representation of  `CityData` */
-struct DBCity:Codable {
+struct DBCity:Codable, Identifiable, Hashable {
     
     var id:UUID
     

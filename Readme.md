@@ -136,15 +136,18 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 - [X] GameSettings -> Auto merge tanks? See Station.Truss.mergeTanks()
 - [X] Game Settings -> BioBox -> Source of food (Bool) -> Station Accounting
 
-- [X] Join a Guild
-- [ ] Display my Guild under 'Server tab'
 
-- [ ] Guild Task
+- [X] SettingsServerTab -> Display my Guild
+- [X] SettingsServerTab -> Join Guild
+- [ ] SettingsServerTab -> Leave Guild
+- [ ] SettingsServerTab -> Create Guild
+
+
+- [ ] Claim City Button not showing up
+
 - [ ] Outpost supply method + SKNS request for `Outpost` upgrades
 
 - [ ] New Modules not fully available after Tech research. 
-
-
 
 - [ ] Test if wasteLiquid, and wasteSolid are not being removed when empty. Fixed under `Truss.mergeTanks()`
 

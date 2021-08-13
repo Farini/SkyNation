@@ -32,6 +32,12 @@ class SKNS {
     /// Keep a record of the queries performed, so we don't keep repeating the same queries.
     var queries:[Routes:Date] = [:] // Queries should have *route, *date, *objectRetrieved, *
     
+    /// The default `error` response from server
+    struct GameError:Codable {
+        var error:Bool
+        var reason:String
+    }
+    
     static let baseAddress = "http://127.0.0.1:8080"
     
     // MARK: - User, Login
@@ -464,8 +470,6 @@ class SKNS {
         task.resume()
     }
     
-    // MARK: - Older Methods
-    
     // MARK: - Tokens
     
     // Validate
@@ -564,12 +568,65 @@ class SKNS {
         task.resume()
     }
     
+    /// Gets the details (GuildFullContent) about a Guild
+    static func fetchGuildDetails(gid:UUID, completion:((GuildFullContent?, Error?) -> ())?) {
+        
+        guard let player = LocalDatabase.shared.player,
+              let pid = player.playerID else {
+            print("Something Wrong.")
+            completion?(nil, nil)
+            return
+        }
+        
+        let url = URL(string: "\(baseAddress)/guilds/find/\(gid)")!
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        // Set the playerID if there is one
+        request.setValue(pid.uuidString, forHTTPHeaderField: "pid")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                do {
+//                    let guilds:[GuildSummary] = try decoder.decode([GuildSummary].self, from: data)
+                    let guild:GuildFullContent = try decoder.decode(GuildFullContent.self, from: data)
+                    DispatchQueue.main.async {
+                        print("Data returning")
+                        completion?(guild, nil)
+                    }
+                } catch {
+                    print("Not Guilds Object. Error:\(error.localizedDescription): \(data)")
+                    if let string = String(data: data, encoding: .utf8) {
+                        print("Not Guilds String: \(string)")
+                    }
+                }
+            } else if let error = error {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    /// Tries to join a Guild
     static func joinGuildPetition(guildID:UUID, completion:((GuildSummary?, Error?) -> ())?) {
         
         let url = URL(string: "\(baseAddress)/guilds/join/\(guildID.uuidString)")!
         guard let player = LocalDatabase.shared.player,
               let pid = player.playerID else {
             print("⚠️ Error: Data Missing")
+            completion?(nil, nil)
+            return
+        }
+        
+        guard let playerPost:PlayerUpdate = try? PlayerUpdate.create(player: player) else {
+            print("Player missing basic info")
             completion?(nil, nil)
             return
         }
@@ -582,12 +639,11 @@ class SKNS {
         
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
-//        request.setValue(pid.uuidString, forHTTPHeaderField: "pid")
         
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .secondsSince1970
         
-        guard let data = try? encoder.encode(player) else { fatalError() }
+        guard let data = try? encoder.encode(playerPost) else { fatalError() }
         
         request.httpBody = data
         
@@ -607,8 +663,15 @@ class SKNS {
                         completion?(guild, nil)
                         return
                     }catch{
-                        print("Error decoding")
-                        completion?(nil, error)
+                        
+                        if let gameError = try? decoder.decode(GameError.self, from: data) {
+                            print("Error decoding.: \(gameError.reason)")
+                            completion?(nil, error)
+                            
+                        } else {
+                            print("Error - Something else has happened")
+                            completion?(nil, error)
+                        }
                     }
                 }
                 
@@ -622,9 +685,7 @@ class SKNS {
         task.resume()
     }
     
-    
-    
-    
+    /// Creates a Guild in the server
     /*
     static func createGuild(localPlayer:SKNUserPost, guildName:String, completion:((Data?, Error?) -> ())?) {
         

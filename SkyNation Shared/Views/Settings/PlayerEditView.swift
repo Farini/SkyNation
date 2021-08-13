@@ -187,132 +187,6 @@ struct PlayerEditView: View {
 
 // MARK: - Tab3: Server
 
-struct SettingsServerTab:View {
-    
-    @ObservedObject var controller:GameSettingsController
-    @ObservedObject var guildController:GuildController
-    
-    var body: some View {
-        
-        ScrollView {
-            
-            VStack {
-                
-                HStack(alignment:.top) {
-                    
-                    VStack(alignment:.leading, spacing:24) {
-                        //                    Text("Player").font(.title)
-                        //                    Divider()
-                        Text("Server").font(.title)
-                        Text("Server version: 1.0").foregroundColor(.gray)
-                        Text("Guild")
-                        
-                        if let guild = controller.guild {
-                            Text("\(guild.name)")
-                            Text("\(guild.id.uuidString)")
-                            Text("Cities: \(guild.cities?.count ?? 0)")
-                        } else {
-                            Text("No guild").foregroundColor(.gray)
-                        }
-                    }
-                    
-                    Spacer()
-                    
-                    if let guild = guildController.joinedGuild {
-                        // Make a Guild view with the full object
-                        Text("Your Guild \(guild.name)")
-                        GuildView(controller:guildController, guild:guild, style:.largeSummary)
-                    } else if let guild = controller.selectedGuildSum {
-//                        Text("Guild \(guild.name)")
-                        GuildView(controller: guildController, guild:guild, style:.largeSummary)
-                    } else if let guild = controller.selectedGuildObj {
-                        // Make another view for full object
-                        Text("G: \(guild.name)")
-                    }
-                    
-                }
-                .padding(.horizontal)
-                
-                // Exploring
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 130), spacing: 16, alignment: .top)], alignment: .center, spacing: 16) {
-                    
-                    ForEach(controller.joinableGuilds, id:\.id) { guild in
-
-                        Text("Guild \(guild.name)").padding(12)
-                        GuildView(controller:guildController, guild:guild, style:.thumbnail)
-                            .onTapGesture {
-                                select(guild:guild)
-                            }
-                    }
-                }
-                
-                Divider()
-                // Buttons
-                HStack {
-                    
-                    // User
-                    if guildController.upPlayer != nil {
-                        Button("Fetch User") {
-                            controller.fetchUser()
-                        }
-                        .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
-                    }
-                    
-                    // Create
-                    if controller.guild == nil {
-                        Button("Create Guild") {
-                            controller.createGuild()
-                        }
-                        .foregroundColor(.red)
-                        .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
-                        
-                        Button("Fetch Guilds") {
-//                            controller.fetchGuilds()
-                            guildController.fetchGuilds()
-                        }
-                        .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
-                    } else {
-                        // Fetch My guild
-                    }
-                    
-                    // Join
-                    if controller.guild == nil {
-                        Button("Join Guild") {
-                            print("Join")
-                            //                        controller.createGuild()
-                        }
-                        .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
-                    }
-                    // Guild
-                    if controller.guild != nil {
-                        Button("Leave Guild") {
-                            print("Leaving Guild")
-                            
-                            //                        controller.createGuild()
-                        }
-                        .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
-                    }
-                }
-                
-                if !guildController.news.isEmpty {
-                    Text(guildController.news)
-                }
-            }
-        }
-    }
-    
-    func select(guild: GuildSummary) {
-        withAnimation(.openCard) {
-            controller.selectedGuildSum = guild
-        }
-    }
-    
-    func closeviewaction() {
-        print("Join Guild Action")
-        controller.joinGuild(sum: controller.selectedGuildSum!)
-        
-    }
-}
 
 // MARK: - Tab4: Settings
 struct GameSettingsTabView: View {
@@ -408,10 +282,10 @@ struct GameSettingsTabView: View {
 
 // MARK: - Previews
 
-struct PlayerEditView_Previews: PreviewProvider {
+struct ServerViewView_Previews: PreviewProvider {
     static var previews: some View {
         //        PlayerEditView(controller: GameSettingsController())
-        SettingsServerTab(controller:GameSettingsController(), guildController: GuildController(autologin: false))
+        SettingsServerTab(controller:GameSettingsController())
     }
 }
 
@@ -429,11 +303,10 @@ struct GameTabs_Previews2: PreviewProvider {
                     Label("Game", systemImage:"gamecontroller")
                 }
             // Server
-            SettingsServerTab(controller:GameSettingsController(), guildController: GuildController(autologin: false))
+            SettingsServerTab(controller:GameSettingsController())
                 .tabItem {
                     Label("Server", systemImage:"gamecontroller")
                 }
-            
             
             // Player
             PlayerEditView(controller:GameSettingsController())

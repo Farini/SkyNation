@@ -160,7 +160,7 @@ struct Guild:Codable {
 }
 
 /// the Guild. Full Content Format, with DBOutposts and DBCities
-struct GuildFullContent:Codable {
+struct GuildFullContent:Codable, Identifiable {
     
     var id:UUID
     

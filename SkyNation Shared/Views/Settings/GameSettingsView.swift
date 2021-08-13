@@ -6,21 +6,6 @@
 import SwiftUI
 import CoreImage
 
-enum GameSettingsTab: String, CaseIterable {
-    
-    case Loading            // Loading the scene (can be interrupted)
-    case EditingPlayer      // Editing Player Attributes
-    case Server             // Checking Server Info
-    case Settings           // Going through GameSettings
-    
-    var tabString:String {
-        switch self {
-            case .Loading, .Server, .Settings: return self.rawValue
-            case .EditingPlayer: return "Player"
-        }
-    }
-}
-
 struct GameSettingsView: View {
     
     @ObservedObject var guildController:GuildController
@@ -40,6 +25,7 @@ struct GameSettingsView: View {
         self.guildController = GuildController(autologin: true)
     }
     
+    /// Header (only shows when `inGame` is on
     var header: some View {
         
         Group {
@@ -86,13 +72,16 @@ struct GameSettingsView: View {
                 header
             }
             
-            // Segment Control
+            // Segment Control (Tab)
             Picker("", selection: $controller.viewState) {
                 let options = inGame ? [GameSettingsTab.EditingPlayer, GameSettingsTab.Server, GameSettingsTab.Settings]:GameSettingsTab.allCases
                 ForEach(options, id:\.self) { tabName in
                     Text(tabName.tabString)
                 }
             }.pickerStyle(SegmentedPickerStyle())
+            .onChange(of: controller.viewState, perform: { value in
+                controller.didSelectTab(newTab: value)
+            })
             
             
             Divider()
@@ -106,7 +95,7 @@ struct GameSettingsView: View {
                     PlayerEditView(controller: controller)
                     
                 case .Server:
-                    SettingsServerTab(controller:controller, guildController: guildController)
+                    SettingsServerTab(controller:controller)
                     
                 case .Settings:
                     GameSettingsTabView()
@@ -203,7 +192,7 @@ struct GameTabs_Previews: PreviewProvider {
         TabView {
             
             // Server
-            SettingsServerTab(controller:GameSettingsController(), guildController: GuildController(autologin: false))
+            SettingsServerTab(controller:GameSettingsController())
                 .tabItem {
                     Text("Server")
                 }

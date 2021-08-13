@@ -7,6 +7,75 @@
 
 import Foundation
 
+/// The Main tab of the game (Shows up at the start)
+enum GameSettingsTab: String, CaseIterable {
+    
+    case Loading            // Loading the scene (can be interrupted)
+    case EditingPlayer      // Editing Player Attributes
+    case Server             // Checking Server Info
+    case Settings           // Going through GameSettings
+    
+    var tabString:String {
+        switch self {
+            case .Loading, .Server, .Settings: return self.rawValue
+            case .EditingPlayer: return "Player"
+        }
+    }
+}
+
+/// A state to display about the status of the `Player` in relation to `Guild`
+enum GuildJoinState {
+    
+    /// Loading data from server
+    case loading
+    
+    /// Player has no Guild
+    case noGuild
+    
+    /// Player does NOT have an .Entry token
+    case noEntry
+    
+    /// Player been kicked
+    case kickedOut
+    
+    case choosing // Player choosing Guild
+    
+    /// Joined
+    case joined(guild:GuildFullContent)
+    case leaving
+    
+    case error(error:Error)
+    
+    var message:String {
+        switch self {
+            case .loading: return "Loading..."
+            case .noGuild: return "You haven't joined a Guild. Choose one to join."
+            case .joined(let guild): return "Your Guild.: \(guild.name)"
+            case .choosing: return "Choose a Guild"
+            case .kickedOut: return "Oh no! It seems you were kicked out, or Guild does not exist anymore."
+            case .noEntry: return "You need an Entry Token to join a Guild"
+            case .leaving: return "Leaving Guild"
+            case .error(let error): return "Error.: \(error.localizedDescription)"
+        }
+    }
+    
+    /// Whether should have a "Join" Button
+    var joinButton:Bool {
+        switch self {
+            case .choosing: return true
+            default: return false
+        }
+    }
+    
+    /// Whether should have a "Leave" button
+    var leaveButton:Bool {
+        switch self {
+            case .joined(_): return true
+            default:return false
+        }
+    }
+}
+
 // MARK: - Controller
 
 class GameSettingsController:ObservableObject {
@@ -25,21 +94,25 @@ class GameSettingsController:ObservableObject {
     @Published var playerID:UUID
     @Published var isNewPlayer:Bool
     @Published var savedChanges:Bool
-    
-//    @Published var user:SKNPlayer?
-    @Published var guild:Guild?
+    @Published var stationSceneLoaded:Bool = false
     
     // Guild Selection
+    @Published var guildJoinState:GuildJoinState = .loading
+    // [Not Joined] -> Fetch
     @Published var joinableGuilds:[GuildSummary] = []
-    @Published var selectedGuildSum:GuildSummary?
     @Published var selectedGuildObj:GuildFullContent?
+    @Published var allFetchedGuilds:[GuildFullContent] = []
+    // [Joined] -> Reload?
+    @Published var myGuild:GuildFullContent?
+    
+    // Others
     
     @Published var fetchedString:String?
     
     /// A list of things to load
     @Published var loadedList:[String] = []
     
-    @Published var stationSceneLoaded:Bool = false
+    // MARK: - Methods
     
     init() {
         
@@ -117,6 +190,7 @@ class GameSettingsController:ObservableObject {
         self.loadedList = items
     }
     
+    /// Saving Player
     func savePlayer() {
         player.name = playerName
         if LocalDatabase.shared.savePlayer(player: player) {
@@ -141,32 +215,102 @@ class GameSettingsController:ObservableObject {
     
     // MARK: - Server Tab
     
-    func fetchUser() {
+    /// Called when Player selects a different tab.
+    func didSelectTab(newTab:GameSettingsTab) {
+        print("Did select tab !!!")
+        switch newTab {
+            case .Server:
+                print("Selected Server")
+                self.viewState = .Server
+                self.enterServerTab()
+            case .EditingPlayer:
+                print("Selected `Player` \(self.viewState)")
+            case .Settings:
+                print("Selected `Settings` \(self.viewState)")
+            case .Loading:
+                print("Back to Loading \(self.viewState)")
+        }
+    }
+    
+    /// Entering Server Tab - Fetch Guild (if any), and Player status
+    func enterServerTab() {
         
-        SKNS.performLogin { playerUpdate, error in
-            if let p = playerUpdate {
-                print("Player Update: \(p.id)")
-            } else {
-                print("Error: \(error?.localizedDescription ?? "n/a")")
+        print("Entering Server Tab. guildJoinState: \(self.guildJoinState)")
+        
+        // Check Entry
+        var enter:Bool = false
+        let entryResult = player.marsEntryPass()
+        if entryResult.result == false {
+            if let entryToken = entryResult.token {
+                if let r2 = player.requestEntryToken(token: entryToken) {
+                    print("Found an Entry ticket \(r2.date)")
+                    enter = true
+                }
             }
+        } else {
+            print("Entry OK: \(entryResult.token?.id.uuidString ?? "n/a")")
+            enter = true
+        }
+        if !enter {
+            self.guildJoinState = .noEntry
+            return
         }
         
-        
-//        ServerManager.shared.inquireLogin { player, error in
-//            
-//            DispatchQueue.main.async {
-//                if let player = player {
-////                    self.user = player
-//                } else {
-//                    print("Did not find user. \(error?.localizedDescription ?? "")")
-//                    // serverID CCB3A438-3CEC-44E8-94C5-EC711FBF4ABB
-//                }
-//            }
-//        }
-        
+        // Server Tab stuff
+        if let gid = player.guildID {
+            
+            print("Player GuildID: \(gid)")
+            
+            ServerManager.shared.inquireFullGuild(force: false) { fullGuild, error in
+                
+                if let guild:GuildFullContent = fullGuild {
+                    
+                    if guild.id == self.player.guildID {
+                        // Same O' Guild
+                        
+                        if guild.citizens.compactMap({ $0.id }).contains(self.player.playerID ?? UUID()) {
+                            
+                            self.myGuild = guild
+                            self.guildJoinState = .joined(guild: guild)
+                            
+                        } else {
+                            
+                            // Kicked Out?
+                            self.myGuild = nil
+                            self.player.guildID = nil
+                            self.guildJoinState = .kickedOut
+                            
+                        }
+                    } else {
+                        
+                        // Different Guild
+                        self.myGuild = nil
+                        self.player.guildID = nil
+                        self.guildJoinState = .kickedOut
+                        
+                    }
+                } else {
+                    
+                    // No Guild, or Error
+                    if let error = error {
+                        self.guildJoinState = .error(error: error)
+                    } else {
+                        self.guildJoinState = .noGuild
+                    }
+                    
+                }
+            }
+        } else {
+            // No Guild
+            self.guildJoinState = .noGuild
+            self.fetchGuilds()
+        }
     }
     
     func createGuild() {
+        
+        // FIXME: - Needs Implementation
+        
 //        guard let user = user else {
 //            print("No user")
 //            return
@@ -183,15 +327,17 @@ class GameSettingsController:ObservableObject {
 ////                print("Failed creating guild. Reason: \(error?.localizedDescription ?? "n/a")")
 ////            }
 ////        }
+        
     }
     
-    /*
+    /// Fetches all `Joinable` Guilds
     func fetchGuilds() {
-//        news = "Fetching Guilds..."
+        
         SKNS.browseGuilds { (guilds, error) in
             if let array = guilds {
                 print("Updating Guilds \(array.count)")
                 self.joinableGuilds = array
+                self.guildJoinState = .choosing
             } else {
                 if let error = error {
                     print("Error: \(error.localizedDescription)")
@@ -199,29 +345,65 @@ class GameSettingsController:ObservableObject {
                     print("Something else happened. Not an error, but no Guilds")
                 }
             }
-            
         }
     }
-    */
     
-    
-    func joinGuild(sum:GuildSummary) {
+    /// Gets one Guild's Details to display for user (Choosing Guild)
+    func fetchGuildDetails(guildSum:GuildSummary) {
         
-        guard player.guildID == nil else {
-            print("Error: Player already has a guild")
+        if let fetched:GuildFullContent = allFetchedGuilds.first(where: { $0.id == guildSum.id }) {
+            
+            self.selectedGuildObj = fetched
             return
+            
+        } else {
+            SKNS.fetchGuildDetails(gid: guildSum.id) { fullGuild, error in
+                if let fullGuild = fullGuild {
+                    DispatchQueue.main.async {
+                        self.selectedGuildObj = fullGuild
+                    }
+                } else {
+                    print("‼️ Could not get full Guild")
+                }
+            }
         }
+    }
+    
+    /// Request to join a Guild
+    func requestJoin(_ guild:GuildFullContent) {
         
-        SKNS.joinGuildPetition(guildID: sum.id) { (newGuildSum, error) in
-            if let newGuild = newGuildSum {
-                print("Player joined new guild! Success.")
-                self.player.guildID = newGuild.id
-                DispatchQueue.main.async {
-                    let save = LocalDatabase.shared.savePlayer(player: self.player)
-                    print("Saved Player: \(save)")
+        guard let playerID = self.player.playerID,
+              let gfc:GuildFullContent = selectedGuildObj else { return }
+        
+        print("Requesting Guild Join...")
+        
+        SKNS.joinGuildPetition(guildID: guild.id) { (newGuildSum, error) in
+            
+            if let newGuild:GuildSummary = newGuildSum {
+                
+                let citizens = newGuild.citizens
+                if citizens.contains(playerID) && gfc.id == newGuild.id {
+                    
+                    DispatchQueue.main.async {
+                        // OK.
+                        self.player.guildID = newGuild.id
+                        self.guildJoinState = .joined(guild: gfc)
+                        
+                        let save = LocalDatabase.shared.savePlayer(player: self.player)
+                        print("Saved Player: \(save)")
+                    }
+                    
+                } else {
+                    // Unable
+                    print("⚠️ Unable to join. Try again slowly.")
                 }
             } else {
                 print("⚠️ Player could not join Guild. \(error?.localizedDescription ?? "")")
+                if let error = error {
+                    DispatchQueue.main.async {
+                        self.guildJoinState = .error(error: error)
+                    }
+                }
             }
         }
     }
@@ -247,6 +429,7 @@ class GameSettingsController:ObservableObject {
         }
     }
     
+    /// Runs Accounting, and loads the Station Scene
     func loadGameData() {
         
         let builder = LocalDatabase.shared.stationBuilder
@@ -277,6 +460,7 @@ class GameSettingsController:ObservableObject {
         }
     }
     
+    /// Runs the Game's login
     func loadServerData() {
         
         ServerManager.shared.inquireLogin { player, error in

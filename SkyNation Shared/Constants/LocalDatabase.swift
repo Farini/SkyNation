@@ -570,8 +570,8 @@ class LocalDatabase {
         // Server Database
         if let servData = loadServerData() {
             print("Server data loaded from disk")
-            let newData = ServerData(localData: servData)
-            self.serverData = newData
+//            let newData = ServerData(localData: servData)
+            self.serverData = servData
         } else {
             print("No server data")
 //            if let p1 = player {

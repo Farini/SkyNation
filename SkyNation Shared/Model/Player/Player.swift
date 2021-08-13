@@ -229,7 +229,7 @@ struct SKNUserPost:Codable {
 
 /** The Content used to **update**  a `DBPlayer` */
 
-struct PlayerContent:Codable {
+struct PlayerContent:Codable, Identifiable, Hashable {
     
     var id:UUID
     var localID:UUID            // id given by local machine
@@ -270,6 +270,7 @@ struct PlayerContent:Codable {
     
 }
 
+/*
 struct PlayerPost:Codable {
     
     // IDs
@@ -312,6 +313,7 @@ struct PlayerPost:Codable {
         self.keyPass = player.keyPass
     }
 }
+*/
 
 
 // MARK: - New, Simpler Method
@@ -418,7 +420,7 @@ struct PlayerUpdate: Codable {
 }
 
 /// Card representation of Player, to show to other Players
-struct PlayerCard: Codable {
+struct PlayerCard: Codable, Identifiable {
     
     /// ID of `DBPlayer`
     var id:UUID

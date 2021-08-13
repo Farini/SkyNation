@@ -60,7 +60,7 @@ class ServerManager {
         } else {
             
             guard let player = LocalDatabase.shared.player else {
-                print("Server Data Crashing")
+                print("Server Data Crashing. Player doesn't exist")
                 fatalError()
             }
             
@@ -83,6 +83,7 @@ class ServerManager {
     
     /// Gets the Full Guild Content
     func inquireFullGuild(force:Bool, completion:@escaping(GuildFullContent?, Error?) -> ()) {
+        
         guard let serverData:ServerData = serverData else {
             completion(nil, ServerDataError.noFile)
             return
