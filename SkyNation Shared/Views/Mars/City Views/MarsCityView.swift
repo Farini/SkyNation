@@ -72,13 +72,12 @@ struct MarsCityView: View {
                                 Text("If you don't have a city yet, you may claim this one to get started.").foregroundColor(.gray)
                                 
                                 // Button to Claim City (if player doesn't have one)
-                                if controller.player.cityID == nil {
+                                if controller.isClaimable() == true {
                                     Button("Claim City") {
-                                        
                                         print("Should claim it")
                                         controller.claimCity(posdex: posdex)
-                                        
                                     }
+                                    .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
                                 }
                             }
                         

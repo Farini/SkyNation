@@ -39,6 +39,7 @@ class CityController:ObservableObject {
     @Published var cityTab:MarsCityTab = .Hab
     
     init() {
+        
         guard let player = LocalDatabase.shared.player else { fatalError() }
         self.player = player
         self.builder = MarsBuilder.shared
@@ -189,54 +190,17 @@ class CityController:ObservableObject {
         
     }
     
-    /*
-    func unpackVehicle(vehicle:SpaceVehicleContent) {
+    /// Checks if player can claim city
+    func isClaimable() -> Bool {
         
-        // Testing time
-        
-        
-//        guard let vid = vehicle.id,
-//              self.cityData != nil else {
-//            print("No vehicle ID !!!")
-//            return
-//        }
-        
-//        let cCopy = cityData!
-//
-////        print("Unpacking vehicle. id: \(vid)")
-//        cCopy.boxes.append(contentsOf: vehicle.boxes)
-//        cCopy.tanks.append(contentsOf: vehicle.tanks)
-//        cCopy.batteries.append(contentsOf: vehicle.batteries)
-//        cCopy.peripherals.append(contentsOf: vehicle.peripherals)
-//        cCopy.inhabitants.append(contentsOf: vehicle.passengers)
-        
-//        self.cityData = cCopy
-//
-//        // Update city to server
-//        SKNS.saveCity(city: cCopy) { (cData, error) in
-//            if let cData:CityData = cData {
-//                print("Got cData! Updated.")
-//                self.cityData = cData
-//            } else {
-//                print("Error: \(error?.localizedDescription ?? "n/a")")
-//            }
-//        }
-//
-//
-//        switch self.viewState {
-//            case .mine(let city):
-////                self.allVehicles.removeAll(where: { $0.id == vehicle.id })
-//                self.viewState = .mine(cityData: city)
-//            default:
-//                print("not my city")
-//
-//        }
-        
-        // Updated city. Now needs to update server
-        // Updated server. Delete Vehicle
-        //
+        if city?.owner != nil { return false }
+        let dbc = builder.cities.compactMap({ $0.id })
+        if dbc.contains(self.player.cityID ?? UUID()) {
+            return false
+        } else {
+            return true
+        }
     }
-    */
     
     /// Claims the city for the Player
     func claimCity(posdex:Posdex) {

@@ -51,6 +51,15 @@ class CityData:Codable, Identifiable {
     var id:UUID
     var posdex:Posdex
     
+    
+    // Persons
+    var inhabitants:[Person]
+    
+    // + airComposition
+    var air:AirComposition
+    
+    // MARK: - Resources
+    
     // Ingredients
     var boxes:[StorageBox]
     
@@ -60,9 +69,6 @@ class CityData:Codable, Identifiable {
     // Batteries
     var batteries:[Battery]
     
-    // Persons
-    var inhabitants:[Person]
-    
     // Peripherals
     var peripherals:[PeripheralObject]
     
@@ -71,18 +77,15 @@ class CityData:Codable, Identifiable {
     
     var bioBoxes:[BioBox]?
     
+    // MARK: - Tech Stack
+    
     // Robots, or Vehicles
     var vehicles:[String]?
     
     // Tech Tree
     var tech:[CityTech]
     
-    // MARK: - To add:
-    
-    // + airComposition
-    var air:AirComposition
-    
-    // + unlockedRecipes
+    // Recipes
     var unlockedRecipes:[Recipe]
     
     // + labActivity
@@ -91,7 +94,7 @@ class CityData:Codable, Identifiable {
     // + garage (Vehicles)
     var garage:Garage
     
-    // + accounting + report
+    // + accounting
     // + dateAccounting
     // + accountingReport
     
@@ -102,13 +105,105 @@ class CityData:Codable, Identifiable {
     // To add
     // + accounting
     // + collectRecipe
-    // + removeItem(peripheral, box, etc?)
-    // + roomsAvailable
+    func collectRecipe(recipe:Recipe) {
+        
+        switch recipe {
+            // Going to TRUSS
+            case .SolarPanel:
+                print("Solar")
+                self.solarPanels.append(SolarPanel())
+                
+            // Battery
+            case .Battery:
+                let battery = Battery(shopped: true)
+                batteries.append(battery)
+                
+            // PERIPHERALS
+            case .Methanizer:
+                let m = PeripheralObject(peripheral: .Methanizer)
+                self.peripherals.append(m)
+            case .Electrolizer:
+                let l = PeripheralObject(peripheral: .Electrolizer)
+                self.peripherals.append(l)
+            case .ScrubberCO2:
+                let s = PeripheralObject(peripheral: .ScrubberCO2)
+                self.peripherals.append(s)
+            case .Condensator:
+                let c = PeripheralObject(peripheral: .Condensator)
+                self.peripherals.append(c)
+            case .WaterFilter:
+                let w = PeripheralObject(peripheral:.WaterFilter)
+                self.peripherals.append(w)
+            case .BioSolidifier:
+                let b = PeripheralObject(peripheral: .BioSolidifier)
+                self.peripherals.append(b)
+                
+            case .Alloy: self.boxes.append(StorageBox(ingType: .Alloy, current: Ingredient.Alloy.boxCapacity()))
+
+            case .Cement: self.boxes.append(StorageBox(ingType: .Cement, current: Ingredient.Cement.boxCapacity()))
+            case .ChargedGlass: self.boxes.append(StorageBox(ingType: .Glass, current: Ingredient.Glass.boxCapacity()))
+            case .Module, .Node, .Radiator, .Roboarm, .StorageBox: print("Those don't work here")
+            
+            case .tank: self.tanks.append(Tank(type: .empty))
+        }
+        
+    }
     
     func takeBox(box:StorageBox) {
         print("Taking box from city: \(box.type). Total boxes: \(boxes.count)")
         boxes.removeAll(where: { $0.id == box.id })
         print("Boxes after taking: \(boxes.count)")
+    }
+    
+    /// Checks air for required vs supply
+    func checkRequiredAir() -> Int {
+        
+        let base = GameLogic.airPerModule * 2 // 225 * 2 = 450
+        var reqAir = base
+        
+        if tech.contains(.Hab1) { reqAir += GameLogic.airPerModule }
+        if tech.contains(.Hab2) { reqAir += GameLogic.airPerModule }
+        if tech.contains(.Hab3) { reqAir += GameLogic.airPerModule }
+        if tech.contains(.Hab4) { reqAir += GameLogic.airPerModule }
+        if tech.contains(.Hab5) { reqAir += GameLogic.airPerModule }
+        if tech.contains(.Hab6) { reqAir += GameLogic.airPerModule }
+        
+        let suppliedAir = self.air.getVolume()
+        
+        print("--- Air:")
+        print("--- Required: \(reqAir)")
+        print("--- Supplied: \(suppliedAir)")
+        return reqAir
+        
+    }
+    
+    /// Returns 1 if you have just as much as you need. Less if you have less
+    func airPressure() -> Double {
+        let requiredAir:Double = Double(self.checkRequiredAir())
+        let available:Double = Double(self.air.getVolume())
+        return requiredAir / available
+    }
+    
+    /// When Accounting sees a person with health physycal < 1
+    private func prepareDeath(of person:Person) {
+        GameMessageBoard.shared.newAchievement(type: .experience, message: "💀 \(person.name) has passed away!")
+        inhabitants.removeAll(where:  { $0.id == person.id })
+    }
+    
+    /// Returns how many rooms available in the station
+    func checkForRoomsAvailable() -> Int {
+        
+        let base = 3
+        var available:Int = base
+        
+        if tech.contains(.Hab1) { available += 3 }
+        if tech.contains(.Hab2) { available += 3 }
+        if tech.contains(.Hab3) { available += 3 }
+        if tech.contains(.Hab4) { available += 3 }
+        if tech.contains(.Hab5) { available += 3 }
+        if tech.contains(.Hab6) { available += 3 }
+        
+        return available
     }
     
     // MARK: - Initializers
@@ -127,7 +222,7 @@ class CityData:Codable, Identifiable {
         self.bioBoxes = []
         self.vehicles = []
         self.tech = []
-        self.air = AirComposition(mars: true)
+        self.air = AirComposition(amount: GameLogic.airPerModule * 2)
         self.unlockedRecipes = LocalDatabase.shared.station?.unlockedRecipes ?? []
         self.garage = Garage()
         
@@ -206,154 +301,3 @@ class CityData:Codable, Identifiable {
     }
 }
 
-enum CityTech:String, Codable, CaseIterable, Identifiable {
-    
-    /// Conveniently identifies this item versus others
-    var id: String {
-        return self.rawValue
-    }
-    
-    // Habs
-    case Hab1
-    case Hab2
-    case Hab3
-    case Hab4
-    case Hab5
-    case Hab6
-    
-    case OutsideDome1
-    
-    case VehicleRoom1
-    case VehicleRoom2
-    case VehicleRoom3
-    case VehicleRoom4
-    
-    // Recipes
-    case recipeCement
-    case recipeGlass
-    case recipeVehicle          // Can be split in different resources
-    case recipeAirTrap          // Can be split
-    case recipeBig
-    case recipeWaterSanitizer
-    case recipeAlloy
-    
-    // MARK: - Logic
-    
-    /// Determines whether this tech can be researched. See CityData.tech, if the unlockedBy tech has been discovered, then this tech can be researched.
-    var unlockedBy:CityTech? {
-        switch self {
-            case .Hab2: return .Hab1
-            case .Hab3: return .Hab2
-            case .Hab4: return .Hab3
-            case .Hab5: return .Hab4
-            case .Hab6: return .Hab5
-            
-            case .VehicleRoom4: return .VehicleRoom3
-            case .VehicleRoom3: return .VehicleRoom2
-            case .VehicleRoom2: return .VehicleRoom1
-            case .VehicleRoom1: return .recipeVehicle
-                
-            case .recipeAirTrap: return .Hab3
-            case .recipeGlass: return .Hab4
-            case .recipeCement: return .Hab2
-            case .recipeAlloy: return .VehicleRoom2
-                
-            default: return nil
-        }
-    }
-//    var unlocks:[CityTech] {
-//        switch self {
-//            case .Hab1: return [.Hab2, .recipeVehicle]
-//            default: return []
-//        }
-//    }
-    
-    // MARK: - Display
-    
-    var shortName:String {
-        switch self {
-            case .Hab1, .Hab2, .Hab3, .Hab4, .Hab5, .Hab6: return "Hab Module"
-            default: return "Short"
-        }
-    }
-    
-    var elaborated:String {
-        switch self {
-            case .Hab1, .Hab2, .Hab3, .Hab4, .Hab5, .Hab6: return "Adds room for more people"
-            default: return "Tech description goes here"
-        }
-    }
-    
-    // MARK: - Requirements
-    
-    /// Ingredients required to research this tech
-    var ingredients:[Ingredient:Int] {
-        switch self {
-            case .Hab1: return [.Iron:10, .Ceramic:5]
-            case .Hab2: return [.Iron:14, .Ceramic:8, .DCMotor:1]
-            case .Hab3: return [.Iron:20, .Ceramic:16, .Silica:2]
-            default: return [:]
-        }
-    }
-    
-    /// Amount of seconds it takes to complete this tech research
-    var duration:Int {
-        switch self {
-            default: return 1
-        }
-    }
-    
-    /// `Human` Skills required to research this tech
-    var skillSet:[Skills:Int] {
-        switch self {
-            default: return [.Material:2]
-        }
-    }
-    
-}
-
-enum MarsRecipe:String, Codable, CaseIterable {
-    
-    case Cement     // Any Structure
-    case Glass      // Any Structure
-    case Alloy      // Any Structure
-    
-    case SolarCell
-    case Polimer
-    
-    case MegaTank
-    case MegaBox
-    
-    case EVehicle   // Extract Silica, Iron, Lithium, Crystals
-}
-
-struct CityTechTree {
-    var uniqueTree:Tree<Unique<CityTech>>
-    
-    init() {
-        
-        let cement = Tree(CityTech.recipeCement)
-        let glass = Tree(CityTech.recipeGlass)
-        let airTrap = Tree(CityTech.recipeAirTrap)
-        let alloy = Tree(CityTech.recipeAlloy)
-        
-        let hab6 = Tree(CityTech.Hab6)
-        let hab5 = Tree(CityTech.Hab5, children:[hab6])
-        let hab4 = Tree(CityTech.Hab4, children:[hab5, glass])
-        let hab3 = Tree(CityTech.Hab3, children:[hab4, airTrap])
-        let hab2 = Tree(CityTech.Hab2, children:[hab3, cement])
-        
-        let vr4 = Tree(CityTech.VehicleRoom4)
-        let vr3 = Tree(CityTech.VehicleRoom3, children:[vr4])
-        let vr2 = Tree(CityTech.VehicleRoom2, children:[alloy, vr3])
-        let vr1 = Tree(CityTech.VehicleRoom1, children:[vr2])
-        
-        let recVehicle = Tree(CityTech.recipeVehicle, children:[vr1])
-        
-        // Finalize
-        let binaryTree = Tree<CityTech>(CityTech.Hab1, children: [hab2, recVehicle])
-        
-        let uniqueTree:Tree<Unique<CityTech>> = binaryTree.map(Unique.init)
-        self.uniqueTree = uniqueTree
-    }
-}

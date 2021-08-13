@@ -144,6 +144,8 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
 
 
 - [ ] Claim City Button not showing up
+- [ ] PlayerContent, or PlayerCard View - Other players
+
 
 - [ ] Outpost supply method + SKNS request for `Outpost` upgrades
 

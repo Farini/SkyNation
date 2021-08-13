@@ -295,6 +295,10 @@
 		85487F1E26C5BB2000EBC070 /* SettingsServerTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F1D26C5BB2000EBC070 /* SettingsServerTab.swift */; };
 		85487F1F26C5BB2000EBC070 /* SettingsServerTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F1D26C5BB2000EBC070 /* SettingsServerTab.swift */; };
 		85487F2026C5BB2000EBC070 /* SettingsServerTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F1D26C5BB2000EBC070 /* SettingsServerTab.swift */; };
+		85487F2326C63F9800EBC070 /* CityTech.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F2226C63F9800EBC070 /* CityTech.swift */; };
+		85487F2426C63F9800EBC070 /* CityTech.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F2226C63F9800EBC070 /* CityTech.swift */; };
+		85487F2526C63F9800EBC070 /* CityTech.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F2226C63F9800EBC070 /* CityTech.swift */; };
+		85487F2626C63F9800EBC070 /* CityTech.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F2226C63F9800EBC070 /* CityTech.swift */; };
 		8559201525959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
 		8559201625959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
 		8559201725959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
@@ -644,6 +648,7 @@
 		85487F0B26C0DF6000EBC070 /* OPSupply+Job.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OPSupply+Job.swift"; sourceTree = "<group>"; };
 		85487F1026C0DFB000EBC070 /* OP+Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OP+Enums.swift"; sourceTree = "<group>"; };
 		85487F1D26C5BB2000EBC070 /* SettingsServerTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsServerTab.swift; sourceTree = "<group>"; };
+		85487F2226C63F9800EBC070 /* CityTech.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityTech.swift; sourceTree = "<group>"; };
 		8559201425959A4300CF5467 /* SideMenuNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuNode.swift; sourceTree = "<group>"; };
 		8569A303259F7F990057A518 /* dissolve.fragment.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dissolve.fragment.txt; sourceTree = "<group>"; };
 		8569A30E259F81110057A518 /* CutionStripesColored.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CutionStripesColored.fsh; sourceTree = "<group>"; };
@@ -1157,6 +1162,15 @@
 			path = Tabs;
 			sourceTree = "<group>";
 		};
+		85487F2126C63F4E00EBC070 /* City */ = {
+			isa = PBXGroup;
+			children = (
+				8592821125EA3287001233BE /* City.swift */,
+				85487F2226C63F9800EBC070 /* CityTech.swift */,
+			);
+			path = City;
+			sourceTree = "<group>";
+		};
 		8569A302259F7F7A0057A518 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
@@ -1235,8 +1249,8 @@
 			children = (
 				85761806268EC2680024233D /* DataPlan.md */,
 				8517EE3325FC11EF00C34C54 /* Guild.swift */,
+				85487F2126C63F4E00EBC070 /* City */,
 				85487F0A26C0DF2400EBC070 /* Outpost */,
-				8592821125EA3287001233BE /* City.swift */,
 			);
 			path = Mars;
 			sourceTree = "<group>";
@@ -1684,6 +1698,7 @@
 				85797518259BD394004C54D2 /* ItemCollectionViews.swift in Sources */,
 				85E2C42226BD8A6E003315F2 /* StoreManager.swift in Sources */,
 				8536F2EA258D330300B509D2 /* GameController.swift in Sources */,
+				85487F2326C63F9800EBC070 /* CityTech.swift in Sources */,
 				8536F37E258D475D00B509D2 /* Station.swift in Sources */,
 				8536F426258D47D000B509D2 /* LifeSupportView.swift in Sources */,
 				8536F4AF258D49C900B509D2 /* TravelersView.swift in Sources */,
@@ -1812,6 +1827,7 @@
 				85960B9825D9B3F000AC9592 /* EDLInventoryView.swift in Sources */,
 				85797519259BD394004C54D2 /* ItemCollectionViews.swift in Sources */,
 				8536F2EB258D330300B509D2 /* GameController.swift in Sources */,
+				85487F2426C63F9800EBC070 /* CityTech.swift in Sources */,
 				85D3BB2426AC9C9800B6AA36 /* CityTechDiagram.swift in Sources */,
 				8504A51525C5D3B800739C58 /* CautionStripes.swift in Sources */,
 				8536F37F258D475D00B509D2 /* Station.swift in Sources */,
@@ -1945,6 +1961,7 @@
 				8536F2EC258D330300B509D2 /* GameController.swift in Sources */,
 				85E2C42426BD8A6E003315F2 /* StoreManager.swift in Sources */,
 				8536F380258D475D00B509D2 /* Station.swift in Sources */,
+				85487F2526C63F9800EBC070 /* CityTech.swift in Sources */,
 				8536F428258D47D000B509D2 /* LifeSupportView.swift in Sources */,
 				8536F4B1258D49C900B509D2 /* TravelersView.swift in Sources */,
 				8536F374258D475D00B509D2 /* Persistance.swift in Sources */,
@@ -2045,6 +2062,7 @@
 				8536F379258D475D00B509D2 /* Peripherals.swift in Sources */,
 				8592823925EC4DD3001233BE /* GuildController.swift in Sources */,
 				8592828D25F176F4001233BE /* GameCamera.swift in Sources */,
+				85487F2626C63F9800EBC070 /* CityTech.swift in Sources */,
 				8536F371258D475D00B509D2 /* SceneHelpers.swift in Sources */,
 				8536F395258D475D00B509D2 /* BioModule.swift in Sources */,
 				850A1B1225ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */,
