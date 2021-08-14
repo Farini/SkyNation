@@ -16,7 +16,7 @@ struct CityLabView: View {
 //            }
 //            .padding(.horizontal, 6)
             
-            HSplitView {
+            HStack {
                 List() {
                     Section(header: recipeHeader) {
                         ForEach(Recipe.marsCases, id:\.self) { recipe in

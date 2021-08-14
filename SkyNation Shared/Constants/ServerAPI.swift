@@ -729,6 +729,7 @@ class SKNS {
     // MARK: - City
     
     static func claimCity(user:SKNUserPost, posdex:Posdex, completion:((DBCity?, Error?) -> ())?) {
+        
         print("Claiming City")
         
         let url = URL(string: "\(baseAddress)/guilds/city/claim/\(posdex.rawValue)")!
@@ -748,7 +749,8 @@ class SKNS {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .secondsSince1970
         
-        if let data = try? encoder.encode(player) {
+        let playerUpdate:PlayerUpdate = try! PlayerUpdate.create(player: player)
+        if let data = try? encoder.encode(playerUpdate) {
             print("Adding Data")
             request.httpBody = data
             let dataString = String(data:data, encoding: .utf8) ?? "n/a"

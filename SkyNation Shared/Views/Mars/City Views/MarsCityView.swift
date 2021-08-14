@@ -12,7 +12,6 @@ struct MarsCityView: View {
     @ObservedObject private var controller = CityController()
     
     @State var posdex:Posdex
-    
     @State private var cityMenuItem:CityMenuItem = .hab
     
     var header: some View {

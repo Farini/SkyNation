@@ -23,7 +23,7 @@ class StartingViewController: UIViewController {
     }
     
     func addStartingView() {
-        let startView = GameSettingsView()
+        let startView = GameSettingsView(guildController: GuildController(autologin: true))
         let controller = UIHostingController(rootView: startView)
         addChild(controller)
         controller.view.translatesAutoresizingMaskIntoConstraints = false

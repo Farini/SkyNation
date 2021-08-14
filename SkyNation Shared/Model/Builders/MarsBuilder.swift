@@ -39,6 +39,7 @@ class MarsBuilder {
     var hasNoGuild:Bool = false
     
     // Scene Callback from clicking Mars Icon (Switch Scene)
+    /*
     func requestMarsInfo(completion:@escaping(GuildFullContent?, MGuildState) -> ()) {
         
         print("\n Will load Mars Scene")
@@ -163,14 +164,95 @@ class MarsBuilder {
         
         completion(nil, .serverDown)
     }
+    */
     
     // Request Guild Details
     
     /**
         Populates the data. Use `randomize` to populate randomly (create a example/sample)
      */
-    func getServerInfo(randomize:Bool) {
+    func getServerInfo() {
         
+        if GameSettings.onlineStatus {
+            
+            print("Getting Server Info")
+            
+            guard let player = LocalDatabase.shared.player else {
+                print("No Player")
+                return
+            }
+            guard let _ = player.guildID else {
+                print("No Guild ID for player: \(player.name)")
+                self.hasNoGuild = true
+                return
+            }
+            
+            ServerManager.shared.inquireFullGuild(force:true) { guild, error in
+                if let guild:GuildFullContent = guild {
+                    self.guild = guild
+                    print("\n**********************")
+                    print("Guild Result: \(guild.name)")
+                    print("**********************")
+                    for city:DBCity in guild.cities {
+                        print("City: Pos:\(city.posdex) >> \(city.name)")
+                        if let cid = city.owner?["id"] {
+                            if cid != nil && cid == player.cityID {
+                                print("This city is mine!")
+                                self.myDBCity = city
+                            }
+                        }
+                    }
+                    self.cities = guild.cities
+                    
+                    for outpost:DBOutpost in guild.outposts {
+                        print("OutPost: \(outpost.type)")
+                    }
+                    self.outposts = guild.outposts
+                    
+                    for player:PlayerContent in guild.citizens {
+                        print("Player Content: \(player.name)")
+                    }
+                    self.players = guild.citizens
+                    
+                    self.getArrivedVehicles()
+                    
+                } else {
+                    print("No guild in result")
+                    self.hasNoGuild = true
+                    
+                    if let error = error {
+                        print("Error: \(error.localizedDescription)")
+                    }
+                }
+            }
+        } else {
+            
+            // Randomly Created Data
+            
+            print("\n *** Random Data *** \n")
+            
+            var randomGuild = GuildFullContent()
+            self.cities = randomGuild.cities
+            self.outposts = randomGuild.outposts
+            self.players = randomGuild.citizens
+            self.guild = randomGuild
+            
+            // Populate my city:
+            // var myDBCity:DBCity?
+            // var myCityData:CityData?
+            let mc:DBCity = DBCity(id: UUID(), guild: ["guild":randomGuild.id], name: "Fariland", accounting: Date(), owner: ["id":LocalDatabase.shared.player!.playerID], posdex: Posdex.city9.rawValue, gateColor: 0, experience:0)
+            let cd = CityData(example: true, id:mc.id)
+            // add city
+            randomGuild.cities.append(mc)
+            self.cities.append(mc)
+            
+            self.myDBCity = mc
+            self.myCityData = cd
+        }
+        
+        
+        
+        /*
         // Not random
         if !randomize {
             
@@ -253,6 +335,7 @@ class MarsBuilder {
             
         }
         
+        */
         
     }
     
@@ -343,7 +426,10 @@ class MarsBuilder {
         guard let scene = MarsBuilder.loadScene() else { fatalError() }
         self.scene = scene
         
-        getServerInfo(randomize: false)
+        getServerInfo()
+        
+        // Load CityData
+        self.myCityData = LocalDatabase.shared.loadCity()
     }
     
     // Load Scene

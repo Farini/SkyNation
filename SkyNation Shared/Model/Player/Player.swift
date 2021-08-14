@@ -268,53 +268,10 @@ struct PlayerContent:Codable, Identifiable, Hashable {
         return Date().timeIntervalSince(lastSeen)
     }
     
-}
-
-/*
-struct PlayerPost:Codable {
-    
-    // IDs
-//    var id:UUID
-    var localID:UUID            // id given by local machine
-    var serverID:UUID?          // an ID given by the server (SKNUser)
-    var playerID:UUID?          // an ID for the `DBPlayer` object
-    var gcid:String?            // an ID given by GameCenter
-    var guildID:UUID?           // id of the Guild
-    var cityID:UUID?            // City ID
-    
-    // Constructed
-    var name:String
-    var avatar:String
-    var money:Int
-    var experience:Int
-    
-    // Dates
-    var beganGame:Date
-    var lastSeen:Date
-    
-    // Server Pass
-    var datePass:Date?
-    var keyPass:String?
-    
-    init(player:SKNPlayer) {
-        self.localID = player.localID
-        self.serverID = player.serverID
-        self.playerID = player.playerID
-        self.gcid = player.gcid
-        self.guildID = player.guildID
-        self.cityID = player.cityID
-        self.name = player.name
-        self.avatar = player.avatar
-        self.money = player.money
-        self.experience = player.experience
-        self.beganGame = player.beganGame
-        self.lastSeen = player.lastSeen
-        self.datePass = player.datePass
-        self.keyPass = player.keyPass
+    func makePlayerCard() -> PlayerCard {
+        return PlayerCard(id: id, localID: localID, guildID: guildID, name: name, avatar: avatar, experience: experience, lastSeen: lastSeen)
     }
 }
-*/
-
 
 // MARK: - New, Simpler Method
 
@@ -438,7 +395,10 @@ struct PlayerCard: Codable, Identifiable {
     var lastSeen:Date
     
     // No initializers (Comes from Server)
-    
+    static func generate() -> PlayerCard {
+        let card = PlayerCard(id: UUID(), localID: UUID(), guildID: UUID(), name: "Player One", avatar: "people_01", experience: 12, lastSeen: Date().addingTimeInterval(-500))
+        return card
+    }
 }
 
 

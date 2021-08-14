@@ -25,26 +25,25 @@ The contributors to these projects shall have a **fair** share of the game, and 
 - [ ] Apple Store Product Registration
 - [ ] Product Version 1.0
 
-## Methodology 
-The completion of each **ToDo** item will lead to the earning of **Stars**, which represent a feature of the game.
-Each **ToDo** item has a difficulty level. As each item is different, and requires some amount of work, a ToDo item should have its difficulty level indicated on the ToDo list, as described below:
-
-> ★ Completed features get a *filled* star.
-
-> ☆ Features that need work done, are incomplete, or not yet started, get an empty star.
-
+### Methodology 
+**ToDo** Items are a part of a **Component** of the Game. Completing these items will ultimately generate one or more stars, that indicates the progress of that component. A Component will be fully complete when 5 stars are reached - in which case it means that no more work is required for that component.
 
 ### 📝 Difficulty Levels
- - 1. 1 hour or less
- - 3. 1h < 1d
- - 5. 1d < 3d
- - 8. 3d < 7d
- - 13. 7d, or more
+- 1. 1 hour or less
+- 3. 1h < 1d
+- 5. 1d < 3d
+- 8. 3d < 7d
+- 13. 7d, or more
+
+### Star Rating
+
+> ★ Completed components get a *filled* star.
+> ☆ Empty stars indicate that component is incomplete.
  
  # Completeness
  Each Item gets a grade 1-5 (stars) that rerpresents how complete the item is.
  
- ## Programming
+ ## Programming (Front End)
  
  - [ ] ★★★☆☆ Module, Hab, Lab, Bio
  - [ ] ★★★★☆ Earth Order
@@ -53,207 +52,136 @@ Each **ToDo** item has a difficulty level. As each item is different, and requir
  - [ ] ★★★★☆ Truss
  - [ ] ★★★★☆ Life Support Systems
  - [ ] ★★★☆☆ Vehicles Travelling Views/Scenes
+ 
  - [ ] ★☆☆☆☆ Mars Scene
- - [ ] ★☆☆☆☆ Server - SKNServer?
+ - [ ] ★★☆☆☆ Mars City
+ - [ ] ★★☆☆☆ Mars Outposts
+ - [ ] ★★☆☆☆ Game Chats, Messages, Achievements
+ - [ ] ★★☆☆☆ Game Store + Use of `GameTokens`
  - [ ] ★★★☆☆ Player(object) + settings + playability + Purchases
  
- ## Art Assets
- Each Item gets a grade 1-5 (stars) that rerpresents how complete the item is.
+ ## Programming (Back End)
  
- Icons + 2D Overlays
+ - [ ] ★★★★☆ Player
+ - [ ] ★★★☆☆ Guild
+ - [ ] ★★★☆☆ City + Outposts
+ - [ ] ★☆☆☆☆ Messages + Chat
+ - [ ] ★☆☆☆☆ Bonus - New Features
+ 
+ ## Art Assets -  Graphics 2D
+ 
  - [ ] ★★★★☆ Humans + Skills
  - [ ] ★★★★☆ Tanks, Containers, Ingredients, Peripherals
  - [ ] ★★★☆☆ Scenes Overlay (Camera, Vehicles list, etc.)
  - [ ] ★★★☆☆ Action Icons - Buy, Cancel, Cheat, Tokens, etc.
  - [ ] ★★☆☆☆ Icons - App Icon
  
- Audio
- - [ ] ★☆☆☆☆ Sound Effects
- - [ ] ★☆☆☆☆ Music / Soudtrack
+ ## Art Assets -  Scenes 3D
  
- 3D Scenes
  - [ ] ★★★☆☆ Space Station
  - [ ] ★★★★☆ Delivery Vehicle
  - [ ] ★★☆☆☆ Mars Colony
  - [ ] ★★★☆☆ Space Vehicle
  
- ## Total Completeness
- Example calculation of **fair share**
+ ## Art Assets - Audio
  
- @ File created (with these settings): October 29, 2020 at 3:00 PM
- - Star Count: 5/70 = 7.14%
- - ★ (1 Star) = 1.43%
- - Farini 5/5 = 100%
- - Difficulty Count: 64
- - Done Difficulty: 6/64 = 9.37%
+ - [ ] ★★☆☆☆ Sound Effects
+ - [ ] ★★☆☆☆ Music / Soudtrack
+
+ 
+ ## Completeness
+ Example calculation of *fair share*
+ 
+ @ October 29, 2020
+- ★/☆: 5/70 = 7.14%
+- ★ (1 Star) = 1.43%
+- To Do's: 6/64 = 9.37%
  
  @ December 24, 2020
-- Star Count: 26/105 = 24.76%
+- ★/☆: 26/105 = 24.76%
 - ★ (1 Star) = 0.95%
-- Farini 26/26 = 100%
-- Difficulty Count: 152
-- Done Difficulty: 52/152 = 34.21%
+- To Do's: 52/152 = 34.21%
+
+@ August 13, 2021
+- ★/☆: 79/145
+- ★ (1 Star) = 0.69%
+- To Do's: 239/289 = 83%
+
 
 ## 📝 Doing - Present
 
-- [X] GameMessages showing strange dates
-- [X] Mars Button -> Display Guild Settings, or Server down, if there is no info. Only a Player that has a SpaceVehicle built
-- [X] Make all Tutorial points (Questionmarks).
-- [X] Display Person's recently eaten
-- [X] Bugfix: Humans dying too quickly
-- [X] Fix buttons getting green and not returning to white
-- [X] 1/3 Camera options + animations
-- [X] Adjust camera LOOK@ constraints
-- [X] Remodel Garage (Garage4.scn)
-- [X] Have 3 Background music
-- [X] Person Workout not incrementing health
-- [X] GameSettings -> Sound
-- [X] iOS Force Dark Mode
-- [X] Accounting: waste (pee, and poop) not subtracting when Peripheral is working
-- [X] Accounting: When station doesn't have people -> Don't make money
-- [X] Make sure that Air adjustments AND Oxygen adjustments are working - Accounting
-- [X] LSS View -> Define Tank not working properly (remove scrollview)
-- [X] Animate Satellite Opening Solar Panel (if there is one)
-- [X] Scene Alert (News) -> Low Oxygen
-- [X] Scene Alert (News) -> Bad AirQualities
-- [X] Scene Alert (News) -> Low Water
-- [X] Biobox still not saving when done (needs testing)
-- [X] Bio View - DNA animation (needs testing)
-- [X] Settings in `LocalDatabase`
-- [X] Game Store Improvements
-- [X] Game Token Object
-- [X] Shopped Object (data for purchased items on `Player`)
-- [X] Implement `Purchase.Kit` in `GameShoppingView`.
-- [X] App Store products registration
-- [X] LSS View -> Ability to sort tanks from empty to full
-- [X] HabModule -> Person Detail View -> Finish Activity with tokens.
-- [X] Player -> convenient function to use token (getAToken, and useToken) -> Copy from `Shopped`
-- [X] Player -> Mars Entry - Only get to Mars if player has an `.Entry` type of token, used. 
-- [X] Player -> Mars Entry `func marsEntryPass()` and `requestEntryToken` need testing
-- [X] Player -> Mars Entry  -> Scene Loading When loading Mars Scene, test `marsEntryPass()` and `requestEntryToken`
-- [X] Server re-structure (Model)
-- [X] GameSettings -> Object in `LocalDatabase`
-- [X] GameSettings -> Auto merge tanks? See Station.Truss.mergeTanks()
-- [X] Game Settings -> BioBox -> Source of food (Bool) -> Station Accounting
+- [ ] Settings - ServerTab - Leave Guild
+- [ ] Settings - ServerTab - Create Guild
+
+- [ ] City View - Garage (Receiving Vehicles)
+- [ ] City View - Election
+
+- [ ] Outpost - supply method + SKNS request for `Outpost` upgrades
+
+- [ ] Station Scene - Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
+- [ ] Station Scene - Background HDRI image
+- [ ] Station Scene - Make the Earth bright again?
+- [ ] Station Scene - New Modules not fully available after Tech research. 
+- [ ] Station Scene - Garage - Space Vehicle Registration (when launch)
+- [ ] Station Scene - Garage - Space Vehicle Validation (when arriving (orbit))
+- [ ] Station Scene - Garage - Add Solar Panel, Robot, Bioboxes
+
+- [ ] Mars Scene - Guild map improvements (x8)
+- [ ] Mars Scene - City - Gate Config (to layout scene)
+- [ ] Mars Scene - City - Solar Panel(s)
+- [ ] Mars Scene - Outposts with Levels
+- [ ] Mars Scene - Outpost - State (building) scenes
+- [ ] Mars Scene - Infinite floor
+- [ ] Mars Scene - Animations - SpaceVehicle arriving
+- [ ] Mars Scene - Animations - Outposts Particle emitters
+- [ ] Mars Scene - Animations - Transportation
+- [ ] Mars Scene - Animations - Camera entrance
+
+- [ ] Overlays - Guild Chat
+- [ ] Overlays - Messages?
+- [ ] Overlays - Election
+- [ ] Overlays - Cameras
+- [ ] Overlays - Outpost rss Collecting
+
+- [X] Model - City Tech
+- [X] Model - Mars City in `LocalDatabase`
+- [ ] Model - E-Vehicle/Bot
+- [ ] Model - City Accounting
+- [ ] Model - Outpost rss Collecting
+- [ ] Model - Guild Chat
+- [ ] Model - Election
+- [ ] Model - Road?
+- [ ] Model - Mars Accounting
+
+- [ ] 2D Graphics - iOS app icon
+- [ ] 2D Graphics - Blender individual tanks
+- [ ] 2D Graphics - Custom SFFonts
+
+- [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing)
+- [ ] Sound - 2 more music (better ones)
+
+- [X] Basic Views - PlayerContent, or PlayerCard
+- [ ] Basic Views - Error messages (red)
+- [ ] Basic Views - Alert messages (orange)
 
 
-- [X] SettingsServerTab -> Display my Guild
-- [X] SettingsServerTab -> Join Guild
-- [ ] SettingsServerTab -> Leave Guild
-- [ ] SettingsServerTab -> Create Guild
-
-
-- [ ] Claim City Button not showing up
-- [ ] PlayerContent, or PlayerCard View - Other players
-
-
-- [ ] Outpost supply method + SKNS request for `Outpost` upgrades
-
-- [ ] New Modules not fully available after Tech research. 
-
-- [ ] Test if wasteLiquid, and wasteSolid are not being removed when empty. Fixed under `Truss.mergeTanks()`
-
-- [ ] 3/21 Mars Views & Controllers
-    - [ ] City Views
-        - [X] My City
-        - [X] Other Cities
-        - [X] Unclaimed City
-        - [ ] Garage (Receiving Vehicles)
-
-    - [ ] Oupost View
-        - [X] My City Resources
-        - [X] Contribute Resources
-        - [X] OutpostData
-        - [ ] Server Requests
-        - [ ] Contributors
-        
-- [ ] 3/13 Mars Scene
-    - [ ] Gate Config (to layout scene)
-    - [ ] Outposts with Levels
-    - [ ] Infinite floor
-    - [ ] Animations
-    
-- [ ] Mars Model
-    - [X] City Tech (Model)
-    - [ ] Test Mars City in `LocalDatabase`
-    - [ ] E-Vehicle/Bot
-    - [ ] City Accounting
-    - [ ] Outpost Collecting
-
-- [ ] Icons
-    - [X] SpaceVehicle engine icons
-    - [ ] iOS app icon
-    - [ ] Guild Icons
-
-- [ ] 16/21 (Feb.17) Station Scene Improvements - Started: 02/08/2021
-    - [ ] Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
-    - [ ] Improve Background HDRI image
-    - [ ] Make the Earth bright again?
-    - [ ] Add TechItems updates to StationBuilder
-        
-- [ ] 7/8 Garage View Improvements
-    - [X] Engines Images
-    - [X] Reduce Travel Time
-    - [ ] Test Vehicle Arrival (Mars City)
-    - [ ] [DEPRECATE] Space Vehicle Registration (when launch)
-    - [ ] [DEPRECATE] Space Vehicle Validation (when arriving (orbit))
-    - [ ] Add Solar Panel, Robot, Bioboxes
-    
-- [ ] 12/13 Basic Views
-    - [ ] Error messages
-    
-- [X] Resources View Example (Copy from `EDLInventoryView`)
-    - [X] Resources Tab
-    - [X] Resources Selection + Callback
-    - [ ] Resources Collections - Similar size items
-    
-## 📝 To Do - Future
-Grab things from this list as you go along.
-
-- [ ] 2/8 Soundtrack + FX
-    - [X] Add a couple of SoundFX
-    - [X] Gamesettings -> SoundFX
-    - [ ] 2 more Sound FXs (Vehicle departing, News appearing)
-    - [ ] 2 more music (better ones)
-
-- [X] 5/8 Accounting
-    - [ ] Mars Accounting
-    - [ ] Test Accounting Fix (pee and poop should be lower than max)
-
-- [ ] 8/21 Server
-    - [X] Server test address
-    - [X] Player Object(s)
-    - [X] Guilds
-    - [ ] Free Deliveries
-    - [ ] Available Humans for delivery
-    - [ ] Token Validation
-
-- [ ] 1/3 iOS View Presentation
-    - [X] Test iPhone View sizes
-    - [ ] Adjust iPhone View sizes
-
-### Characters prompt lines:
-1. When hired: "Yay", "Thank you", "Here we go", etc.
-2. When fired: "Boo"
-3. When unhappy: *crying*
-4. When unhealthy: *blerg*
-5. Bad air quality: "I can't breathe"
-6. When going to Mars: "Woohoo"
-7. Tech research: "alright!"
+- [ ] iOS - Views are too large
+- [ ] iOS - Font modifiers
+- [ ] iOS - Window Sizes + View Sizes
+- [ ] iOS - Neumorphic Button smaller
+- [ ] iOS - Popover sizes
 
 ## Wishlist + Questionable
 Features that are requested, but are not required to launch the game
 
-- [ ] Free Supply Drop-offs -> Pay for more 
+- [ ] Free Supply Drop-offs -> Tokens for more 
 - [ ] Person: Have action(s) to make **Person** happier
-- [ ] Blender Individual Tanks
 - [ ] Reskin Delivery Vehicle
 - [ ] Remodel Space Vehicle
 - [ ] Rebake Garage Skin x 2 (Choices)
 - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
 - [ ] Plugins
 - [ ] Person var stress?
-
 - [ ] Peripheral Upgrades
 - [ ] Activity name enum?
 - [ ] BioBox DNA enum
@@ -325,7 +253,6 @@ Features that are requested, but are not required to launch the game
 - [X] Accounting should use all of the energy generated first, then from batteries
 
 [02/08/2021]
-
 - [X] Custom Game Buttons
 - [X] Rounded Buttons
 - [X] Better Delivery Order Ticket (Popover)
@@ -335,7 +262,6 @@ Features that are requested, but are not required to launch the game
 - [X] LSS View -> Make 1 tab for tanks & ingredients, and another for Peripherals
 
 [2/17 to 3/1/2021]
-
 - [X] Ingredients and sufficiency
 - [X] Create a general Header View in SwiftUI for all SwiftUI base views
 - [X] Improve People Selection View - Add a mark so user knows when they are selected
@@ -369,7 +295,6 @@ Features that are requested, but are not required to launch the game
 - [X] Where to display freebies? -> Accounting, add new game message (not achievement)
 
 [3/1/2021 - 3/28/2021]
-
 - [X] Post Launch Scene
 - [X] Server SpaceVehicle
 - [X] Bring Scene in - Desktop:SpaceVehilce2.dae
@@ -455,3 +380,60 @@ Features that are requested, but are not required to launch the game
 - [X] Accounting Report object
 - [X] Present view on iPad
 - [X] iPad View dismissal
+
+[6/29/2021 - 8/13/2021]
+- [X] GameMessages showing strange dates
+- [X] Mars Button -> Display Guild Settings, or Server down, if there is no info. Only a Player that has a SpaceVehicle built
+- [X] Make all Tutorial points (Questionmarks).
+- [X] Display Person's recently eaten
+- [X] Bugfix: Humans dying too quickly
+- [X] Fix buttons getting green and not returning to white
+- [X] 1/3 Camera options + animations
+- [X] Adjust camera LOOK@ constraints
+- [X] Remodel Garage (Garage4.scn)
+- [X] Have 3 Background music
+- [X] Person Workout not incrementing health
+- [X] GameSettings -> Sound
+- [X] iOS Force Dark Mode
+- [X] Accounting: waste (pee, and poop) not subtracting when Peripheral is working
+- [X] Accounting: When station doesn't have people -> Don't make money
+- [X] Make sure that Air adjustments AND Oxygen adjustments are working - Accounting
+- [X] LSS View -> Define Tank not working properly (remove scrollview)
+- [X] Animate Satellite Opening Solar Panel (if there is one)
+- [X] Scene Alert (News) -> Low Oxygen
+- [X] Scene Alert (News) -> Bad AirQualities
+- [X] Scene Alert (News) -> Low Water
+- [X] Biobox still not saving when done (needs testing)
+- [X] Bio View - DNA animation (needs testing)
+- [X] Settings in `LocalDatabase`
+- [X] Game Store Improvements
+- [X] Game Token Object
+- [X] Shopped Object (data for purchased items on `Player`)
+- [X] Implement `Purchase.Kit` in `GameShoppingView`.
+- [X] App Store products registration
+- [X] LSS View -> Ability to sort tanks from empty to full
+- [X] HabModule -> Person Detail View -> Finish Activity with tokens.
+- [X] Player -> convenient function to use token (getAToken, and useToken) -> Copy from `Shopped`
+- [X] Player -> Mars Entry - Only get to Mars if player has an `.Entry` type of token, used. 
+- [X] Player -> Mars Entry `func marsEntryPass()` and `requestEntryToken` need testing
+- [X] Player -> Mars Entry  -> Scene Loading When loading Mars Scene, test `marsEntryPass()` and `requestEntryToken`
+- [X] Server re-structure (Model)
+- [X] GameSettings -> Object in `LocalDatabase`
+- [X] GameSettings -> Auto merge tanks
+- [X] Game Settings -> BioBox -> Source of food (Bool) -> Station Accounting
+- [X] Resources View Example (Copy from `EDLInventoryView`)
+- [X] Resources Tab
+- [X] Resources Selection + Callback
+- [X] SettingsServerTab -> Display my Guild
+- [X] SettingsServerTab -> Join Guild
+- [X] CityView -> Claim City Button
+- [X] Test if wasteLiquid, and wasteSolid are not being removed when empty. Fixed under `Truss.mergeTanks()`
+- [X] Reduce Travel Time to 3 days
+- [X] City View - My City
+- [X] City View - Other Cities
+- [X] City View - Unclaimed City
+- [X] Gamesettings -> SoundFX
+- [X] Sound - Add a couple of SoundFX
+- [X] 2D Graphics - SpaceVehicle engine icons
+- [X] 2D Graphics - Guild Icons
+- [X] 2D Graphics - Engines Images

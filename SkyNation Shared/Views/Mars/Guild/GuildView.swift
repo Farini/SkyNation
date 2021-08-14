@@ -101,13 +101,18 @@ struct GuildView: View {
                 switch face {
                     case .citizens:
                         
-                        Text("Citizens: \(guildSum.citizens.count)").font(.title2).foregroundColor(.green)
-                            .foregroundColor(style == .largeDescriptive ? Color.white:Color.yellow)
-                            .font(style == .largeSummary ? .title3:.body)
-                            .padding(.bottom, 4)
-                        
-                        ForEach(guildFull.citizens, id:\.self) { citizen in
-                            Text(citizen.name)
+                        ScrollView {
+                            VStack {
+                                Text("Citizens: \(guildSum.citizens.count)").font(.title2).foregroundColor(.green)
+                                    .foregroundColor(style == .largeDescriptive ? Color.white:Color.yellow)
+                                    .font(style == .largeSummary ? .title3:.body)
+                                    .padding(.bottom, 4)
+                                
+                                ForEach(guildFull.citizens, id:\.self) { citizen in
+                                    SmallPlayerCardView(pCard: citizen.makePlayerCard())
+                                }
+                            }
+                            .frame(minWidth: 170, maxWidth: 200)
                         }
                         
                     case .cities:

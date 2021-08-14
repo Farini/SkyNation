@@ -31,6 +31,7 @@ class CityController:ObservableObject {
     @Published var city:DBCity?
     @Published var cityData:CityData?
     @Published var ownerID:UUID?
+    @Published var arrivedVehicles:[SpaceVehicle] = []
     
     @Published var isMyCity:Bool = false
     @Published var isClaimedCity:Bool = true
@@ -44,6 +45,12 @@ class CityController:ObservableObject {
         self.player = player
         self.builder = MarsBuilder.shared
         viewState = .loading
+        
+        if let cd = LocalDatabase.shared.loadCity() {
+            self.cityData = cd
+        }
+        self.arrivedVehicles = LocalDatabase.shared.vehicles
+        
     }
     
     /// Loads the city at the correct `Posdex`
@@ -67,11 +74,13 @@ class CityController:ObservableObject {
                     
                     // Load City (New Method)
                     if let cityData:CityData = MarsBuilder.shared.myCityData {
+                        
                         if let localCity:CityData = LocalDatabase.shared.city {
                             self.cityData = localCity
                         } else {
                             
                             print("Try to save city")
+                            
 //                            do {
 //                                try LocalDatabase.shared.saveCity(cityData)
 //                            } catch {
@@ -102,7 +111,7 @@ class CityController:ObservableObject {
         
     }
     
-    @Published var arrivedVehicles:[SpaceVehicle] = []
+    // MARK: - Vehicles
     
     /// Gets all vehicles that arrived
     func getArrivedVehicles() {
@@ -189,6 +198,48 @@ class CityController:ObservableObject {
         */
         
     }
+    
+    /// Unloads a `SpaceVehicle` to the city
+    func unload(vehicle:SpaceVehicle) {
+        
+        var travelling = LocalDatabase.shared.vehicles
+        
+        guard let city = cityData else { return }
+        guard travelling.contains(vehicle) else { return }
+        
+        for box in vehicle.boxes {
+            city.boxes.append(box)
+        }
+        for tank in vehicle.tanks {
+            city.tanks.append(tank)
+        }
+        for person in vehicle.passengers {
+            if city.checkForRoomsAvailable() > city.inhabitants.count {
+                city.inhabitants.append(person)
+            } else {
+                print("⚠️ Person doesn't fit! Your city is full!")
+            }
+        }
+        for biobox in vehicle.bioBoxes ?? [] {
+            city.bioBoxes?.append(biobox)
+        }
+        for peripheral in vehicle.peripherals {
+            city.peripherals.append(peripheral)
+        }
+        
+        travelling.removeAll(where: { $0.id == vehicle.id })
+        LocalDatabase.shared.vehicles = travelling
+        LocalDatabase.shared.saveVehicles()
+        
+        // Save
+        do {
+            try LocalDatabase.shared.saveCity(city)
+        } catch {
+            print("Error Saving City: \(error.localizedDescription)")
+        }
+    }
+    
+    // MARK: - Claiming
     
     /// Checks if player can claim city
     func isClaimable() -> Bool {

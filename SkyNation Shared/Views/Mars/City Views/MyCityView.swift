@@ -62,9 +62,6 @@ struct MyCityView: View {
     
     var body: some View {
         VStack {
-//            Text("City Data")
-//                .font(.title)
-//                .foregroundColor(.orange)
             switch cityTab {
                 case .hab:
                     CityHabView(people: $cityData.inhabitants, selection: nil)
@@ -73,22 +70,22 @@ struct MyCityView: View {
                 case .rss:
                     HStack {
                         Spacer()
-                        Text("Resources")
+                        // Boxes
+                        Group {
+                            Divider()
+                            Text("Boxes").font(.title2)
+                            
+                            LazyVGrid(columns: [GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100))], alignment: .center, spacing: 8, pinnedViews: [], content: {
+                                
+                                ForEach(cityData.boxes) { box in
+                                    IngredientView(ingredient: box.type, hasIngredient: true, quantity: box.current)
+                                }
+                            })
+                        }
                         Spacer()
                     }
                     
-                case .rocket:
-                    HStack {
-                        Spacer()
-                        Text("Rockets")
-                        ForEach(controller.arrivedVehicles) { vehicle in
-                            SpaceVehicleRow(vehicle: vehicle)
-                        }
-                        if controller.arrivedVehicles.isEmpty {
-                            Text("No Vehicles arrived").foregroundColor(.gray)
-                        }
-                        Spacer()
-                    }
+                case .rocket: CityGarageView(controller: controller, selectedVehicle: nil)
             }
             
             /*
@@ -158,9 +155,15 @@ struct MyCityView: View {
 // MARK: - Previews
 
 struct MyCityView_Previews: PreviewProvider {
+    
+    static let menu:CityMenuItem = CityMenuItem.rocket
+    
     static var previews: some View {
-        MyCityView(controller:CityController(), cityData: MarsBuilder.shared.myCityData!, cityTab: .constant(.hab))
-            .frame(height:900)
+        VStack {
+            CityMenu(menuItem: .constant(menu))
+            MyCityView(controller:CityController(), cityData: MarsBuilder.shared.myCityData!, cityTab: .constant(menu))
+        }
+        
     }
 }
 

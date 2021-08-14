@@ -125,7 +125,8 @@ extension GameViewController:GameNavDelegate {
     func openOutpostView(posdex: Posdex, outpost: DBOutpost) {
         clearInterface()
         
-        let newHost = UIHostingController(rootView:OutpostView(posdex: posdex, outpost: outpost))
+        let newHost = UIHostingController(rootView:OutpostView(controller: OutpostController(dbOutpost: outpost)))
+        
         newHost.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(newHost.view)
         newHost.view.centerXAnchor.constraint(
@@ -303,7 +304,7 @@ extension GameViewController:GameNavDelegate {
     
     func didSelectShopping() {
         clearInterface()
-        let newHost = UIHostingController(rootView: GameShoppingView())
+        let newHost = UIHostingController(rootView: GameShoppingView(controller: StoreController()))
         
         newHost.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(newHost.view)

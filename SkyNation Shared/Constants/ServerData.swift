@@ -61,7 +61,8 @@ class ServerManager {
             
             guard let player = LocalDatabase.shared.player else {
                 print("Server Data Crashing. Player doesn't exist")
-                fatalError()
+                return
+//                fatalError()
             }
             
             self.serverData = ServerData(player: player)
