@@ -8,37 +8,51 @@
 import SwiftUI
 
 struct CityLabView: View {
+    
+    @ObservedObject var controller:CityController
+    
     var body: some View {
-//        VStack {
-//            HStack {
-//                Text("City Lab").font(.title)
-//                Spacer()
-//            }
-//            .padding(.horizontal, 6)
             
             HStack {
                 List() {
                     Section(header: recipeHeader) {
                         ForEach(Recipe.marsCases, id:\.self) { recipe in
                             Text(recipe.rawValue).foregroundColor(.blue)
+                                .onTapGesture {
+                                    controller.labSelect(recipe: recipe)
+                                }
                         }
                     }
                     Section(header: techHeader) {
                         ForEach(CityTech.allCases, id:\.self) { tech in
                             Text(tech.rawValue).foregroundColor(.blue)
+                                .onTapGesture {
+                                    controller.labSelect(tech: tech)
+                                }
                         }
                     }
                 }
                 .frame(minWidth: 120, idealWidth: 150, maxWidth: 180, minHeight: 300, idealHeight: 500, maxHeight: .infinity, alignment: .center)
                 
                 ScrollView([.vertical, .horizontal], showsIndicators: true) {
-                    HStack {
-                        Spacer()
-                        VStack {
-                            Text("Detail View")
-                            CityTechDiagram()
+                    VStack {
+                        switch controller.labSelection {
+                            case .NoSelection:
+                                CityTechDiagram()
+                            case .recipe(let recipe):
+                                Spacer()
+                                Text("R: \(recipe.rawValue)")
+                                Spacer()
+                            case .tech(let tech):
+                                Spacer()
+                                Text("Tech: \(tech.rawValue)")
+                                Spacer()
+                            case .activity(let activity):
+                                Spacer()
+                                Text("Activity: \(activity.activityName)")
+                                Spacer()
+                                
                         }
-                        Spacer()
                     }
                 }
             }
@@ -47,7 +61,7 @@ struct CityLabView: View {
     var recipeHeader: some View {
         HStack {
             Image(systemName: "list.bullet.rectangle")
-            Text("Recipe")
+            Text("Recipes")
         }
     }
     
@@ -61,6 +75,6 @@ struct CityLabView: View {
 
 struct CityLabView_Previews: PreviewProvider {
     static var previews: some View {
-        CityLabView()
+        CityLabView(controller: CityController())
     }
 }

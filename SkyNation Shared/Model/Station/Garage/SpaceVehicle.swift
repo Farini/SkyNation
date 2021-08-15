@@ -163,7 +163,7 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     func startTravelling() {
         status = .Mars
         dateTravelStarts = Date()
-        travelTime = GameLogic.vehicleTravelTime //60 * 60 * 24 * 7
+        travelTime = GameLogic.vehicleTravelTime
     }
     
     func arriveDate() -> Date {
@@ -187,7 +187,7 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
                         return progress
                     }
                 case .Mars:
-                    let oneWeek:TimeInterval = 60 * 60 * 24 * 7
+                    let oneWeek:TimeInterval = GameLogic.vehicleTravelTime
                     let dateEnd = dateBegin.addingTimeInterval(oneWeek)
                     let totalSeconds = dateEnd.timeIntervalSince(dateBegin)
                     let elapsed = Date().timeIntervalSince(dateBegin)

@@ -37,9 +37,7 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
     case Alloy
     
     // E-Vehicle        bolt.car
-    
     // MegaTank?        capsule.portrait
-    
     // Polimer?         [see ingred.]
     // Solar Cell?      [see ingred.]
     
@@ -123,6 +121,11 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
             case .ChargedGlass: return 60 * 60 // 1h
             case .Alloy: return 60 * 3 // 3m
         }
+    }
+    
+    /// Returns a String of Hours, Minutes, Seconds for the duration of this recipe
+    func durationExtended() -> String {
+        return TimeInterval(getDuration()).stringFromTimeInterval()
     }
     
     func makeProduct(argument:Any) -> Codable? {

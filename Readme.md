@@ -109,11 +109,18 @@ The contributors to these projects shall have a **fair** share of the game, and 
 
 
 ## 📝 Doing - Present
+If looking for things to do and don't know where to start, go to *Find Navigator* and search for **FIXME**, or **TODO**
+
+[8/13/2021 - ?]
+- [X] EarthOrder - People list not refreshing.
 
 - [ ] Settings - ServerTab - Leave Guild
 - [ ] Settings - ServerTab - Create Guild
 
-- [ ] City View - Garage (Receiving Vehicles)
+- [X] City View - Garage (Receiving Vehicles)
+- [ ] City View - City.garage.vehicles not updating.
+- [ ] City View - Tech implementation
+- [ ] City View - Recipes Implementation
 - [ ] City View - Election
 
 - [ ] Outpost - supply method + SKNS request for `Outpost` upgrades
@@ -121,10 +128,14 @@ The contributors to these projects shall have a **fair** share of the game, and 
 - [ ] Station Scene - Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
 - [ ] Station Scene - Background HDRI image
 - [ ] Station Scene - Make the Earth bright again?
-- [ ] Station Scene - New Modules not fully available after Tech research. 
+- [ ] Station Scene - New Modules not available after Tech research. 
 - [ ] Station Scene - Garage - Space Vehicle Registration (when launch)
 - [ ] Station Scene - Garage - Space Vehicle Validation (when arriving (orbit))
 - [ ] Station Scene - Garage - Add Solar Panel, Robot, Bioboxes
+
+- [ ] Station Garage View - Built Vehicles - Remove Inventory Button, have only 'Descent' button
+- [ ] Station Garage View - Building Vehicle - Remove unnecessary views (solar panel, add bot)
+- [ ] Station Garage View - Building Vehicle - Make ScrollView take the whole space
 
 - [ ] Mars Scene - Guild map improvements (x8)
 - [ ] Mars Scene - City - Gate Config (to layout scene)
@@ -137,18 +148,18 @@ The contributors to these projects shall have a **fair** share of the game, and 
 - [ ] Mars Scene - Animations - Transportation
 - [ ] Mars Scene - Animations - Camera entrance
 
-- [ ] Overlays - Guild Chat
-- [ ] Overlays - Messages?
+- [X] Overlays - Guild Chat
+- [ ] Overlays - Messages
 - [ ] Overlays - Election
 - [ ] Overlays - Cameras
 - [ ] Overlays - Outpost rss Collecting
 
 - [X] Model - City Tech
 - [X] Model - Mars City in `LocalDatabase`
+- [X] Model - Guild Chat
 - [ ] Model - E-Vehicle/Bot
 - [ ] Model - City Accounting
 - [ ] Model - Outpost rss Collecting
-- [ ] Model - Guild Chat
 - [ ] Model - Election
 - [ ] Model - Road?
 - [ ] Model - Mars Accounting
@@ -156,6 +167,9 @@ The contributors to these projects shall have a **fair** share of the game, and 
 - [ ] 2D Graphics - iOS app icon
 - [ ] 2D Graphics - Blender individual tanks
 - [ ] 2D Graphics - Custom SFFonts
+- [ ] 2D Graphics - Avatars remake
+- [ ] 2D Graphics - Better Engine Icons
+- [ ] 2D Graphics - SkyNation Entrance
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing)
 - [ ] Sound - 2 more music (better ones)

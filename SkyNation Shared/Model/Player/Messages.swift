@@ -110,3 +110,26 @@ enum GameMessageType:String, Codable, CaseIterable {
         }
     }
 }
+
+// MARK: - Chat
+
+/// Used to post a `ChatMessage`
+struct ChatPost:Codable {
+    
+    var guildID:UUID
+    var playerID:UUID
+    var name:String
+    var date:Date
+    var message:String
+}
+
+struct ChatMessage:Codable, Identifiable, Hashable {
+    
+    var id: UUID
+    var guild: [String:UUID?]
+    
+    var pid: UUID
+    var name: String
+    var message: String
+    var date: Date
+}

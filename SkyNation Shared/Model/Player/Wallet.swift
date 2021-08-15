@@ -58,6 +58,7 @@ class Wallet:Codable {
         
         // Check if should renew the list
         var shouldGenerate:Bool = false
+        
         if timeToGenerateNextPeople() > 0 {
             if useTokens == true || staff.isEmpty == true {
                 shouldGenerate = true
@@ -83,19 +84,18 @@ class Wallet:Codable {
     
     func timeToGenerateNextPeople() -> Double {
         
-        let delay = Double(TimeInterval.oneDay / 24) // 1hr
-        let duration = Date().timeIntervalSince(self.dateStaff)
+        let delay = Double(TimeInterval.oneDay) / 24.0 // 1hr
+        let refresh:Date = self.dateStaff.addingTimeInterval(delay) //Date().timeIntervalSince(self.dateStaff)
         
-        let isReady:Bool = duration > delay
-        print("Duration: \(duration), Ready: \(isReady)")
-        
-        if duration > delay {
-            // ready
+        if refresh.compare(Date()) == .orderedAscending {
+            // refresh
             return 0
         } else {
-            // not ready
-            return delay - duration
+            let delta = Date().timeIntervalSince(self.dateStaff)
+            print("Will generate next staff list in \(delta)")
+            return delta
         }
+        
     }
     
     private func generatePeople(amt:Int) -> [Person] {

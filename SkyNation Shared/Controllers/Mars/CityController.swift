@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// The Status of a CityView
 enum MarsCityStatus {
     case loading                    // Data not loaded yet
     case unclaimed                  // City has no owner
@@ -14,11 +15,19 @@ enum MarsCityStatus {
     case mine(cityData:CityData)    // Belongs to Player
 }
 
+/// The selected tab for MyCityView
 enum MarsCityTab {
     case Hab
     case Lab
     case RSS
     case EVs // Electric Vehicles
+}
+
+enum CityLabState {
+    case NoSelection
+    case recipe(name:Recipe)
+    case tech(name:CityTech)
+    case activity(object:LabActivity)
 }
 
 class CityController:ObservableObject {
@@ -31,13 +40,20 @@ class CityController:ObservableObject {
     @Published var city:DBCity?
     @Published var cityData:CityData?
     @Published var ownerID:UUID?
-    @Published var arrivedVehicles:[SpaceVehicle] = []
     
     @Published var isMyCity:Bool = false
     @Published var isClaimedCity:Bool = true
     
     @Published var viewState:MarsCityStatus
     @Published var cityTab:MarsCityTab = .Hab
+    
+    /// Selection item for Lab View
+    @Published var labSelection:CityLabState = .NoSelection
+    @Published var labActivity:LabActivity?
+    
+    // Vehicles
+    @Published var arrivedVehicles:[SpaceVehicle]
+    @Published var travelVehicles:[SpaceVehicle]
     
     init() {
         
@@ -48,9 +64,21 @@ class CityController:ObservableObject {
         
         if let cd = LocalDatabase.shared.loadCity() {
             self.cityData = cd
+            
+            if let labActivity = cd.labActivity {
+                self.labActivity = labActivity
+                self.labSelection = .activity(object: labActivity)
+            }
         }
-        self.arrivedVehicles = LocalDatabase.shared.vehicles
         
+        // Vehicles initial state
+        let vehicles = LocalDatabase.shared.vehicles
+        print("Initting with vehicles.: \(vehicles.count)")
+        
+        self.travelVehicles = vehicles
+        self.arrivedVehicles = LocalDatabase.shared.city?.garage.vehicles ?? []
+        
+        // Post Init
     }
     
     /// Loads the city at the correct `Posdex`
@@ -90,7 +118,7 @@ class CityController:ObservableObject {
                         
                         self.cityData = cityData
                         self.viewState = .mine(cityData: cityData)
-                        self.getArrivedVehicles()
+                        self.updateVehiclesLists()
                         
                     }
                 } else {
@@ -114,7 +142,7 @@ class CityController:ObservableObject {
     // MARK: - Vehicles
     
     /// Gets all vehicles that arrived
-    func getArrivedVehicles() {
+    func updateVehiclesLists() {
         
         switch viewState {
             case .loading:
@@ -131,31 +159,49 @@ class CityController:ObservableObject {
         
         print("Getting Arrived Vehicles")
         
-        var travellingVehicles = LocalDatabase.shared.vehicles
+        // Get the list of Vehicles in LocalDatabase - Travelling
+        let travelList:[SpaceVehicle] = LocalDatabase.shared.vehicles
         
-        // Loop through Vehicles to see if any one arrived
-        var transferringVehicles:[SpaceVehicle] = []
-        for vehicle in travellingVehicles {
-            if let arrivalDate = vehicle.dateTravelStarts?.addingTimeInterval(GameLogic.vehicleTravelTime) {
-                if Date().compare(arrivalDate) == .orderedDescending {
-                    // Arrived
-                    // Change vehicle destination to either [MarsOrbit, or Exploring, or Settled]
-                    transferringVehicles.append(vehicle)
-                }
+        // Separate in 2 lists: Travelling, and transferring (arriving)
+        var travelling:[SpaceVehicle] = []
+        var transferring:[SpaceVehicle] = []
+        
+        for vehicle in travelList {
+            
+            // Travel must have started
+            guard let travelStart = vehicle.dateTravelStarts else { continue }
+            
+            let arrival:Date = travelStart.addingTimeInterval(GameLogic.vehicleTravelTime)
+            if arrival.compare(Date()) == .orderedAscending {
+                // Arrived
+                transferring.append(vehicle)
+            } else {
+                // Still travelling
+                travelling.append(vehicle)
             }
         }
         
+        // Save the travelling back in LocalDatabase
+        LocalDatabase.shared.vehicles = travelling
+        LocalDatabase.shared.saveVehicles()
         
-        self.arrivedVehicles = transferringVehicles
+        // Save the City with the arrived vehicles
         
-        if let city = cityData {
-            for vehicle in transferringVehicles {
-            
-                travellingVehicles.removeAll(where: { $0.id == vehicle.id })
-                city.garage.vehicles.append(vehicle)
+        if let city = cityData, !transferring.isEmpty {
+            for vehicle in transferring {
                 
-                // Achievement
-                GameMessageBoard.shared.newAchievement(type: .vehicleLanding(vehicle: vehicle), message: nil)
+                // Don't reccord the same vehicle twice
+                if city.garage.vehicles.contains(vehicle) {
+                    continue
+                } else {
+                    city.garage.vehicles.append(vehicle)
+                    
+                    // Achievement
+                    GameMessageBoard.shared.newAchievement(type: .vehicleLanding(vehicle: vehicle), message: nil)
+                    
+                    // FIXME: - Create Notification
+                    // Let the scene know that there is a new vehicle arriving
+                }
             }
             
             do {
@@ -165,47 +211,24 @@ class CityController:ObservableObject {
             }
         }
         
-        LocalDatabase.shared.vehicles = travellingVehicles
+        // Update both Vehicle lists
         self.arrivedVehicles = cityData?.garage.vehicles ?? []
+        self.travelVehicles = travelling
         
-        /*
-        SKNS.arrivedVehiclesInGuildFile { gVehicles, error in
-            if let gVehicles:[SpaceVehicleContent] = gVehicles {
-                self.allVehicles = gVehicles
-                print("Guild garage vehicles: \(gVehicles.count)")
-                let cityOwner = self.city?.owner ?? [:]
-                let ownerID = cityOwner["id"] as? UUID ?? UUID()
-                
-                for vehicle in gVehicles {
-                    
-                    if vehicle.owner == ownerID {
-                        self.cityVehicles.append(vehicle)
-                    }
-                    
-                    if vehicle.owner == self.player.id {
-                        print("Vehicle is mine: \(vehicle.engine)")
-                        print("Contents (count): \(vehicle.boxes.count + vehicle.tanks.count + vehicle.batteries.count + vehicle.passengers.count + vehicle.peripherals.count)")
-                        
-                        // Bring contents to city
-                        // Update City
-                        // Post city update
-                    }
-                }
-            } else {
-                print("⚠️ Error: Could not get arrived vehicles. error -> \(error?.localizedDescription ?? "n/a")")
-            }
-        }
-        */
+        // TODO: - Check Vehicle Registration
         
     }
     
     /// Unloads a `SpaceVehicle` to the city
     func unload(vehicle:SpaceVehicle) {
         
-        var travelling = LocalDatabase.shared.vehicles
-        
         guard let city = cityData else { return }
-        guard travelling.contains(vehicle) else { return }
+        
+        var cityVehicles = city.garage.vehicles
+        
+        guard cityVehicles.contains(vehicle) else { return }
+        
+        // Transfer Vehicle's Contents
         
         for box in vehicle.boxes {
             city.boxes.append(box)
@@ -227,15 +250,24 @@ class CityController:ObservableObject {
             city.peripherals.append(peripheral)
         }
         
-        travelling.removeAll(where: { $0.id == vehicle.id })
-        LocalDatabase.shared.vehicles = travelling
-        LocalDatabase.shared.saveVehicles()
+        cityVehicles.removeAll(where: { $0.id == vehicle.id })
+        
+        // Update data
+        self.arrivedVehicles = cityVehicles
+        
+        city.garage.vehicles = cityVehicles
         
         // Save
         do {
             try LocalDatabase.shared.saveCity(city)
         } catch {
             print("Error Saving City: \(error.localizedDescription)")
+        }
+        
+        // FIXME: - Server Update:
+        // Delete vehicles that arrived and has unpacked
+        if let registration = vehicle.registration {
+            print("Delete vehicle from SErver Dataabase. VID: \(registration)")
         }
     }
     
@@ -350,5 +382,15 @@ class CityController:ObservableObject {
             }
             print("Added 10 tanks")
         }
+    }
+    
+    // MARK: - Lab
+    
+    func labSelect(recipe:Recipe) {
+        self.labSelection = .recipe(name: recipe)
+    }
+    
+    func labSelect(tech:CityTech) {
+        self.labSelection = .tech(name: tech)
     }
 }

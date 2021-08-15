@@ -66,7 +66,7 @@ struct MyCityView: View {
                 case .hab:
                     CityHabView(people: $cityData.inhabitants, selection: nil)
                 case .lab:
-                    CityLabView()
+                    CityLabView(controller:controller)
                 case .rss:
                     HStack {
                         Spacer()
@@ -85,7 +85,8 @@ struct MyCityView: View {
                         Spacer()
                     }
                     
-                case .rocket: CityGarageView(controller: controller, selectedVehicle: nil)
+                case .rocket:
+                    CityGarageView(controller: controller, selectedVehicle: nil)
             }
             
             /*
@@ -156,7 +157,7 @@ struct MyCityView: View {
 
 struct MyCityView_Previews: PreviewProvider {
     
-    static let menu:CityMenuItem = CityMenuItem.rocket
+    static let menu:CityMenuItem = CityMenuItem.lab
     
     static var previews: some View {
         VStack {

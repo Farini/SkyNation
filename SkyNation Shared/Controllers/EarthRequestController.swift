@@ -66,6 +66,7 @@ class EarthRequestController:ObservableObject {
         
         // Get people from Generator
 //        LocalDatabase.shared.gameGenerators?.update()
+        
     }
     
     /// Updates Variables with the PayloadOrder passed

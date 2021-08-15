@@ -615,7 +615,20 @@ struct GamePackage {
  */
 
 extension TimeInterval {
+    
+    /// The Time interval that represents 24 hours
     static var oneDay:TimeInterval = 60.0 * 60.0 * 24.0
+    
+    /// Returns a string with Hours, Minutes and seconds of the TimeInterval value
+    func stringFromTimeInterval() -> String {
+        
+        let time = NSInteger(self)
+        
+        let seconds = time % 60
+        let minutes = (time / 60) % 60
+        let hours = (time / 3600)
+        
+        return String(format: "%dh %0.2dm %0.2ds", hours, minutes, seconds)
+        
+    }
 }
-
-

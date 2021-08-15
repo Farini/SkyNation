@@ -15,16 +15,35 @@ struct CityGarageView: View {
     
     var body: some View {
         HStack {
-            List() {
-                Text("Rockets")
-                ForEach(controller.arrivedVehicles) { vehicle in
-                    SpaceVehicleRow(vehicle: vehicle)
-                        .onTapGesture {
-                            self.selectedVehicle = vehicle
-                        }
+            
+            List {
+                Section(header: Text("Arrived")) {
+                    ForEach(controller.arrivedVehicles) { vehicle in
+                        SpaceVehicleRow(vehicle: vehicle)
+                            .onTapGesture {
+                                self.selectedVehicle = vehicle
+                            }
+                    }
+                    if controller.arrivedVehicles.isEmpty {
+                        Text("< No Vehicles Arrived >")
+                            .foregroundColor(.gray)
+                    }
+                }
+                
+                Section(header: Text("Travelling")) {
+                    ForEach(controller.travelVehicles) { vehicle in
+                        SpaceVehicleRow(vehicle: vehicle)
+                            .onTapGesture {
+                                self.selectedVehicle = vehicle
+                            }
+                    }
+                    if controller.travelVehicles.isEmpty {
+                        Text("< Empty >")
+                            .foregroundColor(.gray)
+                    }
                 }
             }
-            .frame(width:200)
+            .frame(minWidth:180, maxWidth:200, minHeight:300, maxHeight:.infinity)
             
             VStack {
                 if let vehicle = selectedVehicle {
@@ -39,7 +58,7 @@ struct CityGarageView: View {
                                 controller.unload(vehicle: vehicle)
                             }
                             .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
-                            .disabled(vehicle.arriveDate().compare(Date()) == .orderedDescending)
+                            .disabled(controller.travelVehicles.contains(vehicle))
                             
                         }
                         Spacer()
@@ -49,11 +68,15 @@ struct CityGarageView: View {
                     HStack {
                         Spacer()
                         Text("Select a Vehicle")
+                            .foregroundColor(.gray)
                             .padding()
                         Spacer()
                     }
                 }
             }
+        }
+        .onAppear() {
+            controller.updateVehiclesLists()
         }
     }
 }

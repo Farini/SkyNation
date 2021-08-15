@@ -113,6 +113,7 @@ class SKNS {
                         completion?(responsePlayer, nil)
                     }
                     return
+                    
                 } else {
                     
                     if let notFound:NotFoundResponse = try? JSONDecoder().decode(NotFoundResponse.self, from: data) {
@@ -120,6 +121,12 @@ class SKNS {
                             print("Not Found")
                             SKNS.newLogin { newPlayerUpdate, newError in
                                 completion?(newPlayerUpdate, newError)
+                                return
+                            }
+                        } else if notFound.reason == "Wrong Pass" {
+                            SKNS.requestNewPass { pUpdate, pError in
+                                completion?(pUpdate, pError)
+                                return
                             }
                         }
                     } else {
@@ -141,7 +148,7 @@ class SKNS {
         
     }
     
-    /// NLogin
+    /// Create Player Login
     static func newLogin(completion:((PlayerUpdate?, Error?) -> ())?) {
         
         guard let localPlayer = LocalDatabase.shared.player else { return }
@@ -685,6 +692,101 @@ class SKNS {
         task.resume()
     }
     
+    static func readChat(guildID:UUID, completion:(([ChatMessage], Error?) -> ())?) {
+        
+        let url = URL(string: "\(baseAddress)/player/chat/read/\(guildID.uuidString)")!
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                DispatchQueue.main.async {
+                    print("Data returning")
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .secondsSince1970
+                    do {
+                        let messages = try decoder.decode([ChatMessage].self, from: data)
+                        completion?(messages, nil)
+                        return
+                    }catch{
+                        
+                        if let gameError = try? decoder.decode(GameError.self, from: data) {
+                            print("Error decoding.: \(gameError.reason)")
+                            completion?([], error)
+                            
+                        } else {
+                            print("Error - Something else has happened")
+                            completion?([], error)
+                        }
+                    }
+                }
+            } else {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?([], error)
+                }
+            }
+        }
+        task.resume()
+        
+    }
+    
+    static func postChat(message:ChatPost, completion:(([ChatMessage], Error?) -> ())?) {
+        
+        let url = URL(string: "\(baseAddress)/player/chat/message/\(message.guildID)")!
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.POST.rawValue
+        
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+//        request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
+        
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        
+        guard let data = try? encoder.encode(message) else { fatalError() }
+        
+        request.httpBody = data
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                DispatchQueue.main.async {
+                    print("Data returning")
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .secondsSince1970
+                    do {
+                        let messages = try decoder.decode([ChatMessage].self, from: data)
+                        completion?(messages, nil)
+                        return
+                    }catch{
+                        
+                        if let gameError = try? decoder.decode(GameError.self, from: data) {
+                            print("Error decoding.: \(gameError.reason)")
+                            completion?([], error)
+                            
+                        } else {
+                            print("Error - Something else has happened")
+                            completion?([], error)
+                        }
+                    }
+                }
+            } else {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?([], error)
+                }
+            }
+        }
+        task.resume()
+        
+    }
+    
     /// Creates a Guild in the server
     /*
     static func createGuild(localPlayer:SKNUserPost, guildName:String, completion:((Data?, Error?) -> ())?) {
@@ -782,6 +884,7 @@ class SKNS {
         task.resume()
     }
     
+    /*
     static func loadCity(posdex:Posdex, completion:((CityData?, Error?) -> ())?) {
         
         print("Loading City")
@@ -914,6 +1017,7 @@ class SKNS {
         }
         task.resume()
     }
+    */
     
     // MARK: - Outpost
     

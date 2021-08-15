@@ -67,11 +67,6 @@ class LabActivity:Codable, Identifiable {
             station.unlockedRecipes.append(recipe)
         }
         
-        // 2 - Tech unlock
-//        if let techItem = TechItems(rawValue: activityName) {
-//            // let mid = LocalDatabase.shared.builder.
-//        }
-        
         // 3 - BuildItem
         
         // Save

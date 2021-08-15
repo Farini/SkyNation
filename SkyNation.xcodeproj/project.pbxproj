@@ -305,6 +305,9 @@
 		85487F2D26C78D3B00EBC070 /* CityGarageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F2C26C78D3B00EBC070 /* CityGarageView.swift */; };
 		85487F2E26C78D3B00EBC070 /* CityGarageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F2C26C78D3B00EBC070 /* CityGarageView.swift */; };
 		85487F2F26C78D3B00EBC070 /* CityGarageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F2C26C78D3B00EBC070 /* CityGarageView.swift */; };
+		85487F3226C9930500EBC070 /* GuildChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F3126C9930500EBC070 /* GuildChatView.swift */; };
+		85487F3326C9930500EBC070 /* GuildChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F3126C9930500EBC070 /* GuildChatView.swift */; };
+		85487F3426C9930500EBC070 /* GuildChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F3126C9930500EBC070 /* GuildChatView.swift */; };
 		8559201525959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
 		8559201625959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
 		8559201725959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
@@ -395,10 +398,6 @@
 		859281FC25E9529C001233BE /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859281FB25E9529C001233BE /* TutorialView.swift */; };
 		859281FD25E9529C001233BE /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859281FB25E9529C001233BE /* TutorialView.swift */; };
 		859281FE25E9529C001233BE /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859281FB25E9529C001233BE /* TutorialView.swift */; };
-		8592820825EA2D91001233BE /* Generators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592820725EA2D91001233BE /* Generators.swift */; };
-		8592820925EA2D91001233BE /* Generators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592820725EA2D91001233BE /* Generators.swift */; };
-		8592820A25EA2D91001233BE /* Generators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592820725EA2D91001233BE /* Generators.swift */; };
-		8592820B25EA2D91001233BE /* Generators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592820725EA2D91001233BE /* Generators.swift */; };
 		8592821225EA3287001233BE /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592821125EA3287001233BE /* City.swift */; };
 		8592821325EA3287001233BE /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592821125EA3287001233BE /* City.swift */; };
 		8592821425EA3287001233BE /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592821125EA3287001233BE /* City.swift */; };
@@ -657,6 +656,7 @@
 		85487F2226C63F9800EBC070 /* CityTech.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityTech.swift; sourceTree = "<group>"; };
 		85487F2826C6F47100EBC070 /* PlayerCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCardView.swift; sourceTree = "<group>"; };
 		85487F2C26C78D3B00EBC070 /* CityGarageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityGarageView.swift; sourceTree = "<group>"; };
+		85487F3126C9930500EBC070 /* GuildChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildChatView.swift; sourceTree = "<group>"; };
 		8559201425959A4300CF5467 /* SideMenuNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuNode.swift; sourceTree = "<group>"; };
 		8569A303259F7F990057A518 /* dissolve.fragment.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dissolve.fragment.txt; sourceTree = "<group>"; };
 		8569A30E259F81110057A518 /* CutionStripesColored.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CutionStripesColored.fsh; sourceTree = "<group>"; };
@@ -688,7 +688,6 @@
 		858D7C5325D60FA300A45CF9 /* GameButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameButtons.swift; sourceTree = "<group>"; };
 		85927D9425DB1D800071D98B /* VehicleTrunkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTrunkView.swift; sourceTree = "<group>"; };
 		859281FB25E9529C001233BE /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
-		8592820725EA2D91001233BE /* Generators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Generators.swift; sourceTree = "<group>"; };
 		8592821125EA3287001233BE /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		8592822C25EC44F7001233BE /* GuildExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildExplorerView.swift; sourceTree = "<group>"; };
 		8592823525EC4DD3001233BE /* GuildController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildController.swift; sourceTree = "<group>"; };
@@ -891,7 +890,6 @@
 				8536F32A258D412600B509D2 /* LocalDatabase.swift */,
 				8517EE5125FE8C9C00C34C54 /* ServerData.swift */,
 				85E6ECF725C9D92B00229E18 /* ServerAPI.swift */,
-				8592820725EA2D91001233BE /* Generators.swift */,
 				85E2C41C26BCDEF0003315F2 /* SKNConsumable.storekit */,
 			);
 			path = Constants;
@@ -936,7 +934,7 @@
 				859281FA25E95279001233BE /* Tutorials */,
 				85D3BB1526AB249700B6AA36 /* Modifiers */,
 				85E6ED1C25CF518500229E18 /* BackendView.swift */,
-				859D683125DD8B9F005DD42C /* GameMessagesView.swift */,
+				85487F3026C992DB00EBC070 /* Game Messages */,
 				859D683925DD91DB005DD42C /* GameShoppingView.swift */,
 			);
 			path = Views;
@@ -1185,6 +1183,15 @@
 				85487F2826C6F47100EBC070 /* PlayerCardView.swift */,
 			);
 			path = Friends;
+			sourceTree = "<group>";
+		};
+		85487F3026C992DB00EBC070 /* Game Messages */ = {
+			isa = PBXGroup;
+			children = (
+				859D683125DD8B9F005DD42C /* GameMessagesView.swift */,
+				85487F3126C9930500EBC070 /* GuildChatView.swift */,
+			);
+			path = "Game Messages";
 			sourceTree = "<group>";
 		};
 		8569A302259F7F7A0057A518 /* Shaders */ = {
@@ -1651,6 +1658,7 @@
 				8536F396258D475D00B509D2 /* Modules.swift in Sources */,
 				8536F3DA258D47D000B509D2 /* LabActivityView.swift in Sources */,
 				859D683A25DD91DB005DD42C /* GameShoppingView.swift in Sources */,
+				85487F3226C9930500EBC070 /* GuildChatView.swift in Sources */,
 				8536F2C2258D330300B509D2 /* GameViewController.swift in Sources */,
 				8592823625EC4DD3001233BE /* GuildController.swift in Sources */,
 				859D683225DD8B9F005DD42C /* GameMessagesView.swift in Sources */,
@@ -1714,7 +1722,6 @@
 				8569A3D125A6353C0057A518 /* GameActivityView.swift in Sources */,
 				8536F316258D361100B509D2 /* GameConstants.swift in Sources */,
 				857D9A2925C0820200626884 /* StartingViewController.swift in Sources */,
-				8592820825EA2D91001233BE /* Generators.swift in Sources */,
 				85797518259BD394004C54D2 /* ItemCollectionViews.swift in Sources */,
 				85E2C42226BD8A6E003315F2 /* StoreManager.swift in Sources */,
 				8536F2EA258D330300B509D2 /* GameController.swift in Sources */,
@@ -1770,7 +1777,6 @@
 				8569A34C25A3D9590057A518 /* AirComposition.swift in Sources */,
 				8536F39B258D475D00B509D2 /* TechTree.swift in Sources */,
 				8559201625959A4300CF5467 /* SideMenuNode.swift in Sources */,
-				8592820925EA2D91001233BE /* Generators.swift in Sources */,
 				8536F46E258D481700B509D2 /* CamControlNode.swift in Sources */,
 				8523338D25D76A9B004CB638 /* AirCompositionView.swift in Sources */,
 				8536F36F258D475D00B509D2 /* SceneHelpers.swift in Sources */,
@@ -1846,6 +1852,7 @@
 				8536F317258D361100B509D2 /* GameConstants.swift in Sources */,
 				85D3BAAF269DF78500B6AA36 /* MyCityView.swift in Sources */,
 				85960B9825D9B3F000AC9592 /* EDLInventoryView.swift in Sources */,
+				85487F3326C9930500EBC070 /* GuildChatView.swift in Sources */,
 				85797519259BD394004C54D2 /* ItemCollectionViews.swift in Sources */,
 				8536F2EB258D330300B509D2 /* GameController.swift in Sources */,
 				85487F2426C63F9800EBC070 /* CityTech.swift in Sources */,
@@ -1918,6 +1925,7 @@
 				8536F398258D475D00B509D2 /* Modules.swift in Sources */,
 				8536F3DC258D47D000B509D2 /* LabActivityView.swift in Sources */,
 				859D683C25DD91DB005DD42C /* GameShoppingView.swift in Sources */,
+				85487F3426C9930500EBC070 /* GuildChatView.swift in Sources */,
 				8536F2E4258D330300B509D2 /* GameViewController.swift in Sources */,
 				8592823825EC4DD3001233BE /* GuildController.swift in Sources */,
 				859D683425DD8B9F005DD42C /* GameMessagesView.swift in Sources */,
@@ -1981,7 +1989,6 @@
 				8569A3D325A6353C0057A518 /* GameActivityView.swift in Sources */,
 				8536F318258D361100B509D2 /* GameConstants.swift in Sources */,
 				8579751A259BD394004C54D2 /* ItemCollectionViews.swift in Sources */,
-				8592820A25EA2D91001233BE /* Generators.swift in Sources */,
 				8536F2EC258D330300B509D2 /* GameController.swift in Sources */,
 				85E2C42426BD8A6E003315F2 /* StoreManager.swift in Sources */,
 				8536F380258D475D00B509D2 /* Station.swift in Sources */,
@@ -2063,7 +2070,6 @@
 				8536F319258D361100B509D2 /* GameConstants.swift in Sources */,
 				8592825325EED6EF001233BE /* SpaceVehicleNode.swift in Sources */,
 				85E2C41B26BB635E003315F2 /* OutpostController.swift in Sources */,
-				8592820B25EA2D91001233BE /* Generators.swift in Sources */,
 				8569A34E25A3D9590057A518 /* AirComposition.swift in Sources */,
 				8536F375258D475D00B509D2 /* Persistance.swift in Sources */,
 				8517EE3725FC11EF00C34C54 /* Guild.swift in Sources */,

@@ -43,8 +43,8 @@ struct RecipeDetailView:View {
                 Text("\(recipe.elaborate)")
                     .foregroundColor(.gray)
                     .font(.caption)
-                Text("⏱ \(recipe.getDuration())")
-                    .font(.largeTitle)
+                Text("⏱ \(TimeInterval(recipe.getDuration()).stringFromTimeInterval())")
+                    .font(.title)
                     .padding()
             }
             
@@ -123,9 +123,7 @@ struct RecipeDetailView:View {
                 
             }
         }
-        
     }
-    
 }
 
 
