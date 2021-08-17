@@ -63,7 +63,7 @@ class LocalDatabase {
         bcf.countStyle = .file
         
         let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
-        print("Saving Game Size: \(dataSize)")
+        print("Saving Game Settings Size: \(dataSize)")
         
         if !FileManager.default.fileExists(atPath: fileUrl.path) {
             FileManager.default.createFile(atPath: fileUrl.path, contents: encodedData, attributes: nil)
@@ -124,7 +124,7 @@ class LocalDatabase {
         
         do{
             try encodedData.write(to: fileUrl, options: .atomic)
-            print("Saved locally")
+            print("Saved Builder locally")
         }catch{
             print("Error writting data to local url: \(error)")
         }
@@ -191,7 +191,7 @@ class LocalDatabase {
         
         do{
             try encodedData.write(to: fileUrl, options: .atomic)
-            print("Saved locally")
+            print("Saved Messages locally")
         }catch{
             print("Error writting data to local url: \(error)")
         }
@@ -211,7 +211,7 @@ class LocalDatabase {
         bcf.countStyle = .file
         
         let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
-        print("Saving Game Size: \(dataSize)")
+        print("Saving Game Station Size: \(dataSize)")
         
         let fileUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.stationFile)
         
@@ -223,7 +223,7 @@ class LocalDatabase {
         
         do{
             try encodedData.write(to: fileUrl, options: .atomic)
-            print("Saved locally")
+//            print("Saved Station locally")
         }catch{
             print("Error writting data to local url: \(error)")
         }
@@ -282,7 +282,7 @@ class LocalDatabase {
         
         do{
             try encodedData.write(to: fileUrl, options: .atomic)
-            print("Saved locally")
+            print("Saved Vehicles locally")
         }catch{
             print("Error writting data to local url: \(error)")
         }
@@ -329,7 +329,7 @@ class LocalDatabase {
         encoder.outputFormatting = .prettyPrinted
         
         guard let encodedData:Data = try? encoder.encode(player) else { fatalError() }
-        print("Saving Player")
+//        print("Saving Player")
         
         let bcf = ByteCountFormatter()
         bcf.allowedUnits = [.useKB]
@@ -347,7 +347,7 @@ class LocalDatabase {
         } else {
             do {
                 try encodedData.write(to: fileUrl, options: .atomic)
-                print("Saved Player locally")
+//                print("Saved Player locally")
                 return true
             }catch{
                 print("Error writting data to local url: \(error)")

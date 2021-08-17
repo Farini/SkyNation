@@ -106,11 +106,16 @@ struct GameLogic {
     /// Water consumption per `Person`
     static let waterConsumption:Int = 2
     
+    /// The default time a `Person` spends studying
+    static let personStudyTime:Double = 60.0 * 60.0 * 24.0 * 3.0
+    
     /// Cost of building a `BioBox` (Water)
     static let bioBoxWaterConsumption:Int = 3
+    
     /// Cost of building a `BioBox` (Energy)
     static let bioBoxEnergyConsumption:Int = 7
     
+    /// The time that takes to a `SpaceVehicle` can reach Mars.
     static let vehicleTravelTime:Double = 60.0 * 60.0 * 24 * 3
     
     // MARK: - Functions
@@ -194,7 +199,7 @@ struct GameFormatters {
 }
 
 // MARK: - File System
-
+/*
 class GameFiles {
     
     static let shared = GameFiles()
@@ -217,6 +222,7 @@ class GameFiles {
         return appSupportFolder
     }
 }
+*/
 
 // MARK: - Graphics
 
@@ -400,219 +406,6 @@ extension AddingTrussItemProblem: LocalizedError {
     }
 }
 
-// MARK: - Shopping
-
-/*
-
-enum GameRawPackage:String, Codable, CaseIterable {
-    
-    case fiveDollars
-    case tenDollars
-    case twentyDollars
-    
-    var tokenAmount:Int {
-        switch self {
-            case .fiveDollars: return 5
-            case .tenDollars: return 10
-            case .twentyDollars: return 20
-        }
-    }
-    
-    var moneyAmount:Int {
-        switch self {
-            case .fiveDollars: return 150000
-            case .tenDollars: return 320000
-            case .twentyDollars: return 750000
-        }
-    }
-    
-    var boxesAmount:Int {
-        switch self {
-            case .fiveDollars: return 5
-            case .tenDollars: return 12
-            case .twentyDollars: return 25
-        }
-    }
-    
-    var tanksAmount:Int {
-        switch self {
-            case .fiveDollars: return 8
-            case .tenDollars: return 18
-            case .twentyDollars: return 45
-        }
-    }
-    
-    var peopleAmount:Int {
-        switch self {
-            case .fiveDollars: return 2
-            case .tenDollars: return 5
-            case .twentyDollars: return 12
-        }
-    }
-    
-    var gamePackage:GamePackage {
-        
-        let tokens = tokenAmount
-        let money = moneyAmount
-        let boxAmt = boxesAmount
-        let tankAmt = tanksAmount
-        let staffAmount = peopleAmount
-        
-        
-        let boxes = generateBoxes(amt: boxAmt)
-        let tanks = generateTanks(amt: tankAmt)
-        let ppl = generateNewPeople(amt: staffAmount)
-        
-        return GamePackage(id: UUID(), tokens: tokens, money: money, boxes: boxes, tanks: tanks, staff: ppl)
-    }
-    
-    func generateBoxes(amt:Int) -> [StorageBox] {
-        var boxes:[StorageBox] = []
-        for _ in 0...amt {
-            let newType = Ingredient.allCases.randomElement()!
-            var newVar = newType.boxCapacity()
-            if [Ingredient.wasteSolid, Ingredient.wasteLiquid, Ingredient.Battery].contains(newType) {
-                // Set current to zero (for some cases)
-                newVar = 0
-            }
-            let newBox = StorageBox(ingType: newType, current: newVar)
-            boxes.append(newBox)
-        }
-        return boxes
-    }
-    
-    func generateTanks(amt:Int) -> [Tank] {
-        var tanks:[Tank] = []
-        for _ in 0...amt {
-            let newType = TankType.allCases.randomElement()!
-            var newVar = newType.capacity
-            if [TankType.co2, TankType.ch4].contains(newType) {
-                newVar = 0
-            }
-            let newTank = Tank(type: newType, full: newVar == 0 ? false:true)
-            tanks.append(newTank)
-        }
-        return tanks
-    }
-    
-    func generateNewPeople(amt:Int) -> [Person] {
-        var people:[Person] = []
-        for _ in 0...amt {
-            let newPerson = Person(random: true)
-            newPerson.intelligence = max(80, newPerson.intelligence)
-            newPerson.happiness = 100
-            newPerson.healthPhysical = 100
-            
-            while newPerson.skills.count < 4 {
-                let newSkill = Skills.allCases.randomElement()!
-                if let idx = newPerson.skills.firstIndex(where: { $0.skill == newSkill }) {
-                    newPerson.skills[idx].level += 1
-                } else {
-                    newPerson.skills.append(SkillSet(skill: newSkill, level: 1))
-                }
-            }
-            people.append(newPerson)
-        }
-        return people
-    }
-    
-}
-
-/// A Package that can be purchased at the store
-struct GamePackage {
-    
-    var id:UUID
-    var tokens:Int
-    var money:Int
-    var boxes:[StorageBox]
-    var tanks:[Tank]
-    var staff:[Person]
-    
-    enum Kit {
-        case SurvivalKit
-        case BotanistGarden
-        case BuildersTech
-        case Humanitarian
-        
-        /// Returns the Resources that this Kit has
-        func makeResources(level:StorePrice) -> [RSSType] {
-            var resources:[RSSType] = []
-            switch self {
-                case .SurvivalKit:
-                    for _ in 0...level.multiplier {
-                        resources.append(.Tank(object: Tank(type: .o2, full: true)))
-                        resources.append(.Tank(object: Tank(type: .o2, full: true)))
-                        resources.append(.Tank(object: Tank(type: .h2o, full: true)))
-                        resources.append(.Tank(object: Tank(type: .h2o, full: true)))
-                        if Bool.random() == true {
-                            resources.append(.Peripheral(object: PeripheralObject(peripheral: .ScrubberCO2)))
-                        } else {
-                            resources.append(.Peripheral(object: PeripheralObject(peripheral: .Electrolizer)))
-                        }
-                    }
-                case .BotanistGarden:
-                    for _ in 0...level.multiplier {
-                        resources.append(.Box(object: StorageBox(ingType: .Fertilizer, current: Ingredient.Fertilizer.boxCapacity())))
-                        resources.append(.Box(object: StorageBox(ingType: .Fertilizer, current: Ingredient.Fertilizer.boxCapacity())))
-                        resources.append(.Box(object: StorageBox(ingType: .wasteSolid, current: 0)))
-                        resources.append(.Box(object: StorageBox(ingType: .Food, current: Ingredient.Food.boxCapacity())))
-                        resources.append(.Tank(object: Tank(type: .h2o, full: true)))
-                    }
-                case .BuildersTech:
-                    for _ in 0...level.multiplier {
-                        resources.append(.Box(object: StorageBox(ingType: .Aluminium, current: Ingredient.Aluminium.boxCapacity())))
-                        resources.append(.Box(object: StorageBox(ingType: .Copper, current: Ingredient.Copper.boxCapacity())))
-                        resources.append(.Box(object: StorageBox(ingType: .Circuitboard, current: Ingredient.Circuitboard.boxCapacity())))
-                        if Bool.random() == true {
-                            resources.append(.Peripheral(object: PeripheralObject(peripheral: .Methanizer)))
-                        } else {
-                            resources.append(.Peripheral(object: PeripheralObject(peripheral: .WaterFilter)))
-                        }
-                    }
-                default: break
-            }
-            return resources
-                    
-        }
-        
-        /// Makes a Gifted person (only if self is .Humanitarian)
-        func makePerson(level:StorePrice) -> Person? {
-            guard self == .Humanitarian else { return nil }
-            
-            let extraSkills = level == .five ? 2:level == .ten ? 3:5
-            let person = Person(random:true)
-            let learnable:[Skills] = [.Biologic, .Datacomm, .Electric, .Material, .Mechanic, .Medic, .SystemOS]
-            person.name = "The One"
-            for _ in 0...extraSkills {
-                person.learnNewSkill(type: learnable.randomElement()!)
-            }
-            return person
-        }
-        
-    }
-    
-    enum StorePrice {
-        case five
-        case ten
-        case twenty
-        
-        var multiplier:Int {
-            switch self {
-                case .five: return 3
-                case .ten: return 7
-                case .twenty: return 16
-            }
-        }
-    }
-    
-    static func makePackage(price:Int) -> GamePackage {
-        let new = GamePackage(id: UUID(), tokens: price * 3, money: price * 1000, boxes: [], tanks: [], staff: [])
-        return new
-    }
-    
-}
-
- */
 
 extension TimeInterval {
     

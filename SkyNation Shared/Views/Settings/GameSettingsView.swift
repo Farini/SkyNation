@@ -11,17 +11,11 @@ struct GameSettingsView: View {
     @ObservedObject var guildController:GuildController
     @ObservedObject var controller = GameSettingsController()
     
-    
     /// When turned on, this shows the "close" button
     private var inGame:Bool = false
     
-    init(guildController:GuildController) {
-        print("Initializing Game Settings View")
-        self.guildController = guildController
-    }
-    
-    init(inGame:Bool? = true) {
-        self.inGame = true
+    init(inGame:Bool? = false) {
+        self.inGame = inGame!
         self.guildController = GuildController(autologin: true)
     }
     
@@ -182,7 +176,7 @@ struct GameSettingsView: View {
 
 struct GameSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        GameSettingsView(guildController: GuildController(autologin: false))
+        GameSettingsView()
     }
 }
 

@@ -90,6 +90,7 @@ class GameSettingsController:ObservableObject {
             }
         }
     }
+    
     @Published var hasChanges:Bool
     @Published var playerID:UUID
     @Published var isNewPlayer:Bool
@@ -106,7 +107,6 @@ class GameSettingsController:ObservableObject {
     @Published var myGuild:GuildFullContent?
     
     // Others
-    
     @Published var fetchedString:String?
     
     /// A list of things to load
@@ -147,7 +147,9 @@ class GameSettingsController:ObservableObject {
         var items:[String] = []
         
         if GameSettings.onlineStatus == true {
+            
             if let player = LocalDatabase.shared.player {
+                
                 items.append("★ Loaded Player \(player.name)")
                 if let pid = player.serverID {
                     items.append("L-PID \(pid.uuidString)")
@@ -165,23 +167,6 @@ class GameSettingsController:ObservableObject {
                 } else {
                     items.append("Loading station")
                 }
-                
-                // Server Data Loaded
-//                if let user = user {
-//                    if let pid = user.serverID {
-//                        items.append("U-PID \(pid.uuidString)")
-//                    } else {
-//                        items.append("< No server ID >")
-//                    }
-//                    if let gid = user.guildID {
-//                        items.append("Guild: \(gid.uuidString)")
-//                    } else {
-//                        items.append("< No Guild ID >")
-//                    }
-//                } else {
-//                    items.append("User not connected")
-//                }
-                
             }
         } else {
             items.append("🚫 Offline Mode")
@@ -441,18 +426,19 @@ class GameSettingsController:ObservableObject {
                     }
                     DispatchQueue.main.async {
                         builder.prepareScene(station: station) { loadedScene in
+                            
                             builder.scene = loadedScene
-                            LocalDatabase.shared.saveStation(station: station)
                             self.stationSceneLoaded = true
                             self.updateLoadedList()
                             self.loadServerData()
                             LocalDatabase.shared.saveStation(station: station)
-                            if let player = LocalDatabase.shared.player {
-                                let pres = LocalDatabase.shared.savePlayer(player: player)
-                                print("Station saved. Player: \(pres)")
-                            }
-                            print("⚠️ Are we finally ready? 🏆")
-                            print("Enable buttons now ???")
+                            
+//                            if let player = LocalDatabase.shared.player {
+//                                let pres = LocalDatabase.shared.savePlayer(player: player)
+//                                print("Station saved. Player: \(pres)")
+//                            }
+                            
+                            print("⚠️ Game Data Loaded 🏆")
                         }
                     }
                 }

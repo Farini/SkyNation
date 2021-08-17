@@ -18,13 +18,14 @@ class DataTests: XCTestCase {
     }
     
     func testTokens() {
+        
         let myPID:UUID = UUID()
         let store = Wallet(lid: myPID)
         print("My Store")
         print("Token count: \(store.tokens.count)")
         
         for t in store.tokens {
-            print("Token \(t.origin), pid:\(t.user), TokenID:\(t.id)")
+            print("Token \(t.origin), DBPlayer ID:\(t.dbUser), TokenID:\(t.id)")
         }
         guard let player = LocalDatabase.shared.player else {
             fatalError()
@@ -49,6 +50,33 @@ class DataTests: XCTestCase {
         print("Count after purchase: \(store.tokens.count)")
         print("Valid Tokens: \(player.countTokens().count)")
     }
+    
+    func testFreebies() {
+        
+        print("\n\n * Testing Freebies + Dates")
+        
+        guard let player = LocalDatabase.shared.player else {
+            XCTFail()
+            return
+        }
+        
+        let lastDate = player.wallet.freebiesLast // player.lastSeen
+        let df = GameFormatters.dateFormatter
+        let lastString = df.string(from: lastDate)
+        
+        print("Date Last Freebies: \(lastString)")
+        
+        let delta:Double = player.wallet.timeToGenerateNextFreebie()
+        print("Delta: \(delta)")
+        
+        let dayAgo = Date().addingTimeInterval(TimeInterval.oneDay * -1.0)
+        let dayAgoString = df.string(from: dayAgo)
+        print("Day Ago: \(dayAgoString)")
+        
+        print("\n Finished Testing Freebies \n\n")
+        
+    }
+    
     
     
     func testOutpostContribution() {
@@ -278,7 +306,7 @@ class DataTests: XCTestCase {
         
         print("\n --- Accounting Start ---")
         
-        GameSettings.shared.debugAccounting = true
+//        GameSettings.shared.debugAccounting = true
         let station = LocalDatabase.shared.station
         
         // Part 1 (Validation)

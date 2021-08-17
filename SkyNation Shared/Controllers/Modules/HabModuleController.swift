@@ -104,7 +104,7 @@ class HabModuleController: ObservableObject {
         print("Will Study? \(result)")
         if result == true {
             // Add activity to Person
-            let studyActivity = LabActivity(time: 60*60*24*5, name: subject.rawValue)
+            let studyActivity = LabActivity(time: GameLogic.personStudyTime, name: subject.rawValue)
             selected.activity = studyActivity
             messages.append("Studying \(subject.rawValue)")
             save()

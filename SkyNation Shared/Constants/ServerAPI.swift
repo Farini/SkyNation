@@ -79,7 +79,7 @@ class SKNS {
         
         // Body with `PlayerLogin`
         if let data = try? encoder.encode(playerLogin) {
-            print("\n\nAdding Data")
+            print("\n\nLogin Data")
             request.httpBody = data
             let dataString = String(data:data, encoding: .utf8) ?? "n/a"
             print("DS: \(dataString)")

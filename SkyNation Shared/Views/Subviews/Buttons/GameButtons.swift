@@ -80,6 +80,16 @@ struct GameButtons: View {
                         Image(systemName: "xmark.circle")
                     }
                     .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                    
+                    Button("Test") {
+                        print("test")
+                    }
+                    .buttonStyle(GameButtonStyle())
+                    
+                    Button("Test 2") {
+                        print("test")
+                    }
+                    .buttonStyle(GameButtonStyle(labelColor: .red))
                 }
                 .padding()
                 
@@ -88,9 +98,9 @@ struct GameButtons: View {
                 Text("Error message").foregroundColor(.red)
             }
             
-            
             Divider()
             
+            // Bottom
             HStack {
                 Button(action: {
                     print("Back Button Pressed")
@@ -124,16 +134,9 @@ struct GameButtons: View {
     }
 }
 
-// MARK: - Previews
-
-struct GameButtons_Previews: PreviewProvider {
-    static var previews: some View {
-        GameButtons()
-    }
-}
-
 // MARK: - Styles
 
+/// Convenient Style for Circle Buttons - Mainly used in Headers.
 struct SmallCircleButtonStyle: ButtonStyle {
     
     var backColor:Color
@@ -151,7 +154,7 @@ struct SmallCircleButtonStyle: ButtonStyle {
 /// The Game's main button style
 struct NeumorphicButtonStyle: ButtonStyle {
     
-    var bgColor: Color
+    var bgColor:Color
     
     func makeBody(configuration: Self.Configuration) -> some View {
         MyButton(configuration: configuration)
@@ -162,26 +165,22 @@ struct NeumorphicButtonStyle: ButtonStyle {
         @Environment(\.isEnabled) private var isEnabled: Bool
         var body: some View {
             
-            
             configuration.label
                 .padding(8)
                 .background(
                     ZStack {
                         RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .shadow(color: .white,
+                            .shadow(color: .white.opacity(0.5),
                                     radius: configuration.isPressed ? 5: 8,
                                     x: configuration.isPressed ? -3: -5,
                                     y: configuration.isPressed ? -3: -5)
                             .blendMode(.overlay)
                         RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            
                             .fill(Color("DarkGray"))
                         
                         RoundedRectangle(cornerRadius: 8, style: .circular)
                             .strokeBorder(configuration.isPressed ? Color.orange:Color.gray)
-                        
                     }
-                    
                 )
                 .scaleEffect(configuration.isPressed ? 0.95: 1)
                 
@@ -192,3 +191,58 @@ struct NeumorphicButtonStyle: ButtonStyle {
     }
 }
 
+/// The Game's main button style
+struct GameButtonStyle:ButtonStyle {
+    
+    var labelColor:Color = .white
+    
+    func makeBody(configuration: Self.Configuration) -> some View {
+        MyButton(configuration: configuration, labelColor: labelColor)
+    }
+    
+    /// Pass a color if the label color is other than white.
+    init(labelColor:Color? = .white) {
+        self.labelColor = labelColor ?? Color.white
+    }
+    
+    struct MyButton: View {
+        
+        let configuration: ButtonStyle.Configuration
+        @Environment(\.isEnabled) private var isEnabled: Bool
+        var labelColor:Color = .white
+        
+        var body: some View {
+            
+            configuration.label
+                .padding(8)
+                .background(
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .shadow(color: .white.opacity(0.5),
+                                    radius: configuration.isPressed ? 5: 8,
+                                    x: configuration.isPressed ? -3: -5,
+                                    y: configuration.isPressed ? -3: -5)
+                            .blendMode(.overlay)
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .fill(Color("DarkGray"))
+                        
+                        RoundedRectangle(cornerRadius: 8, style: .circular)
+                            .strokeBorder(configuration.isPressed ? Color.orange:Color.gray)
+                    }
+                )
+                .scaleEffect(configuration.isPressed ? 0.95: 1)
+                
+                // Disabled State
+                .foregroundColor(isEnabled ? labelColor : Color.gray)
+                .animation(.spring())
+        }
+    }
+}
+
+// MARK: - Previews
+
+struct GameButtons_Previews: PreviewProvider {
+    static var previews: some View {
+        GameButtons()
+    }
+}

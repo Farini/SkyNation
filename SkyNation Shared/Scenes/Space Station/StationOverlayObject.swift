@@ -212,7 +212,7 @@ class StationOverlay:NSObject, SKSceneDelegate {
         newsPlaceholder.position.x = positionX
         
         newsPlaceholder.addChild(backNode)
-        print("Scene paused: \(scene.isPaused)")
+//        print("Scene paused: \(scene.isPaused)")
         
         let waiter = SKAction.wait(forDuration: 2.25)
         let runner = SKAction.fadeAlpha(to: 0, duration: 0.75)
@@ -255,7 +255,7 @@ class StationOverlay:NSObject, SKSceneDelegate {
         newsPlaceholder.position.x = positionX
         
         newsPlaceholder.addChild(backNode)
-        print("Scene paused: \(scene.isPaused)")
+//        print("Scene paused: \(scene.isPaused)")
         
         let waiter = SKAction.wait(forDuration: 2.25)
         let runner = SKAction.fadeAlpha(to: 0, duration: 0.75)

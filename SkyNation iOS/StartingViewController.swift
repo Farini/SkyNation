@@ -23,7 +23,7 @@ class StartingViewController: UIViewController {
     }
     
     func addStartingView() {
-        let startView = GameSettingsView(guildController: GuildController(autologin: true))
+        let startView = GameSettingsView()
         let controller = UIHostingController(rootView: startView)
         addChild(controller)
         controller.view.translatesAutoresizingMaskIntoConstraints = false
@@ -39,21 +39,9 @@ class StartingViewController: UIViewController {
     }
     
     @objc func startGame(_ notification:Notification) {
-        
-//        let stb = NSStoryboard(name: "Main", bundle: Bundle.main)
-        
         self.performSegue(withIdentifier: "startgame", sender: self)
-        
-//        if let newWindowController = stb.instantiateInitialController() as? NSWindowController {
-//
-//            if let newWindow = newWindowController.window {
-//                print("New Window here: \(newWindow.title)")
-//                newWindow.makeKeyAndOrderFront(self)
-//            }
-//
-//
-//        }
     }
+    
     /*
     // MARK: - Navigation
 

@@ -146,17 +146,12 @@ struct SkillsetView:View {
     }
 }
 
-
 struct PersonDetail:View {
-    
-    
     
     @ObservedObject var controller:HabModuleController
     var person:Person
     
     @State var fireAlert:Bool = false
-    
-    
     
     var body: some View {
         
@@ -170,7 +165,7 @@ struct PersonDetail:View {
             }
             .padding([.top], 8)
             
-            // Picture, name and Skills
+            // Picture, name and Skills (Top)
             HStack {
                 
                 Image(person.avatar)
@@ -186,12 +181,12 @@ struct PersonDetail:View {
                         Text("\(person.age)")
                     }
                     
-                    ProgressView(value: Float(person.intelligence), total:100.0) {
-                        
-                    }
+                    // Intelligence
+                    ProgressView(value: Float(person.intelligence), total:100.0) {}
                     .foregroundColor(.blue)
                     .accentColor(.orange)
                     
+                    // Skills
                     HStack {
                         ForEach(person.skills, id:\.skill) { skillSet in
                             GameImages.imageForSkill(skill: skillSet.skill)
@@ -229,7 +224,7 @@ struct PersonDetail:View {
                 if let activity = person.activity, person.isBusy() {
                     HStack {
                         Spacer()
-                        Button("Boost (-1 Token)") {
+                        Button("Boost (-1 Token/hr)") {
                             if let player = LocalDatabase.shared.player,
                                let token = player.requestToken() {
                                 let result = player.spendToken(token: token, save: true)
@@ -240,7 +235,6 @@ struct PersonDetail:View {
                                         person.activity = nil
                                     }
                                     controller.save()
-                                    
                                     controller.didSelect(person: person)
                                 }
                             }
@@ -250,8 +244,6 @@ struct PersonDetail:View {
                         Spacer()
                     }
                 }
-                
-                
                 
                 ForEach(controller.issues, id:\.self) { issue in
                     Text(issue)
@@ -382,13 +374,26 @@ struct PersonOrderView:View {
                     
                     ProgressView(value: Float(person.intelligence), total:100.0) {
                         HStack {
-                            ForEach(0..<person.skills.count) { idx in
-                                GameImages.imageForSkill(skill: person.skills[idx].skill)
+//                            person.skills.forEach { skset in
+//                                GameImages.imageForSkill(skill: skset.skill)
+//                                    .resizable()
+//                                    .aspectRatio(contentMode:.fit)
+//                                    .frame(width:22, height:22)
+//                            }
+                            let map = person.skills.compactMap({ $0.skill })
+                            ForEach(map, id:\.self) { skill in
+                                GameImages.imageForSkill(skill: skill)
                                     .resizable()
                                     .aspectRatio(contentMode:.fit)
                                     .frame(width:22, height:22)
-                                // Text("x\(person.skills[idx].level) ")
                             }
+//                            ForEach(0..<person.skills) { idx in
+//                                GameImages.imageForSkill(skill: person.skills[idx].skill)
+//                                    .resizable()
+//                                    .aspectRatio(contentMode:.fit)
+//                                    .frame(width:22, height:22)
+//                                // Text("x\(person.skills[idx].level) ")
+//                            }
                         }
                     }
                     .foregroundColor(.blue)
@@ -440,11 +445,11 @@ struct PersonSmall_Preview: PreviewProvider {
     }
 }
     
-    struct PersonOrder_Preview: PreviewProvider {
-        static var previews: some View {
-            PersonOrderView(person: Person(random: true))
-        }
+struct PersonOrder_Preview: PreviewProvider {
+    static var previews: some View {
+        PersonOrderView(person: Person(random: true))
     }
+}
 
 struct PersonDetail_Preview: PreviewProvider {
     

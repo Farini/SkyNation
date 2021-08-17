@@ -12,17 +12,12 @@ class GuildController:ObservableObject {
     @Published var news:String
     
     @Published var player:SKNPlayer?
-//    @Published var user:SKNPlayer?
     
     @Published var upPlayer:PlayerUpdate?
     
     @Published var guilds:[GuildSummary] = []
     @Published var highlightedGuild:GuildSummary? // The Guild to display (bigger)
     @Published var joinedGuild:GuildSummary?
-    
-    @Published var fGuilds:[Guild] = []
-    @Published var sGuild:Guild? = nil
-    
     
     /// Autologin should be `true` for inGame, and `false` for previews (no server)
     init(autologin:Bool) {
@@ -31,21 +26,14 @@ class GuildController:ObservableObject {
         
         if let player = LocalDatabase.shared.player {
             self.player = player
-            
-            print("Guild Controller")
-            print("Local id:\(player.id)")
-            print("Server id: \(player.playerID?.uuidString ?? "[none]")")
-            
+            print("Guild Controller. AutoLogin:\(autologin.description)")
+            print("Local id:\(player.id) Player id: \(player.playerID?.uuidString ?? "[none]")")
         }
         
         if autologin && GameSettings.onlineStatus {
             
-            self.loginUser()
-            
             let _ = ServerManager.shared
-            
-            // Temporary
-            self.fetchGuilds()
+            self.loginUser()
             
         } else {
             self.makeRandomData()
@@ -58,16 +46,15 @@ class GuildController:ObservableObject {
             DispatchQueue.main.async {
                 if let player:PlayerUpdate = player {
                     print("Player login: ID:\(player.id.uuidString), LID: \(player.localID)")
-//                    self.user = player
                     self.upPlayer = player
                 } else {
                     print("Did not find user. \(error?.localizedDescription ?? "")")
                 }
             }
         }
-        
     }
     
+    /// Fetches the Guild the player is in, or other guilds
     func fetchGuilds() {
         
         guard let player = self.player else {
@@ -96,9 +83,6 @@ class GuildController:ObservableObject {
                 }
             }
         }
-        
-        
-        
     }
     
     func findMyGuild() {
@@ -170,15 +154,10 @@ class GuildController:ObservableObject {
     
     /// Make Some Random Guilds
     func makeRandomData() {
-        
         var newGuilds:[Guild] = []
         for i in 0...5 {
             let newGuild = Guild.makeGuild(name: "Guild #\(i)", president: nil)
             newGuilds.append(newGuild)
         }
-        
-        self.fGuilds = newGuilds
-        
-        
     }
 }

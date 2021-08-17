@@ -10,8 +10,8 @@ import Foundation
 
 enum SVBuildStage {
     case engineType
-    case solarPanels        // solar panels
-    case marsBot            // bot tech
+//    case solarPanels        // solar panels
+//    case marsBot            // bot tech
     case pickEngineers(type:EngineType)
     case pickMaterials(type:EngineType)
     case namingVehicle(vehicle:SpaceVehicle)
@@ -51,44 +51,45 @@ class VehicleBuilderViewModel:ObservableObject {
         self.vehicle = newVehicle
         self.selectedEngine = type
         self.ingredients = type.ingredients
-        self.buildStage = .solarPanels //.pickEngineers(type: type)
+        self.buildStage = .pickEngineers(type: type) //.pickEngineers(type: type)
     }
     
     // solarChoice
-    func solarChoice(solar quantity:Int) {
-        let sol = SolarPanel(with: .smallVehicle)
-        vehicle?.solar = Array(repeating: sol, count: quantity)
-        self.ingredients[.SolarCell] = quantity * 5
-        if quantity > 0 {
-            if let prev = self.ingredients[.Polimer] {
-                self.ingredients[.Polimer] = prev + (quantity * 3)
-            } else {
-                self.ingredients[.Polimer] = quantity * 3
-            }
-        }
-        
-        // Update UI
-        self.buildStage = .marsBot
-    }
+//    func solarChoice(solar quantity:Int) {
+//        let sol = SolarPanel(with: .smallVehicle)
+//        vehicle?.solar = Array(repeating: sol, count: quantity)
+//        self.ingredients[.SolarCell] = quantity * 5
+//        if quantity > 0 {
+//            if let prev = self.ingredients[.Polimer] {
+//                self.ingredients[.Polimer] = prev + (quantity * 3)
+//            } else {
+//                self.ingredients[.Polimer] = quantity * 3
+//            }
+//        }
+//
+//        // Update UI
+//        self.buildStage = .marsBot
+//    }
     
     // bot choice
-    func robotChoice(robot:MarsBot?) {
-        vehicle?.marsBot = robot
-        if let botIngredients = robot?.ingredients() {
-            for (k, v) in botIngredients {
-                if let prev = self.ingredients[k] {
-                    self.ingredients[k] = prev + v
-                } else {
-                    self.ingredients[k] = v
-                }
-            }
-        }
-        
-        // Update UI
-        guard let etype = selectedEngine else { fatalError() }
-        buildStage = .pickEngineers(type: etype)
-    }
+//    func robotChoice(robot:MarsBot?) {
+//        vehicle?.marsBot = robot
+//        if let botIngredients = robot?.ingredients() {
+//            for (k, v) in botIngredients {
+//                if let prev = self.ingredients[k] {
+//                    self.ingredients[k] = prev + v
+//                } else {
+//                    self.ingredients[k] = v
+//                }
+//            }
+//        }
+//
+//        // Update UI
+//        guard let etype = selectedEngine else { fatalError() }
+//        buildStage = .pickEngineers(type: etype)
+//    }
     
+    /// Checks whether the staff has the skills to build
     func updateStaffList() {
         
         if let skillsRequired = selectedEngine?.skills {

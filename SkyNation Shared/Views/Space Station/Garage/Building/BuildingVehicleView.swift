@@ -26,8 +26,10 @@ struct BuildingVehicleView: View {
                 case .engineType:
                     
                     Text("Choose Engine Type").font(.title)
-                        .padding(.top)
+                        .padding()
+                    
                     HStack {
+                        Spacer()
                         LazyHGrid(rows: [GridItem(.flexible(minimum: 180, maximum: 250))], alignment: .top, spacing: /*@START_MENU_TOKEN@*/nil/*@END_MENU_TOKEN@*/, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
                             ForEach(EngineType.allCases, id:\.self) { engine in
                                 VStack(spacing:8) {
@@ -58,13 +60,14 @@ struct BuildingVehicleView: View {
                                 .frame(height: 250, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                             }
                         }
+                        Spacer()
                     }
                 
-                case .solarPanels:
-                    VehicleSolarChoice(controller: builderController, engine: builderController.selectedEngine!)
-                    
-                case .marsBot:
-                    VehicleBotTech(controller: builderController, engine: builderController.selectedEngine!)
+//                case .solarPanels:
+//                    VehicleSolarChoice(controller: builderController, engine: builderController.selectedEngine!)
+//
+//                case .marsBot:
+//                    VehicleBotTech(controller: builderController, engine: builderController.selectedEngine!)
                     
                 case .pickEngineers(let engine):
                     
@@ -138,7 +141,7 @@ struct BuildingVehicleView: View {
         .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: .center)
     }
 }
-
+/*
 struct VehicleSolarChoice: View {
     
     @ObservedObject var controller:VehicleBuilderViewModel
@@ -148,21 +151,20 @@ struct VehicleSolarChoice: View {
         VStack {
             Text("If you want to keep your batteries charged, you should use a solr panel")
             HStack {
+                Spacer()
                 Button("Add 1") {
-                    // Add solar
                     controller.solarChoice(solar: 1)
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                 Button("Add 2") {
-                    // Add solar
                     controller.solarChoice(solar: 2)
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                 Button("Continue") {
-                    // no solar
                     controller.solarChoice(solar: 0)
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                Spacer()
             }
         }
     }
@@ -177,6 +179,7 @@ struct VehicleBotTech: View {
         VStack {
             Text("Add Bot?")
             HStack {
+                Spacer()
                 Button("Skip") {
                     controller.robotChoice(robot: nil)
                 }
@@ -203,10 +206,12 @@ struct VehicleBotTech: View {
                     }
                     .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                 }
+                Spacer()
             }
         }
     }
 }
+*/
 
 struct BuildingVehicleView_Previews: PreviewProvider {
     static var previews: some View {

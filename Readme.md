@@ -113,9 +113,14 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 [8/13/2021 - ?]
 - [X] EarthOrder - People list not refreshing.
+- [X] GameLogic - Person - personStudyTime
 
 - [ ] Settings - ServerTab - Leave Guild
 - [ ] Settings - ServerTab - Create Guild
+- [ ] Settings - Eliminate `GuildController` altogether. Merge With GameSettingsController.
+- [ ] Logic -> ServerManager.init() -> Check if LocalPlayer has `PlayerID`. Yes -> Login. No -> SKNS.newLogin
+- [ ] Logic -> ServerManager.init() -> Check if LocalPlayer has guild. Yes -> Load Guild.
+- [ ] ServerManager should decide what to do with Fetching Player Info.
 
 - [X] City View - Garage (Receiving Vehicles)
 - [ ] City View - City.garage.vehicles not updating.
@@ -129,13 +134,12 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Station Scene - Background HDRI image
 - [ ] Station Scene - Make the Earth bright again?
 - [ ] Station Scene - New Modules not available after Tech research. 
-- [ ] Station Scene - Garage - Space Vehicle Registration (when launch)
-- [ ] Station Scene - Garage - Space Vehicle Validation (when arriving (orbit))
-- [ ] Station Scene - Garage - Add Solar Panel, Robot, Bioboxes
 
-- [ ] Station Garage View - Built Vehicles - Remove Inventory Button, have only 'Descent' button
-- [ ] Station Garage View - Building Vehicle - Remove unnecessary views (solar panel, add bot)
-- [ ] Station Garage View - Building Vehicle - Make ScrollView take the whole space
+- [X] Station Garage View - Building Vehicle - Remove unnecessary views (solar panel, add bot)
+- [X] Station Garage View - Building Vehicle - Make ScrollView take the whole space
+- [X] Station Garage View - Built Vehicles - Remove Inventory Button, have only 'Descent' button
+- [X] Station Garage View - Space Vehicle Registration (when launch)
+- [ ] Station Garage View - Building Vehicle - Reduce difficulty for bigger engines
 
 - [ ] Mars Scene - Guild map improvements (x8)
 - [ ] Mars Scene - City - Gate Config (to layout scene)
@@ -147,9 +151,9 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Mars Scene - Animations - Outposts Particle emitters
 - [ ] Mars Scene - Animations - Transportation
 - [ ] Mars Scene - Animations - Camera entrance
+- [ ] Mars Scene - Garage - Vehicle Validation (when arriving (orbit))
 
 - [X] Overlays - Guild Chat
-- [ ] Overlays - Messages
 - [ ] Overlays - Election
 - [ ] Overlays - Cameras
 - [ ] Overlays - Outpost rss Collecting
@@ -171,10 +175,11 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] 2D Graphics - Better Engine Icons
 - [ ] 2D Graphics - SkyNation Entrance
 
-- [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing)
+- [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing) -> Look under Dektop -> Useful Assets -> Sounds
 - [ ] Sound - 2 more music (better ones)
 
 - [X] Basic Views - PlayerContent, or PlayerCard
+- [ ] Basic Views - SelectionIndicator -> ● + ○
 - [ ] Basic Views - Error messages (red)
 - [ ] Basic Views - Alert messages (orange)
 

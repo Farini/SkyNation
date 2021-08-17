@@ -11,16 +11,7 @@ struct GameMessagesView: View {
     
     var messages:[GameMessage]
     
-    @State var tab:GameMessageType = .Achievement
-    
-    // Message Types
-    // achievement   > all messages seem to be achievement
-    // chatmessage
-    // free delivery
-    // other
-    // systemerror
-    // systemwarning
-    // tutorial
+    @State var tab:GameMessageType = .Freebie
     
     init() {
         let messages = LocalDatabase.shared.gameMessages
@@ -112,11 +103,34 @@ struct GameMessagesView: View {
                 ScrollView {
                     switch tab {
                         case .Freebie:
-                            let dateGenerated = Date().addingTimeInterval(LocalDatabase.shared.player?.wallet.timeToGenerateNextFreebie() ?? 0) //generator.dateFreebies
-                            let nextGenerated = dateGenerated.addingTimeInterval(60 * 60 * 12)
                             
                             Text("Freebie of the day").font(.title).foregroundColor(.orange)
+                            
+                            let delta:Double = LocalDatabase.shared.player?.wallet.timeToGenerateNextFreebie() ?? 1.0
+                            if delta < 0.8 {
+                                // Available
+                                Button("Get it!") {
+                                    print("Get Freebie")
+                                }
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                            } else {
+                                Text("⏰ \(TimeInterval(delta).stringFromTimeInterval())")
+                                // Not available
+                                Button("Tokens") {
+//                                    print("Get Freebie via Tokens (force)")
+//                                    print("Need to save generator")
+                                }
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                            }
+                            /*
+                            let dateGenerated = Date().addingTimeInterval(LocalDatabase.shared.player?.wallet.timeToGenerateNextFreebie() ?? 1)
+                            
+                            
+                            let nextGenerated:Date = dateGenerated.addingTimeInterval(60 * 60 * 12)
+                            
+                            
                             Text("Now \(GameFormatters.dateFormatter.string(from: Date()))").foregroundColor(.red)
+                            Text("Delta: \(LocalDatabase.shared.player?.wallet.timeToGenerateNextFreebie() ?? 0)")
                             
                             if nextGenerated.compare(Date()) == .orderedAscending {
                                 Button("Get it!") {
@@ -131,6 +145,7 @@ struct GameMessagesView: View {
                                 }
                                 .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                             }
+                         */
                         case .Achievement:
                             ForEach(messages.filter({$0.type == tab}).sorted(by: { $0.date.compare($1.date) == .orderedDescending}), id:\.self.id) { message in
                                 

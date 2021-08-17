@@ -77,9 +77,7 @@ struct EDLInventoryView: View {
                     Image(systemName: aTab.imageName()).padding(6).frame(height: 32, alignment: .center)
                         .background(segment == aTab ? selLinear:unselinear)
                         .onTapGesture {
-//                            controller.selected(tab: aTab)
                             self.segment = aTab
-                            print("Tapp")
                         }
                         .cornerRadius(4)
                         .clipped()
@@ -89,7 +87,6 @@ struct EDLInventoryView: View {
                 }
                 
                 Spacer()
-//                Text("\(aTab.prettyName)")
             }
             .padding(.horizontal, 6)
             .font(.title3)
@@ -109,7 +106,7 @@ struct EDLInventoryView: View {
                 .foregroundColor(.orange)
                 .padding([.leading])
                 
-                let count = vehicle.calculateWeight() + ingredientsSelected.count + bottechSelected.count
+                let count = vehicle.calculateWeight() + ingredientsSelected.count + peripheralsSelected.count + tanksSelected.count + passengers.count + bioboxes.count //bottechSelected.count
                 
                 Spacer()
                 
@@ -118,8 +115,7 @@ struct EDLInventoryView: View {
                     HStack {
                         Image(systemName: "scalemass")
                             .font(.title)
-                        
-                        Text("Payload: \(count) of \(vehicle.engine.payloadLimit) Kg") // \(vehicle.engine.payloadLimit)
+                        Text("Payload: \(count) of \(vehicle.engine.payloadLimit) Kg")
                             .foregroundColor(count > vehicle.engine.payloadLimit ? .red:.green)
                     }
                     .padding([.top, .bottom], 8)
@@ -130,7 +126,7 @@ struct EDLInventoryView: View {
                 
                 Spacer()
                 
-                // Trunk Button
+                // Top Right Buttons
                 HStack {
                     Button("Inventory") {
                         popTrunk.toggle()
@@ -194,8 +190,12 @@ struct EDLInventoryView: View {
                                 }
                                 .frame(width:100)
                                 .padding([.leading, .trailing, .bottom], 6)
-                                .background(Color.black)
+                                .background(self.batteries.contains(battery) ? Color.black:Color.black.opacity(0.2))
                                 .cornerRadius(12)
+                                .border(batteries.contains(battery) ? Color.blue:Color.clear, width: 2)
+                                .cornerRadius(12)
+                                .clipped()
+                                .padding(4)
                                 .onTapGesture {
                                     self.toggleSelection(battery: battery)
                                 }
@@ -207,6 +207,10 @@ struct EDLInventoryView: View {
                         LazyVGrid(columns: [GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 4, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
                             ForEach(controller.tanks.sorted(by: { $0.type.rawValue.compare($1.type.rawValue) == .orderedAscending })) { tank in
                                 TankViewSmall(tank: tank)
+                                    .border(tanksSelected.contains(tank) ? Color.blue:Color.clear, width: 2)
+                                    .cornerRadius(8)
+                                    .clipped()
+                                    .padding(.horizontal, 4)
                                     .onTapGesture {
                                         self.toggleSelection(tank: tank)
                                     }
@@ -217,6 +221,10 @@ struct EDLInventoryView: View {
                             LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 4, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
                                 ForEach(controller.availablePeople) { person in
                                     PersonSmallView(person: person)
+                                        .border(passengers.contains(person) ? Color.blue:Color.clear, width: 2)
+                                        .cornerRadius(8)
+                                        .clipped()
+                                        .padding(.horizontal, 4)
                                         .onTapGesture {
                                             self.toggleSelection(person: person)
                                         }
@@ -234,8 +242,17 @@ struct EDLInventoryView: View {
                             ForEach(controller.bioBoxes) { biobox in
                                 VStack {
                                     Text("DNA \(biobox.perfectDNA)")
-                                    Text("x \(biobox.population.count)")
+                                    HStack {
+                                        Text(DNAOption(rawValue:biobox.perfectDNA)!.emoji)
+                                        Text("x \(biobox.population.count)")
+                                    }
                                 }
+                                .padding(6)
+                                .background(Color.black)
+                                .border(bioboxes.contains(biobox) ? Color.blue:Color.clear, width: 2)
+                                .cornerRadius(8)
+                                .clipped()
+                                .padding(.horizontal, 4)
                                 .onTapGesture {
                                     self.toggleSelection(biobox: biobox)
                                 }

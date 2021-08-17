@@ -24,17 +24,20 @@ class Wallet:Codable {
     
     /// Initializes with beginner's package
     init(lid:UUID) {
+        
+        print("Initializing beginners package")
+        
         var tokens:[GameToken] = []
         for _ in 1...Wallet.beginTokens {
             tokens.append(GameToken(beginner: lid))
         }
         self.tokens = tokens
         self.purchases = []
-        self.freebiesLast = Date().addingTimeInterval(-1.0 * TimeInterval.oneDay)
+        self.freebiesLast = Date().addingTimeInterval(TimeInterval.oneDay * -1.0)
         self.freebiesMade = [:]
         
         self.staff = []
-        self.dateStaff = Date().addingTimeInterval(-1 * TimeInterval.oneDay)
+        self.dateStaff = Date().addingTimeInterval(TimeInterval.oneDay * -1.0)
     }
     
     // MARK: - Purchases
@@ -128,26 +131,38 @@ class Wallet:Codable {
         dictionary[rnd1, default:0] += 1
         
         // Update the date
-        freebiesLast = Date()
+//        freebiesLast = Date()
         
         return dictionary
     }
     
+    /// Returns the time remaining to claim freebie. 0.0 if can claim now
     func timeToGenerateNextFreebie() -> Double {
         
-        let delay = Double(TimeInterval.oneDay)
-        let duration = Date().timeIntervalSince(self.freebiesLast)
+        // Get the date last generated
+        let lastGen:Date = self.freebiesLast //Date()//self.freebiesLast
         
-        let isReady:Bool = duration > delay
-        print("Duration: \(duration), Ready: \(isReady)")
+        // Get the date its supposed to generate freebie
+        let deadline:Date = lastGen.addingTimeInterval(TimeInterval.oneDay)
+
+        let delta = deadline.timeIntervalSince(Date())
         
-        if duration > delay {
-            // ready
-            return 0
-        } else {
-            // not ready
-            return delay - duration
-        }
+        return max(-0.0, delta)
+        
+        
+//        let delay = Double(TimeInterval.oneDay)
+//        let duration = Date().timeIntervalSince(self.freebiesLast)
+//
+//        let isReady:Bool = duration > delay
+//        print("Duration: \(duration), Ready: \(isReady)")
+//
+//        if duration > delay {
+//            // ready
+//            return 0
+//        } else {
+//            // not ready
+//            return delay - duration
+//        }
     }
     
 }

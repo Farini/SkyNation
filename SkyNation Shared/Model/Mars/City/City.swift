@@ -94,6 +94,9 @@ class CityData:Codable, Identifiable {
     // + garage (Vehicles)
     var garage:Garage
     
+    /// Collected Items from Outpost
+    var opCollection:[UUID:Date]? // ID of outpost -> Date collected
+    
     // + accounting
     // + dateAccounting
     // + accountingReport
@@ -104,7 +107,8 @@ class CityData:Codable, Identifiable {
     
     // To add
     // + accounting
-    // + collectRecipe
+    
+    /// Adds the product of a recipe to the city (i.e. Peripheral)
     func collectRecipe(recipe:Recipe) {
         
         switch recipe {

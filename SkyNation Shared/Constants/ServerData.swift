@@ -62,7 +62,6 @@ class ServerManager {
             guard let player = LocalDatabase.shared.player else {
                 print("Server Data Crashing. Player doesn't exist")
                 return
-//                fatalError()
             }
             
             self.serverData = ServerData(player: player)
@@ -72,14 +71,6 @@ class ServerManager {
             completion(pUpdate, error)
         }
         
-//        guard let serverData:ServerData = serverData else {
-//            completion(nil, ServerDataError.noFile)
-//            return
-//        }
-        
-//        serverData.inquireLogin { sknPlayer, error in
-//            completion(sknPlayer, error)
-//        }
     }
     
     /// Gets the Full Guild Content
@@ -264,6 +255,8 @@ class ServerData:Codable {
     var lastGuildFetch:Date?
     
     func requestPlayerGuild(force:Bool, completion:@escaping(GuildFullContent?, Error?) -> ()) {
+        
+        print("Requesting Player Guild from ServerData.")
         
         // Check if needs update
         let delay:TimeInterval = 60.0

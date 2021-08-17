@@ -305,16 +305,16 @@ struct GarageView: View {
                                 }
                                 .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                                 
-                                Button("Simulate") {
-                                    print("Go Simulate")
-                                }
-                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+//                                Button("Simulate") {
+//                                    print("Go Simulate")
+//                                }
+//                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                                 
-                                Button("Inventory") {
-                                    print("Go to Inventory")
-                                    controller.setupInventory(vehicle: sev)
-                                }
-                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+//                                Button("Inventory") {
+//                                    print("Go to Inventory")
+//                                    controller.setupInventory(vehicle: sev)
+//                                }
+//                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                             }
                             .padding()
                             
@@ -376,30 +376,29 @@ struct GarageView: View {
                                 
                                 
                                 Button("Cancel") {
-                                    print("Cancelling")
                                     controller.cancelSelection()
                                 }
                                 .buttonStyle(NeumorphicButtonStyle(bgColor: Color.blue))
                                 
-                                Button("Simulate") {
-                                    print("Go Simulate")
-                                }
-                                .buttonStyle(NeumorphicButtonStyle(bgColor: Color.blue))
+//                                Button("Simulate") {
+//                                    print("Go Simulate")
+//                                }
+//                                .buttonStyle(NeumorphicButtonStyle(bgColor: Color.blue))
                                 
-                                Button("Inventory") {
-                                    print("Go to Inventory")
-                                    controller.setupInventory(vehicle: sev)
-                                }
-                                .buttonStyle(NeumorphicButtonStyle(bgColor: Color.blue))
+//                                Button("Inventory") {
+//                                    print("Go to Inventory")
+//                                    controller.setupInventory(vehicle: sev)
+//                                }
+//                                .buttonStyle(NeumorphicButtonStyle(bgColor: Color.blue))
                                 
-                                if sev.engine != .Hex6 {
+//                                if sev.engine != .Hex6 {
                                     Button("Descent") {
                                         print("Go to Descent")
                                         controller.setupDescentInventory()
                                         //                                    controller.setupInventory(vehicle: sev)
                                     }
                                     .buttonStyle(NeumorphicButtonStyle(bgColor: Color.blue))
-                                }
+//                                }
                                 
                                 Divider()
                                 
@@ -535,10 +534,14 @@ struct TravellingVehicleView: View {
     
     var vehicle:SpaceVehicle
     
+//    @State var isRegistered:Bool = false
+    @State var newRegistration:UUID?
+    
     init(controller:GarageViewModel) {
         guard let vehicle = controller.selectedVehicle else { fatalError() }
         self.controller = controller
         self.vehicle = vehicle
+        self.newRegistration = vehicle.registration
     }
     
     var body: some View {
@@ -567,30 +570,6 @@ struct TravellingVehicleView: View {
                 Divider()
             }
             
-            // Tanks
-            Group {
-                Text("Tanks(ct): \(vehicle.tanks.count)")
-                ForEach(self.vehicle.tanks, id:\.self) { tank in
-                    TankViewSmall(tank: tank)
-                }
-                Divider()
-            }
-            
-            // Batteries
-            Group {
-                Text("Batteries: \(vehicle.batteries.count)")
-                
-                ForEach(self.vehicle.batteries, id:\.self) { battery in
-                    HStack {
-                        Image("carBattery")
-                            .resizable()
-                            .frame(width: 32, height: 32)
-                        Text("Battery \(battery.current) of \(battery.capacity)")
-                    }
-                }
-                Divider()
-            }
-            
             // Time
             Group {
                 Text("Status")
@@ -611,20 +590,39 @@ struct TravellingVehicleView: View {
                         
                         // Buttons
                         HStack {
-//                            Button("Stop") {
-//                                print("You can't stop me!")
-//                            }
-//                            Button("Boost") {
-//                                print("You can't boost me!")
-//                            }
                             Button("Back") {
                                 print("Cancelling")
                                 controller.cancelSelection()
                             }
                             .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
                             
-                            Button("Registration") {
-                                print("Check vehicle registration (SKNS)")
+                            if controller.isRegistered(vehicle: vehicle) == true {
+                                if let registration = vehicle.registration {
+                                    VStack {
+                                        Text("★ Registration")
+                                        Text("\(String(registration.uuidString.prefix(8)))")
+                                            .foregroundColor(.green)
+                                    }
+                                } else {
+                                    Text("Registered").foregroundColor(.green)
+                                }
+                            } else {
+                                if newRegistration == nil {
+                                    Button("Registration") {
+                                        print("Check vehicle registration (SKNS)")
+                                        controller.registerVehicle(vehicle: vehicle) { ticket, error in
+                                            if let ticket = ticket {
+                                                print("Ticket: \(ticket.id)")
+                                                DispatchQueue.main.async {
+                                                    self.newRegistration = ticket.id
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
+                                } else {
+                                    Text("Registered").foregroundColor(.green)
+                                }
                             }
                         }
                         .padding()
@@ -641,12 +639,6 @@ struct TravellingVehicleView: View {
                         ProgressView("\(power) of \(powerMax)", value: Float(power), total: Float(powerMax))
                             .frame(width:200)
                         
-                        // Peripherals + Antenna
-                        // Keep Satellite alive?
-                        // Buttons, and options (Land, Go back, Destroy, etc.)
-                        // if satellite, no land
-                        // if landing, send to portal
-                        
                         GameActivityView(vehicle: vehicle)
                         
                         Divider()
@@ -659,15 +651,6 @@ struct TravellingVehicleView: View {
                                 controller.cancelSelection()
                             }
                             .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                            
-                            // FIXME: - Uncomment the following commented code
-//                            if vehicle.engine != .Hex6 {
-//                                Button("Begin EDL") {
-//                                    print("Beginning Entry, Descent and Landing")
-////                                    controller.performEntryDescentAndLanding(vehicle: vehicle)
-//                                }
-//                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-//                            }
                             
                             if let bot = vehicle.marsBot {
                                 switch bot {

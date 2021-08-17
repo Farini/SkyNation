@@ -23,7 +23,7 @@ enum VehicleBuildingStage {
     case Descent    // Adding Ingredients, Peripherals, and BotTech
     case Crew       // Selecting Passengers
     case PrepLaunch // Preparing for launch
-    case Launching  //
+    case Launching  // Launching
     
 }
 
@@ -445,68 +445,7 @@ class GarageViewModel:ObservableObject {
         
         print("🚀 Launching Vehicle!")
         self.garageStatus = .planning(stage: .Launching)
-        
-        // Register Vehicle in Server
-        
-//        guard let player = LocalDatabase.shared.player else {
-//            fatalError()
-//        }
-//        let user = SKNUserPost(player: player)
-//        SKNS.registerSpace(vehicle: vehicle, player: user) { (data, error) in
-//            if let data = data {
-//                let decoder = JSONDecoder()
-//                decoder.dateDecodingStrategy = .secondsSince1970
-//                if let vehicleModel = try? decoder.decode(SpaceVehicleModel.self, from: data) {
-//                    print("We got a Vehicle ! \(vehicleModel.engine)")
-//                } else {
-//                    print("No vehicle model")
-//                }
-//            } else {
-//                print("No data. Error: \(error?.localizedDescription ?? "n/a")")
-//            }
-//        }
-        
-        // FIXME: - Registration
-        // Move registration to MarsBuilder?
-        // Move remaining code to bracket under "vModel", so it can be executed only when registered ???
-        // Discussion: Should we alllow vehicle to start travelling only when registered?
-        /*
-        self.registerVehicle(vehicle: vehicle) { (vModel, error) in
-            
-            if let vModel = vModel {
-                print("Registered Successfully. Engine:\(vModel.engine) Owner: \(vModel.owner)")
                 
-                // Back to main thread
-                DispatchQueue.main.async {
-                    
-                    // Set Vehicle to start travelling
-                    vehicle.startTravelling()
-                    
-                    // Remove from Garage
-                    self.garage.buildingVehicles.removeAll(where: { $0.id == vehicle.id })
-                    
-                    // Add to Array of travelling vehicles
-                    LocalDatabase.shared.vehicles.append(vehicle)
-                    self.travellingVehicles.append(vehicle)
-                    
-                    // XP
-                    self.garage.xp += 1
-                    
-                    // Save
-                    LocalDatabase.shared.saveVehicles()
-                    LocalDatabase.shared.saveStation(station: self.station)
-                    
-                    // Update View
-                    self.garageStatus = .planning(stage: .Launching)
-                    // self.cancelSelection()
-                }
-                
-            } else if let error = error {
-                print("Could not register vehicle: \(error.localizedDescription)")
-            }
-        }
-        */
-        
         // Set Vehicle to start travelling
         vehicle.startTravelling()
             
@@ -528,9 +467,17 @@ class GarageViewModel:ObservableObject {
         self.garageStatus = .planning(stage: .Launching)
         // self.cancelSelection()
         
+        self.registerVehicle(vehicle: vehicle, completion: nil)
+        
     }
     
     // MARK: - Server
+    func isRegistered(vehicle:SpaceVehicle) -> Bool {
+        if let dbVehicle = LocalDatabase.shared.vehicles.first(where: { $0.id == vehicle.id }) {
+            return dbVehicle.registration != nil
+        }
+        return false
+    }
     
     func registerVehicle(vehicle:SpaceVehicle, completion:((SpaceVehicleTicket?, Error?) -> ())?) {
         print("Registering Vehicle in Server")
@@ -545,8 +492,12 @@ class GarageViewModel:ObservableObject {
             if let ticket = ticket {
                 print("Vehicle Registration Approved! ")
                 vehicle.registration = ticket.id
-                
-                LocalDatabase.shared.saveStation(station: self.station)
+                if let dbVehicle = LocalDatabase.shared.vehicles.first(where: { $0.id == vehicle.id }) {
+                    dbVehicle.registration = ticket.id
+                    print("Saving Database Travelling Vehicles")
+                    LocalDatabase.shared.saveVehicles()
+                }
+//                LocalDatabase.shared.saveStation(station: self.station)
             } else {
                 print("⚠️ Did not get a ticket from Vehicle Registration! \(error?.localizedDescription ?? "")")
             }

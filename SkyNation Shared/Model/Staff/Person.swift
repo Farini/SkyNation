@@ -109,8 +109,6 @@ class Person:Codable, Identifiable, Equatable {
     
     // + happiness
     var happiness:Int = 50
-    
-    // + teamwork
     var teamWork:Int = 50
     
     // + fix attempts
@@ -342,7 +340,7 @@ class Person:Codable, Identifiable, Equatable {
         return 0.5
     }
     
-    /// Learn new Skill (Called when clearActivity() is being called)
+    /// Learn new Skill (Called when clearActivity() is being called) - after the study is complete
     func learnNewSkill(type:Skills) {
         
         var newSkill:SkillSet?
