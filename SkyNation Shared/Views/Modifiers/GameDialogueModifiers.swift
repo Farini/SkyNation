@@ -22,12 +22,6 @@ struct GameViewMod: ViewModifier {
     }
 }
 
-enum GameFont {
-    case title
-    case section
-    case writing
-    case little
-}
 
 struct GameTypography: ViewModifier {
     
@@ -65,6 +59,7 @@ struct GameTypography: ViewModifier {
         }
         #endif
     }
+    
 }
 
 struct Badged: ViewModifier {

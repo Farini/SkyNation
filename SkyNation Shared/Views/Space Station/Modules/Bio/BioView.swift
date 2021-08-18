@@ -291,34 +291,3 @@ struct BioBuilder_Previews: PreviewProvider {
         }
     }
 }
-
-//struct GameButtonStyle: ButtonStyle {
-//    var foregroundColor: Color
-//    var backgroundColor: Color
-//    var pressedColor: Color
-//
-//    func makeBody(configuration: Self.Configuration) -> some View {
-//        configuration.label
-//            .font(.headline)
-//            .padding(8)
-//            .foregroundColor(foregroundColor)
-//            .background(configuration.isPressed ? pressedColor : backgroundColor)
-//            .cornerRadius(8)
-//    }
-//}
-//
-//extension View {
-//    func gameButton(
-//        foregroundColor: Color = .white,
-//        backgroundColor: Color = Color(SCNColor.darkGray),
-//        pressedColor: Color = .accentColor
-//    ) -> some View {
-//        self.buttonStyle(
-//            GameButtonStyle(
-//                foregroundColor: foregroundColor,
-//                backgroundColor: backgroundColor,
-//                pressedColor: pressedColor
-//            )
-//        )
-//    }
-//}

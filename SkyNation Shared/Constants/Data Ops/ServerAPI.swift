@@ -32,11 +32,7 @@ class SKNS {
     /// Keep a record of the queries performed, so we don't keep repeating the same queries.
     var queries:[Routes:Date] = [:] // Queries should have *route, *date, *objectRetrieved, *
     
-    /// The default `error` response from server
-    struct GameError:Codable {
-        var error:Bool
-        var reason:String
-    }
+    
     
     static let baseAddress = "http://127.0.0.1:8080"
     
@@ -116,7 +112,7 @@ class SKNS {
                     
                 } else {
                     
-                    if let notFound:NotFoundResponse = try? JSONDecoder().decode(NotFoundResponse.self, from: data) {
+                    if let notFound:GameError = try? JSONDecoder().decode(GameError.self, from: data) {
                         if notFound.isNotFound() == true {
                             print("Not Found")
                             SKNS.newLogin { newPlayerUpdate, newError in
@@ -1256,12 +1252,3 @@ class SKNS {
     
 }
 
-struct NotFoundResponse:Codable {
-    
-    var error:Bool
-    var reason:String
-    
-    func isNotFound() -> Bool {
-        return reason == "Not Found"
-    }
-}

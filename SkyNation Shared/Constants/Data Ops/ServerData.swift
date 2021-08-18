@@ -7,15 +7,11 @@
 
 import Foundation
 
-enum ServerDatabaseStatus:String, Codable, CaseIterable {
-    case offline
-    case online
-    case errata // error message should have a valid string
-}
-
-enum ServerDataError:Error {
-    case noFile // = "No file"
-}
+//enum ServerDatabaseStatus:String, Codable, CaseIterable {
+//    case offline
+//    case online
+//    case errata
+//}
 
 class ServerManager {
     
@@ -130,7 +126,7 @@ class ServerData:Codable {
     var guildVehicles:[SpaceVehicleTicket] = []
     
     // Status
-    var status:ServerDatabaseStatus = .offline
+//    var status:ServerDatabaseStatus = .offline
     var errorMessage:String = ""
     
     // MARK: - Methods: Login
@@ -280,7 +276,7 @@ class ServerData:Codable {
                 self.partners = citizens
                 
                 self.lastGuildFetch = Date()
-                self.status = .online
+//                self.status = .online
                 
                 // Save
                 if LocalDatabase.shared.saveServerData(skn: self) == false {

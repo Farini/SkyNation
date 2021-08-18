@@ -49,6 +49,9 @@ class OutpostNode:SCNNode {
             default:
                 print("This posdex is not related to an Outpost")
         }
+        
+        // check if is collectible
+        // load the city, check 'op_collected'
     }
     
     required init?(coder: NSCoder) {

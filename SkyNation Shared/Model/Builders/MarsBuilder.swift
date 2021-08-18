@@ -8,15 +8,6 @@
 import Foundation
 import SceneKit
 
-enum MGuildState:Error {
-    case loaded
-    case serverDown
-    case badRequest
-    case locally
-    case notJoined
-    case nonExistant
-    case other(error:Error)
-}
 
 class MarsBuilder {
     

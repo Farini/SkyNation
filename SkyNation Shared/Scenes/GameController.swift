@@ -69,7 +69,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             
             // Sound
             if GameSettings.shared.soundFXOn {
-                let action = SKAction.playSoundFileNamed("SFXSelected.wav", waitForCompletion: false)
+                let action = SKAction.playSoundFileNamed(SoundFX.Selected.soundName, waitForCompletion: false)
                 node.run(action)
             }
             

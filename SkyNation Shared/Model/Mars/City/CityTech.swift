@@ -110,7 +110,6 @@ enum CityTech:String, Codable, CaseIterable, Identifiable {
             default: return [.Material:2]
         }
     }
-    
 }
 
 enum MarsRecipe:String, Codable, CaseIterable {
