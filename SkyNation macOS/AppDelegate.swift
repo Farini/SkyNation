@@ -33,19 +33,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 backing: .buffered, defer: false)
             window.center()
             window.setFrameAutosaveName("SUI Window")
-            window.contentView = NSHostingView(rootView: GameSettingsView()) //GameSettingsView(guildController: GuildController(autologin: true)))
+            window.contentView = NSHostingView(rootView: GameSettingsView())
             window.makeKeyAndOrderFront(nil)
         }
-        
         
         // Maximize the window
         // if let screen = NSScreen.mainScreen() {
         //  window.setFrame(screen.visibleFrame, display: true, animate: true)
         // }
     }
+    
+    func applicationWillBecomeActive(_ notification: Notification) {
+        print("\n\n Will Become Active")
+        if let screen = NSScreen.main {
+            let rect = screen.frame
+            print("Screen frame: \(rect)")
+            let height = rect.size.height
+            let width = rect.size.width
+            print("Screen width:\(width) x height:\(height)")
+        }
+    }
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
+        print("App will terminate")
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
@@ -68,14 +79,15 @@ class MacMenu:NSObject, NSMenuDelegate {
     }
     
     @IBAction func openServer(_ sender: NSMenuItem) {
-        let window = ClosableWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-            backing: .buffered, defer: false)
-        window.center()
-        window.setFrameAutosaveName("SUI Window")
-        window.contentView = NSHostingView(rootView: BackendView(controller: GuildController(autologin: true)))
-        window.makeKeyAndOrderFront(nil)
+        print("Temporarily disabled")
+//        let window = ClosableWindow(
+//            contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
+//            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+//            backing: .buffered, defer: false)
+//        window.center()
+//        window.setFrameAutosaveName("SUI Window")
+//        window.contentView = NSHostingView(rootView: BackendView(controller: GuildController(autologin: true)))
+//        window.makeKeyAndOrderFront(nil)
     }
     
     

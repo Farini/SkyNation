@@ -84,6 +84,7 @@ class CityData:Codable, Identifiable {
     
     // Tech Tree
     var tech:[CityTech]
+//    var unlockedTech:[CityTech] = []
     
     // Recipes
     var unlockedRecipes:[Recipe]
@@ -209,6 +210,67 @@ class CityData:Codable, Identifiable {
         
         return available
     }
+    
+    /**
+     Checks if there are enough `ingredients` to cover the expenses.
+     - Parameters:
+     - ingredients: a key value of ingredient and quantity
+     - Returns: An array of missing Ingredients (empty if none) */
+    func validateResources(ingredients:[Ingredient:Int]) -> [Ingredient] {
+        
+        var lacking:[Ingredient] = []
+        for (ingr, qtty) in ingredients {
+            let relevantBoxes = boxes.filter({ $0.type == ingr })
+            let iHave = relevantBoxes.map({$0.current}).reduce(0, +)
+            if iHave < qtty {
+                lacking.append(ingr)
+            }
+        }
+        return lacking
+    }
+    
+    /**
+     Pays (reduce amount) for the resources needed. Note: Not responsible for saving.
+     - Parameters:
+     - ingredients: a key value pair of ingredient and quantity
+     - Returns: A `boolean` indicating whther it was successful. */
+    func payForResources(ingredients:[Ingredient:Int]) -> Bool {
+        
+        // Loop through ingredients
+        for (ingr, qtty) in ingredients {
+            // Get boxes that have that ingredient
+            let relevantBoxes = boxes.filter({ $0.type == ingr })  // Filter
+            var debt:Int = qtty
+            boxLoop: for box in relevantBoxes {
+                let boxQtty = box.current
+                if boxQtty > debt {
+                    box.current -= debt
+                    debt = 0
+                    break boxLoop
+                } else if boxQtty == debt {
+                    box.current = 0
+                    debt = 0
+                    // Box is empty. Remove it
+                    boxes.removeAll(where: { $0.id == box.id })
+                    break boxLoop
+                } else if boxQtty < debt {
+                    debt -= boxQtty
+                    box.current = 0
+                    // Box is empty. Remove it
+                    boxes.removeAll(where: { $0.id == box.id })
+                }
+            }
+            
+            // End of box loop
+            if debt > 0 {
+                print("ERROR: COULD NOT PAY DEBT")
+                return false
+            }
+        }
+        // If it hasn't returned false at this point, its because ingredients are met.
+        return true
+    }
+    
     
     // MARK: - Initializers
     

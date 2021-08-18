@@ -28,7 +28,7 @@ struct MarsCityView: View {
                         CityMenu(menuItem: $cityMenuItem)
                     case .foreign(_):
                         Text(controller.cityTitle).font(.title)
-                        // If President -> Delete Button
+                    // If President -> Delete Button
                     case .unclaimed:
                         Text(controller.cityTitle).font(.title)
                 }
@@ -52,47 +52,55 @@ struct MarsCityView: View {
             // Header
             header
             
-            ScrollView(.vertical, showsIndicators: true) {
-                VStack {
-                    switch controller.viewState {
-                        case .loading:
-                            Group {
-                                Text("Loading City...").font(.title).foregroundColor(.gray)
-                                Text("🏛").font(.title)
-                            }
-                            .padding()
-                        
-                        case .unclaimed:
-                            
-                            Group {
-                                Image(systemName: "mappin.and.ellipse").font(.title)
-                                Text("Unclaimed City").foregroundColor(.gray)
-                                Text("Posdex: \(posdex.rawValue) \(posdex.sceneName)").padding()
-                                Text("If you don't have a city yet, you may claim this one to get started.").foregroundColor(.gray)
-                                
-                                // Button to Claim City (if player doesn't have one)
-                                if controller.isClaimable() == true {
-                                    Button("Claim City") {
-                                        print("Should claim it")
-                                        controller.claimCity(posdex: posdex)
-                                    }
-                                    .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
-                                }
-                            }
-                        
-                        case .mine(let cityData):
-                            
-                            MyCityView(controller: controller, cityData: cityData, cityTab: $cityMenuItem)
-                            
-                        case .foreign(let pid):
-                            
-                            ForeignCityView(controller: controller, posdex: self.posdex, player: MarsBuilder.shared.players.filter({ $0.id == pid }).first)
-                            
+            switch controller.viewState {
+                case .loading:
+                    Group {
+                        Spacer()
+                        Text("Loading City...").font(.title).foregroundColor(.gray)
+                        HStack {
+                            Spacer()
+                            Text("🏛").font(.title)
+                            Spacer()
+                        }
+                        Spacer()
                     }
-                }
+                    .padding()
+                    
+                case .unclaimed:
+                    
+                    Group {
+                        
+                        Image(systemName: "mappin.and.ellipse").font(.title)
+                        Text("Unclaimed City").foregroundColor(.gray)
+                        Text("Posdex: \(posdex.rawValue) \(posdex.sceneName)").padding()
+                        Text("If you don't have a city yet, you may claim this one to get started.").foregroundColor(.gray)
+                        
+                        Spacer()
+                        
+                        // Button to Claim City (if player doesn't have one)
+                        if controller.isClaimable() == true {
+                            Button("Claim City") {
+                                print("Should claim it")
+                                controller.claimCity(posdex: posdex)
+                            }
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
+                            .padding(.bottom, 8)
+                        }
+                        
+                    }
+                    
+                case .mine(let cityData):
+                    
+                    MyCityView(controller: controller, cityData: cityData, cityTab: $cityMenuItem)
+                    
+                case .foreign(let pid):
+                    
+                    ForeignCityView(controller: controller, posdex: self.posdex, player: MarsBuilder.shared.players.filter({ $0.id == pid }).first)
+                    
             }
-            .frame(minWidth: 500, minHeight: 350)
         }
+        .frame(minWidth: 600, maxWidth:900, minHeight: 350, idealHeight: 500, maxHeight: 600)
+        
         .onAppear() {
             self.controller.loadAt(posdex: posdex)
         }

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+/*
 struct BackendView: View {
     
     @ObservedObject var controller:GuildController
@@ -95,4 +95,6 @@ struct BackendView_Previews: PreviewProvider {
         BackendView(controller:GuildController(autologin: false))
     }
 }
+
+*/
 

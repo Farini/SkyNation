@@ -7,6 +7,7 @@
 
 import Foundation
 
+/*
 class GuildController:ObservableObject {
     
     @Published var news:String
@@ -24,65 +25,65 @@ class GuildController:ObservableObject {
         
         news = "Autologin"
         
-        if let player = LocalDatabase.shared.player {
-            self.player = player
-            print("Guild Controller. AutoLogin:\(autologin.description)")
-            print("Local id:\(player.id) Player id: \(player.playerID?.uuidString ?? "[none]")")
-        }
-        
-        if autologin && GameSettings.onlineStatus {
-            
-            let _ = ServerManager.shared
-            self.loginUser()
-            
-        } else {
-            self.makeRandomData()
-        }
+//        if let player = LocalDatabase.shared.player {
+//            self.player = player
+//            print("Guild Controller. AutoLogin:\(autologin.description)")
+//            print("Local id:\(player.id) Player id: \(player.playerID?.uuidString ?? "[none]")")
+//        }
+//
+//        if autologin && GameSettings.onlineStatus {
+//
+//            let _ = ServerManager.shared
+//            self.loginUser()
+//
+//        } else {
+//            self.makeRandomData()
+//        }
     }
     
     func loginUser() {
         
-        ServerManager.shared.inquireLogin { player, error in
-            DispatchQueue.main.async {
-                if let player:PlayerUpdate = player {
-                    print("Player login: ID:\(player.id.uuidString), LID: \(player.localID)")
-                    self.upPlayer = player
-                } else {
-                    print("Did not find user. \(error?.localizedDescription ?? "")")
-                }
-            }
-        }
+//        ServerManager.shared.inquireLogin { player, error in
+//            DispatchQueue.main.async {
+//                if let player:PlayerUpdate = player {
+//                    print("Player login: ID:\(player.id.uuidString), LID: \(player.localID)")
+//                    self.upPlayer = player
+//                } else {
+//                    print("Did not find user. \(error?.localizedDescription ?? "")")
+//                }
+//            }
+//        }
     }
     
     /// Fetches the Guild the player is in, or other guilds
     func fetchGuilds() {
         
-        guard let player = self.player else {
-            return
-        }
-        
-        if let gid = player.guildID {
-            print("Fetching Player's Guild \(gid)")
-            self.findMyGuild()
-            
-        } else {
-            news = "Fetching Guilds..."
-            SKNS.browseGuilds { (guilds, error) in
-                if let array = guilds {
-                    print("Updating Guilds")
-                    self.guilds = array
-                    self.highlightedGuild = array.first
-                    self.news = "Here are the guilds"
-                } else {
-                    if let error = error {
-                        self.news = error.localizedDescription
-                    } else {
-                        self.news = "Something else happened. Not an error, but no Guilds"
-                        print("Something else happened. Not an error, but no Guilds")
-                    }
-                }
-            }
-        }
+//        guard let player = self.player else {
+//            return
+//        }
+//
+//        if let gid = player.guildID {
+//            print("Fetching Player's Guild \(gid)")
+//            self.findMyGuild()
+//
+//        } else {
+//            news = "Fetching Guilds..."
+//            SKNS.browseGuilds { (guilds, error) in
+//                if let array = guilds {
+//                    print("Updating Guilds")
+//                    self.guilds = array
+//                    self.highlightedGuild = array.first
+//                    self.news = "Here are the guilds"
+//                } else {
+//                    if let error = error {
+//                        self.news = error.localizedDescription
+//                    } else {
+//                        self.news = "Something else happened. Not an error, but no Guilds"
+//                        print("Something else happened. Not an error, but no Guilds")
+//                    }
+//                }
+//            }
+//        }
     }
     
     func findMyGuild() {
@@ -161,3 +162,5 @@ class GuildController:ObservableObject {
         }
     }
 }
+*/
+

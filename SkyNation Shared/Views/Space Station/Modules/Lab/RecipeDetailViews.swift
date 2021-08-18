@@ -91,6 +91,17 @@ struct RecipeDetailView:View {
                     labModel.selectedStaff = selectedPeople
                 }, title: "\(recipe) Skills Required", issue: "", message: "")
                 
+                if labModel.availableStaff.isEmpty {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            Text("< No one is available >").foregroundColor(.red)
+                            Spacer()
+                        }
+                    }
+                    .background(Color.black)
+                }
+                
                 Divider()
             }
             
@@ -139,6 +150,7 @@ struct RecipeDetailView:View {
             
             RecipeDetailView(recipe: self.recipe, model: self.model)
         }
+        .frame(height:750)
         
     }
  }

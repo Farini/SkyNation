@@ -15,24 +15,31 @@ fileprivate enum HabSelection {
 struct CityHabView: View {
     
     @Binding var people:[Person]
+    var city:CityData
+    
     @State var selection:Person?
     @State fileprivate var selectState:HabSelection = .empty
     
     var body: some View {
         VStack(alignment:.leading) {
             
-            // Header
-            Text("Hab")
-            Text("Limits")
-            
             HStack {
                 // Left List
-                List(people) { person in
-                    ActivityPersonCell(person: person, selected: selection == person)
-                        .onTapGesture {
-                            self.selection = person
-                            self.selectState = .selected(person: person)
+                List {
+                    Section(header:Text("Hab Limit: \(city.checkForRoomsAvailable())")) {
+                        ForEach(people) { person in
+                            ActivityPersonCell(person: person, selected: selection == person)
+                                .onTapGesture {
+                                    self.selection = person
+                                    self.selectState = .selected(person: person)
+                                }
                         }
+                    }
+                    
+                    if people.isEmpty {
+                        Text("No one here").foregroundColor(.gray)
+                    }
+                    
                 }
                 .frame(minWidth: 180, idealWidth: 200, maxWidth: 220, minHeight: 300, idealHeight: 300, maxHeight: .infinity, alignment: .top)
                 
@@ -66,6 +73,6 @@ struct CityHabView: View {
 
 struct CityHabView_Previews: PreviewProvider {
     static var previews: some View {
-        CityHabView(people: .constant(LocalDatabase.shared.city?.inhabitants ?? []))
+        CityHabView(people: .constant(LocalDatabase.shared.city?.inhabitants ?? []), city: LocalDatabase.shared.city!)
     }
 }

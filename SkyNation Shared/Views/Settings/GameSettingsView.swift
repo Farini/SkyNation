@@ -8,7 +8,7 @@ import CoreImage
 
 struct GameSettingsView: View {
     
-    @ObservedObject var guildController:GuildController
+//    @ObservedObject var guildController:GuildController
     @ObservedObject var controller = GameSettingsController()
     
     /// When turned on, this shows the "close" button
@@ -16,7 +16,7 @@ struct GameSettingsView: View {
     
     init(inGame:Bool? = false) {
         self.inGame = inGame!
-        self.guildController = GuildController(autologin: true)
+//        self.guildController = GuildController(autologin: true)
     }
     
     /// Header (only shows when `inGame` is on

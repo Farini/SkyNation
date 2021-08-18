@@ -114,19 +114,28 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 [8/13/2021 - ?]
 - [X] EarthOrder - People list not refreshing.
 - [X] GameLogic - Person - personStudyTime
+- [X] Settings - Eliminate `GuildController` altogether. Merge With GameSettingsController.
+- [X] Settings - Logic -> ServerManager.init() -> Check LocalPlayer -> Login
+- [X] City View - Garage (Receiving Vehicles)
+- [X] Station Garage View - Building Vehicle - Remove unnecessary views (solar panel, add bot)
+- [X] Station Garage View - Building Vehicle - Make ScrollView take the whole space
+- [X] Station Garage View - Built Vehicles - Remove Inventory Button, have only 'Descent' button
+- [X] Station Garage View - Space Vehicle Registration (when launch)
+- [X] Overlays - Guild Chat
+- [X] Model - City Tech
+- [X] Model - Mars City in `LocalDatabase`
+- [X] Model - Guild Chat
+- [X] Basic Views - PlayerContent, or PlayerCard
+8/17/2021 = 14 of 61 (23 %)
+- [X] City View - Tech implementation
+- [X] City View - Recipes Implementation
+
 
 - [ ] Settings - ServerTab - Leave Guild
 - [ ] Settings - ServerTab - Create Guild
-- [ ] Settings - Eliminate `GuildController` altogether. Merge With GameSettingsController.
-- [ ] Logic -> ServerManager.init() -> Check if LocalPlayer has `PlayerID`. Yes -> Login. No -> SKNS.newLogin
-- [ ] Logic -> ServerManager.init() -> Check if LocalPlayer has guild. Yes -> Load Guild.
-- [ ] ServerManager should decide what to do with Fetching Player Info.
 
-- [X] City View - Garage (Receiving Vehicles)
-- [ ] City View - City.garage.vehicles not updating.
-- [ ] City View - Tech implementation
-- [ ] City View - Recipes Implementation
 - [ ] City View - Election
+- [ ] City View - LSS View + (Accounting Status)
 
 - [ ] Outpost - supply method + SKNS request for `Outpost` upgrades
 
@@ -135,15 +144,13 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Station Scene - Make the Earth bright again?
 - [ ] Station Scene - New Modules not available after Tech research. 
 
-- [X] Station Garage View - Building Vehicle - Remove unnecessary views (solar panel, add bot)
-- [X] Station Garage View - Building Vehicle - Make ScrollView take the whole space
-- [X] Station Garage View - Built Vehicles - Remove Inventory Button, have only 'Descent' button
-- [X] Station Garage View - Space Vehicle Registration (when launch)
 - [ ] Station Garage View - Building Vehicle - Reduce difficulty for bigger engines
 
-- [ ] Mars Scene - Guild map improvements (x8)
+
+- [X] Mars Scene - City - Gate Node
 - [ ] Mars Scene - City - Gate Config (to layout scene)
 - [ ] Mars Scene - City - Solar Panel(s)
+- [X] Mars Scene - Outpost Node
 - [ ] Mars Scene - Outposts with Levels
 - [ ] Mars Scene - Outpost - State (building) scenes
 - [ ] Mars Scene - Infinite floor
@@ -152,21 +159,20 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Mars Scene - Animations - Transportation
 - [ ] Mars Scene - Animations - Camera entrance
 - [ ] Mars Scene - Garage - Vehicle Validation (when arriving (orbit))
+- [ ] Mars Scene - Gate Lights changing (Day/Night)
+- [ ] Mars Scene - Guild map improvements (x8)
 
-- [X] Overlays - Guild Chat
 - [ ] Overlays - Election
 - [ ] Overlays - Cameras
 - [ ] Overlays - Outpost rss Collecting
 
-- [X] Model - City Tech
-- [X] Model - Mars City in `LocalDatabase`
-- [X] Model - Guild Chat
 - [ ] Model - E-Vehicle/Bot
 - [ ] Model - City Accounting
 - [ ] Model - Outpost rss Collecting
 - [ ] Model - Election
 - [ ] Model - Road?
 - [ ] Model - Mars Accounting
+- [ ] Model - Guild - Write Invite
 
 - [ ] 2D Graphics - iOS app icon
 - [ ] 2D Graphics - Blender individual tanks
@@ -178,11 +184,9 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing) -> Look under Dektop -> Useful Assets -> Sounds
 - [ ] Sound - 2 more music (better ones)
 
-- [X] Basic Views - PlayerContent, or PlayerCard
 - [ ] Basic Views - SelectionIndicator -> ● + ○
 - [ ] Basic Views - Error messages (red)
 - [ ] Basic Views - Alert messages (orange)
-
 
 - [ ] iOS - Views are too large
 - [ ] iOS - Font modifiers

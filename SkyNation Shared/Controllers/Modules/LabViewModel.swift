@@ -344,6 +344,7 @@ class LabViewModel: ObservableObject {
         return !station.unlockedRecipes.contains(recipe)
     }
     
+    /// Begins the LabActivity to make a recipe
     func makeRecipe(recipe:Recipe) {
         
         print("Making recipe: \(recipe.rawValue)")
@@ -668,7 +669,7 @@ class LabViewModel: ObservableObject {
     
 }
 
-
+/// Controls a continuous `LabActivity` updating it every few seconds
 class LabActivityViewModel: ObservableObject {
     
     @Published var counter:Int = 0

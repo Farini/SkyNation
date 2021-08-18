@@ -157,4 +157,27 @@ struct CityTechTree {
         let uniqueTree:Tree<Unique<CityTech>> = binaryTree.map(Unique.init)
         self.uniqueTree = uniqueTree
     }
+    
+    /// Returns a `CityTech` array containing items that can be researched.
+    func unlockedTechAfter(doneTech:[CityTech]) -> [CityTech] {
+        
+        var next = [self.uniqueTree]
+        
+        var array:[CityTech] = [uniqueTree.value.value]
+        
+        while let scope = next.first {
+
+            if doneTech.contains(scope.value.value) {
+                array.append(contentsOf: scope.children.compactMap({ $0.value.value }))
+                next.append(contentsOf: scope.children)
+            }
+            next.removeFirst()
+        }
+        
+        print("\n\n\n *** Discoverable ***")
+        print(array.description)
+        
+        return array
+        
+    }
 }

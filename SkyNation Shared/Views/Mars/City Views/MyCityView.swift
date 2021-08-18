@@ -64,25 +64,25 @@ struct MyCityView: View {
         VStack {
             switch cityTab {
                 case .hab:
-                    CityHabView(people: $cityData.inhabitants, selection: nil)
+                    CityHabView(people: $cityData.inhabitants, city: cityData, selection: nil)
                 case .lab:
                     CityLabView(controller:controller)
                 case .rss:
-                    HStack {
-                        Spacer()
-                        // Boxes
-                        Group {
-                            Divider()
-                            Text("Boxes").font(.title2)
-                            
-                            LazyVGrid(columns: [GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100))], alignment: .center, spacing: 8, pinnedViews: [], content: {
+                    ScrollView {
+                        VStack {
+                            Group {
+//                                Divider()
+                                Text("Boxes").font(.title2)
                                 
-                                ForEach(cityData.boxes) { box in
-                                    IngredientView(ingredient: box.type, hasIngredient: true, quantity: box.current)
-                                }
-                            })
+                                LazyVGrid(columns: [GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100))], alignment: .center, spacing: 8, pinnedViews: [], content: {
+                                    
+                                    ForEach(cityData.boxes) { box in
+                                        IngredientView(ingredient: box.type, hasIngredient: true, quantity: box.current)
+                                    }
+                                })
+                            }
                         }
-                        Spacer()
+                        .frame(minWidth: 600, idealWidth: 750, maxWidth: 900)
                     }
                     
                 case .rocket:

@@ -55,10 +55,21 @@ class CityController:ObservableObject {
     @Published var arrivedVehicles:[SpaceVehicle]
     @Published var travelVehicles:[SpaceVehicle]
     
+    // People
+    @Published var availableStaff:[Person] = []
+    @Published var selectedStaff:[Person] = []
+    
+    @Published var unlockedTech:[CityTech] = []
+    
+    // Errors & Warnings
+    @Published var warnings:[String] = []
+    
+    
     init() {
         
         guard let player = LocalDatabase.shared.player else { fatalError() }
         self.player = player
+        
         self.builder = MarsBuilder.shared
         viewState = .loading
         
@@ -104,7 +115,14 @@ class CityController:ObservableObject {
                     if let cityData:CityData = MarsBuilder.shared.myCityData {
                         
                         if let localCity:CityData = LocalDatabase.shared.city {
+                            
+                            // Update main City Data Object
                             self.cityData = localCity
+                            
+                            // Update Staff
+                            self.availableStaff = localCity.inhabitants.filter({ $0.isBusy() == false })
+                            self.unlockedTech = CityTechTree().unlockedTechAfter(doneTech: localCity.tech)
+                            
                         } else {
                             
                             print("Try to save city")
@@ -335,6 +353,7 @@ class CityController:ObservableObject {
     }
     
     // Development Helper
+    /*
     func addSomethingToCity() {
         
         if cityData == nil {
@@ -383,14 +402,260 @@ class CityController:ObservableObject {
             print("Added 10 tanks")
         }
     }
+    */
     
-    // MARK: - Lab
+    // MARK: - Lab (Recipes)
     
+    /// Called when Player clicks on a Recipe
     func labSelect(recipe:Recipe) {
+        self.warnings = []
         self.labSelection = .recipe(name: recipe)
     }
     
+    /// The disabled state of the button "Make Recipe" for this recipe
+    func recipeDisabled(recipe:Recipe) -> Bool {
+        if let city = cityData {
+            return !city.unlockedRecipes.contains(recipe)
+        } else {
+            return true
+        }
+    }
+    
+    /// Begins the LabActivity to make a recipe
+    func makeRecipe(recipe:Recipe) {
+        
+        // Reset Warnings
+        self.warnings = []
+        print("Making recipe: \(recipe.rawValue)")
+        
+        guard let cityData = cityData else {
+            self.warnings = ["You don't have a City"]
+            return
+        }
+        
+        // Check Ingredients
+        let reqIngredients:[Ingredient:Int] = recipe.ingredients()
+        let lacking:[Ingredient] = cityData.validateResources(ingredients: reqIngredients)
+        
+        // Add problem message
+        if !lacking.isEmpty {
+            var problematicMessage:String = "Missing ingredients:"
+            for ingredient in lacking {
+                problematicMessage += "\n\(ingredient.rawValue) "
+            }
+            self.warnings.append(problematicMessage)
+            
+            print("Cannot charge :(")
+            return
+        } else {
+            print("Ingredients Check: OK")
+        }
+        
+        // Check Skills
+        let reqSkills:[Skills:Int] = recipe.skillSet()
+        let workers:[Person] = self.selectedStaff
+        var missingSkills:[Skills] = []
+        for (key, value) in reqSkills {
+            var valueCount:Int = value // The sum of ppl skills
+            for p in workers {
+                let skset:[SkillSet] = p.skills.filter({ $0.skill == key })
+                for sdk in skset {
+                    if sdk.skill == key {
+                        valueCount -= sdk.level
+                    }
+                }
+            }
+            if valueCount > 0 {
+                missingSkills.append(key)
+            }
+        }
+        
+        // Problems (if any)
+        if missingSkills.isEmpty {
+            print("Skills Check OK.")
+            
+        } else {
+            
+            var problematicMessage:String = "Missing Skills"
+            for skill in missingSkills {
+                problematicMessage += "\n\(skill.rawValue)"
+            }
+            self.warnings.append(problematicMessage)
+            
+            print("There aren't enough skills :(")
+            return
+        }
+        
+        var bonus:Double = 0.1
+        for person in workers {
+            let lacking = Double(max(100, person.intelligence) + max(100, person.happiness) + max(100, person.teamWork)) / 3.0
+            // lacking will be 100 (best), 0 (worst)
+            bonus += lacking / Double(workers.count)
+        }
+        let timeDiscount = (bonus / 100) * 0.6 * Double(recipe.getDuration()) // up to 60% discount on time
+        
+        // Create Activity
+        let duration = recipe.getDuration() - Int(timeDiscount)
+        let delta:TimeInterval = Double(duration)
+        let activity = LabActivity(time: delta, name: recipe.rawValue)
+        cityData.labActivity = activity
+        
+        // Assign activity to workers
+        for person in self.selectedStaff {
+            person.activity = activity
+        }
+        
+        // Charge
+        let chargeResult = cityData.payForResources(ingredients: reqIngredients)
+        if chargeResult == false {
+            print("ERROR: Could not charge resources")
+            warnings.append("Could not charge resources")
+            return
+        } else {
+            print("Charged successful: \(reqIngredients)")
+        }
+        
+        // Save and update view
+        do {
+            try LocalDatabase.shared.saveCity(cityData) //saveStation(station: station)
+            self.labSelection = .activity(object: activity)
+            print("Activity created")
+        } catch {
+            print("Error: \(error.localizedDescription)")
+            self.warnings = ["Could not save city \(error.localizedDescription)"]
+        }
+        
+    }
+    
+    // MARK: - Lab (Tech)
+    
     func labSelect(tech:CityTech) {
+        
+        print("\n\t TECH")
+        self.unlockedTech = CityTechTree().unlockedTechAfter(doneTech: cityData!.tech)
+        
+        self.warnings = []
         self.labSelection = .tech(name: tech)
+    }
+    
+    func makeTech(tech:CityTech) {
+        
+        // Reset Warnings
+        self.warnings = []
+        print("Making tech: \(tech.rawValue)")
+        
+        guard let cityData = cityData else {
+            self.warnings = ["You don't have a City"]
+            return
+        }
+        
+        // Check Ingredients
+        let reqIngredients:[Ingredient:Int] = tech.ingredients
+        let lacking:[Ingredient] = cityData.validateResources(ingredients: reqIngredients)
+        // Add problem message
+        if !lacking.isEmpty {
+            var problematicMessage:String = "Missing ingredients"
+            for ingredient in lacking {
+                problematicMessage += "\n\(ingredient.rawValue) "
+            }
+            self.warnings.append(problematicMessage)
+            
+            print("Cannot charge :(")
+            return
+        } else {
+            print("There are enough ingredients!")
+        }
+        
+        // Check Skills
+        let reqSkills:[Skills:Int] = tech.skillSet
+        let workers:[Person] = self.selectedStaff
+        var missingSkills:[Skills] = []
+        for (key, value) in reqSkills {
+            var valueCount:Int = value // The sum of ppl skills
+            for p in workers {
+                let skset:[SkillSet] = p.skills.filter({ $0.skill == key })
+                for sdk in skset {
+                    if sdk.skill == key {
+                        valueCount -= sdk.level
+                    }
+                }
+            }
+            if valueCount > 0 {
+                missingSkills.append(key)
+            }
+        }
+        
+        // Problems (if any)
+        if missingSkills.isEmpty {
+            print("There are enough skills :)")
+            
+        } else {
+            
+            var problematicMessage:String = "Missing Skills:"
+            // problematicMessage += "\nMissing Skills:"
+            for skill in missingSkills {
+                problematicMessage += "\n\(skill.rawValue)"
+            }
+            self.warnings.append(problematicMessage)
+            print("There aren't enough skills :(")
+            return
+        }
+        
+        var bonus:Double = 0.1
+        for person in workers {
+            let lacking = Double(max(100, person.intelligence) + max(100, person.happiness) + max(100, person.teamWork)) / 3.0
+            // lacking will be 100 (best), 0 (worst)
+            bonus += lacking / Double(workers.count)
+        }
+        let timeDiscount = (bonus / 100) * 0.6 * Double(tech.duration) // up to 60% discount on time
+        
+        // Create activity
+        let duration = tech.duration - Int(timeDiscount)
+        let delta:TimeInterval = Double(duration)
+        let activity = LabActivity(time: delta, name: tech.rawValue)
+        cityData.labActivity = activity
+        
+        // Assign activity to workers
+        for person in self.selectedStaff {
+            person.activity = activity
+        }
+        
+        // Charge
+        let chargeResult = cityData.payForResources(ingredients: reqIngredients)
+        if chargeResult == false {
+            print("ERROR: Could not charge results")
+        } else {
+            print("Charged successful: \(reqIngredients)")
+        }
+        
+        // Save and update view
+        do {
+            try LocalDatabase.shared.saveCity(cityData) //saveStation(station: station)
+            self.labSelection = .activity(object: activity)
+            self.warnings = []
+            print("Activity created")
+        } catch {
+            print("Error: \(error.localizedDescription)")
+            self.warnings = ["Could not save city \(error.localizedDescription)"]
+        }
+        
+        // Reset other vars
+        selectedStaff = []
+    }
+    
+    // MARK: - Leb (General)
+    
+    /// Checks how much of that recipe the City has.
+    func availabilityOf(ingredient:Ingredient) -> Int {
+        return cityData?.boxes.filter({ $0.type == ingredient }).compactMap({ $0.current }).reduce(0, +) ?? 0
+    }
+    
+    /// Cancels the selection of TechItem, or Recipe
+    func cancelSelection() {
+        // Set the selection to none, to update the view
+        self.labSelection = .NoSelection
+        self.warnings = []
+        // Reset Staff selection
+        if !selectedStaff.isEmpty { selectedStaff = [] }
     }
 }

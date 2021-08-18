@@ -91,18 +91,24 @@ class GameSettingsController:ObservableObject {
         }
     }
     
+    // Local DB + Player begins
     @Published var hasChanges:Bool
     @Published var playerID:UUID
     @Published var isNewPlayer:Bool
     @Published var savedChanges:Bool
     @Published var stationSceneLoaded:Bool = false
     
+    /// MARK: - Online Data
+    
+    /// Keep track of updated player (login)
+    @Published var updatedPlayer:PlayerUpdate?
     // Guild Selection
     @Published var guildJoinState:GuildJoinState = .loading
     // [Not Joined] -> Fetch
     @Published var joinableGuilds:[GuildSummary] = []
     @Published var selectedGuildObj:GuildFullContent?
-    @Published var allFetchedGuilds:[GuildFullContent] = []
+    private var otherFetchedGuilds:[GuildFullContent] = []
+    
     // [Joined] -> Reload?
     @Published var myGuild:GuildFullContent?
     
@@ -111,6 +117,9 @@ class GameSettingsController:ObservableObject {
     
     /// A list of things to load
     @Published var loadedList:[String] = []
+    
+    /// A list of errors to display
+    @Published var warningList:[String] = []
     
     // MARK: - Methods
     
@@ -151,14 +160,25 @@ class GameSettingsController:ObservableObject {
             if let player = LocalDatabase.shared.player {
                 
                 items.append("★ Loaded Player \(player.name)")
+                
                 if let pid = player.serverID {
+                    
                     items.append("L-PID \(pid.uuidString)")
-                }
-                if let gid = player.guildID {
-                    items.append("L-GID \(gid.uuidString.prefix(8))")
-                }
-                if let cid = player.cityID {
-                    items.append("L-CID \(cid.uuidString.prefix(8))")
+                    let _ = ServerManager.shared
+                    
+                    if let gid = player.guildID {
+                        items.append("L-GID \(gid.uuidString.prefix(8))")
+                    }
+                    
+                    if let cid = player.cityID {
+                        items.append("L-CID \(cid.uuidString.prefix(8))")
+                    }
+                    
+                    if GameSettings.onlineStatus == true {
+                        if updatedPlayer == nil {
+                            self.loginPlayer()
+                        }
+                    }
                 }
                 
                 // Scene Loaded
@@ -198,7 +218,24 @@ class GameSettingsController:ObservableObject {
         self.viewState = .EditingPlayer
     }
     
-    // MARK: - Server Tab
+    // MARK: - Server Tab + Online
+    func loginPlayer() {
+        
+        ServerManager.shared.inquireLogin { player, error in
+            DispatchQueue.main.async {
+                if let player:PlayerUpdate = player {
+                    print("Player login: ID:\(player.id.uuidString), LID: \(player.localID)")
+                    self.loadedList.append("★ Player logged in")
+                    self.updatedPlayer = player
+                } else {
+                    print("Did not find user. \(error?.localizedDescription ?? "")")
+                    self.loadedList.append("Did not find user. \(error?.localizedDescription ?? "")")
+                    self.warningList.append("Did not find user. \(error?.localizedDescription ?? "")")
+                }
+            }
+        }
+        
+    }
     
     /// Called when Player selects a different tab.
     func didSelectTab(newTab:GameSettingsTab) {
@@ -217,7 +254,7 @@ class GameSettingsController:ObservableObject {
         }
     }
     
-    /// Entering Server Tab - Fetch Guild (if any), and Player status
+    /// Entering Server Tab - Fetch Player's Guild, (or list), and Player status
     func enterServerTab() {
         
         print("Entering Server Tab. guildJoinState: \(self.guildJoinState)")
@@ -246,45 +283,15 @@ class GameSettingsController:ObservableObject {
             
             print("Player GuildID: \(gid)")
             
-            ServerManager.shared.inquireFullGuild(force: false) { fullGuild, error in
-                
-                if let guild:GuildFullContent = fullGuild {
-                    
-                    if guild.id == self.player.guildID {
-                        // Same O' Guild
-                        
-                        if guild.citizens.compactMap({ $0.id }).contains(self.player.playerID ?? UUID()) {
-                            
-                            self.myGuild = guild
-                            self.guildJoinState = .joined(guild: guild)
-                            
-                        } else {
-                            
-                            // Kicked Out?
-                            self.myGuild = nil
-                            self.player.guildID = nil
-                            self.guildJoinState = .kickedOut
-                            
-                        }
-                    } else {
-                        
-                        // Different Guild
-                        self.myGuild = nil
-                        self.player.guildID = nil
-                        self.guildJoinState = .kickedOut
-                        
-                    }
-                } else {
-                    
-                    // No Guild, or Error
-                    if let error = error {
-                        self.guildJoinState = .error(error: error)
-                    } else {
-                        self.guildJoinState = .noGuild
-                    }
-                    
-                }
+            // Avoid loading Guild multiple times.
+            if GameSettings.onlineStatus == false { return }
+            if let myGuild = myGuild {
+                print("Already got my Guild.: \(myGuild.name) Returning")
+                return
             }
+            
+            self.fetchMyGuild()
+            
         } else {
             // No Guild
             self.guildJoinState = .noGuild
@@ -292,7 +299,73 @@ class GameSettingsController:ObservableObject {
         }
     }
     
+    /// Gets My Guild and update guildJoinState
+    func fetchMyGuild() {
+        
+        ServerManager.shared.inquireFullGuild(force: false) { fullGuild, error in
+            
+            if let guild:GuildFullContent = fullGuild {
+                
+                if guild.id == self.player.guildID {
+                    // Same O' Guild
+                    
+                    if guild.citizens.compactMap({ $0.id }).contains(self.player.playerID ?? UUID()) {
+                        
+                        self.myGuild = guild
+                        self.guildJoinState = .joined(guild: guild)
+                        
+                    } else {
+                        
+                        // Kicked Out?
+                        self.myGuild = nil
+                        self.player.guildID = nil
+                        self.guildJoinState = .kickedOut
+                        
+                    }
+                } else {
+                    
+                    // Different Guild
+                    self.myGuild = nil
+                    self.player.guildID = nil
+                    self.guildJoinState = .kickedOut
+                    
+                }
+            } else {
+                
+                // No Guild, or Error
+                if let error = error {
+                    self.guildJoinState = .error(error: error)
+                } else {
+                    self.guildJoinState = .noGuild
+                }
+                
+            }
+        }
+        
+    }
+    
+    /// Fetches all `Joinable` Guilds
+    func fetchGuilds() {
+        
+        SKNS.browseGuilds { (guilds, error) in
+            if let array = guilds {
+                print("Updating Guilds")
+                self.joinableGuilds = array
+                self.loadedList.append("Fetched \(array.count) Guilds")
+            } else {
+                if let error = error {
+                    self.warningList.append(error.localizedDescription)
+                } else {
+                    self.warningList.append("Something else happened. Not an error, but no Guilds")
+                    print("Something else happened. Not an error, but no Guilds")
+                }
+            }
+        }
+    }
+    
     func createGuild() {
+        
+        print("Needs implementation")
         
         // FIXME: - Needs Implementation
         
@@ -304,39 +377,21 @@ class GameSettingsController:ObservableObject {
 //        let decoder = JSONDecoder()
 //        decoder.dateDecodingStrategy = .secondsSince1970
 //
-////        SKNS.createGuild(localPlayer: user, guildName: "Test Guild") { (data, error) in
-////            if let data = data, let guild = try? decoder.decode(Guild.self, from: data) {
-////                print("We got a Guild: \(guild.name)")
-////                self.guild = guild
-////            } else {
-////                print("Failed creating guild. Reason: \(error?.localizedDescription ?? "n/a")")
-////            }
-////        }
+//        SKNS.createGuild(localPlayer: user, guildName: "Test Guild") { (data, error) in
+//            if let data = data, let guild = try? decoder.decode(Guild.self, from: data) {
+//                print("We got a Guild: \(guild.name)")
+//                self.guild = guild
+//            } else {
+//                print("Failed creating guild. Reason: \(error?.localizedDescription ?? "n/a")")
+//            }
+//        }
         
-    }
-    
-    /// Fetches all `Joinable` Guilds
-    func fetchGuilds() {
-        
-        SKNS.browseGuilds { (guilds, error) in
-            if let array = guilds {
-                print("Updating Guilds \(array.count)")
-                self.joinableGuilds = array
-                self.guildJoinState = .choosing
-            } else {
-                if let error = error {
-                    print("Error: \(error.localizedDescription)")
-                } else {
-                    print("Something else happened. Not an error, but no Guilds")
-                }
-            }
-        }
     }
     
     /// Gets one Guild's Details to display for user (Choosing Guild)
     func fetchGuildDetails(guildSum:GuildSummary) {
         
-        if let fetched:GuildFullContent = allFetchedGuilds.first(where: { $0.id == guildSum.id }) {
+        if let fetched:GuildFullContent = otherFetchedGuilds.first(where: { $0.id == guildSum.id }) {
             
             self.selectedGuildObj = fetched
             return
@@ -346,6 +401,7 @@ class GameSettingsController:ObservableObject {
                 if let fullGuild = fullGuild {
                     DispatchQueue.main.async {
                         self.selectedGuildObj = fullGuild
+                        self.otherFetchedGuilds.append(fullGuild)
                     }
                 } else {
                     print("‼️ Could not get full Guild")

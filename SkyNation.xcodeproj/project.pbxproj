@@ -65,7 +65,6 @@
 		8536F2D9258D330300B509D2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8536F2D7258D330300B509D2 /* LaunchScreen.storyboard */; };
 		8536F2E2258D330300B509D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2E1258D330300B509D2 /* AppDelegate.swift */; };
 		8536F2E4258D330300B509D2 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2E3258D330300B509D2 /* GameViewController.swift */; };
-		8536F2E7258D330300B509D2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8536F2E5258D330300B509D2 /* Main.storyboard */; };
 		8536F2EA258D330300B509D2 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2B5258D330200B509D2 /* GameController.swift */; };
 		8536F2EB258D330300B509D2 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2B5258D330200B509D2 /* GameController.swift */; };
 		8536F2EC258D330300B509D2 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2B5258D330200B509D2 /* GameController.swift */; };
@@ -308,6 +307,21 @@
 		85487F3226C9930500EBC070 /* GuildChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F3126C9930500EBC070 /* GuildChatView.swift */; };
 		85487F3326C9930500EBC070 /* GuildChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F3126C9930500EBC070 /* GuildChatView.swift */; };
 		85487F3426C9930500EBC070 /* GuildChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F3126C9930500EBC070 /* GuildChatView.swift */; };
+		85487F3726CC221E00EBC070 /* CityLabRecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F3626CC221E00EBC070 /* CityLabRecipeView.swift */; };
+		85487F3826CC221E00EBC070 /* CityLabRecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F3626CC221E00EBC070 /* CityLabRecipeView.swift */; };
+		85487F3926CC221E00EBC070 /* CityLabRecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F3626CC221E00EBC070 /* CityLabRecipeView.swift */; };
+		85487F3B26CC32F900EBC070 /* CityLabTechView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F3A26CC32F900EBC070 /* CityLabTechView.swift */; };
+		85487F3C26CC32F900EBC070 /* CityLabTechView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F3A26CC32F900EBC070 /* CityLabTechView.swift */; };
+		85487F3D26CC32F900EBC070 /* CityLabTechView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F3A26CC32F900EBC070 /* CityLabTechView.swift */; };
+		85487F3F26CC65E000EBC070 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 85487F3E26CC65E000EBC070 /* Main.storyboard */; };
+		85487F4226CC691300EBC070 /* CityGateNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F4126CC691300EBC070 /* CityGateNode.swift */; };
+		85487F4326CC691300EBC070 /* CityGateNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F4126CC691300EBC070 /* CityGateNode.swift */; };
+		85487F4426CC691300EBC070 /* CityGateNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F4126CC691300EBC070 /* CityGateNode.swift */; };
+		85487F4526CC691300EBC070 /* CityGateNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F4126CC691300EBC070 /* CityGateNode.swift */; };
+		85487F4726CC7C7400EBC070 /* OutpostNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F4626CC7C7400EBC070 /* OutpostNode.swift */; };
+		85487F4826CC7C7400EBC070 /* OutpostNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F4626CC7C7400EBC070 /* OutpostNode.swift */; };
+		85487F4926CC7C7400EBC070 /* OutpostNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F4626CC7C7400EBC070 /* OutpostNode.swift */; };
+		85487F4A26CC7C7400EBC070 /* OutpostNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85487F4626CC7C7400EBC070 /* OutpostNode.swift */; };
 		8559201525959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
 		8559201625959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
 		8559201725959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
@@ -586,7 +600,6 @@
 		8536F2DF258D330300B509D2 /* SkyNation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SkyNation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8536F2E1258D330300B509D2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8536F2E3258D330300B509D2 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
-		8536F2E6258D330300B509D2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8536F2E8258D330300B509D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8536F2E9258D330300B509D2 /* SkyNation_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SkyNation_macOS.entitlements; sourceTree = "<group>"; };
 		8536F301258D34D100B509D2 /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.markdown; };
@@ -657,6 +670,11 @@
 		85487F2826C6F47100EBC070 /* PlayerCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCardView.swift; sourceTree = "<group>"; };
 		85487F2C26C78D3B00EBC070 /* CityGarageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityGarageView.swift; sourceTree = "<group>"; };
 		85487F3126C9930500EBC070 /* GuildChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildChatView.swift; sourceTree = "<group>"; };
+		85487F3626CC221E00EBC070 /* CityLabRecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityLabRecipeView.swift; sourceTree = "<group>"; };
+		85487F3A26CC32F900EBC070 /* CityLabTechView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityLabTechView.swift; sourceTree = "<group>"; };
+		85487F3E26CC65E000EBC070 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		85487F4126CC691300EBC070 /* CityGateNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityGateNode.swift; sourceTree = "<group>"; };
+		85487F4626CC7C7400EBC070 /* OutpostNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutpostNode.swift; sourceTree = "<group>"; };
 		8559201425959A4300CF5467 /* SideMenuNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuNode.swift; sourceTree = "<group>"; };
 		8569A303259F7F990057A518 /* dissolve.fragment.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dissolve.fragment.txt; sourceTree = "<group>"; };
 		8569A30E259F81110057A518 /* CutionStripesColored.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CutionStripesColored.fsh; sourceTree = "<group>"; };
@@ -864,12 +882,12 @@
 			isa = PBXGroup;
 			children = (
 				8536F2E1258D330300B509D2 /* AppDelegate.swift */,
+				857D9A1825BF42CB00626884 /* Entry.storyboard */,
+				8597BBA925BF40AB00C705A0 /* StartingWindow.swift */,
+				85487F3E26CC65E000EBC070 /* Main.storyboard */,
 				8536F2E3258D330300B509D2 /* GameViewController.swift */,
-				8536F2E5258D330300B509D2 /* Main.storyboard */,
 				8536F2E8258D330300B509D2 /* Info.plist */,
 				8536F2E9258D330300B509D2 /* SkyNation_macOS.entitlements */,
-				8597BBA925BF40AB00C705A0 /* StartingWindow.swift */,
-				857D9A1825BF42CB00626884 /* Entry.storyboard */,
 			);
 			path = "SkyNation macOS";
 			sourceTree = "<group>";
@@ -949,6 +967,7 @@
 				858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */,
 				8536F465258D481700B509D2 /* Space Station */,
 				8592824E25EED6C6001233BE /* SpaceVehicle */,
+				85487F4026CC68CF00EBC070 /* Mars */,
 				8536F460258D481700B509D2 /* Mars Map */,
 				8536F45D258D481700B509D2 /* Overlays */,
 				8569A302259F7F7A0057A518 /* Shaders */,
@@ -1194,6 +1213,26 @@
 			path = "Game Messages";
 			sourceTree = "<group>";
 		};
+		85487F3526CC21E500EBC070 /* Lab */ = {
+			isa = PBXGroup;
+			children = (
+				85D3BB1A26AC771D00B6AA36 /* CityLabView.swift */,
+				85487F3A26CC32F900EBC070 /* CityLabTechView.swift */,
+				85D3BB2226AC9C9800B6AA36 /* CityTechDiagram.swift */,
+				85487F3626CC221E00EBC070 /* CityLabRecipeView.swift */,
+			);
+			path = Lab;
+			sourceTree = "<group>";
+		};
+		85487F4026CC68CF00EBC070 /* Mars */ = {
+			isa = PBXGroup;
+			children = (
+				85487F4126CC691300EBC070 /* CityGateNode.swift */,
+				85487F4626CC7C7400EBC070 /* OutpostNode.swift */,
+			);
+			path = Mars;
+			sourceTree = "<group>";
+		};
 		8569A302259F7F7A0057A518 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
@@ -1351,11 +1390,10 @@
 			children = (
 				85D3BAA9269DF75000B6AA36 /* MarsCityView.swift */,
 				85D3BAAD269DF78500B6AA36 /* MyCityView.swift */,
-				85487F2C26C78D3B00EBC070 /* CityGarageView.swift */,
 				85D3BAB1269DF79800B6AA36 /* ForeignCityView.swift */,
-				85D3BB1A26AC771D00B6AA36 /* CityLabView.swift */,
+				85487F3526CC21E500EBC070 /* Lab */,
+				85487F2C26C78D3B00EBC070 /* CityGarageView.swift */,
 				85D3BB1E26AC84CA00B6AA36 /* CityHabView.swift */,
-				85D3BB2226AC9C9800B6AA36 /* CityTechDiagram.swift */,
 			);
 			path = "City Views";
 			sourceTree = "<group>";
@@ -1591,12 +1629,12 @@
 			files = (
 				8569A32A259F81110057A518 /* HexagonShader.fsh in Resources */,
 				8569A31E259F81110057A518 /* InterlaceShader.fsh in Resources */,
-				8536F2E7258D330300B509D2 /* Main.storyboard in Resources */,
 				85D3BB2A26AF244400B6AA36 /* SFXClose.wav in Resources */,
 				8569A321259F81110057A518 /* TransitionShader.fsh in Resources */,
 				8536F2F2258D330300B509D2 /* Assets.xcassets in Resources */,
 				8569A336259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
 				85E2C41F26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
+				85487F3F26CC65E000EBC070 /* Main.storyboard in Resources */,
 				8569A31B259F81110057A518 /* CutionStripesColored.fsh in Resources */,
 				857D9A1925BF42CB00626884 /* Entry.storyboard in Resources */,
 				8536F47F258D481700B509D2 /* MapIndicators.sks in Resources */,
@@ -1651,6 +1689,7 @@
 				85487F1E26C5BB2000EBC070 /* SettingsServerTab.swift in Sources */,
 				8559201525959A4300CF5467 /* SideMenuNode.swift in Sources */,
 				8536F46D258D481700B509D2 /* CamControlNode.swift in Sources */,
+				85487F3726CC221E00EBC070 /* CityLabRecipeView.swift in Sources */,
 				8504A52E25C6872B00739C58 /* Tanks.swift in Sources */,
 				8536F36E258D475D00B509D2 /* SceneHelpers.swift in Sources */,
 				8536F4A2258D484B00B509D2 /* SceneDirector.swift in Sources */,
@@ -1660,6 +1699,7 @@
 				859D683A25DD91DB005DD42C /* GameShoppingView.swift in Sources */,
 				85487F3226C9930500EBC070 /* GuildChatView.swift in Sources */,
 				8536F2C2258D330300B509D2 /* GameViewController.swift in Sources */,
+				85487F4226CC691300EBC070 /* CityGateNode.swift in Sources */,
 				8592823625EC4DD3001233BE /* GuildController.swift in Sources */,
 				859D683225DD8B9F005DD42C /* GameMessagesView.swift in Sources */,
 				85CD46B025D20B42000D9C64 /* ModulePopView.swift in Sources */,
@@ -1701,6 +1741,7 @@
 				8569A3DA25A799840057A518 /* LaunchingVehicleView.swift in Sources */,
 				8536F3E6258D47D000B509D2 /* HabModuleView.swift in Sources */,
 				8517EE632605DC8800C34C54 /* CityController.swift in Sources */,
+				85487F4726CC7C7400EBC070 /* OutpostNode.swift in Sources */,
 				8536F3F6258D47D000B509D2 /* TankViews.swift in Sources */,
 				85D3BB1F26AC84CA00B6AA36 /* CityHabView.swift in Sources */,
 				8536F445258D47EA00B509D2 /* LabViewModel.swift in Sources */,
@@ -1751,6 +1792,7 @@
 				8536F386258D475D00B509D2 /* HabModule.swift in Sources */,
 				85C3418525905A7500BF82F9 /* TutorialNode.swift in Sources */,
 				85E6ECF825C9D92B00229E18 /* ServerAPI.swift in Sources */,
+				85487F3B26CC32F900EBC070 /* CityLabTechView.swift in Sources */,
 				8536F37A258D475D00B509D2 /* Recipes.swift in Sources */,
 				8536F451258D47EA00B509D2 /* BioModController.swift in Sources */,
 				8536F362258D475D00B509D2 /* Person.swift in Sources */,
@@ -1773,6 +1815,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8536F442258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
+				85487F4326CC691300EBC070 /* CityGateNode.swift in Sources */,
 				85797510259B9E70004C54D2 /* FlipView.swift in Sources */,
 				8569A34C25A3D9590057A518 /* AirComposition.swift in Sources */,
 				8536F39B258D475D00B509D2 /* TechTree.swift in Sources */,
@@ -1827,6 +1870,7 @@
 				8536F3E7258D47D000B509D2 /* HabModuleView.swift in Sources */,
 				8536F3F7258D47D000B509D2 /* TankViews.swift in Sources */,
 				85D3BB3126AFD28100B6AA36 /* BioBoxDetailView.swift in Sources */,
+				85487F3C26CC32F900EBC070 /* CityLabTechView.swift in Sources */,
 				859281FD25E9529C001233BE /* TutorialView.swift in Sources */,
 				8536F446258D47EA00B509D2 /* LabViewModel.swift in Sources */,
 				8536F377258D475D00B509D2 /* Peripherals.swift in Sources */,
@@ -1884,6 +1928,7 @@
 				859D683B25DD91DB005DD42C /* GameShoppingView.swift in Sources */,
 				85C3418625905A7500BF82F9 /* TutorialNode.swift in Sources */,
 				8517EE2C25F7C3AB00C34C54 /* MarsBuilder.swift in Sources */,
+				85487F4826CC7C7400EBC070 /* OutpostNode.swift in Sources */,
 				8536F37B258D475D00B509D2 /* Recipes.swift in Sources */,
 				85D3BB3526AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */,
 				859D683325DD8B9F005DD42C /* GameMessagesView.swift in Sources */,
@@ -1892,6 +1937,7 @@
 				8536F363258D475D00B509D2 /* Person.swift in Sources */,
 				8536F417258D47D000B509D2 /* GarageView.swift in Sources */,
 				8536F35F258D475D00B509D2 /* Ingredients.swift in Sources */,
+				85487F3826CC221E00EBC070 /* CityLabRecipeView.swift in Sources */,
 				8536F2D1258D330300B509D2 /* AppDelegate.swift in Sources */,
 				85969837260E8FD400BF1860 /* OutpostController.swift in Sources */,
 				8504A52F25C6872B00739C58 /* Tanks.swift in Sources */,
@@ -1918,6 +1964,7 @@
 				85487F2026C5BB2000EBC070 /* SettingsServerTab.swift in Sources */,
 				8559201725959A4300CF5467 /* SideMenuNode.swift in Sources */,
 				8536F46F258D481700B509D2 /* CamControlNode.swift in Sources */,
+				85487F3926CC221E00EBC070 /* CityLabRecipeView.swift in Sources */,
 				8504A53025C6872B00739C58 /* Tanks.swift in Sources */,
 				8536F370258D475D00B509D2 /* SceneHelpers.swift in Sources */,
 				8536F4A4258D484B00B509D2 /* SceneDirector.swift in Sources */,
@@ -1927,6 +1974,7 @@
 				859D683C25DD91DB005DD42C /* GameShoppingView.swift in Sources */,
 				85487F3426C9930500EBC070 /* GuildChatView.swift in Sources */,
 				8536F2E4258D330300B509D2 /* GameViewController.swift in Sources */,
+				85487F4426CC691300EBC070 /* CityGateNode.swift in Sources */,
 				8592823825EC4DD3001233BE /* GuildController.swift in Sources */,
 				859D683425DD8B9F005DD42C /* GameMessagesView.swift in Sources */,
 				85CD46B225D20B42000D9C64 /* ModulePopView.swift in Sources */,
@@ -1968,6 +2016,7 @@
 				8569A3DC25A799840057A518 /* LaunchingVehicleView.swift in Sources */,
 				8536F3E8258D47D000B509D2 /* HabModuleView.swift in Sources */,
 				8517EE652605DC8800C34C54 /* CityController.swift in Sources */,
+				85487F4926CC7C7400EBC070 /* OutpostNode.swift in Sources */,
 				8536F3F8258D47D000B509D2 /* TankViews.swift in Sources */,
 				85D3BB2126AC84CA00B6AA36 /* CityHabView.swift in Sources */,
 				8536F447258D47EA00B509D2 /* LabViewModel.swift in Sources */,
@@ -2018,6 +2067,7 @@
 				8536F388258D475D00B509D2 /* HabModule.swift in Sources */,
 				85C3418725905A7500BF82F9 /* TutorialNode.swift in Sources */,
 				85E6ECFA25C9D92B00229E18 /* ServerAPI.swift in Sources */,
+				85487F3D26CC32F900EBC070 /* CityLabTechView.swift in Sources */,
 				8536F37C258D475D00B509D2 /* Recipes.swift in Sources */,
 				8536F453258D47EA00B509D2 /* BioModController.swift in Sources */,
 				8536F364258D475D00B509D2 /* Person.swift in Sources */,
@@ -2052,6 +2102,7 @@
 				8536F3A5258D475D00B509D2 /* SpaceVehicle.swift in Sources */,
 				8536F389258D475D00B509D2 /* HabModule.swift in Sources */,
 				8536F454258D47EA00B509D2 /* BioModController.swift in Sources */,
+				85487F4526CC691300EBC070 /* CityGateNode.swift in Sources */,
 				8536F44C258D47EA00B509D2 /* VehicleBuilderViewModel.swift in Sources */,
 				85797512259B9E70004C54D2 /* FlipView.swift in Sources */,
 				8536F415258D47D000B509D2 /* Parafernalia.swift in Sources */,
@@ -2109,6 +2160,7 @@
 				8536F391258D475D00B509D2 /* LabModule.swift in Sources */,
 				8504A53125C6872B00739C58 /* Tanks.swift in Sources */,
 				85C341912591078700BF82F9 /* PlayerCardNode.swift in Sources */,
+				85487F4A26CC7C7400EBC070 /* OutpostNode.swift in Sources */,
 				8536F39D258D475D00B509D2 /* TechTree.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2154,14 +2206,6 @@
 				8536F2D8258D330300B509D2 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		8536F2E5258D330300B509D2 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8536F2E6258D330300B509D2 /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

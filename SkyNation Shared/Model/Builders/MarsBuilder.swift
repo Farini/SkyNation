@@ -250,93 +250,6 @@ class MarsBuilder {
             self.myCityData = cd
         }
         
-        
-        
-        /*
-        // Not random
-        if !randomize {
-            
-            print("Getting Server Info")
-            
-            guard let player = LocalDatabase.shared.player else {
-                print("No Player")
-                return
-            }
-            guard let _ = player.guildID else {
-                print("No Guild ID for player: \(player.name)")
-                self.hasNoGuild = true
-                return
-            }
-            
-            ServerManager.shared.inquireFullGuild(force:false) { guild, error in
-                if let guild:GuildFullContent = guild {
-                    self.guild = guild
-                    print("\n**********************")
-                    print("Guild Result: \(guild.name)")
-                    print("**********************")
-                    for city:DBCity in guild.cities {
-                        print("City: Pos:\(city.posdex) >> \(city.name)")
-                        if let cid = city.owner?["id"] {
-                            if cid != nil && cid == player.cityID {
-                                print("This city is mine!")
-                                self.myDBCity = city
-                            }
-                        }
-                    }
-                    self.cities = guild.cities
-                    
-                    for outpost:DBOutpost in guild.outposts {
-                        print("OutPost: \(outpost.type)")
-                    }
-                    self.outposts = guild.outposts
-                    
-                    for player:PlayerContent in guild.citizens {
-                        print("Player Content: \(player.name)")
-                    }
-                    self.players = guild.citizens
-                    
-                    self.getArrivedVehicles()
-                    
-                } else {
-                    print("No guild in result")
-                    self.hasNoGuild = true
-                    
-                    if let error = error {
-                        print("Error: \(error.localizedDescription)")
-                    }
-                }
-            }
-            
-           
-        }
-        
-        // Random
-        else {
-            
-            print("\n *** Random Data *** \n")
-            
-            var randomGuild = GuildFullContent()
-            self.cities = randomGuild.cities
-            self.outposts = randomGuild.outposts
-            self.players = randomGuild.citizens
-            self.guild = randomGuild
-            
-            // Populate my city:
-            // var myDBCity:DBCity?
-            // var myCityData:CityData?
-            let mc:DBCity = DBCity(id: UUID(), guild: ["guild":randomGuild.id], name: "Fariland", accounting: Date(), owner: ["id":LocalDatabase.shared.player!.playerID], posdex: Posdex.city9.rawValue, gateColor: 0, experience:0)
-            let cd = CityData(example: true, id:mc.id)
-            // add city
-            randomGuild.cities.append(mc)
-            self.cities.append(mc)
-            
-            self.myDBCity = mc
-            self.myCityData = cd
-            
-        }
-        
-        */
-        
     }
     
     /// Gets all vehicles that arrived
@@ -453,8 +366,25 @@ extension MarsBuilder {
         }
         
         // Terrain
+        guard let terrain:SCNNode = root.childNode(withName: "Terrain", recursively: false) else {
+            fatalError("Missing Terrain Node")
+        }
+        print("\nTerrain.: Vertex Count: \(terrain.geometry?.sources.filter({ $0.semantic == .vertex }).compactMap({ $0.vectorCount }).reduce(0, +) ?? 0)")
+        
         // Camera
+        
+        
         // Light
+        let lightNode:SCNNode = root.childNode(withName: "Light", recursively: false)!
+        // light position: 4.076,34.945,-1.005
+        // light euler: 29.656, 49.397, 93.817
+        if let light = lightNode.light {
+            print("\n [ * Light ]")
+            print("Intensity: \(light.intensity)")
+            print("Shadows: \(light.castsShadow.description)")
+            print("Extend: \(light.areaExtents.description)")
+            print("Projection: \(light.automaticallyAdjustsShadowProjection.description)\n")
+        }
         
         // Outposts
         print("\n [ OUTPOSTS ] ")
@@ -478,34 +408,44 @@ extension MarsBuilder {
             
             let cityNodeName = tmpCity.name ?? "unknown"
             if let pp:Posdex = Posdex.allCases.filter({ $0.sceneName == cityNodeName }).first {
+                
                 if let city = cities.filter({ $0.posdex == pp.rawValue }).first {
-                    var ownerString:String = "unowned"
-                    if let ownID = city.owner?.values.first { ownerString = ownID!.uuidString }
-                    let userOwner = players.filter({ $0.id.uuidString == ownerString }).first?.name ?? "unowned"
-                    print("City Node | \(pp.sceneName), owner:\(userOwner)")
                     
-                    // Build gate
-                    if let model:SCNNode = pp.extractModel()?.clone() {
-                        print("Model: \(String(describing: model.name)). Replacing.")
-                        
-                        model.position = pp.position.sceneKitVector()
-                        model.eulerAngles = pp.eulerAngles.sceneKitVector()
-                        model.name = pp.sceneName
-
-                        tmpCity.removeFromParentNode()
-                        citiesParent.addChildNode(model)
-                    }
+                    let node = CityGateNode(posdex: pp, city: city)
+                    citiesParent.addChildNode(node)
+                    tmpCity.removeFromParentNode()
+                    
+//                    var ownerString:String = "unowned"
+//                    if let ownID = city.owner?.values.first { ownerString = ownID!.uuidString }
+//                    let userOwner = players.filter({ $0.id.uuidString == ownerString }).first?.name ?? "unowned"
+//                    print("City Node | \(pp.sceneName), owner:\(userOwner)")
+//
+//                    // Build gate
+//                    if let model:SCNNode = pp.extractModel()?.clone() {
+//                        print("Model: \(String(describing: model.name)). Replacing.")
+//
+//                        model.position = pp.position.sceneKitVector()
+//                        model.eulerAngles = pp.eulerAngles.sceneKitVector()
+//                        model.name = pp.sceneName
+//
+//                        tmpCity.removeFromParentNode()
+//                        citiesParent.addChildNode(model)
+//                    }
                     
                 } else {
                     
                     // Free slot >> Diamond
-                    print("- Unowned \(pp.sceneName), posdex:\(pp.rawValue)")
-                    let gateScene = SCNScene(named: "Art.scnassets/Mars/Gate.scn")!
-                    let diamond = gateScene.rootNode.childNode(withName: "DiamondH", recursively: false)!.clone()
-                    var dPos = tmpCity.position
-                    dPos.y += 5
-                    diamond.position = dPos
-                    citiesParent.addChildNode(diamond)
+                    let node = CityGateNode(posdex: pp, city: nil)
+                    citiesParent.addChildNode(node)
+                    tmpCity.removeFromParentNode()
+                    
+//                    print("- Unowned \(pp.sceneName), posdex:\(pp.rawValue)")
+//                    let gateScene = SCNScene(named: "Art.scnassets/Mars/Gate.scn")!
+//                    let diamond = gateScene.rootNode.childNode(withName: "DiamondH", recursively: false)!.clone()
+//                    var dPos = tmpCity.position
+//                    dPos.y += 5
+//                    diamond.position = dPos
+//                    citiesParent.addChildNode(diamond)
                     
                 }
             }
@@ -517,8 +457,8 @@ extension Posdex {
     
     func extractModel() -> SCNNode? {
         switch self {
-            case .city1, .city2, .city3, .city4, .city5, .city6, .city7, .city8, .city9:
-                return SCNScene(named: "Art.scnassets/Mars/Gate2.scn")!.rootNode.childNodes.first!
+//            case .city1, .city2, .city3, .city4, .city5, .city6, .city7, .city8, .city9:
+//                return SCNScene(named: "Art.scnassets/Mars/Gate2.scn")!.rootNode.childNodes.first!
             case .power1, .power2, .power3, .power4:
                 return SCNScene(named: "Art.scnassets/Mars/Outposts/PowerPlant.scn")!.rootNode
             case .mining1, .mining2, .mining3:
@@ -532,7 +472,7 @@ extension Posdex {
             case .arena: return nil
             case .hq: return nil
             case .observatory: return nil
-//            default: return nil
+            default: return nil
         }
     }
 }

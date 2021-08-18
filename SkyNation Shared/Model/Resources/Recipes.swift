@@ -76,6 +76,10 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
             case .SolarPanel: return "Generates power and charges the batteries."
             case .Battery: return "Stores energy"
             case .BioSolidifier: return "Transforms poop into fertilizer."
+            case .tank: return "Makes an empty tank that can be used for any gas."
+            case .Alloy: return "Makes a Special Alloy needed for building some things."
+            case .WaterFilter: return "A Water filter can save you a lot of water, recycling from waste liquid."
+            
             default: return ""
         }
     }
@@ -153,8 +157,9 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
             case .WaterFilter: return PeripheralObject(peripheral: .WaterFilter).getImage()!
             case .BioSolidifier: return PeripheralObject(peripheral: .BioSolidifier).getImage()!
                 
-            case .Cement: return Recipe.Cement.image
-            case .ChargedGlass: return Recipe.ChargedGlass.image
+            case .Cement: return Ingredient.Cement.image() ?? Image(systemName: "questionmark")
+            case .ChargedGlass: return Ingredient.Glass.image() ?? Image(systemName: "questionmark")
+            case .Alloy: return Ingredient.Alloy.image() ?? Image(systemName: "questionmark")
                 
             default: return Image(systemName: "questionmark")
         }
