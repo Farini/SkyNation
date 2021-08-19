@@ -32,8 +32,6 @@ class SKNS {
     /// Keep a record of the queries performed, so we don't keep repeating the same queries.
     var queries:[Routes:Date] = [:] // Queries should have *route, *date, *objectRetrieved, *
     
-    
-    
     static let baseAddress = "http://127.0.0.1:8080"
     
     // MARK: - User, Login
@@ -42,6 +40,8 @@ class SKNS {
     static func performLogin(completion:((PlayerUpdate?, Error?) -> ())?) {
         
         guard let localPlayer = LocalDatabase.shared.player else { return }
+        localPlayer.lastSeen = Date()
+        
         var pLogin:PlayerLogin?
         
         do {
@@ -96,7 +96,7 @@ class SKNS {
                     
                     // Guild ID
                     if let oldGuild = localPlayer.guildID,
-                       oldGuild != responsePlayer.guildID {
+                        oldGuild != responsePlayer.guildID {
                         print("Attention! - Guild ID changing!\n Old Guild:\(oldGuild), New Guild:\(responsePlayer.guildID?.uuidString ?? "none")")
                         localPlayer.guildID = responsePlayer.guildID
                     }
@@ -521,7 +521,7 @@ class SKNS {
         
     }
     
-    // Make Purchase (push)
+    // Make Purchase (post)
     
     
     // MARK: - Guild
@@ -688,6 +688,8 @@ class SKNS {
         task.resume()
     }
     
+    // MARK: - Guild Chat
+    
     static func readChat(guildID:UUID, completion:(([ChatMessage], Error?) -> ())?) {
         
         let url = URL(string: "\(baseAddress)/player/chat/read/\(guildID.uuidString)")!
@@ -783,47 +785,6 @@ class SKNS {
         
     }
     
-    /// Creates a Guild in the server
-    /*
-    static func createGuild(localPlayer:SKNUserPost, guildName:String, completion:((Data?, Error?) -> ())?) {
-        
-        print("Creating Guild")
-        
-        let url = URL(string: "\(baseAddress)/guilds")!
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = HTTPMethod.POST.rawValue // (Post): HTTPMethod.POST.rawValue // (Get): HTTPMethod.GET.rawValue
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        request.setValue(localPlayer.id.uuidString, forHTTPHeaderField: "playerid")
-        request.setValue(guildName, forHTTPHeaderField: "guildname")
-        
-        let encoder = JSONEncoder()
-        if let data = try? encoder.encode(localPlayer) {
-            print("Adding Data")
-            request.httpBody = data
-            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
-            print("DS: \(dataString)")
-        }
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                DispatchQueue.main.async {
-                    print("Data returning")
-                    completion?(data, nil)
-                }
-                
-            } else if let error = error {
-                print("Error returning")
-                DispatchQueue.main.async {
-                    completion?(nil, error)
-                }
-            }
-        }
-        task.resume()
-    }
-    */
-    
     // MARK: - City
     
     static func claimCity(user:SKNUserPost, posdex:Posdex, completion:((DBCity?, Error?) -> ())?) {
@@ -879,141 +840,6 @@ class SKNS {
         }
         task.resume()
     }
-    
-    /*
-    static func loadCity(posdex:Posdex, completion:((CityData?, Error?) -> ())?) {
-        
-        print("Loading City")
-        
-        let url = URL(string: "\(baseAddress)/guilds/city/load/\(posdex.rawValue)")!
-        
-        guard let player = LocalDatabase.shared.player,
-              let pid = player.playerID
-              // let cid = player.cityID
-        else { fatalError() }
-        
-        print("Player ID: \(pid)")
-//        print("City ID: \(cid)")
-        
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = HTTPMethod.POST.rawValue
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .secondsSince1970
-        
-        if let data = try? encoder.encode(player) {
-            print("Adding Data")
-            request.httpBody = data
-            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
-            print("DS: \(dataString)")
-        }
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .secondsSince1970
-            
-            if let data = data {
-                print("Cityload let data -> ok")
-                do {
-                    let city = try decoder.decode(CityData.self, from: data)
-                    DispatchQueue.main.async {
-                        print("My City Returning: \(city.id)")
-                        completion?(city, nil)
-                        return
-                    }
-                } catch {
-                    print("Could not decode. Reason? \(error.localizedDescription)")
-                    completion?(nil, error)
-                    return
-                }
-                
-                
-                
-            } else if let error = error {
-                print("Error returning")
-                DispatchQueue.main.async {
-                    completion?(nil, error)
-                }
-            }
-        }
-        task.resume()
-        
-    }
-    
-    static func saveCity(city:CityData, completion:((CityData?, Error?) -> ())?) {
-        
-//        let url = URL(string: "\(baseAddress)/guild/city/update")!
-        guard
-              let player = LocalDatabase.shared.player,
-              let pid = player.playerID,
-              let gid = player.guildID,
-            
-            let url = URL(string: "\(baseAddress)/guilds/city/update/\(pid.uuidString)/\(gid.uuidString)/\(city.id.uuidString)")
-        else {
-            fatalError()
-        }
-        
-        
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = HTTPMethod.POST.rawValue
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        request.setValue(pid.uuidString, forHTTPHeaderField: "pid")
-        request.setValue(gid.uuidString, forHTTPHeaderField: "gid")
-        
-        
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .secondsSince1970
-        encoder.outputFormatting = .prettyPrinted
-        
-        // Data
-//        let vehicleModel:SpaceVehicleModel = SpaceVehicleModel(spaceVehicle: vehicle, player: player)
-        if let data = try? encoder.encode(city) {
-            print("Adding Data")
-            request.httpBody = data
-            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
-            print("DS: \(dataString)")
-        }
-        
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .secondsSince1970
-        
-        print("Updating City")
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                DispatchQueue.main.async {
-                    print("Data returning")
-                    if let dCity = try? decoder.decode(CityData.self, from: data) {
-                        completion?(dCity, nil)
-                        return
-                    } else {
-                        if let string = String(data:data, encoding: .utf8) {
-                            print("SR: \(string)")
-                        }
-                        
-                        print("No data")
-                        completion?(nil, nil)
-                        return
-                    }
-                }
-                
-            } else if let error = error {
-                print("Error returning")
-                DispatchQueue.main.async {
-                    completion?(nil, error)
-                    return
-                }
-            }
-        }
-        task.resume()
-    }
-    */
     
     // MARK: - Outpost
     
@@ -1094,66 +920,7 @@ class SKNS {
         task.resume()
     }
     
-    /// Transfer items from arriving vehicles
-    /*
-    static func orbitMarsWith(vehicle:SpaceVehicle, completion:((SpaceVehicleContent?, Error?) -> ())?) {
-        
-        guard let player = LocalDatabase.shared.player,
-              let gid = player.guildID else {
-            return
-        }
-        
-        // Takes GID as parameter
-        // Takes SpaceVehicleContent in body
-        
-        let url = URL(string: "\(baseAddress)/guilds/space_vehicles/edl/\(gid)")!
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = HTTPMethod.POST.rawValue
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        request.setValue(player.id.uuidString, forHTTPHeaderField: "playerid")
-        // request.setValue(guildName, forHTTPHeaderField: "guildname")
-        
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .secondsSince1970
-        encoder.outputFormatting = .prettyPrinted
-        
-        // Data
-//        let vehicleModel:SpaceVehicleModel = SpaceVehicleModel(spaceVehicle: vehicle, player: player)
-        let vehicleContent = SpaceVehicleContent(with: vehicle)
-        if let data = try? encoder.encode(vehicleContent) {
-            print("Adding Data")
-            request.httpBody = data
-            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
-            print("DS: \(dataString)")
-        }
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .secondsSince1970
-                if let vResponse = try? decoder.decode(SpaceVehicleContent.self, from: data) {
-                    DispatchQueue.main.async {
-                        print("Data returning")
-                        completion?(vResponse, nil)
-                    }
-                }
-                
-                
-            } else if let error = error {
-                print("Error returning")
-                DispatchQueue.main.async {
-                    completion?(nil, error)
-                }
-            }
-        }
-        task.resume()
-        
-    }
-    */
-    
-    /// Search vehicles in Guilds File (arrived)
+    /// Search vehicles in Guild (arrived)
     static func arrivedVehiclesInGuildMap(completion:(([SpaceVehicleTicket]?, Error?) -> ())?) {
         // URL: /guilds/space_vehicles/arrived/:gid
         // Expects: :gid GuildID

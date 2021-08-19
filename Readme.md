@@ -129,6 +129,9 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 8/17/2021 = 14 of 61 (23 %)
 - [X] City View - Tech implementation
 - [X] City View - Recipes Implementation
+- [X] EarthRequest - Fix weird Time to renew staff.
+- [X] Mars Scene - City - Gate Node
+- [X] Mars Scene - Outpost Node
 
 
 - [ ] Settings - ServerTab - Leave Guild
@@ -146,11 +149,8 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [ ] Station Garage View - Building Vehicle - Reduce difficulty for bigger engines
 
-
-- [X] Mars Scene - City - Gate Node
 - [ ] Mars Scene - City - Gate Config (to layout scene)
 - [ ] Mars Scene - City - Solar Panel(s)
-- [X] Mars Scene - Outpost Node
 - [ ] Mars Scene - Outposts with Levels
 - [ ] Mars Scene - Outpost - State (building) scenes
 - [ ] Mars Scene - Infinite floor

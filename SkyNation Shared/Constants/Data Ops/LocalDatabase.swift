@@ -80,7 +80,7 @@ class LocalDatabase {
     }
     
     // MARK: - Builder
-    static let stationBuilderFile = "StationBuilder.json"
+    
     /// Initializes `StationBuilder` with the `Station` object, or none if this is a new game.
     private static func initializeStationBuilder() -> StationBuilder {
         if let station = LocalDatabase.loadStation() {
@@ -100,35 +100,6 @@ class LocalDatabase {
             let starter = StationBuilder()
             return starter
         }
-    }
-    func saveStationBuilder(builder:StationBuilder) {
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .secondsSince1970
-        encoder.outputFormatting = .prettyPrinted
-        guard let encodedData:Data = try? encoder.encode(builder) else { fatalError() }
-        
-        let bcf = ByteCountFormatter()
-        bcf.allowedUnits = [.useKB]
-        bcf.countStyle = .file
-        
-        let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
-        print("Saving Station Builder. Size: \(dataSize)")
-        
-        let fileUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.stationBuilderFile)
-        
-        if !FileManager.default.fileExists(atPath: fileUrl.path) {
-            FileManager.default.createFile(atPath: fileUrl.path, contents: encodedData, attributes: nil)
-            print("File created")
-            return
-        }
-        
-        do{
-            try encodedData.write(to: fileUrl, options: .atomic)
-            print("Saved Builder locally")
-        }catch{
-            print("Error writting data to local url: \(error)")
-        }
-        
     }
     
     // MARK: - Game Messages
@@ -329,7 +300,6 @@ class LocalDatabase {
         encoder.outputFormatting = .prettyPrinted
         
         guard let encodedData:Data = try? encoder.encode(player) else { fatalError() }
-//        print("Saving Player")
         
         let bcf = ByteCountFormatter()
         bcf.allowedUnits = [.useKB]
@@ -459,6 +429,8 @@ class LocalDatabase {
     var serverData:ServerData?
     private static let serverDataFile = "SKNSData.json"
     func saveServerData(skn:ServerData) -> Bool {
+        
+        self.serverData = skn
         
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .secondsSince1970

@@ -202,11 +202,11 @@ struct EarthRequestView: View {
                                         Image(systemName:"clock")
                                             .font(.title)
                                         VStack {
-//                                            let delta = LocalDatabase.shared.gameGenerators!.datePeople.timeIntervalSince(Date())
-//                                            let oo = Calendar.current.dateComponents([.minute, .second], from: LocalDatabase.shared.gameGenerators!.datePeople, to: Date())
+                                            let delay = Double(TimeInterval.oneDay) / 24.0 // 1hr
                                             let time:Double = LocalDatabase.shared.player?.wallet.timeToGenerateNextPeople().rounded() ?? 0.0
+                                            let display = GameFormatters.humanReadableTimeInterval(delta: delay - time)
                                             
-                                            Text("Refresh \(Int(time))s")
+                                            Text("Refresh in \(display)")
                                         }
                                     }
                                     .padding(8)
@@ -559,38 +559,3 @@ struct EarthRequestView_Previews: PreviewProvider {
         EarthRequestView()
     }
 }
-
-
-/*
-class PeopleMaker {
-    static var shared = PeopleMaker()
-    private init() {
-        var tmpPeople:[Person] = []
-        // 20?
-        for _ in 0..<16 {
-            let person = Person(random: true)
-            tmpPeople.append(person)
-        }
-        self.people = tmpPeople
-    }
-    var people:[Person] = []
-}
-*/
-
-//extension Array {
-//    /// Use this to divide views in stacks
-//    func chunked(into size:Int) -> [[Element]] {
-//
-//        var chunkedArray = [[Element]]()
-//
-//        for index in 0...self.count {
-//            if index % size == 0 && index != 0 {
-//                chunkedArray.append(Array(self[(index - size)..<index]))
-//            } else if(index == self.count) {
-//                chunkedArray.append(Array(self[index - 1..<index]))
-//            }
-//        }
-//
-//        return chunkedArray
-//    }
-//}

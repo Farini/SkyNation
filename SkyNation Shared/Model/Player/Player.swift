@@ -63,16 +63,10 @@ class SKNPlayer:Codable, Identifiable {
             givenTokens.append(UUID())
         }
         
-        self.id = UUID()
-        
+        // IDs
         let lid = UUID()
+        self.id = lid
         self.localID = lid
-        
-        self.serverID = nil
-        self.guildID = nil
-//        self.deliveryTokens = [UUID(), UUID(), UUID()]
-//        self.timeTokens = givenTokens
-//        self.purchases = []
         
         self.name = "Test Player"
         self.money = 200_000 // 200,000
@@ -87,6 +81,9 @@ class SKNPlayer:Codable, Identifiable {
         
         // Shop (Initial)
         self.wallet = Wallet(lid: lid)
+        
+        self.serverID = nil
+        self.guildID = nil
     }
     
     func receiveFreebiesAndSave(currency:Int, newTokens:[UUID]) {
@@ -255,7 +252,7 @@ struct PlayerContent:Codable, Identifiable, Hashable {
         self.about = player.about
         self.experience = player.experience
         self.beganGame = player.beganGame
-        self.lastSeen = Date()
+        self.lastSeen = player.lastSeen
     }
     
     /// Returns `LastSeen`
@@ -395,27 +392,9 @@ struct PlayerCard: Codable, Identifiable {
     var lastSeen:Date
     
     // No initializers (Comes from Server)
-    static func generate() -> PlayerCard {
-        let card = PlayerCard(id: UUID(), localID: UUID(), guildID: UUID(), name: "Player One", avatar: "people_01", experience: 12, lastSeen: Date().addingTimeInterval(-500))
-        return card
-    }
+//    static func generate() -> PlayerCard {
+//        let card = PlayerCard(id: UUID(), localID: UUID(), guildID: UUID(), name: "Player One", avatar: "people_01", experience: 12, lastSeen: Date().addingTimeInterval(-500))
+//        return card
+//    }
 }
 
-
-/// `Public` information about a `Player`
-/*
-struct PlayerCard {
-    
-    var id:UUID
-    
-    // Constructed
-    var name:String
-    var avatar:String?
-    var money:Int
-    var about:String
-    
-    // Dates
-    var beganGame:Date
-    var lastSeen:Date
-}
-*/

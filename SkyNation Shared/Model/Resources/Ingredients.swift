@@ -116,9 +116,6 @@ enum Ingredient:String, Codable, CaseIterable, Hashable {
             case .Silica: return Image("Silica")
             case .Fertilizer: return Image("Fertilizer")
                 
-            // Cement           puzzlepiece
-            // ChargedGlass     plus.circle
-            // Alloy            triangle.circle
             case .Cement: return Image(systemName: "puzzlepiece")
             case .Glass: return Image(systemName: "plus.circle")
             case .Alloy: return Image(systemName: "triangle.circle")

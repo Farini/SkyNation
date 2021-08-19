@@ -33,11 +33,11 @@ class Wallet:Codable {
         }
         self.tokens = tokens
         self.purchases = []
-        self.freebiesLast = Date().addingTimeInterval(TimeInterval.oneDay * -1.0)
+        self.freebiesLast = Date()
         self.freebiesMade = [:]
         
         self.staff = []
-        self.dateStaff = Date().addingTimeInterval(TimeInterval.oneDay * -1.0)
+        self.dateStaff = Date()
     }
     
     // MARK: - Purchases
@@ -79,6 +79,7 @@ class Wallet:Codable {
         if shouldGenerate {
             let newStaff = self.generatePeople(amt: Wallet.hireAmount)
             self.staff = newStaff
+            self.dateStaff = Date()
             return newStaff
         } else {
             return staff
