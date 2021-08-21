@@ -148,6 +148,10 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Station Scene - New Modules not available after Tech research. 
 
 - [ ] Station Garage View - Building Vehicle - Reduce difficulty for bigger engines
+- [ ] Station Garage View - People not going in Vehicle.
+
+- [ ] Station LSS View - Tank -> Release (if O2, or Air)
+- [ ] Station LSS View - Tank -> Keep this tank (Don't throw away)
 
 - [ ] Mars Scene - City - Gate Config (to layout scene)
 - [ ] Mars Scene - City - Solar Panel(s)
@@ -173,6 +177,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Model - Road?
 - [ ] Model - Mars Accounting
 - [ ] Model - Guild - Write Invite
+- [ ] Model - Tanks & Boxes -> Don't throw away
 
 - [ ] 2D Graphics - iOS app icon
 - [ ] 2D Graphics - Blender individual tanks

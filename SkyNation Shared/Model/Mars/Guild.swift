@@ -41,31 +41,31 @@ enum Posdex:Int, Codable, CaseIterable {
     /// Position on the map
     var position:Vector3D {
         switch self {
-            case .city1: return Vector3D(x: 31.50, y: -4.728, z: 41.505)
-            case .city2: return Vector3D(x: 28.534, y: -4.728, z: 26.91)
-            case .city3: return Vector3D(x: 29.80, y: -4.74, z: -19.45)
-            case .city4: return Vector3D(x: 32.30, y: -4.728, z: -37.018)
-            case .city5: return Vector3D(x: -0.765, y: -4.728, z: 45.0)
-            case .city6: return Vector3D(x: -30.34, y: -4.728, z: 18.424)
-            case .city7: return Vector3D(x: -15.0, y: -4.728, z: 8.826)
-            case .city8: return Vector3D(x: -26.12, y: -4.728, z: -18.384)
-            case .city9: return Vector3D(x: 6.774, y: -4.728, z: -33.71)
+            case .city1: return Vector3D(x: 31.09, y: -4.869, z: 41.877)
+            case .city2: return Vector3D(x: 28.0, y: -4.988, z: 27.0)
+            case .city3: return Vector3D(x: 29.5, y: -4.988, z: -20.0)
+            case .city4: return Vector3D(x: 30.7, y: -4.988, z: -37.5)
+            case .city5: return Vector3D(x: -1.25, y: -4.988, z: 45.0)
+            case .city6: return Vector3D(x: -37.75, y: -4.988, z: 18.0)
+            case .city7: return Vector3D(x: -16.0, y: -4.988, z: 9.0)
+            case .city8: return Vector3D(x: -27.25, y: -4.988, z: -19.0)
+            case .city9: return Vector3D(x: 5.086, y: -4.988, z: -34.118)
             case .hq: return Vector3D.zero
             default: return Vector3D.zero
         }
     }
     
+    /// Orientation on the map.
     var eulerAngles:Vector3D {
         switch self {
             case .city1: return Vector3D(x: 0.0, y: 1.57, z: 0.0)
             case .city2: return Vector3D(x: 0.0, y: 1.57, z: 0.0)
-            case .city3: return Vector3D(x: 0.0, y: 1.57, z: 0.0)
-            
-            case .city4: return Vector3D(x: 3.1416, y: -0.698, z: 3.1416)
+            case .city3: return Vector3D(x: -0.0, y: 1.57, z: 0.0)
+            case .city4: return Vector3D(x: 3.1416, y: -0.733, z: 3.1416)
             case .city5: return Vector3D(x: 0.0, y: 1.57, z: 0.0)
-            case .city6: return Vector3D(x: 3.1416, y: -1.2217, z: 3.1416)
+            case .city6: return Vector3D(x: 3.1416, y: -1.361, z: 3.1416)
             case .city7: return Vector3D(x: 0.0, y: 1.57, z: 0.0)
-            case .city8: return Vector3D(x: 3.1416, y: -1.0472, z: 3.1416)
+            case .city8: return Vector3D(x: 3.1416, y: -0.9948 , z: 3.1416)
             case .city9: return Vector3D(x: 3.1416, y: -1.2217, z: 3.1416)
                 
             default: return Vector3D.zero

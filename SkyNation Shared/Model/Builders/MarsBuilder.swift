@@ -383,7 +383,76 @@ extension MarsBuilder {
         for child in outpostsParent.childNodes {
             let opNodeName = child.name ?? "unknown"
             if let pp:Posdex = Posdex.allCases.filter({ $0.sceneName == opNodeName }).first {
+                
+                // Check New Nodes
+                
                 if let outpost = outposts.filter({ $0.posdex == pp.rawValue }).first {
+                    
+                    // Power Plants
+                    let powerPlantsDexes:[Posdex] = [.power1, .power2, .power3, .power4]
+                    if powerPlantsDexes.contains(pp) {
+                        let newPowerPlant = PowerPlantNode(posdex: pp, outpost: outpost)
+                        newPowerPlant.position = child.position
+                        newPowerPlant.eulerAngles = child.eulerAngles
+                        outpostsParent.addChildNode(newPowerPlant)
+                        
+                        child.removeFromParentNode()
+                    }
+                    
+                    // Antenna - Too Big!
+                    if pp == .antenna {
+                        let antenna = MarsAntennaNode(posdex: pp, outpost: outpost)
+                        antenna.position = child.position
+                        antenna.eulerAngles = child.eulerAngles
+                        outpostsParent.addChildNode(antenna)
+                        
+                        child.removeFromParentNode()
+                    }
+                    
+                    // Landing Pad - Also Too Big! (0.25?)
+                    if pp == .launchPad {
+                        let lPad = LandingPadNode(posdex: pp, outpost: outpost)
+                        lPad.position = child.position
+                        lPad.eulerAngles = child.eulerAngles
+                        outpostsParent.addChildNode(lPad)
+                        
+                        child.removeFromParentNode()
+                    }
+                    
+                    // Mining
+                    let miningDexes:[Posdex] = [.mining1, .mining2, .mining3]
+                    if miningDexes.contains(pp) {
+                        let newMining = MiningNode(posdex: pp, outpost: outpost)
+                        newMining.position = child.position
+                        newMining.eulerAngles = child.eulerAngles
+                        outpostsParent.addChildNode(newMining)
+                        
+                        child.removeFromParentNode()
+                    }
+                    
+                    // Biosphere
+                    let bioDexes:[Posdex] = [.biosphere1, .biosphere2]
+                    if bioDexes.contains(pp) {
+                        let biosphere = BiosphereNode(posdex: pp, outpost: outpost)
+                        biosphere.position = child.position
+                        biosphere.eulerAngles = child.eulerAngles
+                        outpostsParent.addChildNode(biosphere)
+                        
+                        child.removeFromParentNode()
+                    }
+                    
+                    // Observatory
+                    if pp == .observatory {
+                        let observatory = ObservatoryNode(posdex: pp, outpost: outpost)
+                        observatory.position = child.position
+                        observatory.eulerAngles = child.eulerAngles
+                        
+                        outpostsParent.addChildNode(observatory)
+                        
+                        child.removeFromParentNode()
+                    }
+                    
+                    
                     print("\(pp.sceneName) | \(outpost.type.rawValue), lvl:\(outpost.level)")
                     
                 } else {
@@ -406,37 +475,12 @@ extension MarsBuilder {
                     citiesParent.addChildNode(node)
                     tmpCity.removeFromParentNode()
                     
-//                    var ownerString:String = "unowned"
-//                    if let ownID = city.owner?.values.first { ownerString = ownID!.uuidString }
-//                    let userOwner = players.filter({ $0.id.uuidString == ownerString }).first?.name ?? "unowned"
-//                    print("City Node | \(pp.sceneName), owner:\(userOwner)")
-//
-//                    // Build gate
-//                    if let model:SCNNode = pp.extractModel()?.clone() {
-//                        print("Model: \(String(describing: model.name)). Replacing.")
-//
-//                        model.position = pp.position.sceneKitVector()
-//                        model.eulerAngles = pp.eulerAngles.sceneKitVector()
-//                        model.name = pp.sceneName
-//
-//                        tmpCity.removeFromParentNode()
-//                        citiesParent.addChildNode(model)
-//                    }
-                    
                 } else {
                     
                     // Free slot >> Diamond
                     let node = CityGateNode(posdex: pp, city: nil)
                     citiesParent.addChildNode(node)
                     tmpCity.removeFromParentNode()
-                    
-//                    print("- Unowned \(pp.sceneName), posdex:\(pp.rawValue)")
-//                    let gateScene = SCNScene(named: "Art.scnassets/Mars/Gate.scn")!
-//                    let diamond = gateScene.rootNode.childNode(withName: "DiamondH", recursively: false)!.clone()
-//                    var dPos = tmpCity.position
-//                    dPos.y += 5
-//                    diamond.position = dPos
-//                    citiesParent.addChildNode(diamond)
                     
                 }
             }
