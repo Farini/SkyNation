@@ -1,9 +1,8 @@
 //
-//  StationOverlayObject.swift
-//  SkyTestSceneKit
+//  GameOverlay.swift
+//  SkyNation
 //
-//  Created by Farini on 10/26/20.
-//  Copyright © 2020 Farini. All rights reserved.
+//  Created by Carlos Farini on 8/22/21.
 //
 
 import Foundation
@@ -33,15 +32,15 @@ class GameOverlay:NSObject, SKSceneDelegate {
     
     init(renderer:SCNSceneRenderer, station:Station, camNode:GameCamera) {
         
-        let overlay:SKScene = SKScene(fileNamed: "StationOverlay")!
+        let overlay:SKScene = SKScene(fileNamed: "GameOverlay")!
         overlay.size = renderer.currentViewport.size
         
         self.scene = overlay
         self.renderer = renderer
         self.sceneCamera = camNode
         
-//        print("_-_-:: Camera position: \(camNode.position)")
-//        print("_-_-:: ViewPort: \(renderer.currentViewport)")
+        //        print("_-_-:: Camera position: \(camNode.position)")
+        //        print("_-_-:: ViewPort: \(renderer.currentViewport)")
         
         self.playerCardHolder = overlay.childNode(withName: "PlayerCardHolder")!
         self.orbitListHolder = overlay.childNode(withName: "VehiclesHolder")!
@@ -54,6 +53,11 @@ class GameOverlay:NSObject, SKSceneDelegate {
         
         self.buildPlayerCard()
         self.scene.delegate = self
+    }
+    
+    /// Updates the camera node for the new sccene
+    func didChangeScene(camNode:GameCamera) {
+        self.sceneCamera = camNode
     }
     
     /// Playercard has the name, virtual money, and tokens that belong to the player
@@ -78,7 +82,7 @@ class GameOverlay:NSObject, SKSceneDelegate {
         
         
         if let player = LocalDatabase.shared.player {
-        
+            
             if let card:PlayerCardNode = scene.childNode(withName: "playercard") as? PlayerCardNode {
                 card.nameLabel.text = player.name
                 card.moneyLabel.text = GameFormatters.numberFormatter.string(from: NSNumber(value:player.money))
@@ -134,7 +138,7 @@ class GameOverlay:NSObject, SKSceneDelegate {
     /// Makes Camera control appear/disappear
     func toggleCamControl() {
         
-//        print("Toggle cam ccontrol")
+        //        print("Toggle cam ccontrol")
         
         if let camNode:CamControlNode = scene.childNode(withName: "CamControl") as? CamControlNode {
             print("UP cam ccontrol")
@@ -175,7 +179,7 @@ class GameOverlay:NSObject, SKSceneDelegate {
         if let x = x {
             print("Moving Camera to: \(x) | Position:\(sceneCamera.position.z)")
             #if os(macOS)
-//            sceneCamera.position.z = -300 + x * 375 //75 - (375 * x) //-300 * x  // ((x - 0.5) * 84.0) + 84.0
+            //            sceneCamera.position.z = -300 + x * 375 //75 - (375 * x) //-300 * x  // ((x - 0.5) * 84.0) + 84.0
             let destination = -300 + x * 375
             sceneCamera.panCamera(to: Double(destination))
             #else
@@ -219,7 +223,7 @@ class GameOverlay:NSObject, SKSceneDelegate {
         let runner = SKAction.fadeAlpha(to: 0, duration: 0.75)
         let sequel = SKAction.sequence([waiter, runner])
         label.run(sequel) {
-            print("Finished generating news")
+            //            print("Finished generating news")
             backNode.removeFromParent()
         }
     }
@@ -255,7 +259,7 @@ class GameOverlay:NSObject, SKSceneDelegate {
         newsPlaceholder.position.x = positionX
         
         newsPlaceholder.addChild(backNode)
-//        print("Scene paused: \(scene.isPaused)")
+        //        print("Scene paused: \(scene.isPaused)")
         
         let waiter = SKAction.wait(forDuration: 2.25)
         let runner = SKAction.fadeAlpha(to: 0, duration: 0.75)
@@ -267,4 +271,5 @@ class GameOverlay:NSObject, SKSceneDelegate {
         
     }
 }
+
 

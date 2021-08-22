@@ -257,13 +257,10 @@
 		8536F482258D481700B509D2 /* TravelersScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F464258D481700B509D2 /* TravelersScene.swift */; };
 		8536F483258D481700B509D2 /* TravelersScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F464258D481700B509D2 /* TravelersScene.swift */; };
 		8536F484258D481700B509D2 /* TravelersScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F464258D481700B509D2 /* TravelersScene.swift */; };
-		8536F485258D481700B509D2 /* StationOverlayObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F466258D481700B509D2 /* StationOverlayObject.swift */; };
-		8536F486258D481700B509D2 /* StationOverlayObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F466258D481700B509D2 /* StationOverlayObject.swift */; };
-		8536F487258D481700B509D2 /* StationOverlayObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F466258D481700B509D2 /* StationOverlayObject.swift */; };
-		8536F489258D481700B509D2 /* StationOverlay.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F467258D481700B509D2 /* StationOverlay.sks */; };
-		8536F48A258D481700B509D2 /* StationOverlay.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F467258D481700B509D2 /* StationOverlay.sks */; };
-		8536F48B258D481700B509D2 /* StationOverlay.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F467258D481700B509D2 /* StationOverlay.sks */; };
-		8536F48C258D481700B509D2 /* StationOverlay.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F467258D481700B509D2 /* StationOverlay.sks */; };
+		8536F489258D481700B509D2 /* GameOverlay.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F467258D481700B509D2 /* GameOverlay.sks */; };
+		8536F48A258D481700B509D2 /* GameOverlay.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F467258D481700B509D2 /* GameOverlay.sks */; };
+		8536F48B258D481700B509D2 /* GameOverlay.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F467258D481700B509D2 /* GameOverlay.sks */; };
+		8536F48C258D481700B509D2 /* GameOverlay.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8536F467258D481700B509D2 /* GameOverlay.sks */; };
 		8536F491258D481700B509D2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8536F46B258D481700B509D2 /* Assets.xcassets */; };
 		8536F492258D481700B509D2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8536F46B258D481700B509D2 /* Assets.xcassets */; };
 		8536F493258D481700B509D2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8536F46B258D481700B509D2 /* Assets.xcassets */; };
@@ -452,7 +449,6 @@
 		8592825325EED6EF001233BE /* SpaceVehicleNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8592824F25EED6EF001233BE /* SpaceVehicleNode.swift */; };
 		8592828825F176C1001233BE /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2B5258D330200B509D2 /* GameController.swift */; };
 		8592828D25F176F4001233BE /* GameCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */; };
-		8592829225F17721001233BE /* StationOverlayObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F466258D481700B509D2 /* StationOverlayObject.swift */; };
 		8595402926197A18001D9040 /* SKN_T2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8595402626197A17001D9040 /* SKN_T2.m4a */; };
 		8595402A26197A18001D9040 /* SKN_T2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8595402626197A17001D9040 /* SKN_T2.m4a */; };
 		8595402B26197A18001D9040 /* SKN_T2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8595402626197A17001D9040 /* SKN_T2.m4a */; };
@@ -576,6 +572,10 @@
 		85F6676025AF7CAB00E5003B /* RoboarmNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F6675E25AF7CAB00E5003B /* RoboarmNode.swift */; };
 		85F6676125AF7CAB00E5003B /* RoboarmNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F6675E25AF7CAB00E5003B /* RoboarmNode.swift */; };
 		85F6676225AF7CAB00E5003B /* RoboarmNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F6675E25AF7CAB00E5003B /* RoboarmNode.swift */; };
+		85FEFB6826D2E23E007BA9D1 /* GameOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEFB6726D2E23E007BA9D1 /* GameOverlay.swift */; };
+		85FEFB6926D2E23E007BA9D1 /* GameOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEFB6726D2E23E007BA9D1 /* GameOverlay.swift */; };
+		85FEFB6A26D2E23E007BA9D1 /* GameOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEFB6726D2E23E007BA9D1 /* GameOverlay.swift */; };
+		85FEFB6B26D2E23E007BA9D1 /* GameOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEFB6726D2E23E007BA9D1 /* GameOverlay.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -676,8 +676,7 @@
 		8536F461258D481700B509D2 /* MarsMapScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarsMapScene.swift; sourceTree = "<group>"; };
 		8536F463258D481700B509D2 /* MapIndicators.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MapIndicators.sks; sourceTree = "<group>"; };
 		8536F464258D481700B509D2 /* TravelersScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TravelersScene.swift; sourceTree = "<group>"; };
-		8536F466258D481700B509D2 /* StationOverlayObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationOverlayObject.swift; sourceTree = "<group>"; };
-		8536F467258D481700B509D2 /* StationOverlay.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = StationOverlay.sks; sourceTree = "<group>"; };
+		8536F467258D481700B509D2 /* GameOverlay.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameOverlay.sks; sourceTree = "<group>"; };
 		8536F46B258D481700B509D2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8536F46C258D481700B509D2 /* SparkEmitter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SparkEmitter.sks; sourceTree = "<group>"; };
 		8536F4A1258D484B00B509D2 /* SceneDirector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDirector.swift; sourceTree = "<group>"; };
@@ -774,6 +773,7 @@
 		85F6674C25AF7B9C00E5003B /* RadiatorNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadiatorNode.swift; sourceTree = "<group>"; };
 		85F6675525AF7BBE00E5003B /* DeliveryVehicleNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryVehicleNode.swift; sourceTree = "<group>"; };
 		85F6675E25AF7CAB00E5003B /* RoboarmNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoboarmNode.swift; sourceTree = "<group>"; };
+		85FEFB6726D2E23E007BA9D1 /* GameOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverlay.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1146,6 +1146,8 @@
 		8536F45D258D481700B509D2 /* Overlays */ = {
 			isa = PBXGroup;
 			children = (
+				85FEFB6726D2E23E007BA9D1 /* GameOverlay.swift */,
+				8536F467258D481700B509D2 /* GameOverlay.sks */,
 				8536F45E258D481700B509D2 /* CamControlNode.swift */,
 				8536F45F258D481700B509D2 /* CamControl.sks */,
 				85C3418425905A7500BF82F9 /* TutorialNode.swift */,
@@ -1167,8 +1169,6 @@
 		8536F465258D481700B509D2 /* Space Station */ = {
 			isa = PBXGroup;
 			children = (
-				8536F467258D481700B509D2 /* StationOverlay.sks */,
-				8536F466258D481700B509D2 /* StationOverlayObject.swift */,
 				850A1B0D25ACD5B100BDEF81 /* 3D Nodes */,
 			);
 			path = "Space Station";
@@ -1638,7 +1638,7 @@
 				8569A31F259F81110057A518 /* TransitionShader.fsh in Resources */,
 				8569A32B259F81110057A518 /* CautionStripes.fsh in Resources */,
 				8595402C26197A18001D9040 /* SKN_T1.m4a in Resources */,
-				8536F489258D481700B509D2 /* StationOverlay.sks in Resources */,
+				8536F489258D481700B509D2 /* GameOverlay.sks in Resources */,
 				8536F47D258D481700B509D2 /* MapIndicators.sks in Resources */,
 				8536F491258D481700B509D2 /* Assets.xcassets in Resources */,
 				8536F2ED258D330300B509D2 /* Art.scnassets in Resources */,
@@ -1671,7 +1671,7 @@
 				8569A320259F81110057A518 /* TransitionShader.fsh in Resources */,
 				8569A32C259F81110057A518 /* CautionStripes.fsh in Resources */,
 				8595402D26197A18001D9040 /* SKN_T1.m4a in Resources */,
-				8536F48A258D481700B509D2 /* StationOverlay.sks in Resources */,
+				8536F48A258D481700B509D2 /* GameOverlay.sks in Resources */,
 				8536F47E258D481700B509D2 /* MapIndicators.sks in Resources */,
 				8536F492258D481700B509D2 /* Assets.xcassets in Resources */,
 				8536F2EE258D330300B509D2 /* Art.scnassets in Resources */,
@@ -1708,7 +1708,7 @@
 				8536F473258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F493258D481700B509D2 /* Assets.xcassets in Resources */,
 				8569A333259F81110057A518 /* HealthShader.fsh in Resources */,
-				8536F48B258D481700B509D2 /* StationOverlay.sks in Resources */,
+				8536F48B258D481700B509D2 /* GameOverlay.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1716,7 +1716,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8536F48C258D481700B509D2 /* StationOverlay.sks in Resources */,
+				8536F48C258D481700B509D2 /* GameOverlay.sks in Resources */,
 				8536F474258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F480258D481700B509D2 /* MapIndicators.sks in Resources */,
 				85E2C42026BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
@@ -1775,6 +1775,7 @@
 				85487F1126C0DFB000EBC070 /* OP+Enums.swift in Sources */,
 				85D3BAB2269DF79800B6AA36 /* ForeignCityView.swift in Sources */,
 				850A1B0F25ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */,
+				85FEFB6826D2E23E007BA9D1 /* GameOverlay.swift in Sources */,
 				8536F3EA258D47D000B509D2 /* PersonControl.swift in Sources */,
 				8536F41E258D47D000B509D2 /* BuildingVehicleView.swift in Sources */,
 				8536F3A6258D475D00B509D2 /* Player.swift in Sources */,
@@ -1840,7 +1841,6 @@
 				8592825025EED6EF001233BE /* SpaceVehicleNode.swift in Sources */,
 				8536F3D2258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */,
 				8569A3E325A8D7870057A518 /* BoosterDiagramView.swift in Sources */,
-				8536F485258D481700B509D2 /* StationOverlayObject.swift in Sources */,
 				857A35652696AE500020ADF2 /* RSSView.swift in Sources */,
 				85A6590625E4178F008AA9BA /* GameSettingsController.swift in Sources */,
 				8536F3E2258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */,
@@ -1977,7 +1977,6 @@
 				8536F3D3258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */,
 				85487F5826CD9B3D00EBC070 /* GameFonts.swift in Sources */,
 				8569A3E425A8D7870057A518 /* BoosterDiagramView.swift in Sources */,
-				8536F486258D481700B509D2 /* StationOverlayObject.swift in Sources */,
 				85A6590725E4178F008AA9BA /* GameSettingsController.swift in Sources */,
 				8536F3E3258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */,
 				8592822E25EC44F7001233BE /* GuildExplorerView.swift in Sources */,
@@ -1987,6 +1986,7 @@
 				8536F43A258D47EA00B509D2 /* ModulesViewModel.swift in Sources */,
 				85F6675725AF7BBE00E5003B /* DeliveryVehicleNode.swift in Sources */,
 				85487F6826CD9D2500EBC070 /* GameSettings.swift in Sources */,
+				85FEFB6926D2E23E007BA9D1 /* GameOverlay.swift in Sources */,
 				85D3BAAB269DF75000B6AA36 /* MarsCityView.swift in Sources */,
 				8592825125EED6EF001233BE /* SpaceVehicleNode.swift in Sources */,
 				8536F32C258D412600B509D2 /* LocalDatabase.swift in Sources */,
@@ -2060,6 +2060,7 @@
 				85487F1326C0DFB000EBC070 /* OP+Enums.swift in Sources */,
 				85D3BAB4269DF79800B6AA36 /* ForeignCityView.swift in Sources */,
 				850A1B1125ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */,
+				85FEFB6A26D2E23E007BA9D1 /* GameOverlay.swift in Sources */,
 				8536F3EC258D47D000B509D2 /* PersonControl.swift in Sources */,
 				8536F420258D47D000B509D2 /* BuildingVehicleView.swift in Sources */,
 				8536F3A8258D475D00B509D2 /* Player.swift in Sources */,
@@ -2124,7 +2125,6 @@
 				8592824525EC74FD001233BE /* GuildView.swift in Sources */,
 				8592825225EED6EF001233BE /* SpaceVehicleNode.swift in Sources */,
 				8569A3E525A8D7870057A518 /* BoosterDiagramView.swift in Sources */,
-				8536F487258D481700B509D2 /* StationOverlayObject.swift in Sources */,
 				857A35672696AE500020ADF2 /* RSSView.swift in Sources */,
 				8536F3E4258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */,
 				85A6590825E4178F008AA9BA /* GameSettingsController.swift in Sources */,
@@ -2164,12 +2164,12 @@
 				8517EE4425FC124200C34C54 /* Outpost.swift in Sources */,
 				8536F3A9258D475D00B509D2 /* Player.swift in Sources */,
 				85E2C42526BD8A6E003315F2 /* StoreManager.swift in Sources */,
-				8592829225F17721001233BE /* StationOverlayObject.swift in Sources */,
 				8536F365258D475D00B509D2 /* Person.swift in Sources */,
 				8536F399258D475D00B509D2 /* Modules.swift in Sources */,
 				85487F0F26C0DF6000EBC070 /* OPSupply+Job.swift in Sources */,
 				8536F3A1258D475D00B509D2 /* TechTreeDisplay.swift in Sources */,
 				8592821525EA3287001233BE /* City.swift in Sources */,
+				85FEFB6B26D2E23E007BA9D1 /* GameOverlay.swift in Sources */,
 				8536F3A5258D475D00B509D2 /* SpaceVehicle.swift in Sources */,
 				8536F389258D475D00B509D2 /* HabModule.swift in Sources */,
 				8536F454258D47EA00B509D2 /* BioModController.swift in Sources */,

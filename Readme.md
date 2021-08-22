@@ -132,7 +132,9 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] EarthRequest - Fix weird Time to renew staff.
 - [X] Mars Scene - City - Gate Node
 - [X] Mars Scene - Outpost Node
-
+- [X] Overlays - Cameras
+- [X] Mars Scene - Animations - Camera entrance
+8/22/2021 = 21 of 72 (29 %)
 
 - [ ] Settings - ServerTab - Leave Guild
 - [ ] Settings - ServerTab - Create Guild
@@ -153,21 +155,20 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Station LSS View - Tank -> Release (if O2, or Air)
 - [ ] Station LSS View - Tank -> Keep this tank (Don't throw away)
 
+- [ ] Mars Scene - Animations - Camera change not working!
 - [ ] Mars Scene - City - Gate Config (to layout scene)
 - [ ] Mars Scene - City - Solar Panel(s)
 - [ ] Mars Scene - Outposts with Levels
 - [ ] Mars Scene - Outpost - State (building) scenes
-- [ ] Mars Scene - Infinite floor
 - [ ] Mars Scene - Animations - SpaceVehicle arriving
 - [ ] Mars Scene - Animations - Outposts Particle emitters
 - [ ] Mars Scene - Animations - Transportation - [See Gist](https://gist.github.com/Farini/ede665cab4e736480d4f399fbb4ca4f3)
-- [ ] Mars Scene - Animations - Camera entrance
 - [ ] Mars Scene - Garage - Vehicle Validation (when arriving (orbit))
 - [ ] Mars Scene - Gate Lights changing (Day/Night)
 - [ ] Mars Scene - Guild map improvements (x8)
 
 - [ ] Overlays - Election
-- [ ] Overlays - Cameras
+- [ ] Overlays - Cameras - Mars cameras not working properly
 - [ ] Overlays - Outpost rss Collecting
 
 - [ ] Model - E-Vehicle/Bot

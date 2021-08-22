@@ -66,7 +66,10 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
         // Convert the point to the Overlay Scene
         let converted:CGPoint = sceneRenderer.overlaySKScene!.convertPoint(fromView: point)
-        print("Touch Overlay: X:\(Int(converted.x)), Y:\(Int(converted.y)) \t Point: X:\(Int(point.x)), Y:\(Int(point.y))")
+        
+        if GameSettings.debugScene {
+            print("Touch Overlay: X:\(Int(converted.x)), Y:\(Int(converted.y)) \t Point: X:\(Int(point.x)), Y:\(Int(point.y))")
+        }
         
         // Check Overlay First
         if let node = sceneRenderer.overlaySKScene?.nodes(at: converted).first {
@@ -229,7 +232,15 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             // Camera Rotations
             if sprite.name == "rotate.left" {
                 
-                self.switchToBackCamera()
+                self.moveToPreviousCamera()
+                
+                if let camControl = sprite.parent as? CamControlNode {
+                    
+                    // Update the camcontrol.
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                        camControl.updatePOV()
+                    }
+                }
                 return
             }
             
@@ -274,7 +285,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 return
             }
             if sprite.name == "ChatButton" {
-                print("⚙️ Lets chat!")
+//                print("⚙️ Lets chat!")
                 gameNavDelegate?.didSelectMessages()
                 return
             }
@@ -300,81 +311,65 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     func didSetCamZ(value: Double) {
         print("CAM.POS Z: \(value)")
-        let originalPosition = cameraNode!.position
-        
-        #if os(macOS)
-        let destination = SCNVector3(x: originalPosition.x, y: originalPosition.y, z: CGFloat(value))
-        #else
-        let destination = SCNVector3(x: originalPosition.x, y: originalPosition.y, z: Float(value))
-        #endif
-        
-        cameraNode?.position = destination
+//        let originalPosition = cameraNode!.position
+//
+//        #if os(macOS)
+//        let destination = SCNVector3(x: originalPosition.x, y: originalPosition.y, z: CGFloat(value))
+//        #else
+//        let destination = SCNVector3(x: originalPosition.x, y: originalPosition.y, z: Float(value))
+//        #endif
+//
+//        cameraNode?.position = destination
     }
     
     func showCameraMenu() {
-        print("Should be showing camera menu")
         gameOverlay.toggleCamControl()
     }
     
     func hideCameraMenu() {
-        print("Hide the camera menu")
         gameOverlay.toggleCamControl()
     }
     
     func moveToNextCamera() {
         
-        print("NEXT CAMERA")
-        
         switch gameScene {
-            case .MarsColony: print("Mars")
-            case .SpaceStation:
+            case .MarsColony:
                 
-                // Get the builder
                 cameraNode?.moveToNextPOV()
                 if let pov = cameraNode?.currentPOV {
                     print("Moved to POV: \(pov.name)")
                 }
                 
+            case .SpaceStation:
                 
+                cameraNode?.moveToNextPOV()
+                if let pov = cameraNode?.currentPOV {
+                    print("Moved to POV: \(pov.name)")
+                }
                 
-                // Find out where is current camera
-                
-                // Get the next camera
-                // Move camera to next camera
-                // Add constraint to camera
                 // Save preferred camera on settings?
         }
-        
-//        if let front = scene.rootNode.childNode(withName: "CameraFront", recursively: false) {
-//            let position = front.position
-//            let euler = front.eulerAngles
-//            let moveAction = SCNAction.move(to: position, duration: 2.2)
-//            #if os(macOS)
-//            let rotateAction = SCNAction.rotateTo(x: euler.x, y: euler.y, z: euler.z, duration: 2.2, usesShortestUnitArc: true)
-//            #else
-//            let rotateAction = SCNAction.rotateTo(x: CGFloat(euler.x), y: CGFloat(euler.y), z: CGFloat(euler.z), duration: 2.2, usesShortestUnitArc: true)
-//            #endif
-//            let moveGroup = SCNAction.group([moveAction, rotateAction])
-//            cameraNode?.runAction(moveGroup) {
-//                print("Camera >> Front")
-//            }
-//        }
     }
     
-    func switchToBackCamera() {
-        if let front = scene.rootNode.childNode(withName: "CameraBack", recursively: false) {
-            let position = front.position
-            let euler = front.eulerAngles
-            let moveAction = SCNAction.move(to: position, duration: 2.2)
-            #if os(macOS)
-            let rotateAction = SCNAction.rotateTo(x: euler.x, y: euler.y, z: euler.z, duration: 2.2, usesShortestUnitArc: true)
-            #else
-            let rotateAction = SCNAction.rotateTo(x: CGFloat(euler.x), y: CGFloat(euler.y), z: CGFloat(euler.z), duration: 2.2, usesShortestUnitArc: true)
-            #endif
-            let moveGroup = SCNAction.group([moveAction, rotateAction])
-            cameraNode?.runAction(moveGroup) {
-                print("Camera >> Back")
-            }
+    func moveToPreviousCamera() {
+        
+        switch gameScene {
+            case .MarsColony:
+                
+                cameraNode?.moveToPreviousPOV()
+                if let pov = cameraNode?.currentPOV {
+                    print("Moved to POV: \(pov.name)")
+                }
+                
+            case .SpaceStation:
+                
+                // Get the builder
+                cameraNode?.moveToPreviousPOV()
+                if let pov = cameraNode?.currentPOV {
+                    print("Moved to POV: \(pov.name)")
+                }
+                
+            // Save preferred camera on settings?
         }
     }
     
@@ -542,6 +537,25 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     // MARK: - Scene Transitions
     
+    private func verifyMarsEntry(player:SKNPlayer) -> Bool {
+        
+        var enter:Bool = false
+        print("Requesting Player entry...")
+        let entryResult = player.marsEntryPass()
+        if entryResult.result == false {
+            if let entryToken = entryResult.token {
+                if let r2 = player.requestEntryToken(token: entryToken) {
+                    print("Found an Entry ticket \(r2.date)")
+                    enter = true
+                }
+            }
+        } else {
+            print("Entry OK: \(entryResult.token?.id.uuidString ?? "n/a")")
+            enter = true
+        }
+        return enter
+    }
+    
     func switchScene() {
         switch gameScene {
             
@@ -553,20 +567,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     return
                 }
                 
-                var enter:Bool = false
-                print("Requesting Player entry...")
-                let entryResult = player.marsEntryPass()
-                if entryResult.result == false {
-                    if let entryToken = entryResult.token {
-                        if let r2 = player.requestEntryToken(token: entryToken) {
-                            print("Found an Entry ticket \(r2.date)")
-                            enter = true
-                        }
-                    }
-                } else {
-                    print("Entry OK: \(entryResult.token?.id.uuidString ?? "n/a")")
-                    enter = true
-                }
+                let enter = self.verifyMarsEntry(player: player)
                 
                 guard enter == true else {
                     print("No Entry")
@@ -587,8 +588,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     return
                 }
                 
-                
-                
                 let mBuilder = MarsBuilder.shared
                 guard mBuilder.hasNoGuild == false else {
                     print("No Entry")
@@ -608,68 +607,44 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     
                     return
                 }
-                mBuilder.populateScene()
                 
-                let camParent = mBuilder.scene.rootNode.childNode(withName: "OtherCams", recursively: false)!
-                let pov = camParent.childNode(withName: "TopCam", recursively: false)!
-                let pov2 = camParent.childNodes.filter({ $0.name != "TopCam" && $0.name != "Diag3" }).randomElement()!
+                // MARK: - Camera Setup
                 
-                // Cons
-                let constraint = SCNLookAtConstraint(target: mBuilder.scene.rootNode.childNode(withName: "Terrain", recursively: false)!)
-                pov.constraints = [constraint]
-                
-                let destPos = pov2.position
-                let destAng = pov2.eulerAngles
-                
-                let move = SCNAction.move(to: destPos, duration: 2)
-                #if os(iOS)
-                let rota = SCNAction.rotateTo(x: CGFloat(destAng.x), y: CGFloat(destAng.y), z: CGFloat(destAng.z), duration: 2)
-                #else
-                let rota = SCNAction.rotateTo(x: destAng.x, y: destAng.y, z: destAng.z, duration: 2)
-                #endif
-                
-                let seq2 = SCNAction.sequence([rota])
-                let anime = SCNAction.group([move, seq2])
-                
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-                    self.sceneRenderer.present(mBuilder.scene, with: .doorsCloseVertical(withDuration: 2.25), incomingPointOfView: pov) { // pass a node for point of view
-                        self.scene = mBuilder.scene
-                        print("Mars Scene Loaded :)")
-                        self.gameScene = .MarsColony
-                        self.mars = mBuilder
-                        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-                            pov.runAction(anime)
-                        }
-                    }
+                let newScene:SCNScene = mBuilder.populateScene()
+                guard let cam:GameCamera = newScene.rootNode.childNode(withName: "Camera", recursively: false) as? GameCamera else {
+                    fatalError()
                 }
                 
-            
-                /*
-                MarsBuilder.shared.requestMarsInfo { guildFC, guildState in
+                // Update Overlay
+                gameOverlay.didChangeScene(camNode: cam)
+//                cam.camNode.look(at: SCNVector3())
+                
+                // Present Scene
+                
+                self.sceneRenderer.present(newScene, with: .doorsCloseVertical(withDuration: 1.0), incomingPointOfView: cam.camNode) { // newGameCam.camNode
                     
-                    print("Guild Loading State: \(guildState)")
+                    self.scene = newScene
+                    self.sceneRenderer.pointOfView = cam.camNode
                     
-                    if let gfc:GuildFullContent = guildFC {
-                        
-                        // Guild Loaded. Load scene
-                        print("Found Guild: \(gfc.name)")
-                        
-                        // Present Scene
-                        DispatchQueue.main.async {
-                            self.sceneRenderer.present(MarsBuilder.shared.scene, with: .doorsCloseVertical(withDuration: 1.25), incomingPointOfView: nil) {
-                                self.scene = MarsBuilder.shared.scene
-                                print("Mars Scene Loaded :)")
-                                self.gameScene = .MarsColony
-                                self.mars = MarsBuilder.shared
-                            }
-                        }
-                        
-                    } else {
-                        print("Error: \(guildState)")
-                        self.stationOverlay.generateNews(string: "⚠️ Could not connect to the server \(guildState)")
+                    print("Mars Scene Loaded :)")
+                    self.gameScene = .MarsColony
+                    self.mars = mBuilder
+                    
+                    self.cameraNode = cam
+                    
+                    // Entry Animation
+                    cam.position.y += 40
+                    let waiter = SCNAction.wait(duration: 1.0)
+                    let move1 = SCNAction.move(by: SCNVector3(-1, -20, 0), duration: 0.75)
+                    move1.timingMode = .easeIn
+                    let move2 = SCNAction.move(by: SCNVector3(1, -20, 0), duration: 0.75)
+                    move2.timingMode = .easeOut
+                    let sequence = SCNAction.sequence([waiter, move1, move2])
+                    
+                    cam.runAction(sequence) {
+                        print("CamChild LOOK @ \(cam.eulerAngles)")
                     }
                 }
-             */
                 
             // Loading Space Station from Mars
             case .MarsColony:
@@ -821,7 +796,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
         
         // Fetch Mars Data?
-        let mBuilder = MarsBuilder.shared
+        _ = MarsBuilder.shared
     }
     
     func loadLastBuildItem() {
@@ -850,8 +825,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         print("End Scene Debug ------\n")
     }
     
-    
-
 }
 
 // MARK: - Extensions & Helpers
@@ -912,7 +885,7 @@ extension StationBuildItem {
         switch type {
             case .Node:
 //                print("Load a node")
-                let nodeScene = SCNScene(named: "Art.scnassets/Node.scn")!
+                let nodeScene = SCNScene(named: "Art.scnassets/SpaceStation/Node.scn")!
                 if let nodeObj = nodeScene.rootNode.childNode(withName: "Node2", recursively: false)?.clone() {
                     nodeObj.name = "Node\(nodeCount)"
                     nodeCount += 1
@@ -930,7 +903,7 @@ extension StationBuildItem {
                 
             case .Module:
 
-                let moduleScene = SCNScene(named: "Art.scnassets/Module.scn")!
+                let moduleScene = SCNScene(named: "Art.scnassets/SpaceStation/Module.scn")!
                 if let nodeObj = moduleScene.rootNode.childNode(withName: "Module", recursively: false)?.clone() {
                     
                     let uvMapName = "\(skin?.uvMapName ?? ModuleSkin.allCases.randomElement()!.uvMapName).png"

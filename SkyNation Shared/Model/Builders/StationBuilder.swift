@@ -92,17 +92,10 @@ class StationBuilder:Codable {
     var buildList:[StationBuildItem]
     var lights:[BuildableLight] = []
     
-    /// The Point of Views (Camera Setup)
-//    var cameraPOVs:[GamePOV] = []
-    
-    /// Current camera POV
-//    var currentPOV:GamePOV!
-    
     var scene:SCNScene?
     
     // MARK: - Initializers
     
-    // Initting
     // Initialize the array with node0, node1, .modf, .mod0, .mod1
     /// Initializes the scene for the first time.
     init() {
@@ -275,14 +268,7 @@ extension StationBuilder {
             
             if let model:SCNNode = item.loadToScene() {
                 scene.rootNode.addChildNode(model)
-                if item == .garage {
-                    // add garage camera
-//                    let gCam = GamePOV(position: SCNVector3(x: 15, y: 5, z: -70), target:model, name: "Garage", yRange: nil, zRange: nil, zoom: 60)
-//                    self.cameraPOVs.append(gCam)
-                } else if item == .Airlock {
-//                    let aCam = GamePOV(position: SCNVector3(x: 15, y: 5, z: -10), target:model, name: "Airlock", yRange: nil, zRange: nil, zoom: 60)
-//                    self.cameraPOVs.append(aCam)
-                }
+
                 // Debug
                 if GameSettings.debugScene {
                     print("Loading Tech Node for: \(item)")
@@ -297,7 +283,6 @@ extension StationBuilder {
         scene.rootNode.addChildNode(antenna)
         
         // 5. Lights
-        
         
         
         // 6. Truss
