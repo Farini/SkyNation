@@ -52,7 +52,7 @@ enum ModuleIndex:String, Codable, CaseIterable {
     }
 }
 
-/// The Material to go on the Module.
+/// The Material (image) to go on the Module.
 enum ModuleSkin:String, Codable, CaseIterable {
     
     case ModuleBake
@@ -91,12 +91,20 @@ class StationBuilder:Codable {
     // Single Dimensional Array
     var buildList:[StationBuildItem]
     var lights:[BuildableLight] = []
+    
+    /// The Point of Views (Camera Setup)
+//    var cameraPOVs:[GamePOV] = []
+    
+    /// Current camera POV
+//    var currentPOV:GamePOV!
+    
     var scene:SCNScene?
     
     // MARK: - Initializers
     
     // Initting
     // Initialize the array with node0, node1, .modf, .mod0, .mod1
+    /// Initializes the scene for the first time.
     init() {
         // 5 Initial Objects
         // Create node0, and node1
@@ -115,6 +123,7 @@ class StationBuilder:Codable {
         let moduleBack = StationBuildItem(module: .mod2)
         
         self.buildList = [node0, module0, node2, moduleFront, moduleBack]
+        
     }
     
     /// Initialize with a `Station`, if there is one
@@ -138,24 +147,10 @@ class StationBuilder:Codable {
             // Module Skin
             newModule.skin = module.skin
             
+            // let p = module.moduleDex.position()
+            
             arrayOfModules.append(newModule)
             
-            //            switch modex {
-            //                case .mod3:
-            //                    // Node 2
-            //                    let node2 = StationBuildItem(pos: Vector3D(x: 0, y: 0, z: -12), euler: Vector3D.zero, type: .Node)
-            //                    arrayOfNodes.append(node2)
-            //                case .mod4:
-            //                    // Node 3
-            //                    let node3 = StationBuildItem(pos: Vector3D(x: 0, y: 0, z: -24), euler: Vector3D.zero, type: .Node)
-            //                    arrayOfNodes.append(node3)
-            //                case .mod5:
-            //                    // Node 4
-            //                    let node4 = StationBuildItem(pos: Vector3D(x: 0, y: 0, z: -36), euler: Vector3D.zero, type: .Node)
-            //                    arrayOfNodes.append(node4)
-            //                default:
-            //                    continue
-            //            }
         }
         
         for tech in station.unlockedTechItems {
@@ -177,9 +172,6 @@ class StationBuilder:Codable {
         }
         
         self.buildList = arrayOfNodes + arrayOfModules
-        
-        // Lights
-        
     }
     
     // MARK: - Codable
@@ -197,16 +189,18 @@ class StationBuilder:Codable {
     
     // MARK: - Items
     
+    
     /// sets the lights to the buildable pieces array
     func loadLights(lights:[BuildableLight]) {
         print("Loading lights")
         self.lights = lights
     }
     
+    
     /// Adds tech to the array of buildable parts
-    func loadTechTree(tech:[TechItems]) {
-        print("Load Tech tree items here")
-    }
+//    func loadTechTree(tech:[TechItems]) {
+//        print("Load Tech tree items here")
+//    }
     
     /// Gets the Modules (for IDs)
     func getModules() -> [Module] {
@@ -223,14 +217,6 @@ class StationBuilder:Codable {
     }
     
     // MARK: - Scene Building
-    func prepareGame(station:Station, completion:((Station?, Error?) -> ())?) {
-        // Use this to...
-        // 1. Run Accounting
-        // 2. Load Scene
-        // 3. Return a completion handler
-        
-    }
-    
     
     /// Build Scene on Background, to present
     func build(station:Station) {
@@ -262,17 +248,19 @@ extension StationBuilder {
         // 3. Tech Items
         // 4. Accessories
         // 5. Lights
-        // 6. Camera
-        // 7. Truss
+        // 6. Truss
+        // 7. Camera
         
         // 1. Modules + Nodes
         for buildPart in buildList {
             print("Build: \(buildPart.type.rawValue)")
             if buildPart.position.x == 0 && buildPart.position.y == -12 && buildPart.position.z == 0 {
                 let dock = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Dock.scn")!
+                // Dock
                 let node = dock.rootNode.childNode(withName: "Dock", recursively: false)!
                 node.name = "Dock"
                 scene.rootNode.addChildNode(node)
+                
             } else {
                 if let newNode = buildPart.loadFromScene() {
                     scene.rootNode.addChildNode(newNode)
@@ -285,9 +273,16 @@ extension StationBuilder {
         print("Loading unlocked Technology...")
         for item in station.unlockedTechItems {
             
-            if let model = item.loadToScene() {
+            if let model:SCNNode = item.loadToScene() {
                 scene.rootNode.addChildNode(model)
-                
+                if item == .garage {
+                    // add garage camera
+//                    let gCam = GamePOV(position: SCNVector3(x: 15, y: 5, z: -70), target:model, name: "Garage", yRange: nil, zRange: nil, zoom: 60)
+//                    self.cameraPOVs.append(gCam)
+                } else if item == .Airlock {
+//                    let aCam = GamePOV(position: SCNVector3(x: 15, y: 5, z: -10), target:model, name: "Airlock", yRange: nil, zRange: nil, zoom: 60)
+//                    self.cameraPOVs.append(aCam)
+                }
                 // Debug
                 if GameSettings.debugScene {
                     print("Loading Tech Node for: \(item)")
@@ -298,27 +293,14 @@ extension StationBuilder {
         // 4. Accessories (Antenna)
         let antennaPeripheral = station.truss.antenna
         let antenna = Antenna3DNode(peripheral: antennaPeripheral)
-        antenna.position = SCNVector3(22.0, 1.5, 0.0)
+        antenna.position = SCNVector3(21.5, 1.5, 0.0)
         scene.rootNode.addChildNode(antenna)
         
         // 5. Lights
-        // Folder >> Lights?
         
-        // 6. Camera
         
-        // Create an invisible sphere camera node ?
-        // https://stackoverflow.com/questions/25654772/rotate-scncamera-node-looking-at-an-object-around-an-imaginary-sphere
         
-        // Remove Old Camera
-        if let oldCam = scene.rootNode.childNode(withName: "Camera", recursively: false) {
-            oldCam.removeFromParentNode()
-        }
-        
-        // Game Camera
-        let newCamera = GameCamera()
-        scene.rootNode.addChildNode(newCamera)
-        
-        // 7. Truss
+        // 6. Truss
         
         // Truss (Solar Panels, Radiator, and Roboarm)
         let trussNode = scene.rootNode.childNode(withName: "Truss", recursively: true)!
@@ -365,6 +347,7 @@ extension StationBuilder {
                     
             }
         }
+        
         
         // Earth or ship (Order)
         if let order = station.earthOrder {
@@ -416,17 +399,56 @@ extension StationBuilder {
             scene.rootNode.addChildNode(earth)
         }
         
-        // NEWS
-        // Check Activities
-//        var newsLines:[String] = []
-//        if gameScene == .SpaceStation {
-//            if let labs = station?.labModules {
-//                for lab in labs {
-//                    print("*** Found lab: \(lab.id)")
         
-        // ------------------
-        // Post Notification Scene is ready
-
+        // 7. Camera
+        
+        // Create an invisible sphere camera node ?
+        // https://stackoverflow.com/questions/25654772/rotate-scncamera-node-looking-at-an-object-around-an-imaginary-sphere
+        
+        // Remove Old Camera
+        if let oldCam = scene.rootNode.childNode(withName: "Camera", recursively: false) {
+            oldCam.removeFromParentNode()
+        }
+        
+        
+        // Truss Camera
+        let tCam = GamePOV(position: SCNVector3(x: 25, y: 20, z: 20), target:trussNode, name: "Truss", yRange: nil, zRange: nil, zoom: nil)
+        
+        var camArray:[GamePOV] = []
+        
+        // Other Cameras
+        if let dock = scene.rootNode.childNode(withName: "Dock", recursively: false) {
+            let pos = SCNVector3(15, 10, 8)
+            let cam = GamePOV(position: pos, target: dock, name: "Dock", yRange: nil, zRange: nil, zoom: nil)
+            camArray.append(cam)
+        }
+        camArray.append(tCam)
+        
+        if let cuppola = scene.rootNode.childNode(withName: "Cuppola", recursively: false) {
+            let pos = SCNVector3(20, 7, cuppola.position.z - 3)
+            let cam = GamePOV(position: pos, target: cuppola, name: "Cuppola", yRange: nil, zRange: nil, zoom: nil)
+            camArray.append(cam)
+        } else if let airlock = scene.rootNode.childNode(withName: "Airlock", recursively: false) {
+            let pos = SCNVector3(20, 7, airlock.position.z - 3)
+            let cam = GamePOV(position: pos, target: airlock, name: "Airlock", yRange: nil, zRange: nil, zoom: nil)
+            camArray.append(cam)
+        }
+        if let lastNode = scene.rootNode.childNodes.filter({ $0.position.z < -30 && $0.name == "Node1" }).first {
+            let pos = SCNVector3(20, 10, lastNode.position.z - 5)
+            let cam = GamePOV(position: pos, target: lastNode, name: "Rear", yRange: nil, zRange: nil, zoom: nil)
+            camArray.append(cam)
+        }
+        
+        if let garage = scene.rootNode.childNode(withName: "Garage", recursively: false) {
+            let cam = GamePOV(position: SCNVector3(10, 5, -65), target: garage, name: "Garage", yRange: nil, zRange: nil, zoom: nil)
+            camArray.append(cam)
+        }
+        
+        
+        // Game Camera
+        let newCamera = GameCamera(pov: camArray.first!, array: camArray)
+        scene.rootNode.addChildNode(newCamera)
+        
         
         // Complete
         completion(scene)
@@ -467,6 +489,7 @@ class StationBuildItem:Codable {
     
 }
 
+
 /// A Struct that represents a `Light node` to be added to the scene
 struct BuildableLight:Codable {
     
@@ -483,5 +506,3 @@ struct BuildableLight:Codable {
     var intensty:Double
     
 }
-
-

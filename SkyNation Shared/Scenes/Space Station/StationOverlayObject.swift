@@ -11,7 +11,7 @@ import SpriteKit
 import SceneKit
 
 /// The Overlay of the `Station` Scene (Main Scene)
-class StationOverlay:NSObject, SKSceneDelegate {
+class GameOverlay:NSObject, SKSceneDelegate {
     
     var scene:SKScene
     var station:Station
@@ -25,7 +25,7 @@ class StationOverlay:NSObject, SKSceneDelegate {
     var newsPlaceholder:SKNode
     var sideMenuNode:SideMenuNode?
     
-    // Cam
+    // Camera
     var sceneCamera:GameCamera
     
     // Viewport
@@ -40,8 +40,8 @@ class StationOverlay:NSObject, SKSceneDelegate {
         self.renderer = renderer
         self.sceneCamera = camNode
         
-        print("_-_-:: Camera position: \(camNode.position)")
-        print("_-_-:: ViewPort: \(renderer.currentViewport)")
+//        print("_-_-:: Camera position: \(camNode.position)")
+//        print("_-_-:: ViewPort: \(renderer.currentViewport)")
         
         self.playerCardHolder = overlay.childNode(withName: "PlayerCardHolder")!
         self.orbitListHolder = overlay.childNode(withName: "VehiclesHolder")!
@@ -133,8 +133,10 @@ class StationOverlay:NSObject, SKSceneDelegate {
     
     /// Makes Camera control appear/disappear
     func toggleCamControl() {
-        print("Toggle cam ccontrol")
-        if let camNode = scene.childNode(withName: "CamControl") as? CamControlNode {
+        
+//        print("Toggle cam ccontrol")
+        
+        if let camNode:CamControlNode = scene.childNode(withName: "CamControl") as? CamControlNode {
             print("UP cam ccontrol")
             // Camera control is up. Remove
             let disappear = SKAction.fadeOut(withDuration: 0.25)
@@ -143,10 +145,11 @@ class StationOverlay:NSObject, SKSceneDelegate {
             let moveX = SKAction.moveBy(x: -camNode.position.x, y: 0, duration: 0.5)
             let group = SKAction.group([sequel, moveX])
             camNode.run(group, completion: camNode.removeFromParent)
-        }else{
+            
+        } else {
             
             // Create and show camera control
-            let node = CamControlNode(overlay: self)
+            let node = CamControlNode(overlay: self, gCamera: sceneCamera)
             
             // Adjust Position
             if let camPosition = sideMenuNode?.position {
@@ -210,16 +213,13 @@ class StationOverlay:NSObject, SKSceneDelegate {
         
         positionX -= backSize.width / 2
         newsPlaceholder.position.x = positionX
-        
         newsPlaceholder.addChild(backNode)
-//        print("Scene paused: \(scene.isPaused)")
         
         let waiter = SKAction.wait(forDuration: 2.25)
         let runner = SKAction.fadeAlpha(to: 0, duration: 0.75)
         let sequel = SKAction.sequence([waiter, runner])
         label.run(sequel) {
-            print("Finished sequel")
-//            self.scene.removeChildren(in: [self.newsPlaceholder])
+            print("Finished generating news")
             backNode.removeFromParent()
         }
     }

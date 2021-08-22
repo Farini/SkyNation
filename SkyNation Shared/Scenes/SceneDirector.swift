@@ -76,12 +76,11 @@ class SceneDirector {
         let moduleTechs:[TechItems] = [.module4, .module5, .module6, .module7, .module8, .module9, .module10]
         if moduleTechs.contains(tech) {
             gameController?.loadLastBuildItem()
-            controller.stationOverlay.generateNews(string: "Module Built: \(tech.shortName)")
+            controller.gameOverlay.generateNews(string: "Module Built: \(tech.shortName)")
             return
         }
         
-        
-        controller.stationOverlay.generateNews(string: "New Tech Collected: \(tech.shortName)")
+        controller.gameOverlay.generateNews(string: "New Tech Collected: \(tech.shortName)")
         if let model = model {
             switch tech {
                 case .Roboarm:
@@ -97,7 +96,7 @@ class SceneDirector {
     
     /// Updates the `PlayerCardNode` overlay. Use this when `Player` spends money, or tokens.
     func updatePlayerCard() {
-        gameController?.stationOverlay.updatePlayerCard()
+        gameController?.gameOverlay.updatePlayerCard()
     }
     
 }

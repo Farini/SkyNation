@@ -43,12 +43,16 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     /// An empty Node that controls the camera
     var cameraNode:GameCamera?
-    var camToggle:Bool = false { // The toggle that shows/hides the camera menu
+    
+    /// Shows or hides the camera control node (Menu)
+    var camToggle:Bool = false {
         didSet { oldValue == false ? showCameraMenu():hideCameraMenu() }
     }
     
+//    var camControlNode:
+    
     /// Scene's SpriteKit Overlay
-    var stationOverlay:StationOverlay
+    var gameOverlay:GameOverlay
     
     // Data
     var gameNavDelegate:GameNavDelegate?
@@ -215,7 +219,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         if let city = mars?.didSelectAirButton() {
                             print("Show city status here. \(city.posdex)")
                         } else {
-                            self.stationOverlay.generateNews(string: "You need to claim a city to view LSS report.")
+                            self.gameOverlay.generateNews(string: "You need to claim a city to view LSS report.")
                         }
                 }
                 
@@ -224,14 +228,21 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             
             // Camera Rotations
             if sprite.name == "rotate.left" {
-                //                    self.cameraNode?.eulerAngles.y += 15 * (.pi / 180)
+                
                 self.switchToBackCamera()
                 return
             }
             
             if sprite.name == "rotate.right" {
-                //                    self.cameraNode?.eulerAngles.y += -15 * (.pi / 180)
-                self.switchToFrontCamera()
+                
+                self.moveToNextCamera()
+                if let camControl = sprite.parent as? CamControlNode {
+                    
+                    // Update the camcontrol.
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                        camControl.updatePOV()
+                    }
+                }
                 return
             }
             
@@ -243,7 +254,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             // Tutorial button
             if sprite.name == "tutorial" {
                 print("🎓 HIT TUTORIAL NODE")
-                self.stationOverlay.showTutorial()
+                self.gameOverlay.showTutorial()
                 return
             }
             if sprite.name == "settings" {
@@ -302,29 +313,52 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     func showCameraMenu() {
         print("Should be showing camera menu")
-        stationOverlay.toggleCamControl()
+        gameOverlay.toggleCamControl()
     }
     
     func hideCameraMenu() {
         print("Hide the camera menu")
-        stationOverlay.toggleCamControl()
+        gameOverlay.toggleCamControl()
     }
     
-    func switchToFrontCamera() {
-        if let front = scene.rootNode.childNode(withName: "CameraFront", recursively: false) {
-            let position = front.position
-            let euler = front.eulerAngles
-            let moveAction = SCNAction.move(to: position, duration: 2.2)
-            #if os(macOS)
-            let rotateAction = SCNAction.rotateTo(x: euler.x, y: euler.y, z: euler.z, duration: 2.2, usesShortestUnitArc: true)
-            #else
-            let rotateAction = SCNAction.rotateTo(x: CGFloat(euler.x), y: CGFloat(euler.y), z: CGFloat(euler.z), duration: 2.2, usesShortestUnitArc: true)
-            #endif
-            let moveGroup = SCNAction.group([moveAction, rotateAction])
-            cameraNode?.runAction(moveGroup) {
-                print("Camera >> Front")
-            }
+    func moveToNextCamera() {
+        
+        print("NEXT CAMERA")
+        
+        switch gameScene {
+            case .MarsColony: print("Mars")
+            case .SpaceStation:
+                
+                // Get the builder
+                cameraNode?.moveToNextPOV()
+                if let pov = cameraNode?.currentPOV {
+                    print("Moved to POV: \(pov.name)")
+                }
+                
+                
+                
+                // Find out where is current camera
+                
+                // Get the next camera
+                // Move camera to next camera
+                // Add constraint to camera
+                // Save preferred camera on settings?
         }
+        
+//        if let front = scene.rootNode.childNode(withName: "CameraFront", recursively: false) {
+//            let position = front.position
+//            let euler = front.eulerAngles
+//            let moveAction = SCNAction.move(to: position, duration: 2.2)
+//            #if os(macOS)
+//            let rotateAction = SCNAction.rotateTo(x: euler.x, y: euler.y, z: euler.z, duration: 2.2, usesShortestUnitArc: true)
+//            #else
+//            let rotateAction = SCNAction.rotateTo(x: CGFloat(euler.x), y: CGFloat(euler.y), z: CGFloat(euler.z), duration: 2.2, usesShortestUnitArc: true)
+//            #endif
+//            let moveGroup = SCNAction.group([moveAction, rotateAction])
+//            cameraNode?.runAction(moveGroup) {
+//                print("Camera >> Front")
+//            }
+//        }
     }
     
     func switchToBackCamera() {
@@ -364,7 +398,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         station?.accountingLoop(recursive: false) { (messages) in
                             print("\(messages.first ?? "n/a")")
                         }
-                        stationOverlay.updatePlayerCard()
+                        gameOverlay.updatePlayerCard()
                         
                     case .MarsColony:
                         // print("Update Mars Colony Scene")
@@ -405,7 +439,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     func deliveryIsArriving() {
         
         guard gameScene == .SpaceStation else { return }
-        stationOverlay.generateNews(string: "📦 Delivery arriving...")
+        gameOverlay.generateNews(string: "📦 Delivery arriving...")
         
         // Remove the earth
         if let earth = scene.rootNode.childNode(withName: "Earth", recursively: true) as? EarthNode {
@@ -545,7 +579,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     for line in lines {
                         let timeDelay = DispatchTime.now() + newsDelay
                         DispatchQueue.main.asyncAfter(deadline: timeDelay) {
-                            self.stationOverlay.generateNews(string: line)
+                            self.gameOverlay.generateNews(string: line)
                         }
                         newsDelay += 5
                     }
@@ -567,7 +601,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     for line in lines {
                         let timeDelay = DispatchTime.now() + newsDelay
                         DispatchQueue.main.asyncAfter(deadline: timeDelay) {
-                            self.stationOverlay.generateNews(string: line)
+                            self.gameOverlay.generateNews(string: line)
                         }
                         newsDelay += 5
                     }
@@ -663,7 +697,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
         guard let builtScene = LocalDatabase.shared.stationBuilder.scene else { fatalError() }
         
-        print("--- INIT WITH RENDERER. Size: \(sceneRenderer.currentViewport.size)")
+//        print("--- INIT WITH RENDERER. Size: \(sceneRenderer.currentViewport.size)")
         
         self.scene = builtScene
         
@@ -676,30 +710,28 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             centralNode.position = SCNVector3(x: 0, y: -5, z: 0)
             camera.camNode.look(at: centralNode.position)
             
-            let constraint = SCNLookAtConstraint(target:centralNode)
-            constraint.isGimbalLockEnabled = true
-            constraint.influenceFactor = 0.1
+            camera.position.z += 40
             
-            SCNTransaction.begin()
-            SCNTransaction.animationDuration = 3.0
-            camera.camNode.constraints = [constraint]
-            SCNTransaction.commit()
+            let waiter = SCNAction.wait(duration: 3.0)
+            // let rotate = SCNAction.rotate(by: CGFloat(Double.pi / 8), around: SCNVector3(x: 0, y: 1, z: 0), duration: 2)
+            // rotate.timingMode = .easeOut
+            let move1 = SCNAction.move(by: SCNVector3(-1, 1, -20), duration: 0.75)
+            move1.timingMode = .easeIn
+            let move2 = SCNAction.move(by: SCNVector3(1, -1, -20), duration: 0.75)
+            move2.timingMode = .easeOut
             
-            let waiter = SCNAction.wait(duration: 4.0)
-            let rotate = SCNAction.rotate(by: CGFloat(Double.pi / 8), around: SCNVector3(x: 0, y: 1, z: 0), duration: 2)
-            rotate.timingMode = .easeOut
-            let sequence = SCNAction.sequence([waiter, rotate])
+            let sequence = SCNAction.sequence([waiter, move1, move2])
             
-            camera.runAction(sequence) { // cam.runAction(sequence) {
-                print("CamChild LOOK @ \(camera.eulerAngles)") // print("CamChild LOOK @ \(camChild.eulerAngles)")
+            camera.runAction(sequence) {
+                print("CamChild LOOK @ \(camera.eulerAngles)")
             }
         }
         
         
         // Overlay
-        let stationOverlay = StationOverlay(renderer: renderer, station: station!, camNode: self.cameraNode!)
+        let stationOverlay = GameOverlay(renderer: renderer, station: station!, camNode: self.cameraNode!)
         sceneRenderer.overlaySKScene = stationOverlay.scene
-        self.stationOverlay = stationOverlay
+        self.gameOverlay = stationOverlay
         
         super.init()
         
@@ -759,7 +791,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 print("*** NEWS ***  (\(newsLines.count)")
                 let timeDelay = DispatchTime.now() + newsDelay
                 DispatchQueue.main.asyncAfter(deadline: timeDelay) {
-                    self.stationOverlay.generateNews(string: line)
+                    self.gameOverlay.generateNews(string: line)
                 }
                 newsDelay += 5.0
             }

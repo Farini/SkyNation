@@ -12,27 +12,34 @@ import SceneKit
 
 class CamControlNode:SKNode {
     
-    var overlay:StationOverlay
+    var overlay:GameOverlay
     
     var nodeSize:CGSize
     
     var knob:SKNode
     var knobX:CGFloat = 0
     
-    init(overlay:StationOverlay) {
-        
+    var gameCamera:GameCamera
+    var povLabel:SKLabelNode?
+    
+    
+    init(overlay:GameOverlay, gCamera:GameCamera) {
+
         self.overlay = overlay
         guard let scene = SKScene(fileNamed: "CamControl") else { fatalError() }
         self.nodeSize = scene.size
-        
+
         // Knob
         let knob = SKShapeNode(circleOfRadius: 12)
         knob.name = "knob"
         knob.fillColor = .white
         self.knob = knob
         
+        // Camera
+        self.gameCamera = gCamera
+
         super.init()
-        
+
         self.setup(scene: scene)
         self.isUserInteractionEnabled = true
         self.name = "CamControl"
@@ -42,6 +49,7 @@ class CamControlNode:SKNode {
         
         print("Setting up cam control node")
         
+        // Background Shape
         let backShape = SKShapeNode(rect: CGRect(origin: CGPoint(x: 0, y: -(nodeSize.height / 2)), size: nodeSize), cornerRadius: 12)
         backShape.fillColor = SCNColor.black.withAlphaComponent(0.7)
         backShape.strokeColor = SCNColor.lightGray
@@ -81,11 +89,40 @@ class CamControlNode:SKNode {
         
         // Title
         let label = SKLabelNode(text: "Camera Viewport")
+        label.fontName = "Menlo Regular"
+        label.fontSize = 20
         label.verticalAlignmentMode = .top
         label.horizontalAlignmentMode = .center
         label.position.y = nodeSize.height / 2 - 6
         label.position.x = nodeSize.width / 2
         self.addChild(label)
+        
+        // Current Camera POV Title
+        guard let pov:GamePOV = gameCamera.currentPOV else {
+            print("⚠️ Failed to get camera POV")
+            return
+        }
+        
+        // POV Label - indicates camera position
+        let povLabel = SKLabelNode(text: pov.name)
+        povLabel.verticalAlignmentMode = .top
+        povLabel.horizontalAlignmentMode = .center
+        povLabel.position = scene.childNode(withName: "POV")?.position ?? CGPoint.zero
+        povLabel.fontColor = SKColor.blue
+        povLabel.fontName = "Menlo Regular"
+        povLabel.fontSize = 20
+        
+        povLabel.position.y = scene.childNode(withName: "POV")?.position.y ?? 6
+        povLabel.position.x = nodeSize.width / 2
+        self.povLabel = povLabel
+        
+        self.addChild(povLabel)
+    }
+    
+    /// Updates the label showing POV
+    func updatePOV() {
+        let text = gameCamera.currentPOV?.name
+        self.povLabel?.text = text
     }
     
     /// Puts the slider in the correct position in relation to where the camera is
@@ -93,17 +130,6 @@ class CamControlNode:SKNode {
         
         let poz = camera.position.z
         
-        // EQUATION
-        // 0 = 75, 1 = -300
-//        sceneCamera.position.z = 75 - (150 * x) * 2.5
-        // poz - 75 = 375 * x
-        // x = (poz - 75) / 375
-        
-//        let x1 = ((poz - 42.0) / 84.0)
-//        // x1 = 1 - knobX / maxWidth
-//        let maxWidth = nodeSize.width * 0.9
-        // 1 - knobX = x1 * maxWidth
-        // knobX = x1 * maxWidth + 1
         #if os(macOS)
         knobX = ((poz - 75) / 375) //(1 - x1) * maxWidth //x1 * maxWidth + 1
         #else
@@ -114,6 +140,8 @@ class CamControlNode:SKNode {
     
     /// The position the camera needs to go to
     var camNormalizedPosition:CGFloat?
+    
+    
     #if os(macOS)
     override func mouseDragged(with event: NSEvent) {
         
@@ -134,8 +162,6 @@ class CamControlNode:SKNode {
         
         let normalizedPosition = 1 - knobX / maxWidth
         self.camNormalizedPosition = normalizedPosition
-//        overlay.moveCamera(x: normalizedPosition)
-        
     }
     
     override func mouseUp(with event: NSEvent) {
@@ -146,14 +172,12 @@ class CamControlNode:SKNode {
     }
     #endif
     
-    // add #if macOS
+    
     /// Makes a Sprite from an image name
     func makeSprite(name:String) -> SKSpriteNode {
+        
         guard let image = GameImages.commonSystemImage(name: name)?.image(with: .white) else { fatalError() }
-        //SKNImage(systemSymbolName: name, accessibilityDescription: name)?.image(with: .white) else { fatalError() }
-        // knobX = (1 - x1) * maxWidth
-//        guard let image = GameImages.commonSystemImage(name: "name").imag//SKNImage(systemSymbolName: name, accessibilityDescription: name)?.image(with: .white) else { fatalError() }
-        // NSImage(systemSymbolName: name, accessibilityDescription: name)?.image(with: .white) else { fatalError() }
+        
         #if os(macOS)
         image.isTemplate = true
         let texture = SKTexture(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: [:])!)
@@ -163,7 +187,6 @@ class CamControlNode:SKNode {
         
         #endif
         
-         //SKTexture(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: [:])!)
         let sprite = SKSpriteNode(texture: texture, size:CGSize(width: 36, height: 34))
         sprite.name = name
         sprite.color = .white
