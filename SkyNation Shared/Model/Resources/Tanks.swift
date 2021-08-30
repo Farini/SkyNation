@@ -67,6 +67,9 @@ class Tank:Codable, Identifiable, Hashable {
     var capacity:Int
     var current:Int
     
+    /// Whether `Tank` should be discarded when empty.
+    var discardEmpty:Bool?
+    
     init(type:TankType, full:Bool? = false) {
         self.type = type
         self.capacity = type.capacity

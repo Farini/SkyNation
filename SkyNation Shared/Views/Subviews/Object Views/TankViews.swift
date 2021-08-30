@@ -69,6 +69,8 @@ struct TankView: View {
     var max:Float
     var tank:Tank
     
+    @State var discardWhenEmpty:Bool
+    
     // Popover to change tank type
     @State var popTankType:Bool = false
     
@@ -76,6 +78,14 @@ struct TankView: View {
         let cap = Float(tank.capacity)
         self.max = cap
         self.tank = tank
+        
+        // Checkbox discard empty
+        if tank.discardEmpty == true {
+            self.discardWhenEmpty = true
+        } else {
+            self.discardWhenEmpty = false
+        }
+        
         self.viewModel = model!
         self.current = Float(tank.current)
     }
@@ -112,40 +122,53 @@ struct TankView: View {
             generateBarcode(from: tank.id)
             Text(tank.id.uuidString).font(.footnote).foregroundColor(.gray)
             
+            // Discard
+            Toggle("Discard when empty", isOn: $discardWhenEmpty)
+                .onChange(of: discardWhenEmpty, perform: { value in
+                    if value == true {
+                        tank.discardEmpty = true
+                    }
+                })
+            
             // Slider
-//            Slider(value: $sliderValue, in: 0.0...current) { (changed) in
-//                print("Slider changed?")
-//            }
-//            .frame(maxWidth: 250, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-//            Text("\(Int(sliderValue)) of \(Int(current)) max: \(Int(max))")
+            Slider(value: $sliderValue, in: 0.0...current) { (changed) in
+                print("Slider changed?")
+            }
+            .frame(maxWidth: 250, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            Text("\(Int(sliderValue)) of \(Int(current)) max: \(Int(max))")
             
             Spacer()
             
             Divider()
             
             HStack {
-//                Button(action: {
-//                    print("Release tank in air")
-//                }, label: {
-//                    Text("Release in air")
-//                })
-//                .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
                 
                 Button(action: {
                     print("Throw away (discarding)")
                     viewModel.discardTank(tank)
                 }, label: {
-                    Text("Throw away")
+                    HStack {
+                        Image(systemName: "trash")
+                        Text("Discard")
+                    }
                 })
-                .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
+                .buttonStyle(GameButtonStyle(labelColor: .red))
+                .frame(width:95)
                 
                 Button(action: {
-//                    print("Release tank in air")
                     self.viewModel.mergeTanks(tank)
                 }, label: {
                     Text("Merge")
                 })
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
+                
+                Button("Release") {
+                    print("Release in air")
+                    viewModel.doReleaseInAir(tank: tank, amt: Int(sliderValue))
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
+                .disabled(!viewModel.canReleaseInAir(tank: tank, amt: Int(sliderValue)))
+                
                 
                 Button(action: {
                     print("Empty, or define")
@@ -164,7 +187,6 @@ struct TankView: View {
                         // Empty
                         Text("Empty")
                     }
-                    
                 })
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
                 .popover(isPresented: $popTankType) {
@@ -181,12 +203,6 @@ struct TankView: View {
                             }
                         }
                     }
-//                    List(TankType.allCases, id:\.self) { tanktype in
-//                        Text("\(tanktype.name) \(tanktype.rawValue.uppercased()) Cap:\(tanktype.capacity)")
-//                            .onTapGesture {
-//                                self.viewModel.defineType(tank, type: tanktype)
-//                            }
-//                    }
                 }
             }
             .padding()
@@ -276,17 +292,8 @@ struct TankOrderView: View {
 struct TankViews_Previews: PreviewProvider {
     
     static var previews: some View {
-        
         VStack {
-            
-//            Text("Tank: - Big")
             TankView(tank:LocalDatabase.shared.station!.truss.getTanks().first!)
-            
-//            Divider()
-//
-//            Text("Tank: - Small")
-//            TankViewSmall(tank: LocalDatabase.shared.station!.truss.getTanks().first!)
-            
         }
     }
 }

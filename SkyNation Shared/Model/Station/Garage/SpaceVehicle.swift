@@ -48,9 +48,9 @@ enum EngineType:String, Codable, CaseIterable, Hashable {
     var skills:[Skills:Int] {
         switch self {
             case .Hex6: return [.Mechanic:1, .Datacomm:1]
-            case .T12: return [.Mechanic:1, .Datacomm:1, .Material:1]
-            case .T18: return [.Mechanic:2, .Datacomm:2, .Material:1, .Handy:2]
-            case .T22: return [.Mechanic:3, .Electric:2, .Datacomm:2, .Handy:2, .Material:2]
+            case .T12: return [.Mechanic:1, .Datacomm:1, .Material:1, .Handy:1]
+            case .T18: return [.Mechanic:2, .Datacomm:1, .Material:1, .Electric:1, .Handy:2]
+            case .T22: return [.Mechanic:2, .Datacomm:2, .Material:2, .SystemOS:1, .Handy:2]
         }
     }
     
@@ -60,7 +60,7 @@ enum EngineType:String, Codable, CaseIterable, Hashable {
             case .Hex6: return [.Aluminium:10, .DCMotor:6, .Iron:6]
             case .T12: return [.Aluminium:14, .DCMotor:12, .Iron:8, .Ceramic:6, .Circuitboard:2]
             case .T18: return [.Aluminium:22, .DCMotor:18, .Iron:10, .Ceramic:10, .Circuitboard:4, .Polimer:5]
-            case .T22: return [.Aluminium:32, .DCMotor:22, .Iron:18, .Ceramic:15, .Circuitboard:9, .Polimer:13]
+            case .T22: return [.Aluminium:32, .DCMotor:22, .Iron:15, .Ceramic:15, .Circuitboard:9, .Polimer:8]
         }
     }
     

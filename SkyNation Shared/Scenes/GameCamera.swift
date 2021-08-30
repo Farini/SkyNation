@@ -100,7 +100,7 @@ class GameCamera:SCNNode {
         // Clear previous constraints & angles
         self.camNode.constraints = []
         self.camNode.eulerAngles = SCNVector3()
-        self.eulerAngles = SCNVector3()
+//        self.eulerAngles = SCNVector3()
         
         // Get destination
         var nextPOV:GamePOV!
@@ -116,9 +116,21 @@ class GameCamera:SCNNode {
         }
         self.currentPOV = nextPOV
         
-        // Move Camera
+        // Move
         let move = SCNAction.move(to: nextPOV.position, duration: 1.2)
-        self.camNode.runAction(move) {
+        var animeArray:[SCNAction] = [move]
+        
+        // Angles
+        if let angles = nextPOV.angles, nextPOV.targetNode == nil {
+            let waiter = SCNAction.wait(duration: 0.5)
+            let rotate = SCNAction.rotateTo(x: angles.x, y: angles.y, z: angles.z, duration: 1.2)
+            animeArray.append(SCNAction.sequence([waiter, rotate]))
+        }
+        
+        let animeGroup = SCNAction.group(animeArray)
+        
+        // Run animation
+        self.camNode.runAction(animeGroup) {
             
             if let targetNode = nextPOV.targetNode {
                 self.smoothLook(at: targetNode)
@@ -126,7 +138,6 @@ class GameCamera:SCNNode {
                 let newNode = SCNNode()
                 newNode.position = nextPOV.targetPosition ?? SCNVector3()
                 self.smoothLook(at: newNode)
-//                self.simpleLookAt(targetPoint: nextPOV.targetPosition ?? SCNVector3())
             }
             
             self.camNode.camera?.fieldOfView = CGFloat(nextPOV.fieldOfView)
@@ -139,7 +150,7 @@ class GameCamera:SCNNode {
         // Clear previous constraints & angles
         self.camNode.constraints = []
         self.camNode.eulerAngles = SCNVector3()
-        self.eulerAngles = SCNVector3()
+//        self.eulerAngles = SCNVector3()
         
         
         // Get destination
@@ -156,20 +167,30 @@ class GameCamera:SCNNode {
         }
         self.currentPOV = previousPOV
         
-        // Move Camera
+        // Move
         let move = SCNAction.move(to: previousPOV.position, duration: 1.2)
-        self.camNode.runAction(move) {
+        var animeArray:[SCNAction] = [move]
+        
+        // Angles
+        if let angles = previousPOV.angles, previousPOV.targetNode == nil {
+            let waiter = SCNAction.wait(duration: 0.5)
+            let rotate = SCNAction.rotateTo(x: angles.x, y: angles.y, z: angles.z, duration: 1.2)
+            animeArray.append(SCNAction.sequence([waiter, rotate]))
+        }
+        
+        let animeGroup = SCNAction.group(animeArray)
+        
+        // Run animation
+        self.camNode.runAction(animeGroup) {
             
-            // Point Camera
             if let targetNode = previousPOV.targetNode {
                 self.smoothLook(at: targetNode)
             } else {
                 let newNode = SCNNode()
                 newNode.position = previousPOV.targetPosition ?? SCNVector3()
                 self.smoothLook(at: newNode)
-//                self.simpleLookAt(targetPoint: previousPOV.targetPosition ?? SCNVector3())
             }
-            // Field of view
+            
             self.camNode.camera?.fieldOfView = CGFloat(previousPOV.fieldOfView)
         }
     }
@@ -256,10 +277,16 @@ struct GamePOV:Identifiable, Equatable {
     /// Position of the camera
     var position:SCNVector3
     
+    /// Angles of camera (if no target node)
+    var angles:SCNVector3?
+    
+    var targetPosition:SCNVector3?
+    
     /// The node the camera is looking at - also the anchor at wich the camera revolves around with yRange.
     var targetNode:SCNNode?
     
-    var targetPosition:SCNVector3?
+
+    
     
     /// The name to Display (select) - if nil, get the targetNode name, or vector
     var name:String
@@ -285,14 +312,27 @@ struct GamePOV:Identifiable, Equatable {
     }
     
     /// Initialize for a target position
-    init(position:SCNVector3, targetPos:SCNVector3, name:String, yRange:ClosedRange<Double>?, zRange:ClosedRange<Double>?, zoom:Double?) {
-        
-        self.position = position
-        self.targetPosition = targetPos
+//    init(position:SCNVector3, targetPos:SCNVector3, name:String, yRange:ClosedRange<Double>?, zRange:ClosedRange<Double>?, zoom:Double?) {
+//
+//        self.position = position
+//        self.targetPosition = targetPos
+//        self.name = name
+//
+//        if let yr = yRange { self.yRange = yr }
+//        if let zr = zRange { self.zoomRange = zr }
+//        if let zoom = zoom { self.fieldOfView = zoom }
+//    }
+    
+    /// Initializer for a target position, with Euler angles - No targetNode
+    init(copycat:SCNNode, name:String, yRange:ClosedRange<Double>?, zRange:ClosedRange<Double>?, zoom:Double?) {
+        self.position = copycat.position
+        self.angles = copycat.eulerAngles
         self.name = name
+        
         if let yr = yRange { self.yRange = yr }
         if let zr = zRange { self.zoomRange = zr }
         if let zoom = zoom { self.fieldOfView = zoom }
+        
     }
     
     static func == (lhs: GamePOV, rhs: GamePOV) -> Bool {

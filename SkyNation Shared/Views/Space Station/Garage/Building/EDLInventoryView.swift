@@ -128,6 +128,8 @@ struct EDLInventoryView: View {
                 
                 // Top Right Buttons
                 HStack {
+                    
+                    // See Trunk
                     Button("Inventory") {
                         popTrunk.toggle()
                     }
@@ -135,9 +137,12 @@ struct EDLInventoryView: View {
                     .popover(isPresented: self.$popTrunk) {
                         VehicleTrunkView(vehicle: vehicle, addedPeripherals: peripheralsSelected, addedIngredients: ingredientsSelected)
                     }
+                    
+                    // Load the vehicle
                     Button("Done") {
                         print("Finished Descent Order")
-                        controller.finishedDescentInventory(vehicle: vehicle, cargo: ingredientsSelected, devices: peripheralsSelected)
+//                        controller.finishedDescentInventory(vehicle: vehicle, cargo: ingredientsSelected, devices: peripheralsSelected)
+                        controller.finishedDescentInventory(vehicle: vehicle, cargo: ingredientsSelected, tanks: tanksSelected, batteries: batteries, devices: peripheralsSelected, people: passengers, bioBoxes: bioboxes)
                     }
                     .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
                     .disabled(count > vehicle.engine.payloadLimit)

@@ -167,6 +167,7 @@ struct LifeSupportView: View {
                                     Text("Peripheral")
                                     
                                 case .Tank(let tankObject):
+                                    
                                     ScrollView {
                                         TankView(tank: tankObject, model: self.controller)
                                     }

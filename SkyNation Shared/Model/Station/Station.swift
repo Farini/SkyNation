@@ -429,30 +429,30 @@ class Station:Codable {
     }
     
     /// Checks air for required vs supply
-    func checkRequiredAir() -> Int {
-        
-        let labs = labModules.count
-        let habs = habModules.count
-        let bios = bioModules.count
-        
-        // Each Requires 75?
-        let totalCount = labs + habs + bios
-        let requiredAir = totalCount * GameLogic.airPerModule
-        let suppliedAir = self.air.getVolume()
-        
-        print("--- Air:")
-        print("--- Required: \(requiredAir)")
-        print("--- Supplied: \(suppliedAir)")
-        return requiredAir
-        
-    }
+//    func checkRequiredAir() -> Int {
+//
+//        let labs = labModules.count
+//        let habs = habModules.count
+//        let bios = bioModules.count
+//
+//        // Each Requires 75?
+//        let totalCount = labs + habs + bios
+//        let requiredAir = totalCount * GameLogic.airPerModule
+//        let suppliedAir = self.air.getVolume()
+//
+//        print("--- Air:")
+//        print("--- Required: \(requiredAir)")
+//        print("--- Supplied: \(suppliedAir)")
+//        return requiredAir
+//
+//    }
     
     /// Adds an amount of air to the Station air
     func addControlledAir(amount:Int) {
         self.air.mergeWith(newAirAmount: amount)
     }
     
-    /// Calculates `Volume` of air needed in Station
+    /// Calculates total `Volume` of air needed in Station (does not subtract current air volume)
     func calculateNeededAir() -> Int {
         
         var moduleCount = labModules.count + habModules.count + bioModules.count
@@ -617,6 +617,19 @@ class Station:Codable {
             folks.append(contentsOf: hab.inhabitants)
         }
         return folks
+    }
+    
+    /// Tries to remove a Person from the station. (Usually when loading a vahicle) - returns false if person cannot be found.
+    func removePerson(person:Person) -> Bool {
+        for habMod in habModules {
+            if habMod.inhabitants.contains(person) {
+                habMod.inhabitants.removeAll(where: { $0.id == person.id })
+                return true
+            }
+        }
+        
+        print("Could not find: \(person.name)")
+        return false
     }
     
     /**

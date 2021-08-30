@@ -508,8 +508,9 @@ extension MarsBuilder {
         
         for camChild in camParent.childNodes {
             if (camChild.name ?? "").contains("Diag") {
-                let diagPov = GamePOV(position: camChild.position, target: camParent, name: camChild.name!, yRange: nil, zRange: nil, zoom: nil)
-                cameraPOVs.append(diagPov)
+                let dPov = GamePOV(copycat: camChild, name: camChild.name!, yRange: nil, zRange: nil, zoom: nil)
+//                let diagPov = GamePOV(position: camChild.position, target: camParent, name: camChild.name!, yRange: nil, zRange: nil, zoom: nil)
+                cameraPOVs.append(dPov)
             }
         }
         

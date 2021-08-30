@@ -1086,9 +1086,9 @@
 		8536F3B2258D47CF00B509D2 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				85D3BB2E26AFD22600B6AA36 /* Bio */,
 				8536F3B9258D47CF00B509D2 /* SelectModuleTypeView.swift */,
 				8536F3BA258D47CF00B509D2 /* HabModuleView.swift */,
+				85D3BB2E26AFD22600B6AA36 /* Bio */,
 				8536F3B4258D47CF00B509D2 /* Lab */,
 			);
 			path = Modules;

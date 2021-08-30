@@ -56,10 +56,8 @@ class LSSModel:ObservableObject {
     @Published var requiredAir:Int          // Sum  of modules' volume
     @Published var airVolume:Int            // Air Volume
     @Published var airPressure:Double       // volume / required air
-    
     @Published var levelO2:Double
     @Published var levelCO2:Double
-    
     @Published var liquidWater:Int
     @Published var availableFood:[String]
     
@@ -521,6 +519,61 @@ class LSSModel:ObservableObject {
         } else {
             print("Error: Could not find tank to empty")
         }
+    }
+    
+    func canReleaseInAir(tank:Tank, amt:Int) -> Bool {
+        
+        let releasableTankTypes:[TankType] = [.air, .co2, .o2, .n2, .h2o]
+        if !releasableTankTypes.contains(tank.type) { return false }
+        
+        let totalAirNeeded = station.calculateNeededAir()
+        let totalAirVolume = station.air.getVolume()
+        
+        // 120%?
+        let ratio:Double = Double(totalAirVolume) / Double(totalAirNeeded)
+        
+        // Max air is 120% of air needed
+        let maxRatio:Double = 1.2
+        
+        let maxNeededDouble:Int = Int((maxRatio * Double(totalAirNeeded)).rounded())
+        if (totalAirVolume + amt) < maxNeededDouble {
+            return true
+        }
+        
+        print("There is too much air! Ratio: \(ratio.rounded())")
+        
+        return false
+    }
+    
+    func doReleaseInAir(tank:Tank, amt:Int) {
+        
+        let type:TankType = tank.type
+        
+        guard let theTank = station.truss.tanks.filter({ $0.id == tank.id }).first else { return }
+        theTank.current -= amt
+        
+        switch type {
+            case .air: station.air.mergeWith(newAirAmount: amt)
+            case .co2: station.air.co2 += amt
+            case .o2: station.air.o2 += amt
+            case .h2o: station.air.h2o += amt
+            case .n2: station.air.n2 += amt
+            default:break
+        }
+        
+        // Air
+        let reqAir = station.calculateNeededAir()
+        self.requiredAir = reqAir
+        
+        let theAir = station.air
+        air = theAir
+        airVolume = theAir.getVolume()
+        airPressure = Double(theAir.getVolume()) / Double((reqAir + 1)) * 100.0
+        
+        self.levelO2 = (Double(theAir.o2) / Double(theAir.getVolume())) * 100
+        self.levelCO2 = (Double(theAir.co2) / Double(theAir.getVolume())) * 100
+        
+        self.viewState = .Resources(type: .Tank(object: tank))
     }
     
     // MARK: - Accounting

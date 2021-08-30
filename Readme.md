@@ -149,11 +149,13 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Station Scene - Make the Earth bright again?
 - [ ] Station Scene - New Modules not available after Tech research. 
 
-- [ ] Station Garage View - Building Vehicle - Reduce difficulty for bigger engines
-- [ ] Station Garage View - People not going in Vehicle.
+- [X] Station Garage View - People not going in Vehicle.
+- [X] Station Garage View - Building Vehicle - Reduce difficulty for bigger engines
+- [ ] Station Garage View - EDL - Test all resources going into SpaceVehicle
 
-- [ ] Station LSS View - Tank -> Release (if O2, or Air)
-- [ ] Station LSS View - Tank -> Keep this tank (Don't throw away)
+- [X] Station LSS View - Tank -> Release (if O2, or Air)
+- [ ] Station LSS View - Tank -> Test "discardEmptyTank"
+- [ ] Station LSS View - Tank -> Keep this tank (Don't throw away) -> Discard when empty
 
 - [ ] Mars Scene - Animations - Camera change not working!
 - [ ] Mars Scene - City - Gate Config (to layout scene)
@@ -167,9 +169,10 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Mars Scene - Gate Lights changing (Day/Night)
 - [ ] Mars Scene - Guild map improvements (x8)
 
+- [X] Overlays - Cameras - Mars cameras not working properly
 - [ ] Overlays - Election
-- [ ] Overlays - Cameras - Mars cameras not working properly
 - [ ] Overlays - Outpost rss Collecting
+- [ ] Overlays - GameCamera - Fix Awkward cam animations
 
 - [ ] Model - E-Vehicle/Bot
 - [ ] Model - City Accounting

@@ -274,8 +274,6 @@ class GarageViewModel:ObservableObject {
         }
     }
     
-    // MARK: - Cancelling
-    
     /// Resets the view to the beginning state
     func cancelSelection() {
         self.selectedVehicle = nil
@@ -426,15 +424,50 @@ class GarageViewModel:ObservableObject {
         self.garageStatus = .planning(stage: .Descent)
     }
     
-    func finishedDescentInventory(vehicle:SpaceVehicle, cargo:[StorageBox], devices:[PeripheralObject]) {
-        // Needs to implement...
-        // Transfer stuff from station to vehicle
-        station.truss.extraBoxes.removeAll(where: { cargo.map({ $0.id }).contains($0.id) })
-        station.peripherals.removeAll(where: { devices.map({ $0.id }).contains($0.id)})
+    func finishedDescentInventory(vehicle:SpaceVehicle, cargo:[StorageBox], tanks:[Tank], batteries:[Battery], devices:[PeripheralObject], people:[Person], bioBoxes:[BioBox]) {
         
-//        vehicle.boxes = vehicle.boxes ?? []
+        // Transfer stuff from station to vehicle
+        
+        // Boxes
+        station.truss.extraBoxes.removeAll(where: { cargo.map({ $0.id }).contains($0.id) })
         vehicle.boxes.append(contentsOf: cargo)
+        
+        // Tanks
+        station.truss.tanks.removeAll(where: { tanks.map({ $0.id }).contains($0.id) })
+        vehicle.tanks.append(contentsOf: tanks)
+        
+        // Batteries
+        station.truss.batteries.removeAll(where: { batteries.map({ $0.id }).contains($0.id)})
+        vehicle.batteries.append(contentsOf: batteries)
+        
+        // Peripherals
+        station.peripherals.removeAll(where: { devices.map({ $0.id }).contains($0.id)})
         vehicle.peripherals.append(contentsOf: devices)
+        
+        // People
+        for person in people {
+            if station.removePerson(person: person) == true {
+                vehicle.passengers.append(person)
+            }
+        }
+        
+        // BioBoxes
+        var bbArray = vehicle.bioBoxes ?? []
+        for bb in bioBoxes {
+            for bioMod in station.bioModules {
+                if bioMod.boxes.contains(bb) {
+                    bioMod.boxes.removeAll(where: { $0.id == bb.id })
+                    bbArray.append(bb)
+                }
+            }
+        }
+        if !bbArray.isEmpty {
+            vehicle.bioBoxes = bbArray
+        }
+        
+        // Check if over limit?
+        
+        // Save
         
         didSelectBuildEnd(vehicle: vehicle)
 //        cancelSelection()
