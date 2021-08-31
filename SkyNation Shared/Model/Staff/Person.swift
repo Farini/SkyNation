@@ -360,7 +360,11 @@ class Person:Codable, Identifiable, Equatable {
     }
     
     func clearActivity() {
-        if let activity = activity {
+        
+        guard let activity = activity else { return }
+        
+//        if let activity = activity {
+            
             if Date().compare(activity.dateEnds) == .orderedDescending {
                 
                 // Finished Activity
@@ -370,7 +374,7 @@ class Person:Codable, Identifiable, Equatable {
                     GameMessageBoard.shared.newAchievement(type: .experience, message: "\(name) finished a workout 💪")
                     self.healthPhysical = min(100, healthPhysical + 3)
                     
-                    /// Randomgly get happy
+                    /// Randomly get happy
                     if Bool.random() {
                         let happyGain = Int.random(in:1...3)
                         let happy = min(100, happiness + happyGain)
@@ -413,7 +417,7 @@ class Person:Codable, Identifiable, Equatable {
                     self.activity = nil
                 }
             }
-        }
+//        }
     }
     
     // MARK: - Creating a person

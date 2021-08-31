@@ -123,6 +123,7 @@ class Truss:Codable {
         // Add radiator here
     }
     
+    /// Marges the tanks that are half full. Discard if appropriate
     func mergeTanks() {
         for tankType in TankType.allCases {
             if tankType == .empty { continue }
@@ -134,9 +135,16 @@ class Truss:Codable {
                 if lastCapacity >= firstAmount {
                     // Merge Tanks
                     self.tanks.first(where: { $0.id == firstLast.last!.id })!.current += firstAmount
-                    if GameSettings.shared.clearEmptyTanks == true {
+                    self.tanks.first(where: { $0.id == firstLast.first!.id })!.current = 0
+                    
+                    // Check if should discard
+                    var shouldDiscard:Bool = GameSettings.shared.clearEmptyTanks
+                    // if marked as discard, discard anyways
+                    if shouldDiscard == false && self.tanks.first(where: { $0.id == firstLast.first!.id })?.discardEmpty == true { shouldDiscard = true }
+                    if shouldDiscard == true {
                         self.tanks.removeAll(where: { $0.id == firstLast.first!.id })
                     }
+                    
                 }
             } // else no merge
         }
@@ -145,17 +153,17 @@ class Truss:Codable {
     // MARK: - Refills
     
     /**
-     Refills Tanks (Usually Water) after resetting them.
+     Refills Tanks (Usually Water).
      - Parameter type: The type of `Tank` to be refilled
      - Parameter amount: The amount of liquid, or gas to go in the `Tank` array.
      - Returns: The amount that could **NOT** fit the `Tank`
      */
     func refillTanks(of type:TankType, amount:Int) -> Int {
         var leftOvers:Int = amount
-        let tanksArray = tanks.filter({ $0.type == type })
-        
+        let tanksArray = tanks.filter({ $0.type == type }).sorted(by: { $0.current < $1.current })
+
         for tank in tanksArray {
-            tank.current = 0
+//            tank.current = 0
             if leftOvers > 0 {
                 let extra = tank.fillUp(leftOvers)
                 leftOvers = max(extra, 0)

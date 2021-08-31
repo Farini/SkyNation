@@ -210,7 +210,7 @@ class PeripheralObject:Codable, Identifiable, Equatable {
             }
             
         } else {
-            // Power off
+            // Power is off
             return 0
         }
     }
@@ -219,7 +219,7 @@ class PeripheralObject:Codable, Identifiable, Equatable {
         return peripheral.energyConsumption
     }
     
-    /// Key Value for `Peripheral` consumption.
+    /// Key Value for `Peripheral` consumption, or production
     func getConsumables() -> [String:Int] {
         
         switch peripheral {
@@ -229,7 +229,33 @@ class PeripheralObject:Codable, Identifiable, Equatable {
             case .Methanizer: return ["CarbDiox":-4, TankType.h2.rawValue:-4, TankType.ch4.rawValue:4, TankType.o2.rawValue:4]
             case .WaterFilter: return [Ingredient.wasteLiquid.rawValue: -2, TankType.h2o.rawValue:2]
             case .BioSolidifier: return [Ingredient.wasteSolid.rawValue: -2, Ingredient.Fertilizer.rawValue:2]
+                
+            
             default: return [:]
+//            case .Radiator:
+//                <#code#>
+//            case .solarPanel:
+//                <#code#>
+//            case .battery:
+//                <#code#>
+//            case .storageBox:
+//                <#code#>
+//            case .storageTank:
+//                <#code#>
+//            case .DockingPoint:
+//                <#code#>
+//            case .Airlock:
+//                <#code#>
+//            case .Cuppola:
+//                <#code#>
+//            case .GarageArm:
+//                <#code#>
+//            case .Roboarm:
+//                <#code#>
+//            case .Garage:
+//                <#code#>
+//            case .Antenna:
+//                <#code#>
         }
     }
     

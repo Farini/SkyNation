@@ -376,8 +376,9 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     // MARK: - Updates
     var shouldUpdateScene:Bool = false
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        
         // Called before each frame is rendered
-        let rounded = time.rounded() // 10.0
+        let rounded = time.rounded()
         if time < 5 { return }
         
         if rounded.truncatingRemainder(dividingBy: 20) == 0 {
@@ -388,7 +389,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 
                 switch self.gameScene {
                     case .SpaceStation:
-                        print("⏱ Scene Update: \(rounded)")
+                        print("⏱ Station Update: \(rounded)")
                         
                         station?.accountingLoop(recursive: false) { (messages) in
                             print("\(messages.first ?? "n/a")")
@@ -396,6 +397,16 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         gameOverlay.updatePlayerCard()
                         
                     case .MarsColony:
+                        
+                        if let myCity:CityData = self.mars?.myCityData {
+                            print("⏱ My City Update: \(rounded)")
+                            
+                            myCity.accountingLoop(recursive: false) { messages in
+                                print("\(messages.first ?? "n/a")")
+                            }
+                            gameOverlay.updatePlayerCard()
+                        }
+                        
                         // print("Update Mars Colony Scene")
                         return
                 }

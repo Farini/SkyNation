@@ -96,9 +96,12 @@ class Station:Codable {
         
         // Solar panels
         let powerGeneration = truss.powerGeneration()
-        let leftOverPower = truss.refillBatteries(amount: powerGeneration)
+        let startingEnergy = truss.batteries.compactMap({ $0.current }).reduce(0, +)
+//        let leftOverPower = truss.refillBatteries(amount: powerGeneration)
+        var energySpill:Int = truss.refillBatteries(amount: powerGeneration)
+        print("Energy Spilling (extra): \(energySpill)")
         
-        // report
+        // Water + Air
         var water:Int = truss.getAvailableWater()
         let currentAir = air
         
@@ -107,10 +110,11 @@ class Station:Codable {
         var producedPee:Int = 0
         var producedPoo:Int = 0
         
-        let report = AccountingReport(time: starting, powerGen: powerGeneration, energy: leftOverPower, water: water, air: currentAir)
+        let report = AccountingReport(time: starting, powerGen: powerGeneration, energy: startingEnergy, water: water, air: currentAir)
         
         // Peripherals
-        for peripheral in peripherals {
+        for peripheral:PeripheralObject in peripherals {
+            
             // Energy.
             // Increase power consumption if working
             let useResult = peripheral.powerConsume(crack: true)
@@ -128,7 +132,10 @@ class Station:Codable {
                     var didFail:Bool = false
                     
                     // Subtracting
-                    for (key, value) in production where value < 0 {
+                    cLoop:for (key, value) in production where value < 0 {
+                        
+                        guard didFail == false else { break cLoop }
+                        
                         if let ingredient = Ingredient(rawValue: key) {
                             // Ingredient
                             let array = truss.validateResources(ingredients:[ingredient:abs(value)])
@@ -137,7 +144,7 @@ class Station:Codable {
                                 didFail = true
                             } else {
                                 let payment = truss.payForResources(ingredients: [ingredient:abs(value)])
-                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) produced: \(value) \(ingredient.rawValue)")
+                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value)) \(ingredient.rawValue)")
                                 print("Account Pay: \(payment)")
                             }
                             
@@ -148,7 +155,7 @@ class Station:Codable {
                                 didFail = true
                             } else {
                                 let _ = truss.chargeFrom(tank: tank, amount: value)
-                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) produced: \(value) \(tank.rawValue)")
+                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value)) \(tank.rawValue)")
                             }
                         } else if key == "vapor" {
                             // vapor in air
@@ -157,7 +164,7 @@ class Station:Codable {
                                 didFail = true
                             } else {
                                 self.air.h2o -= abs(value) // this actually subtracts
-                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) produced: \(value) vapor")
+                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value)) vapor")
                             }
                             
                         } else if key == "oxygen" {
@@ -176,7 +183,7 @@ class Station:Codable {
                                 report.problems.append("Not enough CO2 for \(peripheral.peripheral.rawValue)")
                                 didFail = true
                             } else {
-                                self.air.co2 += value // This actually subtracts
+                                self.air.co2 -= abs(value) // This actually subtracts
                                 report.peripheralNotes.append("\(peripheral.peripheral.rawValue) produced: \(value) CO2")
                             }
                         }
@@ -191,12 +198,16 @@ class Station:Codable {
                             let spill = truss.refillContainers(of: ingredient, amount: value)
                             if spill > 0 {
                                 report.problems.append("Could not find refill \(ingredient) completely")
+                            } else {
+                                report.notes.append("\(peripheral.peripheral) refilled \(key)")
                             }
                         } else if let tank = TankType(rawValue: key) {
                             // Tank
                             let spill = truss.refillTanks(of: tank, amount: value)
                             if spill > 0 {
                                 report.problems.append("Could not refill \(tank) completely")
+                            } else {
+                                report.notes.append("\(peripheral.peripheral) refilled \(key)")
                             }
                         } else if key == "vapor" {
                             // vapor in air
@@ -343,12 +354,16 @@ class Station:Codable {
         let urineSpill = truss.refillContainers(of: .wasteLiquid, amount: producedPee)
         if urineSpill > 0 {
             report.addProblem(string: "💦 Waste Water containers are full")
+        } else {
+            report.addNote(string: "💦 Waste Water increased by \(producedPee)")
         }
         
         // put back poop
         let poopSpill = truss.refillContainers(of: .wasteSolid, amount: producedPoo)
         if poopSpill > 0 {
             report.addNote(string: "💩 Solid Waste containers are full")
+        } else {
+            report.addNote(string: "💩 Solid Waste increased by \(producedPoo)")
         }
         
         // Modules + Energy Consumption
@@ -394,7 +409,7 @@ class Station:Codable {
             truss.tanks.removeAll(where: { $0.current <= 0 && ($0.type == .o2 || $0.type == .h2o) })
         }
         
-        // This should be another game setting
+        // Merge Tanks
         if GameSettings.shared.autoMergeTanks == true {
             truss.mergeTanks()
         }
@@ -677,16 +692,16 @@ class Station:Codable {
     }
 }
 
-struct EnergyReport:Codable {
-    
-    var solarInput:Int
-    
-    var batteriesBefore:Int
-    var batteriesAfter:Int
-    
-    /// The total power consumed in an Accounting cycle
-    var powerConsumption:Int
-}
+//struct EnergyReport:Codable {
+//
+//    var solarInput:Int
+//
+//    var batteriesBefore:Int
+//    var batteriesAfter:Int
+//
+//    /// The total power consumed in an Accounting cycle
+//    var powerConsumption:Int
+//}
 
 class AccountingReport:Codable {
     
@@ -781,7 +796,6 @@ class AccountingReport:Codable {
 
 /**
  A Container with ingredients, tanks and people
- This is a bit more organized `PayloadOrder`
  */
 class PayloadOrder: Codable {
     

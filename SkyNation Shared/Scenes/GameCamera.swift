@@ -99,7 +99,7 @@ class GameCamera:SCNNode {
         
         // Clear previous constraints & angles
         self.camNode.constraints = []
-        self.camNode.eulerAngles = SCNVector3()
+//        self.camNode.eulerAngles = SCNVector3()
 //        self.eulerAngles = SCNVector3()
         
         // Get destination
@@ -149,7 +149,7 @@ class GameCamera:SCNNode {
         
         // Clear previous constraints & angles
         self.camNode.constraints = []
-        self.camNode.eulerAngles = SCNVector3()
+//        self.camNode.eulerAngles = SCNVector3()
 //        self.eulerAngles = SCNVector3()
         
         

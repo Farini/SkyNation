@@ -136,6 +136,11 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Mars Scene - Animations - Camera entrance
 8/22/2021 = 21 of 72 (29 %)
 
+8/30/2021 to ....
+- [X] Station Garage View - People not going in Vehicle.
+- [X] Station Garage View - Building Vehicle - Reduce difficulty for bigger engines
+- [X] Station LSS View - Tank -> Release (if O2, or Air)
+
 - [ ] Settings - ServerTab - Leave Guild
 - [ ] Settings - ServerTab - Create Guild
 
@@ -149,13 +154,10 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Station Scene - Make the Earth bright again?
 - [ ] Station Scene - New Modules not available after Tech research. 
 
-- [X] Station Garage View - People not going in Vehicle.
-- [X] Station Garage View - Building Vehicle - Reduce difficulty for bigger engines
 - [ ] Station Garage View - EDL - Test all resources going into SpaceVehicle
+- [ ] Station Garage View - Improve departure animation
 
-- [X] Station LSS View - Tank -> Release (if O2, or Air)
 - [ ] Station LSS View - Tank -> Test "discardEmptyTank"
-- [ ] Station LSS View - Tank -> Keep this tank (Don't throw away) -> Discard when empty
 
 - [ ] Mars Scene - Animations - Camera change not working!
 - [ ] Mars Scene - City - Gate Config (to layout scene)
@@ -182,6 +184,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Model - Mars Accounting
 - [ ] Model - Guild - Write Invite
 - [ ] Model - Tanks & Boxes -> Don't throw away
+- [ ] Model - Use more energy (Peripherals + Modules + Person)
 
 - [ ] 2D Graphics - iOS app icon
 - [ ] 2D Graphics - Blender individual tanks
