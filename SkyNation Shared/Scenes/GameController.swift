@@ -16,7 +16,10 @@ protocol GameNavDelegate {
     func didSelectBio(module:BioModule)
     func didSelectTruss(station:Station)
     func didSelectGarage(station:Station)
-    func didSelectAir()
+    
+//    func didSelectAir()
+    func didSelectLSS(scene:GameSceneType)
+    
     func didSelectEarth()
     
     // New
@@ -39,6 +42,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     // Views
     var scene: SCNScene
     let sceneRenderer: SCNSceneRenderer
+    
+    /// The current Scene (Station, or Mars)
     var gameScene:GameSceneType = .SpaceStation
     
     /// An empty Node that controls the camera
@@ -217,10 +222,12 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             if sprite.name == "Air Control" {
                 switch gameScene {
                     case .SpaceStation:
-                        gameNavDelegate?.didSelectAir()
+                        gameNavDelegate?.didSelectLSS(scene: self.gameScene) //didSelectAir()
                     case .MarsColony:
                         if let city = mars?.didSelectAirButton() {
                             print("Show city status here. \(city.posdex)")
+                            gameNavDelegate?.didSelectLSS(scene: self.gameScene)
+                            
                         } else {
                             self.gameOverlay.generateNews(string: "You need to claim a city to view LSS report.")
                         }

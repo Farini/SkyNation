@@ -356,8 +356,11 @@ struct PersonOrderView:View {
     var person:Person
     
     var body: some View {
+        
         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top)) {
+            
             HStack {
+                
                 Image(person.avatar)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -402,13 +405,13 @@ struct PersonOrderView:View {
                 }
                 .padding([.trailing])
             }
+            
             Text("$\(GameLogic.orderPersonPrice)")
-                // .frame(maxWidth:40)
                 .foregroundColor(.gray)
                 .padding(4)
                 .background(Color.black)
+            
         }
-        
         .padding(2)
         .background(Color.black)
         .cornerRadius(8)

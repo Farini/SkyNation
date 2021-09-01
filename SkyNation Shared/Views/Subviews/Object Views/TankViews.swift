@@ -62,35 +62,59 @@ struct TankRow:View {
 
 struct TankView: View {
     
-    @ObservedObject var viewModel:LSSModel
+//    @ObservedObject var viewModel:LSSModel
+    var delegator:LSSDelegate
+    
     @State var sliderValue:Float = 0
     
     var current:Float
     var max:Float
     var tank:Tank
     
-    @State var discardWhenEmpty:Bool
+    @State var discardWhenEmpty:Bool = false
     
     // Popover to change tank type
     @State var popTankType:Bool = false
     
-    init(tank:Tank, model:LSSModel? = LSSModel()) {
+    init(tank:Tank, delegator:LSSDelegate) {
+        
         let cap = Float(tank.capacity)
         self.max = cap
         self.tank = tank
         
+        self.delegator = delegator
+        
+        self.current = Float(tank.current)
+    }
+    
+    func tankDiscard(tank:Tank) {
         // Checkbox discard empty
         if tank.discardEmpty == true {
             self.discardWhenEmpty = true
         } else {
             self.discardWhenEmpty = false
         }
-        
-        self.viewModel = model!
-        self.current = Float(tank.current)
     }
     
+//    init(tank:Tank, model:LSSModel? = LSSModel()) {
+//
+//        let cap = Float(tank.capacity)
+//        self.max = cap
+//        self.tank = tank
+//
+//        // Checkbox discard empty
+//        if tank.discardEmpty == true {
+//            self.discardWhenEmpty = true
+//        } else {
+//            self.discardWhenEmpty = false
+//        }
+//
+//        self.viewModel = model!
+//        self.current = Float(tank.current)
+//    }
+    
     var body: some View {
+        
         VStack {
             
             Text("Tank \(tank.type.rawValue.uppercased()) \(tank.type.name) ")
@@ -134,7 +158,7 @@ struct TankView: View {
             Slider(value: $sliderValue, in: 0.0...current) { (changed) in
                 print("Slider changed?")
             }
-            .frame(maxWidth: 250, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            .frame(maxWidth: 250, alignment: .center)
             Text("\(Int(sliderValue)) of \(Int(current)) max: \(Int(max))")
             
             Spacer()
@@ -145,7 +169,8 @@ struct TankView: View {
                 
                 Button(action: {
                     print("Throw away (discarding)")
-                    viewModel.discardTank(tank)
+//                    viewModel.discardTank(tank)
+                    delegator.discardTank(tank)
                 }, label: {
                     HStack {
                         Image(systemName: "trash")
@@ -156,7 +181,8 @@ struct TankView: View {
                 .frame(width:95)
                 
                 Button(action: {
-                    self.viewModel.mergeTanks(tank)
+//                    self.viewModel.mergeTanks(tank)
+                    delegator.mergeTanks(tank)
                 }, label: {
                     Text("Merge")
                 })
@@ -164,10 +190,13 @@ struct TankView: View {
                 
                 Button("Release") {
                     print("Release in air")
-                    viewModel.doReleaseInAir(tank: tank, amt: Int(sliderValue))
+//                    viewModel.doReleaseInAir(tank: tank, amt: Int(sliderValue))
+                    delegator.doReleaseInAir(tank: tank, amt: Int(self.sliderValue))
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
-                .disabled(!viewModel.canReleaseInAir(tank: tank, amt: Int(sliderValue)))
+                
+                .disabled(!delegator.canReleaseInAir(tank: tank, amt: Int(sliderValue)))
+//                .disabled(!viewModel.canReleaseInAir(tank: tank, amt: Int(sliderValue)))
                 
                 
                 Button(action: {
@@ -199,7 +228,8 @@ struct TankView: View {
                             }
                             .frame(maxWidth:200)
                             .onTapGesture {
-                                self.viewModel.defineType(tank, type: tanktype)
+//                                self.viewModel.defineType(tank, type: tanktype)
+                                delegator.defineType(tank, type: tanktype)
                             }
                         }
                     }
@@ -208,6 +238,10 @@ struct TankView: View {
             .padding()
             
 
+        }
+        
+        .onAppear() {
+            self.tankDiscard(tank: self.tank)
         }
         
     }
@@ -293,7 +327,8 @@ struct TankViews_Previews: PreviewProvider {
     
     static var previews: some View {
         VStack {
-            TankView(tank:LocalDatabase.shared.station!.truss.getTanks().first!)
+//            TankView(tank:LocalDatabase.shared.station!.truss.getTanks().first!)
+            TankView(tank:LocalDatabase.shared.station!.truss.getTanks().first!, delegator: LSSModel())
         }
     }
 }

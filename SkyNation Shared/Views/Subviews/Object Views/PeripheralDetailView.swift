@@ -9,8 +9,9 @@ import SwiftUI
 
 struct PeripheralDetailView: View {
     
-    @ObservedObject var controller:LSSModel
-    var peripheral:PeripheralObject
+//    @ObservedObject var controller:LSSModel
+    var delegator:LSSDelegate
+    @State var peripheral:PeripheralObject
     
     var body: some View {
         VStack {
@@ -66,21 +67,28 @@ struct PeripheralDetailView: View {
                         .padding([.bottom], 6)
                     
                     
-                    ForEach(controller.peripheralMessages, id:\.self) { msg in
-                        Text(msg)
-                            .foregroundColor(.green)
-                            .frame(width: 300, alignment: .center)
-                    }
+//                    ForEach(delegator.peripheralMessages, id:\.self) { msg in
+//                        Text(msg)
+//                            .foregroundColor(.green)
+//                            .frame(width: 300, alignment: .center)
+//                    }
                     
-                    ForEach(controller.peripheralIssues, id:\.self) { msg in
-                        Text(msg)
-                            .foregroundColor(.red)
-                            .frame(width: 300, alignment: .center)
-                    }
+//                    ForEach(controller.peripheralMessages, id:\.self) { msg in
+//                        Text(msg)
+//                            .foregroundColor(.green)
+//                            .frame(width: 300, alignment: .center)
+//                    }
+                    
+//                    ForEach(controller.peripheralIssues, id:\.self) { msg in
+//                        Text(msg)
+//                            .foregroundColor(.red)
+//                            .frame(width: 300, alignment: .center)
+//                    }
                     
                     Button("Instant Use") {
 //                        print("Instause!")
-                        controller.instantUse(peripheral: peripheral)
+//                        controller.instantUse(peripheral: peripheral)
+                        delegator.instantUse(peripheral: peripheral)
                     }
                     .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
                     
@@ -93,7 +101,8 @@ struct PeripheralDetailView: View {
                 Button("Fix") {
 //                    peripheral.isBroken.toggle()
 //                    peripheral.lastFixed = Date()
-                    controller.fixBroken(peripheral: peripheral)
+//                    controller.fixBroken(peripheral: peripheral)
+                    delegator.fixBroken(peripheral: peripheral)
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
                 .disabled(!peripheral.isBroken)
@@ -140,7 +149,8 @@ struct PeripheralDetailView_Previews: PreviewProvider {
     
     static var previews: some View {
         ForEach(peripherals, id:\.id) { peri in
-            PeripheralDetailView(controller:LSSModel(), peripheral: peri)
+//            PeripheralDetailView(controller:LSSModel(), peripheral: peri)
+            PeripheralDetailView(delegator: LSSModel(), peripheral: peri)
         }
         
     }

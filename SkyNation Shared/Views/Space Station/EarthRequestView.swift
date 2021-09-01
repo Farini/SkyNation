@@ -14,14 +14,17 @@ struct EarthRequestView: View {
     
     @State var infoPopover:Bool = false
     @State var popoverTutorial:Bool = false
-    
     @State var alertRenewPeople:Bool = false
+    
+    @State var selectedPeople:[Person] = []
     
     private var ingredientColumns: [GridItem] = [
         GridItem(.fixed(200)),
         GridItem(.fixed(200)),
         GridItem(.fixed(200))
     ]
+    
+    private var shape = RoundedRectangle(cornerRadius: 8, style: .continuous)
     
     var header: some View {
         
@@ -74,21 +77,218 @@ struct EarthRequestView: View {
             // Header
             header
             
-            // Body
-            ScrollView {
+            switch controller.orderStatus {
                 
-                switch controller.orderStatus {
+                case .Ordering(let order):
                     
-                    case .Ordering(let order):
+                    
+                    // Summary + Aisle
+                    Group {
+                        HStack {
+                            
+                            // Summary
+                            VStack(alignment:.leading) {
+                                Text("Summary")
+                                    .font(.title2)
+                                    .foregroundColor(.gray)
+                                
+                                // Quantity / Weight
+                                HStack {
+                                    Image(systemName: "scalemass")
+                                    Text("\(controller.orderQuantity)00 / \(GameLogic.earthOrderLimit)00 Kg")
+                                }
+                                .font(.title2)
+                            }
+                            
+                            Spacer()
+                            
+                            // Costs
+                            HStack {
+                                
+                                // Order Ticket Popover
+                                Button(action: {
+                                    infoPopover.toggle()
+                                    
+                                }) {
+                                    Image("Currency")
+                                        .renderingMode(.template)
+                                        .resizable()
+                                        .fixedSize()
+                                        .frame(width: 32, height: 32, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                                        .aspectRatio(contentMode: .fill)
+                                }
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                                .popover(isPresented: $infoPopover) {
+                                    List {
+                                        
+                                        HStack {
+                                            Text("Base Cost (Rocket): ")
+                                            Spacer()
+                                            Text("$ \(PayloadOrder.basePrice)")
+                                        }
+                                        .foregroundColor(.orange)
+                                        
+                                        Divider()
+                                        ForEach(order.ingredients, id:\.id) { storageBox in
+                                            HStack {
+                                                Text("\(storageBox.type.rawValue) x \(storageBox.capacity)")
+                                                Spacer()
+                                                Text("$ \(storageBox.type.price)")
+                                            }
+                                        }
+                                        Divider()
+                                        ForEach(order.tanks, id:\.id) { tank in
+                                            HStack {
+                                                Text("Tank \(tank.type.rawValue)")
+                                                Spacer()
+                                                Text("$ \(tank.type.price)")
+                                            }
+                                        }
+                                        Divider()
+                                        ForEach(order.people, id:\.id) { person in
+                                            HStack {
+                                                Text("\(person.name)")
+                                                Spacer()
+                                                Text("$ \(GameLogic.orderPersonPrice)")
+                                            }
+                                        }
+                                        Divider()
+                                        HStack {
+                                            Text("Total")
+                                                .font(.headline)
+                                            Spacer()
+                                            Text("$ \(order.calculateTotal())")
+                                                .font(.headline)
+                                        }
+                                        
+                                    }
+                                }
+                                
+                                VStack {
+                                    Text("(-) Costs \(controller.orderCost)").foregroundColor(.gray)
+                                    Text("Balance: \(controller.money - controller.orderCost)").foregroundColor(.orange)
+                                }
+                            }
+                        }
                         
-                        // Summary
+                        // Aisle Picker
+                        Picker(selection: $controller.orderAisle, label: Text("")) {
+                            ForEach(EarthViewPicker.allCases, id:\.self) { earth in
+                                Text(earth.rawValue)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        
+                        Divider()
+                    }
+                    .padding([.horizontal])
+                    
+                    
+                    ScrollView {
+                        
+                        switch controller.orderAisle {
+                            case .People:
+                                LazyVGrid(columns: ingredientColumns, alignment:.center, spacing:8) {
+                                    
+                                    ForEach(LocalDatabase.shared.player?.wallet.getPeople() ?? []) { person in
+                                        
+                                        PersonOrderView(person: person)
+                                            .overlay(
+                                                shape
+                                                    .inset(by: 0.5)
+                                                    .stroke(selectedPeople.contains(person) ? Color.blue.opacity(0.9):Color.clear, lineWidth: 1)
+                                            )
+                                            
+                                            .onTapGesture {
+                                                
+                                                controller.addToHire(person: person)
+                                                
+                                                if selectedPeople.contains(person) {
+                                                    selectedPeople.removeAll(where:  { $0.id == person.id })
+                                                } else {
+                                                    selectedPeople.append(person)
+                                                }
+                                            }
+                                    }
+                                    
+                                    HStack {
+                                        Image(systemName:"clock")
+                                            .font(.title)
+                                        VStack {
+                                            let delay = Double(TimeInterval.oneDay) / 24.0 // 1hr
+                                            let time:Double = LocalDatabase.shared.player?.wallet.timeToGenerateNextPeople().rounded() ?? 0.0
+                                            let display = GameFormatters.humanReadableTimeInterval(delta: delay - time)
+                                            
+                                            Text("Refresh in \(display)")
+                                        }
+                                    }
+                                    .padding(8)
+                                    .background(Color.black)
+                                    .cornerRadius(6)
+                                    .onTapGesture {
+                                        alertRenewPeople.toggle()
+                                    }
+                                    .alert(isPresented: $alertRenewPeople, content: {
+                                        Alert(title: Text("Refresh candidates"), message: Text("Spend 1 token to refresh candidates?"),
+                                              primaryButton: .cancel(),
+                                              secondaryButton: .destructive(Text("Yes"), action: {
+                                                
+                                                if let player = LocalDatabase.shared.player,
+                                                   let token = player.requestToken() {
+                                                    
+                                                    let pplResult = player.wallet.getPeople(true)
+                                                    guard !pplResult.isEmpty else { return }
+                                                    
+                                                    let result = LocalDatabase.shared.player!.spendToken(token: token, save: true)
+                                                    print("Used Token: \(result)")
+                                                } else {
+                                                    controller.errorMessage = "Not enough tokens"
+                                                }
+                                                
+                                                
+                                              }))
+                                    })
+                                }
+                                
+                            case .Ingredients:
+                                LazyVGrid(columns: ingredientColumns, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 8, pinnedViews: []) {
+                                    
+                                    ForEach(Ingredient.allCases.filter{$0.orderable}, id:\.self) { ingredient in
+                                        
+                                        IngredientOrderView(ingredient: ingredient)
+                                            .onTapGesture {
+                                                controller.addToCart(ingredient: ingredient)
+                                            }
+                                    }
+                                }
+                                
+                            case .Tanks:
+                                LazyVGrid(columns: ingredientColumns, alignment:.center, spacing:8, pinnedViews:[]) {
+                                    
+                                    ForEach(TankType.allCases, id:\.self) { tankType in
+                                        
+                                        TankOrderView(tank: tankType)
+                                            .onTapGesture {
+                                                controller.addToCart(tankType: tankType)
+                                            }
+                                    }
+                                }
+                        } // End Switch
+                    } // End ScrollView
+                
+                case .Reviewing(let order):
+                    
+                    // Review the order
+                    Group {
+                        
+                        // Review
                         Group {
                             
                             HStack {
                                 
                                 // Summary
                                 VStack(alignment:.leading) {
-                                    Text("Summary")
+                                    Text("Review")
                                         .font(.title2)
                                         .foregroundColor(.gray)
                                     
@@ -175,197 +375,11 @@ struct EarthRequestView: View {
                         }
                         .padding([.leading, .trailing], 8)
                         
-                        // Aisle Picker
-                        Picker(selection: $controller.orderAisle, label: Text("")) {
-                            ForEach(EarthViewPicker.allCases, id:\.self) { earth in
-                                Text(earth.rawValue)
-                            }
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
+                        Text("Items")
+                            .font(.title2)
+                            .foregroundColor(.orange)
                         
-                        switch controller.orderAisle {
-                            case .People:
-                                LazyVGrid(columns: ingredientColumns, alignment:.center, spacing:8) {
-                                    ForEach(LocalDatabase.shared.player?.wallet.getPeople() ?? []) { person in
-                                        PersonOrderView(person: person)
-                                            .onTapGesture {
-                                                controller.addToHire(person: person)
-                                            }
-                                    }
-//                                    ForEach(LocalDatabase.shared.gameGenerators?.people ?? []) { person in
-//                                        PersonOrderView(person: person)
-//                                            .onTapGesture {
-//                                                controller.addToHire(person: person)
-//                                            }
-//                                    }
-                                    HStack {
-                                        Image(systemName:"clock")
-                                            .font(.title)
-                                        VStack {
-                                            let delay = Double(TimeInterval.oneDay) / 24.0 // 1hr
-                                            let time:Double = LocalDatabase.shared.player?.wallet.timeToGenerateNextPeople().rounded() ?? 0.0
-                                            let display = GameFormatters.humanReadableTimeInterval(delta: delay - time)
-                                            
-                                            Text("Refresh in \(display)")
-                                        }
-                                    }
-                                    .padding(8)
-                                    .background(Color.black)
-                                    .cornerRadius(6)
-                                    .onTapGesture {
-                                        alertRenewPeople.toggle()
-                                    }
-                                    .alert(isPresented: $alertRenewPeople, content: {
-                                        Alert(title: Text("Refresh candidates"), message: Text("Spend 1 token to refresh candidates?"),
-                                              primaryButton: .cancel(),
-                                              secondaryButton: .destructive(Text("Yes"), action: {
-                                                
-                                                if let player = LocalDatabase.shared.player,
-                                                   let token = player.requestToken() {
-                                                    
-                                                    let pplResult = player.wallet.getPeople(true)
-                                                    guard !pplResult.isEmpty else { return }
-                                                    
-                                                    let result = LocalDatabase.shared.player!.spendToken(token: token, save: true)
-                                                    print("Used Token: \(result)")
-                                                } else {
-                                                    controller.errorMessage = "Not enough tokens"
-                                                }
-
-                                                
-                                              }))
-                                    })
-                                }
-
-                            case .Ingredients:
-                                LazyVGrid(columns: ingredientColumns, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 8, pinnedViews: []) {
-                                    
-                                    ForEach(Ingredient.allCases.filter{$0.orderable}, id:\.self) { ingredient in
-                                        
-                                        IngredientOrderView(ingredient: ingredient)
-                                            .onTapGesture {
-                                                controller.addToCart(ingredient: ingredient)
-                                            }
-                                    }
-                                }
-
-                            case .Tanks:
-                                LazyVGrid(columns: ingredientColumns, alignment:.center, spacing:8, pinnedViews:[]) {
-                                    
-                                    ForEach(TankType.allCases, id:\.self) { tankType in
-                                        
-                                        TankOrderView(tank: tankType)
-                                            .onTapGesture {
-                                                controller.addToCart(tankType: tankType)
-                                            }
-                                    }
-                                }
-                        }
-                        
-                    case .Reviewing(let order):
-                        
-                        // Review the order
-                        Group {
-                            
-                            // Review
-                            Group {
-                                
-                                HStack {
-                                    
-                                    // Summary
-                                    VStack(alignment:.leading) {
-                                        Text("Review")
-                                            .font(.title2)
-                                            .foregroundColor(.gray)
-                                        
-                                        // Quantity / Weight
-                                        HStack {
-                                            Image(systemName: "scalemass")
-                                            Text("\(controller.orderQuantity)00 / \(GameLogic.earthOrderLimit)00 Kg")
-                                        }
-                                        .font(.title2)
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    // Costs
-                                    HStack {
-                                        
-                                        // Order Ticket Popover
-                                        Button(action: {
-                                            infoPopover.toggle()
-                                            
-                                        }) {
-                                            Image("Currency")
-                                                .renderingMode(.template)
-                                                .resizable()
-                                                .fixedSize()
-                                                .frame(width: 32, height: 32, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                                                .aspectRatio(contentMode: .fill)
-                                        }
-                                        .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
-                                        .popover(isPresented: $infoPopover) {
-                                            List {
-                                                
-                                                HStack {
-                                                    Text("Base Cost (Rocket): ")
-                                                    Spacer()
-                                                    Text("$ \(PayloadOrder.basePrice)")
-                                                }
-                                                .foregroundColor(.orange)
-                                                
-                                                Divider()
-                                                ForEach(order.ingredients, id:\.id) { storageBox in
-                                                    HStack {
-                                                        Text("\(storageBox.type.rawValue) x \(storageBox.capacity)")
-                                                        Spacer()
-                                                        Text("$ \(storageBox.type.price)")
-                                                    }
-                                                }
-                                                Divider()
-                                                ForEach(order.tanks, id:\.id) { tank in
-                                                    HStack {
-                                                        Text("Tank \(tank.type.rawValue)")
-                                                        Spacer()
-                                                        Text("$ \(tank.type.price)")
-                                                    }
-                                                }
-                                                Divider()
-                                                ForEach(order.people, id:\.id) { person in
-                                                    HStack {
-                                                        Text("\(person.name)")
-                                                        Spacer()
-                                                        Text("$ \(GameLogic.orderPersonPrice)")
-                                                    }
-                                                }
-                                                Divider()
-                                                HStack {
-                                                    Text("Total")
-                                                        .font(.headline)
-                                                    Spacer()
-                                                    Text("$ \(order.calculateTotal())")
-                                                        .font(.headline)
-                                                }
-                                                
-                                            }
-                                        }
-                                        
-                                        VStack {
-                                            Text("(-) Costs \(controller.orderCost)").foregroundColor(.gray)
-                                            Text("Balance: \(controller.money - controller.orderCost)").foregroundColor(.orange)
-                                        }
-                                    }
-                                }
-                                
-                                Divider()
-                            }
-                            .padding([.leading, .trailing], 8)
-                            
-                            
-                            Text("Items")
-                                .font(.title2)
-                                .foregroundColor(.orange)
-                            
+                        ScrollView {
                             LazyVGrid(columns: ingredientColumns, alignment: .center, spacing: 8) {
                                 
                                 ForEach(order.ingredients, id:\.id) { storageBox in
@@ -384,30 +398,34 @@ struct EarthRequestView: View {
                             }
                         }
                         
-                    case .OrderPlaced:
-                        
-                        Group {
-                            Text("Order Placed. Wait for delivery now.")
+                    }
+                    
+                case .OrderPlaced:
+                    
+                    Group {
+                        Text("Order Placed. Wait for delivery now.")
+                            .foregroundColor(.orange)
+                    }
+                    
+                case .Delivering:
+                    
+                    Group {
+                        // Head
+                        VStack {
+                            Text("📦 Delivery")
+                                .font(.largeTitle)
                                 .foregroundColor(.orange)
-                            
+                            Text("Here are the items being delivered")
+                                .foregroundColor(.gray)
                         }
+                        .padding([.bottom], 6)
                         
-                    case .Delivering:
+                        Divider()
                         
-                        Group {
-                            // Head
-                            VStack {
-                                Text("📦 Delivery")
-                                    .font(.largeTitle)
-                                    .foregroundColor(.orange)
-                                Text("Here are the items being delivered")
-                                    .foregroundColor(.gray)
-                            }
-                            .padding([.bottom], 6)
-                            
-                            Divider()
-                            
+                        // Items
+                        ScrollView {
                             LazyVGrid(columns: ingredientColumns, alignment: .center, spacing: 8, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
+                                
                                 // Ingredients
                                 ForEach(controller.currentOrder!.ingredients) { ingredient in
                                     IngredientView(ingredient: ingredient.type, hasIngredient: nil, quantity: nil)
@@ -424,9 +442,9 @@ struct EarthRequestView: View {
                                 }
                             }
                         }
-                }
+                        
+                    }
             }
-            .frame(minWidth: 620, maxWidth: .infinity, minHeight: 275, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment:.topLeading)
             
             Divider()
             
@@ -511,7 +529,7 @@ struct EarthRequestView: View {
                             
                         case .OrderPlaced:
                             Text("Order Placed")
-
+                            
                         case .Delivering:
                             
                             Button(action: {
@@ -547,7 +565,7 @@ struct EarthRequestView: View {
         .frame(height: 550)
         
     }
- 
+    
     func confirmOrder() -> Bool {
         return controller.placeOrder()
     }
@@ -557,5 +575,6 @@ struct EarthRequestView: View {
 struct EarthRequestView_Previews: PreviewProvider {
     static var previews: some View {
         EarthRequestView()
+            .frame(maxWidth:.infinity)
     }
 }

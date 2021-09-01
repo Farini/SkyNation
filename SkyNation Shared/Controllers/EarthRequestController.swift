@@ -181,6 +181,20 @@ class EarthRequestController:ObservableObject {
         }
     }
     
+    func hasSelected(person:Person) -> Bool {
+        
+        guard let currentOrder = currentOrder else {
+            errorMessage = "No current order"
+            return false
+        }
+        
+        if currentOrder.people.contains(person) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     // MARK: - Order Status
     
     // 1. Review

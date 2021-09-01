@@ -140,6 +140,15 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Station Garage View - People not going in Vehicle.
 - [X] Station Garage View - Building Vehicle - Reduce difficulty for bigger engines
 - [X] Station LSS View - Tank -> Release (if O2, or Air)
+9/1/2021 = 24 of 82 (29%)
+- [X] Order View - Use Scroll only on the items collection
+- [X] Order View - Person Selected indicator
+- [X] Overlays - Cameras - Mars cameras not working properly
+- [X] Overlays - Mars LSS View
+- [X] Model - Tanks & Boxes -> Don't throw away
+- [X] Model - City Accounting
+- [X] Mars Scene - Animations - Camera change not working!
+
 
 - [ ] Settings - ServerTab - Leave Guild
 - [ ] Settings - ServerTab - Create Guild
@@ -152,14 +161,15 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Station Scene - Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
 - [ ] Station Scene - Background HDRI image
 - [ ] Station Scene - Make the Earth bright again?
-- [ ] Station Scene - New Modules not available after Tech research. 
+- [ ] Station Scene - New Modules not 'clickable' after Tech research. 
 
 - [ ] Station Garage View - EDL - Test all resources going into SpaceVehicle
 - [ ] Station Garage View - Improve departure animation
+- [ ] Station Garage View - Notify Overlay of New Vehicles
+- [ ] Station Garage View - View size too small (on launch)
 
 - [ ] Station LSS View - Tank -> Test "discardEmptyTank"
 
-- [ ] Mars Scene - Animations - Camera change not working!
 - [ ] Mars Scene - City - Gate Config (to layout scene)
 - [ ] Mars Scene - City - Solar Panel(s)
 - [ ] Mars Scene - Outposts with Levels
@@ -170,20 +180,18 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Mars Scene - Garage - Vehicle Validation (when arriving (orbit))
 - [ ] Mars Scene - Gate Lights changing (Day/Night)
 - [ ] Mars Scene - Guild map improvements (x8)
+- [ ] Mars Scene - Go back to Space Station
 
-- [X] Overlays - Cameras - Mars cameras not working properly
 - [ ] Overlays - Election
 - [ ] Overlays - Outpost rss Collecting
-- [ ] Overlays - GameCamera - Fix Awkward cam animations
+- [ ] Overlays - GameCamera - Fix Awkward cam transitions
 
 - [ ] Model - E-Vehicle/Bot
-- [ ] Model - City Accounting
 - [ ] Model - Outpost rss Collecting
 - [ ] Model - Election
 - [ ] Model - Road?
 - [ ] Model - Mars Accounting
 - [ ] Model - Guild - Write Invite
-- [ ] Model - Tanks & Boxes -> Don't throw away
 - [ ] Model - Use more energy (Peripherals + Modules + Person)
 
 - [ ] 2D Graphics - iOS app icon

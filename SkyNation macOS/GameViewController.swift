@@ -80,6 +80,8 @@ class GameViewController: NSViewController, NSWindowDelegate {
 #if os(macOS)
 extension GameViewController: GameNavDelegate {
     
+    
+    
     func didSelectEarth() {
         
         let controller = NSHostingController(rootView: EarthRequestView()) //UIHostingController(rootView:EarthRequestView())
@@ -98,8 +100,6 @@ extension GameViewController: GameNavDelegate {
     
     func didSelectGarage(station: Station) {
         
-        print("Garage selected")
-        
         let controller = NSHostingController(rootView: GarageView()) //UIHostingController(rootView:EarthRequestView())
         
         controller.view.translatesAutoresizingMaskIntoConstraints = false
@@ -111,20 +111,42 @@ extension GameViewController: GameNavDelegate {
         
         self.openedView = controller.view
         self.presentAsSheet(controller)
-        
-        /*
-         let window = ClosableWindow(
-         contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
-         styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-         backing: .buffered, defer: false)
-         window.center()
-         window.setFrameAutosaveName("SUI Window")
-         window.contentView = NSHostingView(rootView: GarageView())
-         window.makeKeyAndOrderFront(nil)
-         */
-        
     }
     
+    /// LSS Control
+    func didSelectLSS(scene: GameSceneType) {
+        switch scene {
+            case .SpaceStation:
+                
+                let controller = NSHostingController(rootView: LifeSupportView())
+                
+                controller.view.translatesAutoresizingMaskIntoConstraints = false
+                view.addSubview(controller.view)
+                controller.view.centerXAnchor.constraint(
+                    equalTo: view.centerXAnchor).isActive = true
+                controller.view.centerYAnchor.constraint(
+                    equalTo: view.centerYAnchor).isActive = true
+                
+                self.openedView = controller.view
+                self.presentAsSheet(controller)
+            
+            case .MarsColony:
+                
+                let controller = NSHostingController(rootView: CityLSSView())
+                
+                controller.view.translatesAutoresizingMaskIntoConstraints = false
+                view.addSubview(controller.view)
+                controller.view.centerXAnchor.constraint(
+                    equalTo: view.centerXAnchor).isActive = true
+                controller.view.centerYAnchor.constraint(
+                    equalTo: view.centerYAnchor).isActive = true
+                
+                self.openedView = controller.view
+                self.presentAsSheet(controller)
+        }
+    }
+    
+    /* // Old LSS
     func didSelectAir() {
         
         let controller = NSHostingController(rootView: LifeSupportView()) //UIHostingController(rootView:EarthRequestView())
@@ -151,6 +173,7 @@ extension GameViewController: GameNavDelegate {
          window.makeKeyAndOrderFront(nil)
          */
     }
+    */
     
     func didSelectHab(module: HabModule) {
         //        print("Create Hab Module View to View This")

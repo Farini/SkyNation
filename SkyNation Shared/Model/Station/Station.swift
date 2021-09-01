@@ -197,7 +197,7 @@ class Station:Codable {
                             // Ingredient
                             let spill = truss.refillContainers(of: ingredient, amount: value)
                             if spill > 0 {
-                                report.problems.append("Could not find refill \(ingredient) completely")
+                                report.problems.append("Could not refill \(ingredient) completely")
                             } else {
                                 report.notes.append("\(peripheral.peripheral) refilled \(key)")
                             }
@@ -256,7 +256,13 @@ class Station:Codable {
         let radiatorsBoost:Bool = peripherals.filter({ $0.peripheral == .Radiator }).count * 3 >= inhabitants.count ? true:false
         for person in inhabitants {
             print("\(person.name)\t 😷:\(person.healthPhysical) 😃:\(person.happiness) ❤️:\(person.lifeExpectancy)")
-            let personalNote = "\(person.name)\t 😷:\(person.healthPhysical) 😃:\(person.happiness) ❤️:\(person.lifeExpectancy)"
+            
+            var nameStr = person.name
+            while nameStr.count < 16 {
+                nameStr += " "
+            }
+            
+            let personalNote = "\(nameStr)\t 😷 \(person.healthPhysical) 😃 \(person.happiness) ❤️ \(person.lifeExpectancy)"
             report.humanNotes.append(personalNote)
             
             // Air
