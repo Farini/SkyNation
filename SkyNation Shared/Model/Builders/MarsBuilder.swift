@@ -338,7 +338,8 @@ class MarsBuilder {
     
     // Load Scene
     class func loadScene() -> SCNScene? {
-        let nextScene = SCNScene(named: "Art.scnassets/Mars/GuildMap.scn")
+//        let nextScene = SCNScene(named: "Art.scnassets/Mars/GuildMap.scn")
+        let nextScene = SCNScene(named: "Art.scnassets/Mars/MarsMap.scn")
         return nextScene
     }
     
@@ -363,7 +364,8 @@ extension MarsBuilder {
         print("\nTerrain.: Vertex Count: \(terrain.geometry?.sources.filter({ $0.semantic == .vertex }).compactMap({ $0.vectorCount }).reduce(0, +) ?? 0)")
         
         // Light
-        let lightNode:SCNNode = root.childNode(withName: "Light", recursively: false)!
+//        let lightNode:SCNNode = root.childNode(withName: "Light", recursively: false)!
+        let lightNode:SCNNode = root.childNode(withName: "Lights", recursively: false)?.childNodes.first ?? SCNNode()
         // light position: 4.076,34.945,-1.005
         // light euler: 29.656, 49.397, 93.817
         if let light = lightNode.light {
@@ -381,38 +383,30 @@ extension MarsBuilder {
         let citiesParent = root.childNode(withName: "Cities", recursively: false)!
         for tmpCity in citiesParent.childNodes {
             
-            let cityNodeName = tmpCity.name ?? "unknown"
-            if let pp:Posdex = Posdex.allCases.filter({ $0.sceneName == cityNodeName }).first {
-                
-                if let city = cities.filter({ $0.posdex == pp.rawValue }).first {
-                    
-                    let node = CityGateNode(posdex: pp, city: city)
-                    citiesParent.addChildNode(node)
-                    
-                    // POV
-                    if let povNode = node.childNode(withName: "POV", recursively: false) {
-                        if city.id == myCityData!.id {
-                            let pov = GamePOV(position: povNode.position, target: node, name: "Gate", yRange: nil, zRange: nil, zoom: nil)
-                            cameraPOVs.append(pov)
-                        }
-//                        if let myDBC = myDBCity {
-//                            if myDBC.id == city.id {
-//                                let pov = GamePOV(position: povNode.position, target: node, name: "Gate", yRange: nil, zRange: nil, zoom: nil)
-//                                cameraPOVs.append(pov)
-//                            }
-//                        }
-                    }
-                    tmpCity.removeFromParentNode()
-                    
-                } else {
-                    
-                    // Free slot >> Diamond
-                    let node = CityGateNode(posdex: pp, city: nil)
-                    citiesParent.addChildNode(node)
-                    tmpCity.removeFromParentNode()
-                    
+            let cityName:String = tmpCity.name ?? "unknown"
+            
+            guard let posdex:Posdex = Posdex.allCases.filter({ $0.sceneName == cityName }).first  else { continue }
+            
+            let optCity:DBCity? = cities.filter({ $0.posdex == posdex.rawValue }).first
+            
+            let gateNode:CityGateNode = CityGateNode(posdex: posdex, city: optCity)
+            
+            if let mycid = LocalDatabase.shared.player?.cityID, mycid == optCity?.id {
+                // My City
+                print("my city +++")
+                if let pov:SCNNode = gateNode.childNode(withName: "POV", recursively: true) {
+                    print("*** my city *** - load special? ")
+                    let pov = GamePOV(position: pov.position, target: gateNode, name: "Gate", yRange: nil, zRange: nil, zoom: nil)
+                    cameraPOVs.append(pov)
                 }
             }
+            
+            // Adjust position to Scene
+            gateNode.position = tmpCity.position
+            gateNode.eulerAngles = tmpCity.eulerAngles
+            citiesParent.addChildNode(gateNode)
+            print("City: \(posdex.sceneName). Angles:\(gateNode.eulerAngles) - \(tmpCity.eulerAngles)")
+            
         }
         
         // Outposts
@@ -437,7 +431,7 @@ extension MarsBuilder {
                         child.removeFromParentNode()
                     }
                     
-                    // Antenna - Too Big!
+                    // Antenna
                     if pp == .antenna {
                         let antenna = MarsAntennaNode(posdex: pp, outpost: outpost)
                         antenna.position = child.position
@@ -500,14 +494,17 @@ extension MarsBuilder {
         }
         
         // Camera + POVs
-        let camParent = scene.rootNode.childNode(withName: "OtherCams", recursively: false)!
+        // CamPovs
+        let camParent = scene.rootNode.childNode(withName: "CamPovs", recursively: false)!
+//        let camParent = scene.rootNode.childNode(withName: "OtherCams", recursively: false)!
         let topCam = camParent.childNode(withName: "TopCam", recursively: false)!
         let topPov = GamePOV(position: topCam.position, target: terrain, name: "Eagle eye", yRange: nil, zRange: nil, zoom: nil)
         
         cameraPOVs.append(topPov)
         
         for camChild in camParent.childNodes {
-            if (camChild.name ?? "").contains("Diag") {
+            if (camChild.name ?? "").contains("Camera-") {
+//                if (camChild.name ?? "").contains("Diag") {
                 let dPov = GamePOV(copycat: camChild, name: camChild.name!, yRange: nil, zRange: nil, zoom: nil)
 //                let diagPov = GamePOV(position: camChild.position, target: camParent, name: camChild.name!, yRange: nil, zRange: nil, zoom: nil)
                 cameraPOVs.append(dPov)

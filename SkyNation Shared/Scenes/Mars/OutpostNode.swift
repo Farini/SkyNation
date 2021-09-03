@@ -187,7 +187,8 @@ class MarsAntennaNode:SCNNode {
 }
 
 class PowerPlantNode:SCNNode {
-    static let originScene:String = "Art.scnassets/Mars/Outposts/PowerPlant.scn"
+//    static let originScene:String = "Art.scnassets/Mars/Outposts/PowerPlant.scn"
+    static let originScene:String = "Art.scnassets/Mars/Outposts/PowerPlant2.scn"
     
     var posdex:Posdex
     var outpost:DBOutpost
@@ -255,6 +256,8 @@ class PowerPlantNode:SCNNode {
                 }
             }
         }
+        
+        self.prepareForLevel(lvl: outpost.level)
     }
     
     required init?(coder: NSCoder) {
@@ -265,49 +268,125 @@ class PowerPlantNode:SCNNode {
     
     /// Prepares the Outpost Node for the level it is at.
     func prepareForLevel(lvl:Int) {
+        
+        var unvisited:[SCNNode] = self.childNodes
+        var stack:[SCNNode] = []
+        
+        while !unvisited.isEmpty {
+            let next = unvisited.first!
+            stack.append(next)
+            unvisited.append(contentsOf: next.childNodes)
+            unvisited.removeFirst()
+        }
+        
         switch lvl {
             case 0:
                 // Powerplant - Only this child will stay
                 for child in childNodes {
-                    if child.name != "Powerplant" {
+                    if child.name != "Floor" {
                         child.removeFromParentNode()
                     }
+                }
+                
+                if let centerPL1 = childNode(withName: "CenterPL1", recursively: true) {
+                    centerPL1.removeFromParentNode()
+                }
+                if let centerPL3 = childNode(withName: "CenterPL3", recursively: true) {
+                    centerPL3.removeFromParentNode()
                 }
                 
             case 1:
-                let staying:[String] = ["Panel1", "Panel2", "Panel3", "Panel4", "Cable12", "Cable11", "Cable9", "Cable14", "Powerplant"]
                 
-                for child in childNodes {
-                    if !staying.contains(child.name ?? "") {
-                        child.removeFromParentNode()
+                if let centerPL3 = childNode(withName: "CenterPL3", recursively: true) {
+                    centerPL3.removeFromParentNode()
+                }
+                
+                let stays = ["Panel1", "Panel2", "Panel3", "Panel4", "Cable12", "Cable11", "Cable9", "Cable14", "PowerPlant", "Cable12", "Cable11", "Cable9", "Cable14", "Floor", "Panels"]
+                for cNode in stack {
+                    if !stays.contains(cNode.name ?? "zzz") {
+                        cNode.removeFromParentNode()
                     }
                 }
+                
+                
+                
             case 2:
-                let staying:[String] = ["Panel1", "Panel2", "Panel3", "Panel5", "Panel6", "Panel7", "Panel8", "Panel4", "Cable12", "Cable11", "Cable9", "Cable14", "Cable4", "Cable5", "Cable19", "Cabel18", "Powerplant"]
                 
-                for child in childNodes {
-                    if !staying.contains(child.name ?? "") {
-                        child.removeFromParentNode()
+                if let centerPL3 = childNode(withName: "CenterPL3", recursively: true) {
+                    centerPL3.removeFromParentNode()
+                }
+                
+                let stays = ["Panel1", "Panel2", "Panel3", "Panel5", "Panel6", "Panel7", "Panel8", "Panel4", "Powerplant", "Cable12", "Cable11", "Cable9", "Cable14", "Cable4", "Cable5", "Cable19", "Cable18", "Floor", "Panels"]
+                
+//                let stayingPanels:[String] = ["Panel1", "Panel2", "Panel3", "Panel5", "Panel6", "Panel7", "Panel8", "Panel4", "Powerplant"]
+//                let stayingCables:[String] = ["Cable12", "Cable11", "Cable9", "Cable14", "Cable4", "Cable5", "Cable19", "Cable18"]
+                
+                for cNode in stack {
+                    if !stays.contains(cNode.name ?? "zzz") {
+                        cNode.removeFromParentNode()
                     }
                 }
+                
+//                if let panels = childNode(withName: "Panels", recursively: false) {
+//                    for child in panels.childNodes {
+//                        if !stayingPanels.contains(child.name ?? "") {
+//                            child.removeFromParentNode()
+//                        }
+//                    }
+//                }
+//                if let cables = childNode(withName: "Wires", recursively: false) {
+//                    for child in cables.childNodes {
+//                        if !stayingCables.contains(child.name ?? "") {
+//                            child.removeFromParentNode()
+//                        }
+//                    }
+//                }
+                
             case 3:
+                
+                if let centerPL1 = childNode(withName: "CenterPL1", recursively: true) {
+                    centerPL1.removeFromParentNode()
+                }
+                
                 let deleting:[String] = ["MainReflector", "Reflector2", "Reflector3", "Reflector4"]
                 
-                for childName in deleting {
-                    if let del = self.childNode(withName: childName, recursively: true) {
-                        del.removeFromParentNode()
+                
+                for cNode in stack {
+                    if deleting.contains(cNode.name ?? "zzz") {
+                        cNode.removeFromParentNode()
                     }
                 }
+//                for childName in deleting {
+//                    if let del = self.childNode(withName: childName, recursively: true) {
+//                        del.removeFromParentNode()
+//                    }
+//                }
             case 4:
+                
                 let deleting:[String] = ["MainReflector"]
                 
-                for childName in deleting {
-                    if let del = self.childNode(withName: childName, recursively: true) {
-                        del.removeFromParentNode()
+                if let centerPL1 = childNode(withName: "CenterPL1", recursively: true) {
+                    centerPL1.removeFromParentNode()
+                }
+                
+                for cNode in stack {
+                    if deleting.contains(cNode.name ?? "zzz") {
+                        cNode.removeFromParentNode()
                     }
                 }
                 
+//                for childName in deleting {
+//                    if let del = self.childNode(withName: childName, recursively: true) {
+//                        del.removeFromParentNode()
+//                    }
+//                }
+                
             case 5:
+                
+                if let centerPL1 = childNode(withName: "CenterPL1", recursively: true) {
+                    centerPL1.removeFromParentNode()
+                }
+                
                 print("Max Level")
                 
             default: break

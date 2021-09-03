@@ -23,37 +23,40 @@ class CityGateNode:SCNNode {
         
         self.cameraNodes = []
         self.lightNodes = []
-        // Load Gate Node (Scene Gate2.scn)
-        
-        
         
         // This object should be equivalent to the first child node from the root.
         // Get first childnode, assign name, and other basuc properties
         // add all the children from the first object to this node
         
         // Get Scene Root
-        guard let sceneRoot:SCNNode = SCNScene(named: "Art.scnassets/Mars/Gate4.scn")?.rootNode,
+        guard let sceneRoot:SCNNode = SCNScene(named: "Art.scnassets/Mars/Gate5.scn")?.rootNode,
               let baseNode:SCNNode = sceneRoot.childNode(withName: "Gate", recursively: false) else {
             fatalError("Could not find base nodes to build Gate Node")
         }
         
         super.init()
         
-        // Position: see Posdex
-        self.position = posdex.position.sceneKitVector()
-        self.eulerAngles = posdex.eulerAngles.sceneKitVector()
-        // Euler: see Posdex
-        
         self.name = posdex.sceneName
         
         for baseChild in baseNode.childNodes {
+            
             let node = baseChild.clone()
             self.addChildNode(node)
-            if let cam = node.camera {
-                print("Camera: \(cam.description)")
-                self.cameraNodes.append(node)
+            
+            // Cameras
+            if node.name == "POV", let camNode = node.childNodes.first, let _ = camNode.camera {
+                self.cameraNodes.append(camNode)
             }
             
+//            if let cam = node.camera {
+//                print("Camera: \(cam.description)")
+//                self.cameraNodes.append(node)
+//            } else if let cam = node.childNodes.first?.camera {
+//                print("Camera: \(cam.description)")
+//                self.cameraNodes.append(node.childNodes.first ?? SCNNode())
+//            }
+            
+            // Lights
             if let childLight = node.childNodes.filter({ $0.light != nil }).first {
                 // Attention! For now this node is hidden, but at night, we can turn the light on!
                 if GameSettings.debugScene {
@@ -71,15 +74,12 @@ class CityGateNode:SCNNode {
         // When city is nil, add the diamond, as an indicator, and to claim city
         
         if city == nil {
-            guard let diamond = sceneRoot.childNode(withName: "Diamond", recursively: false)?.clone() else {
+            guard let diamond = baseNode.childNode(withName: "Diamond", recursively: false)?.clone() else {
                 print("Could not load diamond")
                 return
             }
             self.addChildNode(diamond)
         }
-        
-//        self.scale = SCNVector3(0.3, 0.3, 0.3)
-        
     }
     
     required init?(coder: NSCoder) {
