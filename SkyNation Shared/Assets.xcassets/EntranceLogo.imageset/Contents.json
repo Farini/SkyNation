@@ -1,12 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "people_09.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Avatar9.png",
+      "filename" : "EntranceLogo.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

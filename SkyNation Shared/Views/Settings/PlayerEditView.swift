@@ -50,7 +50,10 @@ struct GameLoadingTab: View {
                     .frame(height:36)
                 }
                 Spacer()
-                GameImages.generateBarcode(from:controller.player.id)
+                Image("EntranceLogo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width:300)
             }
             
             if controller.isNewPlayer {

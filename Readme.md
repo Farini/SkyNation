@@ -22,7 +22,7 @@ The contributors to these projects shall have a **fair** share of the game, and 
 - [X] Test Project created: "SkyTestSceneKit" - Farini on 7/30/20.
 - [X] SkyNation Project created: 12/18/2020
 - [X] Server Project SKNServer - A server for this game written in Vapor.
-- [ ] Apple Store Product Registration
+- [X] Apple Store Product Registration
 - [ ] Product Version 1.0
 
 ### Methodology 
@@ -45,19 +45,19 @@ The contributors to these projects shall have a **fair** share of the game, and 
  
  ## Programming (Front End)
  
- - [ ] ★★★☆☆ Module, Hab, Lab, Bio
- - [ ] ★★★★☆ Earth Order
+ - [ ] ★★★★☆ Module, Hab, Lab, Bio
+ - [ ] ★★★★★ Earth Order
  - [ ] ★★★☆☆ Garage
  - [ ] ★★★☆☆ Accounting System
  - [ ] ★★★★☆ Truss
  - [ ] ★★★★☆ Life Support Systems
  - [ ] ★★★☆☆ Vehicles Travelling Views/Scenes
  
- - [ ] ★☆☆☆☆ Mars Scene
+ - [ ] ★★☆☆☆ Mars Scene
  - [ ] ★★☆☆☆ Mars City
  - [ ] ★★☆☆☆ Mars Outposts
- - [ ] ★★☆☆☆ Game Chats, Messages, Achievements
- - [ ] ★★☆☆☆ Game Store + Use of `GameTokens`
+ - [ ] ★★★☆☆ Game Chats, Messages, Achievements
+ - [ ] ★★★☆☆ Game Store + Use of `GameTokens`
  - [ ] ★★★☆☆ Player(object) + settings + playability + Purchases
  
  ## Programming (Back End)
@@ -65,7 +65,7 @@ The contributors to these projects shall have a **fair** share of the game, and 
  - [ ] ★★★★☆ Player
  - [ ] ★★★☆☆ Guild
  - [ ] ★★★☆☆ City + Outposts
- - [ ] ★☆☆☆☆ Messages + Chat
+ - [ ] ★★★☆☆ Guild Chat
  - [ ] ★☆☆☆☆ Bonus - New Features
  
  ## Art Assets -  Graphics 2D
@@ -78,10 +78,10 @@ The contributors to these projects shall have a **fair** share of the game, and 
  
  ## Art Assets -  Scenes 3D
  
- - [ ] ★★★☆☆ Space Station
+ - [ ] ★★★★☆ Space Station
  - [ ] ★★★★☆ Delivery Vehicle
- - [ ] ★★☆☆☆ Mars Colony
- - [ ] ★★★☆☆ Space Vehicle
+ - [ ] ★★★☆☆ Mars Colony
+ - [ ] ★★★★☆ Space Vehicle
  
  ## Art Assets - Audio
  
@@ -103,7 +103,7 @@ The contributors to these projects shall have a **fair** share of the game, and 
 - To Do's: 52/152 = 34.21%
 
 @ August 13, 2021
-- ★/☆: 79/145
+- ★/☆: 79/145 = 54.48%
 - ★ (1 Star) = 0.69%
 - To Do's: 239/289 = 83%
 
@@ -148,7 +148,8 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Model - Tanks & Boxes -> Don't throw away
 - [X] Model - City Accounting
 - [X] Mars Scene - Animations - Camera change not working!
-
+- [X] 2D Graphics - Avatars remake
+- [X] 2D Graphics - SkyNation Entrance
 
 - [ ] Settings - ServerTab - Leave Guild
 - [ ] Settings - ServerTab - Create Guild
@@ -166,9 +167,14 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Station Garage View - EDL - Test all resources going into SpaceVehicle
 - [ ] Station Garage View - Improve departure animation
 - [ ] Station Garage View - Notify Overlay of New Vehicles
-- [ ] Station Garage View - View size too small (on launch)
+- [ ] Station Garage View - View size too small (on launch) - use scrollview
+- [ ] Station Garage View - Vehicles not updating upon selection
+- [ ] Station Garage View - Not removing batteries from station when building vehicle
+- [ ] Space Vehicle - Fix Optionals (remove)
+- [ ] Space Vehicle - Remove irrelevant properties
 
 - [ ] Station LSS View - Tank -> Test "discardEmptyTank"
+- [ ] Station LSS View - (Peripheral Selection) - not updating
 
 - [ ] Mars Scene - City - Gate Config (to layout scene)
 - [ ] Mars Scene - City - Solar Panel(s)
@@ -181,6 +187,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Mars Scene - Gate Lights changing (Day/Night)
 - [ ] Mars Scene - Guild map improvements (x8)
 - [ ] Mars Scene - Go back to Space Station
+- [ ] Mars Scene - Random Rocks
 
 - [ ] Overlays - Election
 - [ ] Overlays - Outpost rss Collecting
@@ -196,10 +203,14 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [ ] 2D Graphics - iOS app icon
 - [ ] 2D Graphics - Blender individual tanks
-- [ ] 2D Graphics - Custom SFFonts
-- [ ] 2D Graphics - Avatars remake
 - [ ] 2D Graphics - Better Engine Icons
-- [ ] 2D Graphics - SkyNation Entrance
+
+- [ ] Blender - EVehicle UVMaps
+- [ ] Blender - Terrain + Roads
+- [ ] Blender - Terrain + EmptyNodes (Cameras, Lights, Roads, ETC.)
+- [ ] Blender - EDL Animation
+- [ ] Blender - Individual Tanks
+- [ ] Blender - new HDRI
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing) -> Look under Dektop -> Useful Assets -> Sounds
 - [ ] Sound - 2 more music (better ones)
@@ -218,15 +229,12 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 Features that are requested, but are not required to launch the game
 
 - [ ] Free Supply Drop-offs -> Tokens for more 
-- [ ] Person: Have action(s) to make **Person** happier
 - [ ] Reskin Delivery Vehicle
 - [ ] Remodel Space Vehicle
 - [ ] Rebake Garage Skin x 2 (Choices)
 - [ ] Lights (Roboarm, Garage in, Garage out, Cuppola, Airlock) + User control
-- [ ] Plugins
 - [ ] Person var stress?
 - [ ] Peripheral Upgrades
 - [ ] Activity name enum?
 - [ ] BioBox DNA enum
-- [ ] Garage simulation button -> Person activity -> Garage xp || OR || just delete it
-
+- [ ] 2D Graphics - Custom SFFonts

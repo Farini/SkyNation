@@ -123,7 +123,11 @@ class GameCamera:SCNNode {
         // Angles
         if let angles = nextPOV.angles, nextPOV.targetNode == nil {
             let waiter = SCNAction.wait(duration: 0.5)
+            #if os(iOS)
+            let rotate = SCNAction.rotateTo(x: CGFloat(angles.x), y: CGFloat(angles.y), z: CGFloat(angles.z), duration: 1.2)
+            #else
             let rotate = SCNAction.rotateTo(x: angles.x, y: angles.y, z: angles.z, duration: 1.2)
+            #endif
             animeArray.append(SCNAction.sequence([waiter, rotate]))
         }
         
@@ -174,7 +178,11 @@ class GameCamera:SCNNode {
         // Angles
         if let angles = previousPOV.angles, previousPOV.targetNode == nil {
             let waiter = SCNAction.wait(duration: 0.5)
+            #if os(iOS)
+            let rotate = SCNAction.rotateTo(x: CGFloat(angles.x), y: CGFloat(angles.y), z: CGFloat(angles.z), duration: 1.2)
+            #else
             let rotate = SCNAction.rotateTo(x: angles.x, y: angles.y, z: angles.z, duration: 1.2)
+            #endif
             animeArray.append(SCNAction.sequence([waiter, rotate]))
         }
         
