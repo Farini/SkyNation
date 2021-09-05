@@ -150,39 +150,45 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Mars Scene - Animations - Camera change not working!
 - [X] 2D Graphics - Avatars remake
 - [X] 2D Graphics - SkyNation Entrance
-
-
-## Friday
+9/3/2021
 - [X] Blender - Consolidate Materials
 - [X] Blender - Terrain + EmptyNodes (Cameras, Lights, Roads, ETC.)
 - [X] Blender - new HDRI
 - [X] Blender - Outpost Levels: 5x PowerPlant
 - [X] Blender - GuildMap placeholders - Cities + Outposts + Roads + POVs + Animations Positions: EVehicle 3DPath
-
-- [ ] Blender - Terrain + Roads
-- [ ] Blender - Outpost Levels: 5x Biosphere
-- [ ] Blender - Outpost Levels: 3x Mining
-- [ ] Blender - Outpost Levels: 1x Observatory
-- [ ] Blender - Outpost Levels: 1x LPad
-- [ ] Blender - EVehicle UVMaps
-- [ ] Blender - EDL Animation
-- [ ] Blender - Individual Tanks
-
-
-## Saturday
-- [ ] Mars Scene - City - Gate Config (to layout scene)
+- [X] Blender - Outpost Levels: 5x Biosphere
+- [X] Blender - Outpost Levels: 3x Mining
+- [X] Blender - Outpost Levels: 1x Observatory
+- [X] Blender - Outpost Levels: 1x LPad
+- [X] Blender - Terrain + Roads
+- [X] Blender - EVehicle Mesh + UVMaps simplification
+- [X] Blender - EDL Animation
+9/4/2021
+- [X] Mars Scene - City - Gate Position + Angles
 - [X] Mars Scene - Background
+- [X] Mars Scene - Outposts with Levels
+- [X] Mars Scene - Animations - Transportation - [See Gist](https://gist.github.com/Farini/ede665cab4e736480d4f399fbb4ca4f3)
+- [X] Mars Scene - Guild map improvements (x8)
+9/5/2021 41 of 97 (42%)
+
+- [ ] Finish Outpost View
+- [ ] Finish City View
+
+- [ ] Blender - Biosphere quick fix with floor + Trees
+- [ ] Blender - Individual Tanks
+- [ ] Blender - Biosphere -> Inset floor to improve visual
+- [ ] Blender - Biosphere -> WallL3 needs grass UV
+
+- [ ] Mars Scene - Random Rocks
+- [ ] Mars Scene - Go back to Space Station
+
+- [ ] Mars Scene - City - Gate Color?
 - [ ] Mars Scene - City + Solar Panel(s)
-- [ ] Mars Scene - Outposts with Levels
 - [ ] Mars Scene - Outpost - State (building) scenes
 - [ ] Mars Scene - Animations - SpaceVehicle arriving
 - [ ] Mars Scene - Animations - Outposts Particle emitters
-- [ ] Mars Scene - Animations - Transportation - [See Gist](https://gist.github.com/Farini/ede665cab4e736480d4f399fbb4ca4f3)
 - [ ] Mars Scene - Garage - Vehicle Validation (when arriving (orbit))
 - [ ] Mars Scene - Gate Lights changing (Day/Night)
-- [ ] Mars Scene - Guild map improvements (x8)
-- [ ] Mars Scene - Go back to Space Station
-- [ ] Mars Scene - Random Rocks
 
 - [ ] Station Scene - Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
 - [ ] Station Scene - Background HDRI image
@@ -198,7 +204,6 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Space Vehicle - Fix Optionals (remove)
 - [ ] Space Vehicle - Remove irrelevant properties
 
-## Sunday
 
 - [ ] Station LSS View - Tank -> Test "discardEmptyTank"
 - [ ] Station LSS View - (Peripheral Selection) - not updating
@@ -210,7 +215,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Model - E-Vehicle/Bot
 - [ ] Model - Outpost rss Collecting
 - [ ] Model - Election
-- [ ] Model - Road?
+- [X] Model - Road?
 - [ ] Model - Mars Accounting
 - [ ] Model - Guild - Write Invite
 - [ ] Model - Use more energy (Peripherals + Modules + Person)

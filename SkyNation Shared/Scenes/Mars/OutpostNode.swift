@@ -553,8 +553,6 @@ class LandingPadNode:SCNNode {
             SCNTransaction.commit()
         }
     }
-    
-    
 }
 
 class MiningNode:SCNNode {
@@ -644,11 +642,12 @@ class MiningNode:SCNNode {
             let goUp = SCNAction.move(by: SCNVector3(0.0, 0.7, 0.0), duration: 0.7)
             goDown.timingMode = .easeIn
             goUp.timingMode = .easeOut
-            let waiter = SCNAction.wait(duration: 1.0)
+            let waiter = SCNAction.wait(duration: 3.0)
             
             let sequence = SCNAction.sequence([goDown, waiter, goUp, waiter])
+            let repeater = SCNAction.repeatForever(sequence)
             
-            drill.runAction(sequence)
+            drill.runAction(repeater)
             
             SCNTransaction.commit()
         }
@@ -657,7 +656,8 @@ class MiningNode:SCNNode {
 }
 
 class BiosphereNode:SCNNode {
-    static let originScene:String = "Art.scnassets/Mars/Outposts/Biosphere2.scn"
+    
+    static let originScene:String = "Art.scnassets/Mars/Outposts/Biosphere.scn"
     
     var posdex:Posdex
     var outpost:DBOutpost
@@ -725,6 +725,7 @@ class BiosphereNode:SCNNode {
             }
         }
         
+        self.prepareForLevel(lvl: outpost.level)
         self.performAnimationLoop()
     }
     
@@ -736,7 +737,135 @@ class BiosphereNode:SCNNode {
     
     /// Prepares the Outpost Node for the level it is at.
     func prepareForLevel(lvl:Int) {
-        print("Not Setup yet")
+        
+        guard let walls = self.childNode(withName: "Walls", recursively: false),
+              let buildings = self.childNode(withName: "Buildings", recursively: false),
+              let panels = self.childNode(withName: "SolarPanels", recursively: false),
+              let tanks = self.childNode(withName: "Tanks", recursively: false) else {
+            return
+        }
+        
+        // Walls
+        for child in walls.childNodes {
+            if child.name == "WallL0" {
+                if lvl > 0 { child.removeFromParentNode() }
+            }
+            if child.name == "WallL1" {
+                if lvl == 0 || lvl > 3 {
+                    child.removeFromParentNode()
+                }
+            }
+            if child.name == "WallL3" {
+                if lvl < 3 {
+                    child.removeFromParentNode()
+                }
+            }
+        }
+        
+        // Buildings
+        for child in buildings.childNodes {
+            // Inside dome
+            if child.name == "BuildingL1" {
+                if lvl > 1 { child.removeFromParentNode() }
+            }
+            // Inside dome
+            if child.name == "BuildingL2" {
+                if lvl != 2 {
+                    child.removeFromParentNode()
+                }
+            }
+            // Dome
+            if child.name == "BuildingL3D" {
+                if lvl < 3 {
+                    child.removeFromParentNode()
+                }
+            }
+            // Side building
+            if child.name == "BuildingL4" {
+                if lvl < 4 {
+                    child.removeFromParentNode()
+                }
+            }
+        }
+        
+        // Panels
+        for child in panels.childNodes {
+            var series:[String] = ["L1", "L2", "L3", "L4", "L5"]
+            guard let cName = child.name else { continue }
+            
+            if lvl == 0 {
+                child.removeFromParentNode()
+            } else if lvl == 1 {
+                series.removeFirst()
+                for sName in series {
+                    if cName.contains(sName) {
+                        child.removeFromParentNode()
+                    }
+                }
+            } else if lvl == 2 {
+                series.removeFirst(2)
+                for sName in series {
+                    if cName.contains(sName) {
+                        child.removeFromParentNode()
+                    }
+                }
+            } else if lvl == 3 {
+                series.removeFirst(3)
+                for sName in series {
+                    if cName.contains(sName) {
+                        child.removeFromParentNode()
+                    }
+                }
+            } else if lvl == 4 {
+                series.removeFirst(4)
+                for sName in series {
+                    if cName.contains(sName) {
+                        child.removeFromParentNode()
+                    }
+                }
+            }
+        }
+        
+        
+        // Tanks
+        for child in tanks.childNodes {
+            var series:[String] = ["L1", "L2", "L3", "L4", "L5"]
+            guard let cName = child.name else { continue }
+            
+            if lvl == 0 {
+                child.removeFromParentNode()
+            } else if lvl == 1 {
+                series.removeFirst()
+                for sName in series {
+                    if cName.contains(sName) {
+                        child.removeFromParentNode()
+                    }
+                }
+            } else if lvl == 2 {
+                series.removeFirst(2)
+                for sName in series {
+                    if cName.contains(sName) {
+                        child.removeFromParentNode()
+                    }
+                }
+            } else if lvl == 3 {
+                series.removeFirst(3)
+                for sName in series {
+                    if cName.contains(sName) {
+                        child.removeFromParentNode()
+                    }
+                }
+            } else if lvl == 4 {
+                series.removeFirst(4)
+                for sName in series {
+                    if cName.contains(sName) {
+                        child.removeFromParentNode()
+                    }
+                }
+            }
+        }
+        
+        
     }
     
     // MARK: - Animations
@@ -773,15 +902,14 @@ class ObservatoryNode:SCNNode {
     var cameraNodes:[SCNNode]
     var lightNodes:[SCNNode]
     
-    // Biosphere
+    // Observatory
     // Scene: /Mars/Outposts/Biosphere2.scn
     // [Parts]
-    // - Dome
-    // - Building
-    // SolarPanels x 9
-    // WallLVL x 5
-    // Tanks x 5
-    // Animals
+    // MainPillar
+    // Dome
+    //  -> TelescopeCyl
+    
+    // Note: Animation is working very well.
     
     init(posdex:Posdex, outpost:DBOutpost) {
         
@@ -852,22 +980,72 @@ class ObservatoryNode:SCNNode {
     /// Runs this Outpost's Animations
     func performAnimationLoop() {
         
-        // Blink the signs
+        guard let dome = childNode(withName: "Dome", recursively: true) else { return }
         
-        //        if let drill = self.childNode(withName: "Drill", recursively: true) {
-        //
-        //            let goDown = SCNAction.move(by: SCNVector3(0.0, -0.7, 0.0), duration: 1.6)
-        //            let goUp = SCNAction.move(by: SCNVector3(0.0, 0.7, 0.0), duration: 0.7)
-        //            goDown.timingMode = .easeIn
-        //            goUp.timingMode = .easeOut
-        //            let waiter = SCNAction.wait(duration: 1.0)
-        //
-        //            let sequence = SCNAction.sequence([goDown, waiter, goUp, waiter])
-        //
-        //            drill.runAction(sequence)
-        //
-        //            SCNTransaction.commit()
-        //        }
+        if let telescope = dome.childNode(withName: "TelescopeCyl", recursively: false) {
+            self.lowerTelescopeLens(dome: dome, telescope: telescope, repeatAnime: true)
+        }
+    }
+    
+    private func lowerTelescopeLens(dome:SCNNode, telescope:SCNNode, repeatAnime:Bool) {
+        
+        #if os(macOS)
+        let lowerDeg = CGFloat(GameLogic.radiansFrom(-45))
+        #else
+        let lowerDeg = GameLogic.radiansFrom(-45)
+        #endif
+        
+        // Lower Telescope
+        let teleLower = SCNAction.rotateBy(x: lowerDeg, y: 0, z: 0, duration: 2.2)
+        let waiter = SCNAction.wait(duration: 2)
+        
+        
+        
+        // Sequences
+        // 1. Lower telescope
+        let lowerAction = SCNAction.sequence([teleLower, waiter])
+        
+        
+        
+        telescope.runAction(lowerAction) {
+            self.rotateDome(dome: dome, telescope: telescope, repeatAnime: repeatAnime)
+        }
+        
+    }
+    
+    private func rotateDome(dome:SCNNode, telescope:SCNNode, repeatAnime:Bool) {
+        
+        // Rotate Dome
+        
+        let domeRot = SCNAction.rotateBy(x: 0.0, y: 0.75, z: 0, duration: 2.5)
+        let domeWait = SCNAction.wait(duration: 3.0)
+        let domeBack = SCNAction.rotateBy(x: 0.0, y: -0.75, z: 0, duration: 2.5)
+        
+        let domeAction = SCNAction.sequence([domeRot, domeWait, domeBack])
+        
+        dome.runAction(domeAction) {
+            self.liftTelescope(dome: dome, telescope: telescope, repeatAnime: repeatAnime)
+        }
+    }
+    
+    private func liftTelescope(dome:SCNNode, telescope:SCNNode, repeatAnime:Bool) {
+        
+        #if os(macOS)
+        let lowerDeg = CGFloat(GameLogic.radiansFrom(-45))
+        #else
+        let lowerDeg = GameLogic.radiansFrom(-45)
+        #endif
+        
+        // Lift telescope
+        let teleLift = SCNAction.rotateBy(x: -lowerDeg, y: 0, z: 0, duration: 1.5)
+        let coolDown = SCNAction.wait(duration: 3.5)
+        
+        let liftAction = SCNAction.sequence([teleLift, coolDown])
+        telescope.runAction(liftAction) {
+            if repeatAnime == true {
+                self.lowerTelescopeLens(dome: dome, telescope: telescope, repeatAnime: repeatAnime)
+            }
+        }
     }
 }
 

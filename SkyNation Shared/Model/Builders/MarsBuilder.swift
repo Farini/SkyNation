@@ -514,6 +514,76 @@ extension MarsBuilder {
         let gameCam = GameCamera(pov: cameraPOVs.first!, array: cameraPOVs)
         scene.rootNode.addChildNode(gameCam)
         
+        
+        // EVehicle Animation
+        let vehicleScene = SCNScene(named: "Art.scnassets/Mars/EVehicle.scn")
+        if let vehicle = vehicleScene?.rootNode.childNode(withName: "EVehicle", recursively: false)?.clone() {
+            print("Found Vehicle")
+            
+            let roadBuilder = RoadsBuilder()
+            var pathToFollow = roadBuilder.makeMainRoad()
+            vehicle.position = pathToFollow.first!
+            
+            root.addChildNode(vehicle)
+            
+            // Actions to Move Vehicle
+            var vehicleActions:[SCNAction] = []
+            
+            // Orientation Node
+            let orientationNode = SCNNode()
+            root.addChildNode(orientationNode)
+            
+            // Actions for the orientation node
+            var orientationActions:[SCNAction] = []
+            
+            // Constraint vehicle to look at orientationNode
+            let shipLook = SCNLookAtConstraint(target: orientationNode)
+            shipLook.localFront = SCNVector3(0, 0, 1)
+            shipLook.worldUp = SCNVector3(0, 1, 0)
+            shipLook.isGimbalLockEnabled = true
+            vehicle.constraints = [shipLook]
+            
+            // Populate Path Animations
+            while !pathToFollow.isEmpty {
+                
+                pathToFollow.remove(at: 0)
+                if let next = pathToFollow.first {
+                    
+                    let act = SCNAction.move(to: next, duration: 0.4)
+                    
+                    if pathToFollow.count > 1 {
+                        let dest = pathToFollow[1]
+                        let oriact = SCNAction.move(to: dest, duration: 0.4)
+                        orientationActions.append(oriact)
+                    }
+                    
+                    vehicleActions.append(act)
+                    
+                    // add box
+//                    let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
+//                    let boxNode = SCNNode(geometry: box)
+//                    boxNode.geometry?.materials.first?.diffuse.contents = NSColor.blue
+//                    boxNode.position = SCNVector3(Double(next.x), Double(next.y + 0.4), Double(next.z))
+//                    scene.rootNode.addChildNode(boxNode)
+                }
+            }
+            
+            // Animate Orientation node
+            let oriSequence = SCNAction.sequence(orientationActions)
+            orientationNode.runAction(oriSequence)
+            
+            // Animate Vehicle node
+            let sequence = SCNAction.sequence(vehicleActions)
+            vehicle.runAction(sequence) {
+                print("Vehicle finished sequence")
+            }
+            
+        } else {
+            print(" _+_+_+_+_+ No Vehicle")
+        }
+        // EVehicle
+        
+        
         return self.scene
         
     }
