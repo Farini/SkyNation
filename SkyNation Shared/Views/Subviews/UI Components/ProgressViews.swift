@@ -11,6 +11,7 @@ import SwiftUI
 // MARK: - Progress Bars
 
 struct ProgressCircle: View {
+    
     enum Stroke {
         case line
         case dotted
@@ -109,8 +110,6 @@ struct ProgressBar: View {
     }
 }
 
-
-
 /// This is better than Progress Bar (Another type)
 struct LevelBar: View {
     
@@ -142,6 +141,7 @@ struct LevelBar: View {
     var body: some View {
         
         GeometryReader { geometry in
+            
             VStack {
                 ZStack(alignment:.leading) {
                     // Back
@@ -157,6 +157,7 @@ struct LevelBar: View {
                         .padding(Edge.Set.leading, 9)
                     
                 }.cornerRadius(geometry.size.height / 2)
+                
                 HStack {
                     Text("\(self.min, specifier: "%.2f")%")
                     Spacer()
@@ -167,7 +168,7 @@ struct LevelBar: View {
     }
 }
 
-/// A Progress bar that doesn't update its values (Good to use in humans)
+/// A Progress bar that doesn't update its values
 struct FixedLevelBar:View {
     
     var min:Double
@@ -206,12 +207,117 @@ struct FixedLevelBar:View {
     }
 }
 
-
-
+/// A Contribution Progress bar used in `OutpostView` to display the progress of contributions
+struct ContributionProgressBar:View {
+    
+    @State var value:Int
+    @State var total:Int
+    
+    var title:String = "Contributed"
+    var hasSubtitles:Bool = true
+    var barColor:Color = .blue.opacity(0.6)
+    
+    /**
+     A Contribution Progress bar used in `OutpostView` to display the progress of contributions
+     - Parameters:
+        - value: The current value of the progress
+        - total: The maximum amount it can be contributed.
+        - hasSubtitles: Displays subtitles (defaults to true)
+        - barColor: The foreground color of the progress bar (defaults to blue, alpha:0.6)
+     */
+    init(value:Int, total:Int, title:String? = "", hasSubtitles:Bool? = true, barColor:Color? = nil) {
+        self.value = value
+        self.total = total
+        self.title = title!
+        self.hasSubtitles = hasSubtitles!
+        if let color = barColor {
+            self.barColor = color
+        }
+    }
+    
+    var body: some View {
+        
+        GeometryReader { geometry in
+            VStack {
+                
+                // The Bar
+                ZStack(alignment:.leading) {
+                    
+                    // Back
+                    Rectangle().frame(width: geometry.size.width , height: geometry.size.height)
+                        .opacity(0.3)
+                        .foregroundColor(.gray)
+                        .frame(height:30)
+                    
+                    // Front
+                    Rectangle()
+                        .frame(width: self.indicatorWidth(geometry.size.width), height: geometry.size.height)
+                        .foregroundColor(barColor)
+                        .animation(.easeOut)
+                        .frame(height:30)
+                    
+                    // Title
+                    if hasTitle() {
+                        Text("\(self.title) \(self.value)/\(self.total)")
+                            .padding(.leading, 9)
+                    } else {
+                        HStack {
+                            Spacer()
+                            Text(" \(self.value)/\(self.total) ")
+                                .font(.system(size:12, design: .monospaced))
+                                .padding(4)
+                                .background(Color.black.opacity(0.5))
+                                .cornerRadius(4)
+                            Spacer()
+                        }
+                    }
+                }
+                .cornerRadius(geometry.size.height / 2)
+                
+                // Subtitle
+                if hasSubtitles {
+                    subtitleIndicator
+                } else {
+                    EmptyView()
+                }
+            }
+        }
+        .frame(minWidth: 150, idealWidth: 175, maxWidth: 200, minHeight: 32, idealHeight: 36, maxHeight: 60, alignment: .center)
+        .padding([.horizontal])
+    }
+    
+    var subtitleIndicator: some View {
+        HStack {
+            Text("0")
+            Spacer()
+            Text("|")
+            Spacer()
+            Text("\(self.total)")
+        }
+        .foregroundColor(.gray)
+    }
+    
+    private func hasTitle() -> Bool {
+        return !title.isEmpty
+    }
+    
+    /// Returns the value / total. (or 0 if dividing by 0)
+    private func calculate() -> Double {
+        if value <= 0 { return 0.0 }
+        guard total > 0 else { return 0.0 }
+        return Double(value) / Double(total)
+    }
+    
+    /// The width of the indicator (foreground bar)
+    private func indicatorWidth(_ maxWidth:CGFloat) -> CGFloat {
+        return CGFloat(self.calculate()) * max(CGFloat(1), maxWidth)
+    }
+    
+}
 
 struct PercentageIndicator: AnimatableModifier {
-    var pct: CGFloat = 0
     
+    var pct: CGFloat = 0
     
     var animatableData: CGFloat {
         get { pct }
@@ -259,11 +365,20 @@ struct ProgressViews_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             ProgressCircle(value: 20, maxValue: 100, style: .dotted, backgroundEnabled: true, backgroundColor: Color.orange, foregroundColor: Color.red, lineWidth: 8)
-            Text("Progress Bar").font(.headline).padding()
+            Text("Progress Bar").font(.headline).padding(.top)
             FixedLevelBar(min: 0, max: 100, current: 80, title: "Test Progress", color: .pink)
+                .padding(.bottom, 8)
+            
+            Group {
+                Text("Contribution")
+                ContributionProgressBar(value: 6, total: 8)
+                ContributionProgressBar(value: 6, total: 8, title:"Contribution")
+                Divider()
+            }
+            
         }
         .preferredColorScheme(.dark)
-        
+        .frame(height:500)
     }
 }
 

@@ -11,7 +11,12 @@ import Foundation
 
 // See 'ServerData' file
 enum ServerDataError:Error {
-    case noFile
+    
+    /// Also useful for when an OutpostData doesn't exist on server.
+    case noOutpostFile // Server response, that is
+    
+    /// LocalDatabase doesn't have a server data file
+    case noServerDataFile
 }
 
 /*

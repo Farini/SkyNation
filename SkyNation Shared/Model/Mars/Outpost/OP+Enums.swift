@@ -26,16 +26,44 @@ enum OutpostType:String, CaseIterable, Codable {
     var productionBase: [Ingredient:Int] {
         switch self {
             case .HQ: return [:]
+            
+            // Mining -> Ingredient
             case .Water: return [.Water:20]
             case .Silica: return [.Silica:10]
+            case .Titanium: return [.Iron:5]
+            
+            // Others -> Energy, or Food
             case .Energy: return [.Battery:20]
             case .Biosphere: return [.Food:25]
-            case .Titanium: return [.Iron:5, .Aluminium:10]
+
             case .Observatory: return [:]
             case .Antenna: return [:]
             case .Launchpad: return [:]
             case .Arena: return [:]
             case .ETEC: return [:]
+        }
+    }
+    
+    func baseProduce() -> (name:String, quantity:Int)? {
+        switch self {
+            
+                
+            // Mining -> Ingredient
+            case .Water: return (Ingredient.Water.rawValue, 18)
+            case .Silica: return (Ingredient.Silica.rawValue, 10)
+            case .Titanium: return (Ingredient.Iron.rawValue, 5)
+                
+            // Others -> Energy, or Food
+            case .Energy: return ("Energy", 27)
+            case .Biosphere: return (Ingredient.Food.rawValue, 25)
+                
+            default: return nil
+//            case .HQ: return nil
+//            case .Observatory: return [:]
+//            case .Antenna: return [:]
+//            case .Launchpad: return [:]
+//            case .Arena: return [:]
+//            case .ETEC: return [:]
         }
     }
     
@@ -111,6 +139,7 @@ enum OutpostType:String, CaseIterable, Codable {
 
 /// Update state of an `Outpost`
 enum OutpostState:String, CaseIterable, Codable {
+    
     case collecting     // accepting contributions
     case full           // can upgrade. Set date and proceed to cooldown
     case cooldown       // wait for the date

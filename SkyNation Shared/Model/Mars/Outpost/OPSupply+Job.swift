@@ -113,3 +113,16 @@ class OutpostSupply:Codable {
         self.players = [:]
     }
 }
+
+//struct OutpostProduce {
+//
+//    var element:String
+//    var quantity:Int
+//
+//    init(_ outpost:DBOutpost) {
+//
+//    }
+////    static func production(_ outpost:DBOutpost) -> OutpostProduce {
+////
+////    }
+//}

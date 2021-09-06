@@ -17,11 +17,17 @@ struct OutpostView: View {
     @State var popTutorial:Bool = false
     
     // Tabs
-    // 1 - Ingredient Picker
-    // 2 - People Picker
-    // 3 - Other resources picker
-    // 4 - Current Contributions
-    // 5 - Management
+    // -------
+    // Info
+    // Ingredients
+    // Tanks
+    // BioBoxes
+    // Peripherals
+    // Skills
+    // Contributors
+    // Manage
+    
+    // To add: Scene View ?
     
     var header: some View {
         Group {
@@ -101,6 +107,7 @@ struct OutpostView: View {
                 // Tabs
                 tabber
             }
+            .frame(minWidth:500)
             
             // Content
             ScrollView {
@@ -120,6 +127,10 @@ struct OutpostView: View {
                             OutpostSectionView(controller:controller, tab:.bioboxes)
                             
                         case .info:
+                            
+                            OutpostInfoView(dbOutpost: controller.dbOutpost, outpostData: controller.outpostData)
+                            
+                            /*
                             Group {
                                 HStack {
                                     VStack(alignment:.leading) {
@@ -179,7 +190,7 @@ struct OutpostView: View {
                                 
                                 Text("Fake: \(controller.fake)")
                             }
-                            
+                            */
                         case .contributions:
                             Group {
                                 Text("Contributions").font(.title3).foregroundColor(.orange)
@@ -196,26 +207,7 @@ struct OutpostView: View {
                             }
                         }
                     }
-                    // Buttons
-                    /*
-                    Group {
-                        
-                        Divider()
-                        
-                        HStack{
-                            Button("Close") {
-                                NotificationCenter.default.post(name: .closeView, object: nil)
-                            }
-                            .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                            
-                            Button("Help") {
-                                print("Insert help action here")
-                            }
-                            .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                        }
-                        .padding()
-                    }
-                    */
+                    
                 }// vstack
             } // scroll
         } // vstack

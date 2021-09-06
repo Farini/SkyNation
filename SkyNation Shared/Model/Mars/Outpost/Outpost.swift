@@ -11,7 +11,6 @@ import Foundation
 class Outpost:Codable {
     
     var id:UUID
-//    var guild:[String:UUID?]?
     var guild:UUID
     
     var model:String = ""
@@ -32,27 +31,36 @@ class Outpost:Codable {
     
     // MARK: - Production
     
-    func production() -> OutpostSupply {
-        return OutpostSupply(ingredients: [], tanks: [], peripherals: [], bioBoxes: [])
-    }
+    // Production should return a String, and an Int
+    // Work backwards from String, to find element
+    // It can also be empty (no production)
+    
+//    func producing() -> (name:String, qtty:Int) {
+//    }
+    
+//    func production() -> OutpostSupply {
+//        return OutpostSupply(ingredients: [], tanks: [], peripherals: [], bioBoxes: [])
+//    }
     
     // Outpost type has production base
-    func produceIngredients() -> [Ingredient:Int] {
-        
-        var baseAdjust:[Ingredient:Int] = [:]
-        
-        for (k, v) in type.productionBase {
-            // Level * percentage * fibo * baseValue(v)
-            let fiboValue = GameLogic.fibonnaci(index: self.level)
-            let fiboMatters:Double = 0.5 // (% influence)
-            let calc = v + Int(fiboMatters * Double(fiboValue) * Double(v))
-            baseAdjust[k] = calc
-        }
-        return baseAdjust
-    }
-    func produceTanks() -> [TankType:Int] {
-        return [:]
-    }
+//    func produceIngredients() -> [Ingredient:Int] {
+//
+//        var baseAdjust:[Ingredient:Int] = [:]
+//
+//        for (k, v) in type.productionBase {
+//            // Level * percentage * fibo * baseValue(v)
+//            let fiboValue = GameLogic.fibonnaci(index: self.level)
+//            let fiboMatters:Double = 0.5 // (% influence)
+//            let calc = v + Int(fiboMatters * Double(fiboValue) * Double(v))
+//            baseAdjust[k] = calc
+//        }
+//        return baseAdjust
+//    }
+    
+//    func produceTanks() -> [TankType:Int] {
+//        return [:]
+//    }
+    
     // The above 2 functions should be private
     
     // Happy
@@ -267,6 +275,35 @@ class Outpost:Codable {
     
     // MARK: - Init
     
+    init(dbOutpost:DBOutpost) {
+        
+        self.id = dbOutpost.id
+        
+        // Get Guild ID key
+        var guildID:UUID?
+        if let tGuild:[String:UUID?] = dbOutpost.guild {
+            for (_, v) in tGuild {
+                if let gid = v {
+                    guildID = gid
+                }
+            }
+        }
+        
+        guard let guildID = guildID else { fatalError("No Guild ID") }
+        self.guild = guildID
+        
+        self.model = dbOutpost.model
+        self.posdex = Posdex(rawValue: dbOutpost.posdex)!
+        
+        self.type = dbOutpost.type
+        self.state = dbOutpost.state
+        
+        self.level = dbOutpost.level
+        self.contributed = [:]
+        self.supplied = OutpostSupply()
+        
+    }
+    
     /// Makes an example data. **Delete** this upon launch
     init(type:OutpostType, posdex:Posdex, guild:UUID?) {
         self.id = UUID()
@@ -397,7 +434,7 @@ struct DBOutpost:Codable {
         self.guild = ["guild":gid]
         self.type = type
         self.level = Bool.random() ? 0:1
-        self.accounting = Date().addingTimeInterval(Double.random(in: 20...652))
+        self.accounting = Date().addingTimeInterval(Double.random(in: 20...652) * -1)
         self.posdex = posdex.rawValue
         self.state = .collecting
     }
@@ -429,4 +466,3 @@ struct Ewolf {
         }
     }
 }
-

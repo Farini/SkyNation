@@ -39,7 +39,7 @@ class OutpostController:ObservableObject {
     @Published var dbOutpost:DBOutpost
     
     // OutpostData
-    @Published var opData:Outpost
+    @Published var outpostData:Outpost
     
     // DEPRECATE 3 BELOW
     
@@ -49,7 +49,41 @@ class OutpostController:ObservableObject {
     /// Requirements for next job
     @Published var job:OutpostJob?
     
+    // Errors, Alerts & Messages
     @Published var fake:String = ""
+    @Published var serverError:String = ""
+    @Published var displayError:Bool = false
+    
+    /*
+    // Things to check:
+    
+     0. Contribution Request
+        1 - If OutpostData has not been created, make a request for 'createOutpostData'
+        2 - If you can't find outpost data from 'ServerManager', initialize outpost from DBOutpost,
+            and wait for server response
+        3 - Server response may ask you to create it, because not found.
+    
+    //      After every click, or wait for user to click "contribute"?
+    
+    // 1. Outpost Collection:
+    //      Is it collectable? (Does the outpost have production?)
+    //      Does the city have it? CityData.opCollection[UUID:Date]
+    
+    // 2. Contributors Objects
+    // 3. My City
+    // 4. WARNINGS
+    
+     Warnings will happen if new updates indicate that outpost has level up pending
+     They should be displayed in orange color, on the view.
+     
+    // 5. ERRORS
+    
+     Errors should be displayed as an alert.
+     (Possible Errors)
+     1. No internet connection
+     2. Could not update server (reason)
+     3. Outpost Level doesn't make sense (request)
+     */
     
     // Guild
     
@@ -61,9 +95,31 @@ class OutpostController:ObservableObject {
     /// A KV pair for the items missing for outpost upgrades
     @Published var remains:[String:Int]
     
+    // MARK: - Methods
+    
+    /// Change this to generate random data - it needs to stay here, as opposed to GameSettings
+    static var connectToServer:Bool = true
+    
     init(dbOutpost:DBOutpost) {
+        
         guard let player = LocalDatabase.shared.player else { fatalError() }
         self.player = player
+        
+        
+        /*
+         0. Contribution Request
+         1 - If OutpostData has not been created, make a request for 'createOutpostData'
+         2 - If you can't find outpost data from 'ServerManager', initialize outpost from DBOutpost,
+         and wait for server response
+         3 - Server response may ask you to create it, because not found.
+         */
+        
+//        let opData = Outpost(dbOutpost: dbOutpost)
+//        self.outpostData = opData
+        
+        // Wait for response from server, to make sure it hasn't been created already
+        
+        
         
         // MARK: - FIX THIS BEFORE LAUNCH
         // FIXME: - TEST EXAMPLES
@@ -78,13 +134,39 @@ class OutpostController:ObservableObject {
         
         self.dbOutpost = dbOutpost
         self.posdex = Posdex(rawValue: dbOutpost.posdex)!
-        let outPostData = Outpost.exampleFromDatabase(dbData: dbOutpost)
         
-        opData = outPostData
-        self.remains = outPostData.calculateRemaining()
-        
-        self.job = outPostData.getNextJob()
-        self.supply = outPostData.supplied
+        if !OutpostController.connectToServer {
+            
+            // No Connection - Random Data
+            let outPostData = Outpost.exampleFromDatabase(dbData: dbOutpost)
+            outpostData = outPostData
+            
+            self.remains = outPostData.calculateRemaining()
+            self.job = outPostData.getNextJob()
+            self.supply = outPostData.supplied
+            
+        } else {
+            
+            // Connect to server to update the rest of required data with blank stuff
+            let opData = Outpost(dbOutpost: dbOutpost)
+            self.outpostData = opData
+            
+            /// Simulate data if needed
+            if GameSettings.onlineStatus == false {
+                // not online (simulating random data)
+                self.remains = opData.calculateRemaining()
+                self.job = opData.getNextJob()
+                self.supply = opData.supplied
+                
+            } else {
+                // online
+                self.remains = [:] //opData.calculateRemaining()
+                self.job = nil // Needs to wait for server to update
+                self.supply = OutpostSupply()
+                
+                self.verifyOutpostDataUpdate()
+            }
+        }
     }
     
     /// Initializer for Previews
@@ -99,7 +181,7 @@ class OutpostController:ObservableObject {
         let outPostData = Outpost.exampleFromDatabase(dbData: op)
         self.posdex = Posdex(rawValue: op.posdex)!
         
-        opData = outPostData
+        outpostData = outPostData
         self.remains = outPostData.calculateRemaining()
         
         // Post Init
@@ -109,9 +191,118 @@ class OutpostController:ObservableObject {
         self.supply = outPostData.supplied
     }
     
+    private var hasReqOutpost:Bool = false
+    
+    // MARK: - Post init Outpost Data Request
+    
+    /// Post init method to update the view, that starts with a blank outpost
+    private func verifyOutpostDataUpdate() {
+        
+        print("Fetching Outpost Data")
+        // 1. Request Outpost
+        // 2. Check outpost, Update here (self.outpostData)
+        ServerManager.shared.requestOutpostData(dbOutpost: self.dbOutpost, force:!hasReqOutpost) { opData, error in
+            
+            DispatchQueue.main.async {
+                
+                if let opData = opData {
+                    self.outpostData = opData
+                    self.displayError = false
+                    self.serverError = ""
+                    self.hasReqOutpost = true
+                    self.didUpdateOutpostData(newData: opData)
+                    
+                } else {
+                    let errorString = error?.localizedDescription ?? "Could not retrieve Outpost Data"
+                    self.serverError = errorString
+                    self.hasReqOutpost = false
+                    self.displayError = true
+                    
+                }
+            }
+        }
+    }
+    
+    /// Updates the other variables, dependent on OutpostData
+    private func didUpdateOutpostData(newData:Outpost) {
+        
+        self.remains = newData.calculateRemaining()
+        self.job = newData.getNextJob()
+        self.supply = newData.supplied
+        
+    }
+    
+    // MARK: - Control
+    
     /// Selecting a Tab
     func selected(tab:OutpostViewTab) {
         self.viewTab = tab
+    }
+    
+    
+    
+    
+    // MARK: - Continue here
+    
+    /// Makes the contribution, but doesn't charge from City
+    func testContribution(object:Codable, type:ContributionType) {
+        
+        guard let pid = LocalDatabase.shared.player?.serverID else {
+            print("No player id, or wrong id")
+            return
+        }
+        
+        if let box = object as? StorageBox {
+            fake += " + box"
+            
+            // SKNS.contributionRequest(box:box) { response in
+            outpostData.supplied.ingredients.append(box)
+            outpostData.supplied.players[pid, default:0] += box.current
+            
+//            myCity.boxes.removeAll(where: { $0.id == box.id })
+            
+        } else if let tank = object as? Tank {
+            
+            outpostData.supplied.tanks.append(tank)
+//            myCity.tanks.removeAll(where: { $0.id == tank.id })
+            
+        } else if let peripheral = object as? PeripheralObject {
+            
+            outpostData.supplied.peripherals.append(peripheral)
+//            myCity.peripherals.removeAll(where: { $0.id == peripheral.id })
+            
+        } else if let bioBox = object as? BioBox {
+            
+            outpostData.supplied.bioBoxes.append(bioBox)
+//            myCity.bioBoxes?.removeAll(where: { $0.id == bioBox.id })
+            
+        } else if let person = object as? Person {
+            
+            outpostData.supplied.skills.append(person)
+            if let person = myCity.inhabitants.first(where: { $0.id == person.id }) {
+                let newActivity = LabActivity(time: 1000, name: "Working at Outpost")
+                person.activity = newActivity
+            }
+            
+        } else {
+            print("⚠️ REVISE THIS OBJECT: \(object)")
+            print("⚠️ ERROR OBJECT INVALID")
+        }
+        
+        // Contribution
+        outpostData.contributed[pid, default:0] += 1
+        
+        // Check if fullfilled
+        let remaining = outpostData.calculateRemaining()
+        print("Remaining...")
+        for (k, v) in remaining {
+            print("\t \(k) \(v)")
+        }
+        self.remains = remaining
+        
+        // Make the request
+        SKNS.contributionRequest(object: object, type: type, outpost: outpostData)
+        
     }
     
     /// Called every time user taps on a resource. Adds it to supplied
@@ -135,7 +326,7 @@ class OutpostController:ObservableObject {
                 guard let box = object as? StorageBox else { return }
                 print("Contribute a box \(box.type)")
                 
-                SKNS.contributionRequest(object: box, type: type, outpost: opData)
+                SKNS.contributionRequest(object: box, type: type, outpost: outpostData)
             
             default:break
         }
@@ -144,29 +335,29 @@ class OutpostController:ObservableObject {
             fake += " + box"
             
             // SKNS.contributionRequest(box:box) { response in
-            opData.supplied.ingredients.append(box)
-            opData.supplied.players[pid, default:0] += box.current
+            outpostData.supplied.ingredients.append(box)
+            outpostData.supplied.players[pid, default:0] += box.current
             
             myCity.boxes.removeAll(where: { $0.id == box.id })
             
         } else if let tank = object as? Tank {
             
-            opData.supplied.tanks.append(tank)
+            outpostData.supplied.tanks.append(tank)
             myCity.tanks.removeAll(where: { $0.id == tank.id })
             
         } else if let peripheral = object as? PeripheralObject {
             
-            opData.supplied.peripherals.append(peripheral)
+            outpostData.supplied.peripherals.append(peripheral)
             myCity.peripherals.removeAll(where: { $0.id == peripheral.id })
             
         } else if let bioBox = object as? BioBox {
             
-            opData.supplied.bioBoxes.append(bioBox)
+            outpostData.supplied.bioBoxes.append(bioBox)
             myCity.bioBoxes?.removeAll(where: { $0.id == bioBox.id })
             
         } else if let person = object as? Person {
             
-            opData.supplied.skills.append(person)
+            outpostData.supplied.skills.append(person)
             if let person = myCity.inhabitants.first(where: { $0.id == person.id }) {
                 let newActivity = LabActivity(time: 1000, name: "Working at Outpost")
                 person.activity = newActivity
@@ -179,13 +370,13 @@ class OutpostController:ObservableObject {
         
         // Contribution
         
-            opData.contributed[pid, default:0] += 1
+            outpostData.contributed[pid, default:0] += 1
         
             //opData.contributed[pid] = 1
         
         
         // Check if fullfilled
-        let remaining = opData.calculateRemaining()
+        let remaining = outpostData.calculateRemaining()
         print("Remaining...")
         for (k, v) in remaining {
             print("\t \(k) \(v)")
@@ -196,17 +387,22 @@ class OutpostController:ObservableObject {
         
     }
     
+    
+    
+    
+    
+    
     // MARK: - Requirements
     
     func wantsIngredients() -> [KeyvalComparator] {
         var array:[KeyvalComparator] = []
-        if let job = opData.getNextJob() {
+        if let job = outpostData.getNextJob() {
             print("Job: \(job.wantedIngredients.count)")
             
-            for (k, v) in opData.getNextJob()?.wantedIngredients ?? [:] {
+            for (k, v) in outpostData.getNextJob()?.wantedIngredients ?? [:] {
                 
                 let have = myCity.boxes.filter({ $0.type == k }).compactMap({ $0.current }).reduce(0, +)
-                let opHave = opData.supplied.ingredients.filter({ $0.type == k }).compactMap({ $0.current }).reduce(0, +)
+                let opHave = outpostData.supplied.ingredients.filter({ $0.type == k }).compactMap({ $0.current }).reduce(0, +)
                 
                 print("i need: \(v)")
                 print("i have: \(have)")
@@ -221,13 +417,13 @@ class OutpostController:ObservableObject {
     
     func wantsTanks() -> [KeyvalComparator] {
         var array:[KeyvalComparator] = []
-        if let job = opData.getNextJob() {
+        if let job = outpostData.getNextJob() {
             print("Job: \(job.wantedTanks?.count ?? 0)")
             
-            for (k, v) in opData.getNextJob()?.wantedTanks ?? [:] {
+            for (k, v) in outpostData.getNextJob()?.wantedTanks ?? [:] {
                 
                 let have = myCity.tanks.filter({ $0.type == k }).compactMap({ $0.current }).reduce(0, +)
-                let opHave = opData.supplied.tanks.filter({ $0.type == k }).compactMap({ $0.current }).reduce(0, +)
+                let opHave = outpostData.supplied.tanks.filter({ $0.type == k }).compactMap({ $0.current }).reduce(0, +)
                 
                 print("i need: \(v)")
                 print("i have: \(have)")
@@ -242,13 +438,13 @@ class OutpostController:ObservableObject {
     
     func wantsSkills() -> [KeyvalComparator] {
         var array:[KeyvalComparator] = []
-        if let job = opData.getNextJob() {
+        if let job = outpostData.getNextJob() {
             print("Job: \(job.wantedSkills.count)")
             
-            for (k, v) in opData.getNextJob()?.wantedSkills ?? [:] {
+            for (k, v) in outpostData.getNextJob()?.wantedSkills ?? [:] {
                 
                 let have = myCity.inhabitants.compactMap({$0.levelFor(skill: k)}).reduce(0, +)
-                let opHave = opData.supplied.skills.compactMap({$0.levelFor(skill: k)}).reduce(0, +)
+                let opHave = outpostData.supplied.skills.compactMap({$0.levelFor(skill: k)}).reduce(0, +)
                 
                 print("i need: \(v)")
                 print("i have: \(have)")
@@ -263,13 +459,13 @@ class OutpostController:ObservableObject {
     
     func wantsPeripherals() -> [KeyvalComparator] {
         var array:[KeyvalComparator] = []
-        if let job = opData.getNextJob() {
+        if let job = outpostData.getNextJob() {
             print("Job: \(job.wantedPeripherals?.count ?? 0)")
             
-            for (k, v) in opData.getNextJob()?.wantedPeripherals ?? [:] {
+            for (k, v) in outpostData.getNextJob()?.wantedPeripherals ?? [:] {
                 
                 let have = myCity.peripherals.filter({ $0.peripheral == k }).count
-                let opHave = opData.supplied.peripherals.filter({ $0.peripheral == k }).count
+                let opHave = outpostData.supplied.peripherals.filter({ $0.peripheral == k }).count
                 
                 print("i need: \(v)")
                 print("i have: \(have)")
@@ -284,13 +480,13 @@ class OutpostController:ObservableObject {
     
     func wantsBio() -> [KeyvalComparator] {
         var array:[KeyvalComparator] = []
-        if let job = opData.getNextJob() {
+        if let job = outpostData.getNextJob() {
             print("Job: \(job.wantedBio?.count ?? 0)")
             
-            for (k, v) in opData.getNextJob()?.wantedBio ?? [:] {
+            for (k, v) in outpostData.getNextJob()?.wantedBio ?? [:] {
                 
                 let have = myCity.bioBoxes?.filter({ $0.perfectDNA == k.rawValue }).count ?? 0
-                let opHave = opData.supplied.bioBoxes.filter({ $0.perfectDNA == k.rawValue }).count
+                let opHave = outpostData.supplied.bioBoxes.filter({ $0.perfectDNA == k.rawValue }).count
                 
                 print("i need: \(v)")
                 print("i have: \(have)")
@@ -301,6 +497,17 @@ class OutpostController:ObservableObject {
             }
         }
         return array
+    }
+    
+    // MARK: - Upgrades and Updates
+    
+    /// A public method to update the `OutpostData` variables
+    func updateOutpostData() {
+        if GameSettings.onlineStatus && OutpostController.connectToServer {
+            self.verifyOutpostDataUpdate()
+        } else {
+            self.didUpdateOutpostData(newData: self.outpostData)
+        }
     }
     
     /* Continue... */
@@ -316,9 +523,9 @@ class OutpostController:ObservableObject {
         // 4. Upgrading
     
     
-        let previous = opData.state
+        let previous = outpostData.state
         
-        let upgrade = opData.runUpgrade()
+        let upgrade = outpostData.runUpgrade()
         switch upgrade {
             case .noChanges: print("No Changes")
             case .dateUpgradeShouldBeNil, .needsDateUpgrade: print("Error")

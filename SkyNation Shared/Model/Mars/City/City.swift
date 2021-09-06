@@ -100,8 +100,8 @@ class CityData:Codable, Identifiable {
     var accountingDate:Date?
     var accounting:AccountingReport?
     
-    /// Collected Items from Outpost
-    var opCollection:[UUID:Date]? // ID of outpost -> Date collected
+    /// Collected Items from Outpost - ID of outpost -> Date collected
+    var opCollection:[UUID:Date]?
     
     // + accounting
     // + dateAccounting

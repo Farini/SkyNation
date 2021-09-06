@@ -160,7 +160,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Blender - Outpost Levels: 3x Mining
 - [X] Blender - Outpost Levels: 1x Observatory
 - [X] Blender - Outpost Levels: 1x LPad
-- [X] Blender - Terrain + Roads
+- [X] Blender - Terrain - Roads
 - [X] Blender - EVehicle Mesh + UVMaps simplification
 - [X] Blender - EDL Animation
 9/4/2021
@@ -170,6 +170,13 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Mars Scene - Animations - Transportation - [See Gist](https://gist.github.com/Farini/ede665cab4e736480d4f399fbb4ca4f3)
 - [X] Mars Scene - Guild map improvements (x8)
 9/5/2021 41 of 97 (42%)
+- [X] Model - Roads
+- [X] Model - Create OutpostData
+
+- [X] Outpost View - Remodelling
+- [X] Outpost View - Create OutpostData
+- [ ] Outpost View - Contribution Request
+
 
 - [ ] Finish Outpost View
 - [ ] Finish City View
@@ -181,7 +188,6 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [ ] Mars Scene - Random Rocks
 - [ ] Mars Scene - Go back to Space Station
-
 - [ ] Mars Scene - City - Gate Color?
 - [ ] Mars Scene - City + Solar Panel(s)
 - [ ] Mars Scene - Outpost - State (building) scenes
@@ -212,13 +218,15 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Overlays - Outpost rss Collecting
 - [ ] Overlays - GameCamera - Fix Awkward cam transitions
 
+
+
 - [ ] Model - E-Vehicle/Bot
 - [ ] Model - Outpost rss Collecting
 - [ ] Model - Election
-- [X] Model - Road?
 - [ ] Model - Mars Accounting
 - [ ] Model - Guild - Write Invite
 - [ ] Model - Use more energy (Peripherals + Modules + Person)
+- [ ] Model - Road Updates
 
 - [ ] 2D Graphics - iOS app icon
 - [ ] 2D Graphics - Blender individual tanks

@@ -73,7 +73,7 @@ class ServerManager {
     func inquireFullGuild(force:Bool, completion:@escaping(GuildFullContent?, Error?) -> ()) {
         
         guard let serverData:ServerData = serverData else {
-            completion(nil, ServerDataError.noFile)
+            completion(nil, ServerDataError.noServerDataFile)
             return
         }
         
@@ -95,6 +95,44 @@ class ServerManager {
             }
         }
     }
+    
+    // Outpost Data
+    func requestOutpostData(dbOutpost:DBOutpost, force:Bool, completion:@escaping((Outpost?, Error?) -> ())) {
+        
+        guard let serverData = serverData else {
+            completion(nil, ServerDataError.noServerDataFile)
+            return
+        }
+        
+        serverData.requestOutpostData(dbOutpost: dbOutpost, force: force) { outpost, error in
+            
+            if let error = error as? ServerDataError {
+                if error == .noOutpostFile {
+                    print("Will create Outpost Data in Server!")
+                    // Needs to create an outpost file
+                    // SKNS can solve this
+                    SKNS.createOutpostData(dbOutpost: dbOutpost) { newOutpost, newError in
+                        if let newOutpost:Outpost = newOutpost {
+                            self.serverData!.outposts.append(newOutpost)
+                            self.saveServerData()
+                            print("✅ Outpost Data created in server")
+                        } else {
+                            print("Outpost Data could not be created: \(error.localizedDescription)")
+                            completion(nil, error)
+                        }
+                    }
+                }
+            } else {
+                print("Request Outpost Data Response in...")
+                completion(outpost, error)
+            }
+        }
+    }
+    /*
+     Get Outpost Data (this may take a while) but it is necessary.
+        if outpostData does not exist, needs to create it.
+        
+     */
     
 }
 
@@ -195,56 +233,6 @@ class ServerData:Codable {
         }
     }
     
-    
-//    func updatePlayer(completion:Player)
-    
-    /*
-    func inquireLogin(completion:@escaping(SKNPlayer?, Error?) -> ()) {
-        
-        // Seconds until next fetch
-        let delay:TimeInterval = 60.0
-        
-        if let log = lastLogin, Date().timeIntervalSince(log) < delay {
-            completion(self.player, nil)
-            return
-        } else {
-            SKNS.resolveLogin { (player, error) in
-                if let player = player {
-                    DispatchQueue.main.async {
-                        self.player.keyPass = player.keyPass //= player
-                        if self.player.guildID != player.guildID {
-                            if player.guildID == nil {
-                                self.player.guildID = nil
-                            }
-                        }
-                        self.lastLogin = Date()
-                        self.user = SKNUserPost(player: self.player)
-                        self.status = .online
-                        
-                        // Save
-                        if LocalDatabase.shared.saveServerData(skn: self) == false {
-                            print("could not save")
-                        }
-                        
-                        // fetch guild, if needed
-                        //                        if let _ = player.guildID {
-                        //                            self.fetchGuild()
-                        //                        }
-                        
-                        // completion
-                        completion(self.player, nil)
-                    }
-                    
-                } else {
-                    // Error
-                    self.errorMessage = error?.localizedDescription ?? "Could not connect to server"
-                    completion(nil, error)
-                }
-            }
-        }
-    }
-     */
-    
     // MARK: - Player's Guild
     
     /// Date Guild was last Fetched
@@ -291,81 +279,41 @@ class ServerData:Codable {
         }
     }
     
-    /*
-     1. Request Outpost Data
-    */
-    
-    
-    /// Fetches MyGuild, Guild object
-    /*
-    func fetchGuild(completion:@escaping(Guild?, Error?) -> ()) {
+    // MARK: - Outpost Data
+    var lastOutpostFetch:Date?
+    func requestOutpostData(dbOutpost:DBOutpost, force:Bool, completion:@escaping(Outpost?, Error?) -> ()) {
         
-        // Seconds until next fetch
+        // Check if needs update
         let delay:TimeInterval = 60.0
-
-        if let log = lastGuildFetch, Date().timeIntervalSince(log) < delay {
-            completion(self.guild, nil)
-            return
-        }
-
-        SKNS.findMyGuild(user: self.user) { myGuild, error in
-
-            completion(myGuild, error)
-
-            if let myGuild = myGuild {
-                self.guild = myGuild
-                self.lastGuildFetch = Date()
-                self.status = .online
-
-                // Save
-                if LocalDatabase.shared.saveServerData(skn: self) == false {
-                    print("could not save")
-                }
-                
-                self.fetchGuildVehicles()
-            }
-            return
-        }
-    }
-    */
-    
-//    var lastFullGuildFetch:Date?
-    
-    /// My Guild (Full Content). Use force, if you want to fetch anyways
-    /*
-    func fetchFullGuild(force:Bool, completion:@escaping(GuildFullContent?, Error?) -> ()) {
-        
-        // Seconds until next fetch
-        let delay:TimeInterval = 60.0
-        
-        if let log = lastFullGuildFetch,
+        if let log = lastOutpostFetch,
+           let object:Outpost = self.outposts.first(where: { $0.id == dbOutpost.id }),
            Date().timeIntervalSince(log) < delay,
            force == false {
-            completion(self.guildfc, nil)
+            completion(object, nil)
             return
         }
         
-        SKNS.loadGuild { gfc, error in
-            
-            completion(gfc, error)
-            
-            if let gfc:GuildFullContent = gfc {
-                let cities:[DBCity] = gfc.cities
-                let citizens:[PlayerContent] = gfc.citizens
-                self.guildfc = gfc
-                self.cities = cities
-                self.partners = citizens
-                self.lastFullGuildFetch = Date()
-                self.status = .online
-                
-                // Save
-                if LocalDatabase.shared.saveServerData(skn: self) == false {
-                    print("could not save")
+        // Check server
+        SKNS.requestOutpostData(dbOutpost: dbOutpost) { outpost, error in
+            if let outpost:Outpost = outpost {
+                print("Outpost Fetched: \(outpost.type)")
+                completion(outpost, nil)
+                // Update the fetched date
+                self.lastOutpostFetch = Date()
+                return
+            }
+            if let error = error {
+                if let nofile = error as? ServerDataError {
+                    print("No file error")
+                    completion(nil, nofile)
+                } else {
+                    print("Another error. (File is ok)")
+                    completion(nil, error)
                 }
+                return
             }
         }
     }
-    */
     
     // Vehicles
     var lastFetchedVehicles:Date?
@@ -399,10 +347,6 @@ class ServerData:Codable {
     }
     
     // MARK: - Reports and Updates
-    
-//    func runUpdates(force:Bool = false) {
-//        login()
-//    }
     
     /*
     private func login() {
@@ -494,14 +438,6 @@ class ServerData:Codable {
             self.performLogin()
         }
     }
-    
-//    /// When data doesn't exist. Create.
-//    init(with player:SKNPlayer) {
-//        print("Initting server data with player")
-////        let user = SKNUserPost(player: player)
-//        self.player = player
-//        self.guildfc = LocalDatabase.shared.serverData?.guildfc
-//    }
     
     /// Data exists locally (old data)
     init(localData:ServerData) {
