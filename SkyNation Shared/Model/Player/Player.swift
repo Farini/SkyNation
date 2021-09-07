@@ -374,7 +374,7 @@ struct PlayerUpdate: Codable {
 }
 
 /// Card representation of Player, to show to other Players
-struct PlayerCard: Codable, Identifiable {
+struct PlayerCard: Codable, Identifiable, Hashable {
     
     /// ID of `DBPlayer`
     var id:UUID

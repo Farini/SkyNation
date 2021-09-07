@@ -17,6 +17,9 @@ enum ServerDataError:Error {
     
     /// LocalDatabase doesn't have a server data file
     case noServerDataFile
+    
+    /// Returned when performing player authorized login
+    case failedAuthorization
 }
 
 /*

@@ -44,13 +44,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationWillBecomeActive(_ notification: Notification) {
-        print("\n\n Will Become Active")
         if let screen = NSScreen.main {
             let rect = screen.frame
-            print("Screen frame: \(rect)")
-            let height = rect.size.height
-            let width = rect.size.width
-            print("Screen width:\(width) x height:\(height)")
+//            let height = rect.size.height
+//            let width = rect.size.width
+            print("📺 Screen size: \(rect.size)")
         }
     }
 

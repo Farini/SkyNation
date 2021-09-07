@@ -36,75 +36,32 @@ class SKNS {
     
     // MARK: - User, Login
     
-    /// Updates pass and GuildID on its own. Errors thrown could be `PlayerLogin`.`LogFail`
-    static func performLogin(completion:((PlayerUpdate?, Error?) -> ())?) {
-        
-        guard let localPlayer = LocalDatabase.shared.player else { return }
-        localPlayer.lastSeen = Date()
-        
-        var pLogin:PlayerLogin?
-        
-        do {
-            let pUpdate:PlayerLogin = try PlayerLogin.create(player: localPlayer)
-            pLogin = pUpdate
-        } catch {
-            if let logError:PlayerLogin.LogFail = error as? PlayerLogin.LogFail {
-                print("Player Log Error: \(logError.localizedDescription)")
-            }
-            completion?(nil, error)
-            return
-        }
-        
-        /// The object being posted
-        guard let playerLogin:PlayerLogin = pLogin else {
-            fatalError()
-        }
+    static func authorizeLogin(localPlayer:SKNPlayer, pid:UUID, pass:String, completion:((PlayerUpdate?, Error?) -> ())?) {
         
         // Build Request
-        let address = "\(baseAddress)/player/login"
+        let address = "\(baseAddress)/player/credentials/login"
         
         guard let url = URL(string: address) else { return }
+        
         let session = URLSession.shared
         var request = URLRequest(url: url)
-        request.httpMethod = HTTPMethod.POST.rawValue
+        request.httpMethod = HTTPMethod.GET.rawValue
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .secondsSince1970
-        encoder.outputFormatting = .prettyPrinted
-        
-        // Body with `PlayerLogin`
-        if let data = try? encoder.encode(playerLogin) {
-            print("\n\nLogin Data")
-            request.httpBody = data
-            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
-            print("DS: \(dataString)")
-        }
+        // Set Credentials for authorization.
+        let basicCredential = "\(pid.uuidString):\(pass)".data(using: .utf8)!.base64EncodedString()
+        request.setValue("Basic \(basicCredential)", forHTTPHeaderField: "Authorization")
         
         let task = session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
+            
+            if let data:Data = data {
                 
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .secondsSince1970
                 
                 if let responsePlayer:PlayerUpdate = try? decoder.decode(PlayerUpdate.self, from: data) {
                     
-                    print("Response user: \(responsePlayer.name)")
-                    
-                    // Update Player Properties
-                    localPlayer.keyPass = responsePlayer.pass
-                    
-                    // Guild ID
-                    if let oldGuild = localPlayer.guildID,
-                        oldGuild != responsePlayer.guildID {
-                        print("Attention! - Guild ID changing!\n Old Guild:\(oldGuild), New Guild:\(responsePlayer.guildID?.uuidString ?? "none")")
-                        localPlayer.guildID = responsePlayer.guildID
-                    }
-                    
-                    // Save
-                    let res = LocalDatabase.shared.savePlayer(player: localPlayer)
-                    if !res { print("Error: Could not save player") }
-                    
+                    print("Response player: \(responsePlayer.name)")
                     DispatchQueue.main.async {
                         completion?(responsePlayer, nil)
                     }
@@ -112,42 +69,26 @@ class SKNS {
                     
                 } else {
                     
-                    if let notFound:GameError = try? JSONDecoder().decode(GameError.self, from: data) {
-                        if notFound.isNotFound() == true {
-                            print("Not Found")
-                            SKNS.newLogin { newPlayerUpdate, newError in
-                                completion?(newPlayerUpdate, newError)
-                                return
-                            }
-                        } else if notFound.reason == "Wrong Pass" {
-                            SKNS.requestNewPass { pUpdate, pError in
-                                completion?(pUpdate, pError)
-                                return
-                            }
-                        }
-                    } else {
-                        // Something else went wrong
-                        print("Could Not get Player Update (Decoding) >> \(error?.localizedDescription ?? "noerror"), R:\(response.debugDescription)")
-                        completion?(nil, error)
+                    // Request returned data, but its not a `PlayerUpdate` object.
+                    // This should only happen if the object has been changed
+                    DispatchQueue.main.async {
+                        completion?(nil, error ?? ServerDataError.failedAuthorization)
                     }
-                    
                 }
+                
             } else {
                 DispatchQueue.main.async {
-                    print("Error: \(error?.localizedDescription ?? "n/a")")
+                    // Request returned an error
+                    print("Authorize Login Error: \(error?.localizedDescription ?? "n/a")")
                     completion?(nil, error)
                 }
             }
-            
         }
         task.resume()
-        
     }
     
-    /// Create Player Login
-    static func newLogin(completion:((PlayerUpdate?, Error?) -> ())?) {
-        
-        guard let localPlayer = LocalDatabase.shared.player else { return }
+    /// Creates a new player is the Server Database.
+    static func createNewPlayer(localPlayer:SKNPlayer, completion:((PlayerUpdate?, Error?) -> ())?) {
         
         let pCreate:PlayerCreate = PlayerCreate(player: localPlayer)
         
@@ -180,15 +121,7 @@ class SKNS {
                 
                 if let responsePlayer:PlayerUpdate = try? decoder.decode(PlayerUpdate.self, from: data) {
                     
-                    print("Response user: \(responsePlayer.name)")
-                    
-                    // Update Player Properties
-                    localPlayer.keyPass = responsePlayer.pass
-                    localPlayer.playerID = responsePlayer.id
-                    
-                    // Save
-                    let res = LocalDatabase.shared.savePlayer(player: localPlayer)
-                    print("Player Created. Saving:\(res)")
+                    print("SKNS Created New Player. Name: \(responsePlayer.name), Pass:\(responsePlayer.pass)")
                     
                     DispatchQueue.main.async {
                         completion?(responsePlayer, nil)
@@ -853,7 +786,6 @@ class SKNS {
         request.httpMethod = HTTPMethod.GET.rawValue
 
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        // request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
         
         let task = session.dataTask(with: request) { (data, response, error) in
             
@@ -1140,3 +1072,29 @@ class SKNS {
     
 }
 
+// Cookies
+//            if let a = HTTPCookieStorage.shared.cookies?.first(where: { $0.name.contains("vapor")}) {
+//
+//            }
+//            if let prevCookies = HTTPCookieStorage.shared.cookies {
+//                print("Previous Cookies: \(prevCookies.description)")
+//            }
+//
+//            if let a = response as? HTTPURLResponse,
+//               let b = a.allHeaderFields as? [String:String],
+//               let rurl = response?.url {
+//               let cookies = HTTPCookie.cookies(withResponseHeaderFields: b, for: rurl)
+//                print("Incoming Cookies...")
+//                for cookie in cookies {
+//                    var cookieProperties = [HTTPCookiePropertyKey: Any]()
+//                    cookieProperties[.name] = cookie.name
+//                    cookieProperties[.value] = cookie.value
+//                    cookieProperties[.domain] = cookie.domain
+//                    cookieProperties[.path] = cookie.path
+//                    cookieProperties[.version] = cookie.version
+//                    cookieProperties[.expires] = Date().addingTimeInterval(31536000)
+//                    print("Cookie name: \(cookie.name) value: \(cookie.value)")
+////                    let newCookie = HTTPCookie(properties: cookieProperties)
+////                    HTTPCookieStorage.shared.setCookie(newCookie!)
+//                }
+//            }

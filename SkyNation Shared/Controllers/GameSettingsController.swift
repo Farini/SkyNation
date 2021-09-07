@@ -102,20 +102,17 @@ class GameSettingsController:ObservableObject {
     
     /// Keep track of updated player (login)
     @Published var updatedPlayer:PlayerUpdate?
-    // Guild Selection
+    
+    // Guild Selection (Choosing)
     @Published var guildJoinState:GuildJoinState = .loading
-    // [Not Joined] -> Fetch
     @Published var joinableGuilds:[GuildSummary] = []
     @Published var selectedGuildObj:GuildFullContent?
     private var otherFetchedGuilds:[GuildFullContent] = []
     
-    // [Joined] -> Reload?
+    /// The Guild this player has joined.
     @Published var myGuild:GuildFullContent?
     
-    // Others
-    @Published var fetchedString:String?
-    
-    /// A list of things to load
+    /// A list of things that are loaded
     @Published var loadedList:[String] = []
     
     /// A list of errors to display
@@ -164,7 +161,7 @@ class GameSettingsController:ObservableObject {
                 if let pid = player.serverID {
                     
                     items.append("L-PID \(pid.uuidString)")
-                    let _ = ServerManager.shared
+                    
                     
                     if let gid = player.guildID {
                         items.append("L-GID \(gid.uuidString.prefix(8))")
@@ -172,12 +169,6 @@ class GameSettingsController:ObservableObject {
                     
                     if let cid = player.cityID {
                         items.append("L-CID \(cid.uuidString.prefix(8))")
-                    }
-                    
-                    if GameSettings.onlineStatus == true {
-                        if updatedPlayer == nil {
-                            self.loginPlayer()
-                        }
                     }
                 }
                 
@@ -187,6 +178,11 @@ class GameSettingsController:ObservableObject {
                 } else {
                     items.append("Loading station")
                 }
+                
+                // Make sure we are online (above)
+                let manager = ServerManager.shared
+                print("Server Manager Starting. Logged in: \(manager.playerLogged)")
+                
             }
         } else {
             items.append("🚫 Offline Mode")
@@ -219,23 +215,6 @@ class GameSettingsController:ObservableObject {
     }
     
     // MARK: - Server Tab + Online
-    func loginPlayer() {
-        
-        ServerManager.shared.inquireLogin { player, error in
-            DispatchQueue.main.async {
-                if let player:PlayerUpdate = player {
-                    print("Player login: ID:\(player.id.uuidString), LID: \(player.localID)")
-                    self.loadedList.append("★ Player logged in")
-                    self.updatedPlayer = player
-                } else {
-                    print("Did not find user. \(error?.localizedDescription ?? "")")
-                    self.loadedList.append("Did not find user. \(error?.localizedDescription ?? "")")
-                    self.warningList.append("Did not find user. \(error?.localizedDescription ?? "")")
-                }
-            }
-        }
-        
-    }
     
     /// Called when Player selects a different tab.
     func didSelectTab(newTab:GameSettingsTab) {
@@ -338,10 +317,8 @@ class GameSettingsController:ObservableObject {
                 } else {
                     self.guildJoinState = .noGuild
                 }
-                
             }
         }
-        
     }
     
     /// Fetches all `Joinable` Guilds
@@ -470,6 +447,7 @@ class GameSettingsController:ObservableObject {
         }
     }
     
+    
     /// Runs Accounting, and loads the Station Scene
     func loadGameData() {
         
@@ -486,7 +464,7 @@ class GameSettingsController:ObservableObject {
                             builder.scene = loadedScene
                             self.stationSceneLoaded = true
                             self.updateLoadedList()
-                            self.loadServerData()
+                            
                             LocalDatabase.shared.saveStation(station: station)
                             
 //                            if let player = LocalDatabase.shared.player {
@@ -502,22 +480,50 @@ class GameSettingsController:ObservableObject {
         }
     }
     
-    /// Runs the Game's login
-    func loadServerData() {
+    
+    /// Checks ServerManager for status - It takes a while to happen, so we can check on server status, because there it takes a while as well.
+    func checkServerStatus(attempts:Int = 0) {
         
-        ServerManager.shared.inquireLogin { player, error in
-            
-            DispatchQueue.main.async {
-                if let player:PlayerUpdate = player {
-                    print("Player Update Login: ID:\(player.id.uuidString), LID: \(player.localID)")
-//                    self.user = player
-                    self.updateLoadedList()
-                } else {
-                    print("Did not find user. \(error?.localizedDescription ?? "")")
+        if attempts > 3 { return }
+        print("Getting Server Status. Repeated \(attempts) times.")
+
+        let manager = ServerManager.shared
+        
+        switch manager.loginStatus {
+            case .playerAuthorized(let playerUpdate):
+                self.loadedList.append("Player \(playerUpdate.name) logged in.")
+                self.updatedPlayer = playerUpdate
+                print("🎮 Authorized Player \(player.name)")
+            case .serverError(let originReason, let error, _):
+                self.loadedList.append("ERROR: \(originReason), \(error?.localizedDescription ?? "Try again?")")
+                self.warningList.append("ERROR: \(originReason), \(error?.localizedDescription ?? "Try again?")")
+                
+            case .notStarted:
+                print("SERVER DATA NOT STARTED AFTER 3 SECONDS")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
+                    if let self = self {
+                        self.checkServerStatus(attempts: attempts + 1)
+                    } else {
+                        return
+                    }
                 }
-            }
+            case .createdPlayerWaitingAuth(let newPlayer):
+                print("Waiting for Server to Finish login for \(newPlayer.name)")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+                    if let self = self {
+                        self.checkServerStatus(attempts: attempts + 1)
+                    } else {
+                        return
+                    }
+                }
+            case .playerUnauthorized(let player):
+                print("‼️ Player Unauthorized ‼️ \(player.name)")
+                self.warningList.append("ERROR: ‼️ Player Unauthorized ‼️")
+                
+            case .simulatingData(let serverData):
+                print("Simulating Data for player: \(serverData.player.name)")
         }
-        
     }
+    
     
 }

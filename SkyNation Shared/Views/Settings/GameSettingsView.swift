@@ -8,7 +8,6 @@ import CoreImage
 
 struct GameSettingsView: View {
     
-//    @ObservedObject var guildController:GuildController
     @ObservedObject var controller = GameSettingsController()
     
     /// When turned on, this shows the "close" button
@@ -16,7 +15,6 @@ struct GameSettingsView: View {
     
     init(inGame:Bool? = false) {
         self.inGame = inGame!
-//        self.guildController = GuildController(autologin: true)
     }
     
     /// Header (only shows when `inGame` is on
@@ -77,7 +75,6 @@ struct GameSettingsView: View {
                 controller.didSelectTab(newTab: value)
             })
             
-            
             Divider()
             
             switch controller.viewState {
@@ -126,6 +123,7 @@ struct GameSettingsView: View {
             controller.viewState = .EditingPlayer
         } else {
             controller.loadGameData()
+            controller.checkServerStatus(attempts: 0)
         }
     }
     

@@ -89,6 +89,8 @@ struct OutpostView: View {
                 
                 Spacer()
                 Text("\(vstate.tabName())")
+                    .foregroundColor(controller.isDownloaded ? Color.green:Color.red)
+                
             }
             .padding(.horizontal, 6)
             .font(.title3)
@@ -125,81 +127,50 @@ struct OutpostView: View {
                             OutpostSectionView(controller:controller, tab:.peripherals)
                         case .bioboxes:
                             OutpostSectionView(controller:controller, tab:.bioboxes)
-                            
                         case .info:
-                            
                             OutpostInfoView(dbOutpost: controller.dbOutpost, outpostData: controller.outpostData)
-                            
-                            /*
-                            Group {
-                                HStack {
-                                    VStack(alignment:.leading) {
-                                        Text("\(controller.posdex.sceneName)").foregroundColor(.orange)
-                                        Text("\(controller.opData.type.explanation)").foregroundColor(.gray)
-                                        
-                                        Text("Posdex: \(controller.dbOutpost.posdex)").foregroundColor(.blue).padding(.top, 6)
-                                        Text("Level: \(controller.dbOutpost.level)")
-                                        //                    Text("Model: \(outpost.model)").foregroundColor(.gray)
-                                        Text("Date: \(GameFormatters.dateFormatter.string(from:controller.dbOutpost.accounting))")
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    if let nextJob = controller.opData.getNextJob() {
-                                        VStack(alignment:.leading) {
-                                            Text("Outpost Job").foregroundColor(.orange)
-                                                .padding(.bottom, 6)
-                                            
-                                            Text("🔄 Upgrade to \(controller.dbOutpost.level + 1)").font(.title2)
-                                            Text("Max: \(nextJob.maxScore())")
-                                            
-//                                            let kkeys = nextJob.wantedSkills.map{$0.key}
-//                                            let kvals = nextJob.wantedSkills.map{$0.value}
-//                                            HStack {
-//                                                ForEach(kkeys.indices) { index in
-//                                                    Text("\(kkeys[index].rawValue) | \(kvals[index])")
-//                                                }
-//                                            }
-//                                            Text("Ingredients: \(nextJob.wantedIngredients.count) QTTY: \(nextJob.wantedIngredients.compactMap({$0.value}).reduce(0, +))")
-                                        }
-                                        .foregroundColor(.green)
-                                        .padding(.trailing, 8)
-                                    } else {
-                                        Text("< No upgrades >").foregroundColor(.gray)
-                                    }
-                                }
-                                .padding(.horizontal, 8)
+                        case .contributions:
+                            ScrollView {
                                 
-                                // Remaining
                                 Group {
-                                    Text("Remains").font(.title3).foregroundColor(.orange)
-                                        .padding(.top, 6)
-                                    
-                                    Text(controller.remains.description)
+                                    Text("Contributions").font(.title3).foregroundColor(.orange)
+                                    ForEach(controller.contribList) { litem in
+                                        HStack {
+                                            SmallPlayerCardView(pCard: litem.citizen.makePlayerCard())
+                                            Text("\(litem.score)").font(.title)
+                                        }
+                                    }
+                                    if controller.contribList.isEmpty {
+                                        Text("[ No contributors ]").foregroundColor(.gray)
+                                    }
+                                    Divider()
+                                }.padding()
+                                
+                                Group {
+                                    Text("Citizens")
+                                    ForEach(controller.citizens) { folk in
+                                        
+                                        // SmallPlayerCardView(pCard: folk.makePlayerCard())
+                                        Text("\(folk.id), \(folk.name)")
+                                        
+                                    }
                                     
                                     Divider()
                                 }
                                 
-                                // Supplied
                                 Group {
-                                    Text("Supplied").font(.title3).foregroundColor(.orange)
-                                        .padding(.top, 6)
-                                    Text("\(controller.opData.supplied.supplyScore()) of \(controller.opData.getNextJob()?.maxScore() ?? 0)")
+                                    Text("Missing List")
+                                        .font(.title3).foregroundColor(.orange)
                                     
+                                    let kkeys = controller.remains.map{$0.key}
+                                    let kvals = controller.remains.map{$0.value}
+                                    ForEach(kkeys.indices) { index in
+                                        Text("Missing \(kkeys[index]) | \(kvals[index])")
+                                    }
                                 }
                                 
-                                Text("Fake: \(controller.fake)")
                             }
-                            */
-                        case .contributions:
-                            Group {
-                                Text("Contributions").font(.title3).foregroundColor(.orange)
-                                let kkeys = controller.remains.map{$0.key}
-                                let kvals = controller.remains.map{$0.value}
-                                ForEach(kkeys.indices) { index in
-                                    Text("Missing \(kkeys[index]) | \(kvals[index])")
-                                }
-                            }
+                            .frame(minHeight:300)
                             
                         case .management:
                             Group {

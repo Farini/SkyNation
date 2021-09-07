@@ -13,18 +13,64 @@ import Foundation
 //    case errata
 //}
 
+enum LoginStatus {
+    
+    /// The initial status
+    case notStarted
+    
+    /// Requests returned error
+    case serverError(reason:String, error:Error?, sknsError:ServerDataError?)
+    
+    /// Player successfully authorized
+    case playerAuthorized(playerUpdate:PlayerUpdate)
+    
+    /// Player exists, has a pass AND playerID, but not authorized
+    case playerUnauthorized(player:SKNPlayer)
+    
+    /// Player was created. Now waiting for auth.
+    case createdPlayerWaitingAuth(playerUpdate:PlayerUpdate)
+    
+    
+    case simulatingData(serverData:ServerData)
+    
+}
+
 class ServerManager {
     
     static let shared = ServerManager()
     
     var serverData:ServerData?
     
+    /// Indicates if AuthorizedLogin happened and was successful
+    var playerLogged:Bool // Initializes to false. Turns true when login success only.
+    
+    var loginStatus:LoginStatus
+    
     private init() {
+        
+        self.playerLogged = false
+        self.loginStatus = .notStarted
+        
         if let sd:ServerData = ServerManager.loadServerData() {
+            
+            // Local Server data stored
             self.serverData = sd
+            
+            if GameSettings.onlineStatus == true {
+                // Validate Login
+                self.loginWithData(sd: sd)
+            } else {
+                // Simulate Data
+                self.loginStatus = .simulatingData(serverData: sd)
+            }
+            
         } else {
+            
+            // No Server Data Stored
             if let player = LocalDatabase.shared.player {
-                self.serverData = ServerData(player: player)
+//                self.serverData = ServerData(player: player)
+                self.loginFirstPlayer(player: player)
+                
             } else {
                 print("ERROR (ServerManager): LocalDatabase doesn't have a player")
             }
@@ -35,20 +81,140 @@ class ServerManager {
         return LocalDatabase.shared.loadServerData()
     }
     
+    /// Performs Login with Authorization
+    private func loginWithData(sd:ServerData) {
+        
+        if playerLogged == true {
+            print("Player already logged in")
+            return
+        }
+        
+        // Player is the main holder of password. It is the first that gets updated when a password is set.
+        guard let player = LocalDatabase.shared.player else {
+            fatalError("‼️ Local Player doesn't exist")
+        }
+        
+        guard let pass = player.keyPass,
+              let pid = player.playerID else {
+            fatalError("‼️ Local Player doesn't have a pass, or pid. (See below)\n Pass:\(player.keyPass ?? "none"), PID:\(player.playerID?.uuidString ?? "none")")
+        }
+        
+        SKNS.authorizeLogin(localPlayer: player, pid: pid, pass: pass) { playerUpdate, error in
+            
+            if let playerUpdate = playerUpdate {
+                // success
+                print("Player authorized. Name:\(playerUpdate.name), \(playerUpdate.pass)")
+                
+                DispatchQueue.main.async {
+                    player.lastSeen = Date()
+                    self.playerLogged = true
+                    
+                    let newServerData = ServerData(localData: sd)
+                    self.serverData = newServerData
+                    
+                    self.loginStatus = .playerAuthorized(playerUpdate: playerUpdate)
+                }
+                
+                
+            } else {
+                // failed
+                print("‼️ Authorize Login Failed. Error: \(error?.localizedDescription ?? "no error")")
+                self.loginStatus = .serverError(reason: "Error validating Login", error: error, sknsError: nil)
+            }
+        }
+    }
+    
+    /// Possibly first login, or login after losing data.
+    private func loginFirstPlayer(player:SKNPlayer) {
+        
+        if let pid = player.playerID,
+           let pass = player.keyPass {
+            // attempt login
+            // if fails, need a method to reset password
+            
+            SKNS.authorizeLogin(localPlayer: player, pid: pid, pass: pass) { playerUpdate, error in
+                
+                if let playerUpdate = playerUpdate {
+                    // success
+                    print("Player authorized. Name:\(playerUpdate.name), \(playerUpdate.pass)")
+                    
+                    DispatchQueue.main.async {
+                        player.lastSeen = Date()
+                        self.playerLogged = true
+                        self.loginStatus = .playerAuthorized(playerUpdate: playerUpdate)
+                        
+                        if self.serverData != nil {
+                            self.serverData!.player = player
+                        } else {
+                            self.serverData = ServerData(player: player)
+                        }
+                        
+                    }
+                    
+                } else {
+                    // failed
+                    print("‼️ Authorize Login Failed. Error: \(error?.localizedDescription ?? "no error")")
+                    self.loginStatus = .serverError(reason: "Error validating Login", error: error, sknsError: nil)
+                }
+            }
+            
+        } else {
+            
+            // create login
+            SKNS.createNewPlayer(localPlayer: player) { playerUpdate, error in
+                if let playerUpdate = playerUpdate {
+                    DispatchQueue.main.async {
+                        
+                        // Save new Player
+                        player.playerID = playerUpdate.id
+                        player.keyPass = playerUpdate.pass
+                        let saveResult = LocalDatabase.shared.savePlayer(player: player)
+                        guard saveResult == true else {
+                            fatalError("Failed to save new player")
+                        }
+                        print("New Player Created, and saved.")
+                        
+                        self.loginStatus = .createdPlayerWaitingAuth(playerUpdate: playerUpdate)
+                        
+                        
+                        var sData:ServerData? = self.serverData
+                        if let sData = sData {
+                            sData.player.playerID = playerUpdate.id
+                            sData.player.keyPass = playerUpdate.pass
+                            self.serverData = sData
+                            self.saveServerData()
+                        } else {
+                            sData = ServerData(player: player)
+                        }
+                        guard let sData = sData else { fatalError("Server Data Failed to create") }
+                        
+                        // Needs to validate login
+                        self.loginWithData(sd:sData)
+                        
+                    }
+                } else {
+                    // Deal with error
+                    self.loginStatus = .serverError(reason: "Could not create new player", error: error, sknsError: nil)
+                }
+            }
+        }
+    }
+    
     func saveServerData() {
         if let sdata = serverData {
             let result = LocalDatabase.shared.saveServerData(skn: sdata)
             if result == true {
-                print("saved ServerData")
+                print("saved ServerData locally")
             } else {
-                print("ERROR! saving ServerData")
+                print("‼️ ERROR! saving ServerData ‼️")
             }
         } else {
-            print("No data to save")
+            print("‼️ No Server Data to save ‼️")
         }
     }
     
     /// Get the `SKNPlayer` object from here.
+    /*
     func inquireLogin(completion:@escaping(PlayerUpdate?, Error?) -> ()) {
         
         if let sd = serverData {
@@ -68,6 +234,7 @@ class ServerManager {
         }
         
     }
+    */
     
     /// Gets the Full Guild Content
     func inquireFullGuild(force:Bool, completion:@escaping(GuildFullContent?, Error?) -> ()) {
@@ -128,6 +295,7 @@ class ServerManager {
             }
         }
     }
+    
     /*
      Get Outpost Data (this may take a while) but it is necessary.
         if outpostData does not exist, needs to create it.
@@ -139,8 +307,7 @@ class ServerManager {
 /** A class that holds all Server variables. Stores information, and manage connections. */
 class ServerData:Codable {
     
-    // User
-//    var user:SKNUserPost
+    // Player
     var player:SKNPlayer
     
     // Guild
@@ -186,6 +353,7 @@ class ServerData:Codable {
     /// Date last login was made
     var lastLogin:Date?
     
+    /*
     fileprivate func performLogin() {
         
         print("Server Data Performing Login")
@@ -215,6 +383,7 @@ class ServerData:Codable {
                 if let update = playerUpdate {
                     
                     print("\(update.name) logged in. Pass:\(update.pass). Updating Player...")
+                    self.lastLogin = Date()
                     
 //                    SKNS.updatePlayer { newUpdate, newError in
 //
@@ -227,11 +396,19 @@ class ServerData:Codable {
     
     func inquireLogin(completion:@escaping(PlayerUpdate?, Error?) -> ()) {
         
+        if let lastLogin = lastLogin {
+            if Date().timeIntervalSince(lastLogin) < 5 {
+                completion(nil, nil)
+                return
+            }
+        }
+        
         SKNS.performLogin { playerUpdate, error in
             
             completion(playerUpdate, error)
         }
     }
+    */
     
     // MARK: - Player's Guild
     
@@ -317,7 +494,6 @@ class ServerData:Codable {
     
     // Vehicles
     var lastFetchedVehicles:Date?
-    
     func fetchGuildVehicles() {
         
         // Seconds until next fetch
@@ -431,12 +607,12 @@ class ServerData:Codable {
         print("Server Data Initializing")
         self.player = player
         
-        if GameSettings.onlineStatus == false {
-            print("Not Online. (Sandbox mode)")
-        } else {
-            print("Requesting Online Data...")
-            self.performLogin()
-        }
+//        if GameSettings.onlineStatus == false {
+//            print("Not Online. (Sandbox mode)")
+//        } else {
+//            print("Requesting Online Data...")
+//            self.performLogin()
+//        }
     }
     
     /// Data exists locally (old data)

@@ -67,17 +67,10 @@ struct GameLoadingTab: View {
                 ForEach(controller.loadedList, id:\.self) { litem in
                     Text(litem).foregroundColor(.gray)
                 }
+                
                 ForEach(controller.warningList, id:\.self) { litem in
                     Text(litem).foregroundColor(.orange)
                 }
-                
-                if let string = controller.fetchedString {
-                    Text("Fetched:\n\(string)")
-                }
-                
-//                if let loggedUser = controller.upPlayer {
-//                    Text("Fetched User: \(loggedUser.name)")
-//                }
                 
                 Spacer(minLength: 8)
             }

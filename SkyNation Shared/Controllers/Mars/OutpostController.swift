@@ -32,58 +32,37 @@ class OutpostController:ObservableObject {
     @Published var player:SKNPlayer
     @Published var myCity:CityData = CityData.example()
     
-    // Posdex
+    // Outpost
     @Published var posdex:Posdex
-    
-    // DBOutpost
     @Published var dbOutpost:DBOutpost
-    
-    // OutpostData
     @Published var outpostData:Outpost
-    
-    // DEPRECATE 3 BELOW
-    
     /// Current Supplied
     @Published var supply:OutpostSupply?
-    
     /// Requirements for next job
     @Published var job:OutpostJob?
+    /// List of Contributions per Citizen
+    @Published var contribList:[ContributionScore] = []
+    
+    // Guild
+    // var Guild
+    @Published var citizens:[PlayerContent] = []
+    
+    // View States
+    // outpost state
+    // contributions
+    // has downloaded
+    @Published var isDownloaded:Bool = false
+    
+    // has modified (contributed)
+    @Published var hasContributions:Bool = false
+//    @Published var myContributions:OutpostSupply = OutpostSupply()
+    
+    
     
     // Errors, Alerts & Messages
     @Published var fake:String = ""
     @Published var serverError:String = ""
     @Published var displayError:Bool = false
-    
-    /*
-    // Things to check:
-    
-     0. Contribution Request
-        1 - If OutpostData has not been created, make a request for 'createOutpostData'
-        2 - If you can't find outpost data from 'ServerManager', initialize outpost from DBOutpost,
-            and wait for server response
-        3 - Server response may ask you to create it, because not found.
-    
-    //      After every click, or wait for user to click "contribute"?
-    
-    // 1. Outpost Collection:
-    //      Is it collectable? (Does the outpost have production?)
-    //      Does the city have it? CityData.opCollection[UUID:Date]
-    
-    // 2. Contributors Objects
-    // 3. My City
-    // 4. WARNINGS
-    
-     Warnings will happen if new updates indicate that outpost has level up pending
-     They should be displayed in orange color, on the view.
-     
-    // 5. ERRORS
-    
-     Errors should be displayed as an alert.
-     (Possible Errors)
-     1. No internet connection
-     2. Could not update server (reason)
-     3. Outpost Level doesn't make sense (request)
-     */
     
     // Guild
     
@@ -150,6 +129,10 @@ class OutpostController:ObservableObject {
             // Connect to server to update the rest of required data with blank stuff
             let opData = Outpost(dbOutpost: dbOutpost)
             self.outpostData = opData
+            
+            if let city = LocalDatabase.shared.loadCity() {
+                self.myCity = city
+            }
             
             /// Simulate data if needed
             if GameSettings.onlineStatus == false {
@@ -221,16 +204,85 @@ class OutpostController:ObservableObject {
                 }
             }
         }
+        
+        if let servData = ServerManager.shared.serverData,
+           let folks = servData.guildfc?.citizens {
+            print("\n\n Folks in! \(folks.count) ")
+            
+            self.citizens = folks
+        } else {
+            print("\n\n no folks \n")
+        }
+        
+//        ServerManager.shared.inquireFullGuild(force: false) { fullGuild, error in
+//            print("Requesting Folks")
+//            if let folks = fullGuild?.citizens {
+//                print("Found Folks")
+//                DispatchQueue.main.async {
+//
+//                }
+//            }
+//        }
     }
     
     /// Updates the other variables, dependent on OutpostData
     private func didUpdateOutpostData(newData:Outpost) {
         
+        print("\n\n Did update data function")
+        
         self.remains = newData.calculateRemaining()
         self.job = newData.getNextJob()
         self.supply = newData.supplied
         
+        print("Supply score: \(newData.supplied.supplyScore())")
+        
+        let newContribList = self.getContributionScoreList(opData: newData)
+        self.contribList = newContribList
+        print("Contrib List Items Count: \(self.contribList.count)")
+        
+        self.isDownloaded = true
+        
     }
+    
+    /// Assembles the list of contributions.
+    private func getContributionScoreList(opData:Outpost) -> [ContributionScore] {
+        
+        print("Contrib Score List")
+        
+        let rawList = outpostData.contributed
+        print(rawList.description)
+        let citiList = self.citizens
+        print("-")
+        print(citiList.compactMap({ $0.id }))
+        
+        for r in citiList.compactMap({ $0.id }) {
+            let str = r.uuidString
+            if let item = rawList[r] {
+                print("!!! \(str) = \(item) !!!")
+            }
+        }
+        
+        var list:[ContributionScore] = []
+        
+        for (pid, score) in rawList {
+            if let citizen = citizens.first(where: { $0.id == pid }) {
+                let newItem = ContributionScore(citizen: citizen, score: score)
+                list.append(newItem)
+            }
+        }
+        return list
+    }
+    
+    /// A public method to update the `OutpostData` variables
+    func updateOutpostData() {
+        if GameSettings.onlineStatus && OutpostController.connectToServer {
+            self.verifyOutpostDataUpdate()
+        } else {
+            self.didUpdateOutpostData(newData: self.outpostData)
+        }
+    }
+    
+//    print("⚠️ REVISE THIS OBJECT: \(object)")
     
     // MARK: - Control
     
@@ -239,15 +291,10 @@ class OutpostController:ObservableObject {
         self.viewTab = tab
     }
     
-    
-    
-    
-    // MARK: - Continue here
-    
     /// Makes the contribution, but doesn't charge from City
-    func testContribution(object:Codable, type:ContributionType) {
+    func makeContribution(object:Codable, type:ContributionType) {
         
-        guard let pid = LocalDatabase.shared.player?.serverID else {
+        guard let pid = LocalDatabase.shared.player?.playerID else {
             print("No player id, or wrong id")
             return
         }
@@ -290,107 +337,24 @@ class OutpostController:ObservableObject {
         }
         
         // Contribution
-        outpostData.contributed[pid, default:0] += 1
+        let opData:Outpost = self.outpostData
+        var lastContributes = opData.contributed
+        lastContributes[pid, default:0] += 1
+        self.outpostData.contributed = lastContributes
         
-        // Check if fullfilled
+        let newContribList = self.getContributionScoreList(opData: opData)
+        self.contribList = newContribList
+        print("Contrib List Items Count: \(self.contribList.count)")
+        
+        // Check Remaining
+        
         let remaining = outpostData.calculateRemaining()
-        print("Remaining...")
-        for (k, v) in remaining {
-            print("\t \(k) \(v)")
-        }
         self.remains = remaining
         
         // Make the request
-        SKNS.contributionRequest(object: object, type: type, outpost: outpostData)
+        // SKNS.contributionRequest(object: object, type: type, outpost: outpostData)
         
     }
-    
-    /// Called every time user taps on a resource. Adds it to supplied
-    func makeContribution(object:Codable, type:ContributionType) {
-        
-        guard let pid = LocalDatabase.shared.player?.serverID else {
-            print("No player id, or wrong id")
-            return
-        }
-        
-        print("Contributing...")
-        fake += "Contributing"
-        
-        // Notes: The idea is to check whether we contributed (with the server)
-        // and with the server's response, remove item from city (or make person busy)
-        // See the comment on "box" below
-        
-        switch type {
-            case .box:
-                
-                guard let box = object as? StorageBox else { return }
-                print("Contribute a box \(box.type)")
-                
-                SKNS.contributionRequest(object: box, type: type, outpost: outpostData)
-            
-            default:break
-        }
-        
-        if let box = object as? StorageBox {
-            fake += " + box"
-            
-            // SKNS.contributionRequest(box:box) { response in
-            outpostData.supplied.ingredients.append(box)
-            outpostData.supplied.players[pid, default:0] += box.current
-            
-            myCity.boxes.removeAll(where: { $0.id == box.id })
-            
-        } else if let tank = object as? Tank {
-            
-            outpostData.supplied.tanks.append(tank)
-            myCity.tanks.removeAll(where: { $0.id == tank.id })
-            
-        } else if let peripheral = object as? PeripheralObject {
-            
-            outpostData.supplied.peripherals.append(peripheral)
-            myCity.peripherals.removeAll(where: { $0.id == peripheral.id })
-            
-        } else if let bioBox = object as? BioBox {
-            
-            outpostData.supplied.bioBoxes.append(bioBox)
-            myCity.bioBoxes?.removeAll(where: { $0.id == bioBox.id })
-            
-        } else if let person = object as? Person {
-            
-            outpostData.supplied.skills.append(person)
-            if let person = myCity.inhabitants.first(where: { $0.id == person.id }) {
-                let newActivity = LabActivity(time: 1000, name: "Working at Outpost")
-                person.activity = newActivity
-            }
-            
-        } else {
-            print("⚠️ REVISE THIS OBJECT: \(object)")
-            print("⚠️ ERROR OBJECT INVALID")
-        }
-        
-        // Contribution
-        
-            outpostData.contributed[pid, default:0] += 1
-        
-            //opData.contributed[pid] = 1
-        
-        
-        // Check if fullfilled
-        let remaining = outpostData.calculateRemaining()
-        print("Remaining...")
-        for (k, v) in remaining {
-            print("\t \(k) \(v)")
-        }
-        self.remains = remaining
-        
-        // Update Server, and Save
-        
-    }
-    
-    
-    
-    
-    
     
     // MARK: - Requirements
     
@@ -501,14 +465,7 @@ class OutpostController:ObservableObject {
     
     // MARK: - Upgrades and Updates
     
-    /// A public method to update the `OutpostData` variables
-    func updateOutpostData() {
-        if GameSettings.onlineStatus && OutpostController.connectToServer {
-            self.verifyOutpostDataUpdate()
-        } else {
-            self.didUpdateOutpostData(newData: self.outpostData)
-        }
-    }
+    
     
     /* Continue... */
     // Notes:
@@ -524,6 +481,7 @@ class OutpostController:ObservableObject {
     
     
         let previous = outpostData.state
+        print("Previous State: \(previous)")
         
         let upgrade = outpostData.runUpgrade()
         switch upgrade {
@@ -533,6 +491,19 @@ class OutpostController:ObservableObject {
             case .applyForLevelUp(currentLevel: let level): print("Should Apply for level up. Current:\(level), next:\(level + 1)")
             //                default: print("Not ready")
         }
+    }
+}
+
+struct ContributionScore:Identifiable {
+    
+    var id:UUID
+    var citizen:PlayerContent
+    var score:Int
+    
+    init(citizen:PlayerContent, score:Int) {
+        self.id = UUID()
+        self.citizen = citizen
+        self.score = score
     }
 }
     
