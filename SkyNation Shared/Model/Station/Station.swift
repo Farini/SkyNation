@@ -98,7 +98,7 @@ class Station:Codable {
         let powerGeneration = truss.powerGeneration()
         let startingEnergy = truss.batteries.compactMap({ $0.current }).reduce(0, +)
 //        let leftOverPower = truss.refillBatteries(amount: powerGeneration)
-        var energySpill:Int = truss.refillBatteries(amount: powerGeneration)
+        let energySpill:Int = truss.refillBatteries(amount: powerGeneration)
         print("Energy Spilling (extra): \(energySpill)")
         
         // Water + Air

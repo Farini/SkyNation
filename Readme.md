@@ -172,7 +172,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 9/5/2021 41 of 97 (42%)
 - [X] Model - Roads
 - [X] Model - Create OutpostData
-
+- [X] StorageBoxView - Improvements
 - [X] Outpost View - Remodelling
 - [X] Outpost View - Create OutpostData
 - [ ] Outpost View - Contribution Request
@@ -190,7 +190,6 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Mars Scene - Go back to Space Station
 - [ ] Mars Scene - City - Gate Color?
 - [ ] Mars Scene - City + Solar Panel(s)
-- [ ] Mars Scene - Outpost - State (building) scenes
 - [ ] Mars Scene - Animations - SpaceVehicle arriving
 - [ ] Mars Scene - Animations - Outposts Particle emitters
 - [ ] Mars Scene - Garage - Vehicle Validation (when arriving (orbit))

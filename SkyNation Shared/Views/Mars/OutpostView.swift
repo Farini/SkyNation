@@ -303,10 +303,14 @@ struct OutpostSectionView: View {
                             // Available
                             LazyVGrid(columns: [GridItem(.fixed(120)), GridItem(.fixed(120)), GridItem(.fixed(120)), GridItem(.fixed(120))], alignment: .center, spacing: 8, pinnedViews: []) {
                                 ForEach(controller.myCity.boxes, id:\.id) { box in
-                                    IngredientView(ingredient: box.type, hasIngredient: true, quantity: box.current)
+                                    StorageBoxView(box:box)
                                         .onTapGesture {
                                             controller.makeContribution(object: box, type:.box)
                                         }
+//                                    IngredientView(ingredient: box.type, hasIngredient: true, quantity: box.current)
+//                                        .onTapGesture {
+//                                            controller.makeContribution(object: box, type:.box)
+//                                        }
                                 }
                             }
                         case .tanks:

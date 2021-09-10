@@ -172,6 +172,7 @@ struct PersonDetail:View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 64, height: 64)
+                    .padding(.leading, 6)
                 
                 VStack(alignment: .leading, spacing: 4) {
                     
@@ -259,7 +260,7 @@ struct PersonDetail:View {
             // Work Skills
             VStack {
                 
-                Text("Work Skills").font(.title2)
+                Text("Work Skills").font(.title2).foregroundColor(.blue)
                 HStack(spacing:12) {
                     FixedLevelBar(min: 0, max: 100, current: Double(person.intelligence), title: "Intel", color: .blue)
                         .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)

@@ -149,29 +149,12 @@ struct ModulePopView: View {
                 }
                 .frame(minWidth: 200, idealWidth: 250, maxWidth: 300, maxHeight: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
         }
-        
-        
-        
-        
-        
     }
     
     func changeSkin() {
         self.viewState = .skin
     }
-    
-    
 }
-
-//struct SkinPopupPicker: View {
-//
-//    @State var currentSkin: ModuleSkin?
-//
-//    var body: some View {
-//
-//
-//    }
-//}
 
 struct ModulePopView_Previews: PreviewProvider {
     static var previews: some View {
@@ -184,10 +167,3 @@ struct ModulePopView_Previews: PreviewProvider {
         
     }
 }
-
-//struct SkinPopup_Previews2: PreviewProvider {
-//
-//    static var previews: some View {
-//        SkinPopupPicker()
-//    }
-//}

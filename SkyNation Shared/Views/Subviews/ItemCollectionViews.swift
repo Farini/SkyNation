@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+/*
 struct TankCollectionView: View {
     /// Grid View (1 row)
     private var gridRow:[GridItem] = [
@@ -178,4 +178,6 @@ struct PeripheralCollection_Previews: PreviewProvider {
         PeripheralCollectionView([PeripheralObject(peripheral: .ScrubberCO2), PeripheralObject(peripheral: .Antenna), PeripheralObject(peripheral: .Methanizer)])
     }
 }
+
+*/
 

@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-
+/*
 struct Parafernalia: View {
     @State var backgroundColor:Color = .red
     var station:Station
@@ -89,3 +89,5 @@ struct Parafernalia_Previews: PreviewProvider {
         Parafernalia(station:LocalDatabase.shared.station!)
     }
 }
+*/
+

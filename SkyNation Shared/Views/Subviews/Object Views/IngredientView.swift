@@ -31,7 +31,6 @@ struct IngredientView:View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 42, height: 42)
-//                .frame(width: 64.0, height: 64.0)
             
             Text("○ \(ingredient.rawValue)\(quantity != nil ? " x \(quantity!)":"")")
             .font(.callout)
@@ -117,7 +116,7 @@ struct StorageBoxDetailView:View {
             image
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 52, height: 52)
+                .frame(width: 48, height: 48)
                 .padding(.top)
             
             Text("\(box.type.rawValue)")
@@ -143,6 +142,43 @@ struct StorageBoxDetailView:View {
                 print("Really throwing away")
             }))
         })
+    }
+}
+
+struct StorageBoxView:View {
+    
+    var box:StorageBox
+    @State var selected:Bool = false
+    
+    private let shape = RoundedRectangle(cornerRadius: 8, style: .continuous)
+    private let unselectedColor:Color = Color.white.opacity(0.4)
+    private let selectedColor:Color = Color.blue
+    
+    var body: some View {
+        HStack {
+            let fillLevel:Float = Float(box.current)/Float(box.capacity)
+            let image:Image = box.type.image() ?? Image(systemName: "questionmark")
+            image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 52, height: 52)
+                .padding([.vertical, .leading], 6)
+            
+            VStack(alignment:.leading) {
+                Text("\(box.type.rawValue)").font(.headline)
+                ProgressView("\(box.current) of \(box.capacity)", value: fillLevel)
+                    .frame(width: 100)
+                    .foregroundColor(fillLevel < 0.3 ? .red:fillLevel > 0.7 ? .green:.orange)
+            }
+            .padding(6)
+        }
+        .padding(4)
+        .background(Color.black.opacity(0.5))
+        .overlay(
+            shape
+                .inset(by: selected ? 1.0:0.5)
+                .stroke(selected ? selectedColor:unselectedColor, lineWidth: selected ? 1.5:1.0)
+        )
     }
 }
 
@@ -187,7 +223,29 @@ struct IngredientOrderView:View {
 
 struct StorageBox_Previews: PreviewProvider {
     static var previews: some View {
-        StorageBoxDetailView(box: StorageBox(ingType: .Aluminium, current: 10))
+//        StorageBoxDetailView(box: StorageBox(ingType: .Aluminium, current: 10))
+        VStack {
+            HStack {
+                StorageBoxView(box: StorageBox(ingType: .Aluminium, current: 2))
+                    .padding(4)
+                StorageBoxView(box: StorageBox(ingType: .Aluminium, current: 2), selected: true)
+                    .padding(4)
+            }
+            HStack {
+                StorageBoxView(box: StorageBox(ingType: .Circuitboard, current: Ingredient.Circuitboard.boxCapacity()))
+                    .padding(4)
+                StorageBoxView(box: StorageBox(ingType: .Circuitboard, current: 6), selected: true)
+                    .padding(4)
+            }
+            HStack {
+                StorageBoxView(box: StorageBox(ingType: .Polimer, current: 10))
+                    .padding(4)
+                StorageBoxView(box: StorageBox(ingType: .Polimer, current: 12), selected: true)
+                    .padding(4)
+            }
+            
+        }
+        
     }
 }
 
@@ -248,6 +306,5 @@ struct IngredientOrder_Previews: PreviewProvider {
                 IngredientOrderView(ingredient: ingredient)
             }
         })
-//        for ingredient in Ingredient.allCases.filter($0.orderable == true)
     }
 }

@@ -136,6 +136,7 @@ struct VehicleInventoryView: View {
                     
                     Divider()
                     
+                    /*
                     ScrollView(.vertical, showsIndicators: true) {
                         // Tanks
                         Text("Tanks: \(tanks.count)")
@@ -166,6 +167,7 @@ struct VehicleInventoryView: View {
 //                                .foregroundColor(.red)
 //                        }
                     }
+                    */
                     
                     Divider()
                     Text("Once the continue button is hit, you can't put the inventory of this vehicle back in the station")

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+/*
 struct LoaderView: View {
     
     // MARK:- variables
@@ -83,3 +83,5 @@ struct LoaderView_Previews: PreviewProvider {
         LoaderView()
     }
 }
+*/
+
