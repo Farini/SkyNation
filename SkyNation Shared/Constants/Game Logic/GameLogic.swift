@@ -12,7 +12,9 @@ import Foundation
 extension Notification.Name {
     
     static let URLRequestFailed  = Notification.Name("URLRequestFailed")        // Any URL Request that fails sends this messsage
-    static let DidAddToFavorites = Notification.Name("DidAddToFavorites")       // Add To Favorites Notification
+    
+    // static let DidAddToFavorites = Notification.Name("DidAddToFavorites")       // Add To Favorites Notification
+    
     static let UpdateSceneWithTech = Notification.Name("UpdateSceneWithTech")
     
     /// To Close Views
@@ -23,6 +25,9 @@ extension Notification.Name {
     
     /// Change Module Properties (Name, Skin, Unbuild)
     static let changeModule = Notification.Name("ChangeModuleProperties")
+    
+    /// Notifies Scene Overlay that Vehicle has been launched
+//    static let spaceVehicleLaunch = Notification.Name("DidLaunchSpaceVehicle")
     
 }
 

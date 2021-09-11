@@ -181,6 +181,7 @@ class SKNPlayer:Codable, Identifiable {
 }
 
 /** A base structure used to identify player, login, etc. */
+/*
 struct SKNUserPost:Codable {
     
     var id:UUID         // Wildcard ID
@@ -223,9 +224,9 @@ struct SKNUserPost:Codable {
         self.player = PlayerContent(player: player)
     }
 }
+*/
 
 /** The Content used to **update**  a `DBPlayer` */
-
 struct PlayerContent:Codable, Identifiable, Hashable {
     
     var id:UUID

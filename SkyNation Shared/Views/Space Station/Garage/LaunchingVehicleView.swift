@@ -9,85 +9,78 @@ import SwiftUI
 import SceneKit
 
 struct LaunchingVehicleView: View {
-    // Status = .planning(stage: .PrepLaunch)
     
     @ObservedObject var controller:GarageViewModel
     @ObservedObject var launchController:VehicleLaunchControl
-//    @State var vehicle:SpaceVehicle
     
     init(vehicle:SpaceVehicle, controller:GarageViewModel) {
         self.launchController = VehicleLaunchControl(vehicle: vehicle)
         self.controller = controller
-//        self.vehicle = vehicle
-        
     }
     
     var body: some View {
         VStack {
-            Text("Launching Vehicle").font(.largeTitle)
-                .padding()
+            Text("Prepare for launch").font(.largeTitle)
+                .padding(.top)
                 .foregroundColor(.orange)
             Divider()
             
-            VStack {
-                Text("Vehicle: \(launchController.vehicle.engine.rawValue)")
-                Text("Tanks: \(launchController.vehicle.tanks.count)")
-                Text("Batteries: \(launchController.vehicle.batteries.count)")
-                Text("Peripherals: \(launchController.vehicle.peripherals.count)")
-                Text("Passengers: \(launchController.vehicle.passengers.count)")
-            }
-            .padding()
-            .background(Color.black)
-            .cornerRadius(8)
-            
-            if !launchController.primaryWarnings.isEmpty {
+            HStack(alignment:.top, spacing:12) {
+                
                 VStack {
-                    Text("⚠️ Warnings")
-                        .padding([.bottom])
-                    ForEach(launchController.primaryWarnings, id:\.self) { warning in
-                        Text(warning)
-                            .foregroundColor(.red)
+                    // Checklist
+                    VStack(spacing:4) {
+                        Text("Propulsion Checklist")
+                        Divider().offset(x:0, y:-3)
+                        HStack {
+                            Text(launchController.propulsionCheck.ch4Check ? "✅":"❌")
+                            Text("CH4")
+                            Spacer()
+                            Text("\(launchController.propulsionCheck.ch4)")
+                        }
+                        .padding([.leading, .trailing])
+                        HStack {
+                            Text(launchController.propulsionCheck.o2Check ? "✅":"❌")
+                            Text("O2")
+                            Spacer()
+                            Text("\(launchController.propulsionCheck.o2)")
+                        }
+                        .padding([.leading, .trailing])
+                        HStack {
+                            Text(launchController.propulsionCheck.n2Check ? "✅":"❌")
+                            Text("N2")
+                            Spacer()
+                            Text("\(launchController.propulsionCheck.n2)")
+                        }
+                        .padding([.leading, .trailing])
                     }
-                    ForEach(launchController.sencondWarnings, id:\.self) { warning in
-                        Text(warning)
-                            .foregroundColor(.orange)
+                    .padding(6)
+                    .background(Color.black)
+                    .cornerRadius(8)
+                    .frame(width: 150)
+                    
+                    // Warnings
+                    VStack(spacing:4) {
+                        Text("⚠️ Warnings")
+                            .padding([.bottom], 6)
+                        ForEach(launchController.primaryWarnings, id:\.self) { warning in
+                            Text(warning).foregroundColor(.red)
+                        }
+                        ForEach(launchController.sencondWarnings, id:\.self) { warning in
+                            Text(warning).foregroundColor(.orange)
+                        }
                     }
+                    .padding(6)
+                    .background(Color.black)
+                    .cornerRadius(8)
                 }
-                .padding(6)
-                .background(Color.black)
-                .cornerRadius(8)
+                
+                Spacer()
+                
+                ScrollView(.vertical, showsIndicators: true) {
+                    VehicleTrunkView(vehicle: launchController.vehicle)
+                }
             }
-            
-            VStack(spacing:4) {
-                Text("Propulsion Checklist")
-//                    .padding([.bottom])
-                Divider().offset(x:0, y:-3)
-                HStack {
-                    Text(launchController.propulsionCheck.ch4Check ? "✅":"❌")
-                    Text("CH4")
-                    Spacer()
-                    Text("\(launchController.propulsionCheck.ch4)")
-                }
-                .padding([.leading, .trailing])
-                HStack {
-                    Text(launchController.propulsionCheck.o2Check ? "✅":"❌")
-                    Text("O2")
-                    Spacer()
-                    Text("\(launchController.propulsionCheck.o2)")
-                }
-                .padding([.leading, .trailing])
-                HStack {
-                    Text(launchController.propulsionCheck.n2Check ? "✅":"❌")
-                    Text("N2")
-                    Spacer()
-                    Text("\(launchController.propulsionCheck.n2)")
-                }
-                .padding([.leading, .trailing])
-            }
-            .padding(6)
-            .background(Color.black)
-            .cornerRadius(8)
-            .frame(width: 150)
             
             Divider()
             

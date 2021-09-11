@@ -34,6 +34,7 @@ GLSL                          10             86             186                 
 -------------------------------------------------------------------------------
 SUM:                           242           7404           7201          26645
 -------------------------------------------------------------------------------
+PROJECT SIZE: 572MB
 
 
 
@@ -289,4 +290,59 @@ SUM:                           242           7404           7201          26645
 - [X] 2D Graphics - Guild Icons
 - [X] 2D Graphics - Engines Images
 
-
+[8/13/2021 - 9/5/2021]
+- [X] EarthOrder - People list not refreshing.
+- [X] GameLogic - Person - personStudyTime
+- [X] Settings - Eliminate `GuildController` altogether. Merge With GameSettingsController.
+- [X] Settings - Logic -> ServerManager.init() -> Check LocalPlayer -> Login
+- [X] City View - Garage (Receiving Vehicles)
+- [X] Station Garage View - Building Vehicle - Remove unnecessary views (solar panel, add bot)
+- [X] Station Garage View - Building Vehicle - Make ScrollView take the whole space
+- [X] Station Garage View - Built Vehicles - Remove Inventory Button, have only 'Descent' button
+- [X] Station Garage View - Space Vehicle Registration (when launch)
+- [X] Overlays - Guild Chat
+- [X] Model - City Tech
+- [X] Model - Mars City in `LocalDatabase`
+- [X] Model - Guild Chat
+- [X] Basic Views - PlayerContent, or PlayerCard
+- [X] City View - Tech implementation
+- [X] City View - Recipes Implementation
+- [X] EarthRequest - Fix weird Time to renew staff.
+- [X] Mars Scene - City - Gate Node
+- [X] Mars Scene - Outpost Node
+- [X] Overlays - Cameras
+- [X] Mars Scene - Animations - Camera entrance
+- [X] Station Garage View - People not going in Vehicle.
+- [X] Station Garage View - Building Vehicle - Reduce difficulty for bigger engines
+- [X] Station LSS View - Tank -> Release (if O2, or Air)
+- [X] Order View - Use Scroll only on the items collection
+- [X] Order View - Person Selected indicator
+- [X] Overlays - Cameras - Mars cameras not working properly
+- [X] Overlays - Mars LSS View
+- [X] Model - Tanks & Boxes -> Don't throw away
+- [X] Model - City Accounting
+- [X] Mars Scene - Animations - Camera change not working!
+- [X] 2D Graphics - Avatars remake
+- [X] 2D Graphics - SkyNation Entrance
+- [X] Blender - Consolidate Materials
+- [X] Blender - Terrain + EmptyNodes (Cameras, Lights, Roads, ETC.)
+- [X] Blender - new HDRI
+- [X] Blender - Outpost Levels: 5x PowerPlant
+- [X] Blender - GuildMap placeholders - Cities + Outposts + Roads + POVs + Animations Positions: EVehicle 3DPath
+- [X] Blender - Outpost Levels: 5x Biosphere
+- [X] Blender - Outpost Levels: 3x Mining
+- [X] Blender - Outpost Levels: 1x Observatory
+- [X] Blender - Outpost Levels: 1x LPad
+- [X] Blender - Terrain - Roads
+- [X] Blender - EVehicle Mesh + UVMaps simplification
+- [X] Blender - EDL Animation
+- [X] Mars Scene - City - Gate Position + Angles
+- [X] Mars Scene - Background
+- [X] Mars Scene - Outposts with Levels
+- [X] Mars Scene - Animations - Transportation - [See Gist](https://gist.github.com/Farini/ede665cab4e736480d4f399fbb4ca4f3)
+- [X] Mars Scene - Guild map improvements (x8)
+- [X] Model - Roads
+- [X] Model - Create OutpostData
+- [X] StorageBoxView - Improvements
+- [X] Outpost View - Remodelling
+- [X] Outpost View - Create OutpostData

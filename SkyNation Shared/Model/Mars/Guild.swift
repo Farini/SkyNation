@@ -167,7 +167,7 @@ struct GuildFullContent:Codable, Identifiable {
     var name: String
     
     // https://docs.vapor.codes/4.0/fluent/relations/
-    var president:SKNUserPost?
+    var president:UUID?
     
     var citizens:[PlayerContent]
     

@@ -720,7 +720,7 @@ class SKNS {
     
     // MARK: - City
     
-    static func claimCity(user:SKNUserPost, posdex:Posdex, completion:((DBCity?, Error?) -> ())?) {
+    static func claimCity(posdex:Posdex, completion:((DBCity?, Error?) -> ())?) {
         
         print("Claiming City")
         
@@ -920,7 +920,13 @@ class SKNS {
     // MARK: - Space Vehicle
     
     /// Register Vehicle in Server
-    static func registerSpace(vehicle:SpaceVehicle, player:SKNUserPost, completion:((SpaceVehicleTicket?, Error?) -> ())?) {
+    static func registerSpace(vehicle:SpaceVehicle, completion:((SpaceVehicleTicket?, Error?) -> ())?) {
+        
+        guard let player = LocalDatabase.shared.player,
+              let playerID = player.playerID else {
+            print("ERROR: No Player ID to register vehicle.")
+            return
+        }
         
         let url = URL(string: "\(baseAddress)/register_vehicle")!
         let session = URLSession.shared
@@ -928,7 +934,7 @@ class SKNS {
         
         request.httpMethod = HTTPMethod.POST.rawValue // (Post): HTTPMethod.POST.rawValue // (Get): HTTPMethod.GET.rawValue
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        request.setValue(player.id.uuidString, forHTTPHeaderField: "playerid")
+        request.setValue(playerID.uuidString, forHTTPHeaderField: "playerid")
         // request.setValue(guildName, forHTTPHeaderField: "guildname")
         
         let encoder = JSONEncoder()
@@ -939,7 +945,7 @@ class SKNS {
         decoder.dateDecodingStrategy = .secondsSince1970
         
         // Data
-        let postObject:SpaceVehiclePost = SpaceVehiclePost(spaceVehicle: vehicle, player: player)
+        let postObject:SpaceVehiclePost = SpaceVehiclePost(spaceVehicle: vehicle, playerID: playerID)
         if let data = try? encoder.encode(postObject) {
             print("Adding Data - Space Vehicle Post")
             request.httpBody = data
@@ -1030,45 +1036,45 @@ class SKNS {
     }
     
     // MARK: - Default
-    static func getSimpleData(completion:((Data?, Error?) -> ())?) {
-        
-        print("Getting Simple Data")
-        
-        let url = URL(string: "\(baseAddress)/users")!
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = HTTPMethod.POST.rawValue
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        
-        let user = SKNUserPost(name: "Farini")
-        
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .secondsSince1970
-        if let data = try? encoder.encode(user) {
-            print("Adding Data")
-            request.httpBody = data
-            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
-            print("DS: \(dataString)")
-        }
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                DispatchQueue.main.async {
-                    print("Data returning")
-                    completion?(data, nil)
-                }
-                
-            } else if let error = error {
-                print("Error returning")
-                DispatchQueue.main.async {
-                    completion?(nil, error)
-                }
-            }
-        }
-        task.resume()
-        
-    }
+//    static func getSimpleData(completion:((Data?, Error?) -> ())?) {
+//
+//        print("Getting Simple Data")
+//
+//        let url = URL(string: "\(baseAddress)/users")!
+//        let session = URLSession.shared
+//        var request = URLRequest(url: url)
+//
+//        request.httpMethod = HTTPMethod.POST.rawValue
+//        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+//
+//        let user = SKNUserPost(name: "Farini")
+//
+//        let encoder = JSONEncoder()
+//        encoder.dateEncodingStrategy = .secondsSince1970
+//        if let data = try? encoder.encode(user) {
+//            print("Adding Data")
+//            request.httpBody = data
+//            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
+//            print("DS: \(dataString)")
+//        }
+//
+//        let task = session.dataTask(with: request) { (data, response, error) in
+//            if let data = data {
+//                DispatchQueue.main.async {
+//                    print("Data returning")
+//                    completion?(data, nil)
+//                }
+//                
+//            } else if let error = error {
+//                print("Error returning")
+//                DispatchQueue.main.async {
+//                    completion?(nil, error)
+//                }
+//            }
+//        }
+//        task.resume()
+//
+//    }
     
 }
 

@@ -106,7 +106,7 @@ struct EDLInventoryView: View {
                 .foregroundColor(.orange)
                 .padding([.leading])
                 
-                let count = vehicle.calculateWeight() + ingredientsSelected.count + peripheralsSelected.count + tanksSelected.count + passengers.count + bioboxes.count //bottechSelected.count
+                let count = vehicle.calculateWeight() + ingredientsSelected.count + peripheralsSelected.count + tanksSelected.count + passengers.count + bioboxes.count
                 
                 Spacer()
                 
@@ -135,13 +135,12 @@ struct EDLInventoryView: View {
                     }
                     .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
                     .popover(isPresented: self.$popTrunk) {
-                        VehicleTrunkView(vehicle: vehicle, addedPeripherals: peripheralsSelected, addedIngredients: ingredientsSelected)
+                        VehicleTrunkView(vehicle: vehicle, boxes: ingredientsSelected, tanks: tanksSelected, batteries: batteries, peripherals: peripheralsSelected, passengers: passengers, bioBoxes: bioboxes)
                     }
                     
                     // Load the vehicle
                     Button("Done") {
                         print("Finished Descent Order")
-//                        controller.finishedDescentInventory(vehicle: vehicle, cargo: ingredientsSelected, devices: peripheralsSelected)
                         controller.finishedDescentInventory(vehicle: vehicle, cargo: ingredientsSelected, tanks: tanksSelected, batteries: batteries, devices: peripheralsSelected, people: passengers, bioBoxes: bioboxes)
                     }
                     .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))

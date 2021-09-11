@@ -255,7 +255,7 @@ struct GarageView: View {
                                 }
                                 .font(.headline)
                                 
-                                Text("Simulation: \(sev.simulation) hrs")
+//                                Text("Simulation: \(sev.simulation) hrs")
                                 Text("Destination: \(sev.status.rawValue)")
                                 Text("Travel Starts: \(GameFormatters.dateFormatter.string(from: sev.dateTravelStarts ?? Date()))")
                                 Text("V Engine: \(sev.engine.rawValue)")
@@ -268,10 +268,10 @@ struct GarageView: View {
                                     Text("Battery: \(battery.current) of \(battery.capacity)")
                                         .foregroundColor(.red)
                                 }
-                                ForEach(sev.solar) { panel in
-                                    Text("Solar Panel of size: \(panel.size)")
-                                        .foregroundColor(.red)
-                                }
+//                                ForEach(sev.solar) { panel in
+//                                    Text("Solar Panel of size: \(panel.size)")
+//                                        .foregroundColor(.red)
+//                                }
                             }
                             
                             
@@ -345,10 +345,10 @@ struct GarageView: View {
                                     Text("\(sev.engine.payloadLimit * 100)Kg")
                                 }
                                 .font(.title2)
-                                
-                                Text("Simulation: \(sev.simulation) hrs")
-                                    .padding([.top])
+                                    
                                 Text("Destination: \(sev.status.rawValue)")
+                                    .padding([.top])
+                                
                                 Text("Travel Starts: \(GameFormatters.dateFormatter.string(from: sev.dateTravelStarts ?? Date()))")
                                 Text("V Engine: \(sev.engine.rawValue)")
                                 
@@ -360,10 +360,6 @@ struct GarageView: View {
                                     Text("Battery: \(battery.current) of \(battery.capacity)")
                                         .foregroundColor(.red)
                                 }
-                                ForEach(sev.solar) { panel in
-                                    Text("Solar Panel of size: \(panel.size)")
-                                        .foregroundColor(.red)
-                                }
                             }
                             
                             Text("Status: \(sev.status.rawValue)")
@@ -372,38 +368,23 @@ struct GarageView: View {
                                 .foregroundColor(.orange)
                             
                             Divider()
+                            
                             HStack {
-                                
                                 
                                 Button("Cancel") {
                                     controller.cancelSelection()
                                 }
                                 .buttonStyle(NeumorphicButtonStyle(bgColor: Color.blue))
                                 
-//                                Button("Simulate") {
-//                                    print("Go Simulate")
-//                                }
-//                                .buttonStyle(NeumorphicButtonStyle(bgColor: Color.blue))
-                                
-//                                Button("Inventory") {
-//                                    print("Go to Inventory")
-//                                    controller.setupInventory(vehicle: sev)
-//                                }
-//                                .buttonStyle(NeumorphicButtonStyle(bgColor: Color.blue))
-                                
-//                                if sev.engine != .Hex6 {
-                                    Button("Descent") {
-                                        print("Go to Descent")
-                                        controller.setupDescentInventory()
-                                        //                                    controller.setupInventory(vehicle: sev)
-                                    }
-                                    .buttonStyle(NeumorphicButtonStyle(bgColor: Color.blue))
-//                                }
+                                Button("Descent") {
+                                    print("Go to Descent")
+                                    controller.setupDescentInventory()
+                                }
+                                .buttonStyle(NeumorphicButtonStyle(bgColor: Color.blue))
                                 
                                 Divider()
                                 
                                 Button("🚀 Launch") {
-//                                    controller.launch(vehicle: sev)
                                     controller.garageStatus = .planning(stage: .PrepLaunch)
                                 }
                                 .disabled(controller.vehicleProgress ?? 0 < 1)
@@ -495,7 +476,7 @@ struct SpaceVehicleRow: View {
     var body: some View {
         
         // Total
-        let ttlCount = vehicle.calculateWeight() //vehicle.tanks.count + vehicle.batteries.count + 1 //(vehicle.antenna != nil ? 1:0)
+        let ttlCount = vehicle.calculateWeight()
         
         HStack {
             Text(selected ? "●":"○")
@@ -534,7 +515,6 @@ struct TravellingVehicleView: View {
     
     var vehicle:SpaceVehicle
     
-//    @State var isRegistered:Bool = false
     @State var newRegistration:UUID?
     
     init(controller:GarageViewModel) {
@@ -585,7 +565,6 @@ struct TravellingVehicleView: View {
 
                         GameActivityView(vehicle: vehicle)
                         
-                        Text("Simulation: \(vehicle.simulation) hrs")
                         Divider()
                         
                         // Buttons
@@ -630,7 +609,6 @@ struct TravellingVehicleView: View {
                     case .MarsOrbit:
                         
                         Text("In Orbit")
-                        Text("Simulation: \(vehicle.simulation) hrs")
                         
                         // Batteries
                         let power = vehicle.batteries.compactMap{$0.current}.reduce(1, +)

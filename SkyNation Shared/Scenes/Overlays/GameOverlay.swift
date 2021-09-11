@@ -39,8 +39,8 @@ class GameOverlay:NSObject, SKSceneDelegate {
         self.renderer = renderer
         self.sceneCamera = camNode
         
-        //        print("_-_-:: Camera position: \(camNode.position)")
-        //        print("_-_-:: ViewPort: \(renderer.currentViewport)")
+        // print("_-_-:: Camera position: \(camNode.position)")
+        // print("_-_-:: ViewPort: \(renderer.currentViewport)")
         
         self.playerCardHolder = overlay.childNode(withName: "PlayerCardHolder")!
         self.orbitListHolder = overlay.childNode(withName: "VehiclesHolder")!
@@ -51,8 +51,26 @@ class GameOverlay:NSObject, SKSceneDelegate {
         
         super.init()
         
-        self.buildPlayerCard()
         self.scene.delegate = self
+        self.scene.isPaused = false
+        
+        self.buildPlayerCard()
+        
+    }
+    
+    private var shouldUpdate:Bool = true
+    func update(_ currentTime: TimeInterval, for scene: SKScene) {
+        if Int(currentTime) % 10 == 0 {
+            if shouldUpdate == true {
+                if GameSettings.debugScene {
+                    print("Overlay scene update")
+                }
+                self.updateTravellingVehiclesList()
+                self.shouldUpdate = false
+            }
+        } else {
+            shouldUpdate = true
+        }
     }
     
     /// Updates the camera node for the new sccene
@@ -114,9 +132,21 @@ class GameOverlay:NSObject, SKSceneDelegate {
         mPos.y -= sideMenu.calculateAccumulatedFrame().size.height
         
         // Vehicles
+        self.updateTravellingVehiclesList()
+        
+        /*
         if LocalDatabase.shared.vehicles.isEmpty == false {
             for vehicle in LocalDatabase.shared.vehicles {
-                let vehicleLabel = SKLabelNode(text: "🚀 Vehicle \(vehicle.engine.rawValue)")
+                
+//                mPos.y -= 22
+                
+//                let label = self.makeTravellingVehicleLabel(vehicle: vehicle)
+//                let deltaY = label.calculateAccumulatedFrame().size.height + 4
+//                mPos.y -= deltaY
+//                label.position = mPos
+//                scene.addChild(label)
+                
+                let vehicleLabel = SKLabelNode(text: "🚀 \(vehicle.name) \(vehicle.engine.rawValue)")
                 vehicleLabel.fontName = "Menlo"
                 vehicleLabel.fontSize = 22
                 vehicleLabel.fontColor = .white
@@ -129,10 +159,94 @@ class GameOverlay:NSObject, SKSceneDelegate {
                 scene.addChild(vehicleLabel)
             }
         }
+        */
         
         // Unpause the scene
-        scene.isPaused = false
+//        scene.isPaused = false
+    }
+    
+    private func updateTravellingVehiclesList() {
         
+        // Vehicles
+        if LocalDatabase.shared.vehicles.isEmpty == false {
+            
+            var mPos = orbitListHolder.position
+            mPos.y -= 32
+            
+            let sideMenu = self.sideMenuNode ?? SKNode()
+            mPos.y -= sideMenu.calculateAccumulatedFrame().size.height
+            
+            // Clear Labels
+            self.clearTravellingList()
+            
+            for vehicle in LocalDatabase.shared.vehicles {
+                
+                let label = self.makeTravellingVehicleLabel(vehicle: vehicle)
+                let deltaY = label.calculateAccumulatedFrame().size.height + 4
+                mPos.y -= deltaY
+                label.position = mPos
+                scene.addChild(label)
+                
+            }
+        }
+        
+    }
+    
+    /// Removes all vehicle labels (before updating scene with vehicles list)
+    private func clearTravellingList() {
+        for child in scene.children {
+            if child.name == "SpaceVehicleLabel" {
+                child.removeFromParent()
+            }
+        }
+    }
+    
+    /// Makes a Label with a Progress Bar for Vehicles
+    private func makeTravellingVehicleLabel(vehicle:SpaceVehicle) -> SKNode {
+        
+        // Add Badge if vehicle is registered
+        var preString:String = "🚀"
+        if let _ = vehicle.registration {
+            preString = "💠🚀"
+        }
+        
+        let vehicleLabel = SKLabelNode(text: "\(preString) \(vehicle.name) \(vehicle.engine.rawValue)")
+        vehicleLabel.name = "SpaceVehicleLabel"
+        vehicleLabel.fontName = "Menlo"
+        vehicleLabel.fontSize = 18
+        vehicleLabel.fontColor = .white
+        vehicleLabel.horizontalAlignmentMode = .left
+        vehicleLabel.verticalAlignmentMode = .center
+        vehicleLabel.isUserInteractionEnabled = true
+        vehicleLabel.zPosition = 91
+        
+        // Empty Node (named after vehicle)
+        let emptyNode = SKNode()
+        emptyNode.name = vehicle.id.uuidString
+        vehicleLabel.addChild(emptyNode)
+        
+        // Progress
+        let progbarWidth = 80.0
+        let barBackSize:CGSize = CGSize(width: progbarWidth, height: 8.0)
+        let progOrigin:CGPoint = CGPoint(x: -(progbarWidth / 2.0), y: 0)
+        // Progress back
+        let progressBarBack = SKShapeNode(rect: CGRect(origin: progOrigin, size: barBackSize), cornerRadius: 4)
+        progressBarBack.fillColor = .gray.withAlphaComponent(0.5)
+        progressBarBack.zPosition = 92
+        
+        // Progress front
+        if let travelProg = vehicle.calculateProgress() {
+            let travelWidth = progbarWidth * travelProg
+            let progressBarFront = SKShapeNode(rect: CGRect(origin: .zero, size: CGSize(width: travelWidth, height: 7.0)))
+            progressBarFront.fillColor = .blue
+            progressBarFront.zPosition = 93
+            progressBarBack.addChild(progressBarFront)
+        }
+        
+        vehicleLabel.addChild(progressBarBack)
+        
+        return vehicleLabel
+        // scene.addChild(vehicleLabel)
     }
     
     /// Makes Camera control appear/disappear

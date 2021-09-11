@@ -122,6 +122,7 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     
     var id:UUID = UUID()
     var engine:EngineType
+    var name:String = "Untitled"    // name it
     var marsBot:MarsBot?
     var status:VehicleStatus = .Creating  // Station, Mars, Building (Station while building)
     
@@ -131,19 +132,11 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     var peripherals:[PeripheralObject] = []
     var boxes:[StorageBox] = []
     var passengers:[Person] = []
-    var air:AirComposition?
+    var bioBoxes:[BioBox] = []
     
-    // Bioboxes
-    var bioBoxes:[BioBox]?
-    var solar:[SolarPanel] = []
-//    var antenna:PeripheralObject?
-
     // Travel Info
-    var name:String = "Untitled"    // name it
-    var simulation:Int = 0          // hours simulating
     var dateTravelStarts:Date?      // Date ref
     var travelTime:TimeInterval?    // Time?
-    var dateAccount:Date?
     var registration:UUID?
     
     init(engine:EngineType) {
@@ -153,7 +146,6 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
     func startBuilding() {
         var time:Double = 0
         time += engine.time
-        self.simulation = 0
         self.status = .Creating
         self.dateTravelStarts = Date().addingTimeInterval(TimeInterval(time))
         self.travelTime = Double(time)
@@ -187,8 +179,8 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
                         return progress
                     }
                 case .Mars:
-                    let oneWeek:TimeInterval = GameLogic.vehicleTravelTime
-                    let dateEnd = dateBegin.addingTimeInterval(oneWeek)
+                    let travelTime:TimeInterval = GameLogic.vehicleTravelTime
+                    let dateEnd = dateBegin.addingTimeInterval(travelTime)
                     let totalSeconds = dateEnd.timeIntervalSince(dateBegin)
                     let elapsed = Date().timeIntervalSince(dateBegin)
                     let progress = elapsed / totalSeconds
@@ -201,60 +193,6 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
             }
         }
         return nil
-    }
-    
-    func runAccounting() {
-        // Accounting
-        // ---------------------
-        // 0 - Update the dateAccounting. If doesn't exist, create date now
-        // 0 - Energy input -> Charge batteries
-        // 1 - Peripherals cant work without energy
-        // 2 - Calculate Weight to see how much propulsion is needed
-        // 3 - Account for humans (if any)
-        // 4 - Sattelite consumes energy after arrives
-        // 5 - Antenna consumes energy until arrives
-        
-        // 0 - Update the dateAccounting. If doesn't exist, create date now
-        if let lastAccount = dateAccount {
-            let nextAccount = lastAccount.addingTimeInterval(3600) // 1hr
-            if Date().compare(nextAccount) == .orderedDescending {
-                // need to run account
-            }else{
-                print("no need to run account")
-                return
-            }
-        } else {
-            // Accounting hasn't been setup yet
-            self.dateAccount = Date()
-            return
-        }
-        
-        // 0 - Energy input -> Charge batteries
-        var energyProd:Int = 0
-        for panel in solar {
-            energyProd += panel.maxCurrent()
-        }
-        while energyProd > 0 {
-            for battery in batteries {
-                battery.current += 1
-                energyProd -= 1
-            }
-        }
-        
-        // TODO: - Peripheral
-        // 1 - Peripherals cant work without energy Needs to add *Peripheral* to vehicle
-        
-        // 2 - Calculate Weight to see how much propulsion is needed
-        if checkFuel() == true {
-            print("Fuel Test passed")
-        }else{
-            print("Fuel Test failed")
-        }
-        
-        // 3 - Account for humans (if any)
-        // 4 - Sattelite consumes energy after arrives
-        // 5 - Antenna consumes energy until arrives
-        // 6 - Update the dateAccounting. If doesn't exist, create date now
     }
     
     /// Calculates the weight of this vehicle
@@ -380,7 +318,6 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
         vehicle.tanks = [t1, t2, nitro]
         vehicle.batteries = [b1]
         vehicle.status = .Creating
-        vehicle.simulation = 1
         vehicle.name = "Boogie Down"
         
         return vehicle
@@ -400,7 +337,6 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
         vehicle.batteries = [b1, b2]
         vehicle.status = .Mars
         vehicle.travelTime = GameLogic.vehicleTravelTime
-        vehicle.simulation = 2
         vehicle.name = "Tester"
         
         return vehicle
@@ -422,10 +358,8 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
         
         vehicle.tanks = [t1, t2, t3, t4, nitro]
         vehicle.batteries = [b1, b2]
-//        vehicle.heatshield = .eighteen
         vehicle.status = .Mars
         vehicle.travelTime = GameLogic.vehicleTravelTime
-        vehicle.simulation = 2
         vehicle.name = "Tester T18"
         
         return vehicle
@@ -456,13 +390,15 @@ struct SpaceVehiclePost:Codable {
     var engine:String
     var status:String
     
-    init(spaceVehicle:SpaceVehicle, player:SKNUserPost) {
+    
+    init(spaceVehicle:SpaceVehicle, playerID:UUID) {
         self.localID = spaceVehicle.id
         self.eta = Date().addingTimeInterval(GameLogic.vehicleTravelTime)
-        self.owner = player.id
+        self.owner = playerID
         self.engine = spaceVehicle.engine.rawValue
         self.status = spaceVehicle.status.rawValue
     }
+    
 }
 
 /// When Posting `SpaceVehiclePost`, this is the response. Link to Vehicle immediately. This is also the object that the server has

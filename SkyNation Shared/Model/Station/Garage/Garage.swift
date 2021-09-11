@@ -31,7 +31,6 @@ class Garage:Codable {
     /// Adds to the array **buildingVehicles**
     func startBuildingVehicle(vehicle:SpaceVehicle, time:Double) {
         
-        vehicle.simulation = 0
         vehicle.status = .Creating
         vehicle.dateTravelStarts = Date()
         vehicle.travelTime = Double(time)

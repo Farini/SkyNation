@@ -234,7 +234,7 @@ class GarageViewModel:ObservableObject {
             // Check if arrived
             if Date().compare(vehicle.arriveDate()) == .orderedDescending {
                 vehicle.status = .MarsOrbit
-                vehicle.simulation += 1
+//                vehicle.simulation += 1
                 self.station.garage.simulationXP += 1
                 self.station.garage.xp += 1
                 // Save Station
@@ -452,18 +452,19 @@ class GarageViewModel:ObservableObject {
         }
         
         // BioBoxes
-        var bbArray = vehicle.bioBoxes ?? []
+//        var bbArray = vehicle.bioBoxes ?? []
         for bb in bioBoxes {
             for bioMod in station.bioModules {
                 if bioMod.boxes.contains(bb) {
                     bioMod.boxes.removeAll(where: { $0.id == bb.id })
-                    bbArray.append(bb)
+//                    vehicle.bioBoxes.append(bb)
+                    vehicle.bioBoxes.append(bb)
                 }
             }
         }
-        if !bbArray.isEmpty {
-            vehicle.bioBoxes = bbArray
-        }
+//        if !bbArray.isEmpty {
+//            vehicle.bioBoxes = bbArray
+//        }
         
         // Check if over limit?
         
@@ -500,6 +501,8 @@ class GarageViewModel:ObservableObject {
         self.garageStatus = .planning(stage: .Launching)
         // self.cancelSelection()
         
+        // Update Scene
+        
         self.registerVehicle(vehicle: vehicle, completion: nil)
         
     }
@@ -515,12 +518,12 @@ class GarageViewModel:ObservableObject {
     func registerVehicle(vehicle:SpaceVehicle, completion:((SpaceVehicleTicket?, Error?) -> ())?) {
         print("Registering Vehicle in Server")
         
-        guard let player = LocalDatabase.shared.player else {
+        guard let _ = LocalDatabase.shared.player else {
             fatalError()
         }
-        let user = SKNUserPost(player: player)
+//        let user = SKNUserPost(player: player)
         
-        SKNS.registerSpace(vehicle: vehicle, player: user) { (ticket, error) in
+        SKNS.registerSpace(vehicle: vehicle) { (ticket, error) in
             
             if let ticket = ticket {
                 print("Vehicle Registration Approved! ")

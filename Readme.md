@@ -111,72 +111,16 @@ The contributors to these projects shall have a **fair** share of the game, and 
 ## 📝 Doing - Present
 If looking for things to do and don't know where to start, go to *Find Navigator* and search for **FIXME**, or **TODO**
 
-[8/13/2021 - ?]
-- [X] EarthOrder - People list not refreshing.
-- [X] GameLogic - Person - personStudyTime
-- [X] Settings - Eliminate `GuildController` altogether. Merge With GameSettingsController.
-- [X] Settings - Logic -> ServerManager.init() -> Check LocalPlayer -> Login
-- [X] City View - Garage (Receiving Vehicles)
-- [X] Station Garage View - Building Vehicle - Remove unnecessary views (solar panel, add bot)
-- [X] Station Garage View - Building Vehicle - Make ScrollView take the whole space
-- [X] Station Garage View - Built Vehicles - Remove Inventory Button, have only 'Descent' button
-- [X] Station Garage View - Space Vehicle Registration (when launch)
-- [X] Overlays - Guild Chat
-- [X] Model - City Tech
-- [X] Model - Mars City in `LocalDatabase`
-- [X] Model - Guild Chat
-- [X] Basic Views - PlayerContent, or PlayerCard
-8/17/2021 = 14 of 61 (23 %)
-- [X] City View - Tech implementation
-- [X] City View - Recipes Implementation
-- [X] EarthRequest - Fix weird Time to renew staff.
-- [X] Mars Scene - City - Gate Node
-- [X] Mars Scene - Outpost Node
-- [X] Overlays - Cameras
-- [X] Mars Scene - Animations - Camera entrance
-8/22/2021 = 21 of 72 (29 %)
+9/11/2021 - ?
+- [X] Station Garage View - Update Overlay with Travelling Vehicles
+- [X] Added People and Biobox to Vehicle's Trunk View
+- [X] Station Garage View - View size too small (on launch) - use scrollview
+- [X] Station Garage View - VehicleTrun View - improvements
+- [X] Station Garage View - EDL - Test all resources going into SpaceVehicle
+- [X] Space Vehicle - Fix Optionals (remove)
+- [X] Space Vehicle - Remove irrelevant properties
 
-8/30/2021 to ....
-- [X] Station Garage View - People not going in Vehicle.
-- [X] Station Garage View - Building Vehicle - Reduce difficulty for bigger engines
-- [X] Station LSS View - Tank -> Release (if O2, or Air)
-9/1/2021 = 24 of 82 (29%)
-- [X] Order View - Use Scroll only on the items collection
-- [X] Order View - Person Selected indicator
-- [X] Overlays - Cameras - Mars cameras not working properly
-- [X] Overlays - Mars LSS View
-- [X] Model - Tanks & Boxes -> Don't throw away
-- [X] Model - City Accounting
-- [X] Mars Scene - Animations - Camera change not working!
-- [X] 2D Graphics - Avatars remake
-- [X] 2D Graphics - SkyNation Entrance
-9/3/2021
-- [X] Blender - Consolidate Materials
-- [X] Blender - Terrain + EmptyNodes (Cameras, Lights, Roads, ETC.)
-- [X] Blender - new HDRI
-- [X] Blender - Outpost Levels: 5x PowerPlant
-- [X] Blender - GuildMap placeholders - Cities + Outposts + Roads + POVs + Animations Positions: EVehicle 3DPath
-- [X] Blender - Outpost Levels: 5x Biosphere
-- [X] Blender - Outpost Levels: 3x Mining
-- [X] Blender - Outpost Levels: 1x Observatory
-- [X] Blender - Outpost Levels: 1x LPad
-- [X] Blender - Terrain - Roads
-- [X] Blender - EVehicle Mesh + UVMaps simplification
-- [X] Blender - EDL Animation
-9/4/2021
-- [X] Mars Scene - City - Gate Position + Angles
-- [X] Mars Scene - Background
-- [X] Mars Scene - Outposts with Levels
-- [X] Mars Scene - Animations - Transportation - [See Gist](https://gist.github.com/Farini/ede665cab4e736480d4f399fbb4ca4f3)
-- [X] Mars Scene - Guild map improvements (x8)
-9/5/2021 41 of 97 (42%)
-- [X] Model - Roads
-- [X] Model - Create OutpostData
-- [X] StorageBoxView - Improvements
-- [X] Outpost View - Remodelling
-- [X] Outpost View - Create OutpostData
 - [ ] Outpost View - Contribution Request
-
 
 - [ ] Finish Outpost View
 - [ ] Finish City View
@@ -200,15 +144,9 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Station Scene - Make the Earth bright again?
 - [ ] Station Scene - New Modules not 'clickable' after Tech research. 
 
-- [ ] Station Garage View - EDL - Test all resources going into SpaceVehicle
 - [ ] Station Garage View - Improve departure animation
-- [ ] Station Garage View - Notify Overlay of New Vehicles
-- [ ] Station Garage View - View size too small (on launch) - use scrollview
-- [ ] Station Garage View - Vehicles not updating upon selection
-- [ ] Station Garage View - Not removing batteries from station when building vehicle
-- [ ] Space Vehicle - Fix Optionals (remove)
-- [ ] Space Vehicle - Remove irrelevant properties
-
+- [ ] Station Garage View - Register Vehicle with Authentication (server side)
+- [ ] Station Garage View - Vehicles not updating correctly upon selection (travelling ones)
 
 - [ ] Station LSS View - Tank -> Test "discardEmptyTank"
 - [ ] Station LSS View - (Peripheral Selection) - not updating
@@ -216,8 +154,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Overlays - Election
 - [ ] Overlays - Outpost rss Collecting
 - [ ] Overlays - GameCamera - Fix Awkward cam transitions
-
-
+- [ ] Overlays - CamControl - Fix Buttons & reverse actions (forward = backward)
 
 - [ ] Model - E-Vehicle/Bot
 - [ ] Model - Outpost rss Collecting

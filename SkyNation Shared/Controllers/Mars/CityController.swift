@@ -261,7 +261,7 @@ class CityController:ObservableObject {
                 print("⚠️ Person doesn't fit! Your city is full!")
             }
         }
-        for biobox in vehicle.bioBoxes ?? [] {
+        for biobox in vehicle.bioBoxes {
             city.bioBoxes?.append(biobox)
         }
         for peripheral in vehicle.peripherals {
@@ -310,7 +310,7 @@ class CityController:ObservableObject {
         // Save CityData?
         // the self.loadAt might need updates
         
-        SKNS.claimCity(user: SKNUserPost(player: LocalDatabase.shared.player!), posdex: posdex) { (city, error) in
+        SKNS.claimCity(posdex: posdex) { (city, error) in
             
             // This request should return a DBCity instead
             if let dbCity = city {
