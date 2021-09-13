@@ -261,8 +261,11 @@ class CityController:ObservableObject {
                 print("⚠️ Person doesn't fit! Your city is full!")
             }
         }
+        
+        // FIXME: - Put a limit on Bioboxes?
+        
         for biobox in vehicle.bioBoxes {
-            city.bioBoxes?.append(biobox)
+            city.bioBoxes.append(biobox)
         }
         for peripheral in vehicle.peripherals {
             city.peripherals.append(peripheral)

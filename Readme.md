@@ -53,9 +53,9 @@ The contributors to these projects shall have a **fair** share of the game, and 
  - [ ] ★★★★☆ Life Support Systems
  - [ ] ★★★☆☆ Vehicles Travelling Views/Scenes
  
- - [ ] ★★☆☆☆ Mars Scene
+ - [ ] ★★★☆☆ Mars Scene
  - [ ] ★★☆☆☆ Mars City
- - [ ] ★★☆☆☆ Mars Outposts
+ - [ ] ★★★☆☆ Mars Outposts
  - [ ] ★★★☆☆ Game Chats, Messages, Achievements
  - [ ] ★★★☆☆ Game Store + Use of `GameTokens`
  - [ ] ★★★☆☆ Player(object) + settings + playability + Purchases
@@ -119,6 +119,8 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Station Garage View - EDL - Test all resources going into SpaceVehicle
 - [X] Space Vehicle - Fix Optionals (remove)
 - [X] Space Vehicle - Remove irrelevant properties
+- [X] Station LSS View - (Peripheral Selection) - not updating
+- [X] Station LSS View - Total Remake
 
 - [ ] Outpost View - Contribution Request
 
@@ -149,7 +151,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Station Garage View - Vehicles not updating correctly upon selection (travelling ones)
 
 - [ ] Station LSS View - Tank -> Test "discardEmptyTank"
-- [ ] Station LSS View - (Peripheral Selection) - not updating
+- [ ] Station LSS View - In-depth Testing after remake
 
 - [ ] Overlays - Election
 - [ ] Overlays - Outpost rss Collecting

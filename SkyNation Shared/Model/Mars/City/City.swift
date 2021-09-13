@@ -51,7 +51,6 @@ class CityData:Codable, Identifiable {
     var id:UUID
     var posdex:Posdex
     
-    
     // Persons
     var inhabitants:[Person]
     
@@ -75,17 +74,16 @@ class CityData:Codable, Identifiable {
     // SolarPanels
     var solarPanels:[SolarPanel]
     
-    var bioBoxes:[BioBox]?
-    var food:[String]?
+    var bioBoxes:[BioBox] = []
+    var food:[String] = []
     
     // MARK: - Tech Stack
     
     // Robots, or Vehicles
     var vehicles:[String]?
     
-    // Tech Tree
+    /// Unlocked Tech Items
     var tech:[CityTech]
-//    var unlockedTech:[CityTech] = []
     
     // Recipes
     var unlockedRecipes:[Recipe]
@@ -708,13 +706,13 @@ extension CityData {
             }
             
             // Food
-            if let lastFood:String = food?.last {
+            if let lastFood:String = food.last {
                 person.consumedFood(lastFood)
-                self.food!.removeLast()
+                self.food.removeLast()
             } else {
                 // Look for bio boxes
                 if GameSettings.shared.serveBioBox == true {
-                    let bboxes = bioBoxes?.filter({ $0.mode == .multiply && $0.population.count > 3 }) ?? []
+                    let bboxes = bioBoxes.filter({ $0.mode == .multiply && $0.population.count > 3 })
                     if let nextBox = bboxes.sorted(by: { $0.population.count > $1.population.count }).first {
                         if let nextFood = nextBox.population.last {
                             nextBox.population.removeLast()

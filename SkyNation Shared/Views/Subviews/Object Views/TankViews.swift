@@ -60,10 +60,9 @@ struct TankRow:View {
     }
 }
 
-struct TankView: View {
+struct TankDetailView: View {
     
-//    @ObservedObject var viewModel:LSSModel
-    var delegator:LSSDelegate
+    @ObservedObject var controller:LSSController
     
     @State var sliderValue:Float = 0
     
@@ -76,13 +75,13 @@ struct TankView: View {
     // Popover to change tank type
     @State var popTankType:Bool = false
     
-    init(tank:Tank, delegator:LSSDelegate) {
+    init(tank:Tank, controller:LSSController) {
+        
+        self.controller = controller
         
         let cap = Float(tank.capacity)
         self.max = cap
         self.tank = tank
-        
-        self.delegator = delegator
         
         self.current = Float(tank.current)
     }
@@ -95,23 +94,6 @@ struct TankView: View {
             self.discardWhenEmpty = false
         }
     }
-    
-//    init(tank:Tank, model:LSSModel? = LSSModel()) {
-//
-//        let cap = Float(tank.capacity)
-//        self.max = cap
-//        self.tank = tank
-//
-//        // Checkbox discard empty
-//        if tank.discardEmpty == true {
-//            self.discardWhenEmpty = true
-//        } else {
-//            self.discardWhenEmpty = false
-//        }
-//
-//        self.viewModel = model!
-//        self.current = Float(tank.current)
-//    }
     
     var body: some View {
         
@@ -136,7 +118,6 @@ struct TankView: View {
                     } else {
                         Text("Empty").foregroundColor(.gray)
                     }
-                    
                 }
             }
             .padding(6)
@@ -151,6 +132,8 @@ struct TankView: View {
                 .onChange(of: discardWhenEmpty, perform: { value in
                     if value == true {
                         tank.discardEmpty = true
+                    } else {
+                        tank.discardEmpty = false
                     }
                 })
             
@@ -169,8 +152,7 @@ struct TankView: View {
                 
                 Button(action: {
                     print("Throw away (discarding)")
-//                    viewModel.discardTank(tank)
-                    delegator.discardTank(tank)
+                    controller.discardTank(tank: tank)
                 }, label: {
                     HStack {
                         Image(systemName: "trash")
@@ -181,8 +163,7 @@ struct TankView: View {
                 .frame(width:95)
                 
                 Button(action: {
-//                    self.viewModel.mergeTanks(tank)
-                    delegator.mergeTanks(tank)
+                    controller.mergeTanks(into: tank)
                 }, label: {
                     Text("Merge")
                 })
@@ -190,14 +171,10 @@ struct TankView: View {
                 
                 Button("Release") {
                     print("Release in air")
-//                    viewModel.doReleaseInAir(tank: tank, amt: Int(sliderValue))
-                    delegator.doReleaseInAir(tank: tank, amt: Int(self.sliderValue))
+                    controller.releaseToAir(tank: tank, amt: Int(self.sliderValue))
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
-                
-                .disabled(!delegator.canReleaseInAir(tank: tank, amt: Int(sliderValue)))
-//                .disabled(!viewModel.canReleaseInAir(tank: tank, amt: Int(sliderValue)))
-                
+                .disabled(!controller.canReleaseToAir(tank: tank, amt: Int(sliderValue)))
                 
                 Button(action: {
                     print("Empty, or define")
@@ -206,7 +183,6 @@ struct TankView: View {
                         popTankType.toggle()
                     } else {
                         // Empty
-                        
                     }
                 }, label: {
                     if tank.current == 0 || tank.type == .empty {
@@ -228,27 +204,24 @@ struct TankView: View {
                             }
                             .frame(maxWidth:200)
                             .onTapGesture {
-//                                self.viewModel.defineType(tank, type: tanktype)
-                                delegator.defineType(tank, type: tanktype)
+                                controller.defineTankType(tank: tank, newType: tanktype)
                             }
                         }
                     }
                 }
             }
             .padding()
-            
-
         }
         
         .onAppear() {
             self.tankDiscard(tank: self.tank)
         }
-        
     }
     
+    /// Makes the BarCode from a UUID
     func generateBarcode(from uuid: UUID) -> Image? {
-        let data = uuid.uuidString.prefix(8).data(using: String.Encoding.ascii)
         
+        let data = uuid.uuidString.prefix(8).data(using: String.Encoding.ascii)
         if let filter = CIFilter(name: "CICode128BarcodeGenerator") {
             filter.setValue(data, forKey: "inputMessage")
             
@@ -286,7 +259,6 @@ struct TankView: View {
         
         return nil
     }
-    
 }
 
 struct TankOrderView: View {
@@ -323,26 +295,23 @@ struct TankOrderView: View {
 
 // MARK: - Previews
 
-struct TankViews_Previews: PreviewProvider {
-    
+struct TankPreviews2:PreviewProvider {
     static var previews: some View {
         VStack {
-//            TankView(tank:LocalDatabase.shared.station!.truss.getTanks().first!)
-            TankView(tank:LocalDatabase.shared.station!.truss.getTanks().first!, delegator: LSSModel())
+            TankRow(tank: LocalDatabase.shared.station!.truss.getTanks().first!)
+                .padding()
         }
     }
 }
 
-struct TankPreviews2:PreviewProvider {
+struct TankPreviews3:PreviewProvider {
     static var previews: some View {
         VStack {
-            
-            TankRow(tank: LocalDatabase.shared.station!.truss.getTanks().first!)
-                .padding()
+            TankDetailView(tank: LocalDatabase.shared.station!.truss.getTanks().first!, controller: LSSController(scene: .SpaceStation))
         }
-        
     }
 }
+
 
 struct TankOrder_Previews: PreviewProvider {
     static var previews: some View {

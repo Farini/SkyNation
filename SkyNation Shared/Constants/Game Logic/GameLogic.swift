@@ -51,6 +51,11 @@ struct GameLogic {
     /// Water consumption per `Person`
     static let waterConsumption:Int = 2
     
+    /// Energy Consumption per `Person`
+    static func personalEnergyConsumption() -> Int {
+        return [1,2,3].randomElement()!
+    }
+    
     /// The default time a `Person` spends studying
     static let personStudyTime:Double = 60.0 * 60.0 * 24.0 * 3.0
     

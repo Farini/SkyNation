@@ -62,7 +62,7 @@ struct EDLInventoryView: View {
     
     @State var vehicle:SpaceVehicle
     
-    // Adding Ingredients, Peripherals, and BotTech
+    /// The Tab View
     var tabber: some View {
         // Tabs
         VStack {

@@ -345,26 +345,9 @@ struct ActivityStaffView:View {
 
 // MARK: - Previews
 
-//struct StaffSelection_Previews: PreviewProvider {
-//
-//    static let p1 = Person(random: true)
-//    static var previews: some View {
-//        PersonSelectorView(person: p1, selected: false)
-//    }
-//}
-
-//struct PersonControl_Previews: PreviewProvider {
-//    static var previews: some View {
-//        PersonControl()
-//    }
-//}
-
 struct ActivityStaff_Previews: PreviewProvider {
     
     static var previews: some View {
-//        ActivityStaffView(staff: randomizePeople(), requiredSkills: [Skills.Biologic:3, Skills.Medic:4]) { (people) in
-//            print("People Selected")
-//        }
         ActivityParentView(staff: randomizePeople())
     }
     

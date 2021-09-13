@@ -118,7 +118,7 @@ extension GameViewController: GameNavDelegate {
         switch scene {
             case .SpaceStation:
                 
-                let controller = NSHostingController(rootView: LifeSupportView())
+                let controller = NSHostingController(rootView: LSSView(scene: scene))
                 
                 controller.view.translatesAutoresizingMaskIntoConstraints = false
                 view.addSubview(controller.view)
@@ -132,7 +132,7 @@ extension GameViewController: GameNavDelegate {
             
             case .MarsColony:
                 
-                let controller = NSHostingController(rootView: CityLSSView())
+                let controller = NSHostingController(rootView: LSSView(scene: scene))
                 
                 controller.view.translatesAutoresizingMaskIntoConstraints = false
                 view.addSubview(controller.view)

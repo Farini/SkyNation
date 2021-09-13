@@ -220,10 +220,10 @@ struct IngredientOrderView:View {
     }
 }
 
+// MARK: - Previews
 
 struct StorageBox_Previews: PreviewProvider {
     static var previews: some View {
-//        StorageBoxDetailView(box: StorageBox(ingType: .Aluminium, current: 10))
         VStack {
             HStack {
                 StorageBoxView(box: StorageBox(ingType: .Aluminium, current: 2))

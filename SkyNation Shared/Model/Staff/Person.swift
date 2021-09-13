@@ -104,7 +104,6 @@ class Person:Codable, Identifiable, Equatable {
     var age:Int
     
     var intelligence:Int
-    
     var healthPhysical:Int
     
     // + happiness
