@@ -346,41 +346,34 @@ class GameOverlay:NSObject, SKSceneDelegate {
         
         // Center
         var positionX = scene.size.width / 2
-        let label = SKLabelNode(text: "Tutorial example. This is a tutorial\n But what does a tutorial do?\n That is the question that only the game can answer :)")
-        label.numberOfLines = 0
         
-        // Name
-        label.fontName = "Menlo"
-        label.fontSize = 22
-        label.fontColor = .white
-        label.horizontalAlignmentMode = .center
-        label.verticalAlignmentMode = .center
-        label.isUserInteractionEnabled = true
-        label.zPosition = 90
+        let tutorialNode = TutorialNode(text: """
+            Tutorial.
+            Tap, or click on a module to define its type.
+            
+            There are 3 types of module.
+            The Hab Module will let you host astronauts
+            into your station.
+            After creating your first hab module,
+            it is convenient to hire your first astrnauts.
+            
+            You can purchase things by clicking on the earth.
+            It will let you place an order of things and people
+            that you may need to upgrade your Space Station.
+            """)
         
-        var backSize = label.calculateAccumulatedFrame().size
-        backSize.width += 20
-        backSize.height += 12
         
-        // Background
-        let backNode = SKShapeNode(rectOf: backSize, cornerRadius: 8)
-        backNode.position = CGPoint(x: backSize.width / 2 + 6, y: 0)
-        backNode.fillColor = SCNColor.black.withAlphaComponent(0.7)
-        backNode.strokeColor = SCNColor.lightGray
-        backNode.addChild(label)
-        
-        positionX -= backSize.width / 2
         newsPlaceholder.position.x = positionX
         
-        newsPlaceholder.addChild(backNode)
-        //        print("Scene paused: \(scene.isPaused)")
+        newsPlaceholder.addChild(tutorialNode)
         
-        let waiter = SKAction.wait(forDuration: 2.25)
+        
+        let waiter = SKAction.wait(forDuration: 12.0)
         let runner = SKAction.fadeAlpha(to: 0, duration: 0.75)
         let sequel = SKAction.sequence([waiter, runner])
-        label.run(sequel) {
+        tutorialNode.run(sequel) {
             print("Finished sequel")
-            backNode.removeFromParent()
+            tutorialNode.removeFromParent()
         }
         
     }

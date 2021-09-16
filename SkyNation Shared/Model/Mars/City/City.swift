@@ -74,8 +74,8 @@ class CityData:Codable, Identifiable {
     // SolarPanels
     var solarPanels:[SolarPanel]
     
-    var bioBoxes:[BioBox] = []
-    var food:[String] = []
+    var bioBoxes:[BioBox]
+    var food:[String]
     
     // MARK: - Tech Stack
     
@@ -335,7 +335,8 @@ class CityData:Codable, Identifiable {
         self.air = AirComposition(amount: GameLogic.airPerModule * 2)
         self.unlockedRecipes = LocalDatabase.shared.station?.unlockedRecipes ?? []
         self.garage = Garage()
-        
+        self.food = []
+        self.bioBoxes = []
     }
     
     init(example:Bool, id:UUID? = nil) {
@@ -402,6 +403,9 @@ class CityData:Codable, Identifiable {
         
         // Garage
         self.garage = Garage()
+        
+        self.food = ["banana"]
+        self.bioBoxes = []
     }
     
     /// An example filled with data

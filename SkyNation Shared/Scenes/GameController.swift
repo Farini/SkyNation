@@ -307,6 +307,16 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 self.switchScene()
             }
             
+        } else {
+            if let tutNext = node as? TutorialButtonNode {
+                print("Clicked next")
+            }
+            if let labelNode = node as? SKLabelNode {
+                print("Label \(labelNode.text ?? "n/a")")
+            }
+            if let shapeNode = node as? SKShapeNode {
+                print("Shape Node: \(shapeNode)")
+            }
         }
     }
     
