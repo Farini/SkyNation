@@ -146,35 +146,6 @@ extension GameViewController: GameNavDelegate {
         }
     }
     
-    /* // Old LSS
-    func didSelectAir() {
-        
-        let controller = NSHostingController(rootView: LifeSupportView()) //UIHostingController(rootView:EarthRequestView())
-        
-        controller.view.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(controller.view)
-        controller.view.centerXAnchor.constraint(
-            equalTo: view.centerXAnchor).isActive = true
-        controller.view.centerYAnchor.constraint(
-            equalTo: view.centerYAnchor).isActive = true
-        
-        self.openedView = controller.view
-        self.presentAsSheet(controller)
-        
-        /*
-         print("Create Hab Module View to View This")
-         let window = ClosableWindow(
-         contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
-         styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-         backing: .buffered, defer: false)
-         window.center()
-         window.setFrameAutosaveName("SUI Window")
-         window.contentView = NSHostingView(rootView: LifeSupportView())
-         window.makeKeyAndOrderFront(nil)
-         */
-    }
-    */
-    
     func didSelectHab(module: HabModule) {
         //        print("Create Hab Module View to View This")
         

@@ -347,22 +347,12 @@ class GameOverlay:NSObject, SKSceneDelegate {
         // Center
         var positionX = scene.size.width / 2
         
-        let tutorialNode = TutorialNode(text: """
-            Tutorial.
-            Tap, or click on a module to define its type.
-            
-            There are 3 types of module.
-            The Hab Module will let you host astronauts
-            into your station.
-            After creating your first hab module,
-            it is convenient to hire your first astrnauts.
-            
-            You can purchase things by clicking on the earth.
-            It will let you place an order of things and people
-            that you may need to upgrade your Space Station.
-            """)
         
+        guard let tutorialNode = tutorialArray.first else { return }
+        self.tutorialIndex = 0
         
+        positionX -= tutorialNode.calculateAccumulatedFrame().width / 2.0
+
         newsPlaceholder.position.x = positionX
         
         newsPlaceholder.addChild(tutorialNode)
@@ -374,9 +364,104 @@ class GameOverlay:NSObject, SKSceneDelegate {
         tutorialNode.run(sequel) {
             print("Finished sequel")
             tutorialNode.removeFromParent()
+            
         }
         
     }
+    
+    private var tutorialArray:[TutorialNode] {
+        let tutorialNode = TutorialNode(text: """
+            🏠 Hab Module.
+            
+            Tap, or click on a module to define its type.
+            There are 3 types of module.
+            
+            The Hab Module will let you host astronauts
+            into your station.
+            After creating your first hab module,
+            it is convenient to hire your first astrnauts.
+            
+            You can purchase things by clicking on the earth.
+            It will let you place an order of things and people
+            that you may need to upgrade your Space Station.
+            """)
+        
+        let tutorialNode2 = TutorialNode(text: """
+            🔬 Lab Module.
+            
+            In the Lab Module, it is possible to make parts
+            (recipes) that are useful to upkeep the Space Station
+            and make more progress in the game.
+            
+            You may also work on the tech tree to expand
+            the station. This will enable to build the Garage,
+            which can send Space Vehicles to Mars.
+            """)
+        
+        let tutorialNode3 = TutorialNode(text: """
+            🧬 Bio Module.
+            
+            Everybody needs to eat. With a Bio Module
+            your Space Station can make its own food.
+            
+            Careful, though. Astronauts get tired of eating
+            the same food all the time. Make sure to create
+            a variety, and the people will be happy.
+            """)
+        
+        let tutorialNode4 = TutorialNode(text: """
+            🚀 Garage Module.
+            
+            Build Space Vehicles to aid your city and your Guild
+            in Mars. They are responsible to transport ingredients,
+            boxes, tanks, people, bio boxes, and machines.
+            
+            The more experience you gain, the more stuff you can
+            bring to Mars in one trip.
+            """)
+        
+        return [tutorialNode, tutorialNode2, tutorialNode3, tutorialNode4]
+    }
+    private var tutorialIndex:Int = 0
+    
+    
+    func proceedTutorial() {
+        
+        self.closeTutorial()
+        
+        let nextIndex = self.tutorialIndex + 1
+        if nextIndex < tutorialArray.count {
+            self.tutorialIndex = nextIndex
+            let newTutorial = tutorialArray[nextIndex]
+            newsPlaceholder.addChild(newTutorial)
+            
+            let waiter = SKAction.wait(forDuration: 12.0)
+            let runner = SKAction.fadeAlpha(to: 0, duration: 0.75)
+            let sequel = SKAction.sequence([waiter, runner])
+            newTutorial.run(sequel) {
+                print("Finished sequel")
+                newTutorial.removeFromParent()
+            }
+        } else {
+            self.tutorialIndex = 0
+            guard let newTutorial = tutorialArray.first else { return }
+            newsPlaceholder.addChild(newTutorial)
+            
+            let waiter = SKAction.wait(forDuration: 12.0)
+            let runner = SKAction.fadeAlpha(to: 0, duration: 0.75)
+            let sequel = SKAction.sequence([waiter, runner])
+            newTutorial.run(sequel) {
+                print("Finished sequel")
+                newTutorial.removeFromParent()
+            }
+        }
+    }
+    
+    func closeTutorial() {
+        self.newsPlaceholder.removeAllChildren()
+    }
+    
+    
 }
 
 

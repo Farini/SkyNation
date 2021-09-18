@@ -94,7 +94,7 @@ enum GameMessageType:String, Codable, CaseIterable {
     case Freebie
     
     case Chat
-    case System
+    case Guild
     case Tutorial
     
     case Other
@@ -104,7 +104,7 @@ enum GameMessageType:String, Codable, CaseIterable {
             case .Achievement: return "🏆"
             case .Freebie: return "🎁"
             case .Chat: return "💬"
-            case .System: return "⚙️"
+            case .Guild: return "🔰" // ⚙️
             case .Tutorial: return "🎓"
             case .Other: return "❓"
         }
@@ -132,4 +132,5 @@ struct ChatMessage:Codable, Identifiable, Hashable {
     var name: String
     var message: String
     var date: Date
+    
 }

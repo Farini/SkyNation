@@ -34,58 +34,7 @@ class SKNS {
     
     static let baseAddress = "http://127.0.0.1:8080"
     
-    // MARK: - User, Login
-    
-    static func authorizeLogin(localPlayer:SKNPlayer, pid:UUID, pass:String, completion:((PlayerUpdate?, Error?) -> ())?) {
-        
-        // Build Request
-        let address = "\(baseAddress)/player/credentials/login"
-        
-        guard let url = URL(string: address) else { return }
-        
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        request.httpMethod = HTTPMethod.GET.rawValue
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        
-        // Set Credentials for authorization.
-        let basicCredential = "\(pid.uuidString):\(pass)".data(using: .utf8)!.base64EncodedString()
-        request.setValue("Basic \(basicCredential)", forHTTPHeaderField: "Authorization")
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            
-            if let data:Data = data {
-                
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .secondsSince1970
-                
-                if let responsePlayer:PlayerUpdate = try? decoder.decode(PlayerUpdate.self, from: data) {
-                    
-                    print("Response player: \(responsePlayer.name)")
-                    DispatchQueue.main.async {
-                        completion?(responsePlayer, nil)
-                    }
-                    return
-                    
-                } else {
-                    
-                    // Request returned data, but its not a `PlayerUpdate` object.
-                    // This should only happen if the object has been changed
-                    DispatchQueue.main.async {
-                        completion?(nil, error ?? ServerDataError.failedAuthorization)
-                    }
-                }
-                
-            } else {
-                DispatchQueue.main.async {
-                    // Request returned an error
-                    print("Authorize Login Error: \(error?.localizedDescription ?? "n/a")")
-                    completion?(nil, error)
-                }
-            }
-        }
-        task.resume()
-    }
+    // MARK: - Player, Login
     
     /// Creates a new player is the Server Database.
     static func createNewPlayer(localPlayer:SKNPlayer, completion:((PlayerUpdate?, Error?) -> ())?) {
@@ -137,6 +86,60 @@ class SKNS {
         task.resume()
         
     }
+    
+    /// A Login with Authentication
+    static func authorizeLogin(localPlayer:SKNPlayer, pid:UUID, pass:String, completion:((PlayerUpdate?, Error?) -> ())?) {
+        
+        // Build Request
+        let address = "\(baseAddress)/player/credentials/login"
+        
+        guard let url = URL(string: address) else { return }
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        // Set Credentials for authorization.
+        let basicCredential = "\(pid.uuidString):\(pass)".data(using: .utf8)!.base64EncodedString()
+        request.setValue("Basic \(basicCredential)", forHTTPHeaderField: "Authorization")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            
+            if let data:Data = data {
+                
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                
+                if let responsePlayer:PlayerUpdate = try? decoder.decode(PlayerUpdate.self, from: data) {
+                    
+                    print("Response player: \(responsePlayer.name)")
+                    DispatchQueue.main.async {
+                        completion?(responsePlayer, nil)
+                    }
+                    return
+                    
+                } else {
+                    
+                    // Request returned data, but its not a `PlayerUpdate` object.
+                    // This should only happen if the object has been changed
+                    DispatchQueue.main.async {
+                        completion?(nil, error ?? ServerDataError.failedAuthorization)
+                    }
+                }
+                
+            } else {
+                DispatchQueue.main.async {
+                    // Request returned an error
+                    print("Authorize Login Error: \(error?.localizedDescription ?? "n/a")")
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    
     
     /// Update Player
     static func updatePlayer(completion:((PlayerUpdate?, Error?) -> ())?) {
@@ -553,7 +556,7 @@ class SKNS {
     /// Tries to join a Guild
     static func joinGuildPetition(guildID:UUID, completion:((GuildSummary?, Error?) -> ())?) {
         
-        let url = URL(string: "\(baseAddress)/guilds/join/\(guildID.uuidString)")!
+        let url = URL(string: "\(baseAddress)/guilds/player/join/\(guildID.uuidString)")!
         guard let player = LocalDatabase.shared.player,
               let pid = player.playerID else {
             print("⚠️ Error: Data Missing")
@@ -621,18 +624,18 @@ class SKNS {
         task.resume()
     }
     
-    // MARK: - Guild Chat
+    // Chat
     
     static func readChat(guildID:UUID, completion:(([ChatMessage], Error?) -> ())?) {
         
-        let url = URL(string: "\(baseAddress)/player/chat/read/\(guildID.uuidString)")!
+        let url = URL(string: "\(baseAddress)/guilds/chat/read/\(guildID.uuidString)")!
         
         let session = URLSession.shared
         var request = URLRequest(url: url)
         request.httpMethod = HTTPMethod.GET.rawValue
         
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
+//        request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
         
         let task = session.dataTask(with: request) { (data, response, error) in
             if let data = data {
@@ -669,7 +672,7 @@ class SKNS {
     
     static func postChat(message:ChatPost, completion:(([ChatMessage], Error?) -> ())?) {
         
-        let url = URL(string: "\(baseAddress)/player/chat/message/\(message.guildID)")!
+        let url = URL(string: "\(baseAddress)/guilds/chat/write/\(message.guildID)")!
         
         let session = URLSession.shared
         var request = URLRequest(url: url)
@@ -718,6 +721,257 @@ class SKNS {
         
     }
     
+    // Election
+    
+    // update(restart)
+    static func upRestartElection(completion:((Election?, Error?) -> ())?) {
+        
+        let url = URL(string: "\(baseAddress)/guilds/election/update")!
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        //        request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                DispatchQueue.main.async {
+                    print("Data returning")
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .secondsSince1970
+                    do {
+                        let election = try decoder.decode(Election.self, from: data)
+                        completion?(election, nil)
+                        return
+                    }catch{
+                        
+                        if let gameError = try? decoder.decode(GameError.self, from: data) {
+                            print("Error decoding.: \(gameError.reason)")
+                            if gameError.reason == "Election not started" {
+                                print("Its okay. Election not started")
+                                completion?(nil, nil)
+                                return
+                            }
+                            completion?(nil, error)
+                            return
+                        } else {
+                            print("Error - Something else has happened")
+                            completion?(nil, error)
+                            return
+                        }
+                    }
+                }
+            } else {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+        
+    }
+    
+    // vote
+    static func voteOnElection(candidate:PlayerContent, completion:((Election?, Error?) -> ())?) {
+        
+        let url = URL(string: "\(baseAddress)/guilds/election/vote/\(candidate)")!
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                DispatchQueue.main.async {
+                    print("Data returning")
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .secondsSince1970
+                    do {
+                        let election = try decoder.decode(Election.self, from: data)
+                        completion?(election, nil)
+                        return
+                    }catch{
+                        
+                        if let gameError = try? decoder.decode(GameError.self, from: data) {
+                            print("Error decoding.: \(gameError.reason)")
+                            completion?(nil, error)
+                            return
+                        } else {
+                            print("Error - Something else has happened")
+                            completion?(nil, error)
+                            return
+                        }
+                    }
+                }
+            } else {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    // President
+    // 1. kickout
+    static func kickPlayer(from guild:GuildFullContent, booted:PlayerContent, completion:((Bool?, Error?) -> ())?) {
+        let url = URL(string: "\(baseAddress)/guilds/kickout/\(guild.id)/\(booted.guildID ?? UUID())")!
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                DispatchQueue.main.async {
+                    print("Data returning")
+                    do {
+                        let message = try JSONDecoder().decode(String.self, from: data)
+                        if message.contains("ok") || message.contains("OK") {
+                            completion?(true, error)
+                            return
+                        }
+                        completion?(nil, error)
+                        return
+                    }catch{
+                        
+                        if let gameError = try? JSONDecoder().decode(GameError.self, from: data) {
+                            print("Error decoding.: \(gameError.reason)")
+                            completion?(false, error)
+                            
+                        } else {
+                            print("Error - Something else has happened")
+                            completion?(false, error)
+                        }
+                    }
+                }
+            } else {
+                if let response = response {
+                    if response.debugDescription.contains("ok") || response.debugDescription.contains("OK") {
+                        completion?(true, error)
+                        return
+                    }
+                }
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(false, error)
+                }
+            }
+        }
+        task.resume()
+        
+    }
+    // 2. Modify
+    static func modifyGuild(guild:GuildFullContent, player:SKNPlayer, completion:((GuildFullContent?, Error?) -> ())?) {
+        
+        let url = URL(string: "\(baseAddress)/guilds/player/modify/\(player.keyPass ?? "")")!
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.POST.rawValue
+        
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        //        request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
+        
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        
+        guard let data = try? encoder.encode(guild) else { fatalError() }
+        
+        request.httpBody = data
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                DispatchQueue.main.async {
+                    print("Data returning")
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .secondsSince1970
+                    do {
+                        let upGuild = try decoder.decode(GuildFullContent.self, from: data)
+                        completion?(upGuild, nil)
+                        return
+                    }catch{
+                        
+                        if let gameError = try? decoder.decode(GameError.self, from: data) {
+                            print("Error decoding.: \(gameError.reason)")
+                            completion?(nil, error)
+                            
+                        } else {
+                            print("Error - Something else has happened")
+                            completion?(nil, error)
+                        }
+                    }
+                }
+            } else {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+    }
+    // 3. invite
+    static func addToInvite(player:PlayerContent, completion:((Bool?, Error?) -> ())?) {
+        
+        let url = URL(string: "\(baseAddress)/guilds/player/invite/\(player.id)")!
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        //        request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                DispatchQueue.main.async {
+                    print("Data returning")
+                    do {
+                        let message = try JSONDecoder().decode(String.self, from: data)
+                        if message.contains("ok") || message.contains("OK") {
+                            completion?(true, error)
+                            return
+                        }
+                        completion?(nil, error)
+                        return
+                    }catch{
+                        
+                        if let gameError = try? JSONDecoder().decode(GameError.self, from: data) {
+                            print("Error decoding.: \(gameError.reason)")
+                            completion?(false, error)
+                            
+                        } else {
+                            print("Error - Something else has happened")
+                            completion?(false, error)
+                        }
+                    }
+                }
+            } else {
+                if let response = response {
+                    if response.debugDescription.contains("ok") || response.debugDescription.contains("OK") {
+                        completion?(true, error)
+                        return
+                    }
+                }
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(false, error)
+                }
+            }
+        }
+        task.resume()
+        
+    }
+    
     // MARK: - City
     
     static func claimCity(posdex:Posdex, completion:((DBCity?, Error?) -> ())?) {
@@ -725,7 +979,6 @@ class SKNS {
         print("Claiming City")
         
         let url = URL(string: "\(baseAddress)/guilds/city/claim/\(posdex.rawValue)")!
-        
         
         guard let player = LocalDatabase.shared.player else { fatalError() }
         
@@ -893,8 +1146,6 @@ class SKNS {
     
     // contribute to outpost
     
-    
-    
     // DEPRECATE
     static func contributionRequest(object:Codable, type:ContributionType, outpost:Outpost) {
         
@@ -1035,46 +1286,6 @@ class SKNS {
         
     }
     
-    // MARK: - Default
-//    static func getSimpleData(completion:((Data?, Error?) -> ())?) {
-//
-//        print("Getting Simple Data")
-//
-//        let url = URL(string: "\(baseAddress)/users")!
-//        let session = URLSession.shared
-//        var request = URLRequest(url: url)
-//
-//        request.httpMethod = HTTPMethod.POST.rawValue
-//        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-//
-//        let user = SKNUserPost(name: "Farini")
-//
-//        let encoder = JSONEncoder()
-//        encoder.dateEncodingStrategy = .secondsSince1970
-//        if let data = try? encoder.encode(user) {
-//            print("Adding Data")
-//            request.httpBody = data
-//            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
-//            print("DS: \(dataString)")
-//        }
-//
-//        let task = session.dataTask(with: request) { (data, response, error) in
-//            if let data = data {
-//                DispatchQueue.main.async {
-//                    print("Data returning")
-//                    completion?(data, nil)
-//                }
-//                
-//            } else if let error = error {
-//                print("Error returning")
-//                DispatchQueue.main.async {
-//                    completion?(nil, error)
-//                }
-//            }
-//        }
-//        task.resume()
-//
-//    }
     
 }
 

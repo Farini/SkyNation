@@ -313,6 +313,11 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             }
             if let labelNode = node as? SKLabelNode {
                 print("Label \(labelNode.text ?? "n/a")")
+                if labelNode.text == "Next ➡️" {
+                    gameOverlay.proceedTutorial()
+                } else if labelNode.text == "❌ Close" {
+                    gameOverlay.closeTutorial()
+                }
             }
             if let shapeNode = node as? SKShapeNode {
                 print("Shape Node: \(shapeNode)")
@@ -387,6 +392,29 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 }
                 
             // Save preferred camera on settings?
+        }
+    }
+    
+    // Sounds
+    /// Coordinates the music playing
+    func playMusic() {
+        // Music
+        if GameSettings.shared.musicOn {
+            // Play a random track
+            let track = Soundtrack.allCases.randomElement()
+            if let source = SCNAudioSource(fileNamed: "\(track?.rawValue ?? "na").m4a") {
+                //                print("found audio file")
+                source.volume = 0.5
+                let action = SCNAction.playAudio(source, waitForCompletion: true)
+                scene.rootNode.runAction(action) {
+                    print("Music Finished")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                        self.playMusic()
+                    }
+                }
+            } else {
+                print("cannot find audio file")
+            }
         }
     }
     
@@ -677,6 +705,54 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             // Loading Space Station from Mars
             case .MarsColony:
                 print("We are in Mars. Load Space Station")
+                guard let station = station else {
+                    return
+                }
+                print("Station Reloaded.: \(station.accountingDate)")
+                
+                guard let stationScene = LocalDatabase.shared.stationBuilder.scene else { return }
+                
+                if let camera = stationScene.rootNode.childNode(withName: "Camera", recursively: false) as? GameCamera {
+                    
+                    
+                    
+                    self.sceneRenderer.present(stationScene, with: .doorsOpenVertical(withDuration: 1.0), incomingPointOfView: camera) {
+                        
+                        self.scene = stationScene
+                        
+                        self.gameScene = .SpaceStation
+                        self.cameraNode = camera
+                        let stationOverlay = GameOverlay(renderer: self.sceneRenderer, station: station, camNode: camera)
+                        self.sceneRenderer.overlaySKScene = stationOverlay.scene
+                        self.gameOverlay = stationOverlay
+                        
+                        let centralNode = SCNNode()
+                        centralNode.position = SCNVector3(x: 0, y: -5, z: 0)
+                        camera.camNode.look(at: centralNode.position)
+                        
+//                        camera.position.z += 40
+                        
+//                        let waiter = SCNAction.wait(duration: 3.0)
+//                        // let rotate = SCNAction.rotate(by: CGFloat(Double.pi / 8), around: SCNVector3(x: 0, y: 1, z: 0), duration: 2)
+//                        // rotate.timingMode = .easeOut
+//                        let move1 = SCNAction.move(by: SCNVector3(-1, 1, -20), duration: 0.75)
+//                        move1.timingMode = .easeIn
+//                        let move2 = SCNAction.move(by: SCNVector3(1, -1, -20), duration: 0.75)
+//                        move2.timingMode = .easeOut
+//
+//                        let sequence = SCNAction.sequence([waiter, move1, move2])
+//
+//                        camera.runAction(sequence) {
+//                            print("CamChild LOOK @ \(camera.eulerAngles)")
+//                        }
+                        
+                        //                    }
+                    }
+                }
+                
+                // Tell SceneDirector that scene is loaded
+                SceneDirector.shared.controllerDidLoadScene(controller: self)
+                
                 
         }
     }
@@ -699,8 +775,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         //    sceneRenderer.debugOptions = [dbo2, dbo4]
         
         guard let builtScene = LocalDatabase.shared.stationBuilder.scene else { fatalError() }
-        
-//        print("--- INIT WITH RENDERER. Size: \(sceneRenderer.currentViewport.size)")
         
         self.scene = builtScene
         
@@ -730,7 +804,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             }
         }
         
-        
         // Overlay
         let stationOverlay = GameOverlay(renderer: renderer, station: station!, camNode: self.cameraNode!)
         sceneRenderer.overlaySKScene = stationOverlay.scene
@@ -743,6 +816,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         self.modules = station?.modules ?? []
         
         // NEWS
+        var hasChanges:Bool = false
         // Check Activities
         var newsLines:[String] = []
         if gameScene == .SpaceStation {
@@ -771,6 +845,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                             let moji = person.gender == "male" ? "🙋‍♂️":"🙋‍♀️"
                             let descriptor = "\(moji) \(person.name) completed activity \(activity.activityName)."
                             newsLines.append(descriptor)
+                            person.clearActivity()
+                            hasChanges = true
                         }
                     }
                 }
@@ -800,28 +876,21 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             }
         }
         
+        // Save if needed
+        if hasChanges {
+            if let station = self.station {
+                print("Will save station")
+                LocalDatabase.shared.saveStation(station: station)
+            }
+        }
+        
         // Tell SceneDirector that scene is loaded
         SceneDirector.shared.controllerDidLoadScene(controller: self)
         
         sceneRenderer.delegate = self
         sceneRenderer.scene = scene
         
-        
-        // Music
-        if GameSettings.shared.musicOn {
-            // Play a random track
-            let track = Soundtrack.allCases.randomElement()
-            if let source = SCNAudioSource(fileNamed: "\(track?.rawValue ?? "na").m4a") {
-                print("found audio file")
-                let action = SCNAction.playAudio(source, waitForCompletion: true)
-                scene.rootNode.runAction(action) {
-                    print("Music Finished")
-                }
-            } else {
-                print("cannot find audio file")
-            }
-        }
-        
+        playMusic()
         
         // Fetch Mars Data?
         _ = MarsBuilder.shared

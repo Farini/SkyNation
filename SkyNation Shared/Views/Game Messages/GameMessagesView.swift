@@ -9,13 +9,10 @@ import SwiftUI
 
 struct GameMessagesView: View {
     
-    var messages:[GameMessage]
-    
-    @State var tab:GameMessageType = .Freebie
+    @ObservedObject var controller:SideChatController
     
     init() {
-        let messages = LocalDatabase.shared.gameMessages
-        self.messages = messages
+        self.controller = SideChatController()
     }
     
     var header: some View {
@@ -64,7 +61,7 @@ struct GameMessagesView: View {
     var tabPicker: some View {
         HStack(spacing:0) {
             ForEach(GameMessageType.allCases, id:\.self) { mType in
-                let selected:Bool = self.tab == mType
+                let selected:Bool = controller.selectedTab == mType
                 let myGradient = selected ? Gradient(colors: [Color.red.opacity(0.6), Color.blue.opacity(0.7)]):Gradient(colors: [Color.red.opacity(0.3), Color.blue.opacity(0.3)])
                 ZStack (alignment:.bottomTrailing) {
                     Text(mType.emoji)
@@ -86,8 +83,9 @@ struct GameMessagesView: View {
                 }
                 .help("\(mType.rawValue)")
                 .onTapGesture {
-                    print("Did select tab \(mType.rawValue)")
-                    self.tab = mType
+                    controller.didSelectTab(tab: mType)
+//                    print("Did select tab \(mType.rawValue)")
+//                    self.tab = mType
                 }
             }
         }
@@ -101,7 +99,7 @@ struct GameMessagesView: View {
                 header
                 
                 ScrollView {
-                    switch tab {
+                    switch controller.selectedTab {
                         case .Freebie:
                             
                             Text("Freebie of the day").font(.title).foregroundColor(.orange)
@@ -146,8 +144,10 @@ struct GameMessagesView: View {
                                 .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                             }
                          */
+                        
                         case .Achievement:
-                            ForEach(messages.filter({$0.type == tab}).sorted(by: { $0.date.compare($1.date) == .orderedDescending}), id:\.self.id) { message in
+                            
+                            ForEach(controller.gameMessages.filter({$0.type == controller.selectedTab }).sorted(by: { $0.date.compare($1.date) == .orderedDescending}), id:\.self.id) { message in
                                 
                                 
                                 VStack {
@@ -163,8 +163,21 @@ struct GameMessagesView: View {
                                     Divider()
                                 }
                             }
+                            
                         case .Chat:
                             GuildChatView()
+                            
+                        case .Guild:
+                            if let guild = controller.guild {
+                                MessagesGuildView(controller: controller, guild: guild)
+                            } else {
+                                VStack {
+                                    Spacer()
+                                    Text("⚠️ You must be in a Guild to see related content").foregroundColor(.gray)
+                                    Spacer()
+                                }
+                            }
+                            
                             
                         default:
                             VStack {
@@ -175,13 +188,6 @@ struct GameMessagesView: View {
                             
                             
                     }
-                    
-                    // Freebies
-                    if self.tab == GameMessageType.Freebie {
-                        
-                    }
-                    
-                    
                 }
             }
             .frame(minWidth: 500, idealWidth: 600, maxWidth: 900, minHeight:300, idealHeight:500, maxHeight:600, alignment: .topLeading)
@@ -189,11 +195,68 @@ struct GameMessagesView: View {
     
     /// The callout displaying how many messages in that tab
     func makeTabCallout(type:GameMessageType) -> Text {
-        let current = messages.filter({ $0.type == type }).count
+        let current = controller.gameMessages.filter({ $0.type == type }).count
         return Text("\(current)").foregroundColor(current == 0 ? Color.gray:Color.red)
     }
+}
+
+struct MessagesGuildView:View {
     
+    @ObservedObject var controller:SideChatController
+    @State var guild:GuildFullContent
     
+    var body: some View {
+        VStack {
+            Text("Guild Stuff")
+            
+            // President
+            Text("President").font(.title3)
+            if let presid = guild.president,
+               let person = guild.citizens.filter({ $0.id == presid }).first {
+                SmallPlayerCardView(pCard: person.makePlayerCard())
+                
+                if controller.iAmPresident() == true {
+                    Text("I am president")
+                    
+                    // Add President Actions here
+                    // Guild Modify
+                    // Kickout
+                }
+                
+            } else {
+                Text("No President").foregroundColor(.gray)
+            }
+            
+            Divider()
+                .padding(.horizontal)
+            
+            // Election
+            Text("Election").font(.title3)
+            let electing = guild.election
+            Text(GameFormatters.dateFormatter.string(from: electing))
+            
+            switch controller.electionState {
+                case .noElection:
+                    Text("No Election")
+                case .waiting(let date):
+                    Text("Next Election: \(GameFormatters.fullDateFormatter.string(from: date))")
+                case .running(let deadline):
+                    Text("Election ends: \(GameFormatters.fullDateFormatter.string(from: deadline))")
+                case .finished:
+                    Text("Finished")
+                    Button("Restart") {
+                        controller.restartElection()
+                    }
+                    .buttonStyle(GameButtonStyle())
+                    
+            }
+            
+            // Guild Modify (if president)
+            // Guild Presidential Campaign
+            // Guild Voting
+            
+        }
+    }
 }
 
 struct GameMessagesView_Previews: PreviewProvider {

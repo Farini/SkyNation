@@ -118,9 +118,11 @@ class GuildChatController:ObservableObject {
 }
 
 struct GuildChatView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        GuildChatView() //messages: GuildChatView_Previews.exampleMessages())
+        GuildChatView()
     }
+    
     static func exampleMessages() -> [ChatMessage] {
         
         let gid = UUID()

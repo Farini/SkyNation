@@ -310,3 +310,90 @@ enum GuildColor:String, Codable, CaseIterable {
         }
     }
 }
+
+struct Election:Codable {
+    
+    static let schema = "elections"
+    
+    var id: UUID?
+    
+    var guild:[String:UUID?]
+    
+    // Vote Count
+    
+    /// Citizen x votes casted
+    var casted:[UUID:Int]
+    
+    /// Citizen x votes received
+    var voted:[UUID:Int]
+    
+//    init(guild:Guild) {
+//        self.guild = guild
+//        self.casted = [:]
+//        self.voted = [:]
+//    }
+    
+    // [Timing Functions]
+    
+//    func startDate() -> Date {
+//        return guild.election.addingTimeInterval(60.0 * 60.0 * 24.0 * 7.0)
+//    }
+//
+//    func endDate() -> Date {
+//        return self.startDate().addingTimeInterval(60.0 * 60.0 * 24.0)
+//    }
+    
+    // Voting Functions
+//    func vote(from:UUID, to:UUID, token:GameToken?) -> Bool {
+//
+//        let dateNow = Date()
+//        if dateNow.compare(startDate()) == .orderedDescending && dateNow.compare(endDate()) == .orderedAscending {
+//
+//            let playerVoteCount = self.casted[from, default:0]
+//
+//            var canVote:Bool = false
+//
+//            if playerVoteCount >= 3 {
+//                if let token = token,
+//                   token.usedDate == nil {
+//                    canVote = true
+//                }
+//            } else {
+//                canVote = true
+//            }
+//
+//            if canVote == true {
+//
+//                // Do the voting
+//                self.casted[from, default:0] += 1
+//                self.voted[to, default:0] += 1
+//            }
+//
+//            return canVote
+//
+//        } else {
+//            // Not a good date
+//            return false
+//        }
+//    }
+    
+//    func calculateVictory() -> UUID? {
+//
+//        var winner:UUID?
+//        var maxVotes:Int = 0
+//
+//        for (key, value) in self.voted {
+//            if value > maxVotes {
+//                winner = key
+//            }
+//        }
+//
+//        if let winner = winner,
+//           guild.citizens.contains(winner) {
+//            return winner
+//        } else {
+//            return nil
+//        }
+//    }
+    
+}

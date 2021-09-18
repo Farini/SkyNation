@@ -92,6 +92,9 @@ class StationBuilder:Codable {
     var buildList:[StationBuildItem]
     var lights:[BuildableLight] = []
     
+    // Camera
+    var gameCamera:GameCamera?
+    
     var scene:SCNScene?
     
     // MARK: - Initializers
@@ -432,6 +435,8 @@ extension StationBuilder {
         
         // Game Camera
         let newCamera = GameCamera(pov: camArray.first!, array: camArray)
+        self.gameCamera = newCamera
+        
         scene.rootNode.addChildNode(newCamera)
         
         

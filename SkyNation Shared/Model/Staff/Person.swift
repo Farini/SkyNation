@@ -415,6 +415,8 @@ class Person:Codable, Identifiable, Equatable {
                     print("\(name) finished Recipe \(recipe)")
                     self.activity = nil
                 }
+                
+                self.activity = nil
             }
 //        }
     }
