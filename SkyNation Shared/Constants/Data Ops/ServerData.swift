@@ -200,19 +200,6 @@ class ServerManager {
         }
     }
     
-    func saveServerData() {
-        if let sdata = serverData {
-            let result = LocalDatabase.shared.saveServerData(skn: sdata)
-            if result == true {
-                print("saved ServerData locally")
-            } else {
-                print("‼️ ERROR! saving ServerData ‼️")
-            }
-        } else {
-            print("‼️ No Server Data to save ‼️")
-        }
-    }
-    
     /// Get the `SKNPlayer` object from here.
     /*
     func inquireLogin(completion:@escaping(PlayerUpdate?, Error?) -> ()) {
@@ -302,6 +289,24 @@ class ServerManager {
         
      */
     
+    // Elections
+    
+    
+    // MARK: - Saving
+    
+    func saveServerData() {
+        if let sdata = serverData {
+            let result = LocalDatabase.shared.saveServerData(skn: sdata)
+            if result == true {
+                print("saved ServerData locally")
+            } else {
+                print("‼️ ERROR! saving ServerData ‼️")
+            }
+        } else {
+            print("‼️ No Server Data to save ‼️")
+        }
+    }
+    
 }
 
 /** A class that holds all Server variables. Stores information, and manage connections. */
@@ -323,12 +328,15 @@ class ServerData:Codable {
     /// City that belongs to this user
     var city:CityData?
     
-    /// Guild's outposts
+    /// Guild's outposts (Full Data)
     var outposts:[Outpost] = []
     
     // Vehicles
     var vehicles:[SpaceVehicle] = []
     var guildVehicles:[SpaceVehicleTicket] = []
+    
+    // Election
+    var electionData:GuildElectionData?
     
     // Status
 //    var status:ServerDatabaseStatus = .offline

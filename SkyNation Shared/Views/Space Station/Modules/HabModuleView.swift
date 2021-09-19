@@ -18,7 +18,6 @@ struct HabModuleView: View {
     init(module:HabModule) {
         let controller = HabModuleController(hab: module)
         self.controller = controller
-//        self.module
     }
     
     var body: some View {

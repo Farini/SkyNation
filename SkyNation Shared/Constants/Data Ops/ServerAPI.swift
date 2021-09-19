@@ -724,7 +724,7 @@ class SKNS {
     // Election
     
     // update(restart)
-    static func upRestartElection(completion:((Election?, Error?) -> ())?) {
+    static func upRestartElection(completion:((GuildElectionData?, Error?) -> ())?) {
         
         let url = URL(string: "\(baseAddress)/guilds/election/update")!
         
@@ -742,7 +742,7 @@ class SKNS {
                     let decoder = JSONDecoder()
                     decoder.dateDecodingStrategy = .secondsSince1970
                     do {
-                        let election = try decoder.decode(Election.self, from: data)
+                        let election = try decoder.decode(GuildElectionData.self, from: data)
                         completion?(election, nil)
                         return
                     }catch{

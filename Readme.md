@@ -122,29 +122,18 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Station LSS View - (Peripheral Selection) - not updating
 - [X] Station LSS View - Total Remake
 
+- [ ] City View - LSS View
+- [ ] City View - Test Tech Tree
+- [ ] City View - Test Lab Recipes
+- [ ] City View - Bio View
+
 - [ ] Outpost View - Contribution Request
+- [ ] Outpost View - Contribution Ranking
+- [ ] Outpost - supply method
+- [ ] Outpost - SKNS request for `Outpost` upgrades
 
-- [ ] Finish Outpost View
-- [ ] Finish City View
-
-- [ ] Blender - Biosphere quick fix with floor + Trees
-- [ ] Blender - Individual Tanks
-- [ ] Blender - Biosphere -> Inset floor to improve visual
-- [ ] Blender - Biosphere -> WallL3 needs grass UV
-
-- [ ] Mars Scene - Random Rocks
-- [ ] Mars Scene - Go back to Space Station
-- [ ] Mars Scene - City - Gate Color?
-- [ ] Mars Scene - City + Solar Panel(s)
-- [ ] Mars Scene - Animations - SpaceVehicle arriving
-- [ ] Mars Scene - Animations - Outposts Particle emitters
-- [ ] Mars Scene - Garage - Vehicle Validation (when arriving (orbit))
-- [ ] Mars Scene - Gate Lights changing (Day/Night)
-
-- [ ] Station Scene - Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
-- [ ] Station Scene - Background HDRI image
-- [ ] Station Scene - Make the Earth bright again?
-- [ ] Station Scene - New Modules not 'clickable' after Tech research. 
+- [ ] Settings - ServerTab - Leave Guild
+- [ ] Settings - ServerTab - Create Guild
 
 - [ ] Station Garage View - Improve departure animation
 - [ ] Station Garage View - Register Vehicle with Authentication (server side)
@@ -153,30 +142,36 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Station LSS View - Tank -> Test "discardEmptyTank"
 - [ ] Station LSS View - In-depth Testing after remake
 
-- [ ] Overlays - Election
+- [X] Overlays - Election
 - [ ] Overlays - Outpost rss Collecting
 - [ ] Overlays - GameCamera - Fix Awkward cam transitions
 - [ ] Overlays - CamControl - Fix Buttons & reverse actions (forward = backward)
 
 - [ ] Model - E-Vehicle/Bot
 - [ ] Model - Outpost rss Collecting
-- [ ] Model - Election
+- [X] Model - Election
 - [ ] Model - Mars Accounting
+- [ ] Model - Mars Energy (get from Outposts)
 - [ ] Model - Guild - Write Invite
 - [ ] Model - Use more energy (Peripherals + Modules + Person)
 - [ ] Model - Road Updates
 
 - [ ] 2D Graphics - iOS app icon
-- [ ] 2D Graphics - Blender individual tanks
-- [ ] 2D Graphics - Better Engine Icons
 
-- [ ] Settings - ServerTab - Leave Guild
-- [ ] Settings - ServerTab - Create Guild
+- [ ] Blender - Biosphere quick fix with floor + Trees
+- [ ] Blender - Individual Tanks
+- [ ] Blender - Biosphere -> Inset floor to improve visual
+- [ ] Blender - Biosphere -> WallL3 needs grass UV
+- [ ] Blender - Observatory - Make UVs
 
-- [ ] City View - Election
-- [ ] City View - LSS View + (Accounting Status)
+- [ ] Mars Scene - Go back to Space Station
+- [ ] Mars Scene - Animations - SpaceVehicle arriving
+- [ ] Mars Scene - Garage - Vehicle Validation (when arriving (orbit))
 
-- [ ] Outpost - supply method + SKNS request for `Outpost` upgrades
+- [ ] Station Scene - Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
+- [ ] Station Scene - Background HDRI image
+- [ ] Station Scene - Make the Earth bright again?
+- [ ] Station Scene - New Modules not 'clickable' after Tech research. 
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing) -> Look under Dektop -> Useful Assets -> Sounds
 - [ ] Sound - 2 more music (better ones)
@@ -184,6 +179,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Basic Views - SelectionIndicator -> ● + ○
 - [ ] Basic Views - Error messages (red)
 - [ ] Basic Views - Alert messages (orange)
+- [ ] Basic Views - Player vs Ranking (Keyval pair view)
 
 - [ ] iOS - Views are too large
 - [ ] iOS - Font modifiers
@@ -204,3 +200,9 @@ Features that are requested, but are not required to launch the game
 - [ ] Activity name enum?
 - [ ] BioBox DNA enum
 - [ ] 2D Graphics - Custom SFFonts
+- [ ] 2D Graphics - Blender individual tanks
+- [ ] 2D Graphics - Better Engine Icons
+- [ ] Mars Scene - Random Rocks
+- [ ] Mars Scene - City - Gate Color?
+- [ ] Mars Scene - City + Solar Panel(s)
+- [ ] Mars Scene - Gate Lights changing (Day/Night)

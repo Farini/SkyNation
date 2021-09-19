@@ -102,24 +102,45 @@ struct GameMessagesView: View {
                     switch controller.selectedTab {
                         case .Freebie:
                             
-                            Text("Freebie of the day").font(.title).foregroundColor(.orange)
+                            Text("Freebie of the day")
+                                .font(.title2)
+                                .foregroundColor(.orange)
                             
-                            let delta:Double = LocalDatabase.shared.player?.wallet.timeToGenerateNextFreebie() ?? 1.0
-                            if delta < 0.8 {
+                            ForEach(controller.seeFreebies(), id:\.self) { string in
+                                Text(string).foregroundColor(.green)
+                            }
+                            
+//                            let delta:Double = LocalDatabase.shared.player?.wallet.timeToGenerateNextFreebie() ?? 1.0
+                            
+                            if controller.freebiesAvailable == true {
                                 // Available
                                 Button("Get it!") {
                                     print("Get Freebie")
+                                    controller.retrieveFreebies()
                                 }
                                 .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                                .disabled(controller.freebiesAvailable)
+                                
                             } else {
-                                Text("⏰ \(TimeInterval(delta).stringFromTimeInterval())")
+                                Text("⏰ \(TimeInterval(controller.player.wallet.timeToGenerateNextFreebie()).stringFromTimeInterval())")
                                 // Not available
                                 Button("Tokens") {
-//                                    print("Get Freebie via Tokens (force)")
-//                                    print("Need to save generator")
+                                    //                                    print("Get Freebie via Tokens (force)")
+                                    //                                    print("Need to save generator")
                                 }
                                 .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                             }
+//                            if delta < 0.8 {
+//
+//                            } else {
+//                                Text("⏰ \(TimeInterval(delta).stringFromTimeInterval())")
+//                                // Not available
+//                                Button("Tokens") {
+////                                    print("Get Freebie via Tokens (force)")
+////                                    print("Need to save generator")
+//                                }
+//                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+//                            }
                             /*
                             let dateGenerated = Date().addingTimeInterval(LocalDatabase.shared.player?.wallet.timeToGenerateNextFreebie() ?? 1)
                             
@@ -237,18 +258,11 @@ struct MessagesGuildView:View {
             
             switch controller.electionState {
                 case .noElection:
-                    Text("No Election")
+                    Text("It is not time for election.").foregroundColor(.gray)
                 case .waiting(let date):
                     Text("Next Election: \(GameFormatters.fullDateFormatter.string(from: date))")
-                case .running(let deadline):
-                    Text("Election ends: \(GameFormatters.fullDateFormatter.string(from: deadline))")
-                case .finished:
-                    Text("Finished")
-                    Button("Restart") {
-                        controller.restartElection()
-                    }
-                    .buttonStyle(GameButtonStyle())
-                    
+                case .voting(let election):
+                    GuildElectionsView(controller: controller, election: election)
             }
             
             // Guild Modify (if president)
@@ -256,6 +270,73 @@ struct MessagesGuildView:View {
             // Guild Voting
             
         }
+    }
+}
+
+struct GuildElectionsView:View {
+    
+    @ObservedObject var controller:SideChatController
+    // @State var election:Election
+    var playerVotePairs:[GuildElectionsView.PlayerVoteKeyPair] = []
+    private var castedVotes:Int
+    
+    init(controller:SideChatController, election:Election) {
+        self.controller = controller
+        
+        var votePairs:[GuildElectionsView.PlayerVoteKeyPair] = []
+        for(k, v) in election.voted {
+            if let citizen = controller.citizens.first(where: { $0.id == k }) {
+                votePairs.append(PlayerVoteKeyPair(player: citizen, votes: v))
+            }
+        }
+        self.playerVotePairs = votePairs.sorted(by: { $0.votes > $1.votes })
+        
+        let myPid = LocalDatabase.shared.player?.playerID ?? UUID()
+        let vtCount = election.casted[myPid, default:0]
+        self.castedVotes = vtCount
+        
+        
+    }
+    
+    var body: some View {
+        VStack {
+            
+            let voteLimit:Int = 3
+            let remainingVotes = voteLimit - castedVotes
+            
+            // Votes
+            ForEach(playerVotePairs, id:\.player.id) { votePair in
+                let pCard = votePair.player.makePlayerCard()
+                HStack {
+                    SmallPlayerCardView(pCard: pCard)
+                    Text("\(votePair.votes)")
+                        .font(.title2)
+                        .padding(4)
+                        .background(Color.black.opacity(0.5))
+                }
+                .onTapGesture {
+                    if remainingVotes > 0 {
+                        controller.voteForPresident(citizen: votePair.player)
+                    } else {
+                        
+                    }
+                    
+                }
+            }
+            
+            Divider()
+            
+            Text("You've voted \(castedVotes) times. Remaining votes \(remainingVotes)")
+            
+            // Casts
+            // Creation
+            // Date Ends (timer)
+        }
+    }
+    
+    struct PlayerVoteKeyPair {
+        var player:PlayerContent
+        var votes:Int
     }
 }
 

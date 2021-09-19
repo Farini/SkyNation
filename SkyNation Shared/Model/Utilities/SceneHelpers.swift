@@ -62,7 +62,3 @@ struct Vector3D:Codable {
         return SCNVector3(x, y, z)
     }
 }
-
-
-
-

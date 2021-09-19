@@ -122,7 +122,7 @@ class Wallet:Codable {
     /// Generates Free Stuff. Empty if not ready.
     func generateFreebie() -> [String:Int] {
         
-        guard timeToGenerateNextFreebie() < 1.0 else { return [:] }
+//        guard timeToGenerateNextFreebie() < 1.0 else { return [:] }
         
         // Dictionary
         var dictionary:[String:Int] = [:]
@@ -133,6 +133,7 @@ class Wallet:Codable {
         
         // Update the date
 //        freebiesLast = Date()
+        self.freebiesMade = dictionary
         
         return dictionary
     }
@@ -146,24 +147,10 @@ class Wallet:Codable {
         // Get the date its supposed to generate freebie
         let deadline:Date = lastGen.addingTimeInterval(TimeInterval.oneDay)
 
-        let delta = deadline.timeIntervalSince(Date())
+        let delta = Date().timeIntervalSince(deadline)
         
         return max(-0.0, delta)
         
-        
-//        let delay = Double(TimeInterval.oneDay)
-//        let duration = Date().timeIntervalSince(self.freebiesLast)
-//
-//        let isReady:Bool = duration > delay
-//        print("Duration: \(duration), Ready: \(isReady)")
-//
-//        if duration > delay {
-//            // ready
-//            return 0
-//        } else {
-//            // not ready
-//            return delay - duration
-//        }
     }
     
 }

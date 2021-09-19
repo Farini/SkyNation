@@ -313,8 +313,6 @@ enum GuildColor:String, Codable, CaseIterable {
 
 struct Election:Codable {
     
-    static let schema = "elections"
-    
     var id: UUID?
     
     var guild:[String:UUID?]
@@ -327,6 +325,22 @@ struct Election:Codable {
     /// Citizen x votes received
     var voted:[UUID:Int]
     
+    var createdAt:Date?
+    
+    /// The date election should start
+    func startDate() -> Date {
+        let prestart = self.createdAt ?? Date.distantPast
+        let realStart = prestart.addingTimeInterval(60.0 * 60.0 * 24.0 * 7)
+        return realStart
+    }
+    
+    func electionHasEnded() -> Bool {
+        let electionStarts = self.startDate()
+        let electionEnds = electionStarts.addingTimeInterval(60.0 * 60.0 * 24.0)
+        return Date().compare(electionEnds) != .orderedAscending
+    }
+    
+    /*
 //    init(guild:Guild) {
 //        self.guild = guild
 //        self.casted = [:]
@@ -395,5 +409,27 @@ struct Election:Codable {
 //            return nil
 //        }
 //    }
+ */
+    
+}
+
+enum GuildElectionStage:String, Codable, CaseIterable {
+    
+    /// Election hasn't started.
+    case notStarted
+    
+    /// Election is running 'until'
+    case running
+    
+    /// Election Finished. Needs Updating
+    case finished
+    
+}
+
+struct GuildElectionData:Codable {
+    
+    var president:PlayerContent?
+    var election:Election
+    var electionStage:GuildElectionStage
     
 }

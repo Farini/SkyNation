@@ -115,9 +115,7 @@ struct TrussLayoutView: View {
     }
     
     func didSelect(item:TrussComponent) {
-        
         controller.didTap(component: item)
-        
     }
     
 }

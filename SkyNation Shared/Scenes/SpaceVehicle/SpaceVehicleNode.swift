@@ -8,13 +8,10 @@
 import Foundation
 import SceneKit
 
+/**
+ A Scene node that represents the `SpaceVehicle` object.
+ */
 class SpaceVehicleNode:SCNNode {
-    
-    // :: Children
-    // Satellite
-    // EDLModule
-    // CrewBody
-    // RocketBooster
     
     var rocketBooster:SCNNode
     var satellite:SCNNode
@@ -60,12 +57,7 @@ class SpaceVehicleNode:SCNNode {
         satellite.isHidden = false
         self.satellite = satellite
         
-//        edlModule.isHidden = vehicle.engine == .Hex6
-//        edlModule.isHidden = false
         self.edlModule = edlModule
-        
-//        crewBody.isHidden = ![EngineType.T22, EngineType.T18].contains(vehicle.engine)
-//        crewBody.isHidden = false
         self.crewBody = crewBody
         
         super.init()
@@ -79,7 +71,6 @@ class SpaceVehicleNode:SCNNode {
         self.addChildNode(edlModule)
         self.addChildNode(crewBody)
         
-//        self.move()
     }
     
     func move() {
@@ -114,6 +105,5 @@ class SpaceVehicleNode:SCNNode {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     
 }
