@@ -9,14 +9,16 @@ import SwiftUI
 
 struct OutpostInfoView: View {
     
-    var dbOutpost:DBOutpost
-    var outpostData:Outpost
+    @ObservedObject var controller:OutpostController
     
-    @State var progress = 0.5
-    
-    // Supply
-    @State var supplied:Int = 19
-    @State var totalSupply:Int = 48
+//    var dbOutpost:DBOutpost
+//    var outpostData:Outpost
+//
+//    @State var progress = 0.5
+//
+//    // Supply
+//    @State var supplied:Int = 19
+//    @State var totalSupply:Int = 48
     
     let levelShape = RoundedRectangle(cornerRadius: 4, style: .continuous)
     
@@ -37,16 +39,16 @@ struct OutpostInfoView: View {
                 HStack {
                     // Outpost Type
                     VStack(alignment:.leading) {
-                        Text("\(dbOutpost.type.rawValue)").font(.title3)
-                        Text("\(dbOutpost.type.explanation)").foregroundColor(.gray)
+                        Text("\(controller.dbOutpost.type.rawValue)").font(.title3)
+                        Text("\(controller.dbOutpost.type.explanation)").foregroundColor(.gray)
                         
-                        Text("State: \(dbOutpost.state.rawValue)")
+                        Text("State: \(controller.dbOutpost.state.rawValue)")
                             .padding(.top, 6)
                     }
                     Spacer()
                     VStack {
-                        Text("📍\(dbOutpost.posdex)").foregroundColor(.gray)
-                        if let date = outpostData.dateUpgrade {
+                        Text("📍\(controller.dbOutpost.posdex)").foregroundColor(.gray)
+                        if let date = controller.outpostData.dateUpgrade {
                             Text(GameFormatters.fullDateFormatter.string(from: date))
                         } else {
                             Text("---").foregroundColor(.gray)
@@ -73,7 +75,7 @@ struct OutpostInfoView: View {
                     
                     // Level number
                     VStack {
-                        Text(" \(dbOutpost.level) ").font(.title)
+                        Text(" \(controller.dbOutpost.level) ").font(.title)
                             .padding(6)
                             .background(Color.black.opacity(0.5))
                             .cornerRadius(4)
@@ -93,8 +95,8 @@ struct OutpostInfoView: View {
                         Text(productionDisplay()).font(.title3).foregroundColor(.green)
                         
                         // Upgradable?
-                        if let _ = outpostData.getNextJob() {
-                            Text("Upgradable to \(dbOutpost.level + 1)")
+                        if let _ = controller.outpostData.getNextJob() {
+                            Text("Upgradable to \(controller.dbOutpost.level + 1)")
                             
                         } else {
                             Text("No upgrades").foregroundColor(.gray)
@@ -136,16 +138,20 @@ struct OutpostInfoView: View {
                     
                     VStack {
                         Text("PROGRESS").foregroundColor(.gray)
-                        ContributionProgressBar(value: supplied, total: totalSupply)
+                        
+                        let totalSup = controller.outpostData.getNextJob()?.maxScore() ?? 0
+                        let supplied = max(controller.contribList.compactMap({ $0.score }).reduce(0, +), totalSup)
+                        
+                        ContributionProgressBar(value: supplied, total: totalSup)
                     }
                     
                     Divider().frame(height:12)
                     
                     VStack {
                         Text("Contributors")
-                        Text("Person 1")
-                        Text("Person 2")
-                        Text("Person 3")
+                        ForEach(controller.contribList) { contribution in
+                            PlayerScorePairView(playerPair: PlayerNumKeyPair(contribution.citizen, votes: contribution.score))
+                        }
                     }
                     
                     Spacer()
@@ -168,7 +174,7 @@ struct OutpostInfoView: View {
     
     func productionDisplay() -> String {
         
-        let prod = dbOutpost.type.baseProduce()
+        let prod = controller.dbOutpost.type.baseProduce()
         if let produce = prod {
             return "\(produce.name) x \(produce.quantity)"
         } else {
@@ -176,23 +182,12 @@ struct OutpostInfoView: View {
         }
     }
     
-//    func getProgress() -> Double {
-//        if supplied > 0 {
-//            return Double(supplied) / Double(totalSupply)
-//        } else {
-//            return 0.0
-//        }
-//    }
-    
 }
 
 struct OutpostInfoView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            let op = DBOutpost.example()
-            let opData = Outpost.exampleFromDatabase(dbData:op)
-            OutpostInfoView(dbOutpost: DBOutpost.example(), outpostData: opData)
-                .frame(minHeight:450, maxHeight:.infinity)
+            OutpostInfoView(controller: OutpostController(random: true))
         }
         
     }

@@ -87,32 +87,60 @@ struct SmallPlayerCardView: View {
     }
 }
 
+struct PlayerScorePairView: View {
+    
+    var playerPair:PlayerNumKeyPair
+    
+    var body: some View {
+        HStack {
+            SmallPlayerCardView(pCard: playerPair.player)
+            Text("x \(playerPair.votes)")
+                .font(.title)
+                .padding(4)
+                .background(Color.blue.opacity(0.5))
+                .cornerRadius(6.0)
+        }
+        .padding(4)
+    }
+}
+
 struct PlayerCardView_Previews: PreviewProvider {
     
     static var previews: some View {
         PlayerCardView(pCard: PlayerCardView_Previews.players().first!)
         SmallPlayerCardView(pCard: PlayerCardView_Previews.players().first!)
         
-        List() {
-            ForEach(PlayerCardView_Previews.players()) { card in
-                PlayerCardView(pCard: card)
-            }
-        }
+        PlayerScorePairView(playerPair: PlayerNumKeyPair(players().first!, votes: 5))
+        PlayerScorePairView(playerPair: PlayerNumKeyPair(players().last!, votes: 5))
         
-        List() {
-            ForEach(PlayerCardView_Previews.players()) { card in
-                SmallPlayerCardView(pCard: card)
+        HStack {
+            List() {
+                ForEach(PlayerCardView_Previews.players()) { card in
+                    PlayerCardView(pCard: card)
+                }
+            }
+            
+            List() {
+                ForEach(PlayerCardView_Previews.players()) { card in
+                    SmallPlayerCardView(pCard: card)
+                }
             }
         }
         
     }
     
     static func players() -> [PlayerCard] {
-        let p1 = PlayerCard(id: UUID(), localID: UUID(), guildID: UUID(), name: "Twelve Chars", avatar: "people_02", experience: 202, lastSeen: Date().addingTimeInterval(-200))
-        let p2 = PlayerCard(id: UUID(), localID: UUID(), guildID: UUID(), name: "Ronald Dump", avatar: "people_05", experience: 1, lastSeen: Date().addingTimeInterval(-99999))
-        let p3 = PlayerCard(id: UUID(), localID: UUID(), guildID: UUID(), name: "Osiris", avatar: "people_03", experience: 1254, lastSeen: Date().addingTimeInterval(-50000))
-        let p4 = PlayerCard(id: UUID(), localID: UUID(), guildID: UUID(), name: "Marstronaut", avatar: "people_08", experience: 12, lastSeen: Date().addingTimeInterval(-50000))
-        let p5 = PlayerCard(id: UUID(), localID: UUID(), guildID: UUID(), name: "Space-X", avatar: "people_09", experience: 189, lastSeen: Date().addingTimeInterval(-50000))
+//        let p1 = PlayerCard(id: UUID(), localID: UUID(), guildID: UUID(), name: "Twelve Chars", avatar: "people_02", experience: 202, lastSeen: Date().addingTimeInterval(-200))
+//        let p2 = PlayerCard(id: UUID(), localID: UUID(), guildID: UUID(), name: "Ronald Dump", avatar: "people_05", experience: 1, lastSeen: Date().addingTimeInterval(-99999))
+//        let p3 = PlayerCard(id: UUID(), localID: UUID(), guildID: UUID(), name: "Osiris", avatar: "people_03", experience: 1254, lastSeen: Date().addingTimeInterval(-50000))
+//        let p4 = PlayerCard(id: UUID(), localID: UUID(), guildID: UUID(), name: "Marstronaut", avatar: "people_08", experience: 12, lastSeen: Date().addingTimeInterval(-50000))
+//        let p5 = PlayerCard(id: UUID(), localID: UUID(), guildID: UUID(), name: "Space-X", avatar: "people_09", experience: 189, lastSeen: Date().addingTimeInterval(-50000))
+        let p1 = PlayerCard(playerContent: PlayerContent.example())
+        let p2 = PlayerCard(playerContent: PlayerContent.example())
+        let p3 = PlayerCard(playerContent: PlayerContent.example())
+        let p4 = PlayerCard(playerContent: PlayerContent.example())
+        let p5 = PlayerCard(playerContent: PlayerContent.example())
+        
         
         return [p1, p2, p3, p4, p5]
     }

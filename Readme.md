@@ -132,6 +132,11 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Outpost - supply method
 - [ ] Outpost - SKNS request for `Outpost` upgrades
 
+- [ ] Chat Bubble (Reorganize)
+- [ ] GameMessagesGuildTab - Election
+- [ ] GameMessagesGuildTab - President functions
+- [ ] GameMessagesGuildTab - View Other Players (Search)
+
 - [ ] Settings - ServerTab - Leave Guild
 - [ ] Settings - ServerTab - Create Guild
 

@@ -29,6 +29,9 @@ class OutpostController:ObservableObject {
     
     var builder:MarsBuilder = MarsBuilder.shared
     
+    // Tab
+    @Published var viewTab:OutpostViewTab = .info
+    
     @Published var player:SKNPlayer
     @Published var myCity:CityData = CityData.example()
     
@@ -43,8 +46,6 @@ class OutpostController:ObservableObject {
     /// List of Contributions per Citizen
     @Published var contribList:[ContributionScore] = []
     
-    // Guild
-    // var Guild
     @Published var citizens:[PlayerContent] = []
     
     // View States
@@ -55,21 +56,11 @@ class OutpostController:ObservableObject {
     
     // has modified (contributed)
     @Published var hasContributions:Bool = false
-//    @Published var myContributions:OutpostSupply = OutpostSupply()
-    
-    
-    
+
     // Errors, Alerts & Messages
     @Published var fake:String = ""
     @Published var serverError:String = ""
     @Published var displayError:Bool = false
-    
-    // Guild
-    
-    // Player Cards
-    
-    // Tab
-    @Published var viewTab:OutpostViewTab = .info
     
     /// A KV pair for the items missing for outpost upgrades
     @Published var remains:[String:Int]
@@ -205,6 +196,7 @@ class OutpostController:ObservableObject {
             }
         }
         
+        // Update Citizens
         if let servData = ServerManager.shared.serverData,
            let folks = servData.guildfc?.citizens {
             print("\n\n Folks in! \(folks.count) ")
@@ -214,15 +206,6 @@ class OutpostController:ObservableObject {
             print("\n\n no folks \n")
         }
         
-//        ServerManager.shared.inquireFullGuild(force: false) { fullGuild, error in
-//            print("Requesting Folks")
-//            if let folks = fullGuild?.citizens {
-//                print("Found Folks")
-//                DispatchQueue.main.async {
-//
-//                }
-//            }
-//        }
     }
     
     /// Updates the other variables, dependent on OutpostData

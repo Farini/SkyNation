@@ -775,9 +775,9 @@ class SKNS {
     }
     
     // vote
-    static func voteOnElection(candidate:PlayerContent, completion:((Election?, Error?) -> ())?) {
+    static func voteOnElection(candidate:PlayerCard, completion:((Election?, Error?) -> ())?) {
         
-        let url = URL(string: "\(baseAddress)/guilds/election/vote/\(candidate)")!
+        let url = URL(string: "\(baseAddress)/guilds/election/vote/\(candidate.id)")!
         
         let session = URLSession.shared
         var request = URLRequest(url: url)

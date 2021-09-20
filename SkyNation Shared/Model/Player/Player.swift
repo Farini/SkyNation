@@ -180,52 +180,6 @@ class SKNPlayer:Codable, Identifiable {
     
 }
 
-/** A base structure used to identify player, login, etc. */
-/*
-struct SKNUserPost:Codable {
-    
-    var id:UUID         // Wildcard ID
-    var name:String     // Name of Player
-    var localID:UUID    // ID received when started game
-    
-    var serverID:UUID?  // The one created on here (server)
-    
-    /// Date last password is received
-    var date:Date?
-    
-    /// A password defined by system
-    var pass:String?
-    
-    /// The PlayerContent associated with the DBPlayer
-    var player:PlayerContent?
-    
-    init(name:String) {
-        self.id = UUID()
-        self.localID = UUID()
-        self.name = name
-    }
-    
-    init(player:SKNPlayer) {
-        
-        self.id = player.id
-        self.name = player.name
-        self.localID = player.localID
-        //        self.guildID = player.guildID
-        self.serverID = player.serverID
-        
-        // Update Password only if 1 hour has not passed yet
-        if let pDate = player.datePass,
-           pDate.addingTimeInterval(60*60).compare(Date()) == .orderedAscending {
-            self.date = player.datePass
-            self.pass = player.keyPass
-        }
-        
-        // player pptyd
-        self.player = PlayerContent(player: player)
-    }
-}
-*/
-
 /** The Content used to **update**  a `DBPlayer` */
 struct PlayerContent:Codable, Identifiable, Hashable {
     
@@ -267,7 +221,12 @@ struct PlayerContent:Codable, Identifiable, Hashable {
     }
     
     func makePlayerCard() -> PlayerCard {
-        return PlayerCard(id: id, localID: localID, guildID: guildID, name: name, avatar: avatar, experience: experience, lastSeen: lastSeen)
+        return PlayerCard(playerContent: self)
+    }
+    
+    static func example() -> PlayerContent {
+        let randomPlayer = SKNPlayer.randomPlayers(1).first!
+        return PlayerContent(player: randomPlayer)
     }
 }
 
@@ -392,6 +351,16 @@ struct PlayerCard: Codable, Identifiable, Hashable {
     
     var lastSeen:Date
     
+    init(playerContent:PlayerContent) {
+        self.id = playerContent.id
+        self.localID = playerContent.localID
+        self.guildID = playerContent.guildID
+        self.name = playerContent.name
+        self.avatar = playerContent.avatar
+        self.experience = playerContent.experience
+        self.lastSeen = playerContent.lastSeen
+    }
+    
     // No initializers (Comes from Server)
 //    static func generate() -> PlayerCard {
 //        let card = PlayerCard(id: UUID(), localID: UUID(), guildID: UUID(), name: "Player One", avatar: "people_01", experience: 12, lastSeen: Date().addingTimeInterval(-500))
@@ -399,3 +368,31 @@ struct PlayerCard: Codable, Identifiable, Hashable {
 //    }
 }
 
+// MARK: - Non-Codable
+
+/// A Player and a Number. Useful for voting and displaying score (Contribution)
+struct PlayerNumKeyPair {
+    
+    var player:PlayerCard
+    var votes:Int
+    
+    init(_ player:PlayerContent, votes:Int) {
+        self.player = PlayerCard(playerContent: player)
+        self.votes = votes
+    }
+    
+    init(_ card:PlayerCard, votes:Int) {
+        self.player = card
+        self.votes = votes
+    }
+    
+    /// Helper function to generate this object with Player ID
+    static func makeFrom(id:UUID, votes:Int) -> PlayerNumKeyPair? {
+        guard let citizen = ServerManager.shared.serverData?.partners.first(where: { $0.id == id }) else {
+            print("Could not find player with id: \(id)")
+            return nil
+        }
+        return PlayerNumKeyPair(citizen, votes: votes)
+    }
+    
+}

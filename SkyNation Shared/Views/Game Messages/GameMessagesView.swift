@@ -277,17 +277,20 @@ struct GuildElectionsView:View {
     
     @ObservedObject var controller:SideChatController
     // @State var election:Election
-    var playerVotePairs:[GuildElectionsView.PlayerVoteKeyPair] = []
+    var playerVotePairs:[PlayerNumKeyPair] = []
     private var castedVotes:Int
     
     init(controller:SideChatController, election:Election) {
         self.controller = controller
         
-        var votePairs:[GuildElectionsView.PlayerVoteKeyPair] = []
-        for(k, v) in election.voted {
-            if let citizen = controller.citizens.first(where: { $0.id == k }) {
-                votePairs.append(PlayerVoteKeyPair(player: citizen, votes: v))
+        var votePairs:[PlayerNumKeyPair] = []
+        for(pid, score) in election.voted {
+            if let newPair = PlayerNumKeyPair.makeFrom(id: pid, votes: score) {
+                votePairs.append(newPair)
             }
+//            if let citizen = controller.citizens.first(where: { $0.id == k }) {
+//                votePairs.append(PlayerVoteKeyPair(player: citizen, votes: v))
+//            }
         }
         self.playerVotePairs = votePairs.sorted(by: { $0.votes > $1.votes })
         
@@ -306,7 +309,7 @@ struct GuildElectionsView:View {
             
             // Votes
             ForEach(playerVotePairs, id:\.player.id) { votePair in
-                let pCard = votePair.player.makePlayerCard()
+                let pCard = votePair.player // .makePlayerCard()
                 HStack {
                     SmallPlayerCardView(pCard: pCard)
                     Text("\(votePair.votes)")
@@ -334,10 +337,10 @@ struct GuildElectionsView:View {
         }
     }
     
-    struct PlayerVoteKeyPair {
-        var player:PlayerContent
-        var votes:Int
-    }
+//    struct PlayerVoteKeyPair {
+//        var player:PlayerContent
+//        var votes:Int
+//    }
 }
 
 struct GameMessagesView_Previews: PreviewProvider {

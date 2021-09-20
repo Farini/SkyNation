@@ -23,6 +23,9 @@ class Outpost:Codable {
     var collected:Date?
     var dateUpgrade:Date?
     
+    /// Match the pass for updates
+    var pass:String?
+    
     /// `Player.id` vs `points`
     var contributed:[UUID:Int] = [:]
     

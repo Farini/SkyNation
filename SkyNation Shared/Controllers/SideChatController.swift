@@ -295,7 +295,7 @@ class SideChatController:ObservableObject {
         }
     }
     
-    func voteForPresident(citizen:PlayerContent) {
+    func voteForPresident(citizen:PlayerCard) {
         
         switch self.electionState {
             case .voting(let election):

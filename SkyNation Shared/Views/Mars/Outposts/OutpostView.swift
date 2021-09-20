@@ -128,7 +128,7 @@ struct OutpostView: View {
                         case .bioboxes:
                             OutpostSectionView(controller:controller, tab:.bioboxes)
                         case .info:
-                            OutpostInfoView(dbOutpost: controller.dbOutpost, outpostData: controller.outpostData)
+                            OutpostInfoView(controller:controller)
                         case .contributions:
                             ScrollView {
                                 
@@ -307,10 +307,6 @@ struct OutpostSectionView: View {
                                         .onTapGesture {
                                             controller.makeContribution(object: box, type:.box)
                                         }
-//                                    IngredientView(ingredient: box.type, hasIngredient: true, quantity: box.current)
-//                                        .onTapGesture {
-//                                            controller.makeContribution(object: box, type:.box)
-//                                        }
                                 }
                             }
                         case .tanks:
@@ -346,7 +342,7 @@ struct OutpostSectionView: View {
                             
                         case .bioboxes:
                             LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: [], content: {
-                                ForEach(controller.myCity.bioBoxes ?? [], id:\.id) { bioBox in
+                                ForEach(controller.myCity.bioBoxes, id:\.id) { bioBox in
                                     Text("\(DNAOption(rawValue:bioBox.perfectDNA)!.emoji) x \(bioBox.population.count)").font(.title)
                                         .onTapGesture {
                                             controller.makeContribution(object: bioBox, type:.bioBox)
