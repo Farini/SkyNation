@@ -66,8 +66,33 @@ class OutpostSupply:Codable {
         self.players = [:]
     }
     
-    // MARK: - Contributions
+    /// Initialize this object by merging two `OutpostSupply` objects.
+    init(merging old:OutpostSupply, with new:OutpostSupply) {
+        
+        let allIngredients:[StorageBox] = old.ingredients + new.ingredients
+        let allTanks:[Tank] = old.tanks + new.tanks
+        let allPeople:[Person] = old.skills + new.skills
+        let allPeripherals:[PeripheralObject] = old.peripherals + new.peripherals
+        let allBio:[BioBox] = old.bioBoxes + new.bioBoxes
+        
+        var allPlayers = old.players
+        let contPlayerID = new.players.first?.key ?? UUID()
+        let contPlayerVal = new.players.first?.value ?? 0
+        
+        // Players vs Contrib.
+        allPlayers[contPlayerID, default:0] += contPlayerVal
+        self.players = allPlayers
+        
+        self.ingredients = allIngredients
+        self.tanks = allTanks
+        self.skills = allPeople
+        self.peripherals = allPeripherals
+        self.bioBoxes = allBio
+        
+    }
     
+    // MARK: - Contributions
+    /*
     func contribute(with box:StorageBox, player:SKNPlayer) {
         ingredients.append(box)
         guard let pid = player.serverID else { return }
@@ -85,6 +110,15 @@ class OutpostSupply:Codable {
         
         // FIXME: - Make person busy and Save City (with person)
     }
+    
+    func mergeWith(supply:OutpostSupply) {
+        self.ingredients.append(contentsOf: supply.ingredients)
+        self.tanks.append(contentsOf: supply.tanks)
+        self.skills.append(contentsOf: supply.skills)
+        self.peripherals.append(contentsOf: supply.peripherals)
+        self.bioBoxes.append(contentsOf: supply.bioBoxes)
+    }
+    */
     
     /// Returns the count of all resources
     func supplyScore() -> Int {

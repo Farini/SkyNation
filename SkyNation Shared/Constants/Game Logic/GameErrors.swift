@@ -22,6 +22,17 @@ enum ServerDataError:Error {
     case failedAuthorization
 }
 
+/// An Error occurred when Contributing to Outpost (supply)
+enum OPContribError:Error {
+    
+    case missingOutpostID
+    case badSupplyData
+    case outdated
+    case serverDecodingData // Server could not decode its own data
+    case serverWritingData  // Server could not write new data to file
+    
+}
+
 /*
  (Not sure we need to use it)
  enum MGuildState:Error {

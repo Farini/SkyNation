@@ -127,9 +127,9 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] City View - Test Lab Recipes
 - [ ] City View - Bio View
 
+- [X] Outpost - supply method
 - [ ] Outpost View - Contribution Request
 - [ ] Outpost View - Contribution Ranking
-- [ ] Outpost - supply method
 - [ ] Outpost - SKNS request for `Outpost` upgrades
 
 - [ ] Chat Bubble (Reorganize)

@@ -161,13 +161,13 @@ struct StorageBoxView:View {
             image
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 52, height: 52)
-                .padding([.vertical, .leading], 6)
+                .frame(width: 42, height: 42)
+                .padding([.leading], 6)
             
             VStack(alignment:.leading) {
                 Text("\(box.type.rawValue)").font(.headline)
                 ProgressView("\(box.current) of \(box.capacity)", value: fillLevel)
-                    .frame(width: 100)
+                    .frame(maxWidth: 100)
                     .foregroundColor(fillLevel < 0.3 ? .red:fillLevel > 0.7 ? .green:.orange)
             }
             .padding(6)

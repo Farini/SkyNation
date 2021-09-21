@@ -32,38 +32,46 @@ class OutpostController:ObservableObject {
     // Tab
     @Published var viewTab:OutpostViewTab = .info
     
+    // Player Info
     @Published var player:SKNPlayer
     @Published var myCity:CityData = CityData.example()
+    @Published var citizens:[PlayerContent] = []
     
-    // Outpost
+    // MARK: - Outpost
+    
     @Published var posdex:Posdex
     @Published var dbOutpost:DBOutpost
     @Published var outpostData:Outpost
     /// Current Supplied
     @Published var supply:OutpostSupply?
+    
+    // MARK: - Built Data
+    
     /// Requirements for next job
     @Published var job:OutpostJob?
     /// List of Contributions per Citizen
     @Published var contribList:[ContributionScore] = []
+    /// A KV pair for the items missing for outpost upgrades
+    @Published var remains:[String:Int]
     
-    @Published var citizens:[PlayerContent] = []
+    // MARK: -  Data State
     
-    // View States
-    // outpost state
-    // contributions
-    // has downloaded
     @Published var isDownloaded:Bool = false
     
     // has modified (contributed)
     @Published var hasContributions:Bool = false
+    
+    /// Current Round of contributions from this Player
+    @Published var contribRound:OutpostSupply = OutpostSupply()
 
-    // Errors, Alerts & Messages
-    @Published var fake:String = ""
+    // MARK: - Errors & Alerts
+    
+//    @Published var fake:String = ""
     @Published var serverError:String = ""
+    @Published var deliveryError:String = ""
     @Published var displayError:Bool = false
     
-    /// A KV pair for the items missing for outpost upgrades
-    @Published var remains:[String:Int]
+    
     
     // MARK: - Methods
     
@@ -274,6 +282,49 @@ class OutpostController:ObservableObject {
         self.viewTab = tab
     }
     
+    /// Add an object To `contribRound`
+    func addToContribRound(object:Codable) {
+        
+        guard let pid = LocalDatabase.shared.player?.playerID else {
+            print("No player id, or wrong id")
+            return
+        }
+        
+        let round = OutpostSupply()
+        
+        if let box = object as? StorageBox {
+            if self.contribRound.ingredients.contains(box) {
+                self.contribRound.ingredients.removeAll(where: { $0.id == box.id })
+            } else {
+                round.ingredients.append(box)
+            }
+            
+        } else if let tank = object as? Tank {
+            round.tanks.append(tank)
+        } else if let machine = object as? PeripheralObject {
+            round.peripherals.append(machine)
+        } else if let person = object as? Person {
+            round.skills.append(person)
+        } else if let bio = object as? BioBox {
+            round.bioBoxes.append(bio)
+        } else {
+            print("⚠️ Contribution Object is neither of possible ones.")
+        }
+        
+        guard round.supplyScore() > 0 else {
+            print("⚠️ Contribution needs at least one item.")
+            return
+        }
+        
+        round.players[pid, default:0] += 1
+        
+        let oldRound = self.contribRound
+        let newRound = OutpostSupply(merging: oldRound, with: round)
+        
+        self.contribRound = newRound
+    }
+    
+    /*
     /// Makes the contribution, but doesn't charge from City
     func makeContribution(object:Codable, type:ContributionType) {
         
@@ -337,6 +388,138 @@ class OutpostController:ObservableObject {
         // Make the request
         // SKNS.contributionRequest(object: object, type: type, outpost: outpostData)
         
+    }
+    */
+    
+    func prepareDelivery() {
+        
+        // Get Contrib Round
+        let newSupply:OutpostSupply = self.contribRound
+        
+        // Make sure there is at least one item
+        if newSupply.supplyScore() < 1 {
+            print("Need to supply something.")
+            return
+        }
+        
+        // Make sure outpost state is `.collecting`
+        guard outpostData.state == .collecting else {
+            print("To Contribute, State must be '.collecting'")
+            return
+        }
+        
+        // Make SKNS contribution
+        SKNS.outpostContribution(outpost: self.outpostData, newSupply: newSupply) { newOPData, error in
+            
+            // Check if accepted (server response)
+            if let newOPData = newOPData {
+                DispatchQueue.main.async {
+                    self.outpostData = newOPData
+                    self.postDeliverySuccessUpdates(supplied: newSupply)
+                }
+            } else {
+                if let contribError = error as? OPContribError {
+                    print("Known Outpost Contribution Error.: \(contribError.localizedDescription)")
+                    self.postDeliveryFail(contribError: contribError, error: nil)
+                    
+                } else if let error = error {
+                    print("Unknown Outpost Contribution Error.: \(error.localizedDescription)")
+                    self.postDeliveryFail(contribError: nil, error: error)
+                } else {
+                    print("Worst error possible (no error). Not sure how to recover from here")
+                    self.postDeliveryFail(contribError: nil, error: nil)
+                }
+            }
+        }
+        
+        /*
+        Get Contrib Round
+        Make sure there is at least one item
+        Make sure outpost state is `.collecting`
+            [YES]:
+                Make SKNS contribution
+                Check if accepted (server response)
+                    [ACCEPTED]
+                        Reset contribRound
+                        Charge from city
+                        SAVE CITY
+                        *Separately* Merge with supply
+                        Check if upgradable
+                            [YES]:Request Update, Refresh OutpostData
+                            [NO]: Refresh OutpostData
+                
+            [NO]:
+                Display Problem
+                    [Outdated]: Fetch Data Again
+                    [Other]:    Update display
+        */
+        
+    }
+    
+    private func postDeliverySuccessUpdates(supplied:OutpostSupply) {
+        
+        self.deliveryError = ""
+        
+        // Charge from City
+        for box in supplied.ingredients {
+            myCity.boxes.removeAll(where: { $0.id == box.id })
+        }
+        
+        for tank in supplied.tanks {
+            myCity.tanks.removeAll(where: { $0.id == tank.id })
+        }
+        for machine in supplied.peripherals {
+            myCity.peripherals.removeAll(where: { $0.id == machine.id })
+        }
+        
+        for bio in supplied.bioBoxes {
+            myCity.bioBoxes.removeAll(where: { $0.id == bio.id })
+        }
+        
+        // People (Activity)
+        for skp in supplied.skills {
+            let person = myCity.inhabitants.first(where: { $0.id == skp.id })
+            let activity = LabActivity(time: 60.0 * 60.0 * 24.0, name: "Outpost help")
+            person?.activity = activity
+        }
+        
+        // Save City
+        do {
+            try LocalDatabase.shared.saveCity(myCity)
+        } catch {
+            print("Error saving City")
+        }
+        
+        // Reset contribRound
+        self.contribRound = OutpostSupply()
+        
+        // Check if upgradable
+        let upgradeResult = outpostData.runUpgrade()
+        switch upgradeResult {
+            case .noChanges:
+                print("No Changes")
+            case .dateUpgradeShouldBeNil:
+                print("Error!!! Date upgrade should be nil")
+            case .needsDateUpgrade:
+                print("Error!!! Needs Date upgrade")
+            case .applyForLevelUp(let currentLevel):
+                
+                print("Should update to new level.: \(currentLevel + 1)")
+                // (Y): Request Upgrade
+                // FIXME: - Apply for Level up!!
+            
+            case .nextState(let newState):
+                print("Outpost should be at a new state: \(newState.rawValue)")
+        }
+        
+    }
+    
+    private func postDeliveryFail(contribError:OPContribError?, error:Error?) {
+        if let contError = contribError {
+            self.deliveryError = contError.localizedDescription
+        } else {
+            self.deliveryError = error?.localizedDescription ?? "Unknown error"
+        }
     }
     
     // MARK: - Requirements

@@ -88,42 +88,54 @@ struct PersonRow: View {
 struct PersonSmallView:View {
     
     var person:Person
+    @State var selected:Bool = false
+    
+    private let shape = RoundedRectangle(cornerRadius: 8, style: .continuous)
+    private let unselectedColor:Color = Color.white.opacity(0.4)
+    private let selectedColor:Color = Color.blue
     
     var body: some View {
         
-            HStack {
-                Image(person.avatar)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 56, height: 56)
-                    .padding([.leading], 6)
+        HStack {
+            Image(person.avatar)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 48, height: 48)
+                .padding([.leading], 6)
+            
+            VStack(alignment: .leading, spacing: 2) {
                 
-                VStack(alignment: .leading, spacing: 2) {
-                    
+                HStack {
+                    Text(person.name)
+                        .font(.headline)
+                    Text(" (\(person.age))")
+                }
+                
+                ProgressView(value: Float(person.intelligence), total:100.0) {
                     HStack {
-                        Text(person.name)
-                            .font(.headline)
-                        Text(" (\(person.age))")
-                    }
-                    
-                    ProgressView(value: Float(person.intelligence), total:100.0) {
-                        HStack {
-                            ForEach(0..<person.skills.count) { idx in
-                                GameImages.imageForSkill(skill: person.skills[idx].skill)
-                                    .resizable()
-                                    .aspectRatio(contentMode:.fit)
-                                    .frame(width:22, height:22)
-                                // Text("x\(person.skills[idx].level) ")
-                            }
+                        ForEach(0..<person.skills.count) { idx in
+                            GameImages.imageForSkill(skill: person.skills[idx].skill)
+                                .resizable()
+                                .aspectRatio(contentMode:.fit)
+                                .frame(width:22, height:22)
+                            // Text("x\(person.skills[idx].level) ")
                         }
                     }
-                    .foregroundColor(.blue)
-                    .accentColor(.orange)
-                    
                 }
-                .padding([.trailing])
+                .foregroundColor(.blue)
+                .accentColor(.orange)
+                
+            }
+            .padding([.trailing])
         }
-        .frame(minWidth: 80, maxWidth: 250, minHeight: 56, maxHeight: 72, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        .frame(minWidth: 80, maxWidth: 180, minHeight: 56, maxHeight: 72, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        .padding(4)
+        .background(Color.black.opacity(0.5))
+        .overlay(
+            shape
+                .inset(by: selected ? 1.0:0.5)
+                .stroke(selected ? selectedColor:unselectedColor, lineWidth: selected ? 1.5:1.0)
+        )
     }
 }
 
@@ -438,8 +450,12 @@ struct PersonRow_Preview: PreviewProvider {
 
 struct PersonSmall_Preview: PreviewProvider {
     static var previews: some View {
-        PersonSmallView(person: makePerson())
+        VStack {
+            PersonSmallView(person: makePerson())
+            PersonSmallView(person: makePerson(), selected:true)
+        }
     }
+    
     /// Makes a person with more than 1 skill
     static func makePerson() -> Person {
         let p = Person(random: true)

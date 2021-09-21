@@ -12,6 +12,11 @@ import SwiftUI
 struct TankViewSmall:View {
     
     var tank:Tank
+    @State var selected:Bool = false
+    
+    private let shape = RoundedRectangle(cornerRadius: 8, style: .continuous)
+    private let unselectedColor:Color = Color.white.opacity(0.4)
+    private let selectedColor:Color = Color.blue
     
     var body: some View {
         
@@ -30,6 +35,12 @@ struct TankViewSmall:View {
                 .foregroundColor(tank.current > (tank.capacity / 2) ? Color.green:tank.current > 0 ? Color.orange:Color.red)
             
         }
+        .padding(6)
+        .overlay(
+            shape
+                .inset(by: selected ? 1.0:0.5)
+                .stroke(selected ? selectedColor:unselectedColor, lineWidth: selected ? 1.5:1.0)
+        )
     }
 }
 
@@ -295,16 +306,28 @@ struct TankOrderView: View {
 
 // MARK: - Previews
 
-struct TankPreviews2:PreviewProvider {
+struct TankRowPreviews:PreviewProvider {
     static var previews: some View {
         VStack {
             TankRow(tank: LocalDatabase.shared.station!.truss.getTanks().first!)
                 .padding()
+            
         }
     }
 }
 
-struct TankPreviews3:PreviewProvider {
+struct TankSmallPreview1: PreviewProvider {
+    static var previews: some View {
+        VStack {
+            TankViewSmall(tank: Tank(type: .co2, full: true))
+            TankViewSmall(tank: LocalDatabase.shared.station!.truss.getTanks().last!, selected:true)
+                .padding()
+            
+        }
+    }
+}
+
+struct TankDetailsPreviews:PreviewProvider {
     static var previews: some View {
         VStack {
             TankDetailView(tank: LocalDatabase.shared.station!.truss.getTanks().first!, controller: LSSController(scene: .SpaceStation))
@@ -318,3 +341,5 @@ struct TankOrder_Previews: PreviewProvider {
         TankOrderView(tank: TankType.allCases.randomElement()!)
     }
 }
+
+

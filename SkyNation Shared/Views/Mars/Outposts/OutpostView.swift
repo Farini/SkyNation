@@ -118,56 +118,57 @@ struct OutpostView: View {
                     Group {
                         switch controller.viewTab {
                         case .ingredients:
-                            OutpostSectionView(controller:controller, tab:.ingredients)
+                            OutpostSectionView(controller:controller, tab:.ingredients, contribRound: $controller.contribRound)
                         case .peopleSkills:
-                            OutpostSectionView(controller:controller, tab:.peopleSkills)
+                            OutpostSectionView(controller:controller, tab:.peopleSkills, contribRound: $controller.contribRound)
                         case .tanks:
-                            OutpostSectionView(controller:controller, tab:.tanks)
+                            OutpostSectionView(controller:controller, tab:.tanks, contribRound: $controller.contribRound)
                         case .peripherals:
-                            OutpostSectionView(controller:controller, tab:.peripherals)
+                            OutpostSectionView(controller:controller, tab:.peripherals, contribRound: $controller.contribRound)
                         case .bioboxes:
-                            OutpostSectionView(controller:controller, tab:.bioboxes)
+                            OutpostSectionView(controller:controller, tab:.bioboxes, contribRound: $controller.contribRound)
                         case .info:
-                            OutpostInfoView(controller:controller)
+                            ScrollView {
+                                OutpostInfoView(controller:controller)
+                            }
+                            
                         case .contributions:
                             ScrollView {
-                                
-                                Group {
-                                    Text("Contributions").font(.title3).foregroundColor(.orange)
-                                    ForEach(controller.contribList) { litem in
-                                        HStack {
-                                            SmallPlayerCardView(pCard: litem.citizen.makePlayerCard())
-                                            Text("\(litem.score)").font(.title)
-                                        }
-                                    }
-                                    if controller.contribList.isEmpty {
-                                        Text("[ No contributors ]").foregroundColor(.gray)
-                                    }
-                                    Divider()
-                                }.padding()
-                                
-                                Group {
-                                    Text("Citizens")
-                                    ForEach(controller.citizens) { folk in
-                                        
-                                        // SmallPlayerCardView(pCard: folk.makePlayerCard())
-                                        Text("\(folk.id), \(folk.name)")
-                                        
-                                    }
-                                    
-                                    Divider()
+                                VStack {
+                                    ContributionRoundView(controller: controller, contribRound: $controller.contribRound)
                                 }
                                 
-                                Group {
-                                    Text("Missing List")
-                                        .font(.title3).foregroundColor(.orange)
-                                    
-                                    let kkeys = controller.remains.map{$0.key}
-                                    let kvals = controller.remains.map{$0.value}
-                                    ForEach(kkeys.indices) { index in
-                                        Text("Missing \(kkeys[index]) | \(kvals[index])")
-                                    }
-                                }
+//                                Group {
+//                                    Text("Contributions").font(.title3).foregroundColor(.orange)
+//                                    ForEach(controller.contribList) { litem in
+//                                        HStack {
+//                                            SmallPlayerCardView(pCard: litem.citizen.makePlayerCard())
+//                                            Text("\(litem.score)").font(.title)
+//                                        }
+//                                    }
+//                                    if controller.contribList.isEmpty {
+//                                        Text("[ No contributors ]").foregroundColor(.gray)
+//                                    }
+//                                    Divider()
+//                                }.padding()
+                                
+//                                Group {
+//                                    Text("Citizens")
+//                                    ForEach(controller.citizens) { folk in
+//                                        Text("\(folk.id), \(folk.name)")
+//                                    }
+//                                    Divider()
+//                                }
+                                
+//                                Group {
+//                                    Text("Missing List")
+//                                        .font(.title3).foregroundColor(.orange)
+//                                    let kkeys = controller.remains.map{$0.key}
+//                                    let kvals = controller.remains.map{$0.value}
+//                                    ForEach(kkeys.indices) { index in
+//                                        Text("Missing \(kkeys[index]) | \(kvals[index])")
+//                                    }
+//                                }
                                 
                             }
                             .frame(minHeight:300)
@@ -199,6 +200,7 @@ struct OutpostSectionView: View {
     
     var controller:OutpostController
     var tab:OutpostViewTab
+    @Binding var contribRound:OutpostSupply // = OutpostSupply()
     
     var body: some View {
         
@@ -299,33 +301,34 @@ struct OutpostSectionView: View {
                     Text("Not Needed").foregroundColor(.gray).padding()
                 } else {
                     switch tab {
+                        
+                        // Available
                         case .ingredients:
-                            // Available
-                            LazyVGrid(columns: [GridItem(.fixed(120)), GridItem(.fixed(120)), GridItem(.fixed(120)), GridItem(.fixed(120))], alignment: .center, spacing: 8, pinnedViews: []) {
+                            LazyVGrid(columns: [GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))], alignment: .center, spacing: 8, pinnedViews: []) {
+                                
                                 ForEach(controller.myCity.boxes, id:\.id) { box in
-                                    StorageBoxView(box:box)
+                                    StorageBoxView(box:box, selected:contribRound.ingredients.contains(box))
+                                        .frame(height:80)
                                         .onTapGesture {
-                                            controller.makeContribution(object: box, type:.box)
+                                            controller.addToContribRound(object:box)
                                         }
                                 }
                             }
                         case .tanks:
                             LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: []) {
                                 ForEach(controller.myCity.tanks, id:\.id) { tank in
-                                    TankViewSmall(tank:tank)
+                                    TankViewSmall(tank:tank, selected:contribRound.tanks.contains(tank))
                                         .onTapGesture {
-                                            controller.makeContribution(object: tank, type:.tank)
+                                            controller.addToContribRound(object:tank)
                                         }
                                 }
                             }
                         case .peripherals:
                             LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: [], content: {
                                 ForEach(controller.myCity.peripherals, id:\.id) { peripheral in
-                                    peripheral.getImage()!
-                                        .resizable()
-                                        .frame(width:32, height:32)
+                                    PeripheralSmallSelectView(peripheral:peripheral, selected:contribRound.peripherals.contains(peripheral))
                                         .onTapGesture {
-                                            controller.makeContribution(object: peripheral, type:.machine)
+                                            controller.addToContribRound(object:peripheral)
                                         }
                                 }
                             })
@@ -333,9 +336,9 @@ struct OutpostSectionView: View {
                         case .peopleSkills:
                             LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: [], content: {
                                 ForEach(controller.myCity.inhabitants.filter({$0.isBusy() == false}), id:\.id) { person in
-                                    PersonSmallView(person:person)
+                                    PersonSmallView(person:person, selected:contribRound.skills.contains(person))
                                         .onTapGesture {
-                                            controller.makeContribution(object: person, type:.person)
+                                            controller.addToContribRound(object:person)
                                         }
                                 }
                             })
@@ -343,9 +346,9 @@ struct OutpostSectionView: View {
                         case .bioboxes:
                             LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 8, pinnedViews: [], content: {
                                 ForEach(controller.myCity.bioBoxes, id:\.id) { bioBox in
-                                    Text("\(DNAOption(rawValue:bioBox.perfectDNA)!.emoji) x \(bioBox.population.count)").font(.title)
+                                    BioBoxSelectView(bioBox:bioBox, selected:contribRound.bioBoxes.contains(bioBox))
                                         .onTapGesture {
-                                            controller.makeContribution(object: bioBox, type:.bioBox)
+                                            controller.addToContribRound(object:bioBox)
                                         }
                                 }
                             })
@@ -409,7 +412,7 @@ struct OutpostView_Previews: PreviewProvider {
         OutpostView(controller: controller)
             .frame(width: 600, height: 500, alignment: .top)
         
-        OutpostSectionView(controller: controller, tab:.ingredients)
+        OutpostSectionView(controller: controller, tab:.ingredients, contribRound: .constant(OutpostSupply()))
     }
 }
 

@@ -1145,6 +1145,82 @@ class SKNS {
     // update (upload) outpost data
     
     // contribute to outpost
+    static func outpostContribution(outpost:Outpost, newSupply:OutpostSupply, completion:((Outpost?, Error?) -> ())?) {
+        
+        let url = URL(string: "\(baseAddress)/outposts/data/contribute/\(outpost.id)")!
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.POST.rawValue
+        
+        // Headers
+        let dateUpdate = outpost.collected ?? Date()
+        let dateUpTime:Double = dateUpdate.timeIntervalSince1970
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        // Date in Header
+        request.setValue("\(dateUpTime)", forHTTPHeaderField: "date")
+        
+        // Body
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        encoder.outputFormatting = .prettyPrinted
+        
+        guard let bodyData:Data = try? encoder.encode(newSupply) else {
+            print("Could not encode body data")
+            return
+        }
+        request.httpBody = bodyData
+        
+        // Execution
+        let task = session.dataTask(with: request) { (data, response, error) in
+            
+            if let data = data {
+                DispatchQueue.main.async {
+//                    print("Data returning")
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .secondsSince1970
+                    do {
+                        let outpost = try decoder.decode(Outpost.self, from: data)
+                        completion?(outpost, nil)
+                        return
+                    } catch {
+                        
+                        // No OutpostData
+                        if let gameError = try? decoder.decode(GameError.self, from: data) {
+                            // print("Error decoding.: \(gameError.reason)")
+                            if gameError.reason == "Missing Outpost ID" {
+                                completion?(nil, OPContribError.missingOutpostID)
+                            } else if gameError.reason == "Bad Supply Data" {
+                                completion?(nil, OPContribError.badSupplyData)
+                            } else if gameError.reason == "OUTDATED" {
+                                completion?(nil, OPContribError.outdated)
+                            } else if gameError.reason == "Decoding Outpost Data" {
+                                completion?(nil, OPContribError.serverDecodingData)
+                            } else if gameError.reason == "Could not write new data" {
+                                completion?(nil, OPContribError.serverWritingData)
+                            } else {
+                                completion?(nil, error)
+                            }
+                            return
+                            
+                        } else {
+                            print("Error - An error not supported by GameError happened: \(error.localizedDescription)")
+                            completion?(nil, error)
+                            return
+                        }
+                    }
+                }
+            } else {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+        
+        
+    }
     
     // DEPRECATE
     static func contributionRequest(object:Codable, type:ContributionType, outpost:Outpost) {

@@ -34,35 +34,7 @@ class Outpost:Codable {
     
     // MARK: - Production
     
-    // Production should return a String, and an Int
-    // Work backwards from String, to find element
-    // It can also be empty (no production)
-    
-//    func producing() -> (name:String, qtty:Int) {
-//    }
-    
-//    func production() -> OutpostSupply {
-//        return OutpostSupply(ingredients: [], tanks: [], peripherals: [], bioBoxes: [])
-//    }
-    
-    // Outpost type has production base
-//    func produceIngredients() -> [Ingredient:Int] {
-//
-//        var baseAdjust:[Ingredient:Int] = [:]
-//
-//        for (k, v) in type.productionBase {
-//            // Level * percentage * fibo * baseValue(v)
-//            let fiboValue = GameLogic.fibonnaci(index: self.level)
-//            let fiboMatters:Double = 0.5 // (% influence)
-//            let calc = v + Int(fiboMatters * Double(fiboValue) * Double(v))
-//            baseAdjust[k] = calc
-//        }
-//        return baseAdjust
-//    }
-    
-//    func produceTanks() -> [TankType:Int] {
-//        return [:]
-//    }
+
     
     // The above 2 functions should be private
     
@@ -81,11 +53,17 @@ class Outpost:Codable {
     
     /// Upgrades the model, and returns results that may be relevant to upload to the server.
     func runUpgrade() -> OutpostUpgradeResult {
+        
         let previous = self.state
+        
         switch previous {
             case .collecting:
                 let missingOut:[String:Int] = calculateRemaining()
                 if missingOut.isEmpty == true {
+                    if getNextJob() == nil {
+                        self.state = .maxed
+                        return .nextState(.maxed)
+                    }
                     self.state = .full
                     // State full -> Call Server
                     return .nextState(.full)

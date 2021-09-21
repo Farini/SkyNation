@@ -143,14 +143,20 @@ struct OutpostInfoView: View {
                         let supplied = max(controller.contribList.compactMap({ $0.score }).reduce(0, +), totalSup)
                         
                         ContributionProgressBar(value: supplied, total: totalSup)
+                            .padding(.bottom, 12)
+                            .padding()
                     }
                     
-                    Divider().frame(height:12)
+                    Divider().frame(height:40)
                     
                     VStack {
                         Text("Contributors")
                         ForEach(controller.contribList) { contribution in
                             PlayerScorePairView(playerPair: PlayerNumKeyPair(contribution.citizen, votes: contribution.score))
+                        }
+                        if controller.contribList.isEmpty {
+                            Text("< No Contributions >").foregroundColor(.gray)
+                                .padding(.vertical)
                         }
                     }
                     
@@ -188,6 +194,7 @@ struct OutpostInfoView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             OutpostInfoView(controller: OutpostController(random: true))
+                .frame(height:450)
         }
         
     }
