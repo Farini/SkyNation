@@ -54,8 +54,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         didSet { oldValue == false ? showCameraMenu():hideCameraMenu() }
     }
     
-//    var camControlNode:
-    
     /// Scene's SpriteKit Overlay
     var gameOverlay:GameOverlay
     
@@ -119,7 +117,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
 //                            if let city = self.mars?.didTap(city: posde)
 //                            gameNavDelegate?.openCityView(position: posvec, name: modName)
 //                            print("pos: \(posvec)")
-                        } else if parent.name == "Outposts" || parent.parent?.name == "Outposts"{
+                        } else if parent.name == "Outposts" || parent.parent?.name == "Outposts" || parent.parent?.parent?.name == "Outposts" {
                             print("Go to outpost: \(modName)")
                             for posdex in Posdex.allCases {
                                 if posdex.sceneName == modName || posdex.sceneName == parent.name {
@@ -417,6 +415,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     // MARK: - Updates
     var shouldUpdateScene:Bool = false
+    
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         
         // Called before each frame is rendered

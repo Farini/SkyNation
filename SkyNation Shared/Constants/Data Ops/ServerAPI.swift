@@ -343,41 +343,15 @@ class SKNS {
     static func requestPlayersGuild(completion:((GuildFullContent?, Error?) -> ())?) {
         
         guard let localPlayer = LocalDatabase.shared.player else { return }
-        var pLogin:PlayerLogin?
-        
-        do {
-            let pUpdate:PlayerLogin = try PlayerLogin.create(player: localPlayer)
-            pLogin = pUpdate
-        } catch {
-            completion?(nil, error)
-            return
-        }
-        
-        /// The object being posted
-        guard let playerLogin:PlayerLogin = pLogin else {
-            fatalError()
-        }
         
         // Build Request
-        let address = "\(baseAddress)/player/guild"
+        let address = "\(baseAddress)/guilds/player/find/\(localPlayer.guildID ?? UUID())"
         
         guard let url = URL(string: address) else { return }
         let session = URLSession.shared
         var request = URLRequest(url: url)
-        request.httpMethod = HTTPMethod.POST.rawValue
+        request.httpMethod = HTTPMethod.GET.rawValue
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .secondsSince1970
-        encoder.outputFormatting = .prettyPrinted
-        
-        // Body with `PlayerLogin`
-        if let data = try? encoder.encode(playerLogin) {
-            print("\n\nAdding Data")
-            request.httpBody = data
-            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
-            print("DS: \(dataString)")
-        }
         
         let task = session.dataTask(with: request) { (data, response, error) in
             
@@ -819,6 +793,7 @@ class SKNS {
     }
     
     // President
+    
     // 1. kickout
     static func kickPlayer(from guild:GuildFullContent, booted:PlayerContent, completion:((Bool?, Error?) -> ())?) {
         let url = URL(string: "\(baseAddress)/guilds/kickout/\(guild.id)/\(booted.guildID ?? UUID())")!
@@ -1223,6 +1198,7 @@ class SKNS {
     }
     
     // DEPRECATE
+    /*
     static func contributionRequest(object:Codable, type:ContributionType, outpost:Outpost) {
         
         let url = URL(string: "\(baseAddress)/guilds/outpost/contribute/\(outpost.id.uuidString)")!
@@ -1243,6 +1219,7 @@ class SKNS {
         // After response:
         // 1. Update Server to let it know if Outpost State is UPGRADING
     }
+    */
     
     // MARK: - Space Vehicle
     

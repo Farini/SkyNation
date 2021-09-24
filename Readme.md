@@ -123,7 +123,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Station LSS View - Total Remake
 - [X] Basic Views - Player vs Ranking (Keyval pair view)
 
-- [ ] City View - Outpost  RSS Collection
+- [ ] City View - Outpost RSS Collection
 - [ ] City View - Test Tech Tree
 - [ ] City View - Test Lab Recipes
 - [ ] City View - Bio View
@@ -133,6 +133,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Outpost View - Contribution Request
 - [X] Outpost View - Contribution Ranking
 - [ ] Outpost - SKNS request for `Outpost` upgrades
+- [ ] Outpost - fix bug with contribution - SKNS can't decode OutpostData
 
 - [ ] Chat Bubble (Reorganize)
 - [X] Chat Bubble - Election
