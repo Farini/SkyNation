@@ -82,10 +82,10 @@ class DataTests: XCTestCase {
     func testOutpostContribution() {
         
         print("\n\n Testing Outpost Contribution.")
-        guard let player = LocalDatabase.shared.player else {
-            print("Failed test. No Player")
-            return
-        }
+        //        guard LocalDatabase.shared.player != nil else {
+//            print("Failed test. No Player")
+//            return
+//        }
         
         let outpost = Outpost(type: .Energy, posdex: .power1, guild: UUID())
         if let job = outpost.getNextJob() {
@@ -98,11 +98,13 @@ class DataTests: XCTestCase {
             }
         }
         
+        /*
         outpost.supplied.contribute(with: StorageBox(ingType: .SolarCell, current: Ingredient.SolarCell.boxCapacity()), player: player)
         outpost.supplied.contribute(with: StorageBox(ingType: .SolarCell, current: 186), player: player)
         outpost.supplied.contribute(with: StorageBox(ingType: .Aluminium, current: 20), player: player)
         outpost.supplied.contribute(with: StorageBox(ingType: .Circuitboard, current: 20), player: player)
         outpost.supplied.contribute(with: StorageBox(ingType: .Polimer, current: 50), player: player)
+        */
         
         let p1 = Person(random: true)
         p1.name = "Genius"
@@ -152,7 +154,7 @@ class DataTests: XCTestCase {
         p1.learnNewSkill(type: .Electric)
         p1.learnNewSkill(type: .Electric)
         
-        outpost.supplied.contribute(with: p1, player: player)
+//        outpost.supplied.contribute(with: p1, player: player)
         
         print("\n Genius:")
         for sks in p1.skills {
@@ -365,9 +367,9 @@ class DataTests: XCTestCase {
             }
             print("Energy: \(op2.energy()) KW/h")
             print("Output")
-            for (k, v) in op2.produceIngredients() {
-                print("\t\(k.rawValue):\(v)")
-            }
+//            for (k, v) in op2.produceIngredients() {
+//                print("\t\(k.rawValue):\(v)")
+//            }
             
             op2.level += 1
         }
@@ -387,9 +389,9 @@ class DataTests: XCTestCase {
             }
             print("Energy: \(op3.energy()) KW/h")
             print("Output")
-            for (k, v) in op3.produceIngredients() {
-                print("\t\(k.rawValue):\(v)")
-            }
+//            for (k, v) in op3.produceIngredients() {
+//                print("\t\(k.rawValue):\(v)")
+//            }
             
             op3.level += 1
         }
@@ -409,9 +411,9 @@ class DataTests: XCTestCase {
             }
             print("Energy: \(op4.energy()) KW/h")
             print("Output")
-            for (k, v) in op4.produceIngredients() {
-                print("\t\(k.rawValue):\(v)")
-            }
+//            for (k, v) in op4.produceIngredients() {
+//                print("\t\(k.rawValue):\(v)")
+//            }
             
             op4.level += 1
         }

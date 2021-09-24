@@ -308,9 +308,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             }
             
         } else {
-            if let tutNext = node as? TutorialButtonNode {
-                print("Clicked next")
-            }
             if let labelNode = node as? SKLabelNode {
                 print("Label \(labelNode.text ?? "n/a")")
                 if labelNode.text == "Next ➡️" {
@@ -673,7 +670,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 
                 // Update Overlay
                 gameOverlay.didChangeScene(camNode: cam)
-//                cam.camNode.look(at: SCNVector3())
                 
                 // Present Scene
                 
@@ -722,6 +718,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         
                         self.gameScene = .SpaceStation
                         self.cameraNode = camera
+                        
+                        
                         let stationOverlay = GameOverlay(renderer: self.sceneRenderer, station: station, camNode: camera)
                         self.sceneRenderer.overlaySKScene = stationOverlay.scene
                         self.gameOverlay = stationOverlay

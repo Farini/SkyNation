@@ -66,7 +66,6 @@ class OutpostController:ObservableObject {
 
     // MARK: - Errors & Alerts
     
-//    @Published var fake:String = ""
     @Published var serverError:String = ""
     @Published var deliveryError:String = ""
     @Published var displayError:Bool = false
@@ -261,6 +260,9 @@ class OutpostController:ObservableObject {
                 list.append(newItem)
             }
         }
+        
+        list.sort(by: { $0.score > $1.score })
+        
         return list
     }
     

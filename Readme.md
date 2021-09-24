@@ -121,21 +121,24 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Space Vehicle - Remove irrelevant properties
 - [X] Station LSS View - (Peripheral Selection) - not updating
 - [X] Station LSS View - Total Remake
+- [X] Basic Views - Player vs Ranking (Keyval pair view)
 
-- [ ] City View - LSS View
+- [ ] City View - Outpost  RSS Collection
 - [ ] City View - Test Tech Tree
 - [ ] City View - Test Lab Recipes
 - [ ] City View - Bio View
+- [ ] City View - Hab - Show population limit
 
 - [X] Outpost - supply method
-- [ ] Outpost View - Contribution Request
-- [ ] Outpost View - Contribution Ranking
+- [X] Outpost View - Contribution Request
+- [X] Outpost View - Contribution Ranking
 - [ ] Outpost - SKNS request for `Outpost` upgrades
 
 - [ ] Chat Bubble (Reorganize)
+- [X] Chat Bubble - Election
 - [ ] GameMessagesGuildTab - Election
-- [ ] GameMessagesGuildTab - President functions
-- [ ] GameMessagesGuildTab - View Other Players (Search)
+- [ ] GameMessagesGuildTab - President functions (Invite, Kickout, Modify Guild)
+- [ ] GameMessagesGuildTab - View Other Players (Search by name) + Request
 
 - [ ] Settings - ServerTab - Leave Guild
 - [ ] Settings - ServerTab - Create Guild
@@ -145,28 +148,28 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Station Garage View - Vehicles not updating correctly upon selection (travelling ones)
 
 - [ ] Station LSS View - Tank -> Test "discardEmptyTank"
+- [ ] Station LSS View - Fix Peripherals Scroll View
 - [ ] Station LSS View - In-depth Testing after remake
 
-- [X] Overlays - Election
-- [ ] Overlays - Outpost rss Collecting
 - [ ] Overlays - GameCamera - Fix Awkward cam transitions
 - [ ] Overlays - CamControl - Fix Buttons & reverse actions (forward = backward)
 
-- [ ] Model - E-Vehicle/Bot
-- [ ] Model - Outpost rss Collecting
 - [X] Model - Election
-- [ ] Model - Mars Accounting
-- [ ] Model - Mars Energy (get from Outposts)
-- [ ] Model - Guild - Write Invite
-- [ ] Model - Use more energy (Peripherals + Modules + Person)
+- [X] Model - City - Energy Collection
+- [X] Model - Guild - Invite Request
+- [ ] Model - Outpost rss Collecting
+- [ ] Model - Mars Accounting improvements
+- [ ] Model - Fix accounting - too easy
+- [ ] Model - Accounting Improve Human (PHI - Person Happiness Index)
+- [ ] Model - Fix cost of things (Outpost level ups)
 - [ ] Model - Road Updates
+- [ ] Model - E-Vehicle/Bot
 
 - [ ] 2D Graphics - iOS app icon
 
-- [ ] Blender - Biosphere quick fix with floor + Trees
 - [ ] Blender - Individual Tanks
-- [ ] Blender - Biosphere -> Inset floor to improve visual
 - [ ] Blender - Biosphere -> WallL3 needs grass UV
+- [ ] Blender - Biosphere -> Add trees + water
 - [ ] Blender - Observatory - Make UVs
 
 - [ ] Mars Scene - Go back to Space Station
@@ -175,7 +178,6 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [ ] Station Scene - Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
 - [ ] Station Scene - Background HDRI image
-- [ ] Station Scene - Make the Earth bright again?
 - [ ] Station Scene - New Modules not 'clickable' after Tech research. 
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing) -> Look under Dektop -> Useful Assets -> Sounds
@@ -184,7 +186,6 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Basic Views - SelectionIndicator -> ● + ○
 - [ ] Basic Views - Error messages (red)
 - [ ] Basic Views - Alert messages (orange)
-- [ ] Basic Views - Player vs Ranking (Keyval pair view)
 
 - [ ] iOS - Views are too large
 - [ ] iOS - Font modifiers
@@ -211,3 +212,4 @@ Features that are requested, but are not required to launch the game
 - [ ] Mars Scene - City - Gate Color?
 - [ ] Mars Scene - City + Solar Panel(s)
 - [ ] Mars Scene - Gate Lights changing (Day/Night)
+- [ ] Station Scene - Make the Earth bright again?

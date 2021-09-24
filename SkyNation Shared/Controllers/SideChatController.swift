@@ -88,7 +88,7 @@ class SideChatController:ObservableObject {
             self.requestChat()
             
         } else {
-            self.guildChat = GuildChatView_Previews.exampleMessages()
+            self.guildChat = [] // GuildChatView_Previews.exampleMessages()
         }
     }
     

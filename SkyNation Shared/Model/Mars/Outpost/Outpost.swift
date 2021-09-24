@@ -34,10 +34,6 @@ class Outpost:Codable {
     
     // MARK: - Production
     
-
-    
-    // The above 2 functions should be private
-    
     // Happy
     func happy() -> Int {
         return type.happyDelta

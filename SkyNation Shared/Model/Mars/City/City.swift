@@ -493,9 +493,23 @@ extension CityData {
         
         // Get the initial Data, and build a report.
         
+        // FIXME: - Collect Energy
+        
+        var energyCollection:Int = 5
+        if let sknsData = LocalDatabase.shared.serverData {
+            // get power sources
+            let outposts = sknsData.outposts
+            for op:Outpost in outposts {
+                if op.type == .Energy {
+                    let pEnergy = op.energy() / sknsData.cities.count
+                    energyCollection = max(5, pEnergy)
+                }
+            }
+        }
+        
         // 1. Energy + Power Generation + Guild Power plants
         // City's solar panels
-        let powerGen:Int = solarPanels.compactMap({ $0.maxCurrent() }).reduce(0, +)
+        let powerGen:Int = energyCollection + solarPanels.compactMap({ $0.maxCurrent() }).reduce(0, +)
         let startingEnergy:Int = self.batteries.compactMap({ $0.current }).reduce(0, +)
         
         // 2. Refill batteries function
