@@ -123,11 +123,12 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Station LSS View - Total Remake
 - [X] Basic Views - Player vs Ranking (Keyval pair view)
 
-- [ ] City View - Outpost RSS Collection
+- [X] City View - Outpost RSS Collection
+- [X] City View - Hab - Show population limit
 - [ ] City View - Test Tech Tree
 - [ ] City View - Test Lab Recipes
 - [ ] City View - Bio View
-- [ ] City View - Hab - Show population limit
+- [ ] City View - Review Outpost RSS Collection
 
 - [X] Outpost - supply method
 - [X] Outpost View - Contribution Request
@@ -139,7 +140,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Chat Bubble - Election
 - [ ] GameMessagesGuildTab - Election
 - [ ] GameMessagesGuildTab - President functions (Invite, Kickout, Modify Guild)
-- [ ] GameMessagesGuildTab - View Other Players (Search by name) + Request
+- [ ] Chat Bubble - Search Icon - View Other Players (Search by name) + Request
 
 - [ ] Settings - ServerTab - Leave Guild
 - [ ] Settings - ServerTab - Create Guild
@@ -148,7 +149,6 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Station Garage View - Register Vehicle with Authentication (server side)
 - [ ] Station Garage View - Vehicles not updating correctly upon selection (travelling ones)
 
-- [ ] Station LSS View - Tank -> Test "discardEmptyTank"
 - [ ] Station LSS View - Fix Peripherals Scroll View
 - [ ] Station LSS View - In-depth Testing after remake
 
@@ -158,7 +158,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Model - Election
 - [X] Model - City - Energy Collection
 - [X] Model - Guild - Invite Request
-- [ ] Model - Outpost rss Collecting
+- [X] Model - Outpost rss Collecting
 - [ ] Model - Mars Accounting improvements
 - [ ] Model - Fix accounting - too easy
 - [ ] Model - Accounting Improve Human (PHI - Person Happiness Index)

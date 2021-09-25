@@ -101,11 +101,6 @@ class CityData:Codable, Identifiable {
     /// Collected Items from Outpost - ID of outpost -> Date collected
     var opCollection:[UUID:Date]?
     
-    // + accounting
-    // + dateAccounting
-    // + accountingReport
-    
-    // + food (String, or DNA ?)
     
     // MARK: - Methods
     

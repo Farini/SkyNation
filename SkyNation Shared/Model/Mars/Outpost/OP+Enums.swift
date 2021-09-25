@@ -44,6 +44,7 @@ enum OutpostType:String, CaseIterable, Codable {
         }
     }
     
+    /// Returns a Key, Value pair for production
     func baseProduce() -> (name:String, quantity:Int)? {
         switch self {
             
@@ -58,12 +59,6 @@ enum OutpostType:String, CaseIterable, Codable {
             case .Biosphere: return (Ingredient.Food.rawValue, 25)
                 
             default: return nil
-//            case .HQ: return nil
-//            case .Observatory: return [:]
-//            case .Antenna: return [:]
-//            case .Launchpad: return [:]
-//            case .Arena: return [:]
-//            case .ETEC: return [:]
         }
     }
     

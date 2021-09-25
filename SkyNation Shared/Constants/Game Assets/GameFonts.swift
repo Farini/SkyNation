@@ -28,6 +28,32 @@ struct GameFormatters {
         return formatter
     }()
     
+    /// Time formatter with time only
+    static let tinyTimeFormatter:DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return formatter
+    }()
+    
+    /// Tiny Formatter with day only
+    static let tinyDayFormatter:DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .none
+        return formatter
+    }()
+    
+    /// Returns a tiny String from date. If a day ago, date formatter, or else Time formatter only.
+    static func flexibleDateFormatterString(date:Date) -> String {
+        let delta = Date().timeIntervalSince(date)
+        if delta >= 60.0 * 60.0 * 24.0 {
+            return tinyDayFormatter.string(from: date)
+        } else {
+            return tinyTimeFormatter.string(from: date)
+        }
+    }
+    
     /// Default Number Formatter. 1 to 2 decimal digits
     static let numberFormatter:NumberFormatter = {
         let format = NumberFormatter()

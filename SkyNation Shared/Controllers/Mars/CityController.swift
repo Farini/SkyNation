@@ -34,18 +34,22 @@ class CityController:ObservableObject {
     
     var builder:MarsBuilder
     @Published var player:SKNPlayer
-    
     @Published var cityTitle:String = "Unclaimed City"
     
+    // View States
+    @Published var viewState:MarsCityStatus
+    @Published var cityTab:MarsCityTab = .Hab
+    
+    // City Info
     @Published var city:DBCity?
     @Published var cityData:CityData?
     @Published var ownerID:UUID?
-    
     @Published var isMyCity:Bool = false
     @Published var isClaimedCity:Bool = true
     
-    @Published var viewState:MarsCityStatus
-    @Published var cityTab:MarsCityTab = .Hab
+    // Guild, and Outpost Collection
+    @Published var collectables:[String] = []
+    @Published var opCollectArray:[CityCollectOutpostModel] = []
     
     /// Selection item for Lab View
     @Published var labSelection:CityLabState = .NoSelection
@@ -90,6 +94,10 @@ class CityController:ObservableObject {
         self.arrivedVehicles = LocalDatabase.shared.city?.garage.vehicles ?? []
         
         // Post Init
+        
+        // Outpost Collectables
+        self.updateCityOutpostCollection()
+        
     }
     
     /// Loads the city at the correct `Posdex`
@@ -646,7 +654,7 @@ class CityController:ObservableObject {
         selectedStaff = []
     }
     
-    // MARK: - Leb (General)
+    // MARK: - Lab (General)
     
     /// Checks how much of that recipe the City has.
     func availabilityOf(ingredient:Ingredient) -> Int {
@@ -660,5 +668,151 @@ class CityController:ObservableObject {
         self.warnings = []
         // Reset Staff selection
         if !selectedStaff.isEmpty { selectedStaff = [] }
+    }
+    
+    // MARK: - Biolab
+    
+    // MARK: - Outpost Collection
+    func updateCityOutpostCollection() {
+        
+        self.opCollectArray = []
+        
+        guard let sd = LocalDatabase.shared.serverData else {
+            print("<< No server data >>")
+            return
+        }
+        
+        if let guild = sd.guildfc {
+            for dbOutpost in guild.outposts {
+                
+                collectables.append("\(dbOutpost.type.rawValue): POS.: \(dbOutpost.posdex)")
+                let colModel = CityCollectOutpostModel(dbOutpost: dbOutpost, opCollect: self.cityData?.opCollection ?? [:])
+                
+                self.opCollectArray.append(colModel)
+                
+            }
+        }
+    }
+    
+    /// Collects items from Outpost
+    func collectFromOutpost(outpost:DBOutpost) {
+        
+        guard let cityData = self.cityData else {
+            print("No CityData")
+            return
+        }
+        
+        let outpostType = outpost.type
+        
+        // What to collect?
+        if let baseProduce = outpostType.baseProduce() {
+            if let ingredient = Ingredient(rawValue: baseProduce.name) {
+                switch ingredient {
+                    
+                    case .Silica:
+                        
+                        let res = cityData.refillContainers(of: .Silica, amount: baseProduce.quantity)
+                        print("CityData refilled Silica: \(res)")
+                        if res > 0 {
+                            print("Spilling Silica!! QTTY: \(res)")
+                        }
+                        
+                    case .Water:
+                        print("Water")
+                        let res = cityData.refillContainers(of: .Water, amount: baseProduce.quantity)
+                        print("CityData refilled water: \(res)")
+                        if res > 0 {
+                            print("Spilling water!! QTTY: \(res)")
+                        }
+                    case .Food:
+                        print("Food")
+                        // Different levels, different amount, and different type of food
+                        var possibleFoods:[DNAOption] = DNAOption.allCases.filter({ $0.isAnimal == false && $0.isMedication == false })
+                        if outpost.level > 2 {
+                            possibleFoods.append(contentsOf:DNAOption.allCases.filter({ $0.isAnimal == true && $0.isMedication == false }))
+                            if outpost.level > 3 {
+                                possibleFoods.append(contentsOf:DNAOption.allCases.filter({ $0.isMedication == true }))
+                                
+                            }
+                        }
+                        var limit = baseProduce.quantity
+                        while limit > 0 {
+                            cityData.food.append(possibleFoods.randomElement()!.rawValue)
+                            limit -= 1
+                        }
+                    default:
+                        print("! Not a Collectible item")
+                }
+                
+                var newCollection = cityData.opCollection ?? [:]
+                newCollection[outpost.id, default:Date()] = Date()
+                
+                cityData.opCollection = newCollection
+                
+                do {
+                    try LocalDatabase.shared.saveCity(cityData)
+                    self.updateCityOutpostCollection()
+                } catch {
+                    print("Could not save CityData: \(error.localizedDescription)")
+                }
+                
+            } else if baseProduce.name == "Energy" {
+                
+                print("Energy")
+                let res = cityData.refillBatteries(amount: baseProduce.quantity)
+                print("CityData refilled energy: \(res)")
+                if res > 0 {
+                    print("Spilling energy!! QTTY: \(res)")
+                }
+                
+                var newCollection = cityData.opCollection ?? [:]
+                newCollection[outpost.id, default:Date()] = Date()
+                
+                cityData.opCollection = newCollection
+                
+                do {
+                    try LocalDatabase.shared.saveCity(cityData)
+                    self.updateCityOutpostCollection()
+                } catch {
+                    print("Could not save CityData: \(error.localizedDescription)")
+                }
+            }
+        }
+    
+        // How to collect?
+        // Set cityData.opCollection[outpost.id] = Date()
+        // Save City
+        // Reload - updateCityOutpostCollection
+    }
+    
+}
+
+/// A Model used to check Outpost Collection by a `City`
+struct CityCollectOutpostModel:Identifiable {
+    
+    var id:UUID
+    var outpost:DBOutpost
+    var collected:Date
+    
+    init(dbOutpost:DBOutpost, opCollect:[UUID:Date]) {
+        
+        self.id = UUID()
+        self.outpost = dbOutpost
+        
+        let opioid:UUID = dbOutpost.id
+        if let col = opCollect[opioid] {
+            self.collected = col
+        } else {
+            self.collected = Date.distantPast
+        }
+    }
+    
+    /// Returns whether this can be collected.
+    func canCollect() -> Bool {
+        let deadline = collected.addingTimeInterval(60.0 * 60.0)
+        if outpost.type.productionBase.isEmpty {
+            return false
+        }
+        return Date().compare(deadline) == .orderedDescending
     }
 }

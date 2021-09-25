@@ -12,7 +12,7 @@ struct GameMessagesView: View {
     @ObservedObject var controller:SideChatController
     
     init() {
-        self.controller = SideChatController()
+        self.controller = SideChatController(simulating: false, simElection: false)
     }
     
     var header: some View {
@@ -34,7 +34,7 @@ struct GameMessagesView: View {
                     Image(systemName: "questionmark.circle")
                         .font(.title2)
                 })
-                .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
+                    .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
                 
                 // Close
                 Button(action: {
@@ -72,7 +72,7 @@ struct GameMessagesView: View {
                         .cornerRadius(8)
                         .clipped()
                         .padding(.horizontal, 4)
-                        
+                    
                     self.makeTabCallout(type: mType)
                         .font(.callout)
                         .foregroundColor(.red)
@@ -84,8 +84,8 @@ struct GameMessagesView: View {
                 .help("\(mType.rawValue)")
                 .onTapGesture {
                     controller.didSelectTab(tab: mType)
-//                    print("Did select tab \(mType.rawValue)")
-//                    self.tab = mType
+                    //                    print("Did select tab \(mType.rawValue)")
+                    //                    self.tab = mType
                 }
             }
         }
@@ -94,124 +94,96 @@ struct GameMessagesView: View {
     
     var body: some View {
         
-            VStack {
-                
-                header
-                
-                ScrollView {
-                    switch controller.selectedTab {
-                        case .Freebie:
-                            
-                            Text("Freebie of the day")
-                                .font(.title2)
-                                .foregroundColor(.orange)
-                            
-                            ForEach(controller.seeFreebies(), id:\.self) { string in
-                                Text(string).foregroundColor(.green)
-                            }
-                            
-//                            let delta:Double = LocalDatabase.shared.player?.wallet.timeToGenerateNextFreebie() ?? 1.0
-                            
-                            if controller.freebiesAvailable == true {
-                                // Available
-                                Button("Get it!") {
-                                    print("Get Freebie")
-                                    controller.retrieveFreebies()
-                                }
-                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                                .disabled(controller.freebiesAvailable)
-                                
-                            } else {
-                                Text("⏰ \(TimeInterval(controller.player.wallet.timeToGenerateNextFreebie()).stringFromTimeInterval())")
-                                // Not available
-                                Button("Tokens") {
-                                    //                                    print("Get Freebie via Tokens (force)")
-                                    //                                    print("Need to save generator")
-                                }
-                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                            }
-//                            if delta < 0.8 {
-//
-//                            } else {
-//                                Text("⏰ \(TimeInterval(delta).stringFromTimeInterval())")
-//                                // Not available
-//                                Button("Tokens") {
-////                                    print("Get Freebie via Tokens (force)")
-////                                    print("Need to save generator")
-//                                }
-//                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-//                            }
-                            /*
-                            let dateGenerated = Date().addingTimeInterval(LocalDatabase.shared.player?.wallet.timeToGenerateNextFreebie() ?? 1)
-                            
-                            
-                            let nextGenerated:Date = dateGenerated.addingTimeInterval(60 * 60 * 12)
-                            
-                            
-                            Text("Now \(GameFormatters.dateFormatter.string(from: Date()))").foregroundColor(.red)
-                            Text("Delta: \(LocalDatabase.shared.player?.wallet.timeToGenerateNextFreebie() ?? 0)")
-                            
-                            if nextGenerated.compare(Date()) == .orderedAscending {
-                                Button("Get it!") {
-                                    print("Get Freebie")
-                                }
-                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                            } else {
-                                Text("⏰ \(nextGenerated.timeIntervalSince(Date()))")
-                                Button("Tokens") {
-                                    print("Get Freebie via Tokens (force)")
-                                    print("Need to save generator")
-                                }
-                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                            }
-                         */
+        VStack {
+            
+            header
+            
+            switch controller.selectedTab {
+                case .Freebie:
+                    
+                    Text("Freebie of the day")
+                        .font(.title2)
+                        .foregroundColor(.orange)
+                    
+                    ForEach(controller.seeFreebies(), id:\.self) { string in
+                        Text(string).foregroundColor(.green)
+                    }
+                    
+                    if controller.freebiesAvailable == true {
+                        // Available
+                        Button("Get it!") {
+                            print("Get Freebie")
+                            controller.retrieveFreebies()
+                        }
+                        .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                        .disabled(!controller.freebiesAvailable)
                         
-                        case .Achievement:
+                    } else {
+                        Text("⏰ \(TimeInterval(controller.player.wallet.timeToGenerateNextFreebie()).stringFromTimeInterval())")
+                        // Not available
+                        Button("Tokens") {
+                            print("Get Freebie via Tokens (force)")
+                        }
+                        .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                    }
+                    
+                case .Achievement:
+                    
+                    Text("Achievements").font(.title3).foregroundColor(.orange)
+                    Divider()
+                    
+                    ScrollView(.vertical, showsIndicators: true) {
+                        VStack(alignment: .leading) {
+                            
+                            Text("")
+                                .fixedSize(horizontal: false, vertical: true)
                             
                             ForEach(controller.gameMessages.filter({$0.type == controller.selectedTab }).sorted(by: { $0.date.compare($1.date) == .orderedDescending}), id:\.self.id) { message in
                                 
-                                
-                                VStack {
+                                HStack {
+                                    
+                                    // Message
                                     Text(GameFormatters.dateFormatter.string(from: message.date))
                                         .foregroundColor(message.isCollected ? .gray:.blue)
-                                    Text(message.message)
-                                        .foregroundColor(message.isRead ? .gray:.orange)
-                                    HStack {
-                                        Text("Reward: \(message.moneyRewards ?? 0)")
-                                        Text("Type: \(message.type.rawValue)")
-                                    }
                                     
-                                    Divider()
+                                    // Reward
+                                    Text("Reward: \(message.moneyRewards ?? 0)")
                                 }
+                                
+                                Text(message.message)
+                                    .foregroundColor(message.isRead ? .gray:.orange)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                
+                                Divider()
                             }
-                            
-                        case .Chat:
-                            GuildChatView()
-                            
-                        case .Guild:
-                            if let guild = controller.guild {
-                                MessagesGuildView(controller: controller, guild: guild)
-                            } else {
-                                VStack {
-                                    Spacer()
-                                    Text("⚠️ You must be in a Guild to see related content").foregroundColor(.gray)
-                                    Spacer()
-                                }
-                            }
-                            
-                            
-                        default:
-                            VStack {
-                                Spacer()
-                                Text("Not Implemented")
-                                Spacer()
-                            }
-                            
-                            
+                        }
+                        .padding(.horizontal)
                     }
-                }
+                    
+                case .Chat:
+                    
+                    GuildChatView(controller:controller)
+                    
+                case .Guild:
+                    if let guild = controller.guild {
+                        MessagesGuildView(controller: controller, guild: guild)
+                    } else {
+                        VStack {
+                            Spacer()
+                            Text("⚠️ You must be in a Guild to see related content").foregroundColor(.gray)
+                            Spacer()
+                        }
+                    }
+                    
+                default:
+                    VStack {
+                        Spacer()
+                        Text("Not Implemented")
+                        Spacer()
+                    }
             }
-            .frame(minWidth: 500, idealWidth: 600, maxWidth: 900, minHeight:300, idealHeight:500, maxHeight:600, alignment: .topLeading)
+        }
+        .frame(minWidth: 500, idealWidth: 600, maxWidth: 900, minHeight:300, idealHeight:500, maxHeight:600, alignment: .topLeading)
     }
     
     /// The callout displaying how many messages in that tab
@@ -228,12 +200,25 @@ struct MessagesGuildView:View {
     
     var body: some View {
         VStack {
-            Text("Guild Stuff")
+            
+            Group {
+                HStack {
+                    Image(systemName: guild.icon)
+                    Text("\(guild.name)").foregroundColor(.orange)
+                }
+                .font(.title3)
+                Divider()
+            }
+            
             
             // President
-            Text("President").font(.title3)
+            Text("President")
+                .font(.title3)
+                .foregroundColor(.orange)
+            
             if let presid = guild.president,
                let person = guild.citizens.filter({ $0.id == presid }).first {
+                
                 SmallPlayerCardView(pCard: person.makePlayerCard())
                 
                 if controller.iAmPresident() == true {
@@ -252,7 +237,10 @@ struct MessagesGuildView:View {
                 .padding(.horizontal)
             
             // Election
-            Text("Election").font(.title3)
+            Text("Election")
+                .font(.title3)
+                .foregroundColor(.orange)
+            
             let electing = guild.election
             Text(GameFormatters.dateFormatter.string(from: electing))
             
@@ -260,14 +248,14 @@ struct MessagesGuildView:View {
                 case .noElection:
                     Text("It is not time for election.").foregroundColor(.gray)
                 case .waiting(let date):
+                    Text("Waiting for election")
                     Text("Next Election: \(GameFormatters.fullDateFormatter.string(from: date))")
+                    let delta:TimeInterval = date.timeIntervalSince(Date())
+                    Text("in \(delta.stringFromTimeInterval())")
+                    
                 case .voting(let election):
                     GuildElectionsView(controller: controller, election: election)
             }
-            
-            // Guild Modify (if president)
-            // Guild Presidential Campaign
-            // Guild Voting
             
         }
     }
@@ -288,9 +276,9 @@ struct GuildElectionsView:View {
             if let newPair = PlayerNumKeyPair.makeFrom(id: pid, votes: score) {
                 votePairs.append(newPair)
             }
-//            if let citizen = controller.citizens.first(where: { $0.id == k }) {
-//                votePairs.append(PlayerVoteKeyPair(player: citizen, votes: v))
-//            }
+            //            if let citizen = controller.citizens.first(where: { $0.id == k }) {
+            //                votePairs.append(PlayerVoteKeyPair(player: citizen, votes: v))
+            //            }
         }
         self.playerVotePairs = votePairs.sorted(by: { $0.votes > $1.votes })
         
@@ -309,7 +297,7 @@ struct GuildElectionsView:View {
             
             // Votes
             ForEach(playerVotePairs, id:\.player.id) { votePair in
-                let pCard = votePair.player // .makePlayerCard()
+                let pCard = votePair.player
                 HStack {
                     SmallPlayerCardView(pCard: pCard)
                     Text("\(votePair.votes)")
@@ -337,10 +325,10 @@ struct GuildElectionsView:View {
         }
     }
     
-//    struct PlayerVoteKeyPair {
-//        var player:PlayerContent
-//        var votes:Int
-//    }
+    //    struct PlayerVoteKeyPair {
+    //        var player:PlayerContent
+    //        var votes:Int
+    //    }
 }
 
 struct GameMessagesView_Previews: PreviewProvider {

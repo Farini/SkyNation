@@ -47,23 +47,12 @@ class SideChatController:ObservableObject {
     
     // Guild Chat
     @Published var guildChat:[ChatMessage] = []
+    @Published var chatWarnings:[String] = []
     @Published var currentText:String = ""
     
     private var serverManager = ServerManager.shared
     
-    init() {
-        
-        /*
-        #if DEBUG
-        self.guildChat = GuildChatView_Previews.exampleMessages()
-        #else
-        if GameSettings.onlineStatus == true {
-            self.updateMessages()
-        } else {
-            self.messages = GuildChatView_Previews.exampleMessages()
-        }
-        #endif
-        */
+    init(simulating simChat:Bool, simElection:Bool) {
         
         guard let player = LocalDatabase.shared.player else {
             fatalError("No Player")
@@ -82,13 +71,21 @@ class SideChatController:ObservableObject {
             self.freebiesAvailable = true
         }
         
+        // Server Info
         if GameSettings.onlineStatus == true {
-            
-            self.getGuildInfo()
-            self.requestChat()
-            
+            if simChat == false {
+                self.requestChat()
+            } else {
+                // Simulate Chat
+                self.guildChat = []
+            }
+            if simElection == false {
+                self.getGuildInfo()
+            } else {
+                print("Simulating Election")
+            }
         } else {
-            self.guildChat = [] // GuildChatView_Previews.exampleMessages()
+            self.guildChat = []
         }
     }
     
@@ -102,11 +99,14 @@ class SideChatController:ObservableObject {
         
         self.serverManager.inquireFullGuild(force: false) { fullGuild, error in
             DispatchQueue.main.async {
+                
                 if let fullGuild = fullGuild {
                     self.guild = fullGuild
                     self.citizens = fullGuild.citizens
+                    
                     self.updateElectionData()
                     self.requestChat()
+                    
                 } else {
                     print("Possible error: \(error?.localizedDescription ?? "n/a")")
                 }
@@ -137,6 +137,8 @@ class SideChatController:ObservableObject {
             DispatchQueue.main.async {
                 if !newMessages.isEmpty {
                     self.currentText = ""
+                } else {
+                    self.chatWarnings = ["Could not post previous message"]
                 }
                 self.guildChat = newMessages.sorted(by: { $0.date.compare($1.date) == .orderedAscending })
             }
@@ -152,13 +154,18 @@ class SideChatController:ObservableObject {
             return
         }
         
+        self.chatWarnings = ["Updating messages"]
+        
         print("Fetching Guild Chat PID:\(pid)")
         
         SKNS.readChat(guildID: gid) { newMessages, error in
             if newMessages.isEmpty {
                 print("Empty Messages")
+                self.chatWarnings = ["No messages"]
             } else {
                 print("Got Messages: \(newMessages.count)")
+                self.chatWarnings = []
+                
                 DispatchQueue.main.async {
                     print("Updating \(newMessages.count) messages on screen")
                     self.guildChat = newMessages.sorted(by: { $0.date.compare($1.date) == .orderedAscending }).suffix(20)
@@ -172,98 +179,9 @@ class SideChatController:ObservableObject {
         return currentText.count
     }
     
-    // Others
     
-    func iAmPresident() -> Bool {
-        
-        if let pid = LocalDatabase.shared.player?.playerID,
-           let guild = guild {
-           return guild.president == pid
-        }
-        return false
-    
-    }
-    
-    func seeFreebies() -> [String] {
-        
-        
-        
-        var freebiesMade = player.wallet.freebiesMade
-        if freebiesMade.isEmpty {
-            freebiesMade = player.wallet.generateFreebie()
-        }
-        return Array(freebiesMade.keys)
-        
-    }
-    
-    func retrieveFreebies() {
-        
-        var freebiesMade = player.wallet.freebiesMade
-        if freebiesMade.isEmpty {
-            freebiesMade = player.wallet.generateFreebie()
-        }
-        
-        player.wallet.freebiesLast = Date()
-        
-        for (key, _) in freebiesMade {
-            if key == "token" {
-                player.wallet.tokens.append(GameToken(beginner: player.playerID ?? player.localID))
-                print("Token added.")
-            } else if key == "money" {
-                player.money += 1000
-                print("Money added")
-                
-            } else if let tank = TankType(rawValue: key) {
-                let station = LocalDatabase.shared.station
-                station?.truss.tanks.append(Tank(type: tank, full: true))
-                LocalDatabase.shared.saveStation(station: station!)
-                print("Tank type \(tank.rawValue) added.")
-            }
-        }
-        
-        let r = LocalDatabase.shared.savePlayer(player: player)
-        print("Prize added. Save \(r)")
-        
-        let delta = player.wallet.timeToGenerateNextFreebie()
-        if delta > 0 {
-            self.freebiesAvailable = false
-        } else {
-            self.freebiesAvailable = true
-        }
-        
-        self.selectedTab = .Achievement
-        self.selectedTab = .Freebie
-        
-    }
     
     // MARK: - Election
-    
-//    func updateElectionState() {
-//
-//        guard let guild = guild else {
-//            self.electionState = .noElection
-//            return
-//        }
-//
-//        let election:Date = guild.election
-//        let electStart = election.addingTimeInterval(60.0 * 60.0 * 24.0 * 7.0)
-//        let electEnd = electStart.addingTimeInterval(60.0 * 60.0 * 24.0)
-//        let dateNow = Date()
-//
-//        if dateNow.compare(electStart) == .orderedDescending {
-//            // Past election start
-//            if dateNow.compare(electEnd) == .orderedDescending {
-//                // Past election end
-//                self.electionState = .finished
-//            } else {
-//                // Before Election end
-//                self.electionState = .running(until: electEnd)
-//            }
-//        } else {
-//            // Before Election Start
-//            self.electionState = .waiting(until: electStart)
-//        }
-//    }
     
     func updateElectionData() {
         
@@ -318,5 +236,69 @@ class SideChatController:ObservableObject {
         }
         
         //updateElectionData()
+    }
+    
+    // Others
+    
+    func iAmPresident() -> Bool {
+        
+        if let pid = LocalDatabase.shared.player?.playerID,
+           let guild = guild {
+            return guild.president == pid
+        }
+        return false
+        
+    }
+    
+    func seeFreebies() -> [String] {
+        
+        
+        
+        var freebiesMade = player.wallet.freebiesMade
+        if freebiesMade.isEmpty {
+            freebiesMade = player.wallet.generateFreebie()
+        }
+        return Array(freebiesMade.keys)
+        
+    }
+    
+    func retrieveFreebies() {
+        
+        var freebiesMade = player.wallet.freebiesMade
+        if freebiesMade.isEmpty {
+            freebiesMade = player.wallet.generateFreebie()
+        }
+        
+        player.wallet.freebiesLast = Date()
+        
+        for (key, _) in freebiesMade {
+            if key == "token" {
+                player.wallet.tokens.append(GameToken(beginner: player.playerID ?? player.localID))
+                print("Token added.")
+            } else if key == "money" {
+                player.money += 1000
+                print("Money added")
+                
+            } else if let tank = TankType(rawValue: key) {
+                let station = LocalDatabase.shared.station
+                station?.truss.tanks.append(Tank(type: tank, full: true))
+                LocalDatabase.shared.saveStation(station: station!)
+                print("Tank type \(tank.rawValue) added.")
+            }
+        }
+        
+        let r = LocalDatabase.shared.savePlayer(player: player)
+        print("Prize added. Save \(r)")
+        
+        let delta = player.wallet.timeToGenerateNextFreebie()
+        if delta > 0 {
+            self.freebiesAvailable = false
+        } else {
+            self.freebiesAvailable = true
+        }
+        
+        self.selectedTab = .Achievement
+        self.selectedTab = .Freebie
+        
     }
 }

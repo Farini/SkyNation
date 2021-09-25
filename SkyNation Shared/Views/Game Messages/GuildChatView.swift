@@ -9,118 +9,97 @@ import SwiftUI
 
 struct GuildChatView: View {
     
-    @ObservedObject var controller:GuildChatController = GuildChatController()
+    @ObservedObject var controller:SideChatController
     
     var body: some View {
         VStack {
-            Text("Guild Chat")
-            Divider()
             
-            List {
-                ForEach(controller.messages, id:\.id) { message in
-                    HStack {
-                        Text("\(message.name):")
-                        Text(message.message)
+            ScrollViewReader { scroller in
+                
+                ScrollView([.vertical], showsIndicators: true) {
+                    
+                    VStack(alignment: .leading) {
+                        
+                        Group {
+                            HStack {
+                                Spacer()
+                                Text("Guild Chat")
+                                    .font(.title3)
+                                    .foregroundColor(.orange)
+                                Spacer()
+                            }
+                            Divider()
+                            
+                        }
+                        
+                        Text("")
+                            .fixedSize(horizontal: false, vertical: true)
+                        
+                        ForEach(controller.guildChat, id:\.id) { message in
+                            
+                            HStack(alignment:.top) {
+                                Text("\(message.name)")
+                                    .bold()
+                                    .foregroundColor(.green)
+                                
+                                Text("\(GameFormatters.flexibleDateFormatterString(date: message.date)):")
+                                    .foregroundColor(.blue)
+                                
+                                Text(message.message)
+                                    .font(.system(.body, design: .monospaced))
+                                    .fixedSize(horizontal: false, vertical: true)
+                                
+                                // Multiline text
+                                // https://stackoverflow.com/questions/56593120/how-do-you-create-a-multi-line-text-inside-a-scrollview-in-swiftui/56604599#56604599
+                            }
+                            .padding(.vertical, 4)
+                            
+                            Divider()
+                        }
+                        
+                        if controller.guildChat.isEmpty {
+                            Text("< No Messages >").foregroundColor(.gray)
+                        }
                     }
                 }
+                .frame(minHeight:280)
+                .padding(.horizontal)
+                .onChange(of: controller.guildChat) { newChat in
+                    scroller.scrollTo(newChat.last?.id, anchor: .bottom)
+                }
             }
-            .frame(minHeight:280, maxHeight:290)
             
-            Spacer()
-            Divider()
+            // Sending
             HStack {
+                
+                // Player Card
                 SmallPlayerCardView(pCard: LocalDatabase.shared.player!.getPlayerContent().makePlayerCard())
                     .onTapGesture {
-                        controller.updateMessages()
+                        controller.requestChat()
                     }
+                
+                // Text
                 TextField("Text", text: $controller.currentText)
                     .padding(.bottom, 6)
+                
                 Text("\(controller.textCount()) / 150").foregroundColor(controller.textCount() <= 150 ? Color.green:Color.red)
+                
                 Button("Send") {
                     controller.postMessage(text: controller.currentText)
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
+                .disabled(controller.currentText.isEmpty)
+                
             }
             .padding(.horizontal)
         }
     }
 }
 
-class GuildChatController:ObservableObject {
-    
-    @Published var messages:[ChatMessage] = []
-    @Published var currentText:String = ""
-    
-    init() {
-        #if DEBUG
-        self.messages = GuildChatView_Previews.exampleMessages()
-        #else
-        if GameSettings.onlineStatus == true {
-            self.updateMessages()
-        } else {
-            self.messages = GuildChatView_Previews.exampleMessages()
-        }
-        #endif
-    }
-    
-    /// Posts a message on the Guild Chat
-    func postMessage(text:String) {
-        
-        guard let player = LocalDatabase.shared.player,
-              let pid = player.playerID,
-              let gid = player.guildID else {
-            fatalError()
-        }
-        
-        guard text.count < 150 else {
-            print("Text is too large !!!")
-            return
-        }
-        
-        let post = ChatPost(guildID: gid, playerID: pid, name: player.name, date: Date(), message: text)
-        
-        SKNS.postChat(message: post) { newMessages, error in
-            
-            DispatchQueue.main.async {
-                if !newMessages.isEmpty {
-                    self.currentText = ""
-                }
-                self.messages = newMessages.sorted(by: { $0.date.compare($1.date) == .orderedAscending })
-            }
-        }
-    }
-    
-    /// Reads Messages from Guild Chat
-    func updateMessages() {
-        guard let player = LocalDatabase.shared.player,
-              let pid = player.playerID,
-              let gid = player.guildID else {
-            fatalError()
-        }
-        print("Fetching Guild Chat PID:\(pid)")
-        
-        SKNS.readChat(guildID: gid) { newMessages, error in
-            if newMessages.isEmpty {
-                print("Empty Messages")
-            } else {
-                print("Got Messages: \(newMessages.count)")
-                DispatchQueue.main.async {
-                    print("Updating \(newMessages.count) messages on screen")
-                    self.messages = newMessages.sorted(by: { $0.date.compare($1.date) == .orderedAscending }).suffix(20)
-                }
-            }
-        }
-    }
-    
-    func textCount() -> Int {
-        return currentText.count
-    }
-}
-
 struct GuildChatView_Previews: PreviewProvider {
     
     static var previews: some View {
-        GuildChatView()
+        GuildChatView(controller: SideChatController(simulating: true, simElection: true))
     }
     
     static func exampleMessages() -> [ChatMessage] {

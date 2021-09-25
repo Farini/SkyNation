@@ -417,6 +417,7 @@ struct DBOutpost:Codable {
     }
 }
 
+// Deprecate?
 /** Energy, Water, Oxygen, Food */
 struct Ewolf {
     
