@@ -276,9 +276,6 @@ struct GuildElectionsView:View {
             if let newPair = PlayerNumKeyPair.makeFrom(id: pid, votes: score) {
                 votePairs.append(newPair)
             }
-            //            if let citizen = controller.citizens.first(where: { $0.id == k }) {
-            //                votePairs.append(PlayerVoteKeyPair(player: citizen, votes: v))
-            //            }
         }
         self.playerVotePairs = votePairs.sorted(by: { $0.votes > $1.votes })
         
@@ -296,6 +293,7 @@ struct GuildElectionsView:View {
             let remainingVotes = voteLimit - castedVotes
             
             // Votes
+            Text("Votes").font(.title3).foregroundColor(.orange)
             ForEach(playerVotePairs, id:\.player.id) { votePair in
                 let pCard = votePair.player
                 HStack {
@@ -311,8 +309,23 @@ struct GuildElectionsView:View {
                     } else {
                         
                     }
-                    
                 }
+            }
+            
+            Divider()
+            
+            // Candidates
+            Text("All Candidates").font(.title3).foregroundColor(.orange)
+            ForEach(controller.citizens, id:\.id) { citizen in
+                let pCard = PlayerCard(playerContent: citizen)
+                SmallPlayerCardView(pCard: pCard)
+                    .onTapGesture {
+                        if remainingVotes > 0 {
+                            controller.voteForPresident(citizen: pCard)
+                        } else {
+                            
+                        }
+                    }
             }
             
             Divider()

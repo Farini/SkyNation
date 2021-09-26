@@ -125,15 +125,16 @@ struct LSSView: View {
                         .frame(minWidth:180, maxWidth:220, minHeight:200, maxHeight: .infinity)
                         
                         // Detail View
-                        ScrollView {
+                        // ScrollView {
                             switch mType {
                                 case .None:
                                     noSelectionView
+                                    
                                 case .Machine(let peripheral):
                                     LSSMachineView(controller:controller, peripheral:peripheral)
                             }
-                        }
-                        .frame(minWidth: 400, maxWidth:.infinity)
+                        // }
+//                        .frame(minWidth: 400, maxWidth:.infinity)
                     }
                     
                 case .Energy:

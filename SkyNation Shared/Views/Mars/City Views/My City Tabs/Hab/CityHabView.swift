@@ -14,6 +14,7 @@ fileprivate enum HabSelection {
 
 struct CityHabView: View {
     
+    @ObservedObject var controller:CityController
     @Binding var people:[Person]
     var city:CityData
     
@@ -44,11 +45,7 @@ struct CityHabView: View {
                 .frame(minWidth: 180, idealWidth: 200, maxWidth: 220, minHeight: 300, idealHeight: 300, maxHeight: .infinity, alignment: .top)
                 
                 HStack {
-                    /*
-                    Spacer()
-                    Text("< No Selection >")
-                    Spacer()
-                     */
+                    
                     switch selectState {
                         case .empty:
                             
@@ -59,7 +56,10 @@ struct CityHabView: View {
                         case .selected(let person):
                             ScrollView {
 //                                PersonDetail(controller: self.controller, person:controller.selectedPerson!)
-                                PersonSmallView(person: person)
+//                                PersonSmallView(person: person)
+                                PersonDetailView(person: person) { personAction in
+                                    controller.personalAction(personAction, person: person)
+                                }
                             }
                     }
                 }
@@ -73,6 +73,6 @@ struct CityHabView: View {
 
 struct CityHabView_Previews: PreviewProvider {
     static var previews: some View {
-        CityHabView(people: .constant(LocalDatabase.shared.city?.inhabitants ?? []), city: LocalDatabase.shared.city!)
+        CityHabView(controller: CityController(), people: .constant(LocalDatabase.shared.city?.inhabitants ?? []), city: LocalDatabase.shared.city!)
     }
 }

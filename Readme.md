@@ -122,25 +122,31 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Station LSS View - (Peripheral Selection) - not updating
 - [X] Station LSS View - Total Remake
 - [X] Basic Views - Player vs Ranking (Keyval pair view)
+- [X] Station LSS View - Fix Peripherals Scroll View
+- [X] Station LSS View - In-depth Testing after remake
 
 - [X] City View - Outpost RSS Collection
 - [X] City View - Hab - Show population limit
 - [X] City View - Bio View
+- [X] City View - Person Details
 - [ ] City View - Bio View Improvements
 - [ ] City View - Test Tech Tree
 - [ ] City View - Test Lab Recipes
 - [ ] City View - Lab Recipes - DetailView(making recipe)
 - [ ] City View - Review Outpost RSS Collection
 
+
 - [X] Outpost - supply method
 - [X] Outpost View - Contribution Request
 - [X] Outpost View - Contribution Ranking
 - [ ] Outpost - SKNS request for `Outpost` upgrades
 - [ ] Outpost - fix bug with contribution - SKNS can't decode OutpostData
+- [ ] Outpost View - non .contributing states views
 
 - [ ] Chat Bubble (Reorganize)
 - [X] Chat Bubble - Election
-- [ ] GameMessagesGuildTab - Election
+- [X] Chat Bubble - Vote in an Election
+- [ ] Chat Bubble - Test Election Results
 - [ ] GameMessagesGuildTab - President functions (Invite, Kickout, Modify Guild)
 - [ ] Chat Bubble - Search Icon - View Other Players (Search by name) + Request
 
@@ -150,9 +156,6 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Station Garage View - Improve departure animation
 - [ ] Station Garage View - Register Vehicle with Authentication (server side)
 - [ ] Station Garage View - Vehicles not updating correctly upon selection (travelling ones)
-
-- [ ] Station LSS View - Fix Peripherals Scroll View
-- [ ] Station LSS View - In-depth Testing after remake
 
 - [ ] Overlays - GameCamera - Fix Awkward cam transitions
 - [ ] Overlays - CamControl - Fix Buttons & reverse actions (forward = backward)

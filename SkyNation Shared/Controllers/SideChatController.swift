@@ -189,7 +189,7 @@ class SideChatController:ObservableObject {
         
         SKNS.upRestartElection { newElection, error in
             DispatchQueue.main.async {
-                if let newElection = newElection {
+                if let newElection:GuildElectionData = newElection {
                     print("Got election")
                     // Elections is here
                     self.electionData = newElection

@@ -417,6 +417,113 @@ class CityController:ObservableObject, BioController {
     }
     */
     
+    // MARK: - Hab
+    
+    func personalAction(_ paction:PersonActionCall, person:Person) {
+        
+        guard let citydata:CityData = self.cityData else {
+            print("Co city data")
+            return
+        }
+        guard let savePerson = citydata.inhabitants.first(where:  { $0.id == person.id }) else {
+            print("Bad person selection")
+            return
+        }
+        
+        switch paction {
+            case .boost:
+                print("Boosting person \(person.name)")
+                // Charge tokens for player
+                if let token = LocalDatabase.shared.player?.requestToken() {
+                    let spend = self.player.spendToken(token: token, save: true)
+                    if spend == true {
+                        if let activity = savePerson.activity {
+                            if activity.dateEnds.timeIntervalSinceNow > (60.0 * 60.0 * 24.0) {
+                                savePerson.activity = nil
+                            } else {
+                                let dateReduced = activity.dateEnds.addingTimeInterval(-60.0 * 60.0)
+                                activity.dateEnds = dateReduced
+                            }
+                        }
+                    }
+                }
+                
+                
+            case .study(let skill):
+                
+                savePerson.learnNewSkill(type: skill)
+                
+                // Add activity to Person
+                let studyActivity = LabActivity(time: GameLogic.personStudyTime, name: skill.rawValue)
+                savePerson.activity = studyActivity
+                
+            case .workout:
+                let workoutActivity = LabActivity(time: 60, name: "Workout")
+                savePerson.activity = workoutActivity
+                print("Person working out")
+                if savePerson.healthPhysical < 80 {
+                    savePerson.healthPhysical += 2
+                    if Bool.random() { savePerson.healthPhysical += 1 }
+                } else if savePerson.healthPhysical > 95 {
+                    savePerson.happiness += 1
+                }
+            
+            case .fire:
+                guard let idx = citydata.inhabitants.firstIndex(of: person) else {
+                    // self.issues.append("Error: Person doesn't belong here")
+                    return
+                }
+                
+                citydata.inhabitants.remove(at: idx)
+                self.availableStaff = citydata.inhabitants.filter({ $0.isBusy() == false })
+                
+            case .medicate:
+                // Check if there is medication
+                var medicine:[DNAOption] = []
+                for food in citydata.food {
+                    if let dna = DNAOption(rawValue: food) {
+                        if dna.isMedication == true {
+                            medicine.append(dna)
+                        }
+                    }
+                }
+                
+                if medicine.count < 5 {
+                    // issues.append("Not enough medicine.")
+                    return
+                } else {
+                    // Remove Medicine from Station (foods)
+                    for med in medicine {
+                        if let firstIndex = citydata.food.firstIndex(of: med.rawValue) {
+                            citydata.food.remove(at: firstIndex)
+                        }
+                    }
+                }
+                
+                // Medic
+                if let medic = citydata.inhabitants.filter({$0.skills.contains(where: { $0.skill == .Medic }) && $0.isBusy() == false }).first {
+                    
+                    // Add activity to medic
+                    medic.activity = LabActivity(time: 600, name: "Medicating")
+                    
+                    // Add activity to Person
+                    savePerson.activity = LabActivity(time: 600, name: "Healing")
+                    savePerson.healthPhysical = min(100, savePerson.healthPhysical + 8)
+                    
+                } else {
+                    // No Medic
+//                    issues.append("No medics were found.")
+                }
+        }
+        
+        do {
+            try LocalDatabase.shared.saveCity(citydata)
+        } catch {
+            print("Error! \(error.localizedDescription)")
+        }
+        
+    }
+    
     // MARK: - Lab (Recipes)
     
     /// Called when Player clicks on a Recipe

@@ -71,7 +71,7 @@ struct MyCityView: View {
         VStack {
             switch cityTab {
                 case .hab:
-                    CityHabView(people: $cityData.inhabitants, city: cityData, selection: nil)
+                    CityHabView(controller:controller, people: $cityData.inhabitants, city: cityData, selection: nil)
                 case .lab:
                     
                     CityLabView(controller:controller)
