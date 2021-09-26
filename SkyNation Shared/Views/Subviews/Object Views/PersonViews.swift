@@ -113,13 +113,19 @@ struct PersonSmallView:View {
                 
                 ProgressView(value: Float(person.intelligence), total:100.0) {
                     HStack {
-                        ForEach(0..<person.skills.count) { idx in
-                            GameImages.imageForSkill(skill: person.skills[idx].skill)
+                        ForEach(person.skills.compactMap({ $0.skill }), id:\.self) { skill in
+                            GameImages.imageForSkill(skill:skill)
                                 .resizable()
                                 .aspectRatio(contentMode:.fit)
                                 .frame(width:22, height:22)
-                            // Text("x\(person.skills[idx].level) ")
                         }
+//                        ForEach(0..<person.skills.count) { idx in
+//                            GameImages.imageForSkill(skill: person.skills[idx].skill)
+//                                .resizable()
+//                                .aspectRatio(contentMode:.fit)
+//                                .frame(width:22, height:22)
+//                            // Text("x\(person.skills[idx].level) ")
+//                        }
                     }
                 }
                 .foregroundColor(.blue)

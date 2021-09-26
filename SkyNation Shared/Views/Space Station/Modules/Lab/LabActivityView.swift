@@ -129,6 +129,7 @@ struct LabActivityView:View {
             self.viewModel.stop()
         }
     }
+    
 }
 
 struct LabActivity_Previews: PreviewProvider {

@@ -256,18 +256,11 @@ struct BioView: View {
                     
                 }
             }
-//            .frame(minWidth: 500, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment:.topLeading)
             
         }
         .frame(minWidth: 600, idealWidth: 700, maxWidth: 800, alignment: .top)
     }
 }
-
-
-
-
-
-
 
 // MARK: - Previews
 

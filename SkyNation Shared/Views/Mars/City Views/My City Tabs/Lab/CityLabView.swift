@@ -53,9 +53,33 @@ struct CityLabView: View {
                                 CityLabTechView(controller: controller, tech: tech)
                                 
                             case .activity(let activity):
-                                Spacer()
-                                Text("Activity: \(activity.activityName)")
-                                Spacer()
+                                // CityLabActivityView(activity: activity, city: .constant(controller.cityData!)) {
+                                
+//                                CityLabActivityView(activity: activity, city: controller.cityData!) {
+                                let model = LabActivityViewModel(labActivity: activity)
+                                
+                                CityLabActivityView(activityModel: model, labActivity: activity) { dismState in
+                                    
+                                    switch dismState {
+                                        case .cancelled:
+                                            print("Cancelled")
+                                        case .finishedRecipe(let recipe):
+                                            print("Finished recipe: \(recipe.rawValue)")
+                                        case .finishedTech(let tech):
+                                            print("Finished Tech: \(tech.rawValue)")
+                                        case .useToken(let token):
+                                            print("Use token. \(token.id)")
+                                            
+                                    }
+                                
+                                    // Dismiss Activity
+                                    print("CityLab view wants to dismiss.... ")
+                                    
+                                    controller.labSelection = .NoSelection
+                                }
+//                                Spacer()
+//                                Text("Activity: \(activity.activityName)")
+//                                Spacer()
                                 
                         }
                     }

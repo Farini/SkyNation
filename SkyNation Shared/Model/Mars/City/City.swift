@@ -101,11 +101,7 @@ class CityData:Codable, Identifiable {
     /// Collected Items from Outpost - ID of outpost -> Date collected
     var opCollection:[UUID:Date]?
     
-    
     // MARK: - Methods
-    
-    // To add
-    // + accounting
     
     /// Adds the product of a recipe to the city (i.e. Peripheral)
     func collectRecipe(recipe:Recipe) {
@@ -225,6 +221,22 @@ class CityData:Codable, Identifiable {
             }
         }
         return lacking
+    }
+    
+    func availableEnergy() -> Int {
+        return batteries.compactMap({ $0.current }).reduce(0, +)
+    }
+    
+    func availableWater() -> Int {
+        return tanks.filter({ $0.type == .h2o }).compactMap({ $0.current }).reduce(0, +)
+    }
+    
+    func availableBioSlots() -> Int {
+        var base = 20
+        if tech.contains(CityTech.recipeAirTrap) { base += 5 }
+        if tech.contains(CityTech.recipeAirTrap) { base += 5 }
+        if tech.contains(CityTech.recipeWaterSanitizer) { base += 5 }
+        return base
     }
     
     /**

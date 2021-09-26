@@ -125,9 +125,11 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [X] City View - Outpost RSS Collection
 - [X] City View - Hab - Show population limit
+- [X] City View - Bio View
+- [ ] City View - Bio View Improvements
 - [ ] City View - Test Tech Tree
 - [ ] City View - Test Lab Recipes
-- [ ] City View - Bio View
+- [ ] City View - Lab Recipes - DetailView(making recipe)
 - [ ] City View - Review Outpost RSS Collection
 
 - [X] Outpost - supply method

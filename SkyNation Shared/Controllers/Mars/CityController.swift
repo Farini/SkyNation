@@ -30,7 +30,7 @@ enum CityLabState {
     case activity(object:LabActivity)
 }
 
-class CityController:ObservableObject {
+class CityController:ObservableObject, BioController {
     
     var builder:MarsBuilder
     @Published var player:SKNPlayer
@@ -84,6 +84,8 @@ class CityController:ObservableObject {
                 self.labActivity = labActivity
                 self.labSelection = .activity(object: labActivity)
             }
+            
+            self.availableStaff = cd.inhabitants.filter({ $0.isBusy() == false })
         }
         
         // Vehicles initial state
@@ -499,7 +501,7 @@ class CityController:ObservableObject {
         
         var bonus:Double = 0.1
         for person in workers {
-            let lacking = Double(max(100, person.intelligence) + max(100, person.happiness) + max(100, person.teamWork)) / 3.0
+            let lacking = Double(min(100, person.intelligence) + min(100, person.happiness) + min(100, person.teamWork)) / 3.0
             // lacking will be 100 (best), 0 (worst)
             bonus += lacking / Double(workers.count)
         }
@@ -661,6 +663,65 @@ class CityController:ObservableObject {
         return cityData?.boxes.filter({ $0.type == ingredient }).compactMap({ $0.current }).reduce(0, +) ?? 0
     }
     
+    func validadeTokenPayment(box qtty:Int, tokens:Int) -> [String] {
+        
+        var problems:[String] = []
+        
+        let playerTokens = player.countTokens() // { //LocalDatabase.shared.player?.timeTokens {
+            if playerTokens.count >= tokens {
+                
+                // Player Has enough tokens - Check if Skills match
+//                var bioCount:Int = 0
+//                var medCount:Int = 0
+//                for person in selectedStaff {
+//                    for skill in person.skills {
+//                        if skill.skill == .Biologic {
+//                            bioCount += skill.level
+//                        }
+//                        if skill.skill == .Medic {
+//                            medCount += 1
+//                        }
+//                    }
+//                }
+//                if bioCount + medCount < 1 {
+//                    print("Not enough Skills")
+//                    problems.append("Not enough Skills")
+//                } else {
+//                    print("Skills Verified - Charging Tokens")
+                
+                // Free the people
+                self.selectedStaff = []
+                    
+                    // Charge Player
+                    let player = LocalDatabase.shared.player!
+                    //                    player.timeTokens.removeFirst(tokens)
+                    for _ in 1...tokens {
+                        if let token = player.requestToken() {
+                            let result = player.spendToken(token: token, save: true)
+                            print("Spent Token result: \(result)")
+                        }
+                    }
+                    
+                    // Make people busy
+//                    let activity = LabActivity(time: 3600, name: "Planting life")
+//                    for person in selectedStaff {
+//                        person.activity = activity
+//                    }
+                    
+                    // Save
+                    let pRes = LocalDatabase.shared.savePlayer(player: player)
+                    try? LocalDatabase.shared.saveCity(cityData!)
+                    
+                    print("Saved player: \(pRes)")
+//                }
+                
+            } else {
+                problems.append("Not enough tokens")
+            }
+        
+        return problems
+    }
+    
     /// Cancels the selection of TechItem, or Recipe
     func cancelSelection() {
         // Set the selection to none, to update the view
@@ -672,7 +733,70 @@ class CityController:ObservableObject {
     
     // MARK: - Biolab
     
+    @Published var bioboxModel:CityWorkingBioboxModel? = nil
+    
+    func evolveBio(box:BioBox) {
+        
+        // Check if perfect DNA already found
+        let populi = box.population
+        let perfect = box.perfectDNA
+        if populi.contains(perfect) {
+            box.mode = .multiply
+            //            self.multiply(box: box)
+            print("Perfect DNA Found! Updating box.")
+            return
+        }
+        
+        // Get a model
+        var currentBioModel:CityWorkingBioboxModel?
+        if let currentModel = bioboxModel {
+            if currentModel.generatorRunning == true {
+                return
+            } else {
+                currentBioModel = currentModel
+            }
+        } else {
+            let newModel = CityWorkingBioboxModel(bioBox: box)
+            currentBioModel = newModel
+        }
+        guard let currentBioModel = currentBioModel else {
+            return
+        }
+        
+        // Use the Generator
+        let generator = DNAGenerator(controller: self, box: box)
+        let score:Double = (1.0 / (Double(generator.bestLevel) + 1.0)) * 100.0
+        currentBioModel.score = score
+        currentBioModel.generatorRunning = true
+        generator.main()
+    }
+    
+    /// Called by `DNAGenerator`
+    func updateGeneticCode(sender:DNAGenerator, finished:Bool = false) {
+        print("Updating genetic code. \(sender.counter)")
+        
+        guard let bbModel = bioboxModel else { return }
+        bbModel.updateWith(generator: sender, finished: finished)
+        
+        /*
+        // Update Population
+        self.selectedPopulation = sender.populationStrings
+        self.geneticLoops = sender.counter
+        self.geneticFitString = sender.bestFit
+        let score:Double = (1.0 / (Double(sender.bestLevel) + 1.0)) * 100.0
+        self.geneticScore = Int(score)
+        if (finished) {
+            self.geneticRunning = false
+            self.selectedBioBox!.population = sender.populationStrings
+            self.selectedBioBox!.currentGeneration += sender.counter
+            self.geneticFitString = self.selectedBioBox?.getBestFitDNA() ?? ""
+//            saveStation()
+        }
+        */
+    }
+    
     // MARK: - Outpost Collection
+    
     func updateCityOutpostCollection() {
         
         self.opCollectArray = []
@@ -815,4 +939,62 @@ struct CityCollectOutpostModel:Identifiable {
         }
         return Date().compare(deadline) == .orderedDescending
     }
+}
+
+class CityWorkingBioboxModel {
+    
+    var bioBox:BioBox
+    var population:[String]
+    var geneticLoops:Int
+    var fittestString:String
+    var score:Double = 0
+    var generatorRunning:Bool = false
+    
+    init(bioBox:BioBox) {
+        self.bioBox = bioBox
+        self.population = bioBox.population
+        self.geneticLoops = 0
+        self.fittestString = bioBox.getBestFitDNA() ?? ""
+    }
+    
+    func updateWith(generator:DNAGenerator, finished:Bool) {
+        self.population = generator.populationStrings
+        self.geneticLoops = generator.counter
+        self.fittestString = generator.bestFit
+        self.score = (1.0 / (Double(generator.bestLevel) + 1.0)) * 100.0
+        
+        if (finished) {
+            self.generatorRunning = false
+            bioBox.population = generator.populationStrings
+            bioBox.currentGeneration += generator.counter
+            self.fittestString = bioBox.getBestFitDNA() ?? ""
+        }
+    }
+    
+    
+    // population
+    // genetic loops
+    // fittest string
+    // score
+    // isRunning
+    
+    // updateBioboxPopulation
+    // currentGeneration
+    
+    /// Called by `DNAGenerator`
+//    func updateGeneticCode(sender:DNAGenerator, finished:Bool = false) {
+//        // Update Population
+//        self.selectedPopulation = sender.populationStrings
+//        self.geneticLoops = sender.counter
+//        self.geneticFitString = sender.bestFit
+//        let score:Double = (1.0 / (Double(sender.bestLevel) + 1.0)) * 100.0
+//        self.geneticScore = Int(score)
+//        if (finished) {
+//            self.geneticRunning = false
+//            self.selectedBioBox!.population = sender.populationStrings
+//            self.selectedBioBox!.currentGeneration += sender.counter
+//            self.geneticFitString = self.selectedBioBox?.getBestFitDNA() ?? ""
+//            //            saveStation()
+//        }
+//    }
 }

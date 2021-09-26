@@ -13,10 +13,13 @@ enum BioModSelection {
     case selected(box:BioBox)
     case building
     // trimming
-    
 }
 
-class BioModController: ObservableObject {
+protocol BioController {
+    func updateGeneticCode(sender:DNAGenerator, finished:Bool)
+}
+
+class BioModController: ObservableObject, BioController {
     
     var station:Station
     var module:BioModule
@@ -503,7 +506,7 @@ class BioModController: ObservableObject {
 
 class DNAGenerator {
     
-    var controller:BioModController
+    var controller:BioController
     
     var perfectDNA:[UInt8]
     var populationDNAs:[[UInt8]]
@@ -525,7 +528,7 @@ class DNAGenerator {
     var isRunning:Bool = false
     
     
-    init(controller:BioModController, box:BioBox) {
+    init(controller:BioController, box:BioBox) {
         
         self.controller = controller
         
@@ -710,7 +713,7 @@ class DNAGenerator {
                     self.counter += 1
                     self.populationDNAs = population
                     self.populationStrings = newPopStrings
-                    self.controller.updateGeneticCode(sender: self)
+                    self.controller.updateGeneticCode(sender: self, finished: false)
                 }
                 
                 if minFitness == 0 { break; }

@@ -672,20 +672,42 @@ class LabViewModel: ObservableObject {
 /// Controls a continuous `LabActivity` updating it every few seconds
 class LabActivityViewModel: ObservableObject {
     
+    enum ActivityState {
+        case running(remaining:Int)
+        case finished
+    }
+    
     @Published var counter:Int = 0
     @Published var totalTime:Double
     @Published var timeRemaining:Int
     @Published var percentage:Double
     
     @Published var activity:LabActivity
+    @Published var activityState:ActivityState
     
     init(labActivity:LabActivity) {
+        
         self.activity = labActivity
+        
         let tr = labActivity.dateEnds.timeIntervalSince(Date())
         self.timeRemaining = Int(tr)
+        
         let total = labActivity.dateEnds.timeIntervalSince(labActivity.dateStarted)
         self.totalTime = total
         self.percentage = tr / Double(total)
+        
+//        if labActivity.dateStarted.compare(Date()) == .orderedDescending {
+//            self.activity.dateStarted = Date()
+//            self.activity.dateEnds = Date().addingTimeInterval(total)
+//            let newTR =
+//        }
+        
+        if tr <= 0 {
+            self.activityState = .finished
+            return
+        } else {
+            self.activityState = .running(remaining: Int(tr))
+        }
             
         start()
     }
@@ -701,9 +723,17 @@ class LabActivityViewModel: ObservableObject {
         let total = activity.dateEnds.timeIntervalSince(activity.dateStarted)
         self.totalTime = total
         self.percentage = tr / total
-        if tr < 0 {
+        
+        if tr <= 0 {
             timer.invalidate()
+            self.activityState = .finished
+        } else {
+            self.activityState = .running(remaining: Int(tr))
         }
+    }
+    
+    func hourBoost() {
+        self.activity.dateEnds.addTimeInterval(-3600)
     }
     
     deinit {
@@ -727,4 +757,5 @@ class LabActivityViewModel: ObservableObject {
         counter = 0
         timer.invalidate()
     }
+    
 }

@@ -73,9 +73,13 @@ struct MyCityView: View {
                 case .hab:
                     CityHabView(people: $cityData.inhabitants, city: cityData, selection: nil)
                 case .lab:
+                    
                     CityLabView(controller:controller)
+                    
                 case .bio:
-                    Text("BioView not implemented").foregroundColor(.gray)
+//                    Text("BioView not implemented").foregroundColor(.gray)
+                    CityBioView(controller: controller)
+                    
                 case .rss:
                     ScrollView {
                         VStack {

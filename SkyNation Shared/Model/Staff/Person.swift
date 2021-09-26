@@ -52,25 +52,26 @@ class LabActivity:Codable, Identifiable {
     
     init(time:TimeInterval, name:String = "") {
         self.id = UUID()
-        self.dateStarted = Date()
-        self.dateEnds = Date().addingTimeInterval(time)
+        let dateNow = Date()
+        self.dateStarted = dateNow
+        self.dateEnds = dateNow.addingTimeInterval(time)
         self.activityName = name
     }
     
     /// Prepares an output for this event (Adds to Station)
-    func getOutput(station:Station) {
-        
-        // output can be...
-        
-        // 1 - Recipe unlock (Recipe.rawValue)
-        if let recipe = Recipe(rawValue: activityName) {
-            station.unlockedRecipes.append(recipe)
-        }
-        
-        // 3 - BuildItem
-        
-        // Save
-    }
+//    func getOutput(station:Station) {
+//
+//        // output can be...
+//
+//        // 1 - Recipe unlock (Recipe.rawValue)
+//        if let recipe = Recipe(rawValue: activityName) {
+//            station.unlockedRecipes.append(recipe)
+//        }
+//
+//        // 3 - BuildItem
+//
+//        // Save
+//    }
     
     func activityType() -> PersonActivityType? {
         if let _ = Skills(rawValue: activityName) {
