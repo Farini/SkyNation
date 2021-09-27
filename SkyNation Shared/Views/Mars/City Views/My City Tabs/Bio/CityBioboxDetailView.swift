@@ -10,7 +10,7 @@ import SceneKit
 
 struct CityBioboxDetailView: View {
     
-    @ObservedObject var controller:CityController
+    @ObservedObject var controller:LocalCityController
     @Binding var cityData:CityData
     @Binding var bioBox:BioBox
     var onCancelSelection:(() -> (Void))  = {}

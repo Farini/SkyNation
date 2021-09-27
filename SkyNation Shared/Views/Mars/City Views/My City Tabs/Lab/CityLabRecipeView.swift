@@ -9,12 +9,12 @@ import SwiftUI
 
 struct CityLabRecipeView: View {
     
-    @ObservedObject var controller:CityController
+    @ObservedObject var controller:LocalCityController
     
     var recipe:Recipe
     var skills:[SkillSet] = []
     
-    init(controller:CityController, recipe:Recipe) {
+    init(controller:LocalCityController, recipe:Recipe) {
         self.controller = controller
         self.recipe = recipe
         for (k, v) in recipe.skillSet() {
@@ -118,7 +118,7 @@ struct CityLabRecipeView: View {
             HStack {
                 
                 Button(action: {
-                    controller.cancelSelection()
+                    controller.cancelSelectionOn(tab: .lab)
                 }) {
                     HStack {
                         Image(systemName: "backward.frame")
@@ -132,8 +132,8 @@ struct CityLabRecipeView: View {
                 Button("🛠 Make Recipe") {
                     controller.makeRecipe(recipe: recipe)
                 }
-                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                .disabled(controller.recipeDisabled(recipe: recipe))
+                .buttonStyle(GameButtonStyle())
+                // .disabled(controller.recipeDisabled(recipe: recipe))
                 
             }
         }
@@ -143,7 +143,7 @@ struct CityLabRecipeView: View {
 struct CityLabRecipeView_Previews: PreviewProvider {
     static let recipe = Recipe.marsCases.randomElement()!
     static var previews: some View {
-        CityLabRecipeView(controller: CityController(), recipe:CityLabRecipeView_Previews.recipe)
+        CityLabRecipeView(controller: LocalCityController(), recipe:CityLabRecipeView_Previews.recipe)
             .frame(height:550)
     }
 }

@@ -134,7 +134,11 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] City View - Test Lab Recipes
 - [ ] City View - Lab Recipes - DetailView(making recipe)
 - [ ] City View - Review Outpost RSS Collection
-
+### Discussion: 2 Methods
+1. LocalCityViewState - A Global state of LocalCityView
+2. Individual View States - (Hab, Lab, Bio, etc.)
+Whichever one you pick, at least the controller now has an unwrapped access to CityData
+And the funtions are a little more clear cut.
 
 - [X] Outpost - supply method
 - [X] Outpost View - Contribution Request

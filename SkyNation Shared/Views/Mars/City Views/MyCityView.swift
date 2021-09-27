@@ -7,38 +7,14 @@
 
 import SwiftUI
 
-// MARK: - My City Menu
-
-enum CityMenuItem:Int, CaseIterable {
-    
-    case hab
-    case lab
-    case bio
-    case rss
-    case collect
-    case rocket
-    
-    // ↯
-    
-    var string:String {
-        switch self {
-            case .hab: return "🏠"
-            case .lab: return "🔬"
-            case .bio: return "🧬"
-            case .rss: return "♻️"
-            case .collect: return "↯"
-            case .rocket: return "🚀"
-        }
-    }
-}
-
+/// A View Containing the CityTabs
 struct CityMenu: View {
     
     @Binding var menuItem:CityMenuItem
     
     var body: some View {
+        
         HStack {
-            
             ForEach(CityMenuItem.allCases, id:\.self) { mitem in
                 ZStack {
                     Circle()
@@ -52,6 +28,8 @@ struct CityMenu: View {
                 .modifier(Badged())
             }
             
+            
+            
         }
         .font(.title)
         .padding(.horizontal)
@@ -59,25 +37,69 @@ struct CityMenu: View {
     }
 }
 
-// MARK: - My City View
+// MARK: - My City
 
-struct MyCityView: View {
+/// The View of the `CityData` that belongs to the `Player`
+struct LocalCityView: View {
     
-    @ObservedObject var controller:CityController
-    @State var cityData:CityData
-    @Binding var cityTab:CityMenuItem
+    @ObservedObject var controller:LocalCityController
+    @State private var menuItem:CityMenuItem = .hab
+    
+    /// The City Menu (Tabs)
+    var header: some View {
+        HStack {
+            ForEach(CityMenuItem.allCases, id:\.self) { mitem in
+                ZStack {
+                    Circle()
+                        .strokeBorder(menuItem == mitem ? Color.red:Color.gray, lineWidth: 2, antialiased: false)
+                        .frame(width: 32, height: 32, alignment: .center)
+                    Text(mitem.string)
+                }
+                .onTapGesture {
+                    self.menuItem = mitem
+                    switch mitem {
+                        case .hab: controller.cityViewState = .hab(state: .noSelection)
+                        case .lab:
+                            if let activity = controller.cityData.labActivity {
+                                controller.labActivity = activity
+                                controller.cityViewState = .lab(state: .activity(object: activity))
+                            } else {
+                                controller.cityViewState = .lab(state: .NoSelection)
+                            }
+                        case .bio: controller.cityViewState = .bio(state: .notSelected)
+                        case .rss: controller.cityViewState = .rss
+                        case .collect: controller.cityViewState = .collect
+                        case .rocket: controller.cityViewState = .rocket(state: .noSelection)
+                    }
+                }
+                .modifier(Badged())
+            }
+            
+            Spacer()
+            Button("X") {
+                NotificationCenter.default.post(name: .closeView, object: self)
+            }
+            .buttonStyle(SmallCircleButtonStyle(backColor: .blue))
+            
+        }
+        .font(.title)
+        .padding(.horizontal)
+        .padding(.vertical, 4)
+    }
     
     var body: some View {
         VStack {
-            switch cityTab {
-                case .hab:
-                    CityHabView(controller:controller, people: $cityData.inhabitants, city: cityData, selection: nil)
-                case .lab:
+                        
+            header
+
+            switch controller.cityViewState {
+                case .hab(let habState):
+                    CityHabView(controller: controller, habState: habState)
                     
-                    CityLabView(controller:controller)
+                case .lab(let labState):
+                    CityLabView(controller: controller, labState: labState)
                     
-                case .bio:
-//                    Text("BioView not implemented").foregroundColor(.gray)
+                case .bio(let bioState):
                     CityBioView(controller: controller)
                     
                 case .rss:
@@ -88,7 +110,7 @@ struct MyCityView: View {
                                 
                                 LazyVGrid(columns: [GridItem(.fixed(100)), GridItem(.fixed(100)), GridItem(.fixed(100))], alignment: .center, spacing: 8, pinnedViews: [], content: {
                                     
-                                    ForEach(cityData.boxes) { box in
+                                    ForEach(controller.cityData.boxes) { box in
                                         IngredientView(ingredient: box.type, hasIngredient: true, quantity: box.current)
                                     }
                                 })
@@ -96,15 +118,18 @@ struct MyCityView: View {
                         }
                         .frame(minWidth: 600, idealWidth: 750, maxWidth: 900)
                     }
+                    
                 case .collect:
-//                    Text("Outpost Collection not implemented").foregroundColor(.gray)
                     CityOPCollectView(controller: controller)
-                case .rocket:
-                    CityGarageView(controller: controller, selectedVehicle: nil)
+                    
+                case .rocket(let rocketState):
+                    CityGarageView(controller: controller, garageState: rocketState)
             }
         }
     }
 }
+
+
 
 // MARK: - Previews
 
@@ -115,9 +140,8 @@ struct MyCityView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             CityMenu(menuItem: .constant(menu))
-            MyCityView(controller:CityController(), cityData: MarsBuilder.shared.myCityData!, cityTab: .constant(menu))
+            LocalCityView(controller: LocalCityController())
         }
-        
     }
 }
 

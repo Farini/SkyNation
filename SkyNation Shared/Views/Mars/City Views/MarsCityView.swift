@@ -14,6 +14,7 @@ struct MarsCityView: View {
     @State var posdex:Posdex
     @State private var cityMenuItem:CityMenuItem = .hab
     
+    // MOVE THIS TO MyCityView or LocalCityView
     var header: some View {
         VStack {
             // Title
@@ -49,11 +50,14 @@ struct MarsCityView: View {
     var body: some View {
         
         VStack {
-            // Header
-            header
+            
             
             switch controller.viewState {
                 case .loading:
+                    
+                    // Header
+                    header
+                    
                     Group {
                         Spacer()
                         Text("Loading City...").font(.title).foregroundColor(.gray)
@@ -68,6 +72,9 @@ struct MarsCityView: View {
                     
                 case .unclaimed:
                     
+                    // Header
+                    header
+                    
                     Group {
                         
                         Image(systemName: "mappin.and.ellipse").font(.title)
@@ -80,7 +87,6 @@ struct MarsCityView: View {
                         // Button to Claim City (if player doesn't have one)
                         if controller.isClaimable() == true {
                             Button("Claim City") {
-                                print("Should claim it")
                                 controller.claimCity(posdex: posdex)
                             }
                             .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
@@ -89,11 +95,15 @@ struct MarsCityView: View {
                         
                     }
                     
-                case .mine(let cityData):
+                case .mine(_):
                     
-                    MyCityView(controller: controller, cityData: cityData, cityTab: $cityMenuItem)
+//                    MyCityView(controller: controller, cityData: cityData, cityTab: $cityMenuItem)
+                    LocalCityView(controller: LocalCityController())
                     
                 case .foreign(let pid):
+                    
+                    // Header
+                    header
                     
                     ForeignCityView(controller: controller, posdex: self.posdex, player: MarsBuilder.shared.players.filter({ $0.id == pid }).first)
                     

@@ -9,13 +9,13 @@ import SwiftUI
 
 struct CityLabTechView: View {
     
-    @ObservedObject var controller:CityController
+    @ObservedObject var controller:LocalCityController
     
     var tech:CityTech
     var ingredients:[String:Int]
     var skills:[SkillSet] = []
     
-    init(controller:CityController, tech:CityTech) {
+    init(controller:LocalCityController, tech:CityTech) {
         self.controller = controller
         self.tech = tech
         
@@ -69,7 +69,6 @@ struct CityLabTechView: View {
             Divider()
             
             // Skills and People
-            
             ActivityStaffView(staff: controller.availableStaff, selected: [], requiredSkills: tech.skillSet, chooseWithReturn: { (selectedPeople) in
                 
                 controller.selectedStaff = selectedPeople
@@ -101,7 +100,6 @@ struct CityLabTechView: View {
                     }
                     .background(Color.black)
                 }
-                
                 Divider()
             }
             
@@ -109,7 +107,7 @@ struct CityLabTechView: View {
             HStack {
                 
                 Button(action: {
-                    controller.cancelSelection()
+                    controller.cancelSelectionOn(tab: .lab)
                 }) {
                     HStack {
                         Image(systemName: "backward.frame")
@@ -119,7 +117,7 @@ struct CityLabTechView: View {
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
                 .help("Go back")
                 
-                if controller.unlockedTech.contains(self.tech) && ((controller.cityData?.tech ?? []).contains(self.tech) == false) {
+                if controller.unlockedTech.contains(self.tech) && ((controller.cityData.tech).contains(self.tech) == false) {
                     
                     // Can research
                     Button("🔬 Research") {
@@ -130,14 +128,13 @@ struct CityLabTechView: View {
                     
                 } else {
                     
-                    if (controller.cityData?.tech ?? []).contains(self.tech) {
+                    if (controller.cityData.tech).contains(self.tech) {
                         // already researched
                         Text("Already researched this item").foregroundColor(.orange)
                     } else {
                         // cant research yet
                         Text("Cannot research this item yet").foregroundColor(.orange)
                     }
-                    
                 }
             }
             Spacer()
@@ -147,6 +144,6 @@ struct CityLabTechView: View {
 
 struct CityLabTechView_Previews: PreviewProvider {
     static var previews: some View {
-        CityLabTechView(controller: CityController(), tech: CityTech.allCases.randomElement()!)
+        CityLabTechView(controller: LocalCityController(), tech: CityTech.allCases.randomElement()!)
     }
 }

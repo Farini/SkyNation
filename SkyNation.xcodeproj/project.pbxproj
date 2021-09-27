@@ -70,6 +70,10 @@
 		85351E8726FF644800EEE04C /* CityLabActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85351E8626FF644800EEE04C /* CityLabActivityView.swift */; };
 		85351E8826FF644800EEE04C /* CityLabActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85351E8626FF644800EEE04C /* CityLabActivityView.swift */; };
 		85351E8926FF644800EEE04C /* CityLabActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85351E8626FF644800EEE04C /* CityLabActivityView.swift */; };
+		85351E8B2700D76000EEE04C /* LocalCityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85351E8A2700D76000EEE04C /* LocalCityController.swift */; };
+		85351E8C2700D76000EEE04C /* LocalCityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85351E8A2700D76000EEE04C /* LocalCityController.swift */; };
+		85351E8D2700D76000EEE04C /* LocalCityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85351E8A2700D76000EEE04C /* LocalCityController.swift */; };
+		85351E8E2700D76000EEE04C /* LocalCityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85351E8A2700D76000EEE04C /* LocalCityController.swift */; };
 		8536F2C0258D330300B509D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2BF258D330300B509D2 /* AppDelegate.swift */; };
 		8536F2C2258D330300B509D2 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2C1258D330300B509D2 /* GameViewController.swift */; };
 		8536F2C5258D330300B509D2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8536F2C3258D330300B509D2 /* Main.storyboard */; };
@@ -645,6 +649,7 @@
 		85351E7E26FEE07500EEE04C /* CityBioBuilderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityBioBuilderView.swift; sourceTree = "<group>"; };
 		85351E8226FEEA6700EEE04C /* CityBioboxDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityBioboxDetailView.swift; sourceTree = "<group>"; };
 		85351E8626FF644800EEE04C /* CityLabActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityLabActivityView.swift; sourceTree = "<group>"; };
+		85351E8A2700D76000EEE04C /* LocalCityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalCityController.swift; sourceTree = "<group>"; };
 		8536F2B5258D330200B509D2 /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
 		8536F2B6258D330200B509D2 /* Art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Art.scnassets; sourceTree = "<group>"; };
 		8536F2B7258D330300B509D2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -1498,6 +1503,7 @@
 			children = (
 				8592823525EC4DD3001233BE /* GuildController.swift */,
 				8517EE622605DC8800C34C54 /* CityController.swift */,
+				85351E8A2700D76000EEE04C /* LocalCityController.swift */,
 				85969835260E8FD400BF1860 /* OutpostController.swift */,
 			);
 			path = Mars;
@@ -1989,6 +1995,7 @@
 				8536F32B258D412600B509D2 /* LocalDatabase.swift in Sources */,
 				8536F386258D475D00B509D2 /* HabModule.swift in Sources */,
 				85C3418525905A7500BF82F9 /* TutorialNode.swift in Sources */,
+				85351E8B2700D76000EEE04C /* LocalCityController.swift in Sources */,
 				85E6ECF825C9D92B00229E18 /* ServerAPI.swift in Sources */,
 				85487F3B26CC32F900EBC070 /* CityLabTechView.swift in Sources */,
 				8536F37A258D475D00B509D2 /* Recipes.swift in Sources */,
@@ -2133,6 +2140,7 @@
 				8592822E25EC44F7001233BE /* GuildExplorerView.swift in Sources */,
 				8536F3EF258D47D000B509D2 /* TrussView.swift in Sources */,
 				85487F1F26C5BB2000EBC070 /* SettingsServerTab.swift in Sources */,
+				85351E8C2700D76000EEE04C /* LocalCityController.swift in Sources */,
 				8536F40F258D47D000B509D2 /* AnimationsTest.swift in Sources */,
 				8536F43A258D47EA00B509D2 /* ModulesViewModel.swift in Sources */,
 				85F6675725AF7BBE00E5003B /* DeliveryVehicleNode.swift in Sources */,
@@ -2298,6 +2306,7 @@
 				8536F32D258D412600B509D2 /* LocalDatabase.swift in Sources */,
 				8536F388258D475D00B509D2 /* HabModule.swift in Sources */,
 				85C3418725905A7500BF82F9 /* TutorialNode.swift in Sources */,
+				85351E8D2700D76000EEE04C /* LocalCityController.swift in Sources */,
 				85E6ECFA25C9D92B00229E18 /* ServerAPI.swift in Sources */,
 				85487F3D26CC32F900EBC070 /* CityLabTechView.swift in Sources */,
 				8536F37C258D475D00B509D2 /* Recipes.swift in Sources */,
@@ -2328,6 +2337,7 @@
 				85E2C42526BD8A6E003315F2 /* StoreManager.swift in Sources */,
 				8536F365258D475D00B509D2 /* Person.swift in Sources */,
 				85B34B1A26F711C5007178F5 /* BiosphereNode.swift in Sources */,
+				85351E8E2700D76000EEE04C /* LocalCityController.swift in Sources */,
 				8536F399258D475D00B509D2 /* Modules.swift in Sources */,
 				85487F0F26C0DF6000EBC070 /* OPSupply+Job.swift in Sources */,
 				8536F3A1258D475D00B509D2 /* TechTreeDisplay.swift in Sources */,

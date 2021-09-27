@@ -17,12 +17,9 @@ enum ActivityDismissalState {
 struct CityLabActivityView: View {
     
     @ObservedObject var activityModel:LabActivityViewModel
-//    var cityData:CityData
     @State var labActivity:LabActivity
     
     var dismissActivity:((ActivityDismissalState) -> ())
-    
-//    @State private var progress:Double = 0.0
     
     /// Show an alert for spending tokens
     @State private var tokenSpendAlert:Bool = false
@@ -30,14 +27,6 @@ struct CityLabActivityView: View {
     
     @State private var badNews:String = ""
     @State private var goodNews:String = ""
-    
-//    init(activity:LabActivity, city:CityData, dismissActivity:(() -> (Void)?)) {
-//
-//        self.activityModel = LabActivityViewModel(labActivity: activity)
-//        self.labActivity = activity
-//        self.cityData = city
-//        self.dismissActivity = dismissActivity
-//    }
     
     var body: some View {
         
@@ -153,7 +142,6 @@ struct CityLabActivityView: View {
     func stopActivity() {
         self.activityModel.stop()
         self.activityModel.timer.invalidate()
-//        cityData.labActivity = nil
         
         self.dismissActivity(.cancelled)
     }
@@ -240,29 +228,6 @@ struct CityLabActivityView: View {
             }
         }
     }
-    
-    /*
-    func collectTech(tech:CityTech) {
-        
-        cityData.tech.append(tech)
-        
-        do {
-            try LocalDatabase.shared.saveCity(cityData)
-            // Success
-            self.goodNews = "Tech \(tech.rawValue) collected"
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.0) {
-                self.dismissActivity()
-            }
-            
-        } catch {
-            // Deal with error
-            self.badNews = "Error: \(error.localizedDescription)"
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3.0) {
-                self.dismissActivity()
-            }
-        }
-    }
-    */
     
     func collectRecipe(recipe:Recipe) {
         
@@ -359,11 +324,6 @@ struct CityLabActivityView_Previews: PreviewProvider {
             print("Dismissed ????")
         }
         .frame(width: 500, height: 600, alignment: .center)
-        
-//        CityLabActivityView(activity: makeActivity(), city: getCityData(), dismissActivity: {
-//            print("dismissed")
-//        })
-            
     }
     
     static func getCityData() -> CityData {

@@ -16,19 +16,25 @@ enum MarsCityStatus {
 }
 
 /// The selected tab for MyCityView
-enum MarsCityTab {
-    case Hab
-    case Lab
-    case RSS
-    case EVs // Electric Vehicles
-}
+//enum MarsCityTab {
+//    case Hab
+//    case Lab
+//    case RSS
+//    case EVs // Electric Vehicles
+//}
 
-enum CityLabState {
-    case NoSelection
-    case recipe(name:Recipe)
-    case tech(name:CityTech)
-    case activity(object:LabActivity)
-}
+
+
+
+
+
+
+/**
+    My CityController vs. ForeignCityController
+        
+        Foreign City - Uses MarsCityStatus
+        MyCity - Uses LocalCityState?
+*/
 
 class CityController:ObservableObject, BioController {
     
@@ -38,7 +44,7 @@ class CityController:ObservableObject, BioController {
     
     // View States
     @Published var viewState:MarsCityStatus
-    @Published var cityTab:MarsCityTab = .Hab
+//    @Published var cityTab:MarsCityTab = .Hab
     
     // City Info
     @Published var city:DBCity?
@@ -165,6 +171,69 @@ class CityController:ObservableObject, BioController {
             viewState = .unclaimed
         }
         
+    }
+    
+    // MARK: - Claiming
+    
+    /// Checks if player can claim city
+    func isClaimable() -> Bool {
+        
+        if city?.owner != nil { return false }
+        let dbc = builder.cities.compactMap({ $0.id })
+        if dbc.contains(self.player.cityID ?? UUID()) {
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    /// Claims the city for the Player
+    func claimCity(posdex:Posdex) {
+        
+        // FIXME: - Develop this
+        // Save CityData?
+        // the self.loadAt might need updates
+        
+        SKNS.claimCity(posdex: posdex) { (city, error) in
+            
+            // This request should return a DBCity instead
+            if let dbCity = city {
+                
+                print("We have a new city !!!! \t \(dbCity.id)")
+                
+                var localCity:CityData!
+                
+                // First, check if player alread has a city in LocalDatabase
+                if let savedCity:CityData = LocalDatabase.shared.loadCity() {
+                    
+                    // We have a local city saved. Update ID
+                    savedCity.id = dbCity.id
+                    localCity = savedCity
+                    
+                } else {
+                    localCity = CityData(dbCity: dbCity)
+                }
+                
+                try? LocalDatabase.shared.saveCity(localCity)
+                
+                let player = self.player
+                player.cityID = dbCity.id
+                
+                let res = LocalDatabase.shared.savePlayer(player: player)
+                
+                print("Claim city results Saved. Player:\(res)")
+                
+                // Get Vehicles from 'Travelling.josn'
+                
+                // Reload GuildFullContent
+                //                ServerManager.shared.inquireFullGuild { fullGuild, error in
+                //
+                //                }
+                
+            } else {
+                print("No City. Error: \(error?.localizedDescription ?? "n/a")")
+            }
+        }
     }
     
     // MARK: - Vehicles
@@ -301,121 +370,6 @@ class CityController:ObservableObject, BioController {
             print("Delete vehicle from SErver Dataabase. VID: \(registration)")
         }
     }
-    
-    // MARK: - Claiming
-    
-    /// Checks if player can claim city
-    func isClaimable() -> Bool {
-        
-        if city?.owner != nil { return false }
-        let dbc = builder.cities.compactMap({ $0.id })
-        if dbc.contains(self.player.cityID ?? UUID()) {
-            return false
-        } else {
-            return true
-        }
-    }
-    
-    /// Claims the city for the Player
-    func claimCity(posdex:Posdex) {
-        
-        // FIXME: - Develop this
-        // Save CityData?
-        // the self.loadAt might need updates
-        
-        SKNS.claimCity(posdex: posdex) { (city, error) in
-            
-            // This request should return a DBCity instead
-            if let dbCity = city {
-                
-                print("We have a new city !!!! \t \(dbCity.id)")
-                
-                var localCity:CityData!
-                
-                // First, check if player alread has a city in LocalDatabase
-                if let savedCity:CityData = LocalDatabase.shared.loadCity() {
-                    
-                    // We have a local city saved. Update ID
-                    savedCity.id = dbCity.id
-                    localCity = savedCity
-                    
-                } else {
-                    localCity = CityData(dbCity: dbCity)
-                }
-                
-                try? LocalDatabase.shared.saveCity(localCity)
-                
-                let player = self.player
-                player.cityID = dbCity.id
-                
-                let res = LocalDatabase.shared.savePlayer(player: player)
-                
-                print("Claim city results Saved. Player:\(res)")
-                
-                // Get Vehicles from 'Travelling.josn'
-                
-                // Reload GuildFullContent
-//                ServerManager.shared.inquireFullGuild { fullGuild, error in
-//
-//                }
-                
-            } else {
-                print("No City. Error: \(error?.localizedDescription ?? "n/a")")
-            }
-        }
-    }
-    
-    // Development Helper
-    /*
-    func addSomethingToCity() {
-        
-        if cityData == nil {
-            print("!! City data is nil !!!")
-        }
-        
-        var willAddBatteries:Bool = Bool.random()
-        var willAddTanks:Bool = Bool.random()
-        var willAddBoxes:Bool = Bool.random()
-        
-        if cityData?.batteries.isEmpty == false {
-            willAddBatteries = false
-        }
-        if cityData?.tanks.isEmpty == false {
-            willAddTanks = false
-        }
-        if cityData?.boxes.isEmpty == false {
-            willAddBoxes = false
-        }
-        
-        if willAddBatteries {
-            for _ in 0..<5 {
-                let newBattery = Battery(shopped: true)
-                cityData?.batteries.append(newBattery)
-            }
-            print("Added 5 batteries")
-            
-        }
-        
-        if willAddBoxes {
-            for _ in 0..<10 {
-                let newBoxType = Ingredient.allCases.randomElement()!
-                let nb = StorageBox(ingType: newBoxType, current: newBoxType.boxCapacity())
-                cityData?.boxes.append(nb)
-            }
-            print("Added 10 ingredients")
-        }
-        
-        if willAddTanks {
-            for _ in 0..<10 {
-            
-                let ttype = TankType.allCases.randomElement()!
-                let tank = Tank(type: ttype, full: true)
-                cityData?.tanks.append(tank)
-            }
-            print("Added 10 tanks")
-        }
-    }
-    */
     
     // MARK: - Hab
     
@@ -770,65 +724,6 @@ class CityController:ObservableObject, BioController {
         return cityData?.boxes.filter({ $0.type == ingredient }).compactMap({ $0.current }).reduce(0, +) ?? 0
     }
     
-    func validadeTokenPayment(box qtty:Int, tokens:Int) -> [String] {
-        
-        var problems:[String] = []
-        
-        let playerTokens = player.countTokens() // { //LocalDatabase.shared.player?.timeTokens {
-            if playerTokens.count >= tokens {
-                
-                // Player Has enough tokens - Check if Skills match
-//                var bioCount:Int = 0
-//                var medCount:Int = 0
-//                for person in selectedStaff {
-//                    for skill in person.skills {
-//                        if skill.skill == .Biologic {
-//                            bioCount += skill.level
-//                        }
-//                        if skill.skill == .Medic {
-//                            medCount += 1
-//                        }
-//                    }
-//                }
-//                if bioCount + medCount < 1 {
-//                    print("Not enough Skills")
-//                    problems.append("Not enough Skills")
-//                } else {
-//                    print("Skills Verified - Charging Tokens")
-                
-                // Free the people
-                self.selectedStaff = []
-                    
-                    // Charge Player
-                    let player = LocalDatabase.shared.player!
-                    //                    player.timeTokens.removeFirst(tokens)
-                    for _ in 1...tokens {
-                        if let token = player.requestToken() {
-                            let result = player.spendToken(token: token, save: true)
-                            print("Spent Token result: \(result)")
-                        }
-                    }
-                    
-                    // Make people busy
-//                    let activity = LabActivity(time: 3600, name: "Planting life")
-//                    for person in selectedStaff {
-//                        person.activity = activity
-//                    }
-                    
-                    // Save
-                    let pRes = LocalDatabase.shared.savePlayer(player: player)
-                    try? LocalDatabase.shared.saveCity(cityData!)
-                    
-                    print("Saved player: \(pRes)")
-//                }
-                
-            } else {
-                problems.append("Not enough tokens")
-            }
-        
-        return problems
-    }
-    
     /// Cancels the selection of TechItem, or Recipe
     func cancelSelection() {
         // Set the selection to none, to update the view
@@ -900,6 +795,65 @@ class CityController:ObservableObject, BioController {
 //            saveStation()
         }
         */
+    }
+    
+    func validadeTokenPayment(box qtty:Int, tokens:Int) -> [String] {
+        
+        var problems:[String] = []
+        
+        let playerTokens = player.countTokens() // { //LocalDatabase.shared.player?.timeTokens {
+        if playerTokens.count >= tokens {
+            
+            // Player Has enough tokens - Check if Skills match
+            //                var bioCount:Int = 0
+            //                var medCount:Int = 0
+            //                for person in selectedStaff {
+            //                    for skill in person.skills {
+            //                        if skill.skill == .Biologic {
+            //                            bioCount += skill.level
+            //                        }
+            //                        if skill.skill == .Medic {
+            //                            medCount += 1
+            //                        }
+            //                    }
+            //                }
+            //                if bioCount + medCount < 1 {
+            //                    print("Not enough Skills")
+            //                    problems.append("Not enough Skills")
+            //                } else {
+            //                    print("Skills Verified - Charging Tokens")
+            
+            // Free the people
+            self.selectedStaff = []
+            
+            // Charge Player
+            let player = LocalDatabase.shared.player!
+            //                    player.timeTokens.removeFirst(tokens)
+            for _ in 1...tokens {
+                if let token = player.requestToken() {
+                    let result = player.spendToken(token: token, save: true)
+                    print("Spent Token result: \(result)")
+                }
+            }
+            
+            // Make people busy
+            //                    let activity = LabActivity(time: 3600, name: "Planting life")
+            //                    for person in selectedStaff {
+            //                        person.activity = activity
+            //                    }
+            
+            // Save
+            let pRes = LocalDatabase.shared.savePlayer(player: player)
+            try? LocalDatabase.shared.saveCity(cityData!)
+            
+            print("Saved player: \(pRes)")
+            //                }
+            
+        } else {
+            problems.append("Not enough tokens")
+        }
+        
+        return problems
     }
     
     // MARK: - Outpost Collection
@@ -1018,90 +972,4 @@ class CityController:ObservableObject, BioController {
     
 }
 
-/// A Model used to check Outpost Collection by a `City`
-struct CityCollectOutpostModel:Identifiable {
-    
-    var id:UUID
-    var outpost:DBOutpost
-    var collected:Date
-    
-    init(dbOutpost:DBOutpost, opCollect:[UUID:Date]) {
-        
-        self.id = UUID()
-        self.outpost = dbOutpost
-        
-        let opioid:UUID = dbOutpost.id
-        if let col = opCollect[opioid] {
-            self.collected = col
-        } else {
-            self.collected = Date.distantPast
-        }
-    }
-    
-    /// Returns whether this can be collected.
-    func canCollect() -> Bool {
-        let deadline = collected.addingTimeInterval(60.0 * 60.0)
-        if outpost.type.productionBase.isEmpty {
-            return false
-        }
-        return Date().compare(deadline) == .orderedDescending
-    }
-}
 
-class CityWorkingBioboxModel {
-    
-    var bioBox:BioBox
-    var population:[String]
-    var geneticLoops:Int
-    var fittestString:String
-    var score:Double = 0
-    var generatorRunning:Bool = false
-    
-    init(bioBox:BioBox) {
-        self.bioBox = bioBox
-        self.population = bioBox.population
-        self.geneticLoops = 0
-        self.fittestString = bioBox.getBestFitDNA() ?? ""
-    }
-    
-    func updateWith(generator:DNAGenerator, finished:Bool) {
-        self.population = generator.populationStrings
-        self.geneticLoops = generator.counter
-        self.fittestString = generator.bestFit
-        self.score = (1.0 / (Double(generator.bestLevel) + 1.0)) * 100.0
-        
-        if (finished) {
-            self.generatorRunning = false
-            bioBox.population = generator.populationStrings
-            bioBox.currentGeneration += generator.counter
-            self.fittestString = bioBox.getBestFitDNA() ?? ""
-        }
-    }
-    
-    
-    // population
-    // genetic loops
-    // fittest string
-    // score
-    // isRunning
-    
-    // updateBioboxPopulation
-    // currentGeneration
-    
-    /// Called by `DNAGenerator`
-//    func updateGeneticCode(sender:DNAGenerator, finished:Bool = false) {
-//        // Update Population
-//        self.selectedPopulation = sender.populationStrings
-//        self.geneticLoops = sender.counter
-//        self.geneticFitString = sender.bestFit
-//        let score:Double = (1.0 / (Double(sender.bestLevel) + 1.0)) * 100.0
-//        self.geneticScore = Int(score)
-//        if (finished) {
-//            self.geneticRunning = false
-//            self.selectedBioBox!.population = sender.populationStrings
-//            self.selectedBioBox!.currentGeneration += sender.counter
-//            self.geneticFitString = self.selectedBioBox?.getBestFitDNA() ?? ""
-//            //            saveStation()
-//        }
-//    }
-}

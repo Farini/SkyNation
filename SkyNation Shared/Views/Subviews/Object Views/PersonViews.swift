@@ -377,16 +377,7 @@ struct PersonDetail:View {
     }
 }
 
-enum PersonActionCall {
-    
-    /// Boosting Person Activity
-    case boost
-    
-    case study(skill:Skills)
-    case workout
-    case fire
-    case medicate
-}
+
 
 struct PersonDetailView:View {
     

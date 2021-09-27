@@ -184,7 +184,7 @@ class LabViewModel: ObservableObject {
         
         var bonus:Double = 0.1
         for person in workers {
-            let lacking = Double(max(100, person.intelligence) + max(100, person.happiness) + max(100, person.teamWork)) / 3.0
+            let lacking = Double(min(100, person.intelligence) + min(100, person.happiness) + min(100, person.teamWork)) / 3.0
             // lacking will be 100 (best), 0 (worst)
             bonus += lacking / Double(workers.count)
         }
@@ -401,7 +401,7 @@ class LabViewModel: ObservableObject {
         
         var bonus:Double = 0.1
         for person in workers {
-            let lacking = Double(max(100, person.intelligence) + max(100, person.happiness) + max(100, person.teamWork)) / 3.0
+            let lacking = Double(min(100, person.intelligence) + min(100, person.happiness) + min(100, person.teamWork)) / 3.0
             // lacking will be 100 (best), 0 (worst)
             bonus += lacking / Double(workers.count)
         }

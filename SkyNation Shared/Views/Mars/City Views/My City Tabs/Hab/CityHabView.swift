@@ -14,49 +14,53 @@ fileprivate enum HabSelection {
 
 struct CityHabView: View {
     
-    @ObservedObject var controller:CityController
-    @Binding var people:[Person]
-    var city:CityData
+    @ObservedObject var controller:LocalCityController
     
-    @State var selection:Person?
-    @State fileprivate var selectState:HabSelection = .empty
+    @State var habState:HabModuleViewState {
+        didSet {
+            switch self.habState {
+                case .noSelection:
+                    selectedPerson = nil
+                case .selected(let person):
+                    selectedPerson = person
+            }
+        }
+    }
+    
+    @State private var selectedPerson:Person?
     
     var body: some View {
+        
         VStack(alignment:.leading) {
             
             HStack {
+                
                 // Left List
                 List {
-                    Section(header:Text("Hab Limit: \(city.checkForRoomsAvailable())")) {
-                        ForEach(people) { person in
-                            ActivityPersonCell(person: person, selected: selection == person)
+                    Section(header:Text("Hab Limit: \(controller.cityData.checkForRoomsAvailable())")) {
+                        ForEach(controller.allStaff) { person in
+                            ActivityPersonCell(person: person, selected: person == selectedPerson)
                                 .onTapGesture {
-                                    self.selection = person
-                                    self.selectState = .selected(person: person)
+                                    self.habState = .selected(person: person)
                                 }
                         }
                     }
                     
-                    if people.isEmpty {
+                    if controller.allStaff.isEmpty {
                         Text("No one here").foregroundColor(.gray)
                     }
-                    
                 }
                 .frame(minWidth: 180, idealWidth: 200, maxWidth: 220, minHeight: 300, idealHeight: 300, maxHeight: .infinity, alignment: .top)
                 
                 HStack {
                     
-                    switch selectState {
-                        case .empty:
-                            
+                    switch habState {
+                        case .noSelection:
                             Spacer()
                             Text("< No Selection >").foregroundColor(.gray)
                             Spacer()
-                            
                         case .selected(let person):
                             ScrollView {
-//                                PersonDetail(controller: self.controller, person:controller.selectedPerson!)
-//                                PersonSmallView(person: person)
                                 PersonDetailView(person: person) { personAction in
                                     controller.personalAction(personAction, person: person)
                                 }
@@ -64,15 +68,13 @@ struct CityHabView: View {
                     }
                 }
             }
-            
-            
-            // Selection
         }
     }
 }
 
 struct CityHabView_Previews: PreviewProvider {
     static var previews: some View {
-        CityHabView(controller: CityController(), people: .constant(LocalDatabase.shared.city?.inhabitants ?? []), city: LocalDatabase.shared.city!)
+//        CityHabView(controller: LocalCityController(), people: .constant(LocalDatabase.shared.city?.inhabitants ?? []), city: LocalDatabase.shared.city!)
+        CityHabView(controller: LocalCityController(), habState: .noSelection)
     }
 }

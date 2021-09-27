@@ -12,7 +12,6 @@ enum BioModSelection {
     case notSelected
     case selected(box:BioBox)
     case building
-    // trimming
 }
 
 protocol BioController {

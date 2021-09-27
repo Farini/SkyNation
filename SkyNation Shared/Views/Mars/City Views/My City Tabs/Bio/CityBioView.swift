@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CityBioView: View {
     
-    @ObservedObject var controller:CityController
+    @ObservedObject var controller:LocalCityController
     
     @State private var selectedBiobox:BioBox? = nil
     @State private var selection:BioModSelection = .notSelected
@@ -29,7 +29,7 @@ struct CityBioView: View {
                     // TABLE Bio Boxes
                     List() {
                         Section(header: Text("Bio Boxes")) {
-                            ForEach(controller.cityData?.bioBoxes ?? []) { biobox in
+                            ForEach(controller.cityData.bioBoxes) { biobox in
                                 Text(biobox.perfectDNA.isEmpty ? "Sprout":biobox.perfectDNA)
                                     .font(.callout)
                                     .foregroundColor(selectedBiobox?.id ?? UUID() == biobox.id ? Color.orange:Color.white)
@@ -58,10 +58,10 @@ struct CityBioView: View {
                                     Group {
                                         
                                         Text("City BioLab").font(.headline).padding()
-                                        Text("Boxes \(controller.cityData?.bioBoxes.count ?? 0)").foregroundColor(.gray)
-                                        Text("Slots Available:\(controller.cityData?.availableBioSlots() ?? 0)")
-                                        Text("Energy: \(controller.cityData?.availableEnergy() ?? 0)")
-                                            .foregroundColor(controller.cityData?.availableEnergy() ?? 0 > 100 ? .green:.red)
+                                        Text("Boxes \(controller.cityData.bioBoxes.count)").foregroundColor(.gray)
+                                        Text("Slots Available:\(controller.cityData.availableBioSlots())")
+                                        Text("Energy: \(controller.cityData.availableEnergy())")
+                                            .foregroundColor(controller.cityData.availableEnergy() > 100 ? .green:.red)
                                         
                                         Text("⚠️  Do not leave food out of the boxes.")
                                             .foregroundColor(.orange)
@@ -103,7 +103,7 @@ struct CityBioView: View {
 //                                    }
 //                                    .padding()
                                     
-                                    CityBioboxDetailView(controller: controller, cityData: .constant(controller.cityData!), bioBox: .constant(bioBox)) {
+                                    CityBioboxDetailView(controller: controller, cityData: .constant(controller.cityData), bioBox: .constant(bioBox)) {
                                         self.selection = .notSelected
                                     }
                                     
@@ -152,6 +152,6 @@ struct CityBioView: View {
 
 struct CityBioView_Previews: PreviewProvider {
     static var previews: some View {
-        CityBioView(controller: CityController())
+        CityBioView(controller: LocalCityController())
     }
 }

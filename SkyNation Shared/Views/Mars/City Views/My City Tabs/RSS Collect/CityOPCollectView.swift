@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CityOPCollectView: View {
     
-    @ObservedObject var controller:CityController
+    @ObservedObject var controller:LocalCityController
     
     var body: some View {
         
@@ -60,6 +60,6 @@ struct CityOPCollectView: View {
 
 struct CityOPCollectView_Previews: PreviewProvider {
     static var previews: some View {
-        CityOPCollectView(controller: CityController())
+        CityOPCollectView(controller: LocalCityController())
     }
 }

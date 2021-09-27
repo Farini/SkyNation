@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CityBioBuilderView: View {
     
-    @ObservedObject var controller:CityController
+    @ObservedObject var controller:LocalCityController
     var onCancelSelection:(() -> (Void))  = {}
     
     @State var chosenDNA:DNAOption = DNAOption.allCases.filter({ $0.isAnimal == false }).randomElement()!     // The DNA chosen
@@ -67,7 +67,7 @@ struct CityBioBuilderView: View {
                         
                         VStack(alignment: .leading) {
                             ZStack {
-                                Slider(value: $sliderValue, in: 0.0...Double(controller.cityData?.availableBioSlots() ?? 0)) { (changed) in
+                                Slider(value: $sliderValue, in: 0.0...Double(controller.cityData.availableBioSlots())) { (changed) in
                                     print("Slider changed \(changed)")
                                     let boxSize = Int(sliderValue)
                                     productionCost[.Fertilizer] = boxSize
@@ -77,7 +77,7 @@ struct CityBioBuilderView: View {
                                 .frame(maxWidth: 200, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                                 .padding(4)
                                 
-                                Text("\(Int(sliderValue)) of \(controller.cityData?.availableBioSlots() ?? 0)")
+                                Text("\(Int(sliderValue)) of \(controller.cityData.availableBioSlots())")
                                     .offset(x: 80, y: /*@START_MENU_TOKEN@*/10.0/*@END_MENU_TOKEN@*/)
                                     .foregroundColor(.gray)
                             }
@@ -136,9 +136,9 @@ struct CityBioBuilderView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 22, height: 22, alignment: .center)
-                        Text("Water: \(productionWaterCost) of \(controller.cityData?.availableWater() ?? 0)")
+                        Text("Water: \(productionWaterCost) of \(controller.cityData.availableWater())")
                     }
-                    .foregroundColor(controller.cityData?.availableWater() ?? 0 >= productionWaterCost ? .green:.red)
+                    .foregroundColor(controller.cityData.availableWater() >= productionWaterCost ? .green:.red)
                     
                     HStack {
                         
@@ -146,10 +146,10 @@ struct CityBioBuilderView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 22, height: 22, alignment: .center)
-                        Text("Energy: \(productionEnergyCost) of \(controller.cityData?.availableEnergy() ?? 0)")
+                        Text("Energy: \(productionEnergyCost) of \(controller.cityData.availableEnergy())")
                         
                     }
-                    .foregroundColor(controller.cityData?.availableEnergy() ?? 0 >= productionEnergyCost ? .green:.red)
+                    .foregroundColor(controller.cityData.availableEnergy() >= productionEnergyCost ? .green:.red)
                     
                     //                    Text("Time: ?")
                 }
@@ -212,11 +212,18 @@ struct CityBioBuilderView: View {
                 
                 Button("Use \(Int(sliderValue/10.0) + 1) Tokens ") {
                     print("Pay with tokens ??? ^^")
-                    let problems = controller.validadeTokenPayment(box: Int(sliderValue), tokens: Int(sliderValue/10.0) + 1)
-                    self.problems = problems
-                    if problems.isEmpty {
+                    let newBioBox = BioBox(chosen: self.chosenDNA, size: Int(sliderValue))
+                    
+                    let result:Bool = controller.buildBio(box: newBioBox, usingTokens: true, boxSize: Int(sliderValue))
+                    
+//                    let problems = controller.validadeTokenPayment(box: Int(sliderValue), tokens: Int(sliderValue/10.0) + 1)
+//                    self.problems = problems
+                    if result == true {
                         self.confirmBioBox()
                     }
+//                    if problems.isEmpty {
+//                        self.confirmBioBox()
+//                    }
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                 .disabled(Int(sliderValue) < minimumLimit)
@@ -227,7 +234,7 @@ struct CityBioBuilderView: View {
     }
     
     func availableFertilizer() -> Int {
-        return controller.cityData?.boxes.compactMap({ $0.current }).reduce(0, +) ?? 0
+        return controller.cityData.boxes.compactMap({ $0.current }).reduce(0, +)
     }
     
     func validateResourcesForBox(qtty:Int) -> [String] {
@@ -235,27 +242,28 @@ struct CityBioBuilderView: View {
         let fertilizer = qtty
         let water = qtty * GameLogic.bioBoxWaterConsumption
         let energy = qtty * GameLogic.bioBoxEnergyConsumption
-        guard let citydata = controller.cityData else { return [] }
+        
+        let cityData = controller.cityData
         
         // Problems Array
         var problems:[String] = []
         
         // Ingredients Consumption
-        if citydata.validateResources(ingredients: [.Fertilizer:fertilizer]).isEmpty == true {
+        if cityData.validateResources(ingredients: [.Fertilizer:fertilizer]).isEmpty == true {
             print("Fertilizer verified")
         } else {
             print("Not enough Fertilizer")
             problems.append("Not enough Fertilizer")
         }
         
-        if citydata.availableWater() >= water {
+        if cityData.availableWater() >= water {
             print("Water Verified")
         } else {
             print("No enough Water")
             problems.append("Not enough Water")
         }
         
-        if citydata.availableEnergy() >= energy {
+        if cityData.availableEnergy() >= energy {
             print("Energy Verified")
         } else {
             print("Not enough Energy")
@@ -300,15 +308,15 @@ struct CityBioBuilderView: View {
             self.selectedPeople = []
             
             // 3. Charge Energy
-            let consumption:Bool = citydata.consumeEnergyFromBatteries(amount: energy) //station.truss.consumeEnergy(amount: energy)
+            let consumption:Bool = cityData.consumeEnergyFromBatteries(amount: energy) //station.truss.consumeEnergy(amount: energy)
             
             // 4. Charge Fertilizers
-            let payment = citydata.payForResources(ingredients: [.Fertilizer:fertilizer])
+            let payment = cityData.payForResources(ingredients: [.Fertilizer:fertilizer])
             //station.truss.payForResources(ingredients: [.Fertilizer:fertilizer])
             
             // Save
             do {
-                try LocalDatabase.shared.saveCity(citydata)
+                try LocalDatabase.shared.saveCity(cityData)
             } catch {
                 print("Error saving city: \(error.localizedDescription)")
             }
@@ -338,6 +346,6 @@ struct CityBioBuilderView: View {
 
 struct CityBioBuilderView_Previews: PreviewProvider {
     static var previews: some View {
-        CityBioBuilderView(controller: CityController())
+        CityBioBuilderView(controller: LocalCityController())
     }
 }
