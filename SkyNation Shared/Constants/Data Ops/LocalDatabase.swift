@@ -15,82 +15,110 @@
 
 import Foundation
 
+enum LocalDatabaseError:Error {
+    
+    /// File Doesn't exist
+    case noFile
+    
+    /// Error Encoding/Decoding
+    case coding(type: Codable.Type, reason:String)
+    
+    /// A `String` to display to the user.
+    var message:String {
+        switch self {
+            case .noFile: return "💾 File doesn't exist in LocalDatabase."
+            case .coding(let type, let string): return "Could not encode/decode file type \(type). Reason: \(string)"
+        }
+    }
+}
+
 class LocalDatabase {
     
     static let shared = LocalDatabase()
     
-    var player:SKNPlayer?
-    var station:Station?
-    var vehicles:[SpaceVehicle] = []    // Vehicles that are travelling
-    var stationBuilder:StationBuilder
-    
-    
     // MARK: - Game Settings
-    static let settingsFile = "GameSettings.json"
+    
     var gameSettings:GameSettings
-    static func loadSettings() -> GameSettings {
-        // create if doesn't exist
-        let finalUrl = LocalDatabase.folder.appendingPathComponent(settingsFile)
-        
-        if !FileManager.default.fileExists(atPath: finalUrl.path){
-            print("File doesn't exist")
-            let newSettings = GameSettings.create()
-            
-            return newSettings
+    func saveSettings(settings:GameSettings) throws {
+        do {
+            let data = try LocalDatabase.encodeData(object: settings)
+            do {
+                try data.write(to: LocalDatabase.folder.appendingPathComponent(GameFile.settings.fileName), options: .atomic)
+                self.gameSettings = settings
+            } catch {
+                throw error
+            }
+        } catch {
+            throw error
         }
-        
-        
-        if let theData:Data = try? Data(contentsOf: finalUrl),
-           let lSettings:GameSettings = try? JSONDecoder().decode(GameSettings.self, from: theData) {
-            
-            return lSettings
-            
-        } else {
-            // no data found
+    }
+    private static func loadSettings() throws -> GameSettings {
+        print("Loading Settings")
+        do {
+            let data:Data = try LocalDatabase.loadData(file: .settings)
+            LocalDatabase.reportDataSize(data, file: GameFile.settings.fileName)
+            do {
+                let settings = try LocalDatabase.decodeData(GameSettings.self, from: data)
+                return settings
+            } catch {
+                print("Error decoding Settings. \(error.localizedDescription)")
+                throw error
+            }
+        } catch {
+            print("Error loading data for Game Settings. \(error.localizedDescription)")
+            // probably was empty
             return GameSettings.create()
         }
     }
-    func saveSettings(newSettings:GameSettings) {
-        let fileUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.settingsFile)
-        
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        
-        guard let encodedData:Data = try? encoder.encode(newSettings) else { fatalError() }
-        
-        let bcf = ByteCountFormatter()
-        bcf.allowedUnits = [.useKB]
-        bcf.countStyle = .file
-        
-        let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
-        print("Saving Game Settings Size: \(dataSize)")
-        
-        if !FileManager.default.fileExists(atPath: fileUrl.path) {
-            FileManager.default.createFile(atPath: fileUrl.path, contents: encodedData, attributes: nil)
-            print("File created")
-            return
+    
+    // MARK: - Player
+    var player:SKNPlayer
+    func savePlayer(_ player:SKNPlayer) throws {
+        do {
+            let data = try LocalDatabase.encodeData(object: player)
+            do {
+                try data.write(to: LocalDatabase.folder.appendingPathComponent(GameFile.player.fileName), options: .atomic)
+                self.player = player
+            } catch {
+                if let error = error as? EncodingError {
+                    print("Encoding Default error.: \(error.localizedDescription)")
+                    throw LocalDatabaseError.coding(type: SKNPlayer.self, reason: error.localizedDescription)
+                } else {
+                    print("Unrecognizable error during encoding serverData. Reason.: \(error.localizedDescription)")
+                    throw error
+                }
+            }
+        } catch {
+            if let error = error as? EncodingError {
+                print("Encoding Default error.: \(error.localizedDescription)")
+                throw LocalDatabaseError.coding(type: SKNPlayer.self, reason: error.localizedDescription)
+            } else {
+                print("Unrecognizable error during encoding serverData. Reason.: \(error.localizedDescription)")
+                throw error
+            }
         }
+    }
+    static func loadPlayer() throws -> SKNPlayer {
         
-        do{
-            try encodedData.write(to: fileUrl, options: .atomic)
-            print("Saved Settings locally")
-        }catch{
-            print("Error writting data to local url: \(error)")
+        print("Loading Player")
+        do {
+            let data:Data = try LocalDatabase.loadData(file: .player)
+            reportDataSize(data, file: GameFile.player.fileName)
+            do {
+                let player = try LocalDatabase.decodeData(SKNPlayer.self, from: data)
+                return player
+            } catch {
+                throw error
+            }
+        } catch {
+            print("Error loading Player. \(error.localizedDescription)")
+            throw error
         }
     }
     
     // MARK: - Builder
+    var stationBuilder:StationBuilder
     
-    /// Initializes `StationBuilder` with the `Station` object, or none if this is a new game.
-    private static func initializeStationBuilder() -> StationBuilder {
-        if let station = LocalDatabase.loadStation() {
-            let builder = StationBuilder(station: station)
-            return builder
-        } else {
-            let builder = StationBuilder()
-            return builder
-        }
-    }
     /// Public function to reload the Builder. Pass a Station, or reload from start. Useful to reload scene
     func reloadBuilder(newStation:Station?) -> StationBuilder {
         if let new = newStation {
@@ -102,393 +130,210 @@ class LocalDatabase {
         }
     }
     
-    // MARK: - Game Messages
-    var gameMessages:[GameMessage] = []
-    static let gameMessagesFile = "GameMessages.json"
-    private static func loadMessages() -> [GameMessage] {
-        
-        print("Loading Messages")
-        let finalUrl = LocalDatabase.folder.appendingPathComponent(gameMessagesFile)
-        
-        if !FileManager.default.fileExists(atPath: finalUrl.path){
-            print("File doesn't exist")
-            return []
-        }
-        
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .secondsSince1970
-        
-        do{
-            let theData = try Data(contentsOf: finalUrl)
-            
-            do {
-                let localData:[GameMessage] = try decoder.decode([GameMessage].self, from: theData)
-                return localData
-                
-            }catch{
-                // Decode JSON Error
-                print("Error Decoding JSON: \(error)")
-                return []
-            }
-        }catch{
-            // First Do - let data error
-            print("Error getting Data from URL: \(error)")
-            return []
-        }
-    }
-    func saveMessages() {
-        let encoder = dataEncoder() //JSONEncoder()
-//        encoder.dateEncodingStrategy = .secondsSince1970
-//        encoder.outputFormatting = .prettyPrinted
-        guard let encodedData:Data = try? encoder.encode(gameMessages) else { fatalError() }
-        
-//        let bcf = ByteCountFormatter()
-//        bcf.allowedUnits = [.useKB]
-//        bcf.countStyle = .file
-//
-//        let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
-//        print("Saving Station Builder. Size: \(dataSize)")
-        let file = LocalDatabase.gameMessagesFile
-        
-        reportDataSize(encodedData, file: file)
-        
-        let fileUrl = LocalDatabase.folder.appendingPathComponent(file)
-        
-        if !FileManager.default.fileExists(atPath: fileUrl.path) {
-            FileManager.default.createFile(atPath: fileUrl.path, contents: encodedData, attributes: nil)
-            print("File created")
-            return
-        }
-        
-        do{
-            try encodedData.write(to: fileUrl, options: .atomic)
-            print("Saved Messages locally")
-        }catch{
-            print("Error writting data to local url: \(error)")
-        }
-    }
-    
     // MARK: - Station
-    static let stationFile = "Station.json"
-    func saveStation(station:Station) {
-        
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        
-        guard let encodedData:Data = try? encoder.encode(station) else { fatalError() }
-        
-        let bcf = ByteCountFormatter()
-        bcf.allowedUnits = [.useKB]
-        bcf.countStyle = .file
-        
-        let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
-        print("Saving Game Station Size: \(dataSize)")
-        
-        let fileUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.stationFile)
-        
-        if !FileManager.default.fileExists(atPath: fileUrl.path) {
-            FileManager.default.createFile(atPath: fileUrl.path, contents: encodedData, attributes: nil)
-            print("File created")
-            return
-        }
-        
-        do{
-            try encodedData.write(to: fileUrl, options: .atomic)
-//            print("Saved Station locally")
-        }catch{
-            print("Error writting data to local url: \(error)")
-        }
-    }
-    private static func loadStation() -> Station? {
-//        print("Loading Station")
-        let finalUrl = LocalDatabase.folder.appendingPathComponent(stationFile)
-        
-        if !FileManager.default.fileExists(atPath: finalUrl.path){
-            print("File doesn't exist")
-            return nil
-        }
-        
-        do{
-            let theData = try Data(contentsOf: finalUrl)
-            
-            do{
-                let localData:Station = try JSONDecoder().decode(Station.self, from: theData)
-                return localData
-                
-            }catch{
-                // Decode JSON Error
-                print("Error Decoding JSON: \(error)")
-                return nil
-            }
-        }catch{
-            // First Do - let data error
-            print("Error getting Data from URL: \(error)")
-            return nil
-        }
-    }
-    
-    // MARK: - Space Vehicles - Travelling
-    static let vehiclesFile = "Travelling.json"
-    func saveVehicles() {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        
-        guard let encodedData:Data = try? encoder.encode(vehicles) else { fatalError() }
-        print("Saving Travelling Vehicles")
-        
-        let bcf = ByteCountFormatter()
-        bcf.allowedUnits = [.useKB]
-        bcf.countStyle = .file
-        
-        let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
-        print("Saving Vehicles Size: \(dataSize)")
-        
-        let fileUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.vehiclesFile)
-        
-        if !FileManager.default.fileExists(atPath: fileUrl.path) {
-            FileManager.default.createFile(atPath: fileUrl.path, contents: encodedData, attributes: nil)
-            print("File created")
-            return
-        }
-        
-        do{
-            try encodedData.write(to: fileUrl, options: .atomic)
-            print("Saved Vehicles locally")
-        }catch{
-            print("Error writting data to local url: \(error)")
-        }
-    }
-    private static func loadVehicles() -> [SpaceVehicle] {
-        
-        print("Loading Travelling Vehicles")
-        let finalUrl = LocalDatabase.folder.appendingPathComponent(vehiclesFile)
-        
-        if !FileManager.default.fileExists(atPath: finalUrl.path){
-            print("File doesn't exist")
-            return []
-        }
-        
-        do{
-            let theData = try Data(contentsOf: finalUrl)
-            
-            do{
-                let localData:[SpaceVehicle] = try JSONDecoder().decode([SpaceVehicle].self, from: theData)
-                return localData
-                
-            }catch{
-                // Decode JSON Error
-                print("Error Decoding JSON: \(error)")
-                return []
-            }
-        }catch{
-            // First Do - let data error
-            print("Error getting Data from URL: \(error)")
-            return []
-        }
-        
-//        return []
-    }
-    
-    // MARK: - Player
-    private static let playerFile = "Player.json"
-    func savePlayer(player:SKNPlayer) -> Bool {
-        
-        self.player = player
-        
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .secondsSince1970
-        encoder.outputFormatting = .prettyPrinted
-        
-        guard let encodedData:Data = try? encoder.encode(player) else { fatalError() }
-        
-        let bcf = ByteCountFormatter()
-        bcf.allowedUnits = [.useKB]
-        bcf.countStyle = .file
-        
-        let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
-        print("Saving Player Size: \(dataSize)")
-        
-        let fileUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.playerFile)
-        
-        if !FileManager.default.fileExists(atPath: fileUrl.path) {
-            FileManager.default.createFile(atPath: fileUrl.path, contents: encodedData, attributes: nil)
-            print("File created")
-            return true
-        } else {
-            do {
-                try encodedData.write(to: fileUrl, options: .atomic)
-//                print("Saved Player locally")
-                return true
-            }catch{
-                print("Error writting data to local url: \(error)")
-                return false
-            }
-        }
-    }
-    private static func loadPlayer() -> SKNPlayer? {
-        
-        print("Loading Player")
-        let finalUrl = LocalDatabase.folder.appendingPathComponent(playerFile)
-        
-        if !FileManager.default.fileExists(atPath: finalUrl.path){
-            print("File doesn't exist")
-            return nil
-        }
-        
+    var station:Station
+    func saveStation(_ station:Station) throws {
         do {
-            let theData = try Data(contentsOf: finalUrl)
-            
+            let data = try LocalDatabase.encodeData(object: station)
             do {
-                let localPlayer:SKNPlayer = try JSONDecoder().decode(SKNPlayer.self, from: theData)
-                return localPlayer
-                
-            }catch{
-                // Decode JSON Error
-                print("Error Decoding JSON: \(error)")
-                return nil
+                try data.write(to: LocalDatabase.folder.appendingPathComponent(GameFile.station.fileName), options: .atomic)
+                self.station = station
+            } catch {
+                if let error = error as? EncodingError {
+                    print("Encoding Default error.: \(error.localizedDescription)")
+                    throw LocalDatabaseError.coding(type: Station.self, reason: error.localizedDescription)
+                } else {
+                    print("Unrecognizable error during encoding Space Station. Reason.: \(error.localizedDescription)")
+                    throw error
+                }
             }
-        }catch{
-            // First Do - let data error
-            print("Error getting Data from URL: \(error)")
-            return nil
-        }
-    }
-    
-    // MARK: - Mars City
-    private static let cityFile = "MarsCity.json"
-    var city:CityData?
-    func saveCity(_ newCity:CityData) throws {
-        self.city = newCity
-        
-        let encoder = dataEncoder()
-        
-        guard let encodedData:Data = try? encoder.encode(newCity) else { fatalError() }
-        print("Saving City")
-        
-//        let bcf = ByteCountFormatter()
-//        bcf.allowedUnits = [.useKB]
-//        bcf.countStyle = .file
-//
-//        let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
-//        print("Saving City Size: \(dataSize)")
-        
-        reportDataSize(encodedData, file: LocalDatabase.cityFile)
-        
-        let fileUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.cityFile)
-        
-        if !FileManager.default.fileExists(atPath: fileUrl.path) {
-            FileManager.default.createFile(atPath: fileUrl.path, contents: encodedData, attributes: nil)
-            print("File created")
-            // return true
-        } else {
-            do {
-                try encodedData.write(to: fileUrl, options: .atomic)
-                print("Saved City locally")
-                // return true
-            }catch{
-                print("Error writting data to local url: \(error)")
-                // return false
+        } catch {
+            if let error = error as? EncodingError {
+                print("Encoding Default error.: \(error.localizedDescription)")
+                throw LocalDatabaseError.coding(type: Station.self, reason: error.localizedDescription)
+            } else {
+                print("Unrecognizable error during encoding Space Station. Reason.: \(error.localizedDescription)")
                 throw error
             }
         }
     }
-    func loadCity() -> CityData? {
-        
-        print("Loading City")
-        let finalUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.cityFile)
-        
-        if !FileManager.default.fileExists(atPath: finalUrl.path){
-            print("File doesn't exist")
-            return nil
+    private static func loadStation() throws -> Station {
+        print("Loading Station")
+        do {
+            let data:Data = try LocalDatabase.loadData(file: .station)
+            LocalDatabase.reportDataSize(data, file: GameFile.station.fileName)
+            do {
+                let station = try LocalDatabase.decodeData(Station.self, from: data)
+                return station
+            } catch {
+                print("Error decoding Station. \(error.localizedDescription)")
+                throw error
+            }
+        } catch {
+            print("Error loading data for Space Station. \(error.localizedDescription)")
+            throw error
         }
+    }
+    
+    // MARK: - Game Messages
+    var gameMessages:[GameMessage] // = []
+    func saveMessages(messages:[GameMessage]) throws {
+        do {
+            let data = try LocalDatabase.encodeData(object: messages)
+            do {
+                try data.write(to: LocalDatabase.folder.appendingPathComponent(GameFile.messages.fileName), options: .atomic)
+                self.gameMessages = messages
+            } catch {
+                throw error
+            }
+        } catch {
+            throw error
+        }
+    }
+    private static func loadGameMessages() -> [GameMessage] {
+        do {
+            let data:Data = try LocalDatabase.loadData(file: .messages)
+            LocalDatabase.reportDataSize(data, file: GameFile.messages.fileName)
+            do {
+                let messages = try LocalDatabase.decodeData([GameMessage].self, from: data)
+                return messages
+            } catch {
+                return []
+            }
+        } catch {
+            print("Error loading data for Game Messages. \(error.localizedDescription)")
+            return []
+        }
+    }
+    
+    // MARK: - Space Vehicles - Travelling
+    var vehicles:[SpaceVehicle]
+    func saveVehicles(_ array:[SpaceVehicle]) throws {
         
         do {
-            let theData = try Data(contentsOf: finalUrl)
-            
+            let data = try LocalDatabase.encodeData(object: array)
             do {
-                let marsCity:CityData = try JSONDecoder().decode(CityData.self, from: theData)
-                return marsCity
-                
-            }catch{
-                // Decode JSON Error
-                print("Error Decoding JSON: \(error)")
-                return nil
+                try data.write(to: LocalDatabase.folder.appendingPathComponent(GameFile.travels.fileName), options: .atomic)
+                self.vehicles = array
+            } catch {
+                if let error = error as? EncodingError {
+                    print("Encoding Default error.: \(error.localizedDescription)")
+                    throw LocalDatabaseError.coding(type: CityData.self, reason: error.localizedDescription)
+                } else {
+                    print("Unrecognizable error during encoding serverData. Reason.: \(error.localizedDescription)")
+                    throw error
+                }
             }
-        }catch{
-            // First Do - let data error
-            print("Error getting Data from URL: \(error)")
-            return nil
+        } catch {
+            if let error = error as? EncodingError {
+                print("Encoding Default error.: \(error.localizedDescription)")
+                throw LocalDatabaseError.coding(type: SpaceVehicle.self, reason: error.localizedDescription)
+            } else {
+                print("Unrecognizable error during encoding serverData. Reason.: \(error.localizedDescription)")
+                throw error
+            }
+        }
+    }
+    private static func loadVehicles() -> [SpaceVehicle] {
+        
+        print("Loading Vehicles")
+        do {
+            let data:Data = try LocalDatabase.loadData(file: .travels)
+            reportDataSize(data, file: GameFile.travels.fileName)
+            do {
+                let vehicles = try LocalDatabase.decodeData([SpaceVehicle].self, from: data)
+                return vehicles
+            } catch {
+                print("Error decoding Travelling Vehicles. \(error.localizedDescription)")
+                return []
+            }
+        } catch {
+            print("Error loading Travelling Vehicles. \(error.localizedDescription)")
+            return []
+        }
+    }
+    
+    // MARK: - Mars City
+    var cityData:CityData?
+    func saveCity(_ city:CityData) throws {
+        do {
+            let data = try LocalDatabase.encodeData(object: city)
+            do {
+                try data.write(to: LocalDatabase.folder.appendingPathComponent(GameFile.cityData.fileName), options: .atomic)
+                self.cityData = city
+            } catch {
+                print("Error writing data from 'CityData'")
+                throw error
+            }
+        } catch {
+            if let error = error as? EncodingError {
+                print("Encoding Default error.: \(error.localizedDescription)")
+                throw LocalDatabaseError.coding(type: CityData.self, reason: error.localizedDescription)
+            } else {
+                print("Unrecognizable error during encoding serverData. Reason.: \(error.localizedDescription)")
+                throw error
+            }
+        }
+    }
+    static func loadCity() throws -> CityData {
+        
+        print("Loading City")
+        do {
+            let data:Data = try LocalDatabase.loadData(file: .cityData)
+            reportDataSize(data, file: GameFile.cityData.fileName)
+            do {
+                let city = try LocalDatabase.decodeData(CityData.self, from: data)
+                return city
+            } catch {
+                throw error
+            }
+        } catch {
+            print("Error loading CityData. \(error.localizedDescription)")
+            throw error
         }
     }
     
     // ---------------------------
-    // MARK: - In Memory (Fetched)
-    // ===========================
-    
-    // Server file
+    // MARK: - In Memory ServerData
     var serverData:ServerData?
-    private static let serverDataFile = "SKNSData.json"
-    func saveServerData(skn:ServerData) -> Bool {
-        
-        self.serverData = skn
-        
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .secondsSince1970
-        encoder.outputFormatting = .prettyPrinted
-        
-        guard let encodedData:Data = try? encoder.encode(skn) else { fatalError() }
-        print("Saving Server Data Vehicles")
-        
-        let bcf = ByteCountFormatter()
-        bcf.allowedUnits = [.useKB]
-        bcf.countStyle = .file
-        
-        let dataSize = bcf.string(fromByteCount: Int64(encodedData.count))
-        print("Saving Server Data Size: \(dataSize)")
-        
-        let fileUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.serverDataFile)
-        
-        if !FileManager.default.fileExists(atPath: fileUrl.path) {
-            FileManager.default.createFile(atPath: fileUrl.path, contents: encodedData, attributes: nil)
-            print("File created")
-            return true
-        } else {
+    func saveServerData(_ serverData:ServerData) throws {
+        do {
+            let data = try LocalDatabase.encodeData(object: serverData)
             do {
-                try encodedData.write(to: fileUrl, options: .atomic)
-                print("Saved Server Data locally")
-                return true
-            }catch{
-                print("Error writting data to local url: \(error)")
-                return false
+                try data.write(to: LocalDatabase.folder.appendingPathComponent(GameFile.server.fileName), options: .atomic)
+                self.serverData = serverData
+            } catch {
+                print("Error writing data from 'ServerData'")
+                throw error
+            }
+        } catch {
+            if let error = error as? EncodingError {
+                print("Encoding Default error.: \(error.localizedDescription)")
+                throw LocalDatabaseError.coding(type: ServerData.self, reason: error.localizedDescription)
+            } else {
+                print("Unrecognizable error during encoding serverData. Reason.: \(error.localizedDescription)")
+                throw error
             }
         }
     }
-    func loadServerData() -> ServerData? {
-        
-        print("Loading Server data")
-        let finalUrl = LocalDatabase.folder.appendingPathComponent(LocalDatabase.serverDataFile)
-        
-        if !FileManager.default.fileExists(atPath: finalUrl.path){
-            print("File doesn't exist")
-            return nil
-        }
-        
+    static func loadServerData() throws -> ServerData {
         do {
-            let theData = try Data(contentsOf: finalUrl)
-            
+            let data:Data = try LocalDatabase.loadData(file: .server)
             do {
-                let localServer:ServerData = try JSONDecoder().decode(ServerData.self, from: theData)
-                return localServer
-                
-            }catch{
-                // Decode JSON Error
-                print("Error Decoding JSON: \(error)")
-                return nil
+                let serverData = try LocalDatabase.decodeData(ServerData.self, from: data) //decodeData(object: gameFile.fileType, data: data)
+                return serverData
+            } catch {
+                if let error = error as? LocalDatabaseError {
+                    print("Error decoding Server Data. \(error.localizedDescription)")
+                    throw error
+                } else {
+                    print("Another error with Server Data. \(error.localizedDescription)")
+                    throw error
+                }
             }
-        }catch{
-            // First Do - let data error
-            print("Error getting Server Data from URL. \(error)")
-            return nil
+        } catch {
+            print("Error loading Server Data. \(error.localizedDescription)")
+            throw error
         }
     }
     
@@ -506,29 +351,59 @@ class LocalDatabase {
     
     private init() {
         
+        /*
+         When loading an object, check the 'throws'
+         if the throw is LocalDatabaseError.noFile,
+         
+         [ recover ] - Simply Check if we can create the file
+         */
+        
         // Player
-        if let player = LocalDatabase.loadPlayer() {
+        do {
+            let player = try LocalDatabase.loadPlayer()
             self.player = player
-        } else {
-            print("No Player !!!")
+        } catch {
+            if let error = error as? LocalDatabaseError {
+                switch error {
+                    case .noFile:
+                        print("Creating new player !!")
+                        let newPlayer = SKNPlayer()
+                        self.player = newPlayer
+                    case .coding(let type, let reason):
+                        fatalError("Coding Error loading Player.: \(type), reason:\(reason)")
+                }
+            } else {
+                fatalError("Error Loading Player.: \(error.localizedDescription)")
+            }
         }
         
-        // Space Station
-        if let ss = LocalDatabase.loadStation() {
-            // Set the Station
-            self.station = ss
-            // Load builder for station
-            let sBuilder = LocalDatabase.initializeStationBuilder()
-            self.stationBuilder = sBuilder
-        }else{
-            print("=== Starting New Game ===")
-            let sBuilder = LocalDatabase.initializeStationBuilder()
-            self.stationBuilder = sBuilder
-            self.station = Station(stationBuilder: sBuilder)
+        // Space Station + Builder
+        do {
+            let spaceStation = try LocalDatabase.loadStation()
+            self.station = spaceStation
+            let builder = StationBuilder(station: spaceStation)
+            self.stationBuilder = builder
+            
+        } catch {
+            if let error = error as? LocalDatabaseError {
+                switch error {
+                    case .noFile:
+                        print("Creating new station !!")
+                        let builder = StationBuilder()
+                        self.stationBuilder = builder
+                        let spaceStation = Station(stationBuilder: builder)
+                        self.station = spaceStation
+                    case .coding(let type, let reason):
+                        fatalError("Coding Error loading SpaceStation.: \(type), reason:\(reason)")
+                }
+            } else {
+                fatalError("Error Loading Station.: \(error.localizedDescription)")
+            }
         }
         
         // Messages
-        self.gameMessages = LocalDatabase.loadMessages()
+        let gMessages = LocalDatabase.loadGameMessages()
+        self.gameMessages = gMessages
         
         // Vehicles
         let vehiclesArray = LocalDatabase.loadVehicles()
@@ -536,24 +411,29 @@ class LocalDatabase {
         
         // Settings
         print("Loading Settings")
-        let settings = LocalDatabase.loadSettings()
-        self.gameSettings = settings
+        do {
+            let gSettings = try LocalDatabase.loadSettings()
+            self.gameSettings = gSettings
+        } catch {
+            print("Loading Settings for the first time")
+            let newGameSettings = GameSettings.create()
+            self.gameSettings = newGameSettings
+        }
         
         // Server Database
-        if let servData = loadServerData() {
-            print("Server data loaded from disk")
-//            let newData = ServerData(localData: servData)
-            self.serverData = servData
-        } else {
-            print("No server data")
-//            if let p1 = player {
-//                let newData = ServerData(player: p1)
-//                self.serverData = newData
-//                if self.saveServerData(skn: newData) == true {
-//                    print("New server data saved")
-//                }
-//            }
-//            print("Server data not written locally")
+        do {
+            let server = try LocalDatabase.loadServerData()
+            self.serverData = server
+        } catch {
+            // Serverdata doesn't need to be loaded.
+            if let error = error as? LocalDatabaseError {
+                switch error {
+                    case .noFile:
+                        print("ServerData - No File. Doesn't need to be set")
+                    case .coding(let type, let reason):
+                        print("Error coding server data. \(type). reason:\(reason)")
+                }
+            }
         }
         
         print("LocalDatabase Finished Loading \n\n")
@@ -562,23 +442,74 @@ class LocalDatabase {
 
 extension LocalDatabase {
     
-    /// Gets the `JsonEncoder` for the game
-    private func dataEncoder() -> JSONEncoder {
+    /// Returns Data encoded from the object passed.
+    private class func encodeData<T:Codable>(object:T) throws -> Data {
+        
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .secondsSince1970
         encoder.outputFormatting = .prettyPrinted
-        return encoder
+        
+        do {
+            let data = try encoder.encode(object)
+            return data
+        } catch {
+            if let error = error as? EncodingError {
+                print("Encoding Default error.: \(error.localizedDescription)")
+                throw error
+            } else {
+                print("Unrecognizable error during encoding: \(object).: Reason.: \(error.localizedDescription)")
+                throw error
+            }
+        }
     }
     
-    /// Gets the `JsonDecoder` for the game
-    private func gameDecoder() -> JSONDecoder {
+    /// Returns the `Data` from file
+    private static func loadData(file:GameFile) throws -> Data {
+        
+        let url = folder.appendingPathComponent(file.fileName)
+        
+        let bcf = ByteCountFormatter()
+        bcf.allowedUnits = [.useKB]
+        bcf.countStyle = .file
+        
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            throw LocalDatabaseError.noFile
+        }
+        
+        do {
+            let data = try Data(contentsOf: url)
+            
+            return data
+        } catch {
+            if let decodingError = error as? DecodingError {
+                print("‼️ Error Decoding file of type.: \(file.fileType)")
+                throw LocalDatabaseError.coding(type: file.fileType, reason: "\(decodingError.localizedDescription)")
+            }
+            throw error
+        }
+    }
+    
+    /// Returns a Decoded Object
+    private class func decodeData<T>(_ type: T.Type, from data: Data) throws -> T where T : Decodable {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .secondsSince1970
-        return decoder
+        
+        do {
+            let decoded = try decoder.decode(T.self, from: data)
+            return decoded
+        } catch {
+            if let error = error as? DecodingError {
+                print("‼️ Decoding (DecodingError) error.: \(error.localizedDescription)")
+                throw error
+            } else {
+                print("‼️ Unrecognizable error during decoding: \(type.self).: Reason.: \(error.localizedDescription)")
+                throw error
+            }
+        }
     }
     
     /// Prints the file size
-    private func reportDataSize(_ data:Data, file name:String) {
+    private static func reportDataSize(_ data:Data, file name:String) {
         
         let bcf = ByteCountFormatter()
         bcf.allowedUnits = [.useKB]
@@ -594,7 +525,7 @@ extension LocalDatabase {
                 let df = DateFormatter()
                 df.dateStyle = .short
                 df.timeStyle = .short
-                dataDesc += ", Mod: \(df.string(from: modificationDate))"
+                dataDesc += ", Modified: \(df.string(from: modificationDate))"
             }
         }
         print(dataDesc)

@@ -67,18 +67,13 @@ class ServerManager {
         } else {
             
             // No Server Data Stored
-            if let player = LocalDatabase.shared.player {
-//                self.serverData = ServerData(player: player)
-                self.loginFirstPlayer(player: player)
-                
-            } else {
-                print("ERROR (ServerManager): LocalDatabase doesn't have a player")
-            }
+            let player = LocalDatabase.shared.player
+            self.loginFirstPlayer(player: player)
         }
     }
     
     private static func loadServerData() -> ServerData? {
-        return LocalDatabase.shared.loadServerData()
+        return LocalDatabase.shared.serverData
     }
     
     /// Performs Login with Authorization
@@ -90,9 +85,7 @@ class ServerManager {
         }
         
         // Player is the main holder of password. It is the first that gets updated when a password is set.
-        guard let player = LocalDatabase.shared.player else {
-            fatalError("‼️ Local Player doesn't exist")
-        }
+        let player = LocalDatabase.shared.player
         
         guard let pass = player.keyPass,
               let pid = player.playerID else {
@@ -168,14 +161,15 @@ class ServerManager {
                         // Save new Player
                         player.playerID = playerUpdate.id
                         player.keyPass = playerUpdate.pass
-                        let saveResult = LocalDatabase.shared.savePlayer(player: player)
-                        guard saveResult == true else {
-                            fatalError("Failed to save new player")
+                        // Save
+                        do {
+                            try LocalDatabase.shared.savePlayer(player)
+                            print("New Player created in database")
+                        } catch {
+                            print("‼️ Could not save station.: \(error.localizedDescription)")
                         }
-                        print("New Player Created, and saved.")
                         
                         self.loginStatus = .createdPlayerWaitingAuth(playerUpdate: playerUpdate)
-                        
                         
                         var sData:ServerData? = self.serverData
                         if let sData = sData {
@@ -296,11 +290,11 @@ class ServerManager {
     
     func saveServerData() {
         if let sdata = serverData {
-            let result = LocalDatabase.shared.saveServerData(skn: sdata)
-            if result == true {
-                print("saved ServerData locally")
-            } else {
-                print("‼️ ERROR! saving ServerData ‼️")
+            // Save
+            do {
+                try LocalDatabase.shared.saveServerData(sdata)
+            } catch {
+                print("‼️ Could not save server data.: \(error.localizedDescription)")
             }
         } else {
             print("‼️ No Server Data to save ‼️")
@@ -452,9 +446,15 @@ class ServerData:Codable {
 //                self.status = .online
                 
                 // Save
-                if LocalDatabase.shared.saveServerData(skn: self) == false {
-                    print("‼️ could not save ServerData")
+                // Save
+                do {
+                    try LocalDatabase.shared.saveServerData(self)
+                } catch {
+                    print("‼️ Could not save Server Data.: \(error.localizedDescription)")
                 }
+//                if LocalDatabase.shared.saveServerData(skn: self) == false {
+//                    print("‼️ could not save ServerData")
+//                }
                 
             } else if let error = error {
                 print("ERROR Requesting Guild: \(error.localizedDescription)")
@@ -518,7 +518,7 @@ class ServerData:Codable {
                 
                 self.guildVehicles = gVehicles
                 for vehicle in gVehicles {
-                    if vehicle.owner == LocalDatabase.shared.player?.playerID {
+                    if vehicle.owner == LocalDatabase.shared.player.playerID {
                         print("Vehicle is mine: \(vehicle.engine)")
                     } else {
                         print("Vehicle belongs to: \(vehicle.owner)")
@@ -626,7 +626,7 @@ class ServerData:Codable {
     /// Data exists locally (old data)
     init(localData:ServerData) {
         
-        self.player = LocalDatabase.shared.player!
+        self.player = LocalDatabase.shared.player
         
         self.lastLogin = localData.lastLogin
         self.lastGuildFetch = localData.lastGuildFetch

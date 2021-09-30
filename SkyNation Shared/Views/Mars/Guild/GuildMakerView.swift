@@ -120,7 +120,7 @@ struct GuildMakerView: View {
                     
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
-                .disabled(LocalDatabase.shared.player?.countTokens().count ?? 0 < 10) //timeTokens.count ?? 0 < 10)
+                .disabled(LocalDatabase.shared.player.countTokens().count < 10) //timeTokens.count ?? 0 < 10)
             }
             .padding(.bottom, 6)
         }

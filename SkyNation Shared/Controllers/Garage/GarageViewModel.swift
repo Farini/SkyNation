@@ -56,7 +56,7 @@ class GarageViewModel:ObservableObject {
     
     init() {
         // Load Station
-        let station = LocalDatabase.shared.station!
+        let station = LocalDatabase.shared.station
         self.station = station
         self.garage = station.garage
         
@@ -111,7 +111,7 @@ class GarageViewModel:ObservableObject {
             }
         }
         for vehicle in transferringVehicles {
-            if let city = LocalDatabase.shared.city {
+            if let city = LocalDatabase.shared.cityData {
                 travellingVehicles.removeAll(where: { $0.id == vehicle.id })
                 city.garage.vehicles.append(vehicle)
                 // Achievement
@@ -237,11 +237,21 @@ class GarageViewModel:ObservableObject {
 //                vehicle.simulation += 1
                 self.station.garage.simulationXP += 1
                 self.station.garage.xp += 1
-                // Save Station
-                LocalDatabase.shared.saveStation(station: station)
-                // Save Vehicle
-                LocalDatabase.shared.vehicles = travellingVehicles
-                LocalDatabase.shared.saveVehicles()
+                
+                // Save
+                do {
+                    // Save Station
+                    try LocalDatabase.shared.saveStation(station)
+                    do {
+                        // Save Vehicle
+                        try LocalDatabase.shared.saveVehicles(travellingVehicles)
+                        
+                    } catch {
+                        print("‼️ Could not save vehicles.: \(error.localizedDescription)")
+                    }
+                } catch {
+                    print("‼️ Could not save station.: \(error.localizedDescription)")
+                }
             }
         }
         
@@ -320,7 +330,13 @@ class GarageViewModel:ObservableObject {
         
         // Update and save Model
         station.garage.startBuildingVehicle(vehicle: vehicle, time:duration)
-        LocalDatabase.shared.saveStation(station: station)
+        // Save
+        do {
+            // Save Station
+            try LocalDatabase.shared.saveStation(station)
+        } catch {
+            print("‼️ Could not save station.: \(error.localizedDescription)")
+        }
     }
     
     /// Updates the UI to setup the Inventory
@@ -487,15 +503,30 @@ class GarageViewModel:ObservableObject {
         self.garage.buildingVehicles.removeAll(where: { $0.id == vehicle.id })
             
         // Add to Array of travelling vehicles
-        LocalDatabase.shared.vehicles.append(vehicle)
+        var newVehicleArray = LocalDatabase.shared.vehicles
+        newVehicleArray.append(vehicle)
         self.travellingVehicles.append(vehicle)
             
         // XP
         self.garage.xp += 1
             
         // Save
-        LocalDatabase.shared.saveVehicles()
-        LocalDatabase.shared.saveStation(station: self.station)
+        // Save
+        do {
+            // Save Station
+            try LocalDatabase.shared.saveStation(station)
+            do {
+                // Save Vehicle
+                try LocalDatabase.shared.saveVehicles(newVehicleArray)
+                
+            } catch {
+                print("‼️ Could not save vehicles.: \(error.localizedDescription)")
+            }
+        } catch {
+            print("‼️ Could not save station.: \(error.localizedDescription)")
+        }
+//        LocalDatabase.shared.saveVehicles()
+//        LocalDatabase.shared.saveStation(station: self.station)
             
         // Update View
         self.garageStatus = .planning(stage: .Launching)
@@ -518,21 +549,27 @@ class GarageViewModel:ObservableObject {
     func registerVehicle(vehicle:SpaceVehicle, completion:((SpaceVehicleTicket?, Error?) -> ())?) {
         print("Registering Vehicle in Server")
         
-        guard let _ = LocalDatabase.shared.player else {
-            fatalError()
-        }
 //        let user = SKNUserPost(player: player)
-        
+        var allVehicles = LocalDatabase.shared.vehicles
         SKNS.registerSpace(vehicle: vehicle) { (ticket, error) in
             
             if let ticket = ticket {
-                print("Vehicle Registration Approved! ")
-                vehicle.registration = ticket.id
-                if let dbVehicle = LocalDatabase.shared.vehicles.first(where: { $0.id == vehicle.id }) {
-                    dbVehicle.registration = ticket.id
-                    print("Saving Database Travelling Vehicles")
-                    LocalDatabase.shared.saveVehicles()
+                DispatchQueue.main.async {
+                    print("Vehicle Registration Approved! ")
+                    vehicle.registration = ticket.id
+                    if let dbVehicle = LocalDatabase.shared.vehicles.first(where: { $0.id == vehicle.id }) {
+                        dbVehicle.registration = ticket.id
+                        print("Saving Database Travelling Vehicles")
+                        // Save
+                        do {
+                            // Save Vehicles
+                            try LocalDatabase.shared.saveVehicles(LocalDatabase.shared.vehicles)
+                        } catch {
+                            print("‼️ Could not save station.: \(error.localizedDescription)")
+                        }
+                    }
                 }
+                
 //                LocalDatabase.shared.saveStation(station: self.station)
             } else {
                 print("⚠️ Did not get a ticket from Vehicle Registration! \(error?.localizedDescription ?? "")")

@@ -340,7 +340,7 @@ class CityData:Codable, Identifiable {
         self.vehicles = []
         self.tech = []
         self.air = AirComposition(amount: GameLogic.airPerModule * 2)
-        self.unlockedRecipes = LocalDatabase.shared.station?.unlockedRecipes ?? []
+        self.unlockedRecipes = LocalDatabase.shared.station.unlockedRecipes
         self.garage = Garage()
         self.food = []
         self.bioBoxes = []
@@ -406,7 +406,7 @@ class CityData:Codable, Identifiable {
         self.air = AirComposition(mars: true)
         
         // Recipes
-        self.unlockedRecipes = LocalDatabase.shared.station?.unlockedRecipes ?? []
+        self.unlockedRecipes = LocalDatabase.shared.station.unlockedRecipes
         
         // Garage
         self.garage = Garage()

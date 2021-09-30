@@ -10,18 +10,13 @@ import SwiftUI
 struct CityLabRecipeView: View {
     
     @ObservedObject var controller:LocalCityController
-    
     var recipe:Recipe
-    var skills:[SkillSet] = []
+    var action:((LabActivity) -> ()) // = {}
     
-    init(controller:LocalCityController, recipe:Recipe) {
-        self.controller = controller
-        self.recipe = recipe
-        for (k, v) in recipe.skillSet() {
-            let newSet = SkillSet(skill: k, level: v)
-            skills.append(newSet)
-        }
-    }
+//    init(controller:LocalCityController, recipe:Recipe) {
+//        self.controller = controller
+//        self.recipe = recipe
+//    }
     
     var body: some View {
         VStack {
@@ -66,15 +61,18 @@ struct CityLabRecipeView: View {
                     .font(.headline)
                 
                 HStack {
-                    ForEach(0..<skills.count, id:\.self) { rSkill in
-                        let sset = self.skills[rSkill]
+                    let keyArray = recipe.skillSet().compactMap({ $0.key })
+                    
+                    ForEach(keyArray, id:\.self) { aKey in
                         
-                        GameImages.imageForSkill(skill: sset.skill)
+                        let sset = recipe.skillSet()[aKey]
+                        
+                        GameImages.imageForSkill(skill: aKey)
                             .resizable()
                             .aspectRatio(contentMode:.fit)
                             .frame(width:34, height:34)
                         
-                        Text("x \(sset.level)")
+                        Text("x \(sset ?? 0)")
                             .font(.caption)
                             .padding([.trailing], 6)
                     }
@@ -130,7 +128,13 @@ struct CityLabRecipeView: View {
                 
                 
                 Button("🛠 Make Recipe") {
-                    controller.makeRecipe(recipe: recipe)
+                    let res = controller.makeRecipe(recipe: recipe)
+                    if let activity = controller.labActivity, res == true {
+                        print("Activity in, and result true")
+                        self.action(activity)
+                    } else {
+                        
+                    }
                 }
                 .buttonStyle(GameButtonStyle())
                 // .disabled(controller.recipeDisabled(recipe: recipe))
@@ -143,7 +147,7 @@ struct CityLabRecipeView: View {
 struct CityLabRecipeView_Previews: PreviewProvider {
     static let recipe = Recipe.marsCases.randomElement()!
     static var previews: some View {
-        CityLabRecipeView(controller: LocalCityController(), recipe:CityLabRecipeView_Previews.recipe)
+        CityLabRecipeView(controller: LocalCityController(), recipe:CityLabRecipeView_Previews.recipe, action: {_ in})
             .frame(height:550)
     }
 }

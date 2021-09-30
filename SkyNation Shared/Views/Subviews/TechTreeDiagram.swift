@@ -14,7 +14,7 @@ struct DiagramContent: View {
     
     @ObservedObject var controller:LabViewModel
     @State var tree = TechnologyTree().uniqueTree
-    @State var station:Station = LocalDatabase.shared.station!
+    @State var station:Station = LocalDatabase.shared.station
     
     var body: some View {
         VStack {
@@ -45,7 +45,7 @@ struct DiagramContent: View {
 }
 
 struct DiagramContent_Previews: PreviewProvider {
-    static var module = LocalDatabase.shared.station?.labModules.first ?? LabModule(module: Module(id: UUID(), modex: .mod0))
+    static var module = LocalDatabase.shared.station.labModules.first ?? LabModule(module: Module(id: UUID(), modex: .mod0))
     static var previews: some View {
         DiagramContent(controller: LabViewModel(lab: module))
         

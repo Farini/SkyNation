@@ -10,7 +10,7 @@ import SwiftUI
 struct CityLabView: View {
     
     @ObservedObject var controller:LocalCityController
-    @State var labState:CityLabState
+    @State var labState:CityLabState = .NoSelection
     
     var body: some View {
         
@@ -20,7 +20,8 @@ struct CityLabView: View {
                     ForEach(Recipe.marsCases, id:\.self) { recipe in
                         Text(recipe.rawValue).foregroundColor(.blue)
                             .onTapGesture {
-                                controller.didSelectLab(tech: nil, recipe: recipe)
+//                                controller.didSelectLab(tech: nil, recipe: recipe)
+                                self.labState = .recipe(name: recipe)
                             }
                     }
                 }
@@ -28,7 +29,8 @@ struct CityLabView: View {
                     ForEach(CityTech.allCases, id:\.self) { tech in
                         Text(tech.rawValue).foregroundColor(.blue)
                             .onTapGesture {
-                                controller.didSelectLab(tech: tech, recipe: nil)
+//                                controller.didSelectLab(tech: tech, recipe: nil)
+                                self.labState = .tech(name: tech)
                             }
                     }
                 }
@@ -46,37 +48,36 @@ struct CityLabView: View {
                             CityTechDiagram()
                             
                         case .recipe(let name):
-                            CityLabRecipeView(controller: controller, recipe: name)
+                            CityLabRecipeView(controller: controller, recipe: name) { activity in
+                                // When making a recipe, we get an activity
+                                self.labState = .activity(object: activity)
+                            }
+                            
                         case .tech(let name):
                             CityLabTechView(controller: controller, tech: name)
                         case .activity(let object):
                             
-                            let model = LabActivityViewModel(labActivity: object)
-                            CityLabActivityView(activityModel: model, labActivity: object) { dismState in
-                                
-                                switch dismState {
-                                    case .cancelled:
-                                        print("Cancelled")
-                                        controller.cityData.labActivity = nil
-                                        controller.labActivity = nil
-                                        controller.cancelSelectionOn(tab: .lab)
-                                        
-                                    case .finishedRecipe(let recipe):
-                                        print("Finished recipe: \(recipe.rawValue)")
-                                    case .finishedTech(let tech):
-                                        print("Finished Tech: \(tech.rawValue)")
-                                    case .useToken(let token):
-                                        print("Use token. \(token.id)")
-                                        
+                            let cActivity = controller.labActivity ?? object
+                            CityLabActivityView(activity: cActivity) { activity, cancelled in
+                                print("\n [LAB] Collecting Activity: \(activity.activityName)")
+                                print("Start: \(GameFormatters.fullDateFormatter.string(from: activity.dateStarted))")
+                                print("Finish: \(GameFormatters.fullDateFormatter.string(from: activity.dateEnds))")
+                                if cancelled == true {
+                                    // Cancelling
+                                    self.labState = .NoSelection
+                                    controller.labActivity = nil
+                                    controller.cityData.labActivity = nil
+                                } else {
+                                    controller.collectActivity(activity: activity)
                                 }
-                                
-                                // Dismiss Activity
-                                print("CityLab view wants to dismiss.... ")
-                                controller.cancelSelectionOn(tab: .lab)
-//                                controller.labSelection = .NoSelection
                             }
                     }
                 }
+            }
+        }
+        .onAppear() {
+            if let activity = controller.labActivity {
+                self.labState = .activity(object: activity)
             }
         }
     }

@@ -172,12 +172,12 @@ class PlayerCardNode:SKNode {
     
     /// Updates the PlayerCard UI
     func updatePlayer() {
-        if let newPlayer = LocalDatabase.shared.player {
-            nameLabel.text = newPlayer.name
-            avatar.texture = SKTexture(imageNamed: newPlayer.avatar)
-            moneyLabel.text = "\(GameFormatters.numberFormatter.string(from: NSNumber(value:newPlayer.money)) ?? "---")"
-            tokenLabel.text = "\(newPlayer.countTokens().count)"
-        }
+        let newPlayer = LocalDatabase.shared.player
+        nameLabel.text = newPlayer.name
+        avatar.texture = SKTexture(imageNamed: newPlayer.avatar)
+        moneyLabel.text = "\(GameFormatters.numberFormatter.string(from: NSNumber(value:newPlayer.money)) ?? "---")"
+        tokenLabel.text = "\(newPlayer.countTokens().count)"
+        
     }
     
     /// Makes a Sprite Node from an image name

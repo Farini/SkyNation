@@ -309,7 +309,7 @@ struct TankOrderView: View {
 struct TankRowPreviews:PreviewProvider {
     static var previews: some View {
         VStack {
-            TankRow(tank: LocalDatabase.shared.station!.truss.getTanks().first!)
+            TankRow(tank: LocalDatabase.shared.station.truss.getTanks().first!)
                 .padding()
             
         }
@@ -320,7 +320,7 @@ struct TankSmallPreview1: PreviewProvider {
     static var previews: some View {
         VStack {
             TankViewSmall(tank: Tank(type: .co2, full: true))
-            TankViewSmall(tank: LocalDatabase.shared.station!.truss.getTanks().last!, selected:true)
+            TankViewSmall(tank: LocalDatabase.shared.station.truss.getTanks().last!, selected:true)
                 .padding()
             
         }
@@ -330,7 +330,7 @@ struct TankSmallPreview1: PreviewProvider {
 struct TankDetailsPreviews:PreviewProvider {
     static var previews: some View {
         VStack {
-            TankDetailView(tank: LocalDatabase.shared.station!.truss.getTanks().first!, controller: LSSController(scene: .SpaceStation))
+            TankDetailView(tank: LocalDatabase.shared.station.truss.getTanks().first!, controller: LSSController(scene: .SpaceStation))
         }
     }
 }

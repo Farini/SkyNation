@@ -27,7 +27,7 @@ class SceneDirector {
     func controllerDidLoadScene(controller:GameController) {
         
         self.gameController = controller
-        guard let _ = LocalDatabase.shared.station else { fatalError() }
+        
         
         // Update Truss
 //        controller.updateTrussLayout()

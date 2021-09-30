@@ -82,10 +82,8 @@ class LabViewModel: ObservableObject {
     func boostActivity() -> Bool {
         
         // 1. Get the player
-        guard let player = LocalDatabase.shared.player else {
-            print("No Player")
-            return false
-        }
+        let player = LocalDatabase.shared.player
+        
         // 2. Tokens
         guard let token = player.requestToken() else {
             print("No tokens")
@@ -111,18 +109,29 @@ class LabViewModel: ObservableObject {
             person.activity = activity
         }
         
-        // 5. Save
-        LocalDatabase.shared.saveStation(station: station)
-        
-//        player.timeTokens.removeLast()
-        let result = player.spendToken(token: token, save: false)
-        
-        if result == true {
-            return LocalDatabase.shared.savePlayer(player: player)
+        if let token = player.requestToken() {
+            let spend = player.spendToken(token: token, save: true)
+            if spend == false { return false }
         } else {
             return false
         }
-        // return LocalDatabase.shared.savePlayer(player: player)
+        
+        // 5. Save
+        do {
+            try LocalDatabase.shared.saveStation(station)
+            
+            do {
+                try LocalDatabase.shared.savePlayer(player)
+                return true
+            } catch {
+                print("‼️ Could not save player.: \(error.localizedDescription)")
+                return false
+            }
+        } catch {
+            print("‼️ Could not save station.: \(error.localizedDescription)")
+            return false
+        }
+        
         
     }
     
@@ -210,7 +219,15 @@ class LabViewModel: ObservableObject {
         }
         
         // Save and update view
-        LocalDatabase.shared.saveStation(station: station)
+        // 5. Save
+        do {
+            try LocalDatabase.shared.saveStation(station)
+        } catch {
+            print("‼️ Could not save station.: \(error.localizedDescription)")
+        }
+        
+        
+        
         print("Activity created")
         selection = .activity
         
@@ -318,7 +335,11 @@ class LabViewModel: ObservableObject {
                 self.selection = .NoSelection
                 
                 // Save
-                LocalDatabase.shared.saveStation(station: self.station)
+                do {
+                    try LocalDatabase.shared.saveStation(station)
+                } catch {
+                    print("‼️ Could not save station.: \(error.localizedDescription)")
+                }
             }
             
         }
@@ -328,7 +349,12 @@ class LabViewModel: ObservableObject {
         if let activity = self.labModule.activity {
             print("Throwing away: \(activity.activityName)")
             self.labModule.activity = nil
-            LocalDatabase.shared.saveStation(station: station)
+            // Save
+            do {
+                try LocalDatabase.shared.saveStation(station)
+            } catch {
+                print("‼️ Could not save station.: \(error.localizedDescription)")
+            }
             self.selection = .NoSelection
         }
     }
@@ -427,7 +453,12 @@ class LabViewModel: ObservableObject {
         }
         
         // Save and update view
-        LocalDatabase.shared.saveStation(station: station)
+        // Save
+        do {
+            try LocalDatabase.shared.saveStation(station)
+        } catch {
+            print("‼️ Could not save station.: \(error.localizedDescription)")
+        }
         print("Activity created")
         selection = .activity
     }
@@ -527,7 +558,12 @@ class LabViewModel: ObservableObject {
         print("Finishing Activity")
         module.activity = nil
         self.selection = .NoSelection
-        LocalDatabase.shared.saveStation(station: self.station)
+        // Save
+        do {
+            try LocalDatabase.shared.saveStation(station)
+        } catch {
+            print("‼️ Could not save station.: \(error.localizedDescription)")
+        }
         print("Saved")
     }
     
@@ -536,7 +572,7 @@ class LabViewModel: ObservableObject {
     init(lab:LabModule) {
         
         // Load Station
-        let station = LocalDatabase.shared.station!
+        let station = LocalDatabase.shared.station
         self.station = station
         self.labModule = lab
         self.unlockedRecipes = station.unlockedRecipes
@@ -574,7 +610,7 @@ class LabViewModel: ObservableObject {
     init(demo recipe:Recipe) {
         
         // Load Station
-        let station = LocalDatabase.shared.station!
+        let station = LocalDatabase.shared.station
         self.station = station
         
         self.labModule = LabModule.example()
@@ -606,7 +642,7 @@ class LabViewModel: ObservableObject {
     /// Initializes an instance for `Previews` only!
     init(demo tech:TechItems) {
         // Load Station
-        let station = LocalDatabase.shared.station!
+        let station = LocalDatabase.shared.station
         self.station = station
         
         self.labModule = LabModule.example()
@@ -638,7 +674,7 @@ class LabViewModel: ObservableObject {
     /// Initializes an instance for `Previews` only!
     init(demo activity:LabActivity) {
         // Load Station
-        let station = LocalDatabase.shared.station!
+        let station = LocalDatabase.shared.station
         self.station = station
         
         self.labModule = LabModule.example()

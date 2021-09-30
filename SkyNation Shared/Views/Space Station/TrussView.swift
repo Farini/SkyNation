@@ -243,7 +243,7 @@ class TrussLayoutController: ObservableObject {
     
     init() {
         
-        let station = LocalDatabase.shared.station!
+        let station = LocalDatabase.shared.station
         self.station = station
         self.truss = station.truss
         self.slots = station.truss.tComponents
@@ -342,10 +342,15 @@ class TrussLayoutController: ObservableObject {
     
     func saveSetup() {
         print("Saving Truss Setup\n")
-        // Save
-        LocalDatabase.shared.saveStation(station: station)
-        // Update the Scene
-        SceneDirector.shared.didChangeTrussLayout()
+        // 5. Save
+        do {
+            try LocalDatabase.shared.saveStation(station)
+            SceneDirector.shared.didChangeTrussLayout()
+        } catch {
+            print("‼️ Could not save station.: \(error.localizedDescription)")
+        }
+        
+        
     }
     
 }

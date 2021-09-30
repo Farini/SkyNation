@@ -90,8 +90,13 @@ class SKNPlayer:Codable, Identifiable {
         self.money += currency
         guard newTokens.count <= 3 else { print("More than 3 tokens not allowed in a gift"); return }
 //        self.timeTokens.append(contentsOf: newTokens)
-        let result = LocalDatabase.shared.savePlayer(player: self)
-        print("Saving Player result: \(result)")
+        do {
+            try LocalDatabase.shared.savePlayer(self)
+            
+        } catch {
+            print("Could not save Player: \(error.localizedDescription)")
+        }
+        
     }
     
     /// Random Data generation
@@ -126,11 +131,18 @@ class SKNPlayer:Codable, Identifiable {
             GameToken.createUsedCopy(token: &newToken)
             wallet.tokens.append(newToken)
             if save == true {
-                let res = LocalDatabase.shared.savePlayer(player: self)
-                print("Save player: \(res)")
-                if res == false {
-                    print("⚠️ COULD NOT SAVE PLAYER")
+                do {
+                    try LocalDatabase.shared.savePlayer(self)
+                    
+                } catch {
+                    print("Could not save Player: \(error.localizedDescription)")
                 }
+                
+//                let res = LocalDatabase.shared.savePlayer(player: self)
+//                print("Save player: \(res)")
+//                if res == false {
+//                    print("⚠️ COULD NOT SAVE PLAYER")
+//                }
             }
             return true
         } else {
@@ -163,8 +175,15 @@ class SKNPlayer:Codable, Identifiable {
             GameToken.createUsedCopy(token: &newToken)
             wallet.tokens.append(newToken)
             
-            let res = LocalDatabase.shared.savePlayer(player: self)
-            print("Save player: \(res)")
+            do {
+                try LocalDatabase.shared.savePlayer(self)
+                
+            } catch {
+                print("Could not save Player: \(error.localizedDescription)")
+            }
+            
+//            let res = LocalDatabase.shared.savePlayer(player: self)
+//            print("Save player: \(res)")
             return newToken
             
         } else {

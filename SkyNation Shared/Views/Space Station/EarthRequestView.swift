@@ -190,7 +190,7 @@ struct EarthRequestView: View {
                             case .People:
                                 LazyVGrid(columns: ingredientColumns, alignment:.center, spacing:8) {
                                     
-                                    ForEach(LocalDatabase.shared.player?.wallet.getPeople() ?? []) { person in
+                                    ForEach(LocalDatabase.shared.player.wallet.getPeople() ?? []) { person in
                                         
                                         PersonOrderView(person: person)
                                             .overlay(
@@ -216,7 +216,7 @@ struct EarthRequestView: View {
                                             .font(.title)
                                         VStack {
                                             let delay = Double(TimeInterval.oneDay) / 24.0 // 1hr
-                                            let time:Double = LocalDatabase.shared.player?.wallet.timeToGenerateNextPeople().rounded() ?? 0.0
+                                            let time:Double = LocalDatabase.shared.player.wallet.timeToGenerateNextPeople().rounded() ?? 0.0
                                             let display = GameFormatters.humanReadableTimeInterval(delta: delay - time)
                                             
                                             Text("Refresh in \(display)")
@@ -233,13 +233,13 @@ struct EarthRequestView: View {
                                               primaryButton: .cancel(),
                                               secondaryButton: .destructive(Text("Yes"), action: {
                                                 
-                                                if let player = LocalDatabase.shared.player,
-                                                   let token = player.requestToken() {
+                                            let player = LocalDatabase.shared.player
+                                            if let token = player.requestToken() {
                                                     
                                                     let pplResult = player.wallet.getPeople(true)
                                                     guard !pplResult.isEmpty else { return }
                                                     
-                                                    let result = LocalDatabase.shared.player!.spendToken(token: token, save: true)
+                                                    let result = player.spendToken(token: token, save: true)
                                                     print("Used Token: \(result)")
                                                 } else {
                                                     controller.errorMessage = "Not enough tokens"

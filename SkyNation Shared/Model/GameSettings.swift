@@ -72,7 +72,7 @@ class GameSettings:Codable {
     }
     
     static private func load() -> GameSettings {
-        return LocalDatabase.loadSettings()
+        return LocalDatabase.shared.gameSettings
     }
     
     static func create() -> GameSettings {
@@ -81,6 +81,11 @@ class GameSettings:Codable {
     
     /// Saves the User `Settings`, or Preferences
     func save() {
-        LocalDatabase.shared.saveSettings(newSettings: self)
+        do {
+            try LocalDatabase.shared.saveSettings(settings:self)
+        } catch {
+            print("Error saving Settings.: \(error.localizedDescription)")
+        }
+        
     }
 }

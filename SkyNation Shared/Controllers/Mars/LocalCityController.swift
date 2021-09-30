@@ -96,7 +96,8 @@ enum CityGarageState {
 class LocalCityController:ObservableObject, BioController {
     
     @Published var cityData:CityData
-    @Published var cityViewState:LocalCityViewState = LocalCityViewState.hab(state: .noSelection)
+//    @Published var cityViewState:LocalCityViewState = LocalCityViewState.hab(state: .noSelection)
+    @Published var cityTab:CityMenuItem = .hab
     
     // Hab & People
     
@@ -132,7 +133,7 @@ class LocalCityController:ObservableObject, BioController {
     @Published var warnings:[String] = []
     
     init() {
-        guard let cityData = LocalDatabase.shared.loadCity() else {
+        guard let cityData = LocalDatabase.shared.cityData else {
             fatalError()
         }
         
@@ -154,6 +155,10 @@ class LocalCityController:ObservableObject, BioController {
         self.updateCityOutpostCollection()
     }
     
+    func didSelectTab(tab:CityMenuItem) {
+        self.cityTab = tab
+    }
+    
     // MARK: - HAB
     
     func personalAction(_ paction:PersonActionCall, person:Person) {
@@ -169,9 +174,7 @@ class LocalCityController:ObservableObject, BioController {
         switch paction {
             case .boost:
                 print("Boosting person \(person.name)")
-                guard let player = LocalDatabase.shared.player else {
-                    return
-                }
+                let player = LocalDatabase.shared.player
                 
                 // Charge tokens for player
                 if let token = player.requestToken() {
@@ -261,9 +264,12 @@ class LocalCityController:ObservableObject, BioController {
         do {
             try LocalDatabase.shared.saveCity(cityData)
             if shouldDeselect {
-                self.cityViewState = .hab(state: .noSelection)
+//                self.cityViewState = .hab(state: .noSelection)
+                self.didSelectTab(tab: .hab)
             } else {
-                self.cityViewState = .hab(state: .selected(person: savePerson))
+//                self.cityViewState = .hab(state: .selected(person: savePerson))
+//                self.didSelectTab(tab: .hab)
+                print("Not de-selecting")
             }
         } catch {
             print("Error! \(error.localizedDescription)")
@@ -278,13 +284,16 @@ class LocalCityController:ObservableObject, BioController {
         
         if let tech:CityTech = tech {
             self.unlockedTech = CityTechTree().unlockedTechAfter(doneTech: cityData.tech)
-            self.cityViewState = .lab(state: .tech(name: tech))
+//            self.cityViewState = .lab(state: .tech(name: tech))
+//            self.cityTab = .lab
         } else if let recipe = recipe {
-            self.cityViewState = .lab(state: .recipe(name: recipe))
+//            self.cityViewState = .lab(state: .recipe(name: recipe))
         }
+        
+        self.cityTab = .lab
     }
     
-    func makeRecipe(recipe:Recipe) {
+    func makeRecipe(recipe:Recipe) -> Bool {
         
         // Reset Warnings
         self.warnings = []
@@ -299,23 +308,26 @@ class LocalCityController:ObservableObject, BioController {
         if !possibleProblems.isEmpty {
             self.warnings = possibleProblems
             print("Missing required items")
-            return
+            return false
         }
         
         let workers:[Person] = self.selectedStaff
-        var bonus:Double = 0.1
+        
+        var timeDiscount:Int = 0
         for person in workers {
-            let lacking = Double(min(100, person.intelligence) + min(100, person.happiness) + min(100, person.teamWork)) / 3.0
+            let lacking:Int = (min(100, person.intelligence) + min(100, person.happiness) + min(100, person.teamWork)) / 3
             // lacking will be 100 (best), 0 (worst)
-            bonus += lacking / Double(workers.count)
+            timeDiscount += lacking / workers.count
         }
-        let timeDiscount = (bonus / 100) * 0.6 * Double(recipe.getDuration()) // up to 60% discount on time
+        let pctDiscount = Int((Double(timeDiscount) / 100.0) * 0.5 * Double(recipe.getDuration())) // up to 60% discount on time
         
         // Create Activity
-        let duration = recipe.getDuration() - Int(timeDiscount)
+        let duration = recipe.getDuration() - pctDiscount
         let delta:TimeInterval = Double(duration)
+        
         let activity = LabActivity(time: delta, name: recipe.rawValue)
         cityData.labActivity = activity
+        self.labActivity = activity
         
         // Assign activity to workers
         for person in self.selectedStaff {
@@ -327,7 +339,7 @@ class LocalCityController:ObservableObject, BioController {
         if chargeResult == false {
             print("ERROR: Could not charge resources")
             warnings.append("Could not charge resources")
-            return
+            return false
         } else {
             print("Charged successful: \(requiredIngredients)")
         }
@@ -336,12 +348,16 @@ class LocalCityController:ObservableObject, BioController {
         do {
             try LocalDatabase.shared.saveCity(cityData)
             // Update View State
-            self.cityViewState = .lab(state: .activity(object: activity))
+//            self.cityViewState = .lab(state: .activity(object: activity))
+            self.didSelectTab(tab: .lab)
             print("Activity created")
+            return true
+            
         } catch {
             print("Error: \(error.localizedDescription)")
             self.warnings = ["Could not save city \(error.localizedDescription)"]
         }
+        return false
         
     }
     
@@ -397,7 +413,9 @@ class LocalCityController:ObservableObject, BioController {
             try LocalDatabase.shared.saveCity(cityData)
             
             // Update View State
-            self.cityViewState = .lab(state: .activity(object: activity))
+//            self.cityViewState = .lab(state: .activity(object: activity))
+            self.didSelectTab(tab: .lab)
+            
             // Reset other vars
             selectedStaff = []
             self.warnings = []
@@ -409,6 +427,79 @@ class LocalCityController:ObservableObject, BioController {
     }
     
     // Activity
+    func collectActivity(activity:LabActivity) {
+        print("\n [CTRL] Collecting Activity: \(activity.activityName)")
+        print("Start: \(GameFormatters.fullDateFormatter.string(from: activity.dateStarted))")
+        print("Finish: \(GameFormatters.fullDateFormatter.string(from: activity.dateEnds))")
+        if let recipe = Recipe(rawValue: activity.activityName) {
+            print("Recipe: \(recipe.rawValue)")
+            
+            
+//            cityData.unlockedRecipes.append(recipe)
+            switch recipe {
+                case .Alloy:
+                    cityData.boxes.append(StorageBox(ingType: .Alloy, current: Ingredient.Alloy.boxCapacity()))
+                case .Condensator:
+                    cityData.peripherals.append(PeripheralObject(peripheral: .Condensator))
+                case .ScrubberCO2:
+                    cityData.peripherals.append(PeripheralObject(peripheral: .ScrubberCO2))
+                case .Electrolizer:
+                    cityData.peripherals.append(PeripheralObject(peripheral: .Electrolizer))
+                case .Methanizer:
+                    cityData.peripherals.append(PeripheralObject(peripheral: .Methanizer))
+                case .Radiator:
+                    cityData.peripherals.append(PeripheralObject(peripheral: .Radiator))
+                case .SolarPanel:
+                    cityData.peripherals.append(PeripheralObject(peripheral: .solarPanel))
+                case .Battery:
+                    cityData.batteries.append(Battery(shopped: false))
+                case .tank:
+                    cityData.tanks.append(Tank(type: .empty, full: false))
+                case .WaterFilter:
+                    cityData.peripherals.append(PeripheralObject(peripheral: .WaterFilter))
+                case .BioSolidifier:
+                    cityData.peripherals.append(PeripheralObject(peripheral: .BioSolidifier))
+                case .Cement:
+                    cityData.boxes.append(StorageBox(ingType: .Cement, current: Ingredient.Cement.boxCapacity()))
+                case .ChargedGlass:
+                    cityData.boxes.append(StorageBox(ingType: .Glass, current: Ingredient.Glass.boxCapacity()))
+                default: print("ERROR - DID NOT UNDERSTAND RECIPE: \(recipe.rawValue)")
+            }
+            
+            
+            cityData.labActivity = nil
+//            self.cityViewState = .lab(state: .NoSelection)
+            self.didSelectTab(tab: .lab)
+            self.labActivity = nil
+            
+            do {
+                try LocalDatabase.shared.saveCity(cityData)
+            } catch {
+                // TODO: - Deal with Error
+                // Deal With Error
+                print(error.localizedDescription)
+            }
+            
+        } else if let tech = CityTech(rawValue: activity.activityName) {
+            print("Tech: \(tech.rawValue)")
+            
+            cityData.labActivity = nil
+            cityData.tech.append(tech)
+            
+//            self.cityViewState = .lab(state: .NoSelection)
+            self.didSelectTab(tab: .lab)
+            
+            self.labActivity = nil
+            
+            do {
+                try LocalDatabase.shared.saveCity(cityData)
+            } catch {
+                // TODO: - Deal with Error
+                // Deal With Error
+                print(error.localizedDescription)
+            }
+        }
+    }
     // - cancelActivity
     // - shortenActivityWithTokens
     
@@ -628,8 +719,14 @@ class LocalCityController:ObservableObject, BioController {
         }
         
         // Save the travelling back in LocalDatabase
-        LocalDatabase.shared.vehicles = travelling
-        LocalDatabase.shared.saveVehicles()
+//        LocalDatabase.shared.vehicles = travelling
+        // Save
+        do {
+            try LocalDatabase.shared.saveVehicles(travelling)
+        } catch {
+            print("‼️ Could not save vehicles.: \(error.localizedDescription)")
+        }
+//        LocalDatabase.shared.saveVehicles()
         
         // Save the City with the arrived vehicles
         
@@ -773,6 +870,9 @@ class LocalCityController:ObservableObject, BioController {
         self.selectedStaff = []
         self.warnings = []
         
+        self.didSelectTab(tab: tab)
+        
+        /*
         switch tab {
             case .hab:
                 self.cityViewState = .hab(state: .noSelection)
@@ -788,6 +888,7 @@ class LocalCityController:ObservableObject, BioController {
                 self.cityViewState = .rocket(state: .noSelection)
             default: return
         }
+        */
     }
     
     /// Returns how many ingredients of a certain `Ingredient` type is available
@@ -797,7 +898,7 @@ class LocalCityController:ObservableObject, BioController {
     
     /// Spends a Token and Saves the player object. Returns false if can't
     private func spendToken() -> Bool {
-        guard let player = LocalDatabase.shared.player else { return false }
+        let player = LocalDatabase.shared.player
         if let token = player.requestToken() {
             if player.spendToken(token: token, save: true) == true {
                 return true

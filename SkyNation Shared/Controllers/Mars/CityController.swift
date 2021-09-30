@@ -77,13 +77,13 @@ class CityController:ObservableObject, BioController {
     
     init() {
         
-        guard let player = LocalDatabase.shared.player else { fatalError() }
+        let player = LocalDatabase.shared.player // else { fatalError() }
         self.player = player
         
         self.builder = MarsBuilder.shared
         viewState = .loading
         
-        if let cd = LocalDatabase.shared.loadCity() {
+        if let cd = LocalDatabase.shared.cityData {
             self.cityData = cd
             
             if let labActivity = cd.labActivity {
@@ -92,6 +92,9 @@ class CityController:ObservableObject, BioController {
             }
             
             self.availableStaff = cd.inhabitants.filter({ $0.isBusy() == false })
+            self.arrivedVehicles = cd.garage.vehicles // LocalDatabase.shared.cityData?.garage.vehicles ?? []
+        } else {
+            self.arrivedVehicles = []
         }
         
         // Vehicles initial state
@@ -99,7 +102,7 @@ class CityController:ObservableObject, BioController {
         print("Initting with vehicles.: \(vehicles.count)")
         
         self.travelVehicles = vehicles
-        self.arrivedVehicles = LocalDatabase.shared.city?.garage.vehicles ?? []
+        
         
         // Post Init
         
@@ -130,7 +133,7 @@ class CityController:ObservableObject, BioController {
                     // Load City (New Method)
                     if let cityData:CityData = MarsBuilder.shared.myCityData {
                         
-                        if let localCity:CityData = LocalDatabase.shared.city {
+                        if let localCity:CityData = LocalDatabase.shared.cityData {
                             
                             // Update main City Data Object
                             self.cityData = localCity
@@ -204,7 +207,7 @@ class CityController:ObservableObject, BioController {
                 var localCity:CityData!
                 
                 // First, check if player alread has a city in LocalDatabase
-                if let savedCity:CityData = LocalDatabase.shared.loadCity() {
+                if let savedCity:CityData = LocalDatabase.shared.cityData {
                     
                     // We have a local city saved. Update ID
                     savedCity.id = dbCity.id
@@ -219,9 +222,14 @@ class CityController:ObservableObject, BioController {
                 let player = self.player
                 player.cityID = dbCity.id
                 
-                let res = LocalDatabase.shared.savePlayer(player: player)
+                do {
+                    try LocalDatabase.shared.savePlayer(player)
+                } catch {
+                    print("Could not save Player. Error.: \(error.localizedDescription)")
+                }
+                // let res = LocalDatabase.shared.savePlayer(player: player)
                 
-                print("Claim city results Saved. Player:\(res)")
+                // print("Claim city results Saved. Player:\(res)")
                 
                 // Get Vehicles from 'Travelling.josn'
                 
@@ -280,7 +288,12 @@ class CityController:ObservableObject, BioController {
         
         // Save the travelling back in LocalDatabase
         LocalDatabase.shared.vehicles = travelling
-        LocalDatabase.shared.saveVehicles()
+        do {
+            try LocalDatabase.shared.saveVehicles(travelling)
+        } catch {
+            print("Could not save vehicles.: \(error.localizedDescription)")
+        }
+        
         
         // Save the City with the arrived vehicles
         
@@ -388,7 +401,7 @@ class CityController:ObservableObject, BioController {
             case .boost:
                 print("Boosting person \(person.name)")
                 // Charge tokens for player
-                if let token = LocalDatabase.shared.player?.requestToken() {
+                if let token = LocalDatabase.shared.player.requestToken() {
                     let spend = self.player.spendToken(token: token, save: true)
                     if spend == true {
                         if let activity = savePerson.activity {
@@ -827,7 +840,7 @@ class CityController:ObservableObject, BioController {
             self.selectedStaff = []
             
             // Charge Player
-            let player = LocalDatabase.shared.player!
+            let player = LocalDatabase.shared.player
             //                    player.timeTokens.removeFirst(tokens)
             for _ in 1...tokens {
                 if let token = player.requestToken() {
@@ -843,10 +856,20 @@ class CityController:ObservableObject, BioController {
             //                    }
             
             // Save
-            let pRes = LocalDatabase.shared.savePlayer(player: player)
-            try? LocalDatabase.shared.saveCity(cityData!)
+            do {
+                try LocalDatabase.shared.savePlayer(player)
+            } catch {
+                print("Could not save Player \(error.localizedDescription)")
+            }
+            do {
+                try LocalDatabase.shared.saveCity(self.cityData!)
+            } catch {
+                print("Could not save city.: \(error.localizedDescription)")
+            }
+            // let pRes =
+            // try? LocalDatabase.shared.saveCity(cityData!)
             
-            print("Saved player: \(pRes)")
+            // print("Saved player: \(pRes)")
             //                }
             
         } else {

@@ -79,7 +79,7 @@ class OutpostController:ObservableObject {
     
     init(dbOutpost:DBOutpost) {
         
-        guard let player = LocalDatabase.shared.player else { fatalError() }
+        let player = LocalDatabase.shared.player
         self.player = player
         
         
@@ -128,7 +128,7 @@ class OutpostController:ObservableObject {
             let opData = Outpost(dbOutpost: dbOutpost)
             self.outpostData = opData
             
-            if let city = LocalDatabase.shared.loadCity() {
+            if let city = LocalDatabase.shared.cityData {
                 self.myCity = city
             }
             
@@ -153,8 +153,8 @@ class OutpostController:ObservableObject {
     /// Initializer for Previews
     init(random:Bool = true) {
         
-        guard let player = LocalDatabase.shared.player else { fatalError() }
-        self.player = player
+       
+        self.player = LocalDatabase.shared.player
         
         let op:DBOutpost = DBOutpost.example()
         self.dbOutpost = op
@@ -287,7 +287,7 @@ class OutpostController:ObservableObject {
     /// Add an object To `contribRound`
     func addToContribRound(object:Codable) {
         
-        guard let pid = LocalDatabase.shared.player?.playerID else {
+        guard let pid = LocalDatabase.shared.player.playerID else {
             print("No player id, or wrong id")
             return
         }

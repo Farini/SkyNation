@@ -45,8 +45,8 @@ class EarthRequestController:ObservableObject {
     
     init() {
         
-        let player = LocalDatabase.shared.player ?? SKNPlayer()
-        let spaceStation = LocalDatabase.shared.station!
+        let player = LocalDatabase.shared.player
+        let spaceStation = LocalDatabase.shared.station
         
         // Assign
         self.station = spaceStation
@@ -239,12 +239,22 @@ class EarthRequestController:ObservableObject {
             }
             
             // Save Data
-            LocalDatabase.shared.saveStation(station: station)
-            let result = LocalDatabase.shared.savePlayer(player: player)
-            guard result == true else {
-                print("ERROR: Player \(player.name) could not be saved.")
-                return false
+            do {
+                try LocalDatabase.shared.savePlayer(player)
+                do {
+                    try LocalDatabase.shared.saveStation(station)
+                } catch {
+                    print("Could not save Station \(error.localizedDescription)")
+                }
+            } catch {
+                print("Could not save Player \(error.localizedDescription)")
             }
+//            LocalDatabase.shared.saveStation(station: station)
+//            let result = LocalDatabase.shared.savePlayer(player: player)
+//            guard result == true else {
+//                print("ERROR: Player \(player.name) could not be saved.")
+//                return false
+//            }
             
             // Update Scene Overlay
             SceneDirector.shared.updatePlayerCard()
@@ -295,7 +305,11 @@ class EarthRequestController:ObservableObject {
         
         if cleanup == true {
             station.earthOrder = nil
-            LocalDatabase.shared.saveStation(station: station)
+            do {
+                try LocalDatabase.shared.saveStation(station)
+            } catch {
+                print("Could not save Station \(error.localizedDescription)")
+            }
         }
     }
     
@@ -347,7 +361,7 @@ class EarthRequestController:ObservableObject {
             } else {
                 // Remove person from list of available for hire
 //                LocalDatabase.shared.gameGenerators?.didHirePerson(person: person)
-                LocalDatabase.shared.player?.wallet.didHire(person: person)
+                LocalDatabase.shared.player.wallet.didHire(person: person)
             }
         }
         
@@ -355,7 +369,12 @@ class EarthRequestController:ObservableObject {
         station.earthOrder = nil
         
         // Save
-        LocalDatabase.shared.saveStation(station: station)
+        do {
+            try LocalDatabase.shared.saveStation(station)
+        } catch {
+            print("‼️ Could not save station.: \(error.localizedDescription)")
+        }
+        
         
         // Update UI
         self.resetOrder(cleanup: true)

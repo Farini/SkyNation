@@ -42,7 +42,7 @@ struct CityMenu: View {
 /// The View of the `CityData` that belongs to the `Player`
 struct LocalCityView: View {
     
-    @ObservedObject var controller:LocalCityController
+    @ObservedObject var controller:LocalCityController = LocalCityController()
     @State private var menuItem:CityMenuItem = .hab
     
     /// The City Menu (Tabs)
@@ -57,20 +57,22 @@ struct LocalCityView: View {
                 }
                 .onTapGesture {
                     self.menuItem = mitem
-                    switch mitem {
-                        case .hab: controller.cityViewState = .hab(state: .noSelection)
-                        case .lab:
-                            if let activity = controller.cityData.labActivity {
-                                controller.labActivity = activity
-                                controller.cityViewState = .lab(state: .activity(object: activity))
-                            } else {
-                                controller.cityViewState = .lab(state: .NoSelection)
-                            }
-                        case .bio: controller.cityViewState = .bio(state: .notSelected)
-                        case .rss: controller.cityViewState = .rss
-                        case .collect: controller.cityViewState = .collect
-                        case .rocket: controller.cityViewState = .rocket(state: .noSelection)
-                    }
+                    controller.didSelectTab(tab: mitem)
+//                    switch mitem {
+//                        case .hab: controller.cityViewState = .hab(state: .noSelection)
+//                        case .lab:
+//                            print("clicklab")
+//                            if let activity = controller.labActivity {
+////                                controller.labActivity = activity
+//                                controller.cityViewState = .lab(state: .activity(object: activity))
+//                            } else {
+//                                controller.cityViewState = .lab(state: .NoSelection)
+//                            }
+//                        case .bio: controller.cityViewState = .bio(state: .notSelected)
+//                        case .rss: controller.cityViewState = .rss
+//                        case .collect: controller.cityViewState = .collect
+//                        case .rocket: controller.cityViewState = .rocket(state: .noSelection)
+//                    }
                 }
                 .modifier(Badged())
             }
@@ -92,14 +94,14 @@ struct LocalCityView: View {
                         
             header
 
-            switch controller.cityViewState {
-                case .hab(let habState):
-                    CityHabView(controller: controller, habState: habState)
+            switch controller.cityTab {
+                case .hab:
+                    CityHabView(controller: controller, habState: .noSelection)
                     
-                case .lab(let labState):
-                    CityLabView(controller: controller, labState: labState)
+                case .lab:
+                    CityLabView(controller: controller)
                     
-                case .bio(let bioState):
+                case .bio:
                     CityBioView(controller: controller)
                     
                 case .rss:
@@ -122,8 +124,8 @@ struct LocalCityView: View {
                 case .collect:
                     CityOPCollectView(controller: controller)
                     
-                case .rocket(let rocketState):
-                    CityGarageView(controller: controller, garageState: rocketState)
+                case .rocket:
+                    CityGarageView(controller: controller, garageState: .noSelection)
             }
         }
     }
@@ -140,7 +142,7 @@ struct MyCityView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             CityMenu(menuItem: .constant(menu))
-            LocalCityView(controller: LocalCityController())
+            LocalCityView()
         }
     }
 }

@@ -279,7 +279,7 @@ struct GuildElectionsView:View {
         }
         self.playerVotePairs = votePairs.sorted(by: { $0.votes > $1.votes })
         
-        let myPid = LocalDatabase.shared.player?.playerID ?? UUID()
+        let myPid = LocalDatabase.shared.player.playerID ?? UUID()
         let vtCount = election.casted[myPid, default:0]
         self.castedVotes = vtCount
         

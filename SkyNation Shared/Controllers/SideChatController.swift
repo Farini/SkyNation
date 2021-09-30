@@ -54,9 +54,7 @@ class SideChatController:ObservableObject {
     
     init(simulating simChat:Bool, simElection:Bool) {
         
-        guard let player = LocalDatabase.shared.player else {
-            fatalError("No Player")
-        }
+        let player = LocalDatabase.shared.player
         self.player = player
         
         // Game Messages (Achievements)
@@ -118,9 +116,8 @@ class SideChatController:ObservableObject {
     
     /// Posts a message on the Guild Chat
     func postMessage(text:String) {
-        
-        guard let player = LocalDatabase.shared.player,
-              let pid = player.playerID,
+        let player = LocalDatabase.shared.player
+        guard let pid = player.playerID,
               let gid = player.guildID else {
             fatalError()
         }
@@ -147,9 +144,8 @@ class SideChatController:ObservableObject {
     
     /// Reads Messages from Guild Chat
     func requestChat() {
-        
-        guard let player = LocalDatabase.shared.player,
-              let pid = player.playerID,
+        let player = LocalDatabase.shared.player
+        guard let pid = player.playerID,
               let gid = player.guildID else {
             return
         }
@@ -242,7 +238,7 @@ class SideChatController:ObservableObject {
     
     func iAmPresident() -> Bool {
         
-        if let pid = LocalDatabase.shared.player?.playerID,
+        if let pid = LocalDatabase.shared.player.playerID,
            let guild = guild {
             return guild.president == pid
         }
@@ -281,14 +277,23 @@ class SideChatController:ObservableObject {
                 
             } else if let tank = TankType(rawValue: key) {
                 let station = LocalDatabase.shared.station
-                station?.truss.tanks.append(Tank(type: tank, full: true))
-                LocalDatabase.shared.saveStation(station: station!)
-                print("Tank type \(tank.rawValue) added.")
+                station.truss.tanks.append(Tank(type: tank, full: true))
+                // Save
+                do {
+                    try LocalDatabase.shared.saveStation(station)
+                } catch {
+                    print("‼️ Could not save station.: \(error.localizedDescription)")
+                }
+                
             }
         }
         
-        let r = LocalDatabase.shared.savePlayer(player: player)
-        print("Prize added. Save \(r)")
+        // Save
+        do {
+            try LocalDatabase.shared.savePlayer(player)
+        } catch {
+            print("‼️ Could not save station.: \(error.localizedDescription)")
+        }
         
         let delta = player.wallet.timeToGenerateNextFreebie()
         if delta > 0 {

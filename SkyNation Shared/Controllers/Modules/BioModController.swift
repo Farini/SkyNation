@@ -56,7 +56,7 @@ class BioModController: ObservableObject, BioController {
         self.module = module
         self.selection = .notSelected
         
-        let station = LocalDatabase.shared.station!
+        let station = LocalDatabase.shared.station
         self.station = station
         
         self.dnaOption = .strawberry
@@ -145,8 +145,6 @@ class BioModController: ObservableObject, BioController {
     }
     
     func growPopulation(box:BioBox) {
-        
-        
         
         // Check if population is over limit
         let boxLimit = box.populationLimit
@@ -378,7 +376,13 @@ class BioModController: ObservableObject, BioController {
             let payment = station.truss.payForResources(ingredients: [.Fertilizer:fertilizer])
             
             // Save
-            LocalDatabase.shared.saveStation(station: station)
+            self.saveStation()
+//            do {
+//                try LocalDatabase.shared.saveStation(station)
+//            } catch {
+//                print("Could not save station.: \(error.localizedDescription)")
+//            }
+            
             
             print("Consumed Energy: \(consumption)")
             print("Paid for resources: \(payment)")
@@ -393,48 +397,43 @@ class BioModController: ObservableObject, BioController {
         
         var problems:[String] = []
         
-        if let playerTokens = LocalDatabase.shared.player?.countTokens() { //LocalDatabase.shared.player?.timeTokens {
-            if playerTokens.count >= tokens {
-                
-                // Player Has enough tokens - Check if Skills match
-                var bioCount:Int = 0
-                var medCount:Int = 0
-                for person in selectedPeople {
-                    for skill in person.skills {
-                        if skill.skill == .Biologic {
-                            bioCount += skill.level
-                        }
-                        if skill.skill == .Medic {
-                            medCount += 1
-                        }
-                    }
+        // Check if Skills match
+        var bioCount:Int = 0
+        var medCount:Int = 0
+        for person in selectedPeople {
+            for skill in person.skills {
+                if skill.skill == .Biologic {
+                    bioCount += skill.level
                 }
-                if bioCount + medCount < 1 {
-                    print("Not enough Skills")
-                    problems.append("Not enough Skills")
-                } else {
-                    print("Skills Verified - Charging Tokens")
-                    
-                    // Charge Player
-                    let player = LocalDatabase.shared.player!
-//                    player.timeTokens.removeFirst(tokens)
-                    for _ in 1...tokens {
-                        if let token = player.requestToken() {
-                            let result = player.spendToken(token: token, save: true)
-                            print("Spent Token result: \(result)")
-                        }
-                    }
-                    
-                    
-                    // Make people busy
-                    let activity = LabActivity(time: 3600, name: "Planting life")
-                    for person in selectedPeople {
-                        person.activity = activity
-                    }
-                    
-                    LocalDatabase.shared.saveStation(station: station)
-                    let pRes = LocalDatabase.shared.savePlayer(player: player)
-                    print("Saved player: \(pRes)")
+                if skill.skill == .Medic {
+                    medCount += 1
+                }
+            }
+        }
+        if bioCount + medCount < 1 {
+            print("Not enough Skills")
+            problems.append("Not enough Skills")
+            return problems
+        }
+        
+        let player = LocalDatabase.shared.player
+        if let token = player.requestToken() {
+            let res = player.spendToken(token: token, save: true)
+            
+            if res == true {
+                
+                // Make people busy
+                let activity = LabActivity(time: 3600, name: "Planting life")
+                for person in selectedPeople {
+                    person.activity = activity
+                }
+                
+                do {
+                    try LocalDatabase.shared.savePlayer(player)
+                    self.saveStation()
+                } catch {
+                    print("Could not save Player.: \(error.localizedDescription)")
+                    problems.append("Could not save Player.: \(error.localizedDescription)")
                 }
                 
             } else {
@@ -442,7 +441,7 @@ class BioModController: ObservableObject, BioController {
             }
         } else {
             print("ERROR: Could not find LocalDatabase >> Player >> Tokens")
-            problems.append("Unknown error")
+            problems.append("Not enough tokens")
         }
         
         return problems
@@ -476,7 +475,11 @@ class BioModController: ObservableObject, BioController {
     // MARK: - Saving
     
     private func saveStation() {
-        LocalDatabase.shared.saveStation(station: station)
+        do {
+            try LocalDatabase.shared.saveStation(station)
+        } catch {
+            print("Could not save Station.: \(error.localizedDescription)")
+        }
     }
     
     // MARK: - DNA Generator

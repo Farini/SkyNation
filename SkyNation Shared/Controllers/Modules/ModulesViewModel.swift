@@ -56,9 +56,9 @@ class ModulesViewModel: ObservableObject {
     init() {
         
         let db = LocalDatabase.shared
-        let station = db.station!
+//        let station = db.station
         
-        self.station = station
+        self.station = db.station
         
         // Count Modules
         let modCount = station.labModules.count + station.habModules.count + station.bioModules.count + 1 // Add 1 for proposed new module
@@ -236,7 +236,12 @@ class ModulesViewModel: ObservableObject {
         
         print("Confirm and save")
         self.viewState = .Confirmed
-        LocalDatabase.shared.saveStation(station: station)
+        // Save
+        do {
+            try LocalDatabase.shared.saveStation(station)
+        } catch {
+            print("‼️ Could not save station.: \(error.localizedDescription)")
+        }
     }
     
 }

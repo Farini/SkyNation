@@ -113,6 +113,48 @@ struct GameLogic {
     }
 }
 
+/**
+ Enumeration of all GameFiles.
+ - discussion:
+    - fileName: The name of the file to be fetched
+    - fileType: The Codable Type for this file
+*/
+
+enum GameFile {
+    
+    case player
+    case station
+    case messages
+    case settings
+    case cityData
+    case server
+    case travels
+    
+    var fileName:String {
+        switch self {
+            case .player:   return "Player.json"
+            case .station:  return "Station.json"
+            case .messages: return "GameMessages.json"
+            case .settings: return "GameSettings.json"
+            case .cityData: return "MarsCity.json"
+            case .server:   return "SKNSData.json"
+            case .travels:  return "Travelling.json"
+        }
+    }
+    
+    var fileType:Codable.Type {
+        switch self {
+            case .player:   return SKNPlayer.self
+            case .station:  return Station.self
+            case .messages: return [GameMessage].self
+            case .settings: return GameSettings.self
+            case .cityData: return CityData.self
+            case .server:   return ServerData.self
+            case .travels:  return [SpaceVehicle].self
+        }
+    }
+}
+
 struct GameWindow {
     
     /// Easiest way to close the current Dialogue

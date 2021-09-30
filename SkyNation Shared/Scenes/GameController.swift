@@ -615,9 +615,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             case .SpaceStation:
                 print("We are in Space Station. Load Mars")
                 
-                guard let player = LocalDatabase.shared.player else {
-                    return
-                }
+                let player = LocalDatabase.shared.player
                 
                 let enter = self.verifyMarsEntry(player: player)
                 
@@ -877,7 +875,12 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         if hasChanges {
             if let station = self.station {
                 print("Will save station")
-                LocalDatabase.shared.saveStation(station: station)
+                // Save
+                do {
+                    try LocalDatabase.shared.saveStation(station)
+                } catch {
+                    print("‼️ Could not save station.: \(error.localizedDescription)")
+                }
             }
         }
         

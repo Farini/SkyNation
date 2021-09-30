@@ -139,7 +139,7 @@ struct AirCompositionView: View {
 
 struct AirCompositionView_Previews: PreviewProvider {
     static var previews: some View {
-        let currentAir = LocalDatabase.shared.station?.air ?? AirComposition(amount: nil)
+        let currentAir = LocalDatabase.shared.station.air
         return AirCompositionView(air: currentAir)
     }
 }

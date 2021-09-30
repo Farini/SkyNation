@@ -123,7 +123,20 @@ class GameSettingsController:ObservableObject {
     init() {
         
         // Player
-        if let player = LocalDatabase.shared.player {
+        let player = LocalDatabase.shared.player
+        self.player = player
+        
+        if player.name == "Test Player" && player.experience == 0 && abs(Date().timeIntervalSince(player.beganGame)) < 10 {
+            // New Player
+            playerName = player.name
+            playerID = player.localID
+            isNewPlayer = true
+            hasChanges = true
+            savedChanges = false
+            viewState = GameSettingsTab.EditingPlayer
+            
+        } else {
+            // Old Player
             isNewPlayer = false
             self.player = player
             playerID = player.localID
@@ -132,15 +145,6 @@ class GameSettingsController:ObservableObject {
             savedChanges = true
             viewState = GameSettingsTab.Loading
             
-        } else {
-            let newPlayer = SKNPlayer()
-            self.player = newPlayer
-            playerName = newPlayer.name
-            playerID = newPlayer.localID
-            isNewPlayer = true
-            hasChanges = true
-            savedChanges = false
-            viewState = GameSettingsTab.EditingPlayer
         }
         
         self.updateLoadedList()
@@ -154,36 +158,36 @@ class GameSettingsController:ObservableObject {
         
         if GameSettings.onlineStatus == true {
             
-            if let player = LocalDatabase.shared.player {
+            let player = LocalDatabase.shared.player
+            
+            items.append("★ Loaded Player \(player.name)")
+            
+            if let pid = player.serverID {
                 
-                items.append("★ Loaded Player \(player.name)")
+                items.append("L-PID \(pid.uuidString)")
                 
-                if let pid = player.serverID {
-                    
-                    items.append("L-PID \(pid.uuidString)")
-                    
-                    
-                    if let gid = player.guildID {
-                        items.append("L-GID \(gid.uuidString.prefix(8))")
-                    }
-                    
-                    if let cid = player.cityID {
-                        items.append("L-CID \(cid.uuidString.prefix(8))")
-                    }
+                
+                if let gid = player.guildID {
+                    items.append("L-GID \(gid.uuidString.prefix(8))")
                 }
                 
-                // Scene Loaded
-                if stationSceneLoaded {
-                    items.append("★ Station loaded: \(stationSceneLoaded)")
-                } else {
-                    items.append("Loading station")
+                if let cid = player.cityID {
+                    items.append("L-CID \(cid.uuidString.prefix(8))")
                 }
-                
-                // Make sure we are online (above)
-                let manager = ServerManager.shared
-                print("Server Manager Starting. Logged in: \(manager.playerLogged)")
-                
             }
+            
+            // Scene Loaded
+            if stationSceneLoaded {
+                items.append("★ Station loaded: \(stationSceneLoaded)")
+            } else {
+                items.append("Loading station")
+            }
+            
+            // Make sure we are online (above)
+            let manager = ServerManager.shared
+            print("Server Manager Starting. Logged in: \(manager.playerLogged)")
+            
+            
         } else {
             items.append("🚫 Offline Mode")
         }
@@ -194,22 +198,20 @@ class GameSettingsController:ObservableObject {
     /// Saving Player
     func savePlayer() {
         player.name = playerName
-        if LocalDatabase.shared.savePlayer(player: player) {
-            savedChanges = true
-            hasChanges = false
+        do {
+            try LocalDatabase.shared.savePlayer(player)
+        } catch {
+            print("Error saving Player.: \(error.localizedDescription)")
         }
+        self.hasChanges = false
+        self.savedChanges = true
     }
     
     /// Choosing Avatar
     func didSelectAvatar(card:AvatarCard) {
         
         self.player.avatar = card.name
-        self.player.name = playerName
-        
-        if LocalDatabase.shared.savePlayer(player: player) {
-            savedChanges = true
-            hasChanges = false
-        }
+        self.savePlayer()
         
         self.viewState = .EditingPlayer
     }
@@ -407,8 +409,12 @@ class GameSettingsController:ObservableObject {
                         self.player.guildID = newGuild.id
                         self.guildJoinState = .joined(guild: gfc)
                         
-                        let save = LocalDatabase.shared.savePlayer(player: self.player)
-                        print("Saved Player: \(save)")
+                        do {
+                            try LocalDatabase.shared.savePlayer(self.player)
+                        } catch {
+                            print("Error saving Player.: \(error.localizedDescription)")
+                        }
+                        // print("Saved Player: \(save)")
                     }
                     
                 } else {
@@ -447,39 +453,37 @@ class GameSettingsController:ObservableObject {
         }
     }
     
-    
     /// Runs Accounting, and loads the Station Scene
     func loadGameData() {
         
         let builder = LocalDatabase.shared.stationBuilder
-        if let station = LocalDatabase.shared.station {
-            DispatchQueue(label: "Accounting").async {
-                station.accountingLoop(recursive: true) { comments in
-                    for comment in comments {
-                        print("COMMENTS: \(comment)")
-                    }
-                    DispatchQueue.main.async {
-                        builder.prepareScene(station: station) { loadedScene in
-                            
-                            builder.scene = loadedScene
-                            self.stationSceneLoaded = true
-                            self.updateLoadedList()
-                            
-                            LocalDatabase.shared.saveStation(station: station)
-                            
-//                            if let player = LocalDatabase.shared.player {
-//                                let pres = LocalDatabase.shared.savePlayer(player: player)
-//                                print("Station saved. Player: \(pres)")
-//                            }
-                            
-                            print("⚠️ Game Data Loaded 🏆")
+        let station = LocalDatabase.shared.station
+        
+        DispatchQueue(label: "Accounting").async {
+            station.accountingLoop(recursive: true) { comments in
+                for comment in comments {
+                    print("COMMENTS: \(comment)")
+                }
+                DispatchQueue.main.async {
+                    builder.prepareScene(station: station) { loadedScene in
+                        
+                        builder.scene = loadedScene
+                        self.stationSceneLoaded = true
+                        self.updateLoadedList()
+                        
+                        do {
+                            try LocalDatabase.shared.saveStation(station)
+                        } catch {
+                            print("Error saving Player.: \(error.localizedDescription)")
                         }
+                        
+                        print("⚠️ Game Data Loaded 🏆")
                     }
                 }
             }
         }
+        
     }
-    
     
     /// Checks ServerManager for status - It takes a while to happen, so we can check on server status, because there it takes a while as well.
     func checkServerStatus(attempts:Int = 0) {
@@ -524,6 +528,4 @@ class GameSettingsController:ObservableObject {
                 print("Simulating Data for player: \(serverData.player.name)")
         }
     }
-    
-    
 }

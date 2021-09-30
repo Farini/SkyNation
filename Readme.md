@@ -124,6 +124,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Basic Views - Player vs Ranking (Keyval pair view)
 - [X] Station LSS View - Fix Peripherals Scroll View
 - [X] Station LSS View - In-depth Testing after remake
+- [X] 9/30/2021 - Remake of LocalDatabase
 
 - [X] City View - Outpost RSS Collection
 - [X] City View - Hab - Show population limit

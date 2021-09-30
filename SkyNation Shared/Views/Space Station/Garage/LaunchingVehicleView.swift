@@ -231,7 +231,7 @@ struct LaunchingVehicleView_Previews: PreviewProvider {
     
     static var previews: some View {
         let ctrl = GarageViewModel()
-        if let vehicle = LocalDatabase.shared.station?.garage.buildingVehicles.last {
+        if let vehicle = LocalDatabase.shared.station.garage.buildingVehicles.last {
             LaunchingVehicleView(vehicle: vehicle, controller: ctrl)
         } else {
             LaunchingVehicleView(vehicle: SpaceVehicle.builtExample(), controller:ctrl)

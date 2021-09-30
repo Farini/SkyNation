@@ -267,7 +267,7 @@ struct BioView: View {
 struct BioView_Previews: PreviewProvider {
     static var previews: some View {
         // Pass Controller
-        if let bioModule = LocalDatabase.shared.station?.bioModules.first {
+        if let bioModule = LocalDatabase.shared.station.bioModules.first {
             return BioView(bioMod: bioModule)
         }else{
             return BioView(bioMod: BioModule.example)
@@ -277,7 +277,7 @@ struct BioView_Previews: PreviewProvider {
 
 struct BioBuilder_Previews: PreviewProvider {
     static var previews: some View {
-        if let bioModule = LocalDatabase.shared.station?.bioModules.first {
+        if let bioModule = LocalDatabase.shared.station.bioModules.first {
             return BuildingBioBoxView(controller: BioModController(module: bioModule)) //BioView(bioMod: bioModule)
         }else{
             return BuildingBioBoxView(controller: BioModController(module: BioModule.example))

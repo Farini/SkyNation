@@ -15,32 +15,44 @@ struct GameFormatters {
     /// A Default Date Formatter
     static let dateFormatter:DateFormatter = {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateStyle = .short
         formatter.timeStyle = .short
+        formatter.timeZone = TimeZone.current
+        
         return formatter
     }()
     
     /// Longer date formatter
     static let fullDateFormatter:DateFormatter = {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateStyle = .long
         formatter.timeStyle = .long
+        formatter.timeZone = TimeZone.current
+        
         return formatter
     }()
     
     /// Time formatter with time only
     static let tinyTimeFormatter:DateFormatter = {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateStyle = .none
         formatter.timeStyle = .short
+        formatter.timeZone = TimeZone.current
+        
         return formatter
     }()
     
     /// Tiny Formatter with day only
     static let tinyDayFormatter:DateFormatter = {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateStyle = .short
         formatter.timeStyle = .none
+        formatter.timeZone = TimeZone.current
+        
         return formatter
     }()
     

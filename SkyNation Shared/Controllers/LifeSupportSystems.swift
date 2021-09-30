@@ -665,7 +665,12 @@ class LSSController: ObservableObject {
     }
     
     func saveStation(station:Station) {
-        LocalDatabase.shared.saveStation(station: station)
+        // Save
+        do {
+            try LocalDatabase.shared.saveStation(station)
+        } catch {
+            print("‼️ Could not save station.: \(error.localizedDescription)")
+        }
     }
     
     // MARK: - Init and Updates
@@ -674,15 +679,13 @@ class LSSController: ObservableObject {
         self.gameScene = scene
         switch scene {
             case .SpaceStation:
-                guard let myStation = LocalDatabase.shared.station else {
-                    fatalError("No station")
-                }
+                let myStation = LocalDatabase.shared.station
                 self.station = myStation
                 self.air = myStation.air
                 
                 
             case .MarsColony:
-                guard let myCity = LocalDatabase.shared.loadCity() else {
+                guard let myCity = LocalDatabase.shared.cityData else {
                     fatalError("No City")
                 }
                 self.city = myCity

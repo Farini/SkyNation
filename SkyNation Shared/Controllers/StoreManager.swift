@@ -86,7 +86,7 @@ class StoreController: ObservableObject, StoreManagerDelegate {
     
     init() {
         self.storeOperator = StoreOperator(delegate: self)
-//        self.productRequest = SKProductsRequest
+        //        self.productRequest = SKProductsRequest
         self.fetchProducts(matchingIdentifiers: productIdentifiers)
     }
     
@@ -223,7 +223,7 @@ class StoreController: ObservableObject, StoreManagerDelegate {
     /// Handles successful purchase transactions.
     func handlePurchased(_ transaction: SKPaymentTransaction) {
         
-        guard let player = LocalDatabase.shared.player else { fatalError() }
+        let player = LocalDatabase.shared.player
         
         if let gProduct:GameProduct = gameProducts.first(where: { $0.id == transaction.payment.productIdentifier }) {
             
@@ -248,40 +248,49 @@ class StoreController: ObservableObject, StoreManagerDelegate {
             player.money = money
             
             // Save Player
-            let result = LocalDatabase.shared.savePlayer(player: player)
-            print("Saving player: \(result)")
+            // Save
+            do {
+                try LocalDatabase.shared.savePlayer(player)
+            } catch {
+                print("‼️ Could not save player.: \(error.localizedDescription)")
+            }
             
             // Kit
             // Add items from Kit
             print("Adding items from Kit")
-            if let station = LocalDatabase.shared.station {
-                for (tank, value) in selectedKit.tanks {
-                    guard value > 0 else { break }
-                    for _ in 1...value {
-                        let newTank = Tank(type: tank, full: true)
-                        station.truss.tanks.append(newTank)
-                    }
+            let station = LocalDatabase.shared.station
+            for (tank, value) in selectedKit.tanks {
+                guard value > 0 else { break }
+                for _ in 1...value {
+                    let newTank = Tank(type: tank, full: true)
+                    station.truss.tanks.append(newTank)
                 }
-                for (ing, value) in selectedKit.boxes {
-                    guard value > 0 else { break }
-                    for _ in 1...value {
-                        if ing == .Battery {
-                            station.truss.batteries.append(Battery(shopped: true))
-                        } else if ing == .Food {
-                            let foods = DNAOption.allCases.filter({ $0.isAnimal == false && $0.isMedication == false })
-                            station.food.append(foods.randomElement()!.rawValue)
-                        } else if ing == .wasteLiquid || ing == .wasteSolid {
-                            let box = StorageBox(ingType: ing, current: 0)
-                            station.truss.extraBoxes.append(box)
-                        } else {
-                            let box = StorageBox(ingType: ing, current: ing.boxCapacity())
-                            station.truss.extraBoxes.append(box)
-                        }
-                    }
-                }
-                
-                LocalDatabase.shared.saveStation(station: station)
             }
+            for (ing, value) in selectedKit.boxes {
+                guard value > 0 else { break }
+                for _ in 1...value {
+                    if ing == .Battery {
+                        station.truss.batteries.append(Battery(shopped: true))
+                    } else if ing == .Food {
+                        let foods = DNAOption.allCases.filter({ $0.isAnimal == false && $0.isMedication == false })
+                        station.food.append(foods.randomElement()!.rawValue)
+                    } else if ing == .wasteLiquid || ing == .wasteSolid {
+                        let box = StorageBox(ingType: ing, current: 0)
+                        station.truss.extraBoxes.append(box)
+                    } else {
+                        let box = StorageBox(ingType: ing, current: ing.boxCapacity())
+                        station.truss.extraBoxes.append(box)
+                    }
+                }
+            }
+            
+            // Save
+            do {
+                try LocalDatabase.shared.saveStation(station)
+            } catch {
+                print("‼️ Could not save station.: \(error.localizedDescription)")
+            }
+            
             
         }
         
@@ -364,13 +373,13 @@ extension StoreOperator: SKProductsRequestDelegate {
         
         // products contains products whose identifiers have been recognized by the App Store. As such, they can be purchased.
         if !response.products.isEmpty {
-//            availableProducts = response.products
+            //            availableProducts = response.products
             delegate.storeOperatorDidReceiveProducts(response.products)
         }
         
         // invalidProductIdentifiers contains all product identifiers not recognized by the App Store.
         if !response.invalidProductIdentifiers.isEmpty {
-//            invalidProductIdentifiers = response.invalidProductIdentifiers
+            //            invalidProductIdentifiers = response.invalidProductIdentifiers
         }
         
         //        if !availableProducts.isEmpty {
@@ -397,13 +406,13 @@ extension StoreOperator: SKPaymentTransactionObserver {
         for transaction in transactions {
             switch transaction.transactionState {
                 case .purchasing: break
-                // Do not block the UI. Allow the user to continue using the app.
+                    // Do not block the UI. Allow the user to continue using the app.
                 case .deferred: print("Deferred")
-                // The purchase was successful.
+                    // The purchase was successful.
                 case .purchased: delegate.handlePurchased(transaction)
-                // The transaction failed.
+                    // The transaction failed.
                 case .failed: delegate.handleFailed(transaction)
-                // There're restored products.
+                    // There're restored products.
                 case .restored: delegate.handleRestored(transaction)
                 @unknown default: fatalError("Unknown payment transaction")
             }
@@ -431,11 +440,11 @@ extension StoreOperator: SKPaymentTransactionObserver {
     func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
         print("All restorable transactions have been processed by the payment queue.")
         
-//        if !hasRestorablePurchases {
-//            DispatchQueue.main.async {
-//                print("There are no restorable purchases.")
-//                //                self.delegate?.storeObserverDidReceiveMessage(Messages.noRestorablePurchases)
-//            }
-//        }
+        //        if !hasRestorablePurchases {
+        //            DispatchQueue.main.async {
+        //                print("There are no restorable purchases.")
+        //                //                self.delegate?.storeObserverDidReceiveMessage(Messages.noRestorablePurchases)
+        //            }
+        //        }
     }
 }

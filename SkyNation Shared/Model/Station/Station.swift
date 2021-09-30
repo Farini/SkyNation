@@ -424,18 +424,16 @@ class Station:Codable {
         // Antenna & Money
         let antennaMoney = truss.moneyFromAntenna()
         print("\n 🤑 Antenna Money: \(antennaMoney)")
-        if let player = LocalDatabase.shared.player {
-            if getPeople().count > 0 {
-                player.money += antennaMoney
-                print(" 💵 Player money: \(player.money)")
-                report.addNote(string: "💵 \(player.money) (📡 + \(antennaMoney))")
-            } else {
-                print("No people -> No money")
-                report.addNote(string: "💵 No inhabitants, no money 🥺")
-            }
+        let player = LocalDatabase.shared.player
+        if getPeople().count > 0 {
+            player.money += antennaMoney
+            print(" 💵 Player money: \(player.money)")
+            report.addNote(string: "💵 \(player.money) (📡 + \(antennaMoney))")
         } else {
-            print("No Player, no money")
+            print("No people -> No money")
+            report.addNote(string: "💵 No inhabitants, no money 🥺")
         }
+        
         
         // Finish
         self.accounting = report
@@ -796,7 +794,7 @@ class AccountingReport:Codable {
     }
     
     static func example() -> AccountingReport? {
-        return LocalDatabase.shared.station?.accounting
+        return LocalDatabase.shared.station.accounting
     }
 }
 

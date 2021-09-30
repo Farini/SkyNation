@@ -50,15 +50,27 @@ class GameMessageBoard {
         self.messages.append(newMessage)
 
         // Save
-        LocalDatabase.shared.gameMessages = self.messages
-        LocalDatabase.shared.saveMessages()
+        // LocalDatabase.shared.gameMessages = self.messages
+        // Save
+        do {
+            try LocalDatabase.shared.saveMessages(messages: self.messages)
+        } catch {
+            print("‼️ Could not save station.: \(error.localizedDescription)")
+        }
+        // LocalDatabase.shared.saveMessages()
 
         // Increase Player XP
-        if let player = LocalDatabase.shared.player {
+        let player = LocalDatabase.shared.player
             player.experience += 1
-            let result = LocalDatabase.shared.savePlayer(player: player)
-            print("Saved Player \(result)")
+        // Save
+        do {
+            try LocalDatabase.shared.savePlayer(player)
+        } catch {
+            print("‼️ Could not save station.: \(error.localizedDescription)")
         }
+//            let result = LocalDatabase.shared.savePlayer(player: player)
+//            print("Saved Player \(result)")
+        
     }
 }
 

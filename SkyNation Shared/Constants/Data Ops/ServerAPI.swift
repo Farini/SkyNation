@@ -144,7 +144,7 @@ class SKNS {
     /// Update Player
     static func updatePlayer(completion:((PlayerUpdate?, Error?) -> ())?) {
         
-        guard let localPlayer = LocalDatabase.shared.player else { return }
+        let localPlayer = LocalDatabase.shared.player
         var pUpdate:PlayerUpdate?
         
         do {
@@ -201,8 +201,13 @@ class SKNS {
                     }
                     
                     // Save
-                    let res = LocalDatabase.shared.savePlayer(player: localPlayer)
-                    if !res { print("Error: Could not save player") }
+                    do {
+                        try LocalDatabase.shared.savePlayer(localPlayer)
+                    } catch {
+                        print("‼️ Could not save player.: \(error.localizedDescription)")
+                    }
+//                    let res = LocalDatabase.shared.savePlayer(player: localPlayer)
+//                    if !res { print("Error: Could not save player") }
                     
                     DispatchQueue.main.async {
                         completion?(responsePlayer, nil)
@@ -222,7 +227,7 @@ class SKNS {
     /// Gets a new passowrd for a Player
     static func requestNewPass(completion:((PlayerUpdate?, Error?) -> ())?) {
         
-        guard let localPlayer = LocalDatabase.shared.player else { return }
+        let localPlayer = LocalDatabase.shared.player
         var pUpdate:PlayerUpdate?
         
         do {
@@ -279,8 +284,11 @@ class SKNS {
 //                    }
                     
                     // Save
-                    let res = LocalDatabase.shared.savePlayer(player: localPlayer)
-                    if !res { print("Error: Could not save player") }
+                    do {
+                        try LocalDatabase.shared.savePlayer(localPlayer)
+                    } catch {
+                        print("‼️ Could not save station.: \(error.localizedDescription)")
+                    }
                     
                     DispatchQueue.main.async {
                         completion?(responsePlayer, nil)
@@ -342,7 +350,7 @@ class SKNS {
     /// Fetches a Guild with a PlayerLogin object
     static func requestPlayersGuild(completion:((GuildFullContent?, Error?) -> ())?) {
         
-        guard let localPlayer = LocalDatabase.shared.player else { return }
+        let localPlayer = LocalDatabase.shared.player
         
         // Build Request
         let address = "\(baseAddress)/guilds/player/find/\(localPlayer.guildID ?? UUID())"
@@ -439,8 +447,9 @@ class SKNS {
     /// Still Works 8/10/2021
     static func browseGuilds(completion:(([GuildSummary]?, Error?) -> ())?) {
         
-        guard let player = LocalDatabase.shared.player,
-              let pid = player.playerID else {
+        let player = LocalDatabase.shared.player
+        
+        guard let pid = player.playerID else {
             print("Something Wrong.")
             completion?(nil, nil)
             return
@@ -484,8 +493,9 @@ class SKNS {
     /// Gets the details (GuildFullContent) about a Guild
     static func fetchGuildDetails(gid:UUID, completion:((GuildFullContent?, Error?) -> ())?) {
         
-        guard let player = LocalDatabase.shared.player,
-              let pid = player.playerID else {
+        let player = LocalDatabase.shared.player
+        
+        guard let pid = player.playerID else {
             print("Something Wrong.")
             completion?(nil, nil)
             return
@@ -531,8 +541,10 @@ class SKNS {
     static func joinGuildPetition(guildID:UUID, completion:((GuildSummary?, Error?) -> ())?) {
         
         let url = URL(string: "\(baseAddress)/guilds/player/join/\(guildID.uuidString)")!
-        guard let player = LocalDatabase.shared.player,
-              let pid = player.playerID else {
+        
+        let player = LocalDatabase.shared.player
+        
+        guard let pid = player.playerID else {
             print("⚠️ Error: Data Missing")
             completion?(nil, nil)
             return
@@ -955,7 +967,7 @@ class SKNS {
         
         let url = URL(string: "\(baseAddress)/guilds/city/claim/\(posdex.rawValue)")!
         
-        guard let player = LocalDatabase.shared.player else { fatalError() }
+        let player = LocalDatabase.shared.player
         
         
         let session = URLSession.shared
@@ -1226,8 +1238,9 @@ class SKNS {
     /// Register Vehicle in Server
     static func registerSpace(vehicle:SpaceVehicle, completion:((SpaceVehicleTicket?, Error?) -> ())?) {
         
-        guard let player = LocalDatabase.shared.player,
-              let playerID = player.playerID else {
+        let player = LocalDatabase.shared.player
+        
+        guard let playerID = player.playerID else {
             print("ERROR: No Player ID to register vehicle.")
             return
         }
@@ -1289,8 +1302,9 @@ class SKNS {
         // Expects: :gid GuildID
         // Returns: Array of vehicles in Guild file (arrived)
         
-        guard let player = LocalDatabase.shared.player,
-              let gid = player.guildID else {
+        let player = LocalDatabase.shared.player
+        
+        guard let gid = player.guildID else {
             print("Needs playerID")
             return
         }

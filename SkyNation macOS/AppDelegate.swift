@@ -23,9 +23,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         // Check Database
-        if let player = LocalDatabase.shared.player {
-            print("There is a player \(player.name)")
-        } else {
+        let player = LocalDatabase.shared.player
+        if player.name == "Test Player" && player.experience == 0 && abs(Date().timeIntervalSince(player.beganGame)) < 10 {
             print("No Player")
             let window = ClosableWindow(
                 contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
@@ -36,6 +35,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             window.contentView = NSHostingView(rootView: GameSettingsView())
             window.makeKeyAndOrderFront(nil)
         }
+        
+//        if let player:SKNPlayer = LocalDatabase.shared.player {
+//            print("There is a player \(player.name)")
+//        } else {
+//
+//        }
         
         // Maximize the window
         // if let screen = NSScreen.mainScreen() {

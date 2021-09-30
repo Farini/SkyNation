@@ -96,10 +96,6 @@ struct HabModuleView: View {
                                     .onTapGesture(count: 1, perform: {
                                         controller.didSelect(person: person)
                                     })
-//                                PersonRow(person: person, selected: person == controller.selectedPerson)
-//                                    .onTapGesture(count: 1, perform: {
-//                                        controller.didSelect(person: person)
-//                                    })
                                 
                             }
                             .frame(minWidth: 100, maxWidth: 220, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
@@ -189,7 +185,7 @@ struct HabModuleHeaderView: View {
 struct HeaderView_Previews: PreviewProvider {
     
     static var previews: some View {
-        if let module = LocalDatabase.shared.station?.habModules.first {
+        if let module = LocalDatabase.shared.station.habModules.first {
             return HabModuleHeaderView(module: module) //ModuleHeaderView(hab:module)
         } else {
             return HabModuleHeaderView(module: HabModule.example)//ModuleHeaderView(hab: HabModule.example)
@@ -199,7 +195,7 @@ struct HeaderView_Previews: PreviewProvider {
 
 struct HabModuleView_Previews: PreviewProvider {
     static var previews: some View {
-        let habModule = LocalDatabase.shared.station?.habModules.first ?? HabModule(module: Module(id: UUID(), modex: .mod0))
+        let habModule = LocalDatabase.shared.station.habModules.first ?? HabModule(module: Module(id: UUID(), modex: .mod0))
         return HabModuleView(module: habModule)
     }
 }

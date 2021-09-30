@@ -14,12 +14,29 @@ enum ActivityDismissalState {
     case finishedTech(tech:CityTech)
 }
 
+enum ActivityState {
+    case running(remaining:Int)
+    case finished
+}
+
 struct CityLabActivityView: View {
     
-    @ObservedObject var activityModel:LabActivityViewModel
-    @State var labActivity:LabActivity
+    var labActivity:LabActivity
     
-    var dismissActivity:((ActivityDismissalState) -> ())
+    // activity, cancel:Bool
+    var action:((LabActivity, Bool) -> ())
+    
+    init(activity:LabActivity, callBack:@escaping ((LabActivity, Bool) -> ())) {
+        self.labActivity = activity
+        self.action = callBack
+    }
+    
+    // Timer
+    @State private var activityState:ActivityState = .finished
+    @State private var shouldRun:Bool = true
+    
+    @State private var timeRemaining:Double = 0
+    @State private var totalTime:Double = 0
     
     /// Show an alert for spending tokens
     @State private var tokenSpendAlert:Bool = false
@@ -38,17 +55,55 @@ struct CityLabActivityView: View {
             Divider()
             
             Group {
-                Text("Started: \(GameFormatters.dateFormatter.string(from: labActivity.dateStarted))")
-                Text("Total: \(Int(activityModel.totalTime)) seconds")
-                Text("⏱ Remaining: \(Int(activityModel.timeRemaining)) seconds")
-                Text("Ends: \(GameFormatters.dateFormatter.string(from:labActivity.dateEnds))")
+                Text("Date Now: \(GameFormatters.fullDateFormatter.string(from: Date()))")
+                Text("Started: \(GameFormatters.fullDateFormatter.string(from: labActivity.dateStarted))")
+                Text("Total: \(Int(totalTime)) seconds")
+                Text("⏱ \(timeRemaining.stringFromTimeInterval())")
+                Text("Of \(totalTime.stringFromTimeInterval())")
+                
+//                Text("⏱ Remaining: \(Int(activityModel.timeRemaining)) seconds")
+                Text("Ends: \(GameFormatters.fullDateFormatter.string(from:labActivity.dateEnds))")
+                Text("Ends II \(DateFormatter.localizedString(from: labActivity.dateStarted, dateStyle: .medium, timeStyle: .medium))")
+                Text("Ends III \(labActivity.dateEnds.debugDescription)")
             }
             
             GameActivityView(activity: labActivity)
             Text(badNews).foregroundColor(.red)
             Text(goodNews).foregroundColor(.green)
             
-            switch activityModel.activityState {
+            switch activityState {
+                case .finished:
+                    HStack {
+                        
+                        // Throw away
+                        Button(action: {
+                            print("Throw out")
+                            //                        controller.throwAwayTech()
+                            // Pass true to cancel
+                            self.action(labActivity, true)
+                        }, label:{
+                            Text("Throw Away")
+                        })
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
+                        
+                        // Collect
+                        Button(action: {
+                            
+                            print("Collect activity")
+                            // self.collectActivity()
+//                            if let recipe = Recipe(rawValue: labActivity.activityName) {
+//                                self.dismissActivity(.finishedRecipe(recipe: recipe))
+//                            }else if let tech = CityTech(rawValue: labActivity.activityName) {
+//                                self.dismissActivity(.finishedTech(tech: tech))
+//                            }
+                            self.shouldRun = false
+                            self.action(labActivity, false)
+                            
+                        }, label:{
+                            Text("Collect")
+                        })
+                            .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
+                    }
                 case .running(_):
                     HStack {
                         
@@ -76,13 +131,14 @@ struct CityLabActivityView: View {
                             .buttonStyle(GameButtonStyle())
                             .alert(isPresented: $tokenSpendAlert) {
                                 Alert(title: Text("Token"), message: Text("Spend 1 token to reduce an hour on this activity?"), primaryButton: .default(Text("Yes")) {
-                                    self.spendToken()
+//                                    self.spendToken()
+                                    print("Spend token")
                                 }, secondaryButton: .cancel())
                             }
                         
                         // Cancel
                         Button(action: {
-//                            print("Cancel activity")
+                            //                            print("Cancel activity")
                             self.cancelActivityAlert = true
                         }, label:{
                             Text("Cancel")
@@ -94,62 +150,38 @@ struct CityLabActivityView: View {
                                 }, secondaryButton: .cancel())
                             }
                     }
-                    
-                case .finished:
-                    HStack {
-                        
-                        // Throw away
-                        Button(action: {
-                            print("Throw out")
-                            //                        controller.throwAwayTech()
-                            
-                        }, label:{
-                            Text("Throw Away")
-                        })
-                            .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
-                        
-                        // Collect
-                        Button(action: {
-                            
-                            print("Collect activity")
-                            self.collectActivity()
-                            
-                        }, label:{
-                            Text("Collect")
-                        })
-                            .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
-                    }
             }
-//            if activityModel.timeRemaining > 0 {
-//
-//            }else{
-//
-//            }
             
         }.padding()
         
-        
-        
             .onAppear() {
-//                self.progress = Double(activityModel.timeRemaining)/activityModel.totalTime
+                if Date().compare(self.labActivity.dateEnds) == .orderedAscending {
+                    self.incrementCounter()
+                } else {
+                    self.activityState = .finished
+                }
             }
         
             .onDisappear() {
-                self.activityModel.stop()
+//                self.stop()
             }
     }
     
     func stopActivity() {
-        self.activityModel.stop()
-        self.activityModel.timer.invalidate()
+//        self.activityModel.stop()
+//        self.activityModel.timer.invalidate()
+//        self.stop()
         
-        self.dismissActivity(.cancelled)
+//        self.dismissActivity(.cancelled)
     }
     
     func cancelActivity() {
-        self.stopActivity()
+//        self.stopActivity()
+        self.shouldRun = false
+        self.action(labActivity, true)
     }
     
+    /*
     func spendToken() {
         
         guard let player = LocalDatabase.shared.player else {
@@ -204,133 +236,55 @@ struct CityLabActivityView: View {
         }
     }
     
-    func collectActivity() {
+    
+    */
+    
+    func incrementCounter() {
         
-        self.stopActivity()
+        let tr = labActivity.dateEnds.timeIntervalSince(Date())
+        self.timeRemaining = tr
         
-        if let recipe = Recipe(rawValue: self.labActivity.activityName) {
-            
-            // Recipe
-            self.dismissActivity(.finishedRecipe(recipe: recipe))
-//            self.collectRecipe(recipe: recipe)
-            
-        } else if let tech:CityTech = CityTech(rawValue: self.labActivity.activityName) {
-            
-            // Tech
-//            self.collectTech(tech: tech)
-            self.dismissActivity(.finishedTech(tech: tech))
-            
+        let total = labActivity.dateEnds.timeIntervalSince(labActivity.dateStarted)
+        self.totalTime = total
+        
+        if tr > total {
+            print("Something wrong. Time is wrong.")
+            self.activityState = .finished
+            return
+        }
+        
+        if tr <= 0 {
+            self.activityState = .finished
+            return
         } else {
-            
-            self.badNews = "Unrecognized Activity"
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3.0) {
-                self.dismissActivity(.cancelled)
+            self.activityState = .running(remaining: Int(tr))
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                if shouldRun {
+                    incrementCounter()
+                }
             }
         }
     }
     
-    func collectRecipe(recipe:Recipe) {
-        
-        /*
-        // Recipe
-        print("Collecting Recipe: \(recipe.rawValue)")
-        
-        var madePeripheral:PeripheralObject? = nil
-        
-        switch recipe {
-                
-            case .Condensator:
-                madePeripheral = PeripheralObject(peripheral: .Condensator)
-                
-            case .ScrubberCO2:
-                madePeripheral = PeripheralObject(peripheral: .ScrubberCO2)
-                
-            case .Electrolizer:
-                madePeripheral = PeripheralObject(peripheral: .Electrolizer)
-                
-            case .Methanizer:
-                madePeripheral = PeripheralObject(peripheral: .Methanizer)
-                
-            case .Radiator:
-                madePeripheral = PeripheralObject(peripheral: .Radiator)
-            case .SolarPanel:
-                print("Solar panel is its own beast")
-                //                    madePeripheral = PeripheralObject(peripheral: .sola)
-            case .Battery:
-                
-                let battery = Battery(shopped: false)
-                // add to city
-                cityData.batteries.append(battery)
-                // save city
-                
-            case .StorageBox:
-                print("Storagebox")
-                // Choose Ingredient?
-                
-            case .tank:
-                // tank
-                let newTank:Tank = Tank(type: .empty, full: false)
-                cityData.tanks.append(newTank)
-                
-            case .WaterFilter:
-                madePeripheral = PeripheralObject(peripheral: .WaterFilter)
-            case .BioSolidifier:
-                madePeripheral = PeripheralObject(peripheral: .BioSolidifier)
-            case .Cement:
-                //                    madePeripheral = PeripheralObject(peripheral: .Radiator)
-                let newBox = StorageBox(ingType: .Cement, current: Ingredient.Cement.boxCapacity())
-                cityData.boxes.append(newBox)
-                
-            case .ChargedGlass:
-                let glass = StorageBox(ingType: .Glass, current: Ingredient.Glass.boxCapacity())
-                cityData.boxes.append(glass)
-                
-            case .Alloy:
-                let alloy = StorageBox(ingType: .Alloy, current: Ingredient.Alloy.boxCapacity())
-                cityData.boxes.append(alloy)
-                
-            default:
-                print("Invalid activity")
-        }
-        
-        if let peripheral = madePeripheral {
-            cityData.peripherals.append(peripheral)
-        }
-        
-        do {
-            try LocalDatabase.shared.saveCity(cityData)
-            // Success
-            self.goodNews = "Recipe \(recipe.rawValue) collected"
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.0) {
-                self.dismissActivity()
-            }
-        } catch {
-            // Deal with error
-            self.badNews = "Error: \(error.localizedDescription)"
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3.0) {
-                self.dismissActivity()
-            }
-        }
-         */
-        
-    }
 }
 
 struct CityLabActivityView_Previews: PreviewProvider {
     
     static var previews: some View {
-        let model = LabActivityViewModel(labActivity: makeActivity())
-        CityLabActivityView(activityModel: model, labActivity: model.activity) { dismState in
-            print("Dismissed ????")
+        CityLabActivityView(activity: makeActivity()) { action, cancelled in
+            print("action")
         }
         .frame(width: 500, height: 600, alignment: .center)
     }
     
     static func getCityData() -> CityData {
-        return LocalDatabase.shared.loadCity()!
+        return LocalDatabase.shared.cityData!
     }
     
     static func makeActivity() -> LabActivity {
+        if let cityActivity = LocalDatabase.shared.cityData!.labActivity {
+            return cityActivity
+        }
         let test = LabActivity(time: 300, name: "Test Act")
         return test
     }

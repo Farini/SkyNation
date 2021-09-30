@@ -41,10 +41,7 @@ class MarsBuilder {
             
             print("Getting Server Info")
             
-            guard let player = LocalDatabase.shared.player else {
-                print("No Player")
-                return
-            }
+            let player = LocalDatabase.shared.player
             guard let _ = player.guildID else {
                 print("No Guild ID for player: \(player.name)")
                 self.hasNoGuild = true
@@ -104,7 +101,7 @@ class MarsBuilder {
             // Populate my city:
             // var myDBCity:DBCity?
             // var myCityData:CityData?
-            let mc:DBCity = DBCity(id: UUID(), guild: ["guild":randomGuild.id], name: "Fariland", accounting: Date(), owner: ["id":LocalDatabase.shared.player!.playerID], posdex: Posdex.city9.rawValue, gateColor: 0, experience:0)
+            let mc:DBCity = DBCity(id: UUID(), guild: ["guild":randomGuild.id], name: "Fariland", accounting: Date(), owner: ["id":LocalDatabase.shared.player.playerID], posdex: Posdex.city9.rawValue, gateColor: 0, experience:0)
             let cd = CityData(example: true, id:mc.id)
             // add city
             randomGuild.cities.append(mc)
@@ -124,7 +121,7 @@ class MarsBuilder {
                 print("Guild garage vehicles: \(gVehicles.count)")
                 self.guildGarage = gVehicles
                 for vehicle in gVehicles {
-                    if vehicle.owner == LocalDatabase.shared.player?.playerID {
+                    if vehicle.owner == LocalDatabase.shared.player.playerID {
                         print("Vehicle is mine: \(vehicle.engine)")
                     }
                 }
@@ -206,7 +203,7 @@ class MarsBuilder {
         getServerInfo()
         
         // Load CityData
-        self.myCityData = LocalDatabase.shared.loadCity()
+        self.myCityData = LocalDatabase.shared.cityData
     }
     
     // Load Scene
@@ -264,7 +261,7 @@ extension MarsBuilder {
             
             let gateNode:CityGateNode = CityGateNode(posdex: posdex, city: optCity)
             
-            if let mycid = LocalDatabase.shared.player?.cityID, mycid == optCity?.id {
+            if let mycid = LocalDatabase.shared.player.cityID, mycid == optCity?.id {
                 // My City
                 print("my city +++")
                 if let pov:SCNNode = gateNode.childNode(withName: "POV", recursively: true) {

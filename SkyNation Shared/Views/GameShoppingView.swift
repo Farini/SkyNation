@@ -196,12 +196,18 @@ struct GameShoppingView: View {
         SKNS.validateTokenFromTextInput(text: self.promoCode) { token, errorString in
             if let token = token {
                 print("Got a token: \(token.id)")
-                guard let player = LocalDatabase.shared.player else {
-                    fatalError()
-                }
+                let player = LocalDatabase.shared.player
                 player.wallet.tokens.append(token)
-                let r = LocalDatabase.shared.savePlayer(player: player)
-                print("Saved Player after getting token: \(r)")
+                
+                // Save
+                do {
+                    try LocalDatabase.shared.savePlayer(player)
+                } catch {
+                    print("‼️ Could not save station.: \(error.localizedDescription)")
+                }
+                
+//                let r = LocalDatabase.shared.savePlayer(player: player)
+//                print("Saved Player after getting token: \(r)")
                 DispatchQueue.main.async {
                     self.validationMessage = "You got an Entry token to Mars !"
                     self.isValidatingToken = false
@@ -426,7 +432,7 @@ struct ShopProductRow: View {
                 //                            })
                 //                            .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                 
-                generateBarcode(from: LocalDatabase.shared.player?.id ?? UUID())
+                generateBarcode(from: LocalDatabase.shared.player.id)
             }
             
             // Chevron

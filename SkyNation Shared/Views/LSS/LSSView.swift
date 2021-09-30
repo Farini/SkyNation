@@ -504,8 +504,8 @@ struct LSSReportView: View {
                         
                         VStack(alignment:.leading) {
                             let dbShared = LocalDatabase.shared
-                            let mot = dbShared.station?.truss.moneyFromAntenna() ?? 0
-                            let pot = LocalDatabase.shared.player?.money ?? 0
+                            let mot = dbShared.station.truss.moneyFromAntenna()
+                            let pot = LocalDatabase.shared.player.money
                             
                             Text("\(GameFormatters.numberFormatter.string(from:NSNumber(value:pot)) ?? "---") Sky Coins")//.font(.title2)
                             Text("📡 lvl \(controller.station?.truss.antenna.level ?? 0), + 🪙 \(mot)").foregroundColor(.gray)

@@ -35,7 +35,7 @@ class VehicleBuilderViewModel:ObservableObject {
     
     init() {
         // Load Station
-        let station = LocalDatabase.shared.station!
+        let station = LocalDatabase.shared.station
         self.station = station
         self.garage = station.garage
         

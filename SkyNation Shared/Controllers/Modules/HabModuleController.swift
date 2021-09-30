@@ -28,7 +28,7 @@ class HabModuleController: ObservableObject {
     @Published var messages:[String]
     
     init(hab:HabModule) {
-        guard let station = LocalDatabase.shared.station else { fatalError() }
+        let station = LocalDatabase.shared.station
         self.station = station
         self.habModule = hab
         self.inhabitants = hab.inhabitants
@@ -252,7 +252,12 @@ class HabModuleController: ObservableObject {
     // MARK: - Saving Game
     
     func save() {
-        LocalDatabase.shared.saveStation(station: station)
+        // Save
+        do {
+            try LocalDatabase.shared.saveStation(station)
+        } catch {
+            print("‼️ Could not save station.: \(error.localizedDescription)")
+        }
     }
     
     deinit {

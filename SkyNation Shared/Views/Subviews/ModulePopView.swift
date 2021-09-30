@@ -158,7 +158,7 @@ struct ModulePopView: View {
 
 struct ModulePopView_Previews: PreviewProvider {
     static var previews: some View {
-        if let module = LocalDatabase.shared.station?.modules.first {
+        if let module = LocalDatabase.shared.station.modules.first {
             ModulePopView(name: module.name, module: module)
         } else {
             let module = Module(id: UUID(), modex: .mod10)

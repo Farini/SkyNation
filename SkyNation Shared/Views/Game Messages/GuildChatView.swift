@@ -73,7 +73,7 @@ struct GuildChatView: View {
             HStack {
                 
                 // Player Card
-                SmallPlayerCardView(pCard: LocalDatabase.shared.player!.getPlayerContent().makePlayerCard())
+                SmallPlayerCardView(pCard: LocalDatabase.shared.player.getPlayerContent().makePlayerCard())
                     .onTapGesture {
                         controller.requestChat()
                     }

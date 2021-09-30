@@ -81,36 +81,26 @@ class GameOverlay:NSObject, SKSceneDelegate {
     /// Playercard has the name, virtual money, and tokens that belong to the player
     func buildPlayerCard() {
         
-        if let player = LocalDatabase.shared.player {
-            let playerCard = PlayerCardNode(player: player)
-            playerCard.name = "playercard"
-            scene.addChild(playerCard)
-        } else {
-            let newPlayer = SKNPlayer()
-            let playerCard = PlayerCardNode(player: newPlayer)
-            playerCard.name = "playercard"
-            scene.addChild(playerCard)
-        }
+        let player = LocalDatabase.shared.player
+        let playerCard = PlayerCardNode(player: player)
+        playerCard.name = "playercard"
         
+        scene.addChild(playerCard)
         buildMenu()
     }
     
     /// Updates the `Player Card` overlay node
     func updatePlayerCard() {
         
+        let player = LocalDatabase.shared.player
         
-        if let player = LocalDatabase.shared.player {
+        if let card:PlayerCardNode = scene.childNode(withName: "playercard") as? PlayerCardNode {
+            card.nameLabel.text = player.name
+            card.moneyLabel.text = GameFormatters.numberFormatter.string(from: NSNumber(value:player.money))
+            card.tokenLabel.text = "\(player.countTokens().count)" //"\(player.timeTokens.count)"
             
-            if let card:PlayerCardNode = scene.childNode(withName: "playercard") as? PlayerCardNode {
-                card.nameLabel.text = player.name
-                card.moneyLabel.text = GameFormatters.numberFormatter.string(from: NSNumber(value:player.money))
-                card.tokenLabel.text = "\(player.countTokens().count)" //"\(player.timeTokens.count)"
-                
-            } else {
-                print("⚠️ Error: Couldnt find PlayerCardNode in Overlay Scene")
-            }
         } else {
-            print("⚠️ Error: Couldn't find Local Database Player")
+            print("⚠️ Error: Couldnt find PlayerCardNode in Overlay Scene")
         }
     }
     
