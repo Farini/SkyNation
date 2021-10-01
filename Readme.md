@@ -148,6 +148,8 @@ And the funtions are a little more clear cut.
 - [ ] Outpost - fix bug with contribution - SKNS can't decode OutpostData
 - [ ] Outpost View - non .contributing states views
 
+- [ ] Accounting - Finish Accounting cycle (Station+Account.swift)
+
 - [ ] Chat Bubble (Reorganize)
 - [X] Chat Bubble - Election
 - [X] Chat Bubble - Vote in an Election

@@ -124,7 +124,7 @@ class Person:Codable, Identifiable, Equatable {
     
     var activity:LabActivity?
     
-    // MARK: - Busy Status
+    // MARK: - Lab Activity
     
     /// Checks if this Person is performing an Activity
     func isBusy() -> Bool {
@@ -134,6 +134,7 @@ class Person:Codable, Identifiable, Equatable {
         }
     }
     
+    /// Returns a String equivalent to the task being performed
     func busynessSubtitle() -> String {
         
         if isBusy() == true {
@@ -144,7 +145,72 @@ class Person:Codable, Identifiable, Equatable {
         }
     }
     
+    func clearActivity() {
+        
+        guard let activity = activity else { return }
+        
+        if Date().compare(activity.dateEnds) == .orderedDescending {
+            
+            // Finished Activity
+            if activity.activityName == "Workout" {
+                
+                // Workout
+                GameMessageBoard.shared.newAchievement(type: .experience, message: "\(name) finished a workout 💪")
+                self.healthPhysical = min(100, healthPhysical + 3)
+                
+                /// Randomly get happy
+                if Bool.random() {
+                    let happyGain = Int.random(in:1...3)
+                    let happy = min(100, happiness + happyGain)
+                    self.happiness = happy
+                }
+                
+                self.activity = nil
+                
+            } else if activity.activityName == "Medicating" {
+                
+                // Doctor Medicating
+                GameMessageBoard.shared.newAchievement(type: .experience, message: "\(name) cured someone!")
+                self.activity = nil
+                
+            } else if activity.activityName == "Healing" {
+                
+                // Patient being medicated
+                self.healthPhysical = min(100, healthPhysical + 10)
+                self.activity = nil
+                
+            } else if let education = Skills(rawValue: activity.activityName) {
+                
+                // Learning Skill
+                print("\(name) learned a new skill!")
+                GameMessageBoard.shared.newAchievement(type: .learning(skill: education), message: "\(name) learned a new skill!")
+                
+                self.learnNewSkill(type: education)
+                self.activity = nil
+                
+            } else if let tech = TechItems(rawValue: activity.activityName) {
+                
+                // Tech
+                print("\(name) finished Tech \(tech)")
+                self.activity = nil
+                
+            } else if let recipe = Recipe(rawValue: activity.activityName) {
+                
+                // Recipe
+                print("\(name) finished Recipe \(recipe)")
+                self.activity = nil
+            }
+            
+            self.activity = nil
+        } else {
+            print("⚠️ \(self.name) - Activity not finished. Cannot clear.")
+        }
+    }
+    
+    // MARK: - Accounting
+    
     /// Sets a random mood
+    /// [DEPRECATE]
     func randomMood(tech:[TechItems]) {
         
         var happyDeltas:[Int] = [-1, 0, 1]
@@ -169,7 +235,6 @@ class Person:Codable, Identifiable, Equatable {
             if Bool.random() { happyDeltas.append(-1) }
         }
         
-        
         var newHappy = min(100, happiness + happyDeltas.randomElement()!)
         if newHappy < 0 { newHappy = 0 }
         happiness = newHappy
@@ -190,7 +255,7 @@ class Person:Codable, Identifiable, Equatable {
         
     }
     
-    /// For **ACCOUNTING** only!
+    /// For **ACCOUNTING** only! [DEPRECATE]
     func consumeAir(airComp:AirComposition) -> AirComposition {
         
         let air = airComp
@@ -199,7 +264,6 @@ class Person:Codable, Identifiable, Equatable {
             case .Great:
                 if Bool.random() { happiness = min(100, happiness + 1) }
             case .Good:
-//                print("air was good. boring")
                 if Bool.random() {
                     happiness = min(happiness + 1, 100)
                 } else {
@@ -228,6 +292,7 @@ class Person:Codable, Identifiable, Equatable {
         return air
     }
     
+    /// For **ACCOUNTING** only! [DEPRECATE]
     func consumedFood(_ new:String, bio:Bool = false) {
         
         var happyDelta:Int = 0
@@ -273,7 +338,7 @@ class Person:Codable, Identifiable, Equatable {
         }
     }
     
-    /// Performs changes in health and happiness according to water consumption
+    /// Performs changes in health and happiness according to water consumption [DEPRECATE]
     func consumedWater(success:Bool) {
         if success {
             // Help the sick
@@ -292,6 +357,7 @@ class Person:Codable, Identifiable, Equatable {
         }
     }
     
+    /// DEPRECATE
     func consumedEnergy(success:Bool) {
         if !success {
             if happiness > 20 {
@@ -357,69 +423,6 @@ class Person:Codable, Identifiable, Equatable {
     
     func levelFor(skill:Skills) -> Int {
         return self.skills.filter({ $0.skill == skill }).first?.level ?? 0
-    }
-    
-    func clearActivity() {
-        
-        guard let activity = activity else { return }
-        
-//        if let activity = activity {
-            
-            if Date().compare(activity.dateEnds) == .orderedDescending {
-                
-                // Finished Activity
-                if activity.activityName == "Workout" {
-                    
-                    // Workout
-                    GameMessageBoard.shared.newAchievement(type: .experience, message: "\(name) finished a workout 💪")
-                    self.healthPhysical = min(100, healthPhysical + 3)
-                    
-                    /// Randomly get happy
-                    if Bool.random() {
-                        let happyGain = Int.random(in:1...3)
-                        let happy = min(100, happiness + happyGain)
-                        self.happiness = happy
-                    }
-                    
-                    self.activity = nil
-                    
-                } else if activity.activityName == "Medicating" {
-                    
-                    // Doctor Medicating
-                    GameMessageBoard.shared.newAchievement(type: .experience, message: "\(name) cured someone!")
-                    self.activity = nil
-                    
-                } else if activity.activityName == "Healing" {
-                    
-                    // Patient being medicated
-                    self.healthPhysical = min(100, healthPhysical + 10)
-                    self.activity = nil
-                    
-                } else if let education = Skills(rawValue: activity.activityName) {
-                    
-                    // Learning Skill
-                    print("\(name) learned a new skill!")
-                    GameMessageBoard.shared.newAchievement(type: .learning(skill: education), message: "\(name) learned a new skill!")
-                    
-                    self.learnNewSkill(type: education)
-                    self.activity = nil
-                    
-                } else if let tech = TechItems(rawValue: activity.activityName) {
-                    
-                    // Tech
-                    print("\(name) finished Tech \(tech)")
-                    self.activity = nil
-                    
-                } else if let recipe = Recipe(rawValue: activity.activityName) {
-                    
-                    // Recipe
-                    print("\(name) finished Recipe \(recipe)")
-                    self.activity = nil
-                }
-                
-                self.activity = nil
-            }
-//        }
     }
     
     // MARK: - Creating a person

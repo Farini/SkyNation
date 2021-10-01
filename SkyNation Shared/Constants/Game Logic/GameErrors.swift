@@ -7,7 +7,7 @@
 
 import Foundation
 
-// MARK: - Errors
+// MARK: - Server Errors
 
 // See 'ServerData' file
 enum ServerDataError:Error {

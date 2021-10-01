@@ -345,6 +345,7 @@ class Truss:Codable {
     }
     
     /// Fills the batteries, and returns the left overs
+    ///  [DEPRECATE]
     func refillBatteries(amount:Int) -> Int {
         var remaining:Int = amount
         for battery in batteries.sorted(by: { $0.current < $1.current }) {
@@ -360,6 +361,22 @@ class Truss:Codable {
         }
         guard remaining >= 0 else { fatalError() }
         return remaining
+    }
+    
+    /// Puts back the total energy into the batteries. Doesn't refill them.
+    func resetEnergyLevels(to energy:Int) {
+        var remaining:Int = energy
+        for battery in batteries {
+            let receivable = battery.capacity
+            if remaining > receivable {
+                remaining -= receivable
+                battery.current = receivable
+            } else {
+                // <=
+                battery.current = remaining
+                remaining = 0
+            }
+        }
     }
     
     /**
@@ -379,6 +396,7 @@ class Truss:Codable {
      - amount: the amount of energy to be consumed
      - Returns: A `boolean` indicating whther it was successful. */
     func consumeEnergy(amount:Int) -> Bool {
+        
         var consumption = amount
         let ttl = batteries.map({ $0.current }).reduce(0, +)
         

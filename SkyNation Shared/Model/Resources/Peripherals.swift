@@ -48,7 +48,7 @@ enum PeripheralType:String, Codable, CaseIterable {
     // MARK: - Model Building
     
     /// Where delivery ships can dock
-    case DockingPoint
+//    case DockingPoint
     
     /// Makes Spacewalk much easier (helps reduce chances of breaking peripherals(
     case Airlock
@@ -68,8 +68,14 @@ enum PeripheralType:String, Codable, CaseIterable {
     /// Makes money for the station
     case Antenna
     
+    // MARK: - Required in Mars
+    
+    
+    // AirTrapper - collect co2 from air
+    // GasGenerator - make energy
+    
+    
     // EVBot (E-Vehicle)
-    // AirTrapper
     
     
     // MARK: - Calculated Variables
@@ -80,7 +86,7 @@ enum PeripheralType:String, Codable, CaseIterable {
         switch self {
             case .Radiator: return "Radiator"
             case .solarPanel: return "SolarPanel"
-            case .DockingPoint: return "Docker"
+//            case .DockingPoint: return "Docker"
             case .Airlock: return "Airlock"
             case .Cuppola: return "Cuppola"
             case .Roboarm: return "Roboarm"
@@ -228,7 +234,10 @@ class PeripheralObject:Codable, Identifiable, Equatable {
             case .Electrolizer: return [TankType.h2o.rawValue: -2, "oxygen":2, TankType.h2.rawValue:4]
             case .Methanizer: return ["CarbDiox":-4, TankType.h2.rawValue:-4, TankType.ch4.rawValue:4, TankType.o2.rawValue:4]
             case .WaterFilter: return [Ingredient.wasteLiquid.rawValue: -2, TankType.h2o.rawValue:2]
-            case .BioSolidifier: return [Ingredient.wasteSolid.rawValue: -2, Ingredient.Fertilizer.rawValue:2]
+            case .BioSolidifier:
+                var random:[String:Int] = Bool.random() == true ? ([Ingredient.Fertilizer.rawValue:2]):[TankType.ch4.rawValue:4]
+                random[Ingredient.wasteSolid.rawValue] = -2
+                return random
                 
             
             default: return [:]

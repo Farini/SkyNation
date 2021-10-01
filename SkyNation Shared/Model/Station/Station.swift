@@ -350,6 +350,7 @@ class Station:Codable {
         // Returning things
         
         
+        
         // put the water back in the containers
         let waterSpill = truss.refillTanks(of: .h2o, amount: water)
         if waterSpill > 0 {
@@ -440,9 +441,9 @@ class Station:Codable {
         return starting.addingTimeInterval(3600)
     }
     
-    /// When Accounting sees a person with health physycal < 1
+    /// When Accounting sees a person with health physycal < 1, this will kill them
     private func prepareDeath(of person:Person) {
-        GameMessageBoard.shared.newAchievement(type: .experience, message: "💀 \(person.name) has passed away!") //newAchievement(type: .experience, qtty: nil, message: "\(person.name) has passed away!")
+        GameMessageBoard.shared.newAchievement(type: .experience, message: "💀 \(person.name) has passed away!")
         let hab = habModules.filter({ $0.inhabitants.contains(person) }).first
         hab?.inhabitants.removeAll(where: { $0.id == person.id })
     }
@@ -707,96 +708,7 @@ class Station:Codable {
 //    var powerConsumption:Int
 //}
 
-class AccountingReport:Codable {
-    
-    var id:UUID
-    var date:Date
-    
-    var energyStart:Int
-    var energyInput:Int
-    var waterStart:Int
-    
-    // Issues encountered when accounting (lack of water, food, O2, etc.)
-    var problems:[String]
-    
-    // Other notes worth taking
-    var notes:[String]
-    var powerNotes:[String]
-    var peripheralNotes:[String]
-    var humanNotes:[String]
-    
-    var brokenPeripherals:[UUID]
-    
-    var airStart:AirComposition
-    var airFinish:AirComposition?
-    
-    var energyFinish:Int?
-    var waterFinish:Int?
-    var wasteWaterFinish:Int?
-    var poopFinish:Int?
-    
-    var tankAirAdjustment:Int?
-    
-    init(time:Date, powerGen:Int, energy:Int, water:Int, air:AirComposition) {
-        
-        self.id = UUID()
-        date = time
-        energyStart = energy
-        energyInput = powerGen
-        airStart = air
-        waterStart = water
-        
-        brokenPeripherals = []
-        problems = []
-        notes = []
-        
-        powerNotes = []
-        peripheralNotes = []
-        humanNotes = []
-    }
-    
-    func results(water:Int, urine:Int, poop:Int, air:AirComposition, energy:Int) {
-        
-        airFinish = air
-        energyFinish = energy
-        waterFinish = water
-        wasteWaterFinish = urine
-        poopFinish = poop
-        
-    }
-    
-    func reportNeededAir(amount:Int) {
-        tankAirAdjustment = amount
-    }
-    
-    /// Adds a problem to the accounting
-    func addProblem(string:String) {
-        var newProblems = problems
-        newProblems.append(string)
-        self.problems = newProblems
-    }
-    
-    /// Gets the problems to display
-    func listProblems() -> [String] {
-        return problems
-    }
-    
-    /// Adds a note to the report
-    func addNote(string:String) {
-        var newNotes = notes
-        newNotes.append(string)
-        self.notes = newNotes
-    }
-    
-    /// Gets the notes to display
-    func listNotes() -> [String] {
-        return notes
-    }
-    
-    static func example() -> AccountingReport? {
-        return LocalDatabase.shared.station.accounting
-    }
-}
+
 
 /**
  A Container with ingredients, tanks and people
