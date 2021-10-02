@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GuildChatView: View {
     
-    @ObservedObject var controller:SideChatController
+    @ObservedObject var controller:ChatBubbleController
     
     var body: some View {
         VStack {
@@ -99,7 +99,7 @@ struct GuildChatView: View {
 struct GuildChatView_Previews: PreviewProvider {
     
     static var previews: some View {
-        GuildChatView(controller: SideChatController(simulating: true, simElection: true))
+        GuildChatView(controller: ChatBubbleController(simulating: true, simElection: true))
     }
     
     static func exampleMessages() -> [ChatMessage] {

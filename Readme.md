@@ -126,6 +126,18 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Station LSS View - In-depth Testing after remake
 - [X] 9/30/2021 - Remake of LocalDatabase
 
+- [ ] Station Garage View - Improve departure animation
+- [ ] Station Garage View - Register Vehicle with Authentication (server side)
+- [ ] Station Garage View - Vehicles not updating correctly upon selection (travelling ones)
+
+- [ ] Overlays - GameCamera - Fix Awkward cam transitions
+- [X] Overlays - CamControl - Fix Buttons & reverse actions (forward = backward)
+
+- [ ] Accounting - Finish Accounting cycle (Station+Account.swift)
+
+- [ ] Settings - ServerTab - Leave Guild
+- [ ] Settings - ServerTab - Create Guild
+
 - [X] City View - Outpost RSS Collection
 - [X] City View - Hab - Show population limit
 - [X] City View - Bio View
@@ -148,24 +160,14 @@ And the funtions are a little more clear cut.
 - [ ] Outpost - fix bug with contribution - SKNS can't decode OutpostData
 - [ ] Outpost View - non .contributing states views
 
-- [ ] Accounting - Finish Accounting cycle (Station+Account.swift)
-
-- [ ] Chat Bubble (Reorganize)
+- [X] Chat Bubble (Reorganize)
 - [X] Chat Bubble - Election
 - [X] Chat Bubble - Vote in an Election
+- [X] Chat Bubble - Search Icon - View Other Players (Search by name) + Request
+- [ ] Chat Bubble - Test Search Player
 - [ ] Chat Bubble - Test Election Results
 - [ ] GameMessagesGuildTab - President functions (Invite, Kickout, Modify Guild)
-- [ ] Chat Bubble - Search Icon - View Other Players (Search by name) + Request
 
-- [ ] Settings - ServerTab - Leave Guild
-- [ ] Settings - ServerTab - Create Guild
-
-- [ ] Station Garage View - Improve departure animation
-- [ ] Station Garage View - Register Vehicle with Authentication (server side)
-- [ ] Station Garage View - Vehicles not updating correctly upon selection (travelling ones)
-
-- [ ] Overlays - GameCamera - Fix Awkward cam transitions
-- [ ] Overlays - CamControl - Fix Buttons & reverse actions (forward = backward)
 
 - [X] Model - Election
 - [X] Model - City - Energy Collection

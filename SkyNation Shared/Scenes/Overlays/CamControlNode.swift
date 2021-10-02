@@ -76,13 +76,13 @@ class CamControlNode:SKNode {
         self.addChild(camSprite)
         
         // Rotate Left
-        let rotLSprite = makeSprite(name: "rotate.left")
+        let rotLSprite = makeSprite(name: "chevron.right.square")
         rotLSprite.position = CGPoint(x: nodeSize.width - 40, y: 0)
         rotLSprite.zPosition = 90
         self.addChild(rotLSprite)
         
         // Rotate Right
-        let rotRSprite = makeSprite(name: "rotate.right")
+        let rotRSprite = makeSprite(name: "chevron.backward.square") // chevron.backward.square
         rotRSprite.position = CGPoint(x: nodeSize.width * 0.05, y: 0)
         rotRSprite.zPosition = 90
         self.addChild(rotRSprite)

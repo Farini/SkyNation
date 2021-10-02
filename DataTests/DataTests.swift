@@ -27,9 +27,7 @@ class DataTests: XCTestCase {
         for t in store.tokens {
             print("Token \(t.origin), DBPlayer ID:\(t.dbUser), TokenID:\(t.id)")
         }
-        guard let player = LocalDatabase.shared.player else {
-            fatalError()
-        }
+        let player = LocalDatabase.shared.player
         
         for i in 1...5 {
             if let token = player.requestToken() {
@@ -55,10 +53,7 @@ class DataTests: XCTestCase {
         
         print("\n\n * Testing Freebies + Dates")
         
-        guard let player = LocalDatabase.shared.player else {
-            XCTFail()
-            return
-        }
+        let player = LocalDatabase.shared.player
         
         let lastDate = player.wallet.freebiesLast // player.lastSeen
         let df = GameFormatters.dateFormatter
@@ -314,7 +309,7 @@ class DataTests: XCTestCase {
         // Part 1 (Validation)
         XCTAssertNotNil(station)
         
-        station?.accountingLoop(recursive: true) { errors in
+        station.accountingLoop(recursive: true) { errors in
             print("Errors: \(errors)")
             print("code completion")
         }

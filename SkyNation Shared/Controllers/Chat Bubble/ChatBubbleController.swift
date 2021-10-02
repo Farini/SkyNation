@@ -1,11 +1,33 @@
 //
-//  SideChatController.swift
+//  ChatBubbleController.swift
 //  SkyNation
 //
-//  Created by Carlos Farini on 9/17/21.
+//  Created by Carlos Farini on 10/1/21.
 //
 
 import SwiftUI
+
+enum ChatBubbleTab:String, CaseIterable {
+    case Achievement
+    case Freebie
+    
+    case Chat
+    case Guild
+    case Tutorial
+    
+    case Search
+    
+    var emoji:String {
+        switch self {
+            case .Achievement: return "🏆"
+            case .Freebie: return "🎁"
+            case .Chat: return "💬"
+            case .Guild: return "🔰" // ⚙️
+            case .Tutorial: return "🎓"
+            case .Search: return "🔎" // 🔎❓
+        }
+    }
+}
 
 enum GuildElectionState {
     
@@ -15,25 +37,20 @@ enum GuildElectionState {
     /// Election hasn't started. Will start on 'until'
     case waiting(until:Date)
     
-    /// Election is running 'until'
-//    case running(until:Date)
-    
     /// Election with an Object
     case voting(election:Election)
-    
-    /// Election Finished. Needs Updating
-//    case finished
 }
 
-class SideChatController:ObservableObject {
+
+class ChatBubbleController:ObservableObject {
     
     // Tab
-    @Published var selectedTab:GameMessageType = GameMessageType.Achievement
+    @Published var selectedTab:ChatBubbleTab = .Achievement
     
     // Game Messages
     @Published var gameMessages:[GameMessage] = []
     
-    // Player
+    // Player + Freebies
     @Published var player:SKNPlayer
     @Published var freebiesAvailable:Bool = false
     
@@ -49,8 +66,6 @@ class SideChatController:ObservableObject {
     @Published var guildChat:[ChatMessage] = []
     @Published var chatWarnings:[String] = []
     @Published var currentText:String = ""
-    
-    private var serverManager = ServerManager.shared
     
     init(simulating simChat:Bool, simElection:Bool) {
         
@@ -89,9 +104,11 @@ class SideChatController:ObservableObject {
     
     // MARK: - Control + Updates
     
-    func didSelectTab(tab:GameMessageType) {
+    func didSelectTab(tab:ChatBubbleTab) {
         self.selectedTab = tab
     }
+    
+    private var serverManager = ServerManager.shared
     
     func getGuildInfo() {
         
@@ -112,6 +129,14 @@ class SideChatController:ObservableObject {
         }
     }
     
+    // MARK: - Achievements
+    
+    func updateAchievements() {
+        // Game Messages (Achievements)
+        let gameMessages = LocalDatabase.shared.gameMessages
+        self.gameMessages = gameMessages
+    }
+    
     // MARK: - Chat
     
     /// Posts a message on the Guild Chat
@@ -119,8 +144,9 @@ class SideChatController:ObservableObject {
         let player = LocalDatabase.shared.player
         guard let pid = player.playerID,
               let gid = player.guildID else {
-            fatalError()
-        }
+                  print("No Guild = No Chat")
+                  return
+              }
         
         guard text.count < 150 else {
             print("Text is too large !!!")
@@ -147,8 +173,8 @@ class SideChatController:ObservableObject {
         let player = LocalDatabase.shared.player
         guard let pid = player.playerID,
               let gid = player.guildID else {
-            return
-        }
+                  return
+              }
         
         self.chatWarnings = ["Updating messages"]
         
@@ -174,8 +200,6 @@ class SideChatController:ObservableObject {
     func textCount() -> Int {
         return currentText.count
     }
-    
-    
     
     // MARK: - Election
     
@@ -234,8 +258,6 @@ class SideChatController:ObservableObject {
         //updateElectionData()
     }
     
-    // Others
-    
     func iAmPresident() -> Bool {
         
         if let pid = LocalDatabase.shared.player.playerID,
@@ -246,16 +268,15 @@ class SideChatController:ObservableObject {
         
     }
     
+    // MARK: - Freebies Tab
+    
     func seeFreebies() -> [String] {
-        
-        
         
         var freebiesMade = player.wallet.freebiesMade
         if freebiesMade.isEmpty {
             freebiesMade = player.wallet.generateFreebie()
         }
         return Array(freebiesMade.keys)
-        
     }
     
     func retrieveFreebies() {
@@ -305,5 +326,29 @@ class SideChatController:ObservableObject {
         self.selectedTab = .Achievement
         self.selectedTab = .Freebie
         
+    }
+    
+    // MARK: - Tutorial
+    
+    /// Current Tutorial Page
+    @Published var tutPage:Int = 0
+    
+    func updateTutorialPage(page:Int) {
+        
+    }
+    
+    // MARK: - Search Tab
+    
+    /// Players Searched
+    @Published var searchPlayerResult:[PlayerContent] = []
+    @Published var searchText:String = ""
+    
+    private var lastSearch:Date?
+    
+    func searchPlayerByName() {
+        SKNS.searchPlayerByName(name: self.searchText) { playerArray, error in
+            self.lastSearch = Date()
+            self.searchPlayerResult = playerArray
+        }
     }
 }

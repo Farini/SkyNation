@@ -169,6 +169,22 @@ class StoreController: ObservableObject, StoreManagerDelegate {
         SKPaymentQueue.default().restoreCompletedTransactions()
     }
     
+    func getReceipt() {
+        // Get the receipt if it's available
+        if let appStoreReceiptURL = Bundle.main.appStoreReceiptURL,
+           FileManager.default.fileExists(atPath: appStoreReceiptURL.path) {
+            
+            do {
+                let receiptData = try Data(contentsOf: appStoreReceiptURL, options: .alwaysMapped)
+                print(receiptData)
+                
+                let receiptString = receiptData.base64EncodedString(options: [])
+                // Read receiptData
+            }
+            catch { print("Couldn't read receipt data with error: " + error.localizedDescription) }
+        }
+    }
+    
     // MARK: - Store Manager Delegate
     
     /// Error Messages
@@ -231,10 +247,28 @@ class StoreController: ObservableObject, StoreManagerDelegate {
             let tokenAmount = gProduct.type.tokenAmount
             let moneyAmount = gProduct.type.moneyAmount
             
+            // FIXME: - unique receipt for token
+//            let p = transaction.scriptingProperties.
+            
             print("Player about to get \(tokenAmount) tokens, and \(moneyAmount) SkyCoins")
+            if let date = transaction.transactionDate {
+                // To obtain a unique "Identifier"
+                // Pass date into the purchase
+                // Find a way to combine the date with product identifier and encode in 64baseData
+                let fullDateString = GameFormatters.fullDateFormatter.string(from: date)
+                let productIDString = transaction.payment.productIdentifier
+                let completeString = "\(fullDateString)|\(productIDString)"
+                let encodedString = Data(base64Encoded: completeString)
+                
+                
+            }
+            
+            
+            
             
             // Purchase
             let purch = Purchase(product: gProduct.type, kit: self.selectedKit, receipt: transaction.payment.productIdentifier)
+            
             
             // Add the tokens
             let tokens = purch.getTokens()
@@ -293,7 +327,7 @@ class StoreController: ObservableObject, StoreManagerDelegate {
             
             
         }
-        
+//        transaction.payment.rece
         purchased.append(transaction)
         
         // Finish the successful transaction.

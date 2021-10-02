@@ -697,18 +697,6 @@ class Station:Codable {
     }
 }
 
-//struct EnergyReport:Codable {
-//
-//    var solarInput:Int
-//
-//    var batteriesBefore:Int
-//    var batteriesAfter:Int
-//
-//    /// The total power consumed in an Accounting cycle
-//    var powerConsumption:Int
-//}
-
-
 
 /**
  A Container with ingredients, tanks and people

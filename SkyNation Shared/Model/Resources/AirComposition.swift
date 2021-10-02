@@ -50,11 +50,11 @@ class AirComposition:Codable {
         
         // CO2
         let percentageCO2 = Double(co2) / Double(newVolume)
-        if  percentageCO2 > 0.05 {
+        if  percentageCO2 > 0.02 {
             currentQuality = currentQuality.decrease()
-            if percentageCO2 > 0.10 {
+            if percentageCO2 > 0.07 {
                 currentQuality = .Bad
-                if percentageCO2 > 0.2 {
+                if percentageCO2 > 0.15 {
                     return .Lethal
                 }
             }
@@ -62,9 +62,9 @@ class AirComposition:Codable {
         
         // Oxygen
         let percentageO2 = Double(o2) / Double(newVolume)
-        if percentageO2 < 0.2 {
+        if percentageO2 < 0.18 {
             currentQuality = currentQuality.decrease()
-            if percentageO2 < 0.1 {
+            if percentageO2 < 0.12 {
                 return .Lethal
             }
         }

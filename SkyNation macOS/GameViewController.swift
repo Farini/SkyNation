@@ -284,7 +284,7 @@ extension GameViewController: GameNavDelegate {
     }
     
     func didSelectMessages() {
-        let controller = NSHostingController(rootView: GameMessagesView())
+        let controller = NSHostingController(rootView: ChatBubbleView())
         controller.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(controller.view)
         controller.view.centerXAnchor.constraint(

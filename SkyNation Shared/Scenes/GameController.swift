@@ -235,7 +235,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             }
             
             // Camera Rotations
-            if sprite.name == "rotate.left" {
+            if sprite.name == "chevron.right.square" {
                 
                 self.moveToPreviousCamera()
                 
@@ -249,7 +249,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 return
             }
             
-            if sprite.name == "rotate.right" {
+            if sprite.name == "chevron.backward.square" {
                 
                 self.moveToNextCamera()
                 if let camControl = sprite.parent as? CamControlNode {

@@ -139,8 +139,6 @@ class SKNS {
         task.resume()
     }
     
-    
-    
     /// Update Player
     static func updatePlayer(completion:((PlayerUpdate?, Error?) -> ())?) {
         
@@ -389,6 +387,46 @@ class SKNS {
             }
         }
         task.resume()
+    }
+    
+    static func searchPlayerByName(name:String, completion:(([PlayerContent], Error?) -> ())?) {
+        
+        let url = URL(string: "\(baseAddress)/player/search/name/\(name)")!
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .secondsSince1970
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            
+            if let data = data {
+                
+                if let foundPlayers:[PlayerContent] = try? decoder.decode([PlayerContent].self, from: data) {
+                    
+                    print("Found \(foundPlayers.count) players.")
+                    DispatchQueue.main.async {
+                        completion?(foundPlayers, nil)
+                    }
+                    return
+                    
+                } else {
+                    print("Could not decode Fetched Player. Data: \(String(data:data, encoding:.utf8) ?? "n/a")")
+                    DispatchQueue.main.async {
+                        completion?([], error)
+                    }
+                    return
+                }
+            } else {
+                DispatchQueue.main.async {
+                    print("Did not get Data from Find Player Request. Error: \(error?.localizedDescription ?? "n/a")")
+                    completion?([], error)
+                }
+            }
+        }
+        task.resume()
+        
     }
     
     // MARK: - Tokens
