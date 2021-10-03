@@ -35,7 +35,7 @@ struct BuildingVehicleView: View {
                                 VStack(spacing:8) {
                                     Text("Engine \(engine.rawValue)").font(.headline)
                                         .padding([.top])
-                                    Text("Payload \(engine.payloadLimit)")
+                                    Text("Payload \(engine.payloadLimit)00 Kg")
                                     Image(systemName: engine.imageSName).font(.title)
                                     Text(engine.about)
                                         .foregroundColor(.gray)
@@ -47,6 +47,7 @@ struct BuildingVehicleView: View {
                                         .lineLimit(nil)
                                         .frame(maxWidth:130, maxHeight:20)
                                         .padding(4)
+                                    Text("⏱ \(engine.time.stringFromTimeInterval())")
                                     Button("Build") {
                                         print("Making some")
                                         builderController.newEngine(type: engine)

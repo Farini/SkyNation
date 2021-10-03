@@ -91,6 +91,9 @@
 		85351EA727078BFA00EEE04C /* GuildElectionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85351EA627078BFA00EEE04C /* GuildElectionsView.swift */; };
 		85351EA827078BFA00EEE04C /* GuildElectionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85351EA627078BFA00EEE04C /* GuildElectionsView.swift */; };
 		85351EA927078BFA00EEE04C /* GuildElectionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85351EA627078BFA00EEE04C /* GuildElectionsView.swift */; };
+		85351EAB2709253700EEE04C /* GuildCreatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85351EAA2709253700EEE04C /* GuildCreatorView.swift */; };
+		85351EAC2709253700EEE04C /* GuildCreatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85351EAA2709253700EEE04C /* GuildCreatorView.swift */; };
+		85351EAD2709253700EEE04C /* GuildCreatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85351EAA2709253700EEE04C /* GuildCreatorView.swift */; };
 		8536F2C0258D330300B509D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2BF258D330300B509D2 /* AppDelegate.swift */; };
 		8536F2C2258D330300B509D2 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F2C1258D330300B509D2 /* GameViewController.swift */; };
 		8536F2C5258D330300B509D2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8536F2C3258D330300B509D2 /* Main.storyboard */; };
@@ -665,6 +668,7 @@
 		85351E9B2707881C00EEE04C /* ChatBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubbleView.swift; sourceTree = "<group>"; };
 		85351EA127078B2400EEE04C /* ChatBubbleGuildTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubbleGuildTab.swift; sourceTree = "<group>"; };
 		85351EA627078BFA00EEE04C /* GuildElectionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildElectionsView.swift; sourceTree = "<group>"; };
+		85351EAA2709253700EEE04C /* GuildCreatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildCreatorView.swift; sourceTree = "<group>"; };
 		8536F2B5258D330200B509D2 /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
 		8536F2B6258D330200B509D2 /* Art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Art.scnassets; sourceTree = "<group>"; };
 		8536F2B7258D330300B509D2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -1346,6 +1350,7 @@
 				85A658F925E2251B008AA9BA /* PlayerEditView.swift */,
 				85487F1D26C5BB2000EBC070 /* SettingsServerTab.swift */,
 				85B34B0C26F7042B007178F5 /* GameSettingsTabView.swift */,
+				85351EAA2709253700EEE04C /* GuildCreatorView.swift */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -1889,6 +1894,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8504A51425C5D3B800739C58 /* CautionStripes.swift in Sources */,
+				85351EAB2709253700EEE04C /* GuildCreatorView.swift in Sources */,
 				85B34B1C26FA21FD007178F5 /* ContributionRoundView.swift in Sources */,
 				85E2C41826B9A960003315F2 /* GuildMakerView.swift in Sources */,
 				857DDEC725E4DCAD00E64752 /* Messages.swift in Sources */,
@@ -2160,6 +2166,7 @@
 				85D3BB2026AC84CA00B6AA36 /* CityHabView.swift in Sources */,
 				85351E9D2707881C00EEE04C /* ChatBubbleView.swift in Sources */,
 				85E2C42326BD8A6E003315F2 /* StoreManager.swift in Sources */,
+				85351EAC2709253700EEE04C /* GuildCreatorView.swift in Sources */,
 				8536F4B0258D49C900B509D2 /* TravelersView.swift in Sources */,
 				8504A51E25C6845200739C58 /* StationBuilder.swift in Sources */,
 				8536F3D3258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */,
@@ -2206,6 +2213,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8504A51625C5D3B800739C58 /* CautionStripes.swift in Sources */,
+				85351EAD2709253700EEE04C /* GuildCreatorView.swift in Sources */,
 				85B34B1E26FA21FD007178F5 /* ContributionRoundView.swift in Sources */,
 				85E2C41A26B9A960003315F2 /* GuildMakerView.swift in Sources */,
 				857DDEC925E4DCAD00E64752 /* Messages.swift in Sources */,

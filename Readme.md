@@ -125,8 +125,13 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Station LSS View - Fix Peripherals Scroll View
 - [X] Station LSS View - In-depth Testing after remake
 - [X] 9/30/2021 - Remake of LocalDatabase
+- [X] Settings - ServerTab - Leave Guild
+- [X] Settings - ServerTab - Create Guild
+- [X] Settings - ServerTab - Show status for guildless player, tell them they need to buy an .Entry ticket (purchasing any product)
+- [X] Settings - ServerTab - Missing Guilds
 
-- [ ] Station Garage View - Improve departure animation
+- [X] Station Garage View - Correct Building Time.
+- [X] Station Garage View - Improve departure animation
 - [ ] Station Garage View - Register Vehicle with Authentication (server side)
 - [ ] Station Garage View - Vehicles not updating correctly upon selection (travelling ones)
 
@@ -135,8 +140,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [ ] Accounting - Finish Accounting cycle (Station+Account.swift)
 
-- [ ] Settings - ServerTab - Leave Guild
-- [ ] Settings - ServerTab - Create Guild
+- [ ] Settings - ServerTab - Test Leave Guild
 
 - [X] City View - Outpost RSS Collection
 - [X] City View - Hab - Show population limit

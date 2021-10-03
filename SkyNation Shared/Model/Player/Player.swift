@@ -137,12 +137,6 @@ class SKNPlayer:Codable, Identifiable {
                 } catch {
                     print("Could not save Player: \(error.localizedDescription)")
                 }
-                
-//                let res = LocalDatabase.shared.savePlayer(player: self)
-//                print("Save player: \(res)")
-//                if res == false {
-//                    print("⚠️ COULD NOT SAVE PLAYER")
-//                }
             }
             return true
         } else {

@@ -268,9 +268,21 @@ struct GuildSummary:Codable {
     var color:String
 }
 
+struct GuildCreate:Codable {
+    
+    var name:String
+    var icon:GuildIcon
+    var color:GuildColor
+    var president:UUID
+    
+    var isOpen:Bool
+    var invites:[String]
+    
+}
+
 // MARK: - UI Variables stored on DB
 
-enum GuildIcon:String, Codable, CaseIterable {
+enum GuildIcon:String, Codable, CaseIterable, Equatable {
     
     case moon
     case eclipse

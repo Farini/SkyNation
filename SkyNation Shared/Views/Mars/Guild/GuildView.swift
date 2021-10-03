@@ -45,6 +45,80 @@ struct GuildSummaryView: View {
     }
 }
 
+struct EmptyGuildView: View {
+    
+    let shape = RoundedRectangle(cornerRadius: 16, style: .continuous)
+    
+    var body: some View {
+        
+        VStack {
+            
+            // Header (Icon + Name)
+            VStack {
+                Image(systemName: "questionmark")
+                    .font(.largeTitle)
+                    .foregroundColor(Color.gray)
+                    .padding(4)
+                
+                Text("[ No Guild ]")
+                    .font(.title2)
+                    .foregroundColor(.gray)
+                
+                Divider()
+            }
+            .frame(minWidth: 100, maxWidth: 120, minHeight: 72, maxHeight: 82, alignment: .center)
+            .padding(.top, 8)
+            
+                      // Page
+             VStack {
+                VStack {
+                        Text("Citizens").font(.title2).foregroundColor(.gray)
+                            .foregroundColor(Color.yellow)
+                            .font(.title3)
+                            .padding(.bottom, 4)
+                        Text("Outposts").font(.title2).foregroundColor(.gray)
+                            .foregroundColor(Color.white)
+                            .font(.title3)
+                            .padding(.bottom, 4)
+                        Text("Cities").font(.title2).foregroundColor(.gray)
+                            .foregroundColor(Color.yellow)
+                            .font(.title3)
+                            .padding(.bottom, 4)
+                }
+                .frame(minWidth: 170, maxWidth: 200)
+                    
+                 VStack {
+                     Text("∅").font(.title)
+                     Text("Select a Guild to join")
+                     Text("Or Create a new one")
+                 }
+                 .font(.system(size: 12, weight: .bold, design: .monospaced))
+                 .foregroundColor(.blue)
+                
+                
+                Spacer()
+                Divider()
+                    
+                 Text("No Guild selected.").foregroundColor(.gray)
+                     .padding(6)
+            }
+            .frame(width: 220, height:300, alignment: .center)
+            .clipShape(shape)
+            .accessibilityElement(children: .contain)
+        }
+        .background(GameColors.transBlack)
+        .cornerRadius(16)
+        .overlay(
+            shape
+                .inset(by: 0.5)
+                .stroke(Color.white.opacity(0.5), lineWidth: 2)
+        )
+        .contentShape(shape)
+        
+        
+    }
+}
+
 struct GuildView: View {
     
     @ObservedObject var controller:GameSettingsController
@@ -279,6 +353,8 @@ struct GuildView_Previews: PreviewProvider {
                 .aspectRatio(0.75, contentMode: .fit)
                 .frame(width: 500, height: 400)
                 .previewDisplayName("Large Descriptive")
+            
+            EmptyGuildView()
             
 //            GuildView(guild: rGuild, style: .largeSummary)
 //                .aspectRatio(0.75, contentMode: .fit)

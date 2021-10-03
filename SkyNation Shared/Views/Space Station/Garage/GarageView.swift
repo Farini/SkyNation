@@ -247,6 +247,7 @@ struct GarageView: View {
                                 Text("Building Vehicle")
                                     .font(.title)
                                     .padding()
+                                Text(sev.name)
                                 Text("Engine: \(sev.engine.rawValue) | Limit: \(sev.engine.payloadLimit * 100)Kg.")
                                 
                                 HStack {
@@ -255,23 +256,10 @@ struct GarageView: View {
                                 }
                                 .font(.headline)
                                 
-//                                Text("Simulation: \(sev.simulation) hrs")
                                 Text("Destination: \(sev.status.rawValue)")
                                 Text("Travel Starts: \(GameFormatters.dateFormatter.string(from: sev.dateTravelStarts ?? Date()))")
                                 Text("V Engine: \(sev.engine.rawValue)")
                                 
-                                ForEach(sev.tanks) { tank in
-                                    Text("Tank: \(tank.type.rawValue)")
-                                        .foregroundColor(.blue)
-                                }
-                                ForEach(sev.batteries) { battery in
-                                    Text("Battery: \(battery.current) of \(battery.capacity)")
-                                        .foregroundColor(.red)
-                                }
-//                                ForEach(sev.solar) { panel in
-//                                    Text("Solar Panel of size: \(panel.size)")
-//                                        .foregroundColor(.red)
-//                                }
                             }
                             
                             
@@ -305,16 +293,6 @@ struct GarageView: View {
                                 }
                                 .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                                 
-//                                Button("Simulate") {
-//                                    print("Go Simulate")
-//                                }
-//                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                                
-//                                Button("Inventory") {
-//                                    print("Go to Inventory")
-//                                    controller.setupInventory(vehicle: sev)
-//                                }
-//                                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                             }
                             .padding()
                             
@@ -334,10 +312,11 @@ struct GarageView: View {
                     ScrollView {
                         VStack {
                             Group {
-                                Text("Ready Vehicle")
+                                Text(sev.name)
                                     .font(.title)
                                     .foregroundColor(.blue)
                                     .padding()
+                                
                                 Text("Engine: \(sev.engine.rawValue)")
                                 
                                 HStack {
@@ -563,6 +542,7 @@ struct TravellingVehicleView: View {
                         Text("Time: \(GameFormatters.dateFormatter.string(from: vehicle.dateTravelStarts ?? Date()))")
                         Text("Arrive: \(GameFormatters.dateFormatter.string(from: vehicle.arriveDate()))")
 
+                        // Activity
                         GameActivityView(vehicle: vehicle)
                         
                         Divider()

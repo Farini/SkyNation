@@ -27,24 +27,28 @@ enum GameSettingsTab: String, CaseIterable {
 enum GuildJoinState {
     
     /// Loading data from server
-    case loading
-    
-    /// Player has no Guild
-    case noGuild
+    case loading    // OPT: none
     
     /// Player does NOT have an .Entry token
-    case noEntry
+    case noEntry    // OPT: none
     
-    /// Player been kicked
-    case kickedOut
-    
-    case choosing // Player choosing Guild
+    /// Player has no GuildID
+    case noGuild    // OPT: Browse, Create
     
     /// Joined
-    case joined(guild:GuildFullContent)
-    case leaving
+    case joined(guild:GuildFullContent) // OPT: Leave Guild
     
-    case error(error:Error)
+    /// Player been kicked
+    case kickedOut  // OPT: Browse, Create
+    
+    /// Selecting which Guild to Join
+    case choosing   // OPT: Join, Create
+    
+    case leaving    // OPT: none
+    
+    case creating
+    
+    case error(error:Error) // OPT: try again?
     
     var message:String {
         switch self {
@@ -55,6 +59,7 @@ enum GuildJoinState {
             case .kickedOut: return "Oh no! It seems you were kicked out, or Guild does not exist anymore."
             case .noEntry: return "You need an Entry Token to join a Guild"
             case .leaving: return "Leaving Guild"
+            case .creating: return "Creating Guild"
             case .error(let error): return "Error.: \(error.localizedDescription)"
         }
     }
@@ -216,8 +221,6 @@ class GameSettingsController:ObservableObject {
         self.viewState = .EditingPlayer
     }
     
-    // MARK: - Server Tab + Online
-    
     /// Called when Player selects a different tab.
     func didSelectTab(newTab:GameSettingsTab) {
         print("Did select tab !!!")
@@ -234,6 +237,8 @@ class GameSettingsController:ObservableObject {
                 print("Back to Loading \(self.viewState)")
         }
     }
+    
+    // MARK: - Guild Tab + Online
     
     /// Entering Server Tab - Fetch Player's Guild, (or list), and Player status
     func enterServerTab() {
@@ -258,6 +263,9 @@ class GameSettingsController:ObservableObject {
             self.guildJoinState = .noEntry
             return
         }
+        
+        // Player has entry
+        
         
         // Server Tab stuff
         if let gid = player.guildID {
@@ -342,29 +350,60 @@ class GameSettingsController:ObservableObject {
         }
     }
     
-    func createGuild() {
+    func startCreatingGuild() {
+        self.guildJoinState = .creating
+    }
+    
+    func didCreateGuild(guildCreate:GuildCreate) {
         
-        print("Needs implementation")
+        // Create Guild. If server doesn't respond,
+        // we need to give player back their token
+        SKNS.createGuild(creator: guildCreate) { newFullGuild, error in
+            if let newGuild = newFullGuild {
+                DispatchQueue.main.async {
+                    // Player created guild!
+                    self.player.guildID = newGuild.id
+                    self.guildJoinState = .joined(guild: newGuild)
+                    // Save Player
+                    do {
+                        try LocalDatabase.shared.savePlayer(self.player)
+                    } catch {
+                        print("Could not save Player \(error.localizedDescription)")
+                    }
+                }
+            } else {
+                print("Could not create guild. Returning token?")
+                DispatchQueue.main.async {
+                    self.player.wallet.tokens.append(GameToken(beginner: UUID()))
+                    self.guildJoinState = .choosing
+                    self.fetchGuilds()
+                }
+            }
+        }
+    }
+    
+    func leaveGuild() {
         
-        // FIXME: - Needs Implementation
+        guard let oldGuildID = self.player.guildID else {
+            print("No guild to leave")
+            return
+        }
+        print("Player leaving guild ID:\(oldGuildID)")
         
-//        guard let user = user else {
-//            print("No user")
-//            return
-//        }
-//
-//        let decoder = JSONDecoder()
-//        decoder.dateDecodingStrategy = .secondsSince1970
-//
-//        SKNS.createGuild(localPlayer: user, guildName: "Test Guild") { (data, error) in
-//            if let data = data, let guild = try? decoder.decode(Guild.self, from: data) {
-//                print("We got a Guild: \(guild.name)")
-//                self.guild = guild
-//            } else {
-//                print("Failed creating guild. Reason: \(error?.localizedDescription ?? "n/a")")
-//            }
-//        }
-        
+        SKNS.leaveGuild { playerContent, error in
+            if let playerContent = playerContent {
+                print("New Player content after leaving: \(playerContent)")
+                DispatchQueue.main.async {
+                    self.player.guildID = nil
+                    do {
+                        try LocalDatabase.shared.savePlayer(self.player)
+                        self.guildJoinState = .noGuild
+                    } catch {
+                        print("Error: \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
     }
     
     /// Gets one Guild's Details to display for user (Choosing Guild)
@@ -384,6 +423,7 @@ class GameSettingsController:ObservableObject {
                     }
                 } else {
                     print("‼️ Could not get full Guild")
+                    
                 }
             }
         }

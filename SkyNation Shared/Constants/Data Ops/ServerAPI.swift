@@ -648,6 +648,121 @@ class SKNS {
         task.resume()
     }
     
+    static func createGuild(creator:GuildCreate, completion:((GuildFullContent?, Error?) -> ())?) {
+        // guilds/player/create
+        // Build Request
+        let address = "\(baseAddress)/guilds/player/create"
+        
+        guard let url = URL(string: address) else { return }
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.POST.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        encoder.outputFormatting = .prettyPrinted
+        
+        // Body with `PlayerUpdate`
+        if let data = try? encoder.encode(creator) {
+            print("\n\nAdding Data")
+            request.httpBody = data
+            let dataString = String(data:data, encoding: .utf8) ?? "n/a"
+            print("DS: \(dataString)")
+        }
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                DispatchQueue.main.async {
+                    print("Data returning")
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .secondsSince1970
+                    do {
+                        let guild = try decoder.decode(GuildFullContent.self, from: data)
+                        completion?(guild, nil)
+                        return
+                    }catch{
+                        
+                        if let gameError = try? decoder.decode(GameError.self, from: data) {
+                            print("Error decoding.: \(gameError.reason)")
+                            completion?(nil, error)
+                            
+                        } else {
+                            print("Error - Something else has happened")
+                            completion?(nil, error)
+                        }
+                    }
+                }
+                
+            } else {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    static func leaveGuild(completion:((PlayerContent?, Error?) -> ())?) {
+        
+        let player = LocalDatabase.shared.player
+        let cityID:String = player.cityID?.uuidString ?? ""
+        guard let guildID = player.guildID else {
+            print("No Guild ID to leave")
+            completion?(nil, nil)
+            return
+        }
+        
+        let url = URL(string: "\(baseAddress)/guilds/player/leave/\(guildID.uuidString)/\(cityID)")!
+        
+        print("⚠️ Player wants to leave a guild")
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        // request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
+    
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .secondsSince1970
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                DispatchQueue.main.async {
+                    
+                    do {
+                        let newPlayerContent = try decoder.decode(PlayerContent.self, from: data)
+                        let newGuildID = newPlayerContent.guildID
+                        print("New Guild ID after left guild: \(String(describing: newGuildID?.debugDescription))")
+                        player.guildID = nil
+                        completion?(newPlayerContent, nil)
+                        
+                        return
+                    }catch{
+                        
+                        if let gameError = try? decoder.decode(GameError.self, from: data) {
+                            print("Error decoding.: \(gameError.reason)")
+                            completion?(nil, error)
+                            
+                        } else {
+                            print("Error - Something else has happened")
+                            completion?(nil, error)
+                        }
+                    }
+                } // End Dispatch
+                
+            } else {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+    }
+    
     // Chat
     
     static func readChat(guildID:UUID, completion:(([ChatMessage], Error?) -> ())?) {
@@ -1283,7 +1398,7 @@ class SKNS {
             return
         }
         
-        let url = URL(string: "\(baseAddress)/register_vehicle")!
+        let url = URL(string: "\(baseAddress)/guilds/travelling/register")!
         let session = URLSession.shared
         var request = URLRequest(url: url)
         

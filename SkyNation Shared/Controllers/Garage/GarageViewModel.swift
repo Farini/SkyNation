@@ -85,6 +85,7 @@ class GarageViewModel:ObservableObject {
                 }
             }
         }
+        
         buildingVehicles = tempBuilding
         builtVehicles = tempBuilt
         
@@ -550,7 +551,7 @@ class GarageViewModel:ObservableObject {
         print("Registering Vehicle in Server")
         
 //        let user = SKNUserPost(player: player)
-        var allVehicles = LocalDatabase.shared.vehicles
+//        var allVehicles = LocalDatabase.shared.vehicles
         SKNS.registerSpace(vehicle: vehicle) { (ticket, error) in
             
             if let ticket = ticket {
@@ -631,10 +632,13 @@ class LaunchSceneController:ObservableObject {
         node.move()
         
         if let camera = scene.rootNode.childNode(withName: "Camera", recursively: false) {
+            
+            // Look At
             let constraint = SCNLookAtConstraint(target:vehicleNode)
             constraint.isGimbalLockEnabled = true
             constraint.influenceFactor = 0.1
             
+            // Follow
             let follow = SCNDistanceConstraint(target: vehicleNode)
             follow.minimumDistance = 20
             follow.maximumDistance = 50
@@ -643,6 +647,14 @@ class LaunchSceneController:ObservableObject {
             SCNTransaction.animationDuration = 3.0
             camera.constraints = [constraint, follow]
             SCNTransaction.commit()
+            
+            let waiter = SCNAction.wait(duration: 5)
+            let move = SCNAction.move(by: SCNVector3(100, 0, 0), duration: 10)
+            // let wait = SCNAction.wait(duration: 5)
+            let group = SCNAction.sequence([waiter, move])
+            camera.runAction(group) {
+                print("Finished camera move")
+            }
         }
         
         

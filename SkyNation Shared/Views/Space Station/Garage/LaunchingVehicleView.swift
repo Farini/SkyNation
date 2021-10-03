@@ -77,9 +77,7 @@ struct LaunchingVehicleView: View {
                 
                 Spacer()
                 
-                ScrollView(.vertical, showsIndicators: true) {
-                    VehicleTrunkView(vehicle: launchController.vehicle)
-                }
+                VehicleTrunkView(vehicle: launchController.vehicle)
             }
             
             Divider()
@@ -110,10 +108,6 @@ struct LaunchingVehicleView: View {
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
                 
-//                Button("Test") {
-//                    print("Test")
-//                }
-//                .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
             }
         }
         .padding()
@@ -127,7 +121,6 @@ struct PostLaunchVehicleView: View {
     let renderer = LaunchSceneRendererMan()
     
     // Shows the Vehicle launching, and later its status
-//    @State var vehicle:SpaceVehicle
     
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {

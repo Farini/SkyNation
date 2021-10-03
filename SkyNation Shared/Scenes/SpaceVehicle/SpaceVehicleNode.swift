@@ -24,21 +24,26 @@ class SpaceVehicleNode:SCNNode {
         guard let booster = parentScene.rootNode.childNode(withName: "RocketBooster", recursively: false) else { fatalError() }
         guard let satellite = parentScene.rootNode.childNode(withName: "Satellite", recursively: false),
               let edlModule = parentScene.rootNode.childNode(withName: "EDLModule", recursively: false),
-              let crewBody = parentScene.rootNode.childNode(withName: "CrewBody", recursively: false) else {
+              let crewBody = parentScene.rootNode.childNode(withName: "CrewBody", recursively: false),
+              let emitter = booster.childNode(withName: "Emitter", recursively: true) else {
             fatalError()
         }
         
         booster.isHidden = false
         self.rocketBooster = booster
         
-        if let emitter = booster.childNode(withName: "Emitter", recursively: true) {
-            emitter.isHidden = false
-            print("Emitter is here _+_+_+_+_+_+_+_+_+_+_+_+_+")
-            print("Paused: \(emitter.isPaused)")
-            print("Emitter Children: \(emitter.particleSystems?.count ?? 0)")
-            print("Emitter: \(emitter.debugDescription)")
-            emitter.particleSystems?.first!.emissionDuration = 2
-        }
+        let currentBirthrate = emitter.particleSystems?.first?.birthRate
+        
+        emitter.isHidden = false
+        emitter.particleSystems?.first?.birthRate = 0
+        
+        
+        print("Emitter is here _+_+_+_+_+_+_+_+_+_+_+_+_+")
+        print("Paused: \(emitter.isPaused)")
+        print("Emitter Children: \(emitter.particleSystems?.count ?? 0)")
+        print("Emitter: \(emitter.debugDescription)")
+        emitter.particleSystems?.first!.emissionDuration = 2
+        //        }
         
         switch vehicle.engine {
             case .Hex6:
@@ -70,6 +75,12 @@ class SpaceVehicleNode:SCNNode {
         self.addChildNode(satellite)
         self.addChildNode(edlModule)
         self.addChildNode(crewBody)
+        
+        let waitEmit = SCNAction.wait(duration: 2.9)
+        emitter.runAction(waitEmit) {
+            // ignite
+            emitter.particleSystems?.first?.birthRate = currentBirthrate ?? 100.0
+        }
         
     }
     

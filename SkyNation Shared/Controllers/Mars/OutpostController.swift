@@ -70,8 +70,6 @@ class OutpostController:ObservableObject {
     @Published var deliveryError:String = ""
     @Published var displayError:Bool = false
     
-    
-    
     // MARK: - Methods
     
     /// Change this to generate random data - it needs to stay here, as opposed to GameSettings

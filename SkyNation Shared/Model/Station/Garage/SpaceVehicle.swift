@@ -147,7 +147,7 @@ class SpaceVehicle:Codable, Identifiable, Equatable {
         var time:Double = 0
         time += engine.time
         self.status = .Creating
-        self.dateTravelStarts = Date().addingTimeInterval(TimeInterval(time))
+        self.dateTravelStarts = Date() //.addingTimeInterval(TimeInterval(time))
         self.travelTime = Double(time)
     }
     
