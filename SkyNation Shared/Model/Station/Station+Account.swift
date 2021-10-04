@@ -105,9 +105,8 @@ extension Station {
         // Solar panels
         let powerGeneration = truss.powerGeneration()
         let startingEnergy = truss.batteries.compactMap({ $0.current }).reduce(0, +)
-        // let energySpill:Int = powerGeneration + startingEnergy //truss.refillBatteries(amount: powerGeneration)
         var totalEnergy:Int = powerGeneration + startingEnergy
-        //        print("Energy Spilling (extra): \(energySpill)")
+        // print("Energy Spilling (extra): \(energySpill)")
         
         // Water + Air
         var water:Int = truss.getAvailableWater()

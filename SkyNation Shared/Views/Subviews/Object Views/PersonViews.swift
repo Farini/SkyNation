@@ -258,9 +258,7 @@ struct PersonDetail:View {
                                 if result == true {
                                     let theDate = activity.dateEnds.addingTimeInterval(-3600)
                                     activity.dateEnds = theDate
-                                    if !person.isBusy() {
-                                        person.activity = nil
-                                    }
+                                    person.clearActivity()
                                     controller.save()
                                     controller.didSelect(person: person)
                                 }
@@ -340,7 +338,16 @@ struct PersonDetail:View {
                 Button("Study") {
                     print("\(person.name) Try Studying...")
                     
-                    let randomSubject = Skills.allCases.randomElement() ?? Skills.Handy
+                    var randomSubject = Skills.allCases.randomElement() ?? Skills.Handy
+                    
+                    if person.skills.count > 3 {
+                        randomSubject = person.skills.filter({$0.skill != .Handy }).randomElement()!.skill
+                    } else if person.skills.count > 2 {
+                        if Bool.random() {
+                            randomSubject = person.skills.filter({$0.skill != .Handy }).randomElement()!.skill
+                        }
+                    }
+                    
                     controller.study(person: person, subject: randomSubject)
                 }
                 .disabled(person.isBusy())

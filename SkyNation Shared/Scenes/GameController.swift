@@ -608,6 +608,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         return enter
     }
     
+    /// Loads the scene that is not being displayed, and presents them
     func switchScene() {
         switch gameScene {
             
@@ -703,6 +704,23 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 }
                 print("Station Reloaded.: \(station.accountingDate)")
                 
+                let newStation = LocalDatabase.shared.station
+                let newBuilder = StationBuilder(station: newStation)
+                
+                newBuilder.prepareScene(station: newStation) { stationScene in
+                    
+                    if let camera = stationScene.rootNode.childNode(withName: "Camera", recursively: false) as? GameCamera {
+                        self.gameOverlay.didChangeScene(camNode: camera)
+                        self.sceneRenderer.present(stationScene, with: .doorsOpenVertical(withDuration: 1.0), incomingPointOfView: camera.camNode) {
+                            self.scene = stationScene
+                            self.gameScene = .SpaceStation
+                            self.cameraNode = camera
+                            // Tell SceneDirector that scene is loaded
+                            SceneDirector.shared.controllerDidLoadScene(controller: self)
+                        }
+                    }
+                }
+                /*
                 guard let stationScene = LocalDatabase.shared.stationBuilder.scene else { return }
                 
                 if let camera = stationScene.rootNode.childNode(withName: "Camera", recursively: false) as? GameCamera {
@@ -747,7 +765,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 
                 // Tell SceneDirector that scene is loaded
                 SceneDirector.shared.controllerDidLoadScene(controller: self)
-                
+                */
                 
         }
     }
@@ -810,6 +828,33 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
         self.modules = station?.modules ?? []
         
+        self.prepareNews()
+        
+        // Tell SceneDirector that scene is loaded
+        SceneDirector.shared.controllerDidLoadScene(controller: self)
+        
+        sceneRenderer.delegate = self
+        sceneRenderer.scene = scene
+        
+        playMusic()
+        
+        // Fetch Mars Data?
+        _ = MarsBuilder.shared
+    }
+    
+    /// Reloads the Station Scene with new tech items
+    func loadLastBuildItem() {
+        print("Loading last build item")
+        let builder = LocalDatabase.shared.reloadBuilder(newStation: self.station)
+        let lastTech = builder.buildList.last
+        if let theNode = lastTech?.loadFromScene() {
+            print("Found node to build last tech item: \(theNode.name ?? "n/a")")
+            scene.rootNode.addChildNode(theNode)
+        }
+    }
+    
+    /// Prepares Overlay's news and shows them one by one, every few seconds
+    func prepareNews() {
         // NEWS
         var hasChanges:Bool = false
         // Check Activities
@@ -870,7 +915,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 newsDelay += 5.0
             }
         }
-        
         // Save if needed
         if hasChanges {
             if let station = self.station {
@@ -882,27 +926,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     print("‼️ Could not save station.: \(error.localizedDescription)")
                 }
             }
-        }
-        
-        // Tell SceneDirector that scene is loaded
-        SceneDirector.shared.controllerDidLoadScene(controller: self)
-        
-        sceneRenderer.delegate = self
-        sceneRenderer.scene = scene
-        
-        playMusic()
-        
-        // Fetch Mars Data?
-        _ = MarsBuilder.shared
-    }
-    
-    func loadLastBuildItem() {
-        print("Loading last build item")
-        let builder = LocalDatabase.shared.reloadBuilder(newStation: self.station)
-        let lastTech = builder.buildList.last
-        if let theNode = lastTech?.loadFromScene() {
-            print("Found node to build last tech item: \(theNode.name ?? "n/a")")
-            scene.rootNode.addChildNode(theNode)
         }
     }
     

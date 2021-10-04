@@ -111,75 +111,58 @@ The contributors to these projects shall have a **fair** share of the game, and 
 ## 📝 Doing - Present
 If looking for things to do and don't know where to start, go to *Find Navigator* and search for **FIXME**, or **TODO**
 
-9/11/2021 - ?
-- [X] Station Garage View - Update Overlay with Travelling Vehicles
-- [X] Added People and Biobox to Vehicle's Trunk View
-- [X] Station Garage View - View size too small (on launch) - use scrollview
-- [X] Station Garage View - VehicleTrun View - improvements
-- [X] Station Garage View - EDL - Test all resources going into SpaceVehicle
-- [X] Space Vehicle - Fix Optionals (remove)
-- [X] Space Vehicle - Remove irrelevant properties
-- [X] Station LSS View - (Peripheral Selection) - not updating
-- [X] Station LSS View - Total Remake
-- [X] Basic Views - Player vs Ranking (Keyval pair view)
-- [X] Station LSS View - Fix Peripherals Scroll View
-- [X] Station LSS View - In-depth Testing after remake
-- [X] 9/30/2021 - Remake of LocalDatabase
-- [X] Settings - ServerTab - Leave Guild
-- [X] Settings - ServerTab - Create Guild
-- [X] Settings - ServerTab - Show status for guildless player, tell them they need to buy an .Entry ticket (purchasing any product)
-- [X] Settings - ServerTab - Missing Guilds
-
-- [X] Station Garage View - Correct Building Time.
-- [X] Station Garage View - Improve departure animation
-- [ ] Station Garage View - Register Vehicle with Authentication (server side)
-- [ ] Station Garage View - Vehicles not updating correctly upon selection (travelling ones)
-
-- [ ] Overlays - GameCamera - Fix Awkward cam transitions
-- [X] Overlays - CamControl - Fix Buttons & reverse actions (forward = backward)
-
-- [ ] Accounting - Finish Accounting cycle (Station+Account.swift)
-
-- [ ] Settings - ServerTab - Test Leave Guild
-
+10/03/2021
+- [X] Game Shopping Testable
+- [X] Game Shopping Player not receiving anything
+- [X] Station - HabModule - End of study with Tokens result in Person NOT learning!
 - [X] City View - Outpost RSS Collection
 - [X] City View - Hab - Show population limit
 - [X] City View - Bio View
 - [X] City View - Person Details
+- [X] Outpost - supply method
+- [X] Outpost View - Contribution Request
+- [X] Outpost View - Contribution Ranking
+- [X] Chat Bubble (Reorganize)
+- [X] Chat Bubble - Election
+- [X] Chat Bubble - Vote in an Election
+- [X] Chat Bubble - Search Icon - View Other Players (Search by name) + Request
+- [X] Chat Bubble - Test Search Player
+- [X] Model - Election
+- [X] Model - City - Energy Collection
+- [X] Model - Guild - Invite Request
+- [X] Model - Outpost rss Collecting
+- [X] Model - Accounting Improve Human (PHI - Person Happiness Index)
+
+- [X] Accounting - Implement (Station+Account.swift)
+- [ ] Accounting - Finish Accounting cycle (Station+Account.swift)
+- [ ] Accounting - Fix Human Report Lines w/ weird emojis
+
+- [X] Overlays - CamControl - Fix Buttons & reverse actions (forward = backward)
+- [ ] Overlays - GameCamera - Fix Awkward cam transitions
+- [ ] Overlays - SpaceVehicle - Progress is wrong
+
+- [ ] Settings - ServerTab - Test Leave Guild
+
 - [ ] City View - Bio View Improvements
 - [ ] City View - Test Tech Tree
 - [ ] City View - Test Lab Recipes
 - [ ] City View - Lab Recipes - DetailView(making recipe)
 - [ ] City View - Review Outpost RSS Collection
-### Discussion: 2 Methods
-1. LocalCityViewState - A Global state of LocalCityView
-2. Individual View States - (Hab, Lab, Bio, etc.)
-Whichever one you pick, at least the controller now has an unwrapped access to CityData
-And the funtions are a little more clear cut.
+- [ ] City Peripherals (AirTrap, AlloyMaker)
 
-- [X] Outpost - supply method
-- [X] Outpost View - Contribution Request
-- [X] Outpost View - Contribution Ranking
 - [ ] Outpost - SKNS request for `Outpost` upgrades
 - [ ] Outpost - fix bug with contribution - SKNS can't decode OutpostData
 - [ ] Outpost View - non .contributing states views
+- [ ] Outpost - Posdex remake with Hotel, Arena, Observatory, 2x Biospheres, 4x Power Plants, Etc.
 
-- [X] Chat Bubble (Reorganize)
-- [X] Chat Bubble - Election
-- [X] Chat Bubble - Vote in an Election
-- [X] Chat Bubble - Search Icon - View Other Players (Search by name) + Request
-- [ ] Chat Bubble - Test Search Player
+- [ ] Chat Bubble - Fix Freebie
+- [ ] Chat Bubble - Post PlayerID in Chat?
+- [ ] Chat Bubble - Send free `.Entry` token.
 - [ ] Chat Bubble - Test Election Results
 - [ ] GameMessagesGuildTab - President functions (Invite, Kickout, Modify Guild)
 
-
-- [X] Model - Election
-- [X] Model - City - Energy Collection
-- [X] Model - Guild - Invite Request
-- [X] Model - Outpost rss Collecting
 - [ ] Model - Mars Accounting improvements
 - [ ] Model - Fix accounting - too easy
-- [ ] Model - Accounting Improve Human (PHI - Person Happiness Index)
 - [ ] Model - Fix cost of things (Outpost level ups)
 - [ ] Model - Road Updates
 - [ ] Model - E-Vehicle/Bot
@@ -191,18 +174,19 @@ And the funtions are a little more clear cut.
 - [ ] Blender - Biosphere -> Add trees + water
 - [ ] Blender - Observatory - Make UVs
 
-- [ ] Mars Scene - Go back to Space Station
+- [X] Mars Scene - Go back to Space Station
 - [ ] Mars Scene - Animations - SpaceVehicle arriving
 - [ ] Mars Scene - Garage - Vehicle Validation (when arriving (orbit))
 
-- [ ] Station Scene - Breakdown Scene in Main Components - Nodes, Modules, Lights, Camera, etc.
+- [X] Station Scene - SceneBuilder Improvements (to reload scene back from Mars)
 - [ ] Station Scene - Background HDRI image
 - [ ] Station Scene - New Modules not 'clickable' after Tech research. 
+
+
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing) -> Look under Dektop -> Useful Assets -> Sounds
 - [ ] Sound - 2 more music (better ones)
 
-- [ ] Basic Views - SelectionIndicator -> ● + ○
 - [ ] Basic Views - Error messages (red)
 - [ ] Basic Views - Alert messages (orange)
 

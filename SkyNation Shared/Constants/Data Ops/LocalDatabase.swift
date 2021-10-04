@@ -420,6 +420,14 @@ class LocalDatabase {
             self.gameSettings = newGameSettings
         }
         
+        // City Data
+        do {
+            let cityData = try LocalDatabase.loadCity()
+            self.cityData = cityData
+        } catch {
+            print("Could not load CityData")
+        }
+        
         // Server Database
         do {
             let server = try LocalDatabase.loadServerData()

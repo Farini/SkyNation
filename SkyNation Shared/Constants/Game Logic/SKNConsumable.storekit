@@ -5,7 +5,7 @@
   ],
   "products" : [
     {
-      "displayPrice" : "0.99",
+      "displayPrice" : "4.99",
       "familyShareable" : false,
       "internalID" : "868C7CDC",
       "localizations" : [
@@ -20,7 +20,7 @@
       "type" : "Consumable"
     },
     {
-      "displayPrice" : "0.99",
+      "displayPrice" : "9.99",
       "familyShareable" : false,
       "internalID" : "24ED23E8",
       "localizations" : [
@@ -30,7 +30,7 @@
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.skynation.big",
+      "productID" : "com.skynation.ten",
       "referenceName" : "Big",
       "type" : "Consumable"
     },

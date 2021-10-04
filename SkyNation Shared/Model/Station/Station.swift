@@ -82,7 +82,7 @@ class Station:Codable {
         let response:String = "📊 Accounting Recursive: \(recursive), loops:\(loops), date:\(GameFormatters.dateFormatter.string(from: nextDate))"
         
         while loops > 0 {
-            let followUp = accountCycle(starting: nextDate)
+            let followUp = self.runAccountingCycle(nextDate) //accountCycle(starting: nextDate)
             nextDate = followUp
             self.accountingDate = nextDate
             loops -= 1
@@ -91,6 +91,7 @@ class Station:Codable {
         completion([response])
     }
     
+    /*
     /// Main Accounting function
     private func accountCycle(starting:Date) -> Date {
         
@@ -441,12 +442,14 @@ class Station:Codable {
         return starting.addingTimeInterval(3600)
     }
     
+    
     /// When Accounting sees a person with health physycal < 1, this will kill them
     private func prepareDeath(of person:Person) {
         GameMessageBoard.shared.newAchievement(type: .experience, message: "💀 \(person.name) has passed away!")
         let hab = habModules.filter({ $0.inhabitants.contains(person) }).first
         hab?.inhabitants.removeAll(where: { $0.id == person.id })
     }
+    */
     
     /// Checks air for required vs supply
 //    func checkRequiredAir() -> Int {

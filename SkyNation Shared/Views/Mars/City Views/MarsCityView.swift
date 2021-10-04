@@ -98,6 +98,7 @@ struct MarsCityView: View {
                 case .mine(_):
                     
 //                    MyCityView(controller: controller, cityData: cityData, cityTab: $cityMenuItem)
+                    
                     LocalCityView()
                     
                 case .foreign(let pid):

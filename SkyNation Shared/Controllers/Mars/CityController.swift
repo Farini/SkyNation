@@ -131,39 +131,35 @@ class CityController:ObservableObject, BioController {
                     isMyCity = true
                     
                     // Load City (New Method)
-                    if let cityData:CityData = MarsBuilder.shared.myCityData {
+                    if let localCity:CityData = LocalDatabase.shared.cityData {
                         
-                        if let localCity:CityData = LocalDatabase.shared.cityData {
-                            
-                            // Update main City Data Object
-                            self.cityData = localCity
-                            
-                            // Update Staff
-                            self.availableStaff = localCity.inhabitants.filter({ $0.isBusy() == false })
-                            self.unlockedTech = CityTechTree().unlockedTechAfter(doneTech: localCity.tech)
-                            
-                        } else {
-                            
-                            print("Try to save city")
-                            
-//                            do {
-//                                try LocalDatabase.shared.saveCity(cityData)
-//                            } catch {
-//                                print("⚠️ ERROR loading city data")
-//                            }
-                        }
+                        print("Local City Data in")
                         
-                        self.cityData = cityData
-                        self.viewState = .mine(cityData: cityData)
-                        self.updateVehiclesLists()
+                        // Update main City Data Object
+                        self.cityData = localCity
+                        self.viewState = .mine(cityData: localCity)
                         
+                        // Update Staff
+                        self.availableStaff = localCity.inhabitants.filter({ $0.isBusy() == false })
+                        self.unlockedTech = CityTechTree().unlockedTechAfter(doneTech: localCity.tech)
+                        
+                    } else {
+                        
+                        print("Try to save city")
+                        
+                        //                            do {
+                        //                                try LocalDatabase.shared.saveCity(cityData)
+                        //                            } catch {
+                        //                                print("⚠️ ERROR loading city data")
+                        //                            }
                     }
-                } else {
                     
-                    // Other City - Belongs to someone else
-                    isMyCity = false
-                    self.viewState = .foreign(pid:ownerID)
-                    // Get Player card from GuildFullContent, in 
+                    print("Setting CityData")
+                    
+                    //                        self.cityData = cityData
+                    //                        self.viewState = .mine(cityData: cityData)
+                    self.updateVehiclesLists()
+                    
                 }
             }
         } else {

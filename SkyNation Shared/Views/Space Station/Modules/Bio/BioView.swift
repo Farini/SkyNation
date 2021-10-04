@@ -258,7 +258,7 @@ struct BioView: View {
             }
             
         }
-        .frame(minWidth: 600, idealWidth: 700, maxWidth: 800, alignment: .top)
+        .frame(minWidth: 600, idealWidth: 700, maxWidth: 800, minHeight:400, maxHeight:700, alignment: .top)
     }
 }
 

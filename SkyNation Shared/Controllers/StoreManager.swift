@@ -86,7 +86,6 @@ class StoreController: ObservableObject, StoreManagerDelegate {
     
     init() {
         self.storeOperator = StoreOperator(delegate: self)
-        //        self.productRequest = SKProductsRequest
         self.fetchProducts(matchingIdentifiers: productIdentifiers)
     }
     
@@ -124,8 +123,7 @@ class StoreController: ObservableObject, StoreManagerDelegate {
     
     /// Create and add a payment request to the payment queue.
     private func buyGameProduct(_ product:GameProduct) {
-        let payment = SKMutablePayment(product: product.storeProduct)
-        SKPaymentQueue.default().add(payment)
+        storeOperator?.buyGameProduct(product)
     }
     
     /// Called when user chooses which product to buy
@@ -378,12 +376,13 @@ class StoreOperator: NSObject {
         self.delegate = delegate
     }
     
-    // Actions:
-    // Fetch Products
-    
-    // Buy
-    // Restore
-    
+    /// Sets up the payment Queue with the correct observer.
+    func buyGameProduct(_ product:GameProduct) {
+        print("Buying Product (Store Operator)")
+        SKPaymentQueue.default().add(self)
+        let payment = SKMutablePayment(product: product.storeProduct)
+        SKPaymentQueue.default().add(payment)
+    }
 }
 
 // MARK: - SKRequestDelegate
@@ -407,28 +406,13 @@ extension StoreOperator: SKProductsRequestDelegate {
         
         // products contains products whose identifiers have been recognized by the App Store. As such, they can be purchased.
         if !response.products.isEmpty {
-            //            availableProducts = response.products
             delegate.storeOperatorDidReceiveProducts(response.products)
         }
         
         // invalidProductIdentifiers contains all product identifiers not recognized by the App Store.
         if !response.invalidProductIdentifiers.isEmpty {
-            //            invalidProductIdentifiers = response.invalidProductIdentifiers
+            print("Invalid product Identifiers: \(response.invalidProductIdentifiers)")
         }
-        
-        //        if !availableProducts.isEmpty {
-        //            storeResponse.append(Section(type: .availableProducts, elements: availableProducts))
-        //        }
-        
-        //        if !invalidProductIdentifiers.isEmpty {
-        //            storeResponse.append(Section(type: .invalidProductIdentifiers, elements: invalidProductIdentifiers))
-        //        }
-        
-        //        if !storeResponse.isEmpty {
-        //            DispatchQueue.main.async {
-        //                self.delegate?.storeManagerDidReceiveResponse(self.storeResponse)
-        //            }
-        //        }
     }
 }
 
@@ -443,9 +427,13 @@ extension StoreOperator: SKPaymentTransactionObserver {
                     // Do not block the UI. Allow the user to continue using the app.
                 case .deferred: print("Deferred")
                     // The purchase was successful.
-                case .purchased: delegate.handlePurchased(transaction)
+                case .purchased:
+                    print(" +++ Purchased +++")
+                    delegate.handlePurchased(transaction)
                     // The transaction failed.
-                case .failed: delegate.handleFailed(transaction)
+                case .failed:
+                    print("--- failed ---")
+                    delegate.handleFailed(transaction)
                     // There're restored products.
                 case .restored: delegate.handleRestored(transaction)
                 @unknown default: fatalError("Unknown payment transaction")

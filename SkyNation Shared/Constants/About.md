@@ -346,3 +346,26 @@ PROJECT SIZE: 572MB
 - [X] StorageBoxView - Improvements
 - [X] Outpost View - Remodelling
 - [X] Outpost View - Create OutpostData
+
+[9/11/2021 - 10/03/2021]
+- [X] Station Garage View - Update Overlay with Travelling Vehicles
+- [X] Added People and Biobox to Vehicle's Trunk View
+- [X] Station Garage View - View size too small (on launch) - use scrollview
+- [X] Station Garage View - VehicleTrun View - improvements
+- [X] Station Garage View - EDL - Test all resources going into SpaceVehicle
+- [X] Space Vehicle - Fix Optionals (remove)
+- [X] Space Vehicle - Remove irrelevant properties
+- [X] Station LSS View - (Peripheral Selection) - not updating
+- [X] Station LSS View - Total Remake
+- [X] Basic Views - Player vs Ranking (Keyval pair view)
+- [X] Station LSS View - Fix Peripherals Scroll View
+- [X] Station LSS View - In-depth Testing after remake
+- [X] 9/30/2021 - Remake of LocalDatabase
+- [X] Settings - ServerTab - Leave Guild
+- [X] Settings - ServerTab - Create Guild
+- [X] Settings - ServerTab - Show status for guildless player, tell them they need to buy an .Entry ticket (purchasing any product)
+- [X] Settings - ServerTab - Missing Guilds
+- [X] Station Garage View - Correct Building Time.
+- [X] Station Garage View - Improve departure animation
+- [X] Station Garage View - Register Vehicle with Authentication (server side)
+- [X] Station Garage View - Vehicles not updating correctly upon selection (travelling ones)

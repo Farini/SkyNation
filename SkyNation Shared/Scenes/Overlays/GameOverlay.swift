@@ -124,33 +124,6 @@ class GameOverlay:NSObject, SKSceneDelegate {
         // Vehicles
         self.updateTravellingVehiclesList()
         
-        /*
-        if LocalDatabase.shared.vehicles.isEmpty == false {
-            for vehicle in LocalDatabase.shared.vehicles {
-                
-//                mPos.y -= 22
-                
-//                let label = self.makeTravellingVehicleLabel(vehicle: vehicle)
-//                let deltaY = label.calculateAccumulatedFrame().size.height + 4
-//                mPos.y -= deltaY
-//                label.position = mPos
-//                scene.addChild(label)
-                
-                let vehicleLabel = SKLabelNode(text: "🚀 \(vehicle.name) \(vehicle.engine.rawValue)")
-                vehicleLabel.fontName = "Menlo"
-                vehicleLabel.fontSize = 22
-                vehicleLabel.fontColor = .white
-                mPos.y -= 22
-                vehicleLabel.position = mPos
-                vehicleLabel.horizontalAlignmentMode = .left
-                vehicleLabel.verticalAlignmentMode = .center
-                vehicleLabel.isUserInteractionEnabled = true
-                vehicleLabel.zPosition = 91
-                scene.addChild(vehicleLabel)
-            }
-        }
-        */
-        
         // Unpause the scene
 //        scene.isPaused = false
     }
@@ -216,20 +189,27 @@ class GameOverlay:NSObject, SKSceneDelegate {
         vehicleLabel.addChild(emptyNode)
         
         // Progress
-        let progbarWidth = 80.0
+        let progbarWidth = 100.0
         let barBackSize:CGSize = CGSize(width: progbarWidth, height: 8.0)
         let progOrigin:CGPoint = CGPoint(x: -(progbarWidth / 2.0), y: 0)
         // Progress back
         let progressBarBack = SKShapeNode(rect: CGRect(origin: progOrigin, size: barBackSize), cornerRadius: 4)
         progressBarBack.fillColor = .gray.withAlphaComponent(0.5)
         progressBarBack.zPosition = 92
+        progressBarBack.position.y -= 24
+        progressBarBack.position.x += (progbarWidth / 2) + 20
+        
         
         // Progress front
         if let travelProg = vehicle.calculateProgress() {
             let travelWidth = progbarWidth * travelProg
-            let progressBarFront = SKShapeNode(rect: CGRect(origin: .zero, size: CGSize(width: travelWidth, height: 7.0)))
-            progressBarFront.fillColor = .blue
+            let progressBarFront = SKShapeNode(rect: CGRect(origin: .zero, size: CGSize(width: travelWidth, height: 7.0)), cornerRadius: 4)
+            progressBarFront.fillColor = .orange
             progressBarFront.zPosition = 93
+            progressBarFront.strokeColor = .clear
+            //let adjustX = progressBarFront.calculateAccumulatedFrame().size.width / 2
+            progressBarFront.position.x -= (progbarWidth / 2)
+            
             progressBarBack.addChild(progressBarFront)
         }
         

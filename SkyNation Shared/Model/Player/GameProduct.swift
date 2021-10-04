@@ -75,15 +75,7 @@ struct GameProduct:Identifiable, Hashable {
     
     var storeProduct:SKProduct
     
-    //    extension SKProduct {
-    //        /// - returns: The cost of the product formatted in the local currency.
-    //        var regularPrice: String? {
-    //            let formatter = NumberFormatter()
-    //            formatter.numberStyle = .currency
-    //            formatter.locale = self.priceLocale
-    //            return formatter.string(from: self.price)
-    //        }
-    //    }
+    
     
     init(type:GameProductType, storeProduct:SKProduct) {
         self.id = storeProduct.productIdentifier
@@ -101,4 +93,12 @@ struct GameProduct:Identifiable, Hashable {
 }
 
 
-
+//    extension SKProduct {
+//        /// - returns: The cost of the product formatted in the local currency.
+//        var regularPrice: String? {
+//            let formatter = NumberFormatter()
+//            formatter.numberStyle = .currency
+//            formatter.locale = self.priceLocale
+//            return formatter.string(from: self.price)
+//        }
+//    }

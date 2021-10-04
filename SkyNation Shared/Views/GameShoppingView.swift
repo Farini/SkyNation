@@ -174,6 +174,7 @@ struct GameShoppingView: View {
                 }
             }
         }
+        .frame(minWidth: 500, idealWidth: 600, maxWidth: 800, minHeight:400, maxHeight:700, alignment: .top)
     }
     
     /*

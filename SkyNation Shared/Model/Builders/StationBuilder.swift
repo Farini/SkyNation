@@ -185,18 +185,11 @@ class StationBuilder:Codable {
     
     // MARK: - Items
     
-    
     /// sets the lights to the buildable pieces array
     func loadLights(lights:[BuildableLight]) {
         print("Loading lights")
         self.lights = lights
     }
-    
-    
-    /// Adds tech to the array of buildable parts
-//    func loadTechTree(tech:[TechItems]) {
-//        print("Load Tech tree items here")
-//    }
     
     /// Gets the Modules (for IDs)
     func getModules() -> [Module] {
@@ -457,7 +450,6 @@ class StationBuildItem:Codable {
     
     var skin:ModuleSkin? //String?
     var modex:String?
-    // static func makeFromTech
     
     /// To init from StationBuilder
     init(pos:Vector3D, euler:Vector3D, type:BuildComponent?) {
