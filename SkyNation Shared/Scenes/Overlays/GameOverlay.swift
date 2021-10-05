@@ -86,6 +86,7 @@ class GameOverlay:NSObject, SKSceneDelegate {
         playerCard.name = "playercard"
         
         scene.addChild(playerCard)
+        
         buildMenu()
     }
     

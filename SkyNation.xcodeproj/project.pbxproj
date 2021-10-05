@@ -503,6 +503,10 @@
 		85A585E926E443700020CCBF /* RoadsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A585E726E443700020CCBF /* RoadsBuilder.swift */; };
 		85A585EA26E443700020CCBF /* RoadsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A585E726E443700020CCBF /* RoadsBuilder.swift */; };
 		85A585EB26E443700020CCBF /* RoadsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A585E726E443700020CCBF /* RoadsBuilder.swift */; };
+		85A59EA0270CB6C90049AFC1 /* PlayerCardLayout.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85A59E9F270CB6C90049AFC1 /* PlayerCardLayout.sks */; };
+		85A59EA1270CB6C90049AFC1 /* PlayerCardLayout.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85A59E9F270CB6C90049AFC1 /* PlayerCardLayout.sks */; };
+		85A59EA2270CB6C90049AFC1 /* PlayerCardLayout.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85A59E9F270CB6C90049AFC1 /* PlayerCardLayout.sks */; };
+		85A59EA3270CB6C90049AFC1 /* PlayerCardLayout.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85A59E9F270CB6C90049AFC1 /* PlayerCardLayout.sks */; };
 		85A62F0C26222AA400D7B7C8 /* LifeSupportSystems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F437258D47EA00B509D2 /* LifeSupportSystems.swift */; };
 		85A658FA25E2251B008AA9BA /* PlayerEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A658F925E2251B008AA9BA /* PlayerEditView.swift */; };
 		85A658FB25E2251B008AA9BA /* PlayerEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A658F925E2251B008AA9BA /* PlayerEditView.swift */; };
@@ -809,6 +813,7 @@
 		8597BBA925BF40AB00C705A0 /* StartingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingWindow.swift; sourceTree = "<group>"; };
 		859D683925DD91DB005DD42C /* GameShoppingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameShoppingView.swift; sourceTree = "<group>"; };
 		85A585E726E443700020CCBF /* RoadsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadsBuilder.swift; sourceTree = "<group>"; };
+		85A59E9F270CB6C90049AFC1 /* PlayerCardLayout.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = PlayerCardLayout.sks; sourceTree = "<group>"; };
 		85A658F925E2251B008AA9BA /* PlayerEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEditView.swift; sourceTree = "<group>"; };
 		85A6590525E4178F008AA9BA /* GameSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSettingsController.swift; sourceTree = "<group>"; };
 		85A6F7A726E52728003F9924 /* OutpostInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutpostInfoView.swift; sourceTree = "<group>"; };
@@ -1292,6 +1297,7 @@
 				85C3418425905A7500BF82F9 /* TutorialNode.swift */,
 				85C3418D2591078700BF82F9 /* PlayerCardNode.swift */,
 				8559201425959A4300CF5467 /* SideMenuNode.swift */,
+				85A59E9F270CB6C90049AFC1 /* PlayerCardLayout.sks */,
 			);
 			path = Overlays;
 			sourceTree = "<group>";
@@ -1786,6 +1792,7 @@
 				8536F471258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F495258D481700B509D2 /* SparkEmitter.sks in Resources */,
 				85E2C41D26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
+				85A59EA0270CB6C90049AFC1 /* PlayerCardLayout.sks in Resources */,
 				8569A304259F7F990057A518 /* dissolve.fragment.txt in Resources */,
 				8569A31C259F81110057A518 /* InterlaceShader.fsh in Resources */,
 				8569A331259F81110057A518 /* HealthShader.fsh in Resources */,
@@ -1819,6 +1826,7 @@
 				8536F472258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F496258D481700B509D2 /* SparkEmitter.sks in Resources */,
 				85E2C41E26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
+				85A59EA1270CB6C90049AFC1 /* PlayerCardLayout.sks in Resources */,
 				8569A305259F7F990057A518 /* dissolve.fragment.txt in Resources */,
 				8569A31D259F81110057A518 /* InterlaceShader.fsh in Resources */,
 				8569A332259F81110057A518 /* HealthShader.fsh in Resources */,
@@ -1852,6 +1860,7 @@
 				8569A336259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
 				85E2C41F26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
 				85487F3F26CC65E000EBC070 /* Main.storyboard in Resources */,
+				85A59EA2270CB6C90049AFC1 /* PlayerCardLayout.sks in Resources */,
 				8569A31B259F81110057A518 /* CutionStripesColored.fsh in Resources */,
 				857D9A1925BF42CB00626884 /* Entry.storyboard in Resources */,
 				8536F47F258D481700B509D2 /* MapIndicators.sks in Resources */,
@@ -1877,6 +1886,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85A59EA3270CB6C90049AFC1 /* PlayerCardLayout.sks in Resources */,
 				8536F48C258D481700B509D2 /* GameOverlay.sks in Resources */,
 				8536F474258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F480258D481700B509D2 /* MapIndicators.sks in Resources */,

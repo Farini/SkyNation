@@ -57,7 +57,7 @@ The contributors to these projects shall have a **fair** share of the game, and 
  - [ ] ★★☆☆☆ Mars City
  - [ ] ★★★☆☆ Mars Outposts
  - [ ] ★★★☆☆ Game Chats, Messages, Achievements
- - [ ] ★★★☆☆ Game Store + Use of `GameTokens`
+ - [ ] ★★★☆☆ Game Store + Use of `GameToken`
  - [ ] ★★★☆☆ Player(object) + settings + playability + Purchases
  
  ## Programming (Back End)
@@ -132,14 +132,15 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Model - Guild - Invite Request
 - [X] Model - Outpost rss Collecting
 - [X] Model - Accounting Improve Human (PHI - Person Happiness Index)
+- [X] Overlay - Remake PlayerCard
 
 - [X] Accounting - Implement (Station+Account.swift)
 - [ ] Accounting - Finish Accounting cycle (Station+Account.swift)
 - [ ] Accounting - Fix Human Report Lines w/ weird emojis
 
 - [X] Overlays - CamControl - Fix Buttons & reverse actions (forward = backward)
+- [X] Overlays - SpaceVehicle - Progress is wrong
 - [ ] Overlays - GameCamera - Fix Awkward cam transitions
-- [ ] Overlays - SpaceVehicle - Progress is wrong
 
 - [ ] Settings - ServerTab - Test Leave Guild
 
@@ -181,8 +182,6 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Station Scene - SceneBuilder Improvements (to reload scene back from Mars)
 - [ ] Station Scene - Background HDRI image
 - [ ] Station Scene - New Modules not 'clickable' after Tech research. 
-
-
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing) -> Look under Dektop -> Useful Assets -> Sounds
 - [ ] Sound - 2 more music (better ones)

@@ -30,72 +30,131 @@ class PlayerCardNode:SKNode {
     
     init(player:SKNPlayer) {
         
-        let timeTokens = player.countTokens()
-//        let deliveryTokens = player.deliveryTokens
-        let name = player.name
+        print("initting with player name: \(player.name)")
+        
+//        let timeTokens = player.countTokens()
+//        let name = player.name
         let money = player.money
         self.player = player
         
-        
         // Player Avatar
         let avatarTexture = SKTexture(imageNamed: player.avatar)
+
         
-        let avWidth = min(avatarTexture.size().width, 110)
-        let avHeight = (avatarTexture.size().height / avatarTexture.size().width) * avWidth
-        let avatarNode = SKSpriteNode(texture: avatarTexture, size: CGSize(width: avWidth, height: avHeight))
         
-        avatarNode.anchorPoint = CGPoint(x: 0.0, y: 1.0)
-        avatarNode.position = CGPoint(x: margin, y: -margin)
-        avatarNode.zPosition = 80
-        self.avatar = avatarNode
         
-        var posXY:CGPoint = CGPoint(x: Double(avatarNode.calculateAccumulatedFrame().width), y: -margin * 4)
-        print("posXY begins: \(posXY)")
+        // ---------------
+        // LinePath
         
-        // Name, Money and Token
-        let nameLabel = PlayerCardNode.makeText(name)
-        nameLabel.position = posXY
-        nameLabel.fontColor = .white
-        self.nameLabel = nameLabel
-        posXY.y -= (nameLabel.calculateAccumulatedFrame().height + CGFloat(margin))
-        print("posXY label: \(posXY)")
+        print("-- layout")
+        let lineScene = SKScene(fileNamed: "PlayerCardLayout")!
+        print("++ layout")
+        let hud = lineScene.childNode(withName: "HUDLine")!
+        let path = CGMutablePath()
+        path.move(to: hud.children.first!.position)
+        print("+++ layout")
+        for hChild in hud.children {
+            path.addLine(to: hChild.position)
+        }
+        path.closeSubpath()
         
-        // Currency image
-        let currencyTexture = SKTexture(image: GameImages.currencyImage)
-        let currencySprite = SKSpriteNode(texture: currencyTexture, color: .white, size: CGSize(width: 24, height: 24))
-        currencySprite.anchorPoint = CGPoint(x: 0, y: 1)
-        currencySprite.zPosition = 90
-        currencySprite.position = posXY
-        self.moneySprite = currencySprite
-        print("posXY currency image: \(posXY)")
+        let pathNode = SKShapeNode(path: path, centered: false)
+        pathNode.strokeColor = .gray
+        pathNode.lineWidth = 3
+        pathNode.glowWidth = 3
+        pathNode.fillColor = SKColor.black.withAlphaComponent(0.8)
         
-        // Currency Label
-        let moneyString = GameFormatters.numberFormatter.string(from: NSNumber(value: money)) ?? "0"
-        let moneyLbl = PlayerCardNode.makeText(moneyString)
-        let moneyPosX = Double(currencySprite.position.x) + 20 + 6
-        moneyLbl.position = CGPoint(x: moneyPosX, y: Double(posXY.y))
-        moneyLbl.zPosition = 90
-        print("\t money lbl: \(moneyPosX), \(posXY.y) > (x):\(posXY.x)")
-        self.moneyLabel = moneyLbl
-        posXY.y -= moneyLbl.calculateAccumulatedFrame().height + CGFloat(margin)
+        // Avatar
+        if let pAvatar = lineScene.childNode(withName: "SpritePlayer") {
+            let avt = SKSpriteNode(texture: avatarTexture)
+            avt.position = pAvatar.position
+            avt.size = pAvatar.frame.size
+            pathNode.addChild(avt)
+            self.avatar = avt
+        } else {
+            self.avatar = SKSpriteNode()
+        }
         
-        // Tokens
-        // TODO: - Make Images for Tokens
-        // Icon
-        let tokenTexture = SKTexture(image: GameImages.tokenImage)
-        let tokenSprite = SKSpriteNode(texture: tokenTexture, color: .white, size: CGSize(width: 24, height: 24))
-        tokenSprite.anchorPoint = CGPoint(x: 0, y: 1)
-        tokenSprite.zPosition = 90
-        tokenSprite.position = posXY
-        self.tokenSprite = tokenSprite
         
-        // Tokens Label
-        let tokensLbl = PlayerCardNode.makeText("\(timeTokens.count)")
-        tokensLbl.position = CGPoint(x: moneyPosX, y: Double(posXY.y))
-        tokensLbl.zPosition = 90
+        // name label
+        if let pnamelbl = lineScene.childNode(withName: "lblName") as? SKLabelNode {
+            pnamelbl.text = player.name
+            pnamelbl.removeFromParent()
+            pathNode.addChild(pnamelbl)
+            self.nameLabel = pnamelbl
+        } else {
+            self.nameLabel = SKLabelNode()
+        }
         
-        self.tokenLabel = tokensLbl
-        print("posXY tokens: \(posXY)")
+        
+        // money sprite
+        if let moneySprite = lineScene.childNode(withName: "SKCoinsprite") as? SKSpriteNode {
+            moneySprite.size = CGSize(width: 20, height: 20)
+            moneySprite.removeFromParent()
+            pathNode.addChild(moneySprite)
+            self.moneySprite = moneySprite
+        } else {
+            self.moneySprite = SKSpriteNode()
+        }
+        
+        
+        // money label
+        if let moneylbl = lineScene.childNode(withName: "lblMoney") as? SKLabelNode {
+            moneylbl.text = "\(GameFormatters.numberFormatter.string(from: NSNumber(value: money)) ?? "0")"
+            moneylbl.removeFromParent()
+            pathNode.addChild(moneylbl)
+            self.moneyLabel = moneylbl
+        } else {
+            self.moneyLabel = SKLabelNode()
+        }
+        
+        // token sprite
+        if let tSprite = lineScene.childNode(withName: "SKTokenSprite") as? SKSpriteNode {
+            tSprite.size = CGSize(width: 20, height: 20)
+            tSprite.removeFromParent()
+            pathNode.addChild(tSprite)
+            self.tokenSprite = tSprite
+        } else {
+            self.tokenSprite = SKSpriteNode()
+        }
+        
+        // token label
+        if let tLabel = lineScene.childNode(withName: "lblToken") as? SKLabelNode {
+            tLabel.text = "x\(player.countTokens().count)"
+            tLabel.removeFromParent()
+            pathNode.addChild(tLabel)
+            self.tokenLabel = tLabel
+        } else {
+            self.tokenLabel = SKLabelNode()
+        }
+        
+        // xp sprite
+        if let xpSprite = lineScene.childNode(withName: "SKXPSprite") as? SKSpriteNode {
+            xpSprite.size = CGSize(width: 20, height: 20)
+            xpSprite.removeFromParent()
+            pathNode.addChild(xpSprite)
+            // tokenSprite.isHidden = true
+        }
+        // xp label
+        if let xpLabel = lineScene.childNode(withName: "lblXP") as? SKLabelNode {
+            xpLabel.text = "\(player.experience)"
+            xpLabel.removeFromParent()
+            pathNode.addChild(xpLabel)
+        }
+        pathNode.position.x += 8
+        pathNode.position.y -= 8
+        
+        // guild logo
+        if let guild = LocalDatabase.shared.serverData?.guildfc {
+            let gci = GuildIcon(rawValue: guild.icon)!
+            let gimg = PlayerCardNode.makeButton(gci.imageName)?.texture //SKNImage(systemSymbolName: "\(gci.imageName)", accessibilityDescription: nil)!
+//            let guildSprite = SKTexture(image: gimg)
+            if let guildImageSpot = lineScene.childNode(withName: "Guildimage") as? SKSpriteNode {
+                guildImageSpot.removeFromParent()
+                guildImageSpot.texture = gimg
+                pathNode.addChild(guildImageSpot)
+            }
+        }
         
         // Settings
         let settingsSprite = PlayerCardNode.makeButton("gearshape.fill")!
@@ -109,41 +168,14 @@ class PlayerCardNode:SKNode {
         tutSprite.name = "tutorial"
         self.tutorialButton = tutSprite
         
-        // Assemble
         
         super.init()
         
-        addChild(avatarNode)
-        addChild(nameLabel)
-        addChild(currencySprite)
-        addChild(moneyLbl)
-        addChild(tokenSprite)
-        addChild(tokensLbl)
-        
-        // Background
-        var backgroundSize = calculateAccumulatedFrame().size
-        backgroundSize.width += 12
-        let backRect = CGRect(origin: CGPoint(x: 6, y: -6), size: backgroundSize)
-        let backShape = SKShapeNode(rect: backRect, cornerRadius: 8)
-        backShape.fillColor = SCNColor.black.withAlphaComponent(0.7)
-        backShape.strokeColor = .gray
-        backShape.lineWidth = 1.5
-        backShape.position = CGPoint(x: 6, y: -backgroundSize.height)
-        backShape.zPosition = 20
-        addChild(backShape)
-        
-        if GameSettings.debugScene {
-            print("Player Card Overlay Node:")
-            print("Back Shape: \(backShape)\n \t Size:\(backgroundSize)")
-            print("Back Rect: \(backRect)")
-            print("Back Size: \(backShape.calculateAccumulatedFrame().size)")
-            print("Back Position: \(backShape.position)")
-            print("")
-        }
+        addChild(pathNode)
         
         // Buttons positions
-        let underpY = -(calculateAccumulatedFrame().size.height + 8)
-        var underneathPosition:CGPoint = CGPoint(x: CGFloat(margin * 4), y: underpY)
+        let underpY = -(calculateAccumulatedFrame().size.height - 4)
+        var underneathPosition:CGPoint = CGPoint(x: CGFloat(margin * 2), y: underpY)
         underneathPosition.y -= self.settingsButton.calculateAccumulatedFrame().height - 4
         
         self.settingsButton.position = underneathPosition //CGPoint(x: outsidePositionX, y: outsidePositionY)
@@ -155,8 +187,6 @@ class PlayerCardNode:SKNode {
         addChild(tutorialButton)
         
         underneathPosition.x += tutorialButton.calculateAccumulatedFrame().width + 6
-        
-        
         
         // Shopping - ShopButton
         if let cartSprite:SKSpriteNode = PlayerCardNode.makeButton("cart") {

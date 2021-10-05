@@ -49,7 +49,7 @@ struct GameLogic {
     static let energyPerModule:Int = 4
     
     /// Water consumption per `Person`
-    static let waterConsumption:Int = 2
+    static let waterConsumption:Int = 3
     
     /// Energy Consumption per `Person`
     static func personalEnergyConsumption() -> Int {
