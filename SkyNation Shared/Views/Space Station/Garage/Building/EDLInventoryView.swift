@@ -106,7 +106,7 @@ struct EDLInventoryView: View {
                 .foregroundColor(.orange)
                 .padding([.leading])
                 
-                let count = vehicle.calculateWeight() + ingredientsSelected.count + peripheralsSelected.count + tanksSelected.count + passengers.count + bioboxes.count
+                let count = vehicle.calculateWeight() + ingredientsSelected.count + peripheralsSelected.count + tanksSelected.count + passengers.count + bioboxes.count + batteries.count
                 
                 Spacer()
                 

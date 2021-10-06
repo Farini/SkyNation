@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+/*
 struct VehicleInventoryView: View {
     
     @ObservedObject var controller:GarageViewModel
@@ -199,3 +200,5 @@ struct VehicleInventoryView_Previews: PreviewProvider {
         return VehicleInventoryView(controller: controller)
     }
 }
+*/
+

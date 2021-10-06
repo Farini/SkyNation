@@ -125,12 +125,10 @@ class Wallet:Codable {
         // Dictionary
         var dictionary:[String:Int] = [:]
         
-        let array:[String] = [TankType.h2o.rawValue, TankType.o2.rawValue, TankType.air.rawValue, "token", "money"]
+        let array:[String] = [TankType.h2o.rawValue, TankType.o2.rawValue, TankType.air.rawValue, "token", "money", "money", "money", "token"]
         let rnd1 = array.randomElement()!
         dictionary[rnd1, default:0] += 1
         
-        // Update the date
-//        freebiesLast = Date()
         self.freebiesMade = dictionary
         
         return dictionary

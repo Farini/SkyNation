@@ -112,6 +112,7 @@ extension Station {
         var water:Int = truss.getAvailableWater()
         let currentAir = air
         
+        // Start Report
         let report = AccountingReport(time: start, powerGen: powerGeneration, energy: startingEnergy, water: water, air: currentAir)
         
         // MARK: - Peripherals
@@ -130,15 +131,12 @@ extension Station {
             
             if useResult > 0 {
                 
-                
-                // let powerConsumeResult:Bool = consumeEnergyFrom(eSpill: &energySpill, amount: useResult)
                 // Energy
                 var powerConsumeResult:Bool = false
                 if totalEnergy >= useResult {
                     powerConsumeResult = true
                     totalEnergy -= useResult
                 }
-                
                 
                 // let trussResult = truss.consumeEnergy(amount: useResult)
                 if (powerConsumeResult == true) && (peripheral.isBroken == false) {
@@ -170,13 +168,21 @@ extension Station {
                     // Tank
                     if let tank = TankType(rawValue: key) {
                         
-                        if truss.tanks.filter({ $0.type == tank }).compactMap({ $0.current }).reduce(0, +) < abs(value) {
-                            report.problems.append("Not enough of \(tank.name) for peripheral")
-                            didFail = true
+                        if tank == .h2o {
+                            // water is separate
+                            water -= abs(value)
+                            report.notes.append("\(peripheral.peripheral.rawValue) consumed \(value) water.")
                         } else {
-                            let _ = truss.chargeFrom(tank: tank, amount: value)
-                            report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value)) \(tank.rawValue)")
+                            if truss.tanks.filter({ $0.type == tank }).compactMap({ $0.current }).reduce(0, +) < abs(value) {
+                                report.problems.append("Not enough of \(tank.name) for peripheral")
+                                didFail = true
+                            } else {
+                                let _ = truss.chargeFrom(tank: tank, amount: value)
+                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value)) \(tank.rawValue)")
+                            }
                         }
+                        
+                        
                     } else
                     
                     // vapor
@@ -232,12 +238,21 @@ extension Station {
                             }
                         } else if let tank = TankType(rawValue: key) {
                             // Tank
-                            let spill = truss.refillTanks(of: tank, amount: value)
-                            if spill > 0 {
-                                report.problems.append("Could not refill \(tank) completely")
-                            } else {
+                            if tank == .h2o {
+                                // Water
+                                water += value
                                 report.notes.append("\(peripheral.peripheral) refilled \(key) with \(value)")
+                            } else {
+                                // Other Tanks
+                                let spill = truss.refillTanks(of: tank, amount: value)
+                                if spill > 0 {
+                                    report.problems.append("Could not refill \(tank) completely")
+                                } else {
+                                    report.notes.append("\(peripheral.peripheral) refilled \(key) with \(value)")
+                                }
                             }
+                            
+                            
                         } else if key == "vapor" {
                             // vapor in air
                             // No peripherals produce Vapor
@@ -383,8 +398,8 @@ extension Station {
         // MARK: - Returning things
         
         // put the water back in the containers
-        let waterSpill = truss.refillTanks(of: .h2o, amount: water)
-        if waterSpill > 0 {
+        let waterReset = truss.resetWaterTanks(newWater: water)
+        if waterReset > 0 {
             report.addNote(string: "💧 Water tanks are full")
         }
         

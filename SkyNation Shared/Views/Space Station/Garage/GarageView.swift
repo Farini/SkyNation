@@ -19,6 +19,9 @@ struct GarageView: View {
     
     @ObservedObject var controller:GarageViewModel = GarageViewModel()
     
+    @State var spendTokenAlert:Bool = false
+    @State var tokenSpendError:String = ""
+    
     var header: some View {
         Group {
             HStack {
@@ -124,7 +127,6 @@ struct GarageView: View {
             Divider()
                 .offset(x: 0, y: -5)
         }
-        
     }
     
     var sideList: some View {
@@ -202,29 +204,48 @@ struct GarageView: View {
                                 .foregroundColor(.gray)
                                 .padding()
                             
-                            Text("XP: \(controller.garage.xp)")
-                            Text("Simulation: \(controller.garage.simulationXP)")
-                            Text("Bot Tech: \(controller.garage.botTech)")
+                            Text("Current XP: \(controller.garage.xp)")
+                                .font(.headline)
+                                .foregroundColor(.blue)
+                            
+                            Text("Building: \(controller.garage.buildingVehicles.count)")
+                            Text("Travelling: \(controller.travellingVehicles.count)")
+                            
                             Divider()
-                            Text("Actions")
+                            
+                            Text(tokenSpendError).foregroundColor(.red)
+                        
+                            // Text("Actions")
                             HStack {
-                                Button("Start New Vehicle") {
+                                Button("Build Space Vehicle") {
                                     print("Starting a new vehicle")
                                     controller.startNewVehicle()
                                 }
                                 .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
                                 
-                                Button("Experience +") {
-//                                    print("Making some")
-                                    controller.improveExperience()
-                                }
-                                .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
                                 
-                                Button("Upgrade ?") {
-                                    //                                    print("Making some")
-                                    controller.improveExperience()
+                                // The following can be used with Token
+                                
+                                Button("Token + XP") {
+                                    self.spendTokenAlert.toggle()
                                 }
                                 .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                                .alert(isPresented: $spendTokenAlert) {
+                                    Alert(title: Text("Token"), message: Text("Spend 1 token to gain 1 Garage XP ?"), primaryButton: .default(Text("Yes")) {
+                                        let player = LocalDatabase.shared.player
+                                        if let token = player.requestToken() {
+                                            let res = player.spendToken(token: token, save: true)
+                                            if res == true {
+                                                controller.improveExperience()
+                                            } else {
+                                                self.tokenSpendError = "Not enough Tokens"
+                                            }
+                                        } else {
+                                            self.tokenSpendError = "Not enough Tokens"
+                                        }
+                                        
+                                    }, secondaryButton: .cancel())
+                                }
                                 
                             }.padding()
                         }
@@ -402,7 +423,8 @@ struct GarageView: View {
                         
                         
                     case .Inventory:    // Adding Tanks, Batteries, and Solar array
-                        VehicleInventoryView(controller: controller)
+//                        VehicleInventoryView(controller: controller)
+                        Text("No Inventory").foregroundColor(.red)
                         
                     case .Descent:      // Adding Ingredients, Peripherals, and BotTech
                         EDLInventoryView(controller:controller, vehicle:controller.selectedVehicle!)

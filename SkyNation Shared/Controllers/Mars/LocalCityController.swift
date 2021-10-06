@@ -123,7 +123,6 @@ class LocalCityController:ObservableObject, BioController {
     @Published var opCollectArray:[CityCollectOutpostModel] = []
     
     // Vehicles
-    
     @Published var arrivedVehicles:[SpaceVehicle] = []
     @Published var travelVehicles:[SpaceVehicle] = []
     @Published var otherVehicles:[SpaceVehicleTicket] = []
@@ -141,6 +140,7 @@ class LocalCityController:ObservableObject, BioController {
         
         // Post Init
         
+        
         // Lab Activity
         if let activity = cityData.labActivity {
             self.labActivity = activity
@@ -150,6 +150,10 @@ class LocalCityController:ObservableObject, BioController {
         self.allStaff = cityData.inhabitants
         self.availableStaff = cityData.inhabitants.filter({ $0.isBusy() == false })
         self.selectedStaff = []
+        
+        // Vehicles
+        self.travelVehicles = LocalDatabase.shared.vehicles
+        self.arrivedVehicles = cityData.garage.vehicles
         
         // OpCollection
         self.updateCityOutpostCollection()
@@ -593,12 +597,9 @@ class LocalCityController:ObservableObject, BioController {
         
         if let guild = sd.guildfc {
             for dbOutpost in guild.outposts {
-                
                 collectables.append("\(dbOutpost.type.rawValue): POS.: \(dbOutpost.posdex)")
                 let colModel = CityCollectOutpostModel(dbOutpost: dbOutpost, opCollect: self.cityData.opCollection ?? [:])
-                
                 self.opCollectArray.append(colModel)
-                
             }
         }
     }

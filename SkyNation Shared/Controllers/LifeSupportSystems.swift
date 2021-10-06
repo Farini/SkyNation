@@ -457,14 +457,25 @@ class LSSController: ObservableObject {
                         let sewerUsage = 10
                         if let sewer = station.truss.extraBoxes.filter({ $0.type == .wasteSolid }).sorted(by: { $0.current > $1.current }).first, sewer.current >= sewerUsage {
                             
-                            let multiplier = 0.5 + 0.1 * Double(peripheral.level) // 50% + 10% each level
-                            let fertilizerGain = Int(multiplier * Double(sewerUsage))
-                            
-                            if let fertBox = station.truss.extraBoxes.filter({ $0.type == .Fertilizer }).sorted(by: { $0.current < $1.current }).first {
-                                fertBox.current = min(fertBox.capacity, fertBox.current + fertilizerGain)
+                            if Bool.random() == true {
+                                let multiplier = 0.6 + 0.1 * Double(peripheral.level) // 60% + 10% each level
+                                let fertilizerGain = Int(multiplier * Double(sewerUsage))
+                                
+                                if let fertBox = station.truss.extraBoxes.filter({ $0.type == .Fertilizer }).sorted(by: { $0.current < $1.current }).first {
+                                    fertBox.current = fertBox.current + fertilizerGain
+                                    periUseMessages.append("Fertilizer box gained \(fertilizerGain)Kg.")
+                                } else {
+                                    periUseMessages.append("Could not find a Fertilizer storage box to store the fertilizer produced. Throwing it away.")
+                                }
                             } else {
-                                periUseMessages.append("Could not find a Fertilizer storage box to store the fertilizer produced. Throwing it away.")
+                                let multiplier = 0.6 + 0.1 * Double(peripheral.level) // 60% + 10% each level
+                                let methaneGain = Int(multiplier * Double(sewerUsage))
+                                if let methaneTank = station.truss.tanks.filter({ $0.type == .ch4 }).sorted(by: { $0.current < $1.current }).first {
+                                    methaneTank.current = min(TankType.ch4.capacity, methaneTank.current + methaneGain)
+                                    periUseMessages.append("Methande Tank gained \(methaneGain)L.")
+                                }
                             }
+                            
                         } else {
                             periUseIssues.append("Not enough solid waste to complete this operation.")
                             return
@@ -579,14 +590,29 @@ class LSSController: ObservableObject {
                         let sewerUsage = 10
                         if let sewer = city.boxes.filter({ $0.type == .wasteSolid }).sorted(by: { $0.current > $1.current }).first, sewer.current >= sewerUsage {
                             
-                            let multiplier = 0.5 + 0.1 * Double(peripheral.level) // 50% + 10% each level
-                            let fertilizerGain = Int(multiplier * Double(sewerUsage))
+                            let multiplier = 0.6 + 0.1 * Double(peripheral.level) // 60% + 10% each level
+                            let methaneGain = Int(multiplier * Double(sewerUsage))
                             
-                            if let fertBox = city.boxes.filter({ $0.type == .Fertilizer }).sorted(by: { $0.current < $1.current }).first {
-                                fertBox.current = min(fertBox.capacity, fertBox.current + fertilizerGain)
+                            if Bool.random() == true {
+                                // Make Fertilizer
+                                let multiplier = 0.6 + 0.1 * Double(peripheral.level) // 60% + 10% each level
+                                let fertilizerGain = Int(multiplier * Double(sewerUsage))
+                                
+                                if let fertBox = city.boxes.filter({ $0.type == .Fertilizer }).sorted(by: { $0.current < $1.current }).first {
+                                    fertBox.current = fertBox.current + fertilizerGain
+                                    periUseMessages.append("Fertilizer box gained \(fertilizerGain)Kg.")
+                                } else {
+                                    periUseMessages.append("Could not find a Fertilizer storage box to store the fertilizer produced. Throwing it away.")
+                                }
                             } else {
-                                periUseMessages.append("Could not find a Fertilizer storage box to store the fertilizer produced. Throwing it away.")
+                                // Make Methane
+                                if let methaneTank = city.tanks.filter({ $0.type == .ch4 }).sorted(by: { $0.current < $1.current }).first {
+                                    methaneTank.current = min(TankType.ch4.capacity, methaneTank.current + methaneGain)
+                                    periUseMessages.append("Methande Tank gained \(methaneGain)L.")
+                                }
                             }
+                            
+                        
                         } else {
                             periUseIssues.append("Not enough solid waste to complete this operation.")
                             return

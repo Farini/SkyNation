@@ -174,7 +174,7 @@ class GarageViewModel:ObservableObject {
         }
     }
     
-    /// Improves Experience (⚠️ Remove when Launching the game)
+    /// Improves Experience (with token)
     func improveExperience() {
         self.garage.xp += 1
     }
@@ -301,29 +301,38 @@ class GarageViewModel:ObservableObject {
     /// Called when Vehicle Engine Setup is Finished
     func didSetupEngine(vehicle:SpaceVehicle, workers:[Person]) {
         
-        // Update Person's Activity
+        // Tech Time Discount
+        var engineDefaultTime = vehicle.engine.time
+        print("⏱ Engine Default Time: \(engineDefaultTime)")
         
-        // Activity and Time
+        if station.unlockedTechItems.contains(.GarageArm) {
+            let third = engineDefaultTime / 3.0
+            engineDefaultTime -= third
+        }
+        print("⏱ Engine After Tech:   \(engineDefaultTime)")
+        
+        // Intelligence Discount
         var bonus:Double = 0.1
         for person in workers {
-            let lacking = Double(max(100, person.intelligence) + max(100, person.happiness) + max(100, person.teamWork)) / 3.0
+            let lacking = Double(min(100, person.intelligence) + min(100, person.happiness) + min(100, person.teamWork)) / 3.0
             // lacking will be 100 (best), 0 (worst)
             bonus += lacking / Double(workers.count)
         }
-        let timeDiscount = (bonus / 100) * 0.6 * Double(vehicle.engine.time) // up to 60% discount on time
+        let timeDiscount = (bonus / 100) * 0.5 * Double(vehicle.engine.time) // up to 50% discount on time
+        print("⏱ Engine Time Discount: \(timeDiscount)")
         
         // Create Activity
-        let duration = vehicle.engine.time - timeDiscount
+        let duration = engineDefaultTime - timeDiscount
+        print("⏱ Engine After Intel:   \(duration)")
+        
+        // Update Person's Activity
         for person in workers {
             let activity = LabActivity(time: duration, name: "Space Vehicle Engine")
             person.activity = activity
         }
         
-        
         selectedVehicle = vehicle
         station.garage.xp += 1
-        
-        print("Finished setting up engine.")
         
         // Update UI
         self.buildingVehicles.append(vehicle)
@@ -331,14 +340,18 @@ class GarageViewModel:ObservableObject {
         
         // Update and save Model
         station.garage.startBuildingVehicle(vehicle: vehicle, time:duration)
+        
         // Save
         do {
             // Save Station
             try LocalDatabase.shared.saveStation(station)
+            print("Finished setting up engine. Game Saved.")
         } catch {
             print("‼️ Could not save station.: \(error.localizedDescription)")
         }
     }
+    
+    // MARK: - Inventory + Launch
     
     /// Updates the UI to setup the Inventory
     func setupInventory(vehicle:SpaceVehicle) {
@@ -469,19 +482,14 @@ class GarageViewModel:ObservableObject {
         }
         
         // BioBoxes
-//        var bbArray = vehicle.bioBoxes ?? []
         for bb in bioBoxes {
             for bioMod in station.bioModules {
                 if bioMod.boxes.contains(bb) {
                     bioMod.boxes.removeAll(where: { $0.id == bb.id })
-//                    vehicle.bioBoxes.append(bb)
                     vehicle.bioBoxes.append(bb)
                 }
             }
         }
-//        if !bbArray.isEmpty {
-//            vehicle.bioBoxes = bbArray
-//        }
         
         // Check if over limit?
         

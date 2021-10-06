@@ -64,9 +64,6 @@ class EarthRequestController:ObservableObject {
             self.orderStatus = .Ordering(order: newOrder)
         }
         
-        // Get people from Generator
-//        LocalDatabase.shared.gameGenerators?.update()
-        
     }
     
     /// Updates Variables with the PayloadOrder passed
@@ -216,8 +213,6 @@ class EarthRequestController:ObservableObject {
             return false
         }
         
-//        print("Placing Order...")
-        
         let totalCost = currentOrder.calculateTotal()
         
         if player.money >= Int(totalCost) {
@@ -249,12 +244,6 @@ class EarthRequestController:ObservableObject {
             } catch {
                 print("Could not save Player \(error.localizedDescription)")
             }
-//            LocalDatabase.shared.saveStation(station: station)
-//            let result = LocalDatabase.shared.savePlayer(player: player)
-//            guard result == true else {
-//                print("ERROR: Player \(player.name) could not be saved.")
-//                return false
-//            }
             
             // Update Scene Overlay
             SceneDirector.shared.updatePlayerCard()
@@ -360,7 +349,6 @@ class EarthRequestController:ObservableObject {
                 self.errorMessage = "No Room for \(person.name)"
             } else {
                 // Remove person from list of available for hire
-//                LocalDatabase.shared.gameGenerators?.didHirePerson(person: person)
                 LocalDatabase.shared.player.wallet.didHire(person: person)
             }
         }
@@ -383,8 +371,6 @@ class EarthRequestController:ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.2) {
             SceneDirector.shared.didFinishDeliveryOrder(order: currentOrder)
         }
-        
-        
     }
     
 }

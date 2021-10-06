@@ -135,7 +135,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Overlay - Remake PlayerCard
 
 - [X] Accounting - Implement (Station+Account.swift)
-- [ ] Accounting - Finish Accounting cycle (Station+Account.swift)
+- [X] Accounting - Finish Accounting cycle (Station+Account.swift)
 - [ ] Accounting - Fix Human Report Lines w/ weird emojis
 
 - [X] Overlays - CamControl - Fix Buttons & reverse actions (forward = backward)
@@ -144,23 +144,24 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [ ] Settings - ServerTab - Test Leave Guild
 
+- [ ] Chat Bubble - Fix Freebie
+- [ ] Chat Bubble - Post PlayerID in Chat?
+- [ ] Chat Bubble - Send free `.Entry` token. -> Or transform into 10 tokens.
+- [ ] Chat Bubble - Test Election Results
+- [ ] GameMessagesGuildTab - President functions (Invite, Kickout, Modify Guild)
+
 - [ ] City View - Bio View Improvements
 - [ ] City View - Test Tech Tree
 - [ ] City View - Test Lab Recipes
 - [ ] City View - Lab Recipes - DetailView(making recipe)
 - [ ] City View - Review Outpost RSS Collection
-- [ ] City Peripherals (AirTrap, AlloyMaker)
+- [ ] City Peripherals (AirTrap, AlloyMaker, PowerGenerator(ch4))
+- [ ] City Model Add Tech BioTech, (number of boxes of food allowed)
 
 - [ ] Outpost - SKNS request for `Outpost` upgrades
 - [ ] Outpost - fix bug with contribution - SKNS can't decode OutpostData
 - [ ] Outpost View - non .contributing states views
 - [ ] Outpost - Posdex remake with Hotel, Arena, Observatory, 2x Biospheres, 4x Power Plants, Etc.
-
-- [ ] Chat Bubble - Fix Freebie
-- [ ] Chat Bubble - Post PlayerID in Chat?
-- [ ] Chat Bubble - Send free `.Entry` token.
-- [ ] Chat Bubble - Test Election Results
-- [ ] GameMessagesGuildTab - President functions (Invite, Kickout, Modify Guild)
 
 - [ ] Model - Mars Accounting improvements
 - [ ] Model - Fix accounting - too easy

@@ -163,13 +163,30 @@ class Truss:Codable {
         let tanksArray = tanks.filter({ $0.type == type }).sorted(by: { $0.current < $1.current })
 
         for tank in tanksArray {
-//            tank.current = 0
             if leftOvers > 0 {
                 let extra = tank.fillUp(leftOvers)
                 leftOvers = max(extra, 0)
             }
         }
         return leftOvers
+    }
+    
+    /// Refilling Water as if Tanks were empty (as passed in accounting)
+    func resetWaterTanks(newWater:Int) -> Int {
+        var waterSpill:Int = newWater
+        for tank in tanks.filter({ $0.type == .h2o }) {
+            if waterSpill > tank.capacity {
+                tank.current = tank.capacity
+                waterSpill -= tank.capacity
+            } else {
+                tank.current = waterSpill
+                if tank.current == 0 && tank.discardEmpty == true {
+                    self.tanks.removeAll(where: { $0.id == tank.id })
+                }
+                waterSpill = 0
+            }
+        }
+        return waterSpill
     }
     
     /**

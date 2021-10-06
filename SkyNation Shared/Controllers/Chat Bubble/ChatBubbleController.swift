@@ -279,7 +279,18 @@ class ChatBubbleController:ObservableObject {
         return Array(freebiesMade.keys)
     }
     
-    func retrieveFreebies() {
+    func retrieveFreebies(using tokens:Bool? = false) {
+        
+        if tokens == true {
+            if let token = player.requestToken() {
+                print("Using token: \(token.id)")
+                let res = player.spendToken(token: token, save: false)
+                if res == false { return }
+            } else {
+                print("Not enough tokens")
+                return
+            }
+        }
         
         var freebiesMade = player.wallet.freebiesMade
         if freebiesMade.isEmpty {
@@ -287,6 +298,9 @@ class ChatBubbleController:ObservableObject {
         }
         
         player.wallet.freebiesLast = Date()
+        let next = player.wallet.generateFreebie() // sets the new freebies made
+        print("Next freebie: \(next)")
+        
         
         for (key, _) in freebiesMade {
             if key == "token" {
@@ -305,7 +319,6 @@ class ChatBubbleController:ObservableObject {
                 } catch {
                     print("‼️ Could not save station.: \(error.localizedDescription)")
                 }
-                
             }
         }
         

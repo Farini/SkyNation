@@ -110,7 +110,11 @@ struct ChatBubbleView: View {
                             .foregroundColor(.orange)
                         
                         ForEach(controller.seeFreebies(), id:\.self) { string in
-                            Text(string).foregroundColor(.green)
+                            if string == "money" {
+                                Text("Sky Coins: 1,000").foregroundColor(.green)
+                            } else {
+                                Text(string).foregroundColor(.green)
+                            }
                         }
                         
                         if controller.freebiesAvailable == true {
@@ -127,6 +131,7 @@ struct ChatBubbleView: View {
                             // Not available
                             Button("Tokens") {
                                 print("Get Freebie via Tokens (force)")
+                                controller.retrieveFreebies(using: true)
                             }
                             .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                         }
