@@ -142,9 +142,14 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Overlays - SpaceVehicle - Progress is wrong
 - [ ] Overlays - GameCamera - Fix Awkward cam transitions
 
+- [X] Store - Register Purchase (Request)
+- [ ] Store - Register Purchase (Method)
+- [ ] Store - Give Token
+- [ ] Store - Claim Token
+
 - [ ] Settings - ServerTab - Test Leave Guild
 
-- [ ] Chat Bubble - Fix Freebie
+- [X] Chat Bubble - Fix Freebie
 - [ ] Chat Bubble - Post PlayerID in Chat?
 - [ ] Chat Bubble - Send free `.Entry` token. -> Or transform into 10 tokens.
 - [ ] Chat Bubble - Test Election Results

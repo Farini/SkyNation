@@ -232,7 +232,6 @@
 		8536F412258D47D000B509D2 /* Parafernalia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C7258D47D000B509D2 /* Parafernalia.swift */; };
 		8536F413258D47D000B509D2 /* Parafernalia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C7258D47D000B509D2 /* Parafernalia.swift */; };
 		8536F414258D47D000B509D2 /* Parafernalia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C7258D47D000B509D2 /* Parafernalia.swift */; };
-		8536F415258D47D000B509D2 /* Parafernalia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C7258D47D000B509D2 /* Parafernalia.swift */; };
 		8536F416258D47D000B509D2 /* GarageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C9258D47D000B509D2 /* GarageView.swift */; };
 		8536F417258D47D000B509D2 /* GarageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C9258D47D000B509D2 /* GarageView.swift */; };
 		8536F418258D47D000B509D2 /* GarageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8536F3C9258D47D000B509D2 /* GarageView.swift */; };
@@ -2402,7 +2401,6 @@
 				85487F5526CD9B1900EBC070 /* GameSounds.swift in Sources */,
 				8536F44C258D47EA00B509D2 /* VehicleBuilderViewModel.swift in Sources */,
 				85797512259B9E70004C54D2 /* FlipView.swift in Sources */,
-				8536F415258D47D000B509D2 /* Parafernalia.swift in Sources */,
 				85E2C43026BE5733003315F2 /* GameProduct.swift in Sources */,
 				8592828825F176C1001233BE /* GameController.swift in Sources */,
 				85487F6A26CD9D2500EBC070 /* GameSettings.swift in Sources */,

@@ -276,6 +276,7 @@ class ChatBubbleController:ObservableObject {
         if freebiesMade.isEmpty {
             freebiesMade = player.wallet.generateFreebie()
         }
+        
         return Array(freebiesMade.keys)
     }
     

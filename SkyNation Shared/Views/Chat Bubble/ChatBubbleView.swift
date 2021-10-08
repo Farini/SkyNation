@@ -88,8 +88,6 @@ struct ChatBubbleView: View {
                 .help("\(mType.rawValue)")
                 .onTapGesture {
                     controller.didSelectTab(tab: mType)
-                    //                    print("Did select tab \(mType.rawValue)")
-                    //                    self.tab = mType
                 }
             }
         }
@@ -110,17 +108,39 @@ struct ChatBubbleView: View {
                             .foregroundColor(.orange)
                         
                         ForEach(controller.seeFreebies(), id:\.self) { string in
-                            if string == "money" {
-                                Text("Sky Coins: 1,000").foregroundColor(.green)
-                            } else {
-                                Text(string).foregroundColor(.green)
+                            
+                            HStack {
+                                if string == "money" {
+                                    
+#if os(macOS)
+                                    Image(nsImage: GameImages.currencyImage)
+#elseif os(iOS)
+                                    Image(uiImage: GameImages.currencyImage)
+#endif
+                                    Text("Sky Coins: 1,000").foregroundColor(.green)
+                                    
+                                    
+                                } else if string == "token" {
+#if os(macOS)
+                                    Image(nsImage: GameImages.tokenImage)
+#elseif os(iOS)
+                                    Image(uiImage: GameImages.tokenImage)
+#endif
+                                    Text("Token: 1").foregroundColor(.green)
+                                    
+                                } else if let _ = TankType(rawValue: string) {
+                                    GameImages.imageForTank()
+                                    Text(string).foregroundColor(.green)
+                                }
                             }
+                            .padding()
+                            .background(Color.black)
+                            .cornerRadius(8)
                         }
                         
                         if controller.freebiesAvailable == true {
                             // Available
                             Button("Get it!") {
-                                print("Get Freebie")
                                 controller.retrieveFreebies()
                             }
                             .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
@@ -204,6 +224,10 @@ struct ChatBubbleView: View {
                         if controller.searchPlayerResult.isEmpty {
                             Text("No Players been found").foregroundColor(.gray)
                         }
+                        
+                        let entryTokens:Int = controller.player.wallet.tokens.filter({ $0.origin == .Entry }).count
+                        Text("You have \(entryTokens) Entry tokens. You may gift it to someone else.")
+                        
                     }
                     
                     

@@ -114,10 +114,44 @@ class SKNS {
                 if let responsePlayer:PlayerUpdate = try? decoder.decode(PlayerUpdate.self, from: data) {
                     
                     print("Response player: \(responsePlayer.name)")
-                    DispatchQueue.main.async {
-                        completion?(responsePlayer, nil)
+                    
+                    // CHECKPOINTS: Check if player is the same as database
+                    var checkPoints:[Bool] = []
+                    checkPoints.append(localPlayer.name == responsePlayer.name)
+                    checkPoints.append(localPlayer.guildID == responsePlayer.guildID)
+                    checkPoints.append(localPlayer.experience == responsePlayer.experience)
+                    checkPoints.append(localPlayer.avatar == responsePlayer.avatar)
+                    checkPoints.append(localPlayer.money == responsePlayer.money)
+                    
+                    if checkPoints.contains(false) {
+                        print("\n ⚠️ Needs to Update Player (in Server)")
+                        SKNS.updatePlayer { newPlayerUpdate, error in
+                            DispatchQueue.main.async {
+                                if let newPlayerUpdate = newPlayerUpdate {
+                                    
+                                    // Update Password
+                                    localPlayer.keyPass = newPlayerUpdate.pass
+                                    
+                                    do {
+                                        try LocalDatabase.shared.savePlayer(localPlayer)
+                                        completion?(newPlayerUpdate, nil)
+                                    } catch {
+                                        completion?(nil, error)
+                                    }
+                                    
+                                } else {
+                                    print("Player not updated. \(error?.localizedDescription ?? "n/a")")
+                                    completion?(nil, nil)
+                                }
+                                return
+                            }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            completion?(responsePlayer, nil)
+                        }
+                        return
                     }
-                    return
                     
                 } else {
                     
@@ -204,8 +238,6 @@ class SKNS {
                     } catch {
                         print("‼️ Could not save player.: \(error.localizedDescription)")
                     }
-//                    let res = LocalDatabase.shared.savePlayer(player: localPlayer)
-//                    if !res { print("Error: Could not save player") }
                     
                     DispatchQueue.main.async {
                         completion?(responsePlayer, nil)
@@ -429,7 +461,7 @@ class SKNS {
         
     }
     
-    // MARK: - Tokens
+    // MARK: - Tokens + Purchase
     
     // Validate
     static func validateTokenFromTextInput(text:String, completion:((GameToken?, String?) -> ())?) {
@@ -477,8 +509,52 @@ class SKNS {
         
     }
     
-    // Make Purchase (post)
+    // Register Purchase (post)
+    static func registerPurchase(purchase:Purchase, completion:(([GameToken], String?) -> ())?) {
+        
+        // Build Request
+        let address = "\(baseAddress)/token/purchase/register"
+        
+        guard let url = URL(string: address) else { return }
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        
+        request.httpMethod = HTTPMethod.POST.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request.setValue("\(purchase.receipt)", forHTTPHeaderField: "receipt")
+        request.setValue("\(purchase.date)", forHTTPHeaderField: "dop")
+        request.setValue("\(purchase.storeProduct.rawValue)", forHTTPHeaderField: "ptype")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                
+                if let responseTokens:[GameToken] = try? decoder.decode([GameToken].self, from: data) {
+                    
+                    print("Response Tokens: \(responseTokens.count)")
+                    completion?(responseTokens, nil)
+                    return
+                    
+                } else if let gameError = try? decoder.decode(GameError.self, from: data) {
+                    print("Response Error.: \(gameError.reason)")
+                    completion?([], gameError.reason)
+                    return
+                }
+            } else {
+                DispatchQueue.main.async {
+                    print("Error: \(error?.localizedDescription ?? "n/a")")
+                    completion?([], error?.localizedDescription ?? "Could not register purchase")
+                    return
+                }
+            }
+        }
+        task.resume()
+    }
     
+    // Gift Token
+    // Claim Token
     
     // MARK: - Guild
     
@@ -1362,29 +1438,6 @@ class SKNS {
         
     }
     
-    // DEPRECATE
-    /*
-    static func contributionRequest(object:Codable, type:ContributionType, outpost:Outpost) {
-        
-        let url = URL(string: "\(baseAddress)/guilds/outpost/contribute/\(outpost.id.uuidString)")!
-        print("Needs to continue code. Create URL request: \(url)")
-        
-        // FIXME: - Contribution Request
-        
-        // Request will need:
-        // 1. SKNUserPost (user + pass)
-        // 2. Outpost ID
-        // 3. Object Type (type here)
-        // 4. Object being contributed Optional (key, val)
-        
-        // Response:
-        // 0. In Server, fetch outpostID.json, then add contribution by (key, val)
-        // 1. Yes, or No (Contribution Successful)
-        
-        // After response:
-        // 1. Update Server to let it know if Outpost State is UPGRADING
-    }
-    */
     
     // MARK: - Space Vehicle
     

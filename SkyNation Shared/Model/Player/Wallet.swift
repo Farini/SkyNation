@@ -215,6 +215,7 @@ struct Purchase:Codable, Identifiable, Hashable {
     var addedTokens:Bool
     var addedKit:Bool
     
+    /// Initting from the store
     init(product:GameProductType, kit:Purchase.Kit, receipt:String) {
         self.id = UUID()
         self.receipt = receipt
@@ -246,4 +247,22 @@ struct Purchase:Codable, Identifiable, Hashable {
         return gTokens
     }
     
+}
+
+/// Copy from Server's `Purchase`
+struct DBPurchase:Codable, Identifiable, Hashable {
+    
+    var id: UUID
+    
+    var userid: UUID
+    
+    var receipt: String?
+    
+    var status: String?
+    
+    var product: String
+    
+    var notes: String?
+    
+    var datePurchased: Date
 }

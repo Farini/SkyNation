@@ -88,6 +88,14 @@ class Station:Codable {
             loops -= 1
         }
         
+        // Save player + Money
+        let player = LocalDatabase.shared.player
+        do {
+            try LocalDatabase.shared.savePlayer(player)
+        } catch {
+            print("Error \(error.localizedDescription)")
+        }
+        
         completion([response])
     }
     

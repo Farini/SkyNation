@@ -67,6 +67,14 @@ struct GameToken:Codable {
         self.date = Date()
         self.dbUser = UUID()
         self.origin = .Beginner
+    }
+    
+    // Gift
+    init(donator:UUID, receiver:UUID, playerToken:GameToken) {
+        self.id = playerToken.id
+        self.date = Date()
+        self.dbUser = donator
+        self.origin = playerToken.origin
         
     }
     

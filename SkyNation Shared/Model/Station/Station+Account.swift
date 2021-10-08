@@ -159,7 +159,7 @@ extension Station {
                             didFail = true
                         } else {
                             let payment = truss.payForResources(ingredients: [ingredient:abs(value)])
-                            report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value)) \(ingredient.rawValue)")
+                            report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value)) \(ingredient.rawValue)Kg.")
                             print("Account Pay: \(payment)")
                         }
                         
@@ -171,14 +171,14 @@ extension Station {
                         if tank == .h2o {
                             // water is separate
                             water -= abs(value)
-                            report.notes.append("\(peripheral.peripheral.rawValue) consumed \(value) water.")
+                            report.notes.append("\(peripheral.peripheral.rawValue) consumed \(abs(value))L of water.")
                         } else {
                             if truss.tanks.filter({ $0.type == tank }).compactMap({ $0.current }).reduce(0, +) < abs(value) {
                                 report.problems.append("Not enough of \(tank.name) for peripheral")
                                 didFail = true
                             } else {
                                 let _ = truss.chargeFrom(tank: tank, amount: value)
-                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value)) \(tank.rawValue)")
+                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value)) \(tank.rawValue)L.")
                             }
                         }
                         
@@ -193,7 +193,7 @@ extension Station {
                             didFail = true
                         } else {
                             self.air.h2o -= abs(value) // this actually subtracts
-                            report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value)) vapor")
+                            report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value))L of vapor")
                         }
                         
                     } else
@@ -206,7 +206,7 @@ extension Station {
                             didFail = true
                         } else {
                             self.air.o2 -= abs(value) // this actually subtracts
-                            report.peripheralNotes.append("\(peripheral.peripheral.rawValue) produced: \(value) oxygen")
+                            report.peripheralNotes.append("\(peripheral.peripheral.rawValue) produced: \(abs(value))L of oxygen")
                         }
                     } else
                     
@@ -232,23 +232,23 @@ extension Station {
                             // Ingredient
                             let ingSpill = truss.refillContainers(of: ingredient, amount: value)
                             if ingSpill > 0 {
-                                report.problems.append("Could not refill \(ingredient) completely")
+                                report.problems.append("Could not refill \(ingredient). No Boxes.")
                             } else {
-                                report.notes.append("\(peripheral.peripheral) refilled \(key) with \(value)")
+                                report.notes.append("\(peripheral.peripheral) refilled \(key) with \(value)Kg.")
                             }
                         } else if let tank = TankType(rawValue: key) {
                             // Tank
                             if tank == .h2o {
                                 // Water
                                 water += value
-                                report.notes.append("\(peripheral.peripheral) refilled \(key) with \(value)")
+                                report.notes.append("\(peripheral.peripheral) refilled \(key) with \(value)L.")
                             } else {
                                 // Other Tanks
                                 let spill = truss.refillTanks(of: tank, amount: value)
                                 if spill > 0 {
                                     report.problems.append("Could not refill \(tank) completely")
                                 } else {
-                                    report.notes.append("\(peripheral.peripheral) refilled \(key) with \(value)")
+                                    report.notes.append("\(peripheral.peripheral) refilled \(key) with \(value)L.")
                                 }
                             }
                             
@@ -465,10 +465,11 @@ extension Station {
         let antennaMoney = truss.moneyFromAntenna()
         print("\n 🤑 Antenna Money: \(antennaMoney)")
         let player = LocalDatabase.shared.player
-        if getPeople().count > 0 {
+        if habModules.compactMap({ $0.inhabitants }).count > 0 {
             player.money += antennaMoney
             print(" 💵 Player money: \(player.money)")
             report.addNote(string: "💵 \(player.money) (📡 + \(antennaMoney))")
+            
         } else {
             print("No people -> No money")
             report.addNote(string: "💵 No inhabitants, no money 🥺")
@@ -674,7 +675,7 @@ extension Station {
         }
         
         // Health
-        reportLine += " 𝚫❤️(\(healthDelta)"
+        reportLine += " ❤️\(healthDelta)"
         let finalHealth = max(0, min(100, person.healthPhysical + healthDelta))
         person.healthPhysical = finalHealth
     }
@@ -770,7 +771,7 @@ extension Station {
         }
         
         // Happy
-        reportLine += " 𝚫😁(\(happyDelta)"
+        reportLine += " 😁(\(happyDelta))"
         let finalHappy = max(0, min(100, person.happiness + happyDelta))
         person.happiness = finalHappy
         
