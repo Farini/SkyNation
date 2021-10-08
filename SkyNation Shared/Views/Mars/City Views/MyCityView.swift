@@ -58,21 +58,6 @@ struct LocalCityView: View {
                 .onTapGesture {
                     self.menuItem = mitem
                     controller.didSelectTab(tab: mitem)
-//                    switch mitem {
-//                        case .hab: controller.cityViewState = .hab(state: .noSelection)
-//                        case .lab:
-//                            print("clicklab")
-//                            if let activity = controller.labActivity {
-////                                controller.labActivity = activity
-//                                controller.cityViewState = .lab(state: .activity(object: activity))
-//                            } else {
-//                                controller.cityViewState = .lab(state: .NoSelection)
-//                            }
-//                        case .bio: controller.cityViewState = .bio(state: .notSelected)
-//                        case .rss: controller.cityViewState = .rss
-//                        case .collect: controller.cityViewState = .collect
-//                        case .rocket: controller.cityViewState = .rocket(state: .noSelection)
-//                    }
                 }
                 .modifier(Badged())
             }
@@ -93,8 +78,10 @@ struct LocalCityView: View {
         VStack {
                         
             header
+            Divider()
 
             switch controller.cityTab {
+                    
                 case .hab:
                     CityHabView(controller: controller, habState: .noSelection)
                     

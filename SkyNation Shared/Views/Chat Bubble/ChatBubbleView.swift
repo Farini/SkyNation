@@ -11,6 +11,7 @@ import SwiftUI
 struct ChatBubbleView: View {
     
     @ObservedObject var controller:ChatBubbleController
+    @State private var hasReadChat:Bool = false
     
     init() {
         self.controller = ChatBubbleController(simulating: false, simElection: false)
@@ -88,6 +89,9 @@ struct ChatBubbleView: View {
                 .help("\(mType.rawValue)")
                 .onTapGesture {
                     controller.didSelectTab(tab: mType)
+                    if mType == .Chat {
+                        self.hasReadChat = true
+                    }
                 }
             }
         }
@@ -208,25 +212,61 @@ struct ChatBubbleView: View {
                     }
                     
                 case .Search:
+                    
+                    
                     Group {
+                        let entryTokens:Int = controller.player.wallet.tokens.filter({ $0.origin == .Entry && $0.usedDate != nil }).count
+                        
                         Text("Search")
                         HStack {
                             Text("Search")
                             TextField("Search", text: $controller.searchText)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .frame(width:250)
                             Button("Search") {
                                 print("Searching")
                                 controller.searchPlayerByName()
                             }
+                            .buttonStyle(GameButtonStyle())
                         }
+                        .padding(.horizontal)
+                        
+                        let guildHasPresident:Bool = controller.guild?.president != nil
+                        let inviteEnabled:Bool = guildHasPresident ? controller.iAmPresident():true
+                        
                         List(controller.searchPlayerResult) { sPlayer in
-                            PlayerCardView(pCard: PlayerCard(playerContent: sPlayer))
+                            VStack {
+                                PlayerCardView(pCard: PlayerCard(playerContent: sPlayer))
+                                HStack {
+                                    Button("🎁 Token") {
+//                                        print("Gifting Token")
+                                        controller.giftToken(to: sPlayer)
+                                    }
+                                    .buttonStyle(GameButtonStyle())
+                                    .disabled(entryTokens < 1)
+                                    
+                                    Button("Invite to Guild") {
+                                        print("Invite")
+                                        controller.inviteToGuild(playerContent: sPlayer)
+                                    }
+                                    .buttonStyle(GameButtonStyle())
+                                    .disabled(!inviteEnabled)
+                                    // if guild is open, then we cannot invite.
+                                }
+                            }
+                            
                         }
                         if controller.searchPlayerResult.isEmpty {
                             Text("No Players been found").foregroundColor(.gray)
                         }
                         
-                        let entryTokens:Int = controller.player.wallet.tokens.filter({ $0.origin == .Entry }).count
+                        
                         Text("You have \(entryTokens) Entry tokens. You may gift it to someone else.")
+                        
+                        Text(controller.tokenMessage)
+                            .font(.headline)
+                            .foregroundColor(controller.tokenMessage.contains("Error") ? .red:.white)
+                        
                         
                     }
                     
@@ -245,8 +285,44 @@ struct ChatBubbleView: View {
     
     /// The callout displaying how many messages in that tab
     func makeTabCallout(type:ChatBubbleTab) -> Text {
-        let current = controller.gameMessages.filter({ $0.type == .Achievement }).count
-        return Text("\(current)").foregroundColor(current == 0 ? Color.gray:Color.red)
+        switch type {
+            case .Achievement:
+                let current = controller.gameMessages.filter({ $0.type == .Achievement }).count
+                return Text("\(current)").foregroundColor(current == 0 ? Color.gray:Color.red)
+            case .Freebie:
+                if controller.player.wallet.timeToGenerateNextFreebie() < 1 {
+                    return Text("!").foregroundColor(.red)
+                } else {
+                    return Text("")
+                }
+            case .Chat:
+                return hasReadChat ? Text(""):Text("\(controller.guildChat.count)")
+                // return
+            case .Guild:
+                switch controller.electionState {
+                    case .noElection: return Text("")
+                    case .voting(let election):
+                        return Text("!\(election.voted.count)").foregroundColor(.red)
+                    case .waiting(_):
+                        return Text("!").foregroundColor(.red)
+                        
+                }
+//                if let deltaTime = controller.guild?.election.timeIntervalSinceNow {
+//                    if abs(deltaTime) > 5.0 * 60.0 * 60.0 * 24.0 {
+//                        return Text("!").foregroundColor(.red)
+//                    } else
+//                    if abs(deltaTime) < 60.0 * 60.0 * 24.0 {
+//                        return Text("!").foregroundColor(.red)
+//                    }
+//                }
+//                return Text("")
+                
+            case .Tutorial:
+                return Text("")
+            case .Search:
+                return Text("")
+        }
+        
     }
 }
 

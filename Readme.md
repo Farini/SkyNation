@@ -137,31 +137,32 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Accounting - Implement (Station+Account.swift)
 - [X] Accounting - Finish Accounting cycle (Station+Account.swift)
 - [ ] Accounting - Fix Human Report Lines w/ weird emojis
+- [ ] Accounting - Copy Station - in Mars (New Methods)
 
 - [X] Overlays - CamControl - Fix Buttons & reverse actions (forward = backward)
 - [X] Overlays - SpaceVehicle - Progress is wrong
 - [ ] Overlays - GameCamera - Fix Awkward cam transitions
 
-- [X] Store - Register Purchase (Request)
-- [ ] Store - Register Purchase (Method)
-- [ ] Store - Give Token
-- [ ] Store - Claim Token
-
 - [ ] Settings - ServerTab - Test Leave Guild
 
 - [X] Chat Bubble - Fix Freebie
-- [ ] Chat Bubble - Post PlayerID in Chat?
-- [ ] Chat Bubble - Send free `.Entry` token. -> Or transform into 10 tokens.
+- [X] Chat Bubble - Fix Callouts
+- [X] Chat Bubble - Gift `.Entry` token. -> Or transform into 10 tokens.
+- [X] Chat Bubble - Invite Player, when there is no Guild President
+- [ ] Chat Bubble - Receive, Claim Gift `.Entry` token. -> Or transform into 10 tokens.
 - [ ] Chat Bubble - Test Election Results
 - [ ] GameMessagesGuildTab - President functions (Invite, Kickout, Modify Guild)
 
+- [X] City View - Test Tech Tree
+- [X] City View - Review Outpost RSS Collection
+- [X] City Peripherals (AirTrap, AlloyMaker, PowerGenerator(ch4))
+- [X] City Model Add Tech BioTech, (number of boxes of food allowed)
 - [ ] City View - Bio View Improvements
-- [ ] City View - Test Tech Tree
+- [ ] City View - Tech tree not showing completed items
 - [ ] City View - Test Lab Recipes
 - [ ] City View - Lab Recipes - DetailView(making recipe)
-- [ ] City View - Review Outpost RSS Collection
-- [ ] City Peripherals (AirTrap, AlloyMaker, PowerGenerator(ch4))
-- [ ] City Model Add Tech BioTech, (number of boxes of food allowed)
+- [ ] City View - Calculate how much food is allowed in BioTab
+- [ ] City View - Vehicle Arrival - Dismiss food if not enough bioboxes
 
 - [ ] Outpost - SKNS request for `Outpost` upgrades
 - [ ] Outpost - fix bug with contribution - SKNS can't decode OutpostData

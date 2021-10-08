@@ -334,10 +334,21 @@ class GameSettingsController:ObservableObject {
     /// Fetches all `Joinable` Guilds
     func fetchGuilds() {
         
+        
+        SKNS.browseInvitesFromGuilds { guildArray, error in
+            if let guildArray = guildArray {
+                DispatchQueue.main.async {
+                    self.joinableGuilds.append(contentsOf: guildArray)
+                }
+            }
+        }
+        
         SKNS.browseGuilds { (guilds, error) in
             if let array = guilds {
                 print("Updating Guilds")
-                self.joinableGuilds = array
+                DispatchQueue.main.async {
+                    self.joinableGuilds.append(contentsOf: array)
+                }
                 self.loadedList.append("Fetched \(array.count) Guilds")
             } else {
                 if let error = error {

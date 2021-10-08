@@ -303,6 +303,7 @@ class LSSController: ObservableObject {
                     
                     self.tanks = station.truss.tanks
                     self.updateState(newState: .Resources(type: .Tank(tank: theTank)))
+                    self.updateAllData()
                 }
                 
                 self.saveStation(station: station)
@@ -317,6 +318,7 @@ class LSSController: ObservableObject {
                     self.tanks = city.tanks
                     
                     self.updateState(newState: .Resources(type: .Tank(tank: theTank)))
+                    self.updateAllData()
                 }
                 
                 self.saveCity(city: city)
@@ -763,7 +765,20 @@ class LSSController: ObservableObject {
         let modulesConsume = modulesCount * GameLogic.energyPerModule
         self.zConsumeModules = modulesConsume
         self.zConsumeHumans = Array(repeating: GameLogic.personalEnergyConsumption(), count: headCount).reduce(0, +)
-        self.zProduction = city.solarPanels.compactMap({ $0.maxCurrent() }).reduce(0, +)
+        
+        // Energy Collection
+        var energyCollection:Int = 5
+        if let sknsData = LocalDatabase.shared.serverData {
+            // get power sources
+            let outposts = sknsData.outposts
+            for op:Outpost in outposts {
+                if op.type == .Energy {
+                    let pEnergy = op.energy() / sknsData.cities.count
+                    energyCollection += pEnergy
+                }
+            }
+        }
+        self.zProduction = city.solarPanels.compactMap({ $0.maxCurrent() }).reduce(0, +) + energyCollection
         let totalConsume = zConsumeModules + zConsumeMachine + zConsumeHumans
         self.zDelta = self.zProduction - totalConsume
         

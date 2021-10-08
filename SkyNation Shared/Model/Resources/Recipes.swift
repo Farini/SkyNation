@@ -36,6 +36,13 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
     // Alloy            triangle.circle
     case Alloy
     
+    // [ MARS ]
+    // PowerGen
+    /// A Power Generator (Mars)
+    case PowerGen
+    case AirTrapper
+    
+    
     // E-Vehicle        bolt.car
     // MegaTank?        capsule.portrait
     // Polimer?         [see ingred.]
@@ -62,6 +69,8 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
             case .Cement: return [.Silica:4, .Polimer:2]
             case .ChargedGlass: return [.Polimer:10, .Silica:5, .Ceramic:4, .Lithium:4, .Sensor:3]
             case .Alloy: return [.Iron:10, .Aluminium:3, .CarbonFiber:5, .Lithium:2, .Copper:4]
+            case .PowerGen: return [.Iron:10, .Aluminium:3, .Lithium:2, .Copper:4]
+            case .AirTrapper: return [.Iron:10, .Aluminium:3, .Lithium:2, .Copper:4]
         }
     }
     
@@ -79,7 +88,8 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
             case .tank: return "Makes an empty tank that can be used for any gas."
             case .Alloy: return "Makes a Special Alloy needed for building some things."
             case .WaterFilter: return "A Water filter can save you a lot of water, recycling from waste liquid."
-            
+            case .PowerGen: return "Generates Power"
+            case .AirTrapper: return "Traps the CO2 from the Martian atmosphere."
             default: return ""
         }
     }
@@ -97,6 +107,8 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
             case .Roboarm: return [.Electric:1, .SystemOS:1, .Mechanic:2]
             case .WaterFilter: return [.Electric:1, .Mechanic:1, .Material:2]
             case .BioSolidifier: return [.Electric:1, .Mechanic:2, .Material:2]
+            case .PowerGen: return [.Handy:1, .Electric:1]
+            case .AirTrapper: return [.Handy:1, .Biologic:1, .SystemOS:1]
             default: return [.Handy:1]
         }
     }
@@ -121,9 +133,11 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
             case .Electrolizer: return 60 * 10      // 10m
             case .tank: return 60 * 60 * 2          // 2h
             
-            case .Cement: return 60 * 2 // 2m
-            case .ChargedGlass: return 60 * 60 // 1h
-            case .Alloy: return 60 * 3 // 3m
+            case .Cement: return 60 * 2             // 2m
+            case .ChargedGlass: return 60 * 60      // 1h
+            case .Alloy: return 60 * 3              // 3m
+            case .PowerGen: return 60 * 10          // 10m
+            case .AirTrapper: return 60 * 60 * 6    // 6h
         }
     }
     
@@ -160,7 +174,8 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
             case .Cement: return Ingredient.Cement.image() ?? Image(systemName: "questionmark")
             case .ChargedGlass: return Ingredient.Glass.image() ?? Image(systemName: "questionmark")
             case .Alloy: return Ingredient.Alloy.image() ?? Image(systemName: "questionmark")
-                
+            case .PowerGen: return Image(systemName: "power") // togglepower
+            case .AirTrapper: return Image(systemName: "wind")
             default: return Image(systemName: "questionmark")
         }
     }

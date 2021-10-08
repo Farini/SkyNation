@@ -63,6 +63,8 @@ struct CityGarageView: View {
                                 Text(vehicle.status.rawValue)
                                 Text("\(vehicle.calculateProgress() ?? 0.0)")
                                 
+                                GameActivityView(vehicle: vehicle)
+                                
                                 Button("Unload") {
                                     controller.unload(vehicle: vehicle)
                                 }

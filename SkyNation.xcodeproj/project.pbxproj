@@ -1613,8 +1613,8 @@
 			isa = PBXGroup;
 			children = (
 				85D3BAA9269DF75000B6AA36 /* MarsCityView.swift */,
-				85D3BAAD269DF78500B6AA36 /* MyCityView.swift */,
 				85D3BAB1269DF79800B6AA36 /* ForeignCityView.swift */,
+				85D3BAAD269DF78500B6AA36 /* MyCityView.swift */,
 				85351E7126FE365100EEE04C /* My City Tabs */,
 			);
 			path = "City Views";

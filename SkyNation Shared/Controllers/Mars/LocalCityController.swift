@@ -96,7 +96,6 @@ enum CityGarageState {
 class LocalCityController:ObservableObject, BioController {
     
     @Published var cityData:CityData
-//    @Published var cityViewState:LocalCityViewState = LocalCityViewState.hab(state: .noSelection)
     @Published var cityTab:CityMenuItem = .hab
     
     // Hab & People
@@ -112,6 +111,7 @@ class LocalCityController:ObservableObject, BioController {
     
     /// Unlocked Lab Technology
     @Published var unlockedTech:[CityTech] = []
+    @Published var unlockedRecipes:[Recipe] = []
     
     // Bio
     
@@ -140,10 +140,18 @@ class LocalCityController:ObservableObject, BioController {
         
         // Post Init
         
-        
         // Lab Activity
         if let activity = cityData.labActivity {
             self.labActivity = activity
+        }
+        // Tech + Recipes
+        self.unlockedTech = CityTechTree().unlockedTechAfter(doneTech: cityData.tech)
+        self.unlockedRecipes = cityData.unlockedRecipes
+        for oldRecipe in LocalDatabase.shared.station.unlockedRecipes {
+            if !cityData.unlockedRecipes.contains(oldRecipe) {
+                cityData.unlockedRecipes.append(oldRecipe)
+                self.unlockedRecipes.append(oldRecipe)
+            }
         }
         
         // People
@@ -282,20 +290,6 @@ class LocalCityController:ObservableObject, BioController {
     }
     
     // MARK: - Lab
-    
-    func didSelectLab(tech:CityTech?, recipe:Recipe?) {
-        self.warnings = []
-        
-        if let tech:CityTech = tech {
-            self.unlockedTech = CityTechTree().unlockedTechAfter(doneTech: cityData.tech)
-//            self.cityViewState = .lab(state: .tech(name: tech))
-//            self.cityTab = .lab
-        } else if let recipe = recipe {
-//            self.cityViewState = .lab(state: .recipe(name: recipe))
-        }
-        
-        self.cityTab = .lab
-    }
     
     func makeRecipe(recipe:Recipe) -> Bool {
         
@@ -438,46 +432,27 @@ class LocalCityController:ObservableObject, BioController {
         if let recipe = Recipe(rawValue: activity.activityName) {
             print("Recipe: \(recipe.rawValue)")
             
-            
-//            cityData.unlockedRecipes.append(recipe)
-            switch recipe {
-                case .Alloy:
-                    cityData.boxes.append(StorageBox(ingType: .Alloy, current: Ingredient.Alloy.boxCapacity()))
-                case .Condensator:
-                    cityData.peripherals.append(PeripheralObject(peripheral: .Condensator))
-                case .ScrubberCO2:
-                    cityData.peripherals.append(PeripheralObject(peripheral: .ScrubberCO2))
-                case .Electrolizer:
-                    cityData.peripherals.append(PeripheralObject(peripheral: .Electrolizer))
-                case .Methanizer:
-                    cityData.peripherals.append(PeripheralObject(peripheral: .Methanizer))
-                case .Radiator:
-                    cityData.peripherals.append(PeripheralObject(peripheral: .Radiator))
-                case .SolarPanel:
-                    cityData.peripherals.append(PeripheralObject(peripheral: .solarPanel))
-                case .Battery:
-                    cityData.batteries.append(Battery(shopped: false))
-                case .tank:
-                    cityData.tanks.append(Tank(type: .empty, full: false))
-                case .WaterFilter:
-                    cityData.peripherals.append(PeripheralObject(peripheral: .WaterFilter))
-                case .BioSolidifier:
-                    cityData.peripherals.append(PeripheralObject(peripheral: .BioSolidifier))
-                case .Cement:
-                    cityData.boxes.append(StorageBox(ingType: .Cement, current: Ingredient.Cement.boxCapacity()))
-                case .ChargedGlass:
-                    cityData.boxes.append(StorageBox(ingType: .Glass, current: Ingredient.Glass.boxCapacity()))
-                default: print("ERROR - DID NOT UNDERSTAND RECIPE: \(recipe.rawValue)")
+            let result = cityData.collectRecipe(recipe: recipe)
+            guard result == true else {
+                print("Failed to collect recipe: \(recipe.rawValue)")
+                self.warnings = ["Failed to collect recipe: \(recipe.rawValue)"]
+                return
             }
             
-            
             cityData.labActivity = nil
-//            self.cityViewState = .lab(state: .NoSelection)
             self.didSelectTab(tab: .lab)
             self.labActivity = nil
             
             do {
                 try LocalDatabase.shared.saveCity(cityData)
+                // update UI
+                self.unlockedRecipes = cityData.unlockedRecipes // + LocalDatabase.shared.station.unlockedRecipes
+                for oldRecipe in LocalDatabase.shared.station.unlockedRecipes {
+                    if !cityData.unlockedRecipes.contains(oldRecipe) {
+                        cityData.unlockedRecipes.append(oldRecipe)
+                        self.unlockedRecipes.append(oldRecipe)
+                    }
+                }
             } catch {
                 // TODO: - Deal with Error
                 // Deal With Error
@@ -490,13 +465,16 @@ class LocalCityController:ObservableObject, BioController {
             cityData.labActivity = nil
             cityData.tech.append(tech)
             
-//            self.cityViewState = .lab(state: .NoSelection)
             self.didSelectTab(tab: .lab)
             
             self.labActivity = nil
             
             do {
                 try LocalDatabase.shared.saveCity(cityData)
+                // Saved
+                // Update Tech
+                self.unlockedTech = CityTechTree().unlockedTechAfter(doneTech: cityData.tech)
+                
             } catch {
                 // TODO: - Deal with Error
                 // Deal With Error
@@ -766,8 +744,6 @@ class LocalCityController:ObservableObject, BioController {
     /// Unloads a `SpaceVehicle` to the city
     func unload(vehicle:SpaceVehicle) {
         
-//        guard let city = cityData else { return }
-        
         var cityVehicles = cityData.garage.vehicles
         
         guard cityVehicles.contains(vehicle) else { return }
@@ -786,6 +762,9 @@ class LocalCityController:ObservableObject, BioController {
             } else {
                 print("⚠️ Person doesn't fit! Your city is full!")
             }
+        }
+        for battery in vehicle.batteries {
+            cityData.batteries.append(battery)
         }
         
         // FIXME: - Put a limit on Bioboxes?

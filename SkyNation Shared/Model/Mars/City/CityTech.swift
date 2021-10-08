@@ -22,7 +22,12 @@ enum CityTech:String, Codable, CaseIterable, Identifiable {
     case Hab5
     case Hab6
     
-    case OutsideDome1
+//    case OutsideDome1
+    // biosphere
+    case Biosphere2 // up to 50?
+    case Biosphere3 // up to 100
+    case Biosphere4 // up to 200
+    case Biosphere5 // up to 400
     
     case VehicleRoom1
     case VehicleRoom2
@@ -37,6 +42,10 @@ enum CityTech:String, Codable, CaseIterable, Identifiable {
     case recipeBig
     case recipeWaterSanitizer
     case recipeAlloy
+    
+    // new
+    case recipeGenerator
+    
     
     // MARK: - Logic
     
@@ -74,7 +83,7 @@ enum CityTech:String, Codable, CaseIterable, Identifiable {
     var shortName:String {
         switch self {
             case .Hab1, .Hab2, .Hab3, .Hab4, .Hab5, .Hab6: return "Hab Module"
-            default: return "Short"
+            default: return self.rawValue
         }
     }
     
@@ -90,7 +99,7 @@ enum CityTech:String, Codable, CaseIterable, Identifiable {
     /// Ingredients required to research this tech
     var ingredients:[Ingredient:Int] {
         switch self {
-            case .Hab1: return [.Iron:10, .Ceramic:5]
+            case .Hab1: return [.Iron:1]
             case .Hab2: return [.Iron:14, .Ceramic:8, .DCMotor:1]
             case .Hab3: return [.Iron:20, .Ceramic:16, .Silica:2]
             default: return [:]
@@ -107,7 +116,7 @@ enum CityTech:String, Codable, CaseIterable, Identifiable {
     /// `Human` Skills required to research this tech
     var skillSet:[Skills:Int] {
         switch self {
-            default: return [.Material:2]
+            default: return [.Handy:1]
         }
     }
 }
@@ -117,6 +126,8 @@ enum MarsRecipe:String, Codable, CaseIterable {
     case Cement     // Any Structure
     case Glass      // Any Structure
     case Alloy      // Any Structure
+    
+    case Generator  // Make energy from Methane
     
     case SolarCell
     case Polimer
@@ -143,15 +154,22 @@ struct CityTechTree {
         let hab3 = Tree(CityTech.Hab3, children:[hab4, airTrap])
         let hab2 = Tree(CityTech.Hab2, children:[hab3, cement])
         
-        let vr4 = Tree(CityTech.VehicleRoom4)
-        let vr3 = Tree(CityTech.VehicleRoom3, children:[vr4])
-        let vr2 = Tree(CityTech.VehicleRoom2, children:[alloy, vr3])
-        let vr1 = Tree(CityTech.VehicleRoom1, children:[vr2])
+        // let vr4 = Tree(CityTech.VehicleRoom4)
+//        let bio2 = Tree(CityTech.Biosphere2)
+//        let bio3 = Tree(CityTech.Biosphere3)
         
-        let recVehicle = Tree(CityTech.recipeVehicle, children:[vr1])
+        let bio5 = Tree(CityTech.Biosphere5)
+        let bio4 = Tree(CityTech.Biosphere4, children: [bio5])
+        let bio3 = Tree(CityTech.Biosphere3, children: [bio4])
+        let bio2 = Tree(CityTech.Biosphere2, children: [bio3, alloy])
+//        let vr3 = Tree(CityTech.VehicleRoom3, children:[vr4])
+//        let vr2 = Tree(CityTech.VehicleRoom2, children:[alloy, vr3])
+//        let vr1 = Tree(CityTech.VehicleRoom1, children:[vr2])
+        
+//        let recVehicle = Tree(CityTech.recipeVehicle, children:[vr1])
         
         // Finalize
-        let binaryTree = Tree<CityTech>(CityTech.Hab1, children: [hab2, recVehicle])
+        let binaryTree = Tree<CityTech>(CityTech.Hab1, children: [hab2, bio2])
         
         let uniqueTree:Tree<Unique<CityTech>> = binaryTree.map(Unique.init)
         self.uniqueTree = uniqueTree

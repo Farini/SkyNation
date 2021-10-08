@@ -359,10 +359,43 @@ class ChatBubbleController:ObservableObject {
     
     private var lastSearch:Date?
     
+    @Published var tokenMessage:String = ""
+    
     func searchPlayerByName() {
         SKNS.searchPlayerByName(name: self.searchText) { playerArray, error in
             self.lastSearch = Date()
             self.searchPlayerResult = playerArray
+        }
+    }
+    
+    func giftToken(to playerContent:PlayerContent) {
+        
+        if let entryToken = player.wallet.tokens.filter({ $0.origin == .Entry && $0.usedDate == nil }).first {
+            let newToken = GameToken(donator: player.playerID!, receiver: playerContent.id, playerToken: entryToken)
+            SKNS.giftToken(to: playerContent, token: newToken) { givenToken, errorMessage in
+                DispatchQueue.main.async {
+                    if let givenToken = givenToken {
+                        self.tokenMessage = "Token successfully given! Receipt:\(givenToken.id)"
+                    } else if let errorMessage = errorMessage {
+                        self.tokenMessage = "Error. \(errorMessage)"
+                    }
+                }
+            }
+        } else {
+            self.tokenMessage = "You have no Entry Tokens to give."
+        }
+    }
+    
+    func inviteToGuild(playerContent:PlayerContent) {
+        self.tokenMessage = ""
+        SKNS.inviteToGuild(player: playerContent) { newPlayerContent, error in
+            if let pp = newPlayerContent {
+                DispatchQueue.main.async {
+                    self.tokenMessage = "Guild invite successfully sent to \(pp.name)"
+                }
+            } else if let error = error {
+                self.tokenMessage = "Error. \(error.localizedDescription)"
+            }
         }
     }
 }

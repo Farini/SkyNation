@@ -17,7 +17,7 @@ struct CityLabView: View {
         HStack {
             List() {
                 Section(header: recipeHeader) {
-                    ForEach(Recipe.marsCases, id:\.self) { recipe in
+                    ForEach(controller.unlockedRecipes, id:\.self) { recipe in
                         Text(recipe.rawValue).foregroundColor(.blue)
                             .onTapGesture {
 //                                controller.didSelectLab(tech: nil, recipe: recipe)
@@ -26,7 +26,7 @@ struct CityLabView: View {
                     }
                 }
                 Section(header: techHeader) {
-                    ForEach(CityTech.allCases, id:\.self) { tech in
+                    ForEach(controller.unlockedTech, id:\.self) { tech in
                         Text(tech.rawValue).foregroundColor(.blue)
                             .onTapGesture {
 //                                controller.didSelectLab(tech: tech, recipe: nil)

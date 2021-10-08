@@ -104,7 +104,9 @@ class CityData:Codable, Identifiable {
     // MARK: - Methods
     
     /// Adds the product of a recipe to the city (i.e. Peripheral)
-    func collectRecipe(recipe:Recipe) {
+    func collectRecipe(recipe:Recipe) -> Bool {
+        
+        var success:Bool = true
         
         switch recipe {
             // Going to TRUSS
@@ -114,7 +116,7 @@ class CityData:Codable, Identifiable {
                 
             // Battery
             case .Battery:
-                let battery = Battery(shopped: true)
+                let battery = Battery(shopped: false)
                 batteries.append(battery)
                 
             // PERIPHERALS
@@ -136,16 +138,32 @@ class CityData:Codable, Identifiable {
             case .BioSolidifier:
                 let b = PeripheralObject(peripheral: .BioSolidifier)
                 self.peripherals.append(b)
+            case .PowerGen:
+                let powerGen = PeripheralObject(peripheral: .PowerGen)
+                self.peripherals.append(powerGen)
+            case .AirTrapper:
+                let airTrapper = PeripheralObject(peripheral: .AirTrap)
+                self.peripherals.append(airTrapper)
+            case .Radiator:
+                let radiator = PeripheralObject(peripheral: .Radiator)
+                self.peripherals.append(radiator)
                 
+            // Ingredients
             case .Alloy: self.boxes.append(StorageBox(ingType: .Alloy, current: Ingredient.Alloy.boxCapacity()))
-
             case .Cement: self.boxes.append(StorageBox(ingType: .Cement, current: Ingredient.Cement.boxCapacity()))
             case .ChargedGlass: self.boxes.append(StorageBox(ingType: .Glass, current: Ingredient.Glass.boxCapacity()))
-            case .Module, .Node, .Radiator, .Roboarm, .StorageBox: print("Those don't work here")
+            
+            // Invalid
+            case .Module, .Node, .Roboarm, .StorageBox:
+                print("Those don't work here")
+                success = false
             
             case .tank: self.tanks.append(Tank(type: .empty))
+            
+            
         }
         
+        return success
     }
     
     func takeBox(box:StorageBox) {

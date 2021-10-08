@@ -70,6 +70,9 @@ enum PeripheralType:String, Codable, CaseIterable {
     
     // MARK: - Required in Mars
     
+    case AirTrap
+    
+    case PowerGen
     
     // AirTrapper - collect co2 from air
     // GasGenerator - make energy
@@ -109,6 +112,8 @@ enum PeripheralType:String, Codable, CaseIterable {
             case .WaterFilter: return "Transforms part of waste water into drinkable water"
             case .BioSolidifier: return "Transforms solid waste into fertilizer"
             
+            case .AirTrap: return "Takes CO2 from the Martian's thin atmosphere"
+            case .PowerGen: return "Makes energy from Methane and Oxygen."
             default: return "It is unknown what this thing does."
         }
     }
@@ -132,7 +137,7 @@ enum PeripheralType:String, Codable, CaseIterable {
     /// Whether peripheral can break
     var breakable:Bool {
         switch self {
-            case .Condensator, .ScrubberCO2, .Electrolizer, .Radiator, .WaterFilter, .BioSolidifier: return true
+            case .Condensator, .ScrubberCO2, .Electrolizer, .Radiator, .WaterFilter, .BioSolidifier, .AirTrap: return true
         default: return false
         }
     }
@@ -152,7 +157,7 @@ enum PeripheralType:String, Codable, CaseIterable {
             case .Electrolizer: return 18
             case .Methanizer, .Radiator, .WaterFilter: return 25
             case .Antenna, .BioSolidifier: return 30
-            
+            case .AirTrap: return 30
             default: return 0
         }
     }
@@ -238,33 +243,10 @@ class PeripheralObject:Codable, Identifiable, Equatable {
                 var random:[String:Int] = Bool.random() == true ? ([Ingredient.Fertilizer.rawValue:2]):[TankType.ch4.rawValue:4]
                 random[Ingredient.wasteSolid.rawValue] = -2
                 return random
-                
+            case .PowerGen: return [TankType.ch4.rawValue: -5, "energy":5]
+            case .AirTrap: return [TankType.co2.rawValue:4, TankType.allCases.randomElement()!.rawValue:1]
             
             default: return [:]
-//            case .Radiator:
-//                <#code#>
-//            case .solarPanel:
-//                <#code#>
-//            case .battery:
-//                <#code#>
-//            case .storageBox:
-//                <#code#>
-//            case .storageTank:
-//                <#code#>
-//            case .DockingPoint:
-//                <#code#>
-//            case .Airlock:
-//                <#code#>
-//            case .Cuppola:
-//                <#code#>
-//            case .GarageArm:
-//                <#code#>
-//            case .Roboarm:
-//                <#code#>
-//            case .Garage:
-//                <#code#>
-//            case .Antenna:
-//                <#code#>
         }
     }
     
@@ -354,6 +336,10 @@ extension PeripheralObject {
                 return Image("BioSolidifier")
             case .Electrolizer:
                 return Image("Electrolizer")
+            case .PowerGen:
+                return Image(systemName: "power") // togglepower
+            case .AirTrap:
+                return Image(systemName: "wind")
             default:
                 print("Don't have an image for that yet")
                 return nil

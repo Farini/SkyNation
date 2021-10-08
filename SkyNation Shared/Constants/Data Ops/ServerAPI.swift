@@ -554,6 +554,52 @@ class SKNS {
     }
     
     // Gift Token
+    static func giftToken(to player:PlayerContent, token:GameToken, completion:((GameToken?, String?) -> ())?) {
+        let address = "\(baseAddress)/token/gifts/give"
+        
+        guard let url = URL(string: address) else { return }
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        
+        request.httpMethod = HTTPMethod.POST.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        encoder.outputFormatting = .prettyPrinted
+        
+        if let data:Data = try? encoder.encode(token) {
+            request.httpBody = data
+        }
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                
+                if let responseToken:GameToken = try? decoder.decode(GameToken.self, from: data) {
+                    
+                    print("Response Token: \(responseToken)")
+                    completion?(responseToken, nil)
+                    return
+                    
+                } else if let gameError = try? decoder.decode(GameError.self, from: data) {
+                    print("Response Error.: \(gameError.reason)")
+                    completion?(nil, gameError.reason)
+                    return
+                }
+            } else {
+                DispatchQueue.main.async {
+                    print("Error: \(error?.localizedDescription ?? "n/a")")
+                    completion?(nil, error?.localizedDescription ?? "Could not register purchase")
+                    return
+                }
+            }
+        }
+        task.resume()
+    }
+    
     // Claim Token
     
     // MARK: - Guild
@@ -577,6 +623,51 @@ class SKNS {
         
         // Set the playerID if there is one
         request.setValue(pid.uuidString, forHTTPHeaderField: "pid")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                do {
+                    let guilds:[GuildSummary] = try decoder.decode([GuildSummary].self, from: data)
+                    DispatchQueue.main.async {
+                        print("Data returning")
+                        completion?(guilds, nil)
+                    }
+                } catch {
+                    print("Not Guilds Object. Error:\(error.localizedDescription): \(data)")
+                    if let string = String(data: data, encoding: .utf8) {
+                        print("Not Guilds String: \(string)")
+                    }
+                }
+            } else if let error = error {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    static func browseInvitesFromGuilds(completion:(([GuildSummary]?, Error?) -> ())?) {
+        
+        let player = LocalDatabase.shared.player
+        
+        guard let _ = player.playerID else {
+            print("Something Wrong.")
+            completion?(nil, nil)
+            return
+        }
+        
+        let url = URL(string: "\(baseAddress)/guilds/player/browse_invites")!
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        // Set the playerID if there is one
+//        request.setValue(pid.uuidString, forHTTPHeaderField: "pid")
         
         let task = session.dataTask(with: request) { (data, response, error) in
             if let data = data {
@@ -831,6 +922,50 @@ class SKNS {
                 
             } else {
                 print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    static func inviteToGuild(player:PlayerContent, completion:((PlayerContent?, Error?) -> ())?) {
+        let player = LocalDatabase.shared.player
+        
+        guard let _ = player.playerID else {
+            print("Something Wrong.")
+            completion?(nil, nil)
+            return
+        }
+        
+        let url = URL(string: "\(baseAddress)/guilds/player/invite")!
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        // Set the playerID if there is one
+        //        request.setValue(pid.uuidString, forHTTPHeaderField: "pid")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                do {
+                    let playerContent:PlayerContent = try decoder.decode(PlayerContent.self, from: data)
+                    DispatchQueue.main.async {
+                        print("Data returning")
+                        completion?(playerContent, nil)
+                    }
+                } catch {
+                    print("⚠️ Invite unsuccessful. Error:\(error.localizedDescription): \(data)")
+                    if let string = String(data: data, encoding: .utf8) {
+                        print("Not Guilds String: \(string)")
+                    }
+                }
+            } else if let error = error {
+                print("⚠️ Error returning")
                 DispatchQueue.main.async {
                     completion?(nil, error)
                 }
