@@ -15,13 +15,6 @@ struct CityBioboxDetailView: View {
     @Binding var bioBox:BioBox
     var onCancelSelection:(() -> (Void))  = {}
     
-//    init(controller:CityController, cityData:Binding<CityData>, bioBox:Binding<BioBox>, cancel:(() -> (Void))) {
-//        self.controller = controller
-//        self.cityData = _cityData
-//        self.bioBox = _bioBox
-//        self.onCancelSelection = cancel
-//    }
-    
     @State private var geneticLoops:Int = 0
     let scene = SCNScene(named: "Art.scnassets/ParticleEmitters/DNAModel.scn")!
     
@@ -106,12 +99,6 @@ struct CityBioboxDetailView: View {
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
 //                .disabled(controller.growDisabledState(box: bioBox))
-                
-//                Button("Crop") {
-//                    print("Crop population")
-//                }
-//                .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
-//                .disabled(controller.cropDisabledState(box: bioBox))
                 
                 Button("Evolve") {
                     controller.evolveBio(box:bioBox)

@@ -20,7 +20,6 @@ struct CityLabView: View {
                     ForEach(controller.unlockedRecipes, id:\.self) { recipe in
                         Text(recipe.rawValue).foregroundColor(.blue)
                             .onTapGesture {
-//                                controller.didSelectLab(tech: nil, recipe: recipe)
                                 self.labState = .recipe(name: recipe)
                             }
                     }
@@ -29,7 +28,6 @@ struct CityLabView: View {
                     ForEach(controller.unlockedTech, id:\.self) { tech in
                         Text(tech.rawValue).foregroundColor(.blue)
                             .onTapGesture {
-//                                controller.didSelectLab(tech: tech, recipe: nil)
                                 self.labState = .tech(name: tech)
                             }
                     }
@@ -45,7 +43,11 @@ struct CityLabView: View {
                                 Text("City Tech").font(.title).foregroundColor(.blue)
                                 Spacer()
                             }
-                            CityTechDiagram()
+                            
+                            CityTechDiagram(city: controller.cityData) { chosenTech in
+                                self.labState = .tech(name: chosenTech)
+                            }
+                            
                             
                         case .recipe(let name):
                             CityLabRecipeView(controller: controller, recipe: name) { activity in
@@ -69,6 +71,7 @@ struct CityLabView: View {
                                     controller.cityData.labActivity = nil
                                 } else {
                                     controller.collectActivity(activity: activity)
+                                    self.labState = .NoSelection
                                 }
                             }
                     }

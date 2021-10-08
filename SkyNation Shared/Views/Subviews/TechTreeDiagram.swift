@@ -19,6 +19,7 @@ struct DiagramContent: View {
     var body: some View {
         VStack {
             Diagram(tree: tree, node: { value in
+                
 //                Text("\(value.value.rawValue): \(value.value.getDuration())")
                 VStack {
                     

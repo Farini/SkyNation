@@ -553,9 +553,42 @@ class LocalCityController:ObservableObject, BioController {
         if usingTokens {
             // Pay with Tokens
         } else {
-            // Pay with Ingredients
-            // Consume Energy
+            
+            // Check Limits
+            let cityLimit = cityData.availableBioSlots()
+            let cityAvailable = cityData.bioBoxes.compactMap({ $0.populationLimit }).reduce(0, +)
+            let cityExtra = cityLimit - cityAvailable
+            
+            if cityExtra >= boxSize {
+                // Pay with Ingredients
+                // Consume Energy
+                let ingResult = cityData.payForResources(ingredients: [.Fertilizer:boxSize])
+                let watResult = cityData.payForTanks(dictionary: [.h2o:boxSize * GameLogic.bioBoxWaterConsumption])
+                let enerResult = cityData.consumeEnergyFromBatteries(amount: boxSize * GameLogic.bioBoxEnergyConsumption)
+                if ingResult == true && watResult == true && enerResult == true {
+                    // Consumed
+                    print("Consumption ok.")
+                    
+                } else {
+                    return false
+                }
+            }
+            
             // Make People Busy
+            // 1. Make person busy
+            let activity = LabActivity(time: 3600, name: "Planting life")
+            for person in selectedStaff {
+                person.activity = activity
+            }
+            
+            self.cityData.bioBoxes.append(box)
+            
+            do {
+                try LocalDatabase.shared.saveCity(self.cityData)
+                print("Success !")
+            } catch {
+                print("Could not save city data after box creation.: \(error.localizedDescription)")
+            }
         }
         // Update State
         // Success -> state is .bio(selected:box)
@@ -767,11 +800,18 @@ class LocalCityController:ObservableObject, BioController {
             cityData.batteries.append(battery)
         }
         
-        // FIXME: - Put a limit on Bioboxes?
-        
         for biobox in vehicle.bioBoxes {
-            cityData.bioBoxes.append(biobox)
+            let currentBoxLevel = cityData.bioBoxes.compactMap({ $0.populationLimit }).reduce(0, +)
+            let bioLimit = cityData.availableBioSlots()
+            let exceed = bioLimit - currentBoxLevel
+            
+            if exceed >= biobox.populationLimit {
+                cityData.bioBoxes.append(biobox)
+            } else {
+                print("⚠️ Biobox doesn't fit! Your city is full!")
+            }
         }
+        
         for peripheral in vehicle.peripherals {
             cityData.peripherals.append(peripheral)
         }
@@ -793,7 +833,7 @@ class LocalCityController:ObservableObject, BioController {
         // FIXME: - Server Update:
         // Delete vehicles that arrived and has unpacked
         if let registration = vehicle.registration {
-            print("Delete vehicle from SErver Dataabase. VID: \(registration)")
+            print("Delete vehicle from Server Database. VID: \(registration)")
         }
     }
     

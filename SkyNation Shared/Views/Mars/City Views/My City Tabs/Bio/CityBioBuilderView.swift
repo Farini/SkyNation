@@ -234,7 +234,7 @@ struct CityBioBuilderView: View {
     }
     
     func availableFertilizer() -> Int {
-        return controller.cityData.boxes.compactMap({ $0.current }).reduce(0, +)
+        return controller.cityData.boxes.filter({$0.type == .Fertilizer}).compactMap({ $0.current }).reduce(0, +)
     }
     
     func validateResourcesForBox(qtty:Int) -> [String] {
@@ -249,21 +249,21 @@ struct CityBioBuilderView: View {
         var problems:[String] = []
         
         // Ingredients Consumption
-        if cityData.validateResources(ingredients: [.Fertilizer:fertilizer]).isEmpty == true {
+        if controller.cityData.validateResources(ingredients: [.Fertilizer:fertilizer]).isEmpty == true {
             print("Fertilizer verified")
         } else {
             print("Not enough Fertilizer")
             problems.append("Not enough Fertilizer")
         }
         
-        if cityData.availableWater() >= water {
+        if controller.cityData.availableWater() >= water {
             print("Water Verified")
         } else {
             print("No enough Water")
             problems.append("Not enough Water")
         }
         
-        if cityData.availableEnergy() >= energy {
+        if controller.cityData.availableEnergy() >= energy {
             print("Energy Verified")
         } else {
             print("Not enough Energy")
@@ -273,7 +273,7 @@ struct CityBioBuilderView: View {
         // Workers & Skills
         var bioCount:Int = 0
         var medCount:Int = 0
-        for person in selectedPeople {
+        for person in controller.selectedStaff {
             for skill in person.skills {
                 if skill.skill == .Biologic {
                     bioCount += skill.level
@@ -340,7 +340,13 @@ struct CityBioBuilderView: View {
         
         // 3 - Create New Box
 //        controller.createNewBox(dna: choice, size: size)
+        let box = BioBox(chosen: choice, size: size)
         
+        let result = controller.buildBio(box: box, usingTokens: false, boxSize: size)
+        if result == true {
+            // Deselect
+            self.onCancelSelection()
+        }
     }
 }
 

@@ -133,6 +133,17 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Model - Outpost rss Collecting
 - [X] Model - Accounting Improve Human (PHI - Person Happiness Index)
 - [X] Overlay - Remake PlayerCard
+- [X] City View - Test Tech Tree
+- [X] City View - Review Outpost RSS Collection
+- [X] City Peripherals (AirTrap, AlloyMaker, PowerGenerator(ch4))
+- [X] City Model Add Tech BioTech, (number of boxes of food allowed)
+- [X] City View - Tech tree not showing completed items
+- [X] City View - Calculate how much food is allowed in BioTab
+- [X] City View - Vehicle Arrival - Dismiss food if not enough bioboxes
+- [X] City View - Test Lab Recipes
+- [X] City View - Lab Recipes - DetailView(making recipe)
+- [X] City View - Bio View Improvements
+
 
 - [X] Accounting - Implement (Station+Account.swift)
 - [X] Accounting - Finish Accounting cycle (Station+Account.swift)
@@ -153,16 +164,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Chat Bubble - Test Election Results
 - [ ] GameMessagesGuildTab - President functions (Invite, Kickout, Modify Guild)
 
-- [X] City View - Test Tech Tree
-- [X] City View - Review Outpost RSS Collection
-- [X] City Peripherals (AirTrap, AlloyMaker, PowerGenerator(ch4))
-- [X] City Model Add Tech BioTech, (number of boxes of food allowed)
-- [ ] City View - Bio View Improvements
-- [ ] City View - Tech tree not showing completed items
-- [ ] City View - Test Lab Recipes
-- [ ] City View - Lab Recipes - DetailView(making recipe)
-- [ ] City View - Calculate how much food is allowed in BioTab
-- [ ] City View - Vehicle Arrival - Dismiss food if not enough bioboxes
+- [ ] Launching a Vehicle should also be an Achievement
 
 - [ ] Outpost - SKNS request for `Outpost` upgrades
 - [ ] Outpost - fix bug with contribution - SKNS can't decode OutpostData
@@ -190,7 +192,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Station Scene - Background HDRI image
 - [ ] Station Scene - New Modules not 'clickable' after Tech research. 
 
-- [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing) -> Look under Dektop -> Useful Assets -> Sounds
+- [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
 - [ ] Sound - 2 more music (better ones)
 
 - [ ] Basic Views - Error messages (red)

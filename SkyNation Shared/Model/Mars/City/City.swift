@@ -233,7 +233,7 @@ class CityData:Codable, Identifiable {
         var lacking:[Ingredient] = []
         for (ingr, qtty) in ingredients {
             let relevantBoxes = boxes.filter({ $0.type == ingr })
-            let iHave = relevantBoxes.map({$0.current}).reduce(0, +)
+            let iHave = relevantBoxes.compactMap({$0.current}).reduce(0, +)
             if iHave < qtty {
                 lacking.append(ingr)
             }
@@ -250,11 +250,22 @@ class CityData:Codable, Identifiable {
     }
     
     func availableBioSlots() -> Int {
-        var base = 20
-        if tech.contains(CityTech.recipeAirTrap) { base += 5 }
-        if tech.contains(CityTech.recipeAirTrap) { base += 5 }
-        if tech.contains(CityTech.recipeWaterSanitizer) { base += 5 }
-        return base
+
+        var begining:Int = 20
+        if tech.contains(.Biosphere2) {
+            begining += 30
+            if tech.contains(.Biosphere3) {
+                begining += 50
+                if tech.contains(.Biosphere4) {
+                    begining += 100
+                    if tech.contains(.Biosphere5) {
+                        begining += 200
+                    }
+                }
+            }
+        }
+        
+        return begining
     }
     
     /**

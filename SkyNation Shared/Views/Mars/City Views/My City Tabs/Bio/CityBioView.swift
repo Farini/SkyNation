@@ -15,6 +15,8 @@ struct CityBioView: View {
     @State private var selection:BioModSelection = .notSelected
     @State private var dnaChoice:DNAOption = .banana
     
+    @State private var bioLimit:Int = 30
+    
     // Available slots
     // available energy
     
@@ -28,13 +30,14 @@ struct CityBioView: View {
                     
                     // TABLE Bio Boxes
                     List() {
+                        Text("Max Boxes: \(bioLimit)")
+                        
                         Section(header: Text("Bio Boxes")) {
                             ForEach(controller.cityData.bioBoxes) { biobox in
                                 Text(biobox.perfectDNA.isEmpty ? "Sprout":biobox.perfectDNA)
                                     .font(.callout)
                                     .foregroundColor(selectedBiobox?.id ?? UUID() == biobox.id ? Color.orange:Color.white)
                                     .onTapGesture {
-//                                        controller.didSelect(box: box)
                                         self.selectedBiobox = biobox
                                         self.selection = .selected(box: biobox)
                                         if let dna = DNAOption(rawValue: biobox.perfectDNA) {
@@ -72,7 +75,6 @@ struct CityBioView: View {
                                     
                                     HStack {
                                         Button(action: {
-//                                            controller.startAddingBox()
                                             self.selection = .building
                                         }, label: {
                                             HStack {
@@ -94,22 +96,9 @@ struct CityBioView: View {
                             HStack {
                                 
                                 ScrollView([.vertical], showsIndicators: true) {
-                                    
-                                    // BioBox
-//                                    VStack {
-//                                        Text("---")
-//                                        Text("Biobox detail view goes here")
-//                                        Text("---")
-//                                    }
-//                                    .padding()
-                                    
                                     CityBioboxDetailView(controller: controller, cityData: .constant(controller.cityData), bioBox: .constant(bioBox)) {
                                         self.selection = .notSelected
                                     }
-                                    
-                                    /*
-                                    BioBoxDetailView(controller:controller, bioBox:bioBox)
-                                    */
                                 }
                                 
                                 // Population Display
@@ -127,18 +116,9 @@ struct CityBioView: View {
                             
                         case .building:
                             ScrollView() {
-//                                VStack {
-//                                    Text("---")
-//                                    Text("Building Biobox View")
-//                                    Text("---")
-//                                }
-//                                .padding()
-                                
                                 CityBioBuilderView(controller:controller, onCancelSelection: {
                                     self.selection = .notSelected
                                 })
-                                
-//                                BuildingBioBoxView(controller:controller)
                             }
                     }
                     
@@ -147,6 +127,13 @@ struct CityBioView: View {
             
         }
         .frame(minWidth: 600, idealWidth: 700, maxWidth: 800, alignment: .top)
+    }
+    
+    /// Updates the limits according to City Tech
+    func updateBioLimits() {
+        // 30, 50, 100, 200, 400
+        let limit = controller.cityData.availableBioSlots()
+        self.bioLimit = limit
     }
 }
 
