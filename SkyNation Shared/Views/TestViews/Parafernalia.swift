@@ -85,13 +85,13 @@ struct TypographyView: View {
                 .padding(.leading)
             
             HStack {
-                PeripheralObject(peripheral: .Airlock).getImage()
+                PeripheralObject(peripheral: .PowerGen).getImage()
                     .padding()
                     .background(Color.black)
                     .cornerRadius(8)
                 
                 
-                PeripheralObject(peripheral: .Airlock).getImage()
+                PeripheralObject(peripheral: .BioSolidifier).getImage()
                     .padding()
                     .background(Color.black)
                     .cornerRadius(8)

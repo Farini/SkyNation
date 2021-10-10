@@ -136,7 +136,7 @@ enum OutpostType:String, CaseIterable, Codable {
 enum OutpostState:String, CaseIterable, Codable {
     
     case collecting     // accepting contributions
-    case full           // can upgrade. Set date and proceed to cooldown
+//    case full           // can upgrade. Set date and proceed to cooldown
     case cooldown       // wait for the date
     case finished       // ready for level upgrade
     case maxed          // no more upgrades

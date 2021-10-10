@@ -14,8 +14,9 @@ struct ContributionRoundView: View {
     @Binding var contribRound:OutpostSupply
     
     @State var deliveryError:String = ""
+//    @State var canUpdate:Bool = false
     
-    var player = LocalDatabase.shared.player ?? SKNPlayer()
+    var player = LocalDatabase.shared.player
     
     let shouldFake:Bool = true
     
@@ -92,18 +93,20 @@ struct ContributionRoundView: View {
             
             Divider().frame(width:150)
             
+            Text(controller.outpostUpgradeMessage).foregroundColor(.orange)
+            
             // Buttons
             HStack {
                 
-                Button("Fake") {
-                    
-                    let faker:OutpostSupply = self.makeFake()
-                    let old = self.contribRound
-                    let new = OutpostSupply(merging: old, with: faker)
-                    
-                    self.contribRound = new
-                }
-                .buttonStyle(GameButtonStyle())
+//                Button("Fake") {
+//
+//                    let faker:OutpostSupply = self.makeFake()
+//                    let old = self.contribRound
+//                    let new = OutpostSupply(merging: old, with: faker)
+//
+//                    self.contribRound = new
+//                }
+//                .buttonStyle(GameButtonStyle())
                 
                 Button("🚚 Deliver") {
                     print("Delivering...")
@@ -111,19 +114,25 @@ struct ContributionRoundView: View {
                 }
                 .buttonStyle(GameButtonStyle())
                 .disabled(controller.contribRound.supplyScore() < 1)
+                
+                Button("⇧ Update") {
+                    controller.upgradeButtonTapped()
+                }
+                .buttonStyle(GameButtonStyle())
+                .disabled(!controller.outpostUpgradeMessage.isEmpty)
             }
         }
         .padding()
     }
     
-    func makeFake() -> OutpostSupply {
-        let fake = OutpostSupply()
-        let ing1 = Ingredient.allCases.randomElement()!
-        fake.ingredients.append(StorageBox(ingType: ing1, current: ing1.boxCapacity()))
-        let tank1 = TankType.allCases.randomElement()!
-        fake.tanks.append(Tank(type: tank1, full: true))
-        return fake
-    }
+//    func makeFake() -> OutpostSupply {
+//        let fake = OutpostSupply()
+//        let ing1 = Ingredient.allCases.randomElement()!
+//        fake.ingredients.append(StorageBox(ingType: ing1, current: ing1.boxCapacity()))
+//        let tank1 = TankType.allCases.randomElement()!
+//        fake.tanks.append(Tank(type: tank1, full: true))
+//        return fake
+//    }
 }
 
 struct ContributionRoundView_Previews: PreviewProvider {

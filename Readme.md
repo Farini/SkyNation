@@ -143,54 +143,56 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] City View - Test Lab Recipes
 - [X] City View - Lab Recipes - DetailView(making recipe)
 - [X] City View - Bio View Improvements
-
+- [X] Overlays - CamControl - Fix Buttons & reverse actions (forward = backward)
+- [X] Overlays - SpaceVehicle - Progress is wrong
+- [X] Chat Bubble - Fix Freebie
+- [X] Chat Bubble - Fix Callouts
+- [X] Chat Bubble - Gift `.Entry` token. -> Or transform into 10 tokens.
+- [X] Chat Bubble - Invite Player, when there is no Guild President
+- [X] Chat Bubble - Receive, Claim Gift `.Entry` token. -> Or transform into 10 tokens.
+- [X] Mars Scene - Go back to Space Station
+- [X] Station Scene - SceneBuilder Improvements (to reload scene back from Mars)
+- [X] Outpost - SKNS request for `Outpost` upgrades
+- [X] Outpost - fix bug with contribution - SKNS can't decode OutpostData
+- [X] Outpost View - non .contributing states views
 
 - [X] Accounting - Implement (Station+Account.swift)
 - [X] Accounting - Finish Accounting cycle (Station+Account.swift)
 - [ ] Accounting - Fix Human Report Lines w/ weird emojis
 - [ ] Accounting - Copy Station - in Mars (New Methods)
 
-- [X] Overlays - CamControl - Fix Buttons & reverse actions (forward = backward)
-- [X] Overlays - SpaceVehicle - Progress is wrong
-- [ ] Overlays - GameCamera - Fix Awkward cam transitions
+- [ ] GameCamera - Fix Awkward cam transitions
 
-- [ ] Settings - ServerTab - Test Leave Guild
+- [ ] Chat Bubble - Chat not showing
+- [ ] Chat Bubble - President functions (Invite, Kickout, Modify Guild)
+- [ ] Chat Bubble - If no president, move election to earlier
 
-- [X] Chat Bubble - Fix Freebie
-- [X] Chat Bubble - Fix Callouts
-- [X] Chat Bubble - Gift `.Entry` token. -> Or transform into 10 tokens.
-- [X] Chat Bubble - Invite Player, when there is no Guild President
-- [ ] Chat Bubble - Receive, Claim Gift `.Entry` token. -> Or transform into 10 tokens.
-- [ ] Chat Bubble - Test Election Results
-- [ ] GameMessagesGuildTab - President functions (Invite, Kickout, Modify Guild)
+- [ ] Tests - (Outpost) - Test SKNS request for `Outpost` upgrades.
+- [ ] Tests - (Settings) - ServerTab - Test Leave Guild
+- [ ] Tests - (Chat Bubble) - Test Election Results
 
-- [ ] Launching a Vehicle should also be an Achievement
-
-- [ ] Outpost - SKNS request for `Outpost` upgrades
-- [ ] Outpost - fix bug with contribution - SKNS can't decode OutpostData
-- [ ] Outpost View - non .contributing states views
-- [ ] Outpost - Posdex remake with Hotel, Arena, Observatory, 2x Biospheres, 4x Power Plants, Etc.
-
+- [ ] Model - Outpost Posdex remake with Hotel, Arena, Observatory, 2x Biospheres, 4x Power Plants, Etc.
+- [ ] Model - Launching a Vehicle should also be an Achievement
 - [ ] Model - Mars Accounting improvements
 - [ ] Model - Fix accounting - too easy
 - [ ] Model - Fix cost of things (Outpost level ups)
+- [ ] Model - Remodel `Posdex`
 - [ ] Model - Road Updates
 - [ ] Model - E-Vehicle/Bot
 
-- [ ] 2D Graphics - iOS app icon
-
-- [ ] Blender - Individual Tanks
-- [ ] Blender - Biosphere -> WallL3 needs grass UV
-- [ ] Blender - Biosphere -> Add trees + water
-- [ ] Blender - Observatory - Make UVs
-
-- [X] Mars Scene - Go back to Space Station
 - [ ] Mars Scene - Animations - SpaceVehicle arriving
 - [ ] Mars Scene - Garage - Vehicle Validation (when arriving (orbit))
 
-- [X] Station Scene - SceneBuilder Improvements (to reload scene back from Mars)
 - [ ] Station Scene - Background HDRI image
 - [ ] Station Scene - New Modules not 'clickable' after Tech research. 
+
+- [ ] 2D Graphics - iOS app icon
+
+- [ ] Blender - Biosphere -> WallL3 needs grass UV
+- [ ] Blender - Biosphere -> Add trees + water
+- [ ] Blender - Observatory - Make UVs
+- [ ] Blender - Observatory - Add new geometries (see kit)
+- [ ] Blender - Biosphere -> Add more geometries
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
 - [ ] Sound - 2 more music (better ones)
@@ -224,3 +226,4 @@ Features that are requested, but are not required to launch the game
 - [ ] Mars Scene - City + Solar Panel(s)
 - [ ] Mars Scene - Gate Lights changing (Day/Night)
 - [ ] Station Scene - Make the Earth bright again?
+- [ ] Blender - Individual Tanks

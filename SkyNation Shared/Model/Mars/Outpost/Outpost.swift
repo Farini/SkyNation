@@ -60,19 +60,15 @@ class Outpost:Codable {
                         self.state = .maxed
                         return .nextState(.maxed)
                     }
-                    self.state = .full
-                    // State full -> Call Server
-                    return .nextState(.full)
+                    // Start The Cooldown
+                    self.state = .cooldown
+                    self.dateUpgrade = Date().addingTimeInterval(TimeInterval.oneDay)
+                    return .nextState(.cooldown)
                 } else {
                     // return current state (collecting)
                     return .noChanges
                 }
-            case .full:
-                self.dateUpgrade = Date().addingTimeInterval(5) //(TimeInterval.oneDay)
-                self.supplied.clearContents()
-                self.state = .cooldown
-                return .nextState(.cooldown)
-                // next state -> Call server
+                
             case .cooldown:
                 guard let upDate = dateUpgrade else { return OutpostUpgradeResult.needsDateUpgrade }
                 if Date().compare(upDate) == .orderedDescending {
@@ -193,9 +189,9 @@ class Outpost:Codable {
             // Energy
             case .power1, .power2:
                 switch level {
-                    case 0: return OutpostJob(wantedIngredients: [.Polimer:50, .Aluminium:20, .SolarCell:200, .Circuitboard:8], wantedSkills: [.Electric:10, .Material:4, .Handy:18])
-                    case 1: return OutpostJob(wantedIngredients: [.Polimer:150, .Aluminium:360, .SolarCell:900, .Circuitboard:54, .Sensor:12], wantedSkills: [.Electric:15, .Material:12, .Handy:22])
-                    case 2: return OutpostJob(wantedIngredients: [.Polimer:320, .Aluminium:450, .SolarCell:1600, .Circuitboard:32, .Sensor:64], wantedSkills: [.Electric:21, .Material:14, .Handy:30, .Mechanic:8])
+                    case 0: return OutpostJob(wantedIngredients: [.Polimer:20, .SolarCell:60, .Circuitboard:4], wantedSkills: [.Electric:3, .Material:1, .Handy:3])
+                    case 1: return OutpostJob(wantedIngredients: [.Polimer:60, .Aluminium:35, .SolarCell:320, .Circuitboard:18, .Sensor:5], wantedSkills: [.Electric:8, .Material:3, .Handy:9])
+                    case 2: return OutpostJob(wantedIngredients: [.Polimer:150, .Aluminium:65, .SolarCell:550, .Circuitboard:22, .Sensor:8], wantedSkills: [.Electric:21, .Material:14, .Handy:30, .Mechanic:8])
                     case 3: return OutpostJob(wantedIngredients: [.Polimer:680, .Aluminium:750, .SolarCell:2500, .Circuitboard:64, .Sensor:128], wantedSkills: [.Electric:32, .Material:24, .Handy:32, .Mechanic:18, .SystemOS:8])
                     case 4: return OutpostJob(wantedIngredients: [.Polimer:1200, .Aluminium:600, .SolarCell:4000, .Circuitboard:128, .Sensor:256], wantedSkills: [.Electric:40, .Material:30, .Handy:50, .Mechanic:15, .Datacomm:8, .SystemOS:12])
                     default: return nil
@@ -417,6 +413,7 @@ struct DBOutpost:Codable {
     }
 }
 
+/*
 // Deprecate?
 /** Energy, Water, Oxygen, Food */
 struct Ewolf {
@@ -444,3 +441,4 @@ struct Ewolf {
         }
     }
 }
+*/

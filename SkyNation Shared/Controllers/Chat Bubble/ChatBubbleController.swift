@@ -342,6 +342,35 @@ class ChatBubbleController:ObservableObject {
         
     }
     
+    @Published var giftedTokenMessage:String = ""
+    func searchGiftedToken() {
+        if !giftedTokenMessage.isEmpty { return }
+        
+        SKNS.requestGiftedToken { gameToken, message in
+            if let gameToken = gameToken {
+                guard self.player.wallet.tokens.contains(where: { $0.id == gameToken.id }) == false else {
+                    print("You already have this token")
+                    return
+                }
+                DispatchQueue.main.async {
+                    self.player.wallet.tokens.append(gameToken)
+                    self.giftedTokenMessage = "Received Token type \(gameToken.origin)"
+                    do {
+                        try LocalDatabase.shared.savePlayer(self.player)
+                    } catch {
+                        print("Error saving gifted token on player.")
+                        return
+                    }
+                }
+                
+            } else {
+                DispatchQueue.main.async {
+                    self.giftedTokenMessage = message ?? "Could not find any token gifted to you."
+                }
+            }
+        }
+    }
+    
     // MARK: - Tutorial
     
     /// Current Tutorial Page

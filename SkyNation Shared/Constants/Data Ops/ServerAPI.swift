@@ -601,6 +601,43 @@ class SKNS {
     }
     
     // Claim Token
+    static func requestGiftedToken(completion:((GameToken?, String?) -> ())?) {
+        let address = "\(baseAddress)/token/gifts/claim"
+        
+        guard let url = URL(string: address) else { return }
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        
+        request.httpMethod = HTTPMethod.GET.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                
+                if let responseToken:GameToken = try? decoder.decode(GameToken.self, from: data) {
+                    
+                    print("Response Token: \(responseToken)")
+                    completion?(responseToken, nil)
+                    return
+                    
+                } else if let gameError = try? decoder.decode(GameError.self, from: data) {
+                    print("Response Error.: \(gameError.reason)")
+                    completion?(nil, gameError.reason)
+                    return
+                }
+            } else {
+                DispatchQueue.main.async {
+                    print("Error: \(error?.localizedDescription ?? "n/a")")
+                    completion?(nil, error?.localizedDescription ?? "Could not register purchase")
+                    return
+                }
+            }
+        }
+        task.resume()
+    }
     
     // MARK: - Guild
     
@@ -1570,6 +1607,95 @@ class SKNS {
         }
         task.resume()
         
+        
+    }
+    
+    static func applyForOutpostUpgrades(outpost:Outpost, upgrade:OutpostUpgradeResult, completion:((Outpost?, Error?) -> ())?) {
+        // updates
+        let url = URL(string: "\(baseAddress)/outposts/data/upgrade")!
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.POST.rawValue
+        
+        // Headers
+        let dateUpdate = outpost.collected ?? Date()
+        let dateUpTime:Double = dateUpdate.timeIntervalSince1970
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        // Date in Header
+        request.setValue("\(dateUpTime)", forHTTPHeaderField: "date")
+        
+        // type in Header
+        switch upgrade {
+            case .needsDateUpgrade, .dateUpgradeShouldBeNil, .noChanges:
+                print("Cannot upgrade an outpost at this state.")
+                return
+            case .nextState(let next):
+                // if you pass "finished", it is the same as ".applyForLevelUp"
+                request.setValue(next.rawValue, forHTTPHeaderField: "type")
+            case .applyForLevelUp(let currentLevel):
+                print("Trying to update from level: \(currentLevel)")
+                request.setValue(OutpostState.finished.rawValue, forHTTPHeaderField: "type")
+        }
+        
+        // Body
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        encoder.outputFormatting = .prettyPrinted
+        
+        guard let bodyData:Data = try? encoder.encode(outpost) else {
+            print("Could not encode Outpost body data")
+            return
+        }
+        request.httpBody = bodyData
+        
+        // Execution
+        let task = session.dataTask(with: request) { (data, response, error) in
+            
+            if let data = data {
+                DispatchQueue.main.async {
+                    //                    print("Data returning")
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .secondsSince1970
+                    do {
+                        let outpost = try decoder.decode(Outpost.self, from: data)
+                        completion?(outpost, nil)
+                        return
+                    } catch {
+                        
+                        // No OutpostData
+                        if let gameError = try? decoder.decode(GameError.self, from: data) {
+                            // print("Error decoding.: \(gameError.reason)")
+                            if gameError.reason == "Missing Outpost ID" {
+                                completion?(nil, OPContribError.missingOutpostID)
+                            } else if gameError.reason == "Bad Supply Data" {
+                                completion?(nil, OPContribError.badSupplyData)
+                            } else if gameError.reason == "OUTDATED" {
+                                completion?(nil, OPContribError.outdated)
+                            } else if gameError.reason == "Decoding Outpost Data" {
+                                completion?(nil, OPContribError.serverDecodingData)
+                            } else if gameError.reason == "Could not write new data" {
+                                completion?(nil, OPContribError.serverWritingData)
+                            } else {
+                                completion?(nil, error)
+                            }
+                            return
+                            
+                        } else {
+                            print("Error - An error not supported by GameError happened: \(error.localizedDescription)")
+                            completion?(nil, error)
+                            return
+                        }
+                    }
+                }
+            } else {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
         
     }
     

@@ -159,6 +159,18 @@ struct ChatBubbleView: View {
                             }
                             .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                         }
+                        
+                        Divider()
+                        
+                        if controller.giftedTokenMessage.isEmpty {
+                            Text("Gifts ?").font(.title2)
+                            Button(" 🎁 ") {
+                                controller.searchGiftedToken()
+                            }
+                            .buttonStyle(GameButtonStyle())
+                        } else {
+                            Text(controller.giftedTokenMessage)
+                        }
                     }
                     
                 case .Achievement:

@@ -51,7 +51,7 @@ enum PeripheralType:String, Codable, CaseIterable {
 //    case DockingPoint
     
     /// Makes Spacewalk much easier (helps reduce chances of breaking peripherals(
-    case Airlock
+    // case Airlock
     
     /// Makes inhabitants happier
     case Cuppola
@@ -90,7 +90,7 @@ enum PeripheralType:String, Codable, CaseIterable {
             case .Radiator: return "Radiator"
             case .solarPanel: return "SolarPanel"
 //            case .DockingPoint: return "Docker"
-            case .Airlock: return "Airlock"
+//            case .Airlock: return "Airlock"
             case .Cuppola: return "Cuppola"
             case .Roboarm: return "Roboarm"
             case .Garage: return "Garage"
@@ -312,8 +312,8 @@ import SwiftUI
 extension PeripheralObject {
     func getImage() -> Image? {
         switch self.peripheral {
-            case .Airlock:
-                return Image("Airlock")
+//            case .Airlock:
+//                return Image("Airlock")
             case .Antenna:
                 return Image("Antenna")
             case .Condensator:

@@ -21,9 +21,15 @@ enum OutpostViewTab:String, Codable, CaseIterable {
     case management
 }
 
-enum ContributionType {
-    case box, tank, person, machine, bioBox
-}
+//enum OupostUpdatingState {
+//    case notStarted
+//    case posting
+//    case done
+//}
+
+//enum ContributionType {
+//    case box, tank, person, machine, bioBox
+//}
 
 class OutpostController:ObservableObject {
     
@@ -56,6 +62,7 @@ class OutpostController:ObservableObject {
     
     // MARK: -  Data State
     
+    /// Indicates when server has downloaded the latest version of `OutpostData`
     @Published var isDownloaded:Bool = false
     
     // has modified (contributed)
@@ -63,12 +70,13 @@ class OutpostController:ObservableObject {
     
     /// Current Round of contributions from this Player
     @Published var contribRound:OutpostSupply = OutpostSupply()
-
+    
     // MARK: - Errors & Alerts
     
     @Published var serverError:String = ""
     @Published var deliveryError:String = ""
     @Published var displayError:Bool = false
+    @Published var outpostUpgradeMessage:String = ""
     
     // MARK: - Methods
     
@@ -79,25 +87,6 @@ class OutpostController:ObservableObject {
         
         let player = LocalDatabase.shared.player
         self.player = player
-        
-        
-        /*
-         0. Contribution Request
-         1 - If OutpostData has not been created, make a request for 'createOutpostData'
-         2 - If you can't find outpost data from 'ServerManager', initialize outpost from DBOutpost,
-         and wait for server response
-         3 - Server response may ask you to create it, because not found.
-         */
-        
-//        let opData = Outpost(dbOutpost: dbOutpost)
-//        self.outpostData = opData
-        
-        // Wait for response from server, to make sure it hasn't been created already
-        
-        
-        
-        // MARK: - FIX THIS BEFORE LAUNCH
-        // FIXME: - TEST EXAMPLES
         
         // Data needed:         Preview Origin          Prod. Origin
         // 1. my CityData       [example]               [json file]
@@ -172,7 +161,7 @@ class OutpostController:ObservableObject {
     
     private var hasReqOutpost:Bool = false
     
-    // MARK: - Post init Outpost Data Request
+    // MARK: - Post init + Updates
     
     /// Post init method to update the view, that starts with a blank outpost
     private func verifyOutpostDataUpdate() {
@@ -216,7 +205,7 @@ class OutpostController:ObservableObject {
     /// Updates the other variables, dependent on OutpostData
     private func didUpdateOutpostData(newData:Outpost) {
         
-        print("\n\n Did update data function")
+        print("Did update data function")
         
         self.remains = newData.calculateRemaining()
         self.job = newData.getNextJob()
@@ -273,8 +262,6 @@ class OutpostController:ObservableObject {
         }
     }
     
-//    print("⚠️ REVISE THIS OBJECT: \(object)")
-    
     // MARK: - Control
     
     /// Selecting a Tab
@@ -324,73 +311,7 @@ class OutpostController:ObservableObject {
         self.contribRound = newRound
     }
     
-    /*
-    /// Makes the contribution, but doesn't charge from City
-    func makeContribution(object:Codable, type:ContributionType) {
-        
-        guard let pid = LocalDatabase.shared.player?.playerID else {
-            print("No player id, or wrong id")
-            return
-        }
-        
-        if let box = object as? StorageBox {
-            fake += " + box"
-            
-            // SKNS.contributionRequest(box:box) { response in
-            outpostData.supplied.ingredients.append(box)
-            outpostData.supplied.players[pid, default:0] += box.current
-            
-//            myCity.boxes.removeAll(where: { $0.id == box.id })
-            
-        } else if let tank = object as? Tank {
-            
-            outpostData.supplied.tanks.append(tank)
-//            myCity.tanks.removeAll(where: { $0.id == tank.id })
-            
-        } else if let peripheral = object as? PeripheralObject {
-            
-            outpostData.supplied.peripherals.append(peripheral)
-//            myCity.peripherals.removeAll(where: { $0.id == peripheral.id })
-            
-        } else if let bioBox = object as? BioBox {
-            
-            outpostData.supplied.bioBoxes.append(bioBox)
-//            myCity.bioBoxes?.removeAll(where: { $0.id == bioBox.id })
-            
-        } else if let person = object as? Person {
-            
-            outpostData.supplied.skills.append(person)
-            if let person = myCity.inhabitants.first(where: { $0.id == person.id }) {
-                let newActivity = LabActivity(time: 1000, name: "Working at Outpost")
-                person.activity = newActivity
-            }
-            
-        } else {
-            print("⚠️ REVISE THIS OBJECT: \(object)")
-            print("⚠️ ERROR OBJECT INVALID")
-        }
-        
-        // Contribution
-        let opData:Outpost = self.outpostData
-        var lastContributes = opData.contributed
-        lastContributes[pid, default:0] += 1
-        self.outpostData.contributed = lastContributes
-        
-        let newContribList = self.getContributionScoreList(opData: opData)
-        self.contribList = newContribList
-        print("Contrib List Items Count: \(self.contribList.count)")
-        
-        // Check Remaining
-        
-        let remaining = outpostData.calculateRemaining()
-        self.remains = remaining
-        
-        // Make the request
-        // SKNS.contributionRequest(object: object, type: type, outpost: outpostData)
-        
-    }
-    */
-    
+    /// Makes an Outpost Contribution with what is selected (contribRound)
     func prepareDelivery() {
         
         // Get Contrib Round
@@ -456,6 +377,95 @@ class OutpostController:ObservableObject {
         
     }
     
+    // Upgrade Button clicked
+    func upgradeButtonTapped() {
+        
+        print("\n\n [ Checking Upgrades ]")
+        let previous = outpostData.state
+        print("Previous State: \(previous)")
+        
+        let upgrade:OutpostUpgradeResult = outpostData.runUpgrade()
+        
+        switch upgrade {
+            case .noChanges:
+                print("No Changes \n\n")
+                self.outpostUpgradeMessage = "No updates."
+                return
+                
+            case .dateUpgradeShouldBeNil, .needsDateUpgrade:
+                print("Error with dates being nil, or whatnot \n\n")
+                self.outpostUpgradeMessage = "Internal Error (Dates)"
+                return
+                
+            case .nextState(let state):
+                print("Next State: \(state). Applying for upgrades")
+                // this will be: .cooldown, or .finished
+                self.applyForUpgrade(upgrade)
+                
+            case .applyForLevelUp(currentLevel: let level):
+                print("Should Apply for level up. Current:\(level), next:\(level + 1). Applying for upgrades")
+                self.applyForUpgrade(upgrade)
+                
+        }
+    }
+    
+    // MARK: - Upgrades and Updates
+    
+    // Only call when you're sure that an upgrade can be done
+    private func applyForUpgrade(_ upgrade:OutpostUpgradeResult) {
+        
+        switch upgrade {
+            case .needsDateUpgrade, .dateUpgradeShouldBeNil, .noChanges:
+                print("Invalid state for upgrade")
+                return
+                
+            default:break
+        }
+   
+        SKNS.applyForOutpostUpgrades(outpost: self.outpostData, upgrade: upgrade) { newOutpostData, error in
+            
+            if let newOutpost:Outpost = newOutpostData {
+                DispatchQueue.main.async {
+                    
+                    print("Did receive new Outpost Data")
+                    print("Outpost Upgraded")
+                    self.serverError = ""
+                    self.deliveryError = ""
+                    self.displayError = false
+                    
+                    self.outpostData = newOutpost
+                    self.outpostUpgradeMessage = "Outpost Upgraded"
+                }
+            } else {
+                
+                DispatchQueue.main.async {
+                    if let error = error {
+                        self.serverError = error.localizedDescription
+                        self.deliveryError = ""
+                    }
+                    self.outpostUpgradeMessage = "Error"
+                    self.displayError = true
+                }
+            }
+        }
+    }
+    
+    /// DBOutpost needs to be fetched after upgrading OutpostData.
+    private func postUpgradeGuildFetch() {
+        
+        let outpostID:UUID = self.outpostData.id
+        
+        // needs to fetch new DBOutpost after upgrades
+        ServerManager.shared.inquireFullGuild(force: true) { fullGuild, error in
+            if let guild:GuildFullContent = fullGuild {
+                let dbo = guild.outposts.first(where: { $0.id == outpostID })!
+                self.dbOutpost = dbo
+                
+            }
+        }
+    }
+    
+    /// Delivery success.:
     private func postDeliverySuccessUpdates(supplied:OutpostSupply) {
         
         self.deliveryError = ""
@@ -492,25 +502,6 @@ class OutpostController:ObservableObject {
         
         // Reset contribRound
         self.contribRound = OutpostSupply()
-        
-        // Check if upgradable
-        let upgradeResult = outpostData.runUpgrade()
-        switch upgradeResult {
-            case .noChanges:
-                print("No Changes")
-            case .dateUpgradeShouldBeNil:
-                print("Error!!! Date upgrade should be nil")
-            case .needsDateUpgrade:
-                print("Error!!! Needs Date upgrade")
-            case .applyForLevelUp(let currentLevel):
-                
-                print("Should update to new level.: \(currentLevel + 1)")
-                // (Y): Request Upgrade
-                // FIXME: - Apply for Level up!!
-            
-            case .nextState(let newState):
-                print("Outpost should be at a new state: \(newState.rawValue)")
-        }
         
     }
     
@@ -627,36 +618,6 @@ class OutpostController:ObservableObject {
             }
         }
         return array
-    }
-    
-    // MARK: - Upgrades and Updates
-    
-    
-    
-    /* Continue... */
-    // Notes:
-    // Needs more logic when contributing (server request)
-    // Check if contribution went through
-    func checkUpgrades() {
-        
-        // Outpost State
-        // 1. Working (upgradable)
-        // 2. NoLevel (not upgradable)
-        // 3. Locked (computing)
-        // 4. Upgrading
-    
-    
-        let previous = outpostData.state
-        print("Previous State: \(previous)")
-        
-        let upgrade = outpostData.runUpgrade()
-        switch upgrade {
-            case .noChanges: print("No Changes")
-            case .dateUpgradeShouldBeNil, .needsDateUpgrade: print("Error")
-            case .nextState(let state): print("Next State: \(state)")
-            case .applyForLevelUp(currentLevel: let level): print("Should Apply for level up. Current:\(level), next:\(level + 1)")
-            //                default: print("Not ready")
-        }
     }
 }
 

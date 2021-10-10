@@ -166,7 +166,7 @@ struct StorageBoxView:View {
             
             VStack(alignment:.leading) {
                 Text("\(box.type.rawValue)").font(.headline)
-                ProgressView("\(box.current) of \(box.capacity)", value: fillLevel)
+                ProgressView("\(box.current) of \(box.capacity)", value: min(0, max(fillLevel, 1)))
                     .frame(maxWidth: 100)
                     .foregroundColor(fillLevel < 0.3 ? .red:fillLevel > 0.7 ? .green:.orange)
             }
