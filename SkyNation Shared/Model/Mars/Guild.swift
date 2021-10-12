@@ -37,6 +37,7 @@ enum Posdex:Int, Codable, CaseIterable {
     case power2
     case power3
     case power4 // 22
+    case hotel
     
     /// Position on the map
     var position:Vector3D {
@@ -98,6 +99,8 @@ enum Posdex:Int, Codable, CaseIterable {
             case .power2: return "Power-02"
             case .power3: return "Power-03"
             case .power4: return "Power-04"
+                
+            case .hotel: return "Hotel"
                 
             default: return "\(self.rawValue)"
         }

@@ -573,6 +573,8 @@ class GarageViewModel:ObservableObject {
                         do {
                             // Save Vehicles
                             try LocalDatabase.shared.saveVehicles(LocalDatabase.shared.vehicles)
+                            // Achievement
+                            GameMessageBoard.shared.newAchievement(type: .experience, message: "Space Vehicle Registered.")
                         } catch {
                             print("‼️ Could not save station.: \(error.localizedDescription)")
                         }

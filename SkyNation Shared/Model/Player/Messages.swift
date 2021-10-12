@@ -145,4 +145,10 @@ struct ChatMessage:Codable, Identifiable, Hashable {
     var message: String
     var date: Date
     
+//    init(from decoder: Decoder) throws {
+//        if let v = decoder.container(keyedBy: CodingKeys.guild) {
+//            
+//        }
+//    }
+    
 }

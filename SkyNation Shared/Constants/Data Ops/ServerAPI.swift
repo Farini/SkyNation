@@ -1066,16 +1066,16 @@ class SKNS {
         request.httpMethod = HTTPMethod.POST.rawValue
         
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-//        request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
         
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .secondsSince1970
         
-        guard let data = try? encoder.encode(message) else { fatalError() }
+        guard let bodyData = try? encoder.encode(message) else { fatalError() }
         
-        request.httpBody = data
+        request.httpBody = bodyData
         
         let task = session.dataTask(with: request) { (data, response, error) in
+            
             if let data = data {
                 DispatchQueue.main.async {
                     print("Data returning")
@@ -1606,7 +1606,6 @@ class SKNS {
             }
         }
         task.resume()
-        
         
     }
     

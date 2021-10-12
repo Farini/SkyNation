@@ -241,6 +241,90 @@ class CityData:Codable, Identifiable {
         return lacking
     }
     
+    /*
+    /**
+     Refills Containers (Pee, and poop))
+     - Parameter type: The type of `StorageBox` to be refilled
+     - Parameter amount: The amount of storage,  to go in the `StorageBox` array.
+     - Returns: The amount that could **NOT** fit the `StorageBox`(es).
+     */
+    func refillContainers(of type:Ingredient, amount:Int) -> Int {
+        var leftOvers = amount
+        let boxArray = boxes.filter({ $0.type == type }).sorted(by: { $0.current < $1.current })
+        for box in boxArray {
+            if leftOvers <= 0 {
+                return 0
+            } else {
+                let input = leftOvers
+                let output = box.fillUp(input)
+                leftOvers = output
+            }
+        }
+        return leftOvers
+    }
+    
+    /**
+     Refills Tanks (Usually Water).
+     - Parameter type: The type of `Tank` to be refilled
+     - Parameter amount: The amount of liquid, or gas to go in the `Tank` array.
+     - Returns: The amount that could **NOT** fit the `Tank`
+     */
+    func refillTanks(of type:TankType, amount:Int) -> Int {
+        var leftOvers:Int = amount
+        let tanksArray = tanks.filter({ $0.type == type }).sorted(by: { $0.current < $1.current })
+        
+        for tank in tanksArray {
+            if leftOvers > 0 {
+                let extra = tank.fillUp(leftOvers)
+                leftOvers = max(extra, 0)
+            }
+        }
+        return leftOvers
+    }
+    */
+    
+    /// Refilling Water as if Tanks were empty (as passed in accounting)
+    func resetWaterTanks(newWater:Int) -> Int {
+        var waterSpill:Int = newWater
+        for tank in tanks.filter({ $0.type == .h2o }) {
+            if waterSpill > tank.capacity {
+                tank.current = tank.capacity
+                waterSpill -= tank.capacity
+            } else {
+                tank.current = waterSpill
+                if tank.current == 0 && tank.discardEmpty == true {
+                    self.tanks.removeAll(where: { $0.id == tank.id })
+                }
+                waterSpill = 0
+            }
+        }
+        return waterSpill
+    }
+    
+    /// Puts back the total energy into the batteries. Doesn't refill them.
+    func resetEnergyLevels(to energy:Int) {
+        var remaining:Int = energy
+        for battery in batteries {
+            let receivable = battery.capacity
+            if remaining > receivable {
+                remaining -= receivable
+                battery.current = receivable
+            } else {
+                // <=
+                battery.current = remaining
+                remaining = 0
+            }
+        }
+    }
+    
+    /// Power Generated (Max 2 Solar Panels)
+    func powerGeneration() -> Int {
+        let maxSolar:[SolarPanel] = Array(solarPanels.prefix(2))
+        return  maxSolar.compactMap({ $0.maxCurrent() }).reduce(0, +)
+        
+//        return maxSolar.compactMap({ $0.maxCurrent }).reduce(0, +)
+    }
+    
     func availableEnergy() -> Int {
         return batteries.compactMap({ $0.current }).reduce(0, +)
     }
@@ -469,7 +553,7 @@ extension CityData {
         let response:String = "📊 Accounting Recursive: \(recursive), loops:\(loops), date:\(GameFormatters.dateFormatter.string(from: nextDate))"
         
         while loops > 0 {
-            let followUp = accountingCycle(startDate: nextDate)
+            let followUp = runAccountingCycle(nextDate)
             nextDate = followUp
             self.accountingDate = nextDate
             loops -= 1
@@ -524,10 +608,11 @@ extension CityData {
         }
     }
     
+    /*
     /// Main Accounting function
     private func accountingCycle(startDate:Date) -> Date {
         
-        // Get the initial Data, and build a report.
+       
         
         // FIXME: - Collect Energy
         
@@ -875,6 +960,7 @@ extension CityData {
         self.accounting = report
         return startDate.addingTimeInterval(3600)
     }
+    */
     
     // MARK: - Batteries & Energy
     

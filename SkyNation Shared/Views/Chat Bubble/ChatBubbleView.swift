@@ -116,20 +116,17 @@ struct ChatBubbleView: View {
                             HStack {
                                 if string == "money" {
                                     
-#if os(macOS)
-                                    Image(nsImage: GameImages.currencyImage)
-#elseif os(iOS)
-                                    Image(uiImage: GameImages.currencyImage)
-#endif
+                                    // Currency
+                                    self.makeImage(GameImages.currencyImage)
+
                                     Text("Sky Coins: 1,000").foregroundColor(.green)
                                     
                                     
                                 } else if string == "token" {
-#if os(macOS)
-                                    Image(nsImage: GameImages.tokenImage)
-#elseif os(iOS)
-                                    Image(uiImage: GameImages.tokenImage)
-#endif
+                                    
+                                    // Token
+                                    self.makeImage(GameImages.tokenImage)
+                                    
                                     Text("Token: 1").foregroundColor(.green)
                                     
                                 } else if let _ = TankType(rawValue: string) {
@@ -212,7 +209,6 @@ struct ChatBubbleView: View {
                     
                 case .Guild:
                     if let guild = controller.guild {
-//                        MessagesGuildView(controller: controller, guild: guild)
                         ChatBubbleGuildTab(controller: controller, guild: guild)
                         Text("Messages Guild View")
                     } else {
@@ -251,7 +247,6 @@ struct ChatBubbleView: View {
                                 PlayerCardView(pCard: PlayerCard(playerContent: sPlayer))
                                 HStack {
                                     Button("🎁 Token") {
-//                                        print("Gifting Token")
                                         controller.giftToken(to: sPlayer)
                                     }
                                     .buttonStyle(GameButtonStyle())
@@ -263,10 +258,8 @@ struct ChatBubbleView: View {
                                     }
                                     .buttonStyle(GameButtonStyle())
                                     .disabled(!inviteEnabled)
-                                    // if guild is open, then we cannot invite.
                                 }
                             }
-                            
                         }
                         if controller.searchPlayerResult.isEmpty {
                             Text("No Players been found").foregroundColor(.gray)
@@ -278,11 +271,7 @@ struct ChatBubbleView: View {
                         Text(controller.tokenMessage)
                             .font(.headline)
                             .foregroundColor(controller.tokenMessage.contains("Error") ? .red:.white)
-                        
-                        
                     }
-                    
-                    
                     
                 default:
                     VStack {
@@ -336,6 +325,16 @@ struct ChatBubbleView: View {
         }
         
     }
+    
+#if os(macOS)
+    func makeImage(_ nsImage:NSImage) -> Image {
+        return Image(nsImage: nsImage)
+    }
+#elseif os(iOS)
+    func makeImage(_ uiImage:NSImage) -> Image {
+        return Image(uiImage: uiImage)
+    }
+#endif
 }
 
 struct ChatBubbleView_Previews: PreviewProvider {

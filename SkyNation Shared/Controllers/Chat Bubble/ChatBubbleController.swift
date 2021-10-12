@@ -141,6 +141,7 @@ class ChatBubbleController:ObservableObject {
     
     /// Posts a message on the Guild Chat
     func postMessage(text:String) {
+        
         let player = LocalDatabase.shared.player
         guard let pid = player.playerID,
               let gid = player.guildID else {

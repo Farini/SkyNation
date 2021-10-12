@@ -499,17 +499,6 @@ extension Station {
      # Headings
      */
     
-    /*
-     fileprivate func consumeEnergyFrom(eSpill:inout Int, amount:Int) -> Bool {
-     if eSpill >= amount {
-     eSpill -= amount
-     return true
-     } else {
-     let trussResult:Bool = truss.consumeEnergy(amount: amount)
-     return trussResult
-     }
-     }
-     */
     
     // Human Happiness Score vs Health
     /*
@@ -590,11 +579,11 @@ extension Station {
             // ok
             water -= consumeWater
             healthDelta += 1
-            reportLine += " +💧"
+            // reportLine += "\t +💧"
         } else {
             // no water
             healthDelta -= 1
-            reportLine += " -💧"
+            // reportLine += "\t -💧"
         }
         
         // Air
@@ -611,14 +600,14 @@ extension Station {
             switch quality {
                 case .Great:
                     healthDelta += 1
-                    reportLine += " +💨"
+                    // reportLine += " +💨"
                 case .Good: if Bool.random() { healthDelta += 1 }
                 case .Medium: break
                 case .Bad:
                     healthDelta -= 1
-                    reportLine += " -💨"
+                    // reportLine += " -💨"
                 case .Lethal: healthDelta -= 3
-                    reportLine += " -💨"
+                    // reportLine += " -💨"
             }
         }
         
@@ -629,7 +618,7 @@ extension Station {
             let postFood = person.foodEaten.suffix(5)
             person.foodEaten = Array(postFood)
             healthDelta += 1
-            reportLine += " +🍽"
+            // reportLine += " +🍽"
         } else {
             // Check Bioboxes
             if GameSettings.shared.serveBioBox == true {
@@ -642,14 +631,14 @@ extension Station {
                     let postFood = person.foodEaten.suffix(5)
                     person.foodEaten = Array(postFood)
                     healthDelta += 1
-                    reportLine += " +🍽"
+                    // reportLine += " +🍽"
                 } else {
                     healthDelta -= 1
-                    reportLine += " -🍽"
+                    // reportLine += " -🍽"
                 }
             } else {
                 healthDelta -= 1 // not on gamesettings
-                reportLine += " -🍽"
+                // reportLine += " -🍽"
             }
         }
         
@@ -675,7 +664,7 @@ extension Station {
         }
         
         // Health
-        reportLine += " ❤️\(healthDelta)"
+        reportLine += "\t 𝝙 \(healthDelta)" // " ❤️\(healthDelta)"
         let finalHealth = max(0, min(100, person.healthPhysical + healthDelta))
         person.healthPhysical = finalHealth
     }
@@ -771,7 +760,7 @@ extension Station {
         }
         
         // Happy
-        reportLine += " 😁(\(happyDelta))"
+        reportLine += ", \(happyDelta)" //" 😁(\(happyDelta))"
         let finalHappy = max(0, min(100, person.happiness + happyDelta))
         person.happiness = finalHappy
         

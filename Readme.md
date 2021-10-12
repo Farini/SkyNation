@@ -155,32 +155,35 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Outpost - SKNS request for `Outpost` upgrades
 - [X] Outpost - fix bug with contribution - SKNS can't decode OutpostData
 - [X] Outpost View - non .contributing states views
-
 - [X] Accounting - Implement (Station+Account.swift)
 - [X] Accounting - Finish Accounting cycle (Station+Account.swift)
-- [ ] Accounting - Fix Human Report Lines w/ weird emojis
-- [ ] Accounting - Copy Station - in Mars (New Methods)
+- [X] Accounting - Fix Human Report Lines w/ weird emojis
+- [X] Accounting - Copy Station - in Mars (New Methods)
+- [X] Model - Outpost `Posdex` remake with Hotel, Arena, Observatory, 2x Biospheres, 4x Power Plants, Etc.
+- [X] Blender - Observatory - Make UVs
+- [X] Blender - Biosphere -> WallL3 needs grass UV
+- [X] Blender - Biosphere -> Add trees
+- [X] Blender - Biosphere -> Add new geometries
+- [X] Blender - Station Truss -> Use Trimsheet
 
-- [ ] GameCamera - Fix Awkward cam transitions
 
-- [ ] Chat Bubble - Chat not showing
+- [ ] Chat Bubble - Chat not showing after posting a message -> Problem is that chat is returning from server with a guild object. We need to transform it (in server)
 - [ ] Chat Bubble - President functions (Invite, Kickout, Modify Guild)
 - [ ] Chat Bubble - If no president, move election to earlier
+
+- [ ] GameCamera - Fix Awkward cam transitions
+- [ ] GameCamera - Add/Remove relevant Cameras
 
 - [ ] Tests - (Outpost) - Test SKNS request for `Outpost` upgrades.
 - [ ] Tests - (Settings) - ServerTab - Test Leave Guild
 - [ ] Tests - (Chat Bubble) - Test Election Results
+- [ ] Tests - Registering new vehicle should increase XP.
 
-- [ ] Model - Outpost Posdex remake with Hotel, Arena, Observatory, 2x Biospheres, 4x Power Plants, Etc.
-- [ ] Model - Launching a Vehicle should also be an Achievement
-- [ ] Model - Mars Accounting improvements
-- [ ] Model - Fix accounting - too easy
+- [X] Model - Launching a Vehicle should also be an Achievement
 - [ ] Model - Fix cost of things (Outpost level ups)
-- [ ] Model - Remodel `Posdex`
 - [ ] Model - Road Updates
 - [ ] Model - E-Vehicle/Bot
 
-- [ ] Mars Scene - Animations - SpaceVehicle arriving
 - [ ] Mars Scene - Garage - Vehicle Validation (when arriving (orbit))
 
 - [ ] Station Scene - Background HDRI image
@@ -188,11 +191,11 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [ ] 2D Graphics - iOS app icon
 
-- [ ] Blender - Biosphere -> WallL3 needs grass UV
-- [ ] Blender - Biosphere -> Add trees + water
-- [ ] Blender - Observatory - Make UVs
+- [ ] Blender - Arrival Scene - Animations - SpaceVehicle Sub-Materials
+
+- [ ] Blender - Reduce Vertex Count, and make scene "DecorKit", to gather resources from there.
 - [ ] Blender - Observatory - Add new geometries (see kit)
-- [ ] Blender - Biosphere -> Add more geometries
+- [ ] Blender - More Vehicle Paths
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
 - [ ] Sound - 2 more music (better ones)

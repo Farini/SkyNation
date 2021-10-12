@@ -63,6 +63,29 @@ class BiosphereNode:SCNNode {
         
         for baseChild in baseNode.childNodes {
             let node = baseChild.clone()
+            
+            if node.name == "Dome2" {
+                if outpost.level < 2 {
+                    continue
+                }
+            }
+            if node.name == "Dome0" {
+                if outpost.level > 2 {
+                    continue
+                }
+            }
+            if node.name == "Ground" {
+                if outpost.level < 2 {
+                    continue
+                } else if outpost.level == 3 {
+                    // Ground below
+                    node.position.y = 0.005
+                } else {
+                    node.position.y = 1.43
+                }
+            }
+            
+            
             self.addChildNode(node)
             
             // Look for cameras
@@ -83,6 +106,13 @@ class BiosphereNode:SCNNode {
         
         self.prepareForLevel(lvl: outpost.level)
         self.performAnimationLoop()
+        
+        
+        /*
+         Level 0, 1 -> Dome0                small Tanks     Side Solar
+         Level 2 -> Dome 2, Ground Down     1 big tank      Rooftop Solar
+         Level 3+ -> Dome 2, Ground Up      2 big tanks     Back Solar
+         */
     }
     
     required init?(coder: NSCoder) {
@@ -94,132 +124,153 @@ class BiosphereNode:SCNNode {
     /// Prepares the Outpost Node for the level it is at.
     func prepareForLevel(lvl:Int) {
         
-        guard let walls = self.childNode(withName: "Walls", recursively: false),
-              let buildings = self.childNode(withName: "Buildings", recursively: false),
-              let panels = self.childNode(withName: "SolarPanels", recursively: false),
-              let tanks = self.childNode(withName: "Tanks", recursively: false) else {
-            return
-        }
-        
-        // Walls
-        for child in walls.childNodes {
-            if child.name == "WallL0" {
-                if lvl > 0 { child.removeFromParentNode() }
-            }
-            if child.name == "WallL1" {
-                if lvl == 0 || lvl > 3 {
-                    child.removeFromParentNode()
-                }
-            }
-            if child.name == "WallL3" {
-                if lvl < 3 {
-                    child.removeFromParentNode()
-                }
-            }
-        }
-        
-        // Buildings
-        for child in buildings.childNodes {
-            // Inside dome
-            if child.name == "BuildingL1" {
-                if lvl > 1 { child.removeFromParentNode() }
-            }
-            // Inside dome
-            if child.name == "BuildingL2" {
-                if lvl != 2 {
-                    child.removeFromParentNode()
-                }
-            }
-            // Dome
-            if child.name == "BuildingL3D" {
-                if lvl < 3 {
-                    child.removeFromParentNode()
-                }
-            }
-            // Side building
-            if child.name == "BuildingL4" {
-                if lvl < 4 {
-                    child.removeFromParentNode()
-                }
-            }
-        }
-        
-        // Panels
-        for child in panels.childNodes {
-            var series:[String] = ["L1", "L2", "L3", "L4", "L5"]
-            guard let cName = child.name else { continue }
+        // Calculate what tanks to show. 5 Tanks, 5 Levels.
+        var linter = lvl
+        if let tankChildren = self.childNode(withName: "Tanks", recursively: false)?.childNodes {
             
-            if lvl == 0 {
-                child.removeFromParentNode()
-            } else if lvl == 1 {
-                series.removeFirst()
-                for sName in series {
-                    if cName.contains(sName) {
-                        child.removeFromParentNode()
+            var doNotDelete:[SCNNode] = []
+            for tankie in tankChildren {
+                while linter > 0 {
+                    if tankie.name?.contains("L\(linter)") == true {
+                        doNotDelete.append(tankie)
                     }
+                    linter -= 1
                 }
-            } else if lvl == 2 {
-                series.removeFirst(2)
-                for sName in series {
-                    if cName.contains(sName) {
-                        child.removeFromParentNode()
-                    }
-                }
-            } else if lvl == 3 {
-                series.removeFirst(3)
-                for sName in series {
-                    if cName.contains(sName) {
-                        child.removeFromParentNode()
-                    }
-                }
-            } else if lvl == 4 {
-                series.removeFirst(4)
-                for sName in series {
-                    if cName.contains(sName) {
-                        child.removeFromParentNode()
-                    }
-                }
+                linter = lvl
             }
-        }
-        
-        
-        // Tanks
-        for child in tanks.childNodes {
-            var series:[String] = ["L1", "L2", "L3", "L4", "L5"]
-            guard let cName = child.name else { continue }
             
-            if lvl == 0 {
-                child.removeFromParentNode()
-            } else if lvl == 1 {
-                series.removeFirst()
-                for sName in series {
-                    if cName.contains(sName) {
-                        child.removeFromParentNode()
-                    }
-                }
-            } else if lvl == 2 {
-                series.removeFirst(2)
-                for sName in series {
-                    if cName.contains(sName) {
-                        child.removeFromParentNode()
-                    }
-                }
-            } else if lvl == 3 {
-                series.removeFirst(3)
-                for sName in series {
-                    if cName.contains(sName) {
-                        child.removeFromParentNode()
-                    }
-                }
-            } else if lvl == 4 {
-                series.removeFirst(4)
-                for sName in series {
-                    if cName.contains(sName) {
-                        child.removeFromParentNode()
-                    }
-                }
+            let operation = Set(tankChildren).subtracting(doNotDelete)
+            for ope in operation {
+                ope.removeFromParentNode()
             }
         }
+        
+//        guard let walls = self.childNode(withName: "Walls", recursively: false),
+//              let buildings = self.childNode(withName: "Buildings", recursively: false),
+//              let panels = self.childNode(withName: "SolarPanels", recursively: false),
+//              let tanks = self.childNode(withName: "Tanks", recursively: false) else {
+//            return
+//        }
+//
+//        // Walls
+//        for child in walls.childNodes {
+//            if child.name == "WallL0" {
+//                if lvl > 0 { child.removeFromParentNode() }
+//            }
+//            if child.name == "WallL1" {
+//                if lvl == 0 || lvl > 3 {
+//                    child.removeFromParentNode()
+//                }
+//            }
+//            if child.name == "WallL3" {
+//                if lvl < 3 {
+//                    child.removeFromParentNode()
+//                }
+//            }
+//        }
+//
+//        // Buildings
+//        for child in buildings.childNodes {
+//            // Inside dome
+//            if child.name == "BuildingL1" {
+//                if lvl > 1 { child.removeFromParentNode() }
+//            }
+//            // Inside dome
+//            if child.name == "BuildingL2" {
+//                if lvl != 2 {
+//                    child.removeFromParentNode()
+//                }
+//            }
+//            // Dome
+//            if child.name == "BuildingL3D" {
+//                if lvl < 3 {
+//                    child.removeFromParentNode()
+//                }
+//            }
+//            // Side building
+//            if child.name == "BuildingL4" {
+//                if lvl < 4 {
+//                    child.removeFromParentNode()
+//                }
+//            }
+//        }
+//
+//        // Panels
+//        for child in panels.childNodes {
+//            var series:[String] = ["L1", "L2", "L3", "L4", "L5"]
+//            guard let cName = child.name else { continue }
+//
+//            if lvl == 0 {
+//                child.removeFromParentNode()
+//            } else if lvl == 1 {
+//                series.removeFirst()
+//                for sName in series {
+//                    if cName.contains(sName) {
+//                        child.removeFromParentNode()
+//                    }
+//                }
+//            } else if lvl == 2 {
+//                series.removeFirst(2)
+//                for sName in series {
+//                    if cName.contains(sName) {
+//                        child.removeFromParentNode()
+//                    }
+//                }
+//            } else if lvl == 3 {
+//                series.removeFirst(3)
+//                for sName in series {
+//                    if cName.contains(sName) {
+//                        child.removeFromParentNode()
+//                    }
+//                }
+//            } else if lvl == 4 {
+//                series.removeFirst(4)
+//                for sName in series {
+//                    if cName.contains(sName) {
+//                        child.removeFromParentNode()
+//                    }
+//                }
+//            }
+//        }
+//
+//
+//        // Tanks
+//        for child in tanks.childNodes {
+//            var series:[String] = ["L1", "L2", "L3", "L4", "L5"]
+//            guard let cName = child.name else { continue }
+//
+//            if lvl == 0 {
+//                child.removeFromParentNode()
+//            } else if lvl == 1 {
+//                series.removeFirst()
+//                for sName in series {
+//                    if cName.contains(sName) {
+//                        child.removeFromParentNode()
+//                    }
+//                }
+//            } else if lvl == 2 {
+//                series.removeFirst(2)
+//                for sName in series {
+//                    if cName.contains(sName) {
+//                        child.removeFromParentNode()
+//                    }
+//                }
+//            } else if lvl == 3 {
+//                series.removeFirst(3)
+//                for sName in series {
+//                    if cName.contains(sName) {
+//                        child.removeFromParentNode()
+//                    }
+//                }
+//            } else if lvl == 4 {
+//                series.removeFirst(4)
+//                for sName in series {
+//                    if cName.contains(sName) {
+//                        child.removeFromParentNode()
+//                    }
+//                }
+//            }
+//        }
         
         
     }

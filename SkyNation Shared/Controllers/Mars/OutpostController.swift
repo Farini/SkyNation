@@ -21,16 +21,6 @@ enum OutpostViewTab:String, Codable, CaseIterable {
     case management
 }
 
-//enum OupostUpdatingState {
-//    case notStarted
-//    case posting
-//    case done
-//}
-
-//enum ContributionType {
-//    case box, tank, person, machine, bioBox
-//}
-
 class OutpostController:ObservableObject {
     
     var builder:MarsBuilder = MarsBuilder.shared
