@@ -9,143 +9,202 @@ import SwiftUI
 
 // MARK: - Tab2: Player
 
-struct PlayerEditView: View {
+struct PlayerEditorView: View {
     
     @ObservedObject var controller:GameSettingsController
     
-    var allNames:[String]
-    var cards:[AvatarCard]
-    
-    @State var selectedCard:AvatarCard?
-    @State var about:String = ""
-    
-    init(controller:GameSettingsController) {
-        
-        self.allNames = HumanGenerator().female_avatar_names + HumanGenerator().male_avatar_names
-        self.controller = controller
-        
-        // Build the image options (avatars)
-        var newCards:[AvatarCard] = []
-        for name in allNames {
-            let card = AvatarCard(name: name)
-            newCards.append(card)
-            if controller.player.avatar == name {
-            }
-        }
-        
-        self.cards = newCards
+    enum EditorStep {
+        case Displaying
+        case TypingName
+        case ChoosingAvatar
+        case Confirming
     }
+    
+    @State private var editorStep:EditorStep = .Displaying
     
     var body: some View {
         ScrollView {
             
-            VStack {
+            VStack(alignment:.leading) {
                 
-                Group {
-                    HStack {
+                // Header
+               
+                    
+                
+                Text("Player")
+                    .font(.title)
+                    .padding(.vertical)
+                
+                Divider()
+                
+                switch editorStep {
                         
-                        // Left
-                        VStack(alignment:.leading) {
-                            TextField("Name:", text: $controller.playerName)
+                    case .Displaying:
+                        
+                        HStack {
+                            Image("\(controller.player.avatar)")
+                                .resizable()
+                                .frame(width:82, height:82)
+                            VStack(alignment:.leading) {
+                                Text(controller.player.name)
+                                Text("XP: \(controller.player.experience)")
+                                Text("Online: \(GameFormatters.dateFormatter.string(from:controller.player.lastSeen))")
+                                    // .foregroundColor(.green)
+                            }
+                        }
+                        .transition(.slide)
+                        
+                        Divider()
+                        
+                        HStack {
+                            Button("Update Player") {
+                                self.editorStep = .TypingName
+                            }
+                            .buttonStyle(GameButtonStyle())
+                        }
+                        .padding(6)
+                        
+                        
+                    case .TypingName:
+                        // Name
+                        Text("Please type your name")
+                            .foregroundColor(.gray)
+                            .padding(6)
+                        
+                        
+                        TextField("name", text: $controller.playerName)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                                 .frame(width: 150)
                                 .cornerRadius(8)
+                                .padding(.bottom, 6)
+                                .transition(AnyTransition.slide)
                             
-                            Text("ID: \(controller.playerID.uuidString)")
-                                .foregroundColor(.gray)
-                                .font(.caption2)
-                        }
-                        .padding([.leading])
-                        Spacer()
+                        Text("\(controller.playerName.count) of max 12 characters")
+                                .foregroundColor(controller.playerName.count == 12 ? .red:.gray)
                         
-                        // Right
-                        VStack(alignment:.trailing) {
-                            Text("Tokens \(controller.player.countTokens().count)") //timeTokens.count)")
-                            Text("Money: \(controller.player.money)")
-                            Text("Experience: \(controller.player.experience)")
-                        }
-                        .padding([.trailing])
-                    }
-                    
-                    Spacer()
-                    
-                    LazyVGrid(columns: [GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96))], alignment: .center, spacing: 8, pinnedViews: [], content: {
-                        ForEach(cards) { avtCard in
-                            ZStack(alignment: .bottom) {
-                                Image(avtCard.name)
-                                    .resizable()
-                                    .frame(width: 82, height: 82, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                        Divider()
+                        
+                        Text("This will be your nickname, as it will appear on your Player Card, and shared with other Guild members.")
+                            .foregroundColor(.gray)
+                            .font(.footnote)
+                            .padding(.horizontal, 30)
+                        
+                        HStack {
+                            
+                            Button("Cancel") {
+                                self.editorStep = .Displaying
                             }
-                            .padding(.vertical)
-                            .background(self.selectedCard?.name == avtCard.name ? Color.red:Color.black)
-                            .cornerRadius(8)
-                            .onTapGesture {
-                                // Set the new avatar
-                                self.selectedCard = avtCard
-                                controller.didSelectAvatar(card: avtCard)
-                                highlightCard()
+                            .buttonStyle(GameButtonStyle())
+                            
+                            Button("Continue") {
+                                print("ok")
+                                self.editorStep = .ChoosingAvatar
+                            }
+                            .buttonStyle(GameButtonStyle())
+                        }
+                        .padding(.vertical, 6)
+                        
+                        
+                        
+                    case .ChoosingAvatar:
+                        
+                        Text("Select an Avatar")
+                            .foregroundColor(.gray)
+                            .padding(6)
+                        
+                        // Avatar
+                        LazyVGrid(columns: [GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96)), GridItem(.fixed(96))], alignment: .center, spacing: 8, pinnedViews: [], content: {
+                            
+                            ForEach(PlayerEditorView.getAllCards()) { avtCard in
+                                ZStack(alignment: .bottom) {
+                                    Image(avtCard.name)
+                                        .resizable()
+                                        .frame(width: 82, height: 82, alignment: .center)
+                                }
+                                .padding(.vertical)
+                                .background(controller.player.avatar == avtCard.name ? Color.red:Color.black)
+                                .cornerRadius(8)
+                                .onTapGesture {
+                                    self.highlightCard(avtCard)
+                                }
+                            }
+                        })
+                        .frame(minHeight:140)
+                        .background(LinearGradient(gradient: Gradient(colors: [Color.red.opacity(0.1), Color.blue.opacity(0.1)]), startPoint: .topLeading, endPoint: .bottomTrailing))
+                        
+                        Divider()
+                        
+                        HStack {
+                            
+                            Button("Back") {
+                                self.editorStep = .TypingName
+                            }
+                            .buttonStyle(GameButtonStyle())
+                            
+                            Button("Update Player") {
+                                controller.updateServerWith(player: controller.player)
+                            }
+                            .buttonStyle(GameButtonStyle())
+                        }
+                        .padding(.vertical, 6)
+                        
+                    case .Confirming:
+                        
+                        Text("Confirmation")
+                            .foregroundColor(.gray)
+                            .padding(6)
+                        
+                        Divider()
+                        
+                        if let updated = controller.updatedPlayer {
+                            Text("\(updated.name) updated.")
+                                .foregroundColor(.green)
+                                .padding()
+                        } else if let warning = controller.warningList.first {
+                            Text(warning)
+                                .foregroundColor(.red)
+                                .padding()
+                        } else {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle())
+                            Text("Please wait a moment for SkyNation to compute new changes.")
+                        }
+                        
+                        HStack {
+                            Button("Start Over") {
+                                self.editorStep = .TypingName
+                            }
+                            Button("View Player") {
+                                self.editorStep = .Displaying
                             }
                         }
-                    })
-                    .frame(minHeight:140)
-                    .background(LinearGradient(gradient: Gradient(colors: [Color.red.opacity(0.1), Color.blue.opacity(0.1)]), startPoint: .topLeading, endPoint: .bottomTrailing))
-                    
-                }
-                .onAppear() {
-                    self.selectedCard = cards.first(where: { $0.name == controller.player.avatar })
-                    self.about = controller.player.about
                 }
             }
-            
+            .padding(.horizontal)
         }
     }
     
-    func highlightCard() {
-        let cardName = controller.player.avatar
-        for card in cards {
-            if card.name == cardName {
-                self.selectedCard = card
-            }
+    func highlightCard(_ card:AvatarCard) {
+        controller.didSelectAvatar(card: card)
+    }
+    
+    static func getAllCards() -> [AvatarCard] {
+        let avatarNames:[String] =  HumanGenerator().female_avatar_names + HumanGenerator().male_avatar_names
+        // Build the image options (avatars)
+        var newCards:[AvatarCard] = []
+        for name in avatarNames {
+            let card = AvatarCard(name: name)
+            newCards.append(card)
         }
+        return newCards
     }
     
 }
 
 // MARK: - Previews
 
-struct ServerViewView_Previews: PreviewProvider {
-    static var previews: some View {
-        //        PlayerEditView(controller: GameSettingsController())
-        SettingsServerTab(controller:GameSettingsController())
-    }
-}
-
-struct GameTabs_Previews2: PreviewProvider {
+struct PlayerEditorPreview: PreviewProvider {
     static var previews:some View {
-        TabView {
-            // Settings
-            GameSettingsTabView()
-                .tabItem {
-                    Label("Settings", systemImage:"gamecontroller")
-                }
-            // Game
-            GameLoadingTab(controller:GameSettingsController())
-                .tabItem {
-                    Label("Game", systemImage:"gamecontroller")
-                }
-            // Server
-            SettingsServerTab(controller:GameSettingsController())
-                .tabItem {
-                    Label("Server", systemImage:"gamecontroller")
-                }
-            
-            // Player
-            PlayerEditView(controller:GameSettingsController())
-                .tabItem {
-                    Label("Player", systemImage:"gamecontroller")
-                }
-        }
+        PlayerEditorView(controller: GameSettingsController())
     }
 }
-
-

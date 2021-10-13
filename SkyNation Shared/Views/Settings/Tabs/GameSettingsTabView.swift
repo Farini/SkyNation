@@ -18,7 +18,7 @@ struct GameSettingsTabView: View {
     @State var clearTanks:Bool = GameSettings.shared.clearEmptyTanks
     @State var mergeTanks:Bool = GameSettings.shared.autoMergeTanks
     @State var startingScene:GameSceneType = GameSettings.shared.startingScene
-    
+    @State var autoStart:Bool = GameSettings.shared.autoStartScene ?? false
     
     @State var musicOn:Bool = GameSettings.shared.musicOn
     @State var soundFXOn:Bool = GameSettings.shared.soundFXOn
@@ -65,7 +65,8 @@ struct GameSettingsTabView: View {
                 Divider()
                 Group {
                     Text("Data").font(.title)
-                    Toggle("Use iCloud", isOn:$useCloudData)
+                    Toggle("Auto Start", isOn:$autoStart)
+//                    Toggle("Use iCloud", isOn:$useCloudData)
                 }
                 
                 Divider()
@@ -74,7 +75,8 @@ struct GameSettingsTabView: View {
                     print("Save Settings")
                     
                     // Data
-                    settings.useCloud = self.useCloudData
+//                    settings.useCloud = self.useCloudData
+                    settings.autoStartScene = self.autoStart
                     
                     // Graphics
                     settings.showLights = self.showLights
@@ -98,3 +100,35 @@ struct GameSettingsTabView: View {
     }
     
 }
+
+
+struct SettingsPlayerPreview: PreviewProvider {
+    static var previews:some View {
+        TabView {
+            let controller = GameSettingsController()
+            
+            // Settings
+            GameSettingsTabView()
+                .tabItem {
+                    Label("Settings", systemImage:"gamecontroller")
+                }
+            // Game
+            GameLoadingTab(controller:controller)
+                .tabItem {
+                    Label("Game", systemImage:"gamecontroller")
+                }
+            // Server
+            SettingsServerTab(controller:controller)
+                .tabItem {
+                    Label("Server", systemImage:"gamecontroller")
+                }
+            
+            // Player
+            PlayerEditorView(controller:controller)
+                .tabItem {
+                    Label("Player", systemImage:"gamecontroller")
+                }
+        }
+    }
+}
+

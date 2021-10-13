@@ -90,6 +90,9 @@ class GameSettingsController:ObservableObject {
     @Published var player:SKNPlayer
     @Published var playerName:String {
         didSet {
+            if playerName.count > 12 {
+                playerName = String(playerName.prefix(12))
+            }
             if player.name != playerName {
                 self.hasChanges = true
             }
@@ -169,15 +172,14 @@ class GameSettingsController:ObservableObject {
             
             if let pid = player.serverID {
                 
-                items.append("L-PID \(pid.uuidString)")
-                
+                items.append("Player ID: \(pid.uuidString)")
                 
                 if let gid = player.guildID {
-                    items.append("L-GID \(gid.uuidString.prefix(8))")
+                    items.append("Guild ID: \(gid.uuidString.prefix(8))")
                 }
                 
                 if let cid = player.cityID {
-                    items.append("L-CID \(cid.uuidString.prefix(8))")
+                    items.append("City ID:  \(cid.uuidString.prefix(8))")
                 }
             }
             
@@ -192,13 +194,14 @@ class GameSettingsController:ObservableObject {
             let manager = ServerManager.shared
             print("Server Manager Starting. Logged in: \(manager.playerLogged)")
             
-            
         } else {
             items.append("🚫 Offline Mode")
         }
         
         self.loadedList = items
     }
+    
+    // MARK: - Player Editing
     
     /// Saving Player
     func savePlayer() {
@@ -210,6 +213,7 @@ class GameSettingsController:ObservableObject {
         }
         self.hasChanges = false
         self.savedChanges = true
+        self.updateLoadedList()
     }
     
     /// Choosing Avatar
@@ -235,6 +239,23 @@ class GameSettingsController:ObservableObject {
                 print("Selected `Settings` \(self.viewState)")
             case .Loading:
                 print("Back to Loading \(self.viewState)")
+        }
+    }
+    
+    func updateServerWith(player:SKNPlayer) {
+        
+        self.warningList = []
+        
+        SKNS.updatePlayer { pUpdate, error in
+            if let pUpdate = pUpdate {
+                self.updatedPlayer = pUpdate
+                
+            } else {
+                // Deal with Error
+                if let error = error {
+                    self.warningList.append(error.localizedDescription)
+                }
+            }
         }
     }
     
@@ -485,25 +506,6 @@ class GameSettingsController:ObservableObject {
     
     // MARK: - Game Start
     
-    /// Disabled state for the `StartGame` button
-    func startGameDisabled() -> Bool {
-        
-        if isNewPlayer {
-            print("New player. make sure to setup first")
-            if hasChanges {
-                print("Save Changes first")
-            }
-            if savedChanges {
-                print("Changes are saved")
-                return false
-            }
-            return true
-            
-        } else {
-            return false
-        }
-    }
-    
     /// Runs Accounting, and loads the Station Scene
     func loadGameData() {
         
@@ -533,7 +535,6 @@ class GameSettingsController:ObservableObject {
                 }
             }
         }
-        
     }
     
     /// Checks ServerManager for status - It takes a while to happen, so we can check on server status, because there it takes a while as well.
@@ -549,6 +550,10 @@ class GameSettingsController:ObservableObject {
                 self.loadedList.append("Player \(playerUpdate.name) logged in.")
                 self.updatedPlayer = playerUpdate
                 print("🎮 Authorized Player \(player.name)")
+                self.loadedList.append("🎮 \(player.name) - Ready.")
+                if self.hasChanges == false && self.savedChanges == true && GameSettings.shared.autoStartScene == true {
+                    self.startGame()
+                }
             case .serverError(let originReason, let error, _):
                 self.loadedList.append("ERROR: \(originReason), \(error?.localizedDescription ?? "Try again?")")
                 self.warningList.append("ERROR: \(originReason), \(error?.localizedDescription ?? "Try again?")")
@@ -577,6 +582,31 @@ class GameSettingsController:ObservableObject {
                 
             case .simulatingData(let serverData):
                 print("Simulating Data for player: \(serverData.player.name)")
+        }
+    }
+    
+    /// Action from Button `Start Game`
+    func startGame() {
+        let note = Notification(name: .startGame)
+        NotificationCenter.default.post(note)
+    }
+    
+    /// Disabled state for the `StartGame` button
+    func startGameDisabled() -> Bool {
+        
+        if isNewPlayer {
+            print("New player. make sure to setup first")
+            if hasChanges {
+                print("Save Changes first")
+            }
+            if savedChanges {
+                print("Changes are saved")
+                return false
+            }
+            return true
+            
+        } else {
+            return false
         }
     }
 }

@@ -46,6 +46,9 @@ class GameSettings:Codable {
     /// Serves food in biobox to astronauts.. Careful.: This could make you run out of DNA's
     var serveBioBox:Bool
     
+    /// Whether scene should be loaded
+    var autoStartScene:Bool?
+    
     // MARK: - Sounds
     
     var musicOn:Bool
@@ -68,6 +71,7 @@ class GameSettings:Codable {
         self.musicOn = true
         self.soundFXOn = true
         self.dialogueOn = true
+        self.autoStartScene = false
         
     }
     

@@ -165,33 +165,36 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Blender - Biosphere -> Add trees
 - [X] Blender - Biosphere -> Add new geometries
 - [X] Blender - Station Truss -> Use Trimsheet
+- [X] Station Scene - New Modules not 'clickable' after Tech research.
+- [X] Station Scene - Background HDRI image
+- [X] Tests - (Outpost) - Test SKNS request for `Outpost` upgrades. -> Server side working, but needs to update the view with ".finished" state
+- [X] Blender - Arrival Scene - Animations - SpaceVehicle Sub-Materials
+- [X] 2D Graphics - iOS app icon
+- [X] Chat Bubble - Chat not showing after posting a message
+- [X] Settings - Better Player Registration
+- [X] Settings - Game Autostart
+- [X] Model - Launching a Vehicle should also be an Achievement
 
 
-- [ ] Chat Bubble - Chat not showing after posting a message -> Problem is that chat is returning from server with a guild object. We need to transform it (in server)
 - [ ] Chat Bubble - President functions (Invite, Kickout, Modify Guild)
 - [ ] Chat Bubble - If no president, move election to earlier
 
 - [ ] GameCamera - Fix Awkward cam transitions
 - [ ] GameCamera - Add/Remove relevant Cameras
+Discussion: Gate camera in Mars seems problematic.
+In SpaceStation, One camera can be removed (the one too close)
 
-- [ ] Tests - (Outpost) - Test SKNS request for `Outpost` upgrades.
 - [ ] Tests - (Settings) - ServerTab - Test Leave Guild
 - [ ] Tests - (Chat Bubble) - Test Election Results
 - [ ] Tests - Registering new vehicle should increase XP.
 
-- [X] Model - Launching a Vehicle should also be an Achievement
-- [ ] Model - Fix cost of things (Outpost level ups)
+- [ ] Model - Fix cost of Outpost level ups
 - [ ] Model - Road Updates
 - [ ] Model - E-Vehicle/Bot
 
+- [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
+
 - [ ] Mars Scene - Garage - Vehicle Validation (when arriving (orbit))
-
-- [ ] Station Scene - Background HDRI image
-- [ ] Station Scene - New Modules not 'clickable' after Tech research. 
-
-- [ ] 2D Graphics - iOS app icon
-
-- [ ] Blender - Arrival Scene - Animations - SpaceVehicle Sub-Materials
 
 - [ ] Blender - Reduce Vertex Count, and make scene "DecorKit", to gather resources from there.
 - [ ] Blender - Observatory - Add new geometries (see kit)
@@ -202,6 +205,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [ ] Basic Views - Error messages (red)
 - [ ] Basic Views - Alert messages (orange)
+- [ ] Basic Views - Typography, and Fonts.
 
 - [ ] iOS - Views are too large
 - [ ] iOS - Font modifiers

@@ -258,25 +258,14 @@ struct SettingsServerTab:View {
 //                        .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
 //                    }
                 }
-                
-//                if !guildController.news.isEmpty {
-//                    Text(guildController.news)
-//                }
             }
         }
     }
     
-//    func select(guild: GuildSummary) {
-////        withAnimation(.openCard) {
-////            controller.selectedGuildSum = guild
-////        }
-//    }
     
-    func closeviewaction() {
-//        print("Join Guild Action")
-//        controller.joinGuild(sum: controller.selectedGuildSum!)
-        
-    }
+//    func closeviewaction() {
+//
+//    }
  }
  
 
@@ -287,5 +276,35 @@ struct SettingsServerTab_Previews: PreviewProvider {
 //            .tabItem {
 //                Label("Server", systemImage:"gamecontroller")
 //            }
+    }
+}
+
+struct GameTabs_Previews2: PreviewProvider {
+    static var previews:some View {
+        TabView {
+            
+            let controller = GameSettingsController()
+            // Settings
+            GameSettingsTabView()
+                .tabItem {
+                    Label("Settings", systemImage:"gamecontroller")
+                }
+            // Game
+            GameLoadingTab(controller:controller)
+                .tabItem {
+                    Label("Game", systemImage:"gamecontroller")
+                }
+            // Server
+            SettingsServerTab(controller:controller)
+                .tabItem {
+                    Label("Server", systemImage:"gamecontroller")
+                }
+            
+            // Player
+            PlayerEditorView(controller:controller)
+                .tabItem {
+                    Label("Player", systemImage:"gamecontroller")
+                }
+        }
     }
 }

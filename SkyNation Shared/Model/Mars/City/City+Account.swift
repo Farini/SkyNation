@@ -431,20 +431,19 @@ extension CityData {
             // reportLine += "\t +💧"
         } else {
             // no water
-            healthDelta -= 1
+            healthDelta -= 4
             // reportLine += "\t -💧"
         }
         
         // Air
         let quality = air.airQuality()
         
-        // Produce CO2, and vapor
-        air.co2 += 1
-        air.h2o += 1
-        
         if air.o2 >= 2 {
             // ok
             air.o2 -= 2
+            // Produce CO2, and vapor
+            air.co2 += 1
+            air.h2o += 1
             
             switch quality {
                 case .Great:
@@ -453,9 +452,9 @@ extension CityData {
                 case .Good: if Bool.random() { healthDelta += 1 }
                 case .Medium: break
                 case .Bad:
-                    healthDelta -= 1
+                    healthDelta -= 2
                     // reportLine += " -💨"
-                case .Lethal: healthDelta -= 3
+                case .Lethal: healthDelta -= 6
                     // reportLine += " -💨"
             }
         }
@@ -482,12 +481,14 @@ extension CityData {
                     healthDelta += 1
                     // reportLine += " +🍽"
                 } else {
-                    healthDelta -= 1
+                    healthDelta -= 4
+                    person.foodEaten.removeFirst()
                     // reportLine += " -🍽"
                 }
             } else {
-                healthDelta -= 1 // not on gamesettings
+                healthDelta -= 4 // not on gamesettings
                                  // reportLine += " -🍽"
+                person.foodEaten.removeFirst()
             }
         }
         
@@ -549,13 +550,16 @@ extension CityData {
         let fArray = person.foodEaten
         let fSet = Set(fArray)
         if fSet.count < 3 && fArray.count >= 4 {
-            happyDelta -= 1
+            happyDelta -= 4
             // reportLine += " -🍻"
         } else if fSet.count > 4 {
             if Bool.random() {
                 happyDelta += 1
                 // reportLine += " +🍻"
             }
+        }
+        if fArray.count < 4 {
+            happyDelta -= 1
         }
         
         // Busy - They don't like activity
@@ -576,7 +580,7 @@ extension CityData {
             if let activity = person.activity {
                 activity.dateEnds.addTimeInterval(600) // 10 minutes more
             } else {
-                happyDelta -= 1
+                happyDelta -= 3
             }
         }
         
@@ -596,7 +600,7 @@ extension CityData {
         
         // Struggles
         if person.happiness > 70 {
-            happyDelta -= 2
+            happyDelta -= 3
         } else if person.happiness < 30 {
             happyDelta += 1
         }
@@ -605,7 +609,7 @@ extension CityData {
         if person.healthPhysical > person.happiness {
             happyDelta += 1
         } else if person.healthPhysical < person.happiness {
-            happyDelta -= 1
+            happyDelta -= 2
         }
         
         // Happy

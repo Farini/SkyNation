@@ -83,7 +83,8 @@ struct GameSettingsView: View {
                     GameLoadingTab(controller: controller)
                     
                 case .EditingPlayer:
-                    PlayerEditView(controller: controller)
+                    // PlayerEditView(controller: controller)
+                    PlayerEditorView(controller: controller)
                     
                 case .Server:
                     SettingsServerTab(controller:controller)
@@ -98,8 +99,7 @@ struct GameSettingsView: View {
             HStack {
                 if (!inGame) {
                     Button("Start Game") {
-                        let note = Notification(name: .startGame)
-                        NotificationCenter.default.post(note)
+                        controller.startGame()
                     }
                     .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
                     .disabled(controller.startGameDisabled())
@@ -183,8 +183,10 @@ struct GameTabs_Previews: PreviewProvider {
         
         TabView {
             
+            let controller = GameSettingsController()
+            
             // Server
-            SettingsServerTab(controller:GameSettingsController())
+            SettingsServerTab(controller:controller)
                 .tabItem {
                     Text("Server")
                 }
@@ -196,13 +198,15 @@ struct GameTabs_Previews: PreviewProvider {
                 }
 
             // Game
-            GameLoadingTab(controller: GameSettingsController())
+            GameLoadingTab(controller: controller)
             
             // Player
-            PlayerEditView(controller:GameSettingsController())
-                .tabItem {
-                    Text("Player")
-                }
+            PlayerEditorView(controller: controller)
+            
+//            PlayerEditView(controller:GameSettingsController())
+//                .tabItem {
+//                    Text("Player")
+//                }
         }
     }
 }

@@ -589,13 +589,14 @@ extension Station {
         // Air
         let quality = air.airQuality()
         
-        // Produce CO2, and vapor
-        air.co2 += 1
-        air.h2o += 1
+        
         
         if air.o2 >= 2 {
             // ok
             air.o2 -= 2
+            // Produce CO2, and vapor
+            air.co2 += 1
+            air.h2o += 1
             
             switch quality {
                 case .Great:
@@ -609,6 +610,8 @@ extension Station {
                 case .Lethal: healthDelta -= 3
                     // reportLine += " -💨"
             }
+        } else {
+            healthDelta -= 5
         }
         
         // Food
@@ -633,11 +636,11 @@ extension Station {
                     healthDelta += 1
                     // reportLine += " +🍽"
                 } else {
-                    healthDelta -= 1
+                    healthDelta -= 3
                     // reportLine += " -🍽"
                 }
             } else {
-                healthDelta -= 1 // not on gamesettings
+                healthDelta -= 4 // not on gamesettings
                 // reportLine += " -🍽"
             }
         }
@@ -712,7 +715,7 @@ extension Station {
         // Busy - They don't like activity
         if person.isBusy() {
             if !(person.activity?.activityName ?? "none").contains("study") {
-                happyDelta -= 1
+                happyDelta -= 4
             }
         } else {
             if Bool.random() { happyDelta += 1 }
@@ -727,7 +730,7 @@ extension Station {
             if let activity = person.activity {
                 activity.dateEnds.addTimeInterval(600) // 10 minutes more
             } else {
-                happyDelta -= 1
+                happyDelta -= 4
             }
         }
         
@@ -736,9 +739,9 @@ extension Station {
         if playerXP > 25 {
             moods.append(-2)
             if playerXP > 75 {
-                moods.append(-2)
+                moods.append(-3)
                 if playerXP > 125 {
-                    moods.append(-2)
+                    moods.append(-4)
                 }
             }
         }
@@ -747,9 +750,9 @@ extension Station {
         
         // Struggles
         if person.happiness > 70 {
-            happyDelta -= 2
+            happyDelta -= 3
         } else if person.happiness < 30 {
-            happyDelta += 1
+            happyDelta += 2
         }
         
         // Balance Happiness & Health

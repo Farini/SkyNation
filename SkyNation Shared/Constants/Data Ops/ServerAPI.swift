@@ -1208,8 +1208,9 @@ class SKNS {
     // President
     
     // 1. kickout
-    static func kickPlayer(from guild:GuildFullContent, booted:PlayerContent, completion:((Bool?, Error?) -> ())?) {
-        let url = URL(string: "\(baseAddress)/guilds/kickout/\(guild.id)/\(booted.guildID ?? UUID())")!
+    static func kickPlayer(from guild:GuildFullContent, city:DBCity, booted:PlayerContent, completion:((Bool?, Error?) -> ())?) {
+        
+        let url = URL(string: "\(baseAddress)/guilds/kickout/\(guild.id)/\(city.id)")!
         
         let session = URLSession.shared
         var request = URLRequest(url: url)

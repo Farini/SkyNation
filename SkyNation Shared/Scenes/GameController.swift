@@ -610,13 +610,13 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     /// Loads the scene that is not being displayed, and presents them
     func switchScene() {
+        
+        let player = LocalDatabase.shared.player
+        
         switch gameScene {
             
             // Loading Mars from Space Station
             case .SpaceStation:
-                print("We are in Space Station. Load Mars")
-                
-                let player = LocalDatabase.shared.player
                 
                 let enter = self.verifyMarsEntry(player: player)
                 
@@ -685,9 +685,9 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     // Entry Animation
                     cam.position.y += 40
                     let waiter = SCNAction.wait(duration: 1.0)
-                    let move1 = SCNAction.move(by: SCNVector3(-1, -20, 0), duration: 0.75)
+                    let move1 = SCNAction.move(by: SCNVector3(0, -20, 0), duration: 0.75)
                     move1.timingMode = .easeIn
-                    let move2 = SCNAction.move(by: SCNVector3(1, -20, 0), duration: 0.75)
+                    let move2 = SCNAction.move(by: SCNVector3(0, -20, 0), duration: 0.75)
                     move2.timingMode = .easeOut
                     let sequence = SCNAction.sequence([waiter, move1, move2])
                     
@@ -849,6 +849,12 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         let lastTech = builder.buildList.last
         if let theNode = lastTech?.loadFromScene() {
             print("Found node to build last tech item: \(theNode.name ?? "n/a")")
+            if lastTech?.type == .Module {
+                if let lastModule = LocalDatabase.shared.station.modules.last {
+                    self.modules.append(lastModule)
+                    theNode.name = lastModule.id.uuidString
+                }
+            }
             scene.rootNode.addChildNode(theNode)
         }
     }

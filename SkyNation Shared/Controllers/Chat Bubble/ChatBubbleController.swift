@@ -159,12 +159,8 @@ class ChatBubbleController:ObservableObject {
         SKNS.postChat(message: post) { newMessages, error in
             
             DispatchQueue.main.async {
-                if !newMessages.isEmpty {
-                    self.currentText = ""
-                } else {
-                    self.chatWarnings = ["Could not post previous message"]
-                }
-                self.guildChat = newMessages.sorted(by: { $0.date.compare($1.date) == .orderedAscending })
+                self.currentText = ""
+                self.requestChat()
             }
         }
     }

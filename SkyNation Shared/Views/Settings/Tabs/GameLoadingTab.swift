@@ -56,6 +56,9 @@ struct GameLoadingTab: View {
                     .frame(width:300)
             }
             
+            Divider()
+                .padding(.bottom)
+            
             if controller.isNewPlayer {
                 Text("New Player")
                     .foregroundColor(.orange)
