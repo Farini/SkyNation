@@ -226,7 +226,9 @@ class ServerManager {
         }
         
         serverData.requestPlayerGuild(force: force) { fullGuild, error in
-            completion(fullGuild, error)
+            DispatchQueue.main.async {
+                completion(fullGuild, error)
+            }
         }
         
     }

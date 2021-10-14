@@ -34,19 +34,6 @@ enum OPContribError:Error {
 }
 
 /*
- (Not sure we need to use it)
- enum MGuildState:Error {
- case loaded
- case serverDown
- case badRequest
- case locally
- case notJoined
- case nonExistant
- case other(error:Error)
- }
- */
-
-/*
  /// Ways in which a login can fail
  enum LogFail:Error {
  case noID

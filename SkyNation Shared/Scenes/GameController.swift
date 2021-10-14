@@ -433,9 +433,11 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         print("⏱ Station Update: \(rounded)")
                         
                         station?.accountingLoop(recursive: false) { (messages) in
-                            print("\(messages.first ?? "n/a")")
+                            DispatchQueue.main.async {
+                                print("\(messages.first ?? "n/a")")
+                                self.gameOverlay.updatePlayerCard()
+                            }
                         }
-                        gameOverlay.updatePlayerCard()
                         
                     case .MarsColony:
                         
@@ -913,7 +915,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         var newsDelay = 3.0
         if !newsLines.isEmpty {
             for line in newsLines {
-                print("*** NEWS ***  (\(newsLines.count)")
+                print("*** NEWS ***  (\(newsLines.count))")
                 let timeDelay = DispatchTime.now() + newsDelay
                 DispatchQueue.main.asyncAfter(deadline: timeDelay) {
                     self.gameOverlay.generateNews(string: line)

@@ -25,17 +25,7 @@ class SceneDirector {
     }
     
     func controllerDidLoadScene(controller:GameController) {
-        
         self.gameController = controller
-        
-        
-        // Update Truss
-//        controller.updateTrussLayout()
-        
-//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
-//            // 3 seconds in
-//            self.gameController?.debugScene()
-//        }
     }
     
     /// Tells the Scene that the delivery os over. Rid of Ship, and Load the Earth
@@ -62,15 +52,13 @@ class SceneDirector {
     /// Tells the scene that the order is done. Rid of the Earth, and load the Ship
     func didFinishPlacingOrder() {
         print("Order is placed.")
-        print("1 - Remove the earth")
-        print("2 - Bring the ship in the scene, and start animating")
         gameController?.deliveryIsArriving()
     }
     
     /// Updates the Scene when a new tech is collected
     func didCollectTech(tech:TechItems, model:SCNNode?) {
         
-        print("Did collect tech: \(tech.shortName). Updating Scene.")
+        print("[Scene Director] Did collect tech: \(tech.shortName). Updating Scene.")
         guard let controller = gameController else { return }
         
         let moduleTechs:[TechItems] = [.module4, .module5, .module6, .module7, .module8, .module9, .module10]

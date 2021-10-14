@@ -101,8 +101,6 @@ struct GuildMakerView: View {
                                 Spacer()
                             }
                             .frame(minHeight:145)
-                            
-                            
                     }
                 }
             }

@@ -190,7 +190,7 @@ struct EarthRequestView: View {
                             case .People:
                                 LazyVGrid(columns: ingredientColumns, alignment:.center, spacing:8) {
                                     
-                                    ForEach(LocalDatabase.shared.player.wallet.getPeople() ?? []) { person in
+                                    ForEach(LocalDatabase.shared.player.wallet.getPeople()) { person in
                                         
                                         PersonOrderView(person: person)
                                             .overlay(
@@ -216,7 +216,7 @@ struct EarthRequestView: View {
                                             .font(.title)
                                         VStack {
                                             let delay = Double(TimeInterval.oneDay) / 24.0 // 1hr
-                                            let time:Double = LocalDatabase.shared.player.wallet.timeToGenerateNextPeople().rounded() ?? 0.0
+                                            let time:Double = LocalDatabase.shared.player.wallet.timeToGenerateNextPeople().rounded()
                                             let display = GameFormatters.humanReadableTimeInterval(delta: delay - time)
                                             
                                             Text("Refresh in \(display)")

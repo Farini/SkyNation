@@ -177,7 +177,9 @@ class StoreController: ObservableObject, StoreManagerDelegate {
                 print(receiptData)
                 
                 let receiptString = receiptData.base64EncodedString(options: [])
-                // Read receiptData
+                print("Receipt: \(receiptString)")
+                
+                // FIXME: - Read receiptData
             }
             catch { print("Couldn't read receipt data with error: " + error.localizedDescription) }
         }
@@ -256,9 +258,10 @@ class StoreController: ObservableObject, StoreManagerDelegate {
                 let fullDateString = GameFormatters.fullDateFormatter.string(from: date)
                 let productIDString = transaction.payment.productIdentifier
                 let completeString = "\(fullDateString)|\(productIDString)"
-                let encodedString = Data(base64Encoded: completeString)
+                print("\n\n String Before Encoding: \n\(completeString)")
+                // let encodedString = Data(base64Encoded: completeString)
                 
-                
+                // print("Encoded String: \(encodedString?.count)")
             }
             
             

@@ -49,42 +49,45 @@ class MarsBuilder {
             }
             
             ServerManager.shared.inquireFullGuild(force:true) { guild, error in
-                if let guild:GuildFullContent = guild {
-                    self.guild = guild
-                    print("\n**********************")
-                    print("Guild Result: \(guild.name)")
-                    print("**********************")
-                    for city:DBCity in guild.cities {
-                        print("City: Pos:\(city.posdex) >> \(city.name)")
-                        if let cid = city.owner?["id"] {
-                            if cid != nil && cid == player.cityID {
-                                print("This city is mine!")
-                                self.myDBCity = city
+                DispatchQueue.main.async {
+                    if let guild:GuildFullContent = guild {
+                        self.guild = guild
+                        print("\n**********************")
+                        print("Guild Result: \(guild.name)")
+                        print("**********************")
+                        for city:DBCity in guild.cities {
+                            print("City: Pos:\(city.posdex) >> \(city.name)")
+                            if let cid = city.owner?["id"] {
+                                if cid != nil && cid == player.cityID {
+                                    print("This city is mine!")
+                                    self.myDBCity = city
+                                }
                             }
                         }
-                    }
-                    self.cities = guild.cities
-                    
-                    for outpost:DBOutpost in guild.outposts {
-                        print("OutPost: \(outpost.type)")
-                    }
-                    self.outposts = guild.outposts
-                    
-                    for player:PlayerContent in guild.citizens {
-                        print("Player Content: \(player.name)")
-                    }
-                    self.players = guild.citizens
-                    
-                    self.getArrivedVehicles()
-                    
-                } else {
-                    print("No guild in result")
-                    self.hasNoGuild = true
-                    
-                    if let error = error {
-                        print("Error: \(error.localizedDescription)")
+                        self.cities = guild.cities
+                        
+                        for outpost:DBOutpost in guild.outposts {
+                            print("OutPost: \(outpost.type)")
+                        }
+                        self.outposts = guild.outposts
+                        
+                        for player:PlayerContent in guild.citizens {
+                            print("Player Content: \(player.name)")
+                        }
+                        self.players = guild.citizens
+                        
+                        self.getArrivedVehicles()
+                        
+                    } else {
+                        print("No guild in result")
+                        self.hasNoGuild = true
+                        
+                        if let error = error {
+                            print("Error: \(error.localizedDescription)")
+                        }
                     }
                 }
+                
             }
         } else {
             
@@ -117,17 +120,20 @@ class MarsBuilder {
     func getArrivedVehicles() {
         print("Getting Arrived Vehicles")
         SKNS.arrivedVehiclesInGuildMap() { gVehicles, error in
-            if let gVehicles = gVehicles {
-                print("Guild garage vehicles: \(gVehicles.count)")
-                self.guildGarage = gVehicles
-                for vehicle in gVehicles {
-                    if vehicle.owner == LocalDatabase.shared.player.playerID {
-                        print("Vehicle is mine: \(vehicle.engine)")
+            DispatchQueue.main.async {
+                if let gVehicles = gVehicles {
+                    print("Guild garage vehicles: \(gVehicles.count)")
+                    self.guildGarage = gVehicles
+                    for vehicle in gVehicles {
+                        if vehicle.owner == LocalDatabase.shared.player.playerID {
+                            print("Vehicle is mine: \(vehicle.engine)")
+                        }
                     }
+                } else {
+                    print("⚠️ Error: Could not get arrived vehicles. error -> \(error?.localizedDescription ?? "n/a")")
                 }
-            } else {
-                print("⚠️ Error: Could not get arrived vehicles. error -> \(error?.localizedDescription ?? "n/a")")
             }
+            
         }
     }
     

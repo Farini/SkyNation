@@ -8,6 +8,7 @@
 import Foundation
 import SpriteKit
 import GameKit
+import SwiftUI
 
 class TutorialNode:SKNode {
     
@@ -78,47 +79,16 @@ class TutorialNode:SKNode {
         backNoise.strokeColor = SKColor.clear
         backNoise.fillTexture = noise
         
+#if os(macOS)
         backNoise.fillColor = SKColor.init(calibratedRed: 0.3, green: 0.2, blue: 0.0, alpha: 0.35)
+#elseif os(iOS)
+        backNoise.fillColor = SKColor(red: 0.3, green: 0.2, blue: 0.0, alpha: 0.35)
+#endif
+        
+        //backNoise.fillColor = SKColor.init(calibratedRed: 0.3, green: 0.2, blue: 0.0, alpha: 0.35)
         //backNoise.colorBlendFactor = 1.0
         backNoise.blendMode = .alpha
         backNoise.zPosition = 0
-        
-        /*
-        let sourcePositions: [SIMD2<Float>] = [
-            SIMD2<Float>(0, 1),   SIMD2<Float>(0.5, 1.0),   SIMD2<Float>(1.0, 1.0),
-            SIMD2<Float>(0, 0.5), SIMD2<Float>(0.5, 0.5), SIMD2<Float>(1.0, 0.5),
-            SIMD2<Float>(0, 0),   SIMD2<Float>(0.5, 0.0),   SIMD2<Float>(1.0, 0.0)
-        ]
-        
-        let destinationPositions: [SIMD2<Float>] = [
-            SIMD2<Float>(0.2, 0.9), SIMD2<Float>(0.5, 1.0), SIMD2<Float>(0.8, 0.9),
-            SIMD2<Float>(0.00, 0.5),   SIMD2<Float>(0.5, 0.5),   SIMD2<Float>(1.0, 0.5),
-            SIMD2<Float>(0.2, 0.1),  SIMD2<Float>(0.5, 0.0),  SIMD2<Float>(0.8, 0.1)
-        ]
-        
-        
-        
-        let warpGeometryGrid = SKWarpGeometryGrid(columns: 2,
-                                                  rows: 2,
-                                                  sourcePositions: sourcePositions,
-                                                  destinationPositions: destinationPositions)
-        
-//        let sprite = SKSpriteNode()
-        let warpGeometryGridNoWarp = SKWarpGeometryGrid(columns: 2, rows: 2)
-//        backNoise.warpGeometry = warpGeometryGridNoWarp
-        
-//        let warpAction = SKAction.warp(to: warpGeometryGrid, duration: 2.5)
-        let warpAction = SKAction.animate(withWarps:[warpGeometryGridNoWarp,
-                                                     warpGeometryGrid,
-                                                     warpGeometryGridNoWarp,
-                                                     warpGeometryGrid,
-                                                     warpGeometryGridNoWarp],
-                                          times: [0.5, 2.0, 4.0, 6.0, 8.0])
-        
-        warpAction?.timingMode = .easeInEaseOut
-        
-        backNoise.run(warpAction!)
-        */
         
         backShape.addChild(backNoise)
         backShape.position = tOrigin
@@ -200,9 +170,23 @@ class TutorialCloseNode:SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
+#if os(macOS)
+    func makeImage(_ nsImage:NSImage) -> Image {
+        return Image(nsImage: nsImage)
+    }
     override func mouseUp(with event: NSEvent) {
         print("Mouse Up! Close, or Next ?!?")
     }
+#elseif os(iOS)
+    func makeImage(_ uiImage:UIImage) -> Image {
+        return Image(uiImage: uiImage)
+    }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("Thumb Up! Close, or Next ?!?")
+    }
+#endif
+    
+    
     
 }
 
@@ -256,9 +240,15 @@ class TutorialButtonNode:SKNode {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+#if os(macOS)
     override func mouseUp(with event: NSEvent) {
         print("Mouse Up! Close, or Next ?!?")
     }
+#elseif os(iOS)
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("Touch end")
+    }
+#endif
+    
 }
 

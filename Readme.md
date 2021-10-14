@@ -176,6 +176,9 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Model - Launching a Vehicle should also be an Achievement
 
 
+- [ ] Mars Scene - Accounting happening every 10 seconds!
+- [ ] Mars Scene - Try to get accounting to be run on a background thread, or run accounting when settings are loading.
+
 - [ ] Chat Bubble - President functions (Invite, Kickout, Modify Guild)
 - [ ] Chat Bubble - If no president, move election to earlier
 
@@ -190,15 +193,17 @@ In SpaceStation, One camera can be removed (the one too close)
 
 - [ ] Model - Fix cost of Outpost level ups
 - [ ] Model - Road Updates
-- [ ] Model - E-Vehicle/Bot
+
+- [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards.
 
 - [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
 
-- [ ] Mars Scene - Garage - Vehicle Validation (when arriving (orbit))
+- [ ] Mars Scene - Garage - Vehicle Validation (when arriving (orbit)) - needs a token, if not valid.
 
 - [ ] Blender - Reduce Vertex Count, and make scene "DecorKit", to gather resources from there.
 - [ ] Blender - Observatory - Add new geometries (see kit)
-- [ ] Blender - More Vehicle Paths
+- [ ] Blender - All Vehicle Paths
+- [ ] Blender - Export Roads
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
 - [ ] Sound - 2 more music (better ones)
@@ -212,6 +217,8 @@ In SpaceStation, One camera can be removed (the one too close)
 - [ ] iOS - Window Sizes + View Sizes
 - [ ] iOS - Neumorphic Button smaller
 - [ ] iOS - Popover sizes
+- [ ] iOS - Semi-black background Color
+- [ ] iOS - increase bloom in camera? - or find a way to make scene brighter.
 
 ## Wishlist + Questionable
 Features that are requested, but are not required to launch the game
@@ -234,3 +241,4 @@ Features that are requested, but are not required to launch the game
 - [ ] Mars Scene - Gate Lights changing (Day/Night)
 - [ ] Station Scene - Make the Earth bright again?
 - [ ] Blender - Individual Tanks
+- [ ] Model - E-Vehicle/Bot

@@ -209,7 +209,7 @@ extension GameViewController:GameNavDelegate {
     func didSelectTruss(station: Station) {
         print("Truss View")
         clearInterface()
-        let newHost = UIHostingController(rootView: LifeSupportView())
+        let newHost = UIHostingController(rootView: LSSView(scene: .SpaceStation))
         
         newHost.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(newHost.view)
@@ -325,7 +325,7 @@ extension GameViewController:GameNavDelegate {
     
     func didSelectMessages() {
         clearInterface()
-        let newHost = UIHostingController(rootView: GameMessagesView())
+        let newHost = UIHostingController(rootView: ChatBubbleView())
         
         newHost.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(newHost.view)

@@ -331,7 +331,7 @@ struct ChatBubbleView: View {
         return Image(nsImage: nsImage)
     }
 #elseif os(iOS)
-    func makeImage(_ uiImage:NSImage) -> Image {
+    func makeImage(_ uiImage:UIImage) -> Image {
         return Image(uiImage: uiImage)
     }
 #endif

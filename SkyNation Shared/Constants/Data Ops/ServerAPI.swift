@@ -32,7 +32,8 @@ class SKNS {
     /// Keep a record of the queries performed, so we don't keep repeating the same queries.
     var queries:[Routes:Date] = [:] // Queries should have *route, *date, *objectRetrieved, *
     
-    static let baseAddress = "http://127.0.0.1:8080"
+    static let baseAddress = "https://cfarini.com/SKNS"
+//    static let baseAddress = "http://127.0.0.1:8080"
     
     // MARK: - Player, Login
     

@@ -595,7 +595,6 @@
 		85D3BB3426AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */; };
 		85D3BB3526AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */; };
 		85D3BB3626AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */; };
-		85E2C41826B9A960003315F2 /* GuildMakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C41726B9A960003315F2 /* GuildMakerView.swift */; };
 		85E2C41926B9A960003315F2 /* GuildMakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C41726B9A960003315F2 /* GuildMakerView.swift */; };
 		85E2C41A26B9A960003315F2 /* GuildMakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C41726B9A960003315F2 /* GuildMakerView.swift */; };
 		85E2C41B26BB635E003315F2 /* OutpostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85969835260E8FD400BF1860 /* OutpostController.swift */; };
@@ -1917,7 +1916,6 @@
 				8504A51425C5D3B800739C58 /* CautionStripes.swift in Sources */,
 				85351EAB2709253700EEE04C /* GuildCreatorView.swift in Sources */,
 				85B34B1C26FA21FD007178F5 /* ContributionRoundView.swift in Sources */,
-				85E2C41826B9A960003315F2 /* GuildMakerView.swift in Sources */,
 				857DDEC725E4DCAD00E64752 /* Messages.swift in Sources */,
 				8536F441258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				85E2C43226BE5753003315F2 /* Wallet.swift in Sources */,

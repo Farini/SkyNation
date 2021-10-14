@@ -220,9 +220,8 @@ extension CityData {
         }
         
         // MARK: - Humans
-        // let inhabitants:[Person] = habModules.flatMap({$0.inhabitants})
         let headcount = inhabitants.count
-        let radiatorsBoost:Bool = peripherals.filter({ $0.peripheral == .Radiator }).count * 3 >= headcount ? true:false
+        // let radiatorsBoost:Bool = peripherals.filter({ $0.peripheral == .Radiator }).count * 3 >= headcount ? true:false
         
         // Waste
         var producedPee:Int = 0

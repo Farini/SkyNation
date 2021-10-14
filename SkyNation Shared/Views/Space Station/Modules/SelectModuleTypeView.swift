@@ -10,7 +10,11 @@ import SwiftUI
 
 struct SelectModuleTypeView: View {
     
-    @Environment(\.presentationMode) var presentationMode // To Dismiss
+//#if os(macOS)
+//    @Environment(\.presentationMode) var presentationMode // To Dismiss
+//#elseif os(iOS)
+//#endif
+    
     @ObservedObject var controller:ModulesViewModel
     let modOptions:[ModuleType] = [.Hab, .Lab, .Bio]
     
@@ -88,7 +92,7 @@ struct SelectModuleTypeView: View {
                         Text("Available air: \(controller.availableAirInTanks)")
                         Text("Active Modules: \(controller.countOfModules)")
                     }
-                    .foregroundColor(controller.canBuild ? GameColors.airBlue:.red)
+                    .foregroundColor(controller.canBuild ? GameColors.airBlue:Color.red)
                 }
                 
                 // Problems
@@ -114,24 +118,26 @@ struct SelectModuleTypeView: View {
                                         .padding(4)
                                     
                                     Divider()
+                                    Group {
+                                        if mod == ModuleType.Lab {
+                                            Text("🔬").font(.largeTitle)
+                                        }
+                                        if mod == ModuleType.Hab {
+                                            Text("🏠").font(.largeTitle)
+                                        }
+                                        if mod == ModuleType.Bio {
+                                            Text("🧬").font(.largeTitle)
+                                        }
+                                        if mod == ModuleType.Unbuilt {
+                                            Text("🛠").font(.largeTitle)
+                                        }
+                                        Text(mod.objective())
+                                            .frame(minWidth: 180, maxWidth: 200, idealHeight: 75, maxHeight: 100, alignment: Alignment.center)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                            .lineLimit(nil)
+                                            .foregroundColor(.gray)
+                                    }
                                     
-                                    if mod == ModuleType.Lab {
-                                        Text("🔬").font(.largeTitle)
-                                    }
-                                    if mod == ModuleType.Hab {
-                                        Text("🏠").font(.largeTitle)
-                                    }
-                                    if mod == ModuleType.Bio {
-                                        Text("🧬").font(.largeTitle)
-                                    }
-                                    if mod == ModuleType.Unbuilt {
-                                        Text("🛠").font(.largeTitle)
-                                    }
-                                    Text(mod.objective())
-                                        .frame(minWidth: 180, maxWidth: 200, idealHeight: 75, maxHeight: 100, alignment: Alignment.center)
-                                        .fixedSize(horizontal: false, vertical: true)
-                                        .lineLimit(nil)
-                                        .foregroundColor(.gray)
                                     
                                     Button(action: {
                                         controller.selectModule(type: mod, id: moduleID)
@@ -139,7 +145,7 @@ struct SelectModuleTypeView: View {
                                         Text("Build \(mod.rawValue)")
                                     })
                                     .disabled(controller.isDisabledModule(type: mod))
-                                    .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                                    .buttonStyle(GameButtonStyle())
                                     .padding([.bottom])
                                 }
                                 .padding(4)
@@ -171,13 +177,16 @@ struct SelectModuleTypeView: View {
                 case .Selected(type: let type):
                     VStack {
                         
-                        Text("Please Confirm Module")
-                            .foregroundColor(Color.red)
-                            .padding()
+                        Group {
+                            Text("Please Confirm Module")
+                                .foregroundColor(Color.red)
+                                .padding()
+                            
+                            Text("Module ID: \(moduleID)").foregroundColor(.gray)
+                            
+                            Text("Module type: \(type.rawValue)")
+                        }
                         
-                        Text("Module ID: \(moduleID)").foregroundColor(.gray)
-                        
-                        Text("Module type: \(type.rawValue)")
                         
                         ForEach(controller.problems, id:\.self) { reason in
                             Text(reason)
@@ -209,12 +218,6 @@ struct SelectModuleTypeView: View {
                     }
                 }
         }
-//        .padding()
-    }
-    
-    /// Dismisses the SwiftUI View
-    func dismissView() {
-        self.presentationMode.wrappedValue.dismiss()
     }
 }
 

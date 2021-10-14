@@ -88,12 +88,7 @@ class LabViewModel: ObservableObject {
         guard let token = player.requestToken() else {
             print("No tokens")
             return false
-        } //player.timeTokens
-        
-//        if timeTokens == nil {
-//            print("No time tokens")
-//            return false
-//        }
+        }
         
         // 3. Activity
         guard let activity = labModule.activity else {
@@ -109,12 +104,8 @@ class LabViewModel: ObservableObject {
             person.activity = activity
         }
         
-        if let token = player.requestToken() {
-            let spend = player.spendToken(token: token, save: true)
-            if spend == false { return false }
-        } else {
-            return false
-        }
+        let spend = player.spendToken(token: token, save: true)
+        if spend == false { return false }
         
         // 5. Save
         do {
