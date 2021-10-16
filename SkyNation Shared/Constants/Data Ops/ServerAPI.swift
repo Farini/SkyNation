@@ -853,7 +853,50 @@ class SKNS {
         task.resume()
     }
     
-    static func createGuild(creator:GuildCreate, completion:((GuildFullContent?, Error?) -> ())?) {
+    static func postCreate(newGuildID:UUID, completion:((GuildFullContent?, Error?) -> ())?) {
+        
+        let address = "\(baseAddress)/guilds/player/postcreate/\(newGuildID)"
+        
+        guard let url = URL(string: address) else { return }
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                DispatchQueue.main.async {
+                    print("Data returning")
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .secondsSince1970
+                    do {
+                        let guild = try decoder.decode(GuildFullContent.self, from: data)
+                        completion?(guild, nil)
+                        return
+                    }catch{
+                        
+                        if let gameError = try? decoder.decode(GameError.self, from: data) {
+                            print("Error decoding.: \(gameError.reason)")
+                            completion?(nil, error)
+                            
+                        } else {
+                            print("Error - Something else has happened")
+                            completion?(nil, error)
+                        }
+                    }
+                }
+                
+            } else {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    static func createGuild(creator:GuildCreate, completion:((GuildSummary?, Error?) -> ())?) {
         // guilds/player/create
         // Build Request
         let address = "\(baseAddress)/guilds/player/create"
@@ -883,7 +926,7 @@ class SKNS {
                     let decoder = JSONDecoder()
                     decoder.dateDecodingStrategy = .secondsSince1970
                     do {
-                        let guild = try decoder.decode(GuildFullContent.self, from: data)
+                        let guild = try decoder.decode(GuildSummary.self, from: data)
                         completion?(guild, nil)
                         return
                     }catch{

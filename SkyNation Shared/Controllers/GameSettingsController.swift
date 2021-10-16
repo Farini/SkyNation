@@ -388,29 +388,49 @@ class GameSettingsController:ObservableObject {
     
     func didCreateGuild(guildCreate:GuildCreate) {
         
+        self.joinableGuilds = []
+        self.otherFetchedGuilds = []
+        
         // Create Guild. If server doesn't respond,
         // we need to give player back their token
-        SKNS.createGuild(creator: guildCreate) { newFullGuild, error in
-            if let newGuild = newFullGuild {
-                DispatchQueue.main.async {
-                    // Player created guild!
-                    self.player.guildID = newGuild.id
-                    self.guildJoinState = .joined(guild: newGuild)
-                    // Save Player
-                    do {
-                        try LocalDatabase.shared.savePlayer(self.player)
-                    } catch {
-                        print("Could not save Player \(error.localizedDescription)")
+        SKNS.createGuild(creator: guildCreate) { guildSum, error in
+            if let guildSum = guildSum {
+                print("\n\nGuild Sum In \(guildSum)")
+                SKNS.postCreate(newGuildID: guildSum.id) { newGuild, newError in
+                    print("Post Creating...")
+                    if let newGuild:GuildFullContent = newGuild {
+                        print("Post Create. New Guild \(newGuild.name)")
+                        DispatchQueue.main.async {
+                            // Player created guild!
+                            self.player.guildID = newGuild.id
+                            self.guildJoinState = .joined(guild: newGuild)
+                            self.selectedGuildObj = newGuild
+                            print("Post Created Guild.")
+                            // Save Player
+                            do {
+                                try LocalDatabase.shared.savePlayer(self.player)
+                            } catch {
+                                print("Could not save Player \(error.localizedDescription)")
+                            }
+                        }
+                    } else {
+                        print("Could not create guild (2nd). Returning token?")
+                        DispatchQueue.main.async {
+                            self.player.wallet.tokens.append(GameToken(beginner: UUID()))
+                            self.guildJoinState = .choosing
+                            self.fetchGuilds()
+                        }
                     }
                 }
             } else {
-                print("Could not create guild. Returning token?")
+                print("Could not create guild (1st). Returning token?")
                 DispatchQueue.main.async {
                     self.player.wallet.tokens.append(GameToken(beginner: UUID()))
                     self.guildJoinState = .choosing
                     self.fetchGuilds()
                 }
             }
+            
         }
     }
     

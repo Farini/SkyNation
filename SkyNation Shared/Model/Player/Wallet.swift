@@ -31,6 +31,7 @@ class Wallet:Codable {
         for _ in 1...Wallet.beginTokens {
             tokens.append(GameToken(beginner: lid))
         }
+        
         self.tokens = tokens
         self.purchases = []
         self.freebiesLast = Date()

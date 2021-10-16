@@ -174,6 +174,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Settings - Better Player Registration
 - [X] Settings - Game Autostart
 - [X] Model - Launching a Vehicle should also be an Achievement
+- [X] Tests - (Settings) - ServerTab - Test Leave Guild
 
 
 - [ ] Mars Scene - Accounting happening every 10 seconds!
@@ -187,7 +188,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 Discussion: Gate camera in Mars seems problematic.
 In SpaceStation, One camera can be removed (the one too close)
 
-- [ ] Tests - (Settings) - ServerTab - Test Leave Guild
+
 - [ ] Tests - (Chat Bubble) - Test Election Results
 - [ ] Tests - Registering new vehicle should increase XP.
 
