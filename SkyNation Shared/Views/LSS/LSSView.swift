@@ -610,7 +610,8 @@ struct AccountingReportView: View {
                 
                 // Compare Table
                 VStack {
-                    Text("Compare").foregroundColor(.orange).font(.title2)
+                    Text("Start vs End of last accounting").foregroundColor(.orange).font(.title2)
+                        .padding(.bottom, 4)
                     
                     HStack(spacing:12) {
                         VStack(alignment:.trailing) {
@@ -650,6 +651,7 @@ struct AccountingReportView: View {
                         }
                     }
                 }
+                .font(.system(.body, design: .monospaced))
                 .padding()
                 
                 Spacer()
@@ -690,6 +692,7 @@ struct AccountingReportView: View {
                     Divider()
                     ForEach(report.humanNotes, id:\.self) { humannote in
                         Text(humannote)
+                            .font(.system(.body, design: .monospaced))
                     }
                     
                     Text("--- Waste Production ----").foregroundColor(.gray)

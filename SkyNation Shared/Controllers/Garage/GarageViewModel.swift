@@ -690,3 +690,179 @@ class LaunchSceneRendererMan:NSObject, SCNSceneRendererDelegate {
         }
     }
 }
+
+import SwiftUI
+
+/**
+ The Controller for the EDL Scene
+ */
+class EDLSceneController:ObservableObject {
+    
+    @Published var scene:SCNScene
+    @Published var edlNode:SCNNode
+    @Published var vehicle:SpaceVehicle
+    @Published var actNames:[String] = []
+    
+    private var burnMaterial:SCNMaterial
+    
+    init(vehicle:SpaceVehicle) {
+        
+        self.vehicle = vehicle
+        
+        let scene = SCNScene(named: "Art.scnassets/Vehicles/EDL.scn")!
+        
+        self.scene = scene
+        
+        let edlModule = scene.rootNode.childNode(withName: "EDLModule", recursively: false)!
+        for eng in edlModule.childNodes {
+            let nodeName = eng.name ?? "na"
+            if nodeName.contains("Engine") {
+                eng.isHidden = true
+            }
+        }
+        self.edlNode = edlModule
+        
+        guard let mainGeometry = edlModule.geometry,
+              let burnMaterial = mainGeometry.materials.first(where: { $0.name == "Burn"}) else {
+                  fatalError()
+              }
+        self.burnMaterial = burnMaterial
+        
+        // Post Init
+        
+        self.burnMaterial.emission.intensity = 0
+        
+        if let camera = scene.rootNode.childNode(withName: "Camera", recursively: false) {
+            
+            self.actNames.append("Camera Move")
+            
+            // Look At
+            let constraint = SCNLookAtConstraint(target:edlModule)
+            constraint.isGimbalLockEnabled = true
+            constraint.influenceFactor = 0.1
+            
+            // Follow
+            let follow = SCNDistanceConstraint(target: edlModule)
+            follow.minimumDistance = 5
+            follow.maximumDistance = 50
+            
+            SCNTransaction.begin()
+            SCNTransaction.animationDuration = 3.0
+            camera.constraints = [constraint, follow]
+            SCNTransaction.commit()
+            
+            let waiter = SCNAction.wait(duration: 5)
+            let move = SCNAction.move(by: SCNVector3(0, -5, 0), duration: 3)
+            let group = SCNAction.sequence([waiter, move])
+            camera.runAction(group) {
+                self.actNames.removeAll(where: { $0 == "Camera Move" })
+                print("Finished camera move")
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.move()
+        }
+    }
+    
+    // FIXME: - Continue
+    /*
+     Before start burning, needs to show particle emitter
+     Animate the burn stopping
+     Dim down particle Emitter
+     
+     Approach with camera and throw something in that direction
+     
+     5 Stages - 2 sec each.
+     
+     - Touch Atmo
+        * start particle emitter
+        * start burning color (after 1s)
+     - Burn
+        * dim burn first
+        * dim emitter (reduce birthRate)
+     - Stabilize
+        * rotate ship
+        * load parashoot geometry
+        * move camera?
+     - Gliding (Parashoot)
+        * throw blob
+        * scale shoot?
+        * show parashoot
+        * release parashoot
+     - Landing (Engines)
+        * unhide engines
+        * engines emitters
+        * land on ground.
+     
+     */
+    
+    func move() {
+        
+        self.actNames.append("Ship Move")
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+            self.burnMaterial.emission.contents = NSColor.red
+            self.burnMaterial.emission.intensity = 0.1
+            self.actNames.append("Burning Intensity")
+            self.burnIntensity()
+        }
+        
+        let action = SCNAction.move(by: SCNVector3(80, 0, 0), duration: 12.0)
+        self.edlNode.runAction(action) {
+            print("Finished moving")
+            self.actNames.removeAll(where: { $0 == "Ship Move" })
+            
+            self.burn()
+        }
+    }
+    
+    /// Burning the material
+    func burn() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.parashoot()
+        }
+    }
+    
+    /// Launch Parashoot
+    func parashoot() {
+        
+        // Stop Burning
+        self.stopBurning()
+        
+        for eng in edlNode.childNodes {
+            let nodeName = eng.name ?? "na"
+            if nodeName == "Parashoot" {
+                eng.runAction(SCNAction.wait(duration: 2.5)) {
+                    eng.isHidden = false
+                }
+            }
+        }
+    }
+    
+    /// Increases the Burn Intensity
+    func burnIntensity() {
+        
+        if self.burnMaterial.emission.intensity >= 0.99 {
+            self.actNames.removeAll(where: { $0 == "Burning Intensity" })
+            
+            return
+        } else {
+            self.burnMaterial.emission.intensity += 0.1
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                self.burnIntensity()
+            }
+        }
+    }
+    
+    /// Stops Burning
+    func stopBurning() {
+        if let particles = self.edlNode.particleSystems?.first {
+            particles.birthRate = 0
+        }
+        
+        self.burnMaterial.emission.intensity = 0.0
+    }
+    
+    
+}

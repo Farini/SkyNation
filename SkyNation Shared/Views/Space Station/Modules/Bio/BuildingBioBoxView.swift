@@ -163,9 +163,12 @@ struct BuildingBioBoxView: View {
             Divider().offset(x: 0, y: -3)
             
             // People Picker
-            ActivityStaffView(staff: controller.availablePeople, selected: [], requiredSkills: [.Biologic:1], chooseWithReturn: { (selectedPeople) in
+            ActivityStaffView(staff: controller.availablePeople, requiredSkills: [.Biologic:1]) { selectedPeople in
                 controller.selectedPeople = selectedPeople
-            }, title: "Select Biologist", issue: "", message: "")
+            }
+//            ActivityStaffView(staff: controller.availablePeople, selected: [], requiredSkills: [.Biologic:1], chooseWithReturn: { (selectedPeople) in
+//                controller.selectedPeople = selectedPeople
+//            }, title: "Select Biologist", issue: "", message: "")
             
             // Warnings
             Group {

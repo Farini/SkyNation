@@ -130,6 +130,7 @@ struct PostLaunchVehicleView: View {
                 Button("Close") {
                     garageController.cancelSelection()
                 }
+                .buttonStyle(GameButtonStyle())
             }
             
             .padding(20)
@@ -233,6 +234,7 @@ struct LaunchingVehicleView_Previews: PreviewProvider {
     }
 }
 
+/// Prepare
 struct PostLaunch_Previews: PreviewProvider {
     static var previews: some View {
         PostLaunchVehicleView(garageController: GarageViewModel(), launchController: LaunchSceneController(vehicle: SpaceVehicle(engine: .T12)))

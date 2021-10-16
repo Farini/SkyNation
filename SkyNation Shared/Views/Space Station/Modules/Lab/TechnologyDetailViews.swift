@@ -70,11 +70,9 @@ struct TechnologyDetailView: View {
             Divider()
             
             // Skills and People
-            
-            ActivityStaffView(staff: labModel.availableStaff, selected: [], requiredSkills: tech.skillSet(), chooseWithReturn: { (selectedPeople) in
-                // labModel.togglePersonSelection(person: <#T##Person#>)
+            ActivityStaffView(staff: labModel.availableStaff, requiredSkills: tech.skillSet()) { (selectedPeople) in
                 labModel.selectedStaff = selectedPeople
-            }, title: "\(tech.shortName) Skills Required", issue: "", message: "")
+            }
             
             Divider()
             

@@ -79,9 +79,9 @@ struct CityLabRecipeView: View {
                 }
                 
                 // Skills and People
-                ActivityStaffView(staff: controller.availableStaff, selected: [], requiredSkills: recipe.skillSet(), chooseWithReturn: { (selectedPeople) in
+                ActivityStaffView(staff: controller.availableStaff, requiredSkills: recipe.skillSet()) { selectedPeople in
                     controller.selectedStaff = selectedPeople
-                }, title: "\(recipe) Skills Required", issue: "", message: "")
+                }
                 
                 // Empty Staff
                 if controller.availableStaff.isEmpty {

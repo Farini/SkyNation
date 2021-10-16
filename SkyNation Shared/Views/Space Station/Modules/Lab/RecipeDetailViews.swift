@@ -86,10 +86,9 @@ struct RecipeDetailView:View {
                 }
                 
                 // Skills and People
-                ActivityStaffView(staff: labModel.availableStaff, selected: [], requiredSkills: recipe.skillSet(), chooseWithReturn: { (selectedPeople) in
-                    // labModel.togglePersonSelection(person: <#T##Person#>)
+                ActivityStaffView(staff: labModel.availableStaff, requiredSkills: recipe.skillSet()) { selectedPeople in
                     labModel.selectedStaff = selectedPeople
-                }, title: "\(recipe) Skills Required", issue: "", message: "")
+                }
                 
                 if labModel.availableStaff.isEmpty {
                     VStack {

@@ -185,11 +185,9 @@ struct ActivityParentView:View {
     
     var body: some View {
         VStack {
-//            Text("Activity Parent").font(.largeTitle)
-//            Text("Message: \(message)")
-            
-            ActivityStaffView(staff: staff, requiredSkills: [Skills.Electric: 1, Skills.Mechanic:2]) { (people) in
-                
+            Text(message)
+            ActivityStaffView(staff: staff, requiredSkills: [Skills.Electric: 1, Skills.Mechanic:1]) { (people) in
+
                 // Callback
                 // Change this to controller.didSelectPeople?
                 self.message = "People: \(people.count)"
@@ -204,40 +202,26 @@ struct ActivityStaffView:View {
     /// The people available to pick (everyone)
     @State var staff:[Person]
     
-    /// The ones that have been selected
-    @State var selected:[Person] = []
-    
     /// Skills required for this Activity
     var requiredSkills:[Skills:Int]
+    
+    var title:String = "Select Staff"
     
     /// A Closure for this view to respond to its parent
     var chooseWithReturn:(_ people:[Person]) -> ()
     
-    var title:String = "Title"
+    /// The ones that have been selected
+    @State private var selected:[Person] = []
+    @State private var gameResponse:GameResponse? = nil
     
-    @State var issue:String = ""
-    @State var message:String = ""
+//    init(staff:[Person], requiredSkills:chooseWithReturn:title:)
     
     var body: some View {
         
         VStack {
-            if let title = title {
-                Text(title).font(.title2)
-            }
-            if issue.isEmpty {
-                if message.isEmpty {
-                    Text("Select staff")
-                        .foregroundColor(.gray)
-//                    CautionStripeShape()
-//                        .frame(width:250, height:12)
-//                        .clipped()
-                }else{
-                    Text(message)
-                        .foregroundColor(.gray)
-                }
-            } else {
-                Text(issue).foregroundColor(.red)
-            }
+            
+            Text(title).font(.title2)
+            GameResponseView(gameResponse: self.gameResponse)
             
             LazyVGrid(columns: [GridItem(.fixed(200)), GridItem(.fixed(200)), GridItem(.fixed(200))], alignment: .center, spacing: 4, pinnedViews: [], content: {
                 Section(header:
@@ -250,7 +234,12 @@ struct ActivityStaffView:View {
                                 print("Tapped: \(person.name)")
                                 if person.isBusy() {
                                     print("Cannot use busy people")
-                                    issue = "\(person.name) is busy"
+                                    let oldResponse = self.gameResponse
+                                    self.gameResponse = GameResponse(error: ActivityStaffViewError.busyPerson(person.name))
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                        self.gameResponse = oldResponse
+                                    }
+//                                    issue = "\(person.name) is busy"
                                 } else {
                                     self.didSelect(person: person)
                                 }
@@ -263,7 +252,7 @@ struct ActivityStaffView:View {
         }
     }
     
-    var preHeader: some View {
+    private var preHeader: some View {
         
         var trios:[SkillTrio] = []
         
@@ -276,7 +265,7 @@ struct ActivityStaffView:View {
         
         return HStack(alignment:.center, spacing:0) {
             if requiredSkills.isEmpty == true {
-                Text("People")
+                Text("No Skills required").foregroundColor(.gray)
             } else {
                 Text("Skills: ")
                 ForEach(trios) { sktrio in
@@ -290,7 +279,7 @@ struct ActivityStaffView:View {
                 }
             }
             Spacer()
-            
+            Text("\(staff.count) people.")
         }
     }
     
@@ -318,9 +307,12 @@ struct ActivityStaffView:View {
         
         if missingSkills.isEmpty {
             print("Passed !!")
+            self.gameResponse = GameResponse(success: "Skills matched")
         } else {
-            let skdetails = missingSkills.map({ $0.key.rawValue }).joined(separator: ", ")
-            issue = "Mising \(missingSkills.map({ $0.value }).reduce(0, +)) points. \(skdetails)"
+//            let skdetails = missingSkills.map({ $0.key.rawValue }).joined(separator: ", ")
+//            issue = "Mising \(missingSkills.map({ $0.value }).reduce(0, +)) points. \(skdetails)"
+            
+            self.gameResponse = GameResponse(error: ActivityStaffViewError.missing(skills: missingSkills))
         }
         
         chooseWithReturn(selected)
@@ -334,6 +326,7 @@ struct ActivityStaffView:View {
         var image:Image
         var name:Skills
         var value:Int
+        
         init(skill:Skills, level:Int) {
             self.name = skill
             self.value = level
@@ -348,16 +341,18 @@ struct ActivityStaffView:View {
 struct ActivityStaff_Previews: PreviewProvider {
     
     static var previews: some View {
-        ActivityParentView(staff: randomizePeople())
+        ActivityParentView(staff: randomPeople, message: "message")
     }
     
+    static let randomPeople = randomizePeople()
+    
     static func randomizePeople() -> [Person] {
-        let qtty = 8
+        let qtty = 12
         var people:[Person] = []
         for _ in 0..<qtty {
             let newPerson = Person(random: true)
-            if Bool.random() {
-                let activity = LabActivity(time: 50, name: "Tester")
+            if Bool.random() && Bool.random() {
+                let activity = LabActivity(time: 10, name: "Tester")
                 newPerson.activity = activity
             }
             people.append(newPerson)

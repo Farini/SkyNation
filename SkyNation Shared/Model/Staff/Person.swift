@@ -510,79 +510,90 @@ class Person:Codable, Identifiable, Equatable {
 class HumanGenerator:NSObject{
     
     func generateNameGenderPair() -> NameGenderPair {
-        let allNameGenderPairs:[NameGenderPair] = [NameGenderPair(name: "Darren Soto", gender: .male),
-                                                   NameGenderPair(name: "Tiffany Love", gender: .female),
-                                                   NameGenderPair(name: "Anita Norman", gender: .female),
-                                                   NameGenderPair(name: "Salvador Lee", gender: .male),
-                                                   NameGenderPair(name: "Charly Ward", gender: .female),
-                                                   NameGenderPair(name: "Cassy Howard", gender: .female),
-                                                   NameGenderPair(name: "Ramiro Nunez", gender: .male),
-                                                   NameGenderPair(name: "Kevin Burke", gender: .male),
-                                                   NameGenderPair(name: "Edwin Greene", gender: .male),
-                                                   NameGenderPair(name: "Judith Parks", gender: .female),
-                                                   
-                                                   NameGenderPair(name: "Nettie Miles", gender: .male),
-                                                   NameGenderPair(name: "Janis Ramirez", gender: .female),
-                                                   NameGenderPair(name: "Suzane Brady", gender: .female),
-                                                   NameGenderPair(name: "Noel Baldwin", gender: .male),
-                                                   NameGenderPair(name: "Renee Chavez", gender: .female),
-                                                   NameGenderPair(name: "Sadie Lopez", gender: .female),
-                                                   NameGenderPair(name: "Boyd Collier", gender: .male),
-                                                   NameGenderPair(name: "Levi Rogers", gender: .male),
-                                                   NameGenderPair(name: "Rachel Wells", gender: .female),
-                                                   NameGenderPair(name: "William Park", gender: .male),
-                                                   
-                                                   NameGenderPair(name: "Timothy Lyons", gender: .male),
-                                                   NameGenderPair(name: "Charlie Walsh", gender: .female),
-                                                   NameGenderPair(name: "Misty Swanson", gender: .female),
-                                                   NameGenderPair(name: "Mable Morales", gender: .female),
-                                                   NameGenderPair(name: "Natty Carson", gender: .female),
-                                                   NameGenderPair(name: "Angelo Wagner", gender: .male),
-                                                   NameGenderPair(name: "Amber Crosser", gender: .female),
-                                                   NameGenderPair(name: "Rene Goodwin", gender: .female),
-                                                   NameGenderPair(name: "Shannon Cross", gender: .female),
-                                                   NameGenderPair(name: "Trevor Baker", gender: .male),
-                                                   
-                                                   NameGenderPair(name: "Giovanni Piza", gender: .male),
-                                                   NameGenderPair(name: "Yuri Bobov", gender: .male),
-                                                   NameGenderPair(name: "Mark Trapuya", gender: .male),
-                                                   NameGenderPair(name: "Anna Johnson", gender: .female),
-                                                   NameGenderPair(name: "Julia Carson", gender: .female),
-                                                   NameGenderPair(name: "Sakura Saito", gender: .female),
-                                                   NameGenderPair(name: "Jeny Muligan", gender: .female),
-                                                   NameGenderPair(name: "Guta Gonzales", gender: .female),
-                                                   NameGenderPair(name: "Masha Ivanov", gender: .female),
-                                                   NameGenderPair(name: "Lauren Gucci", gender: .female),
-                                                   
-                                                   // Below are all equal width.
-                                                   
-                                                   NameGenderPair(name: "Maura Pizani", gender: .female),
-                                                   NameGenderPair(name: "Jeff Johnson", gender: .male),
-                                                   NameGenderPair(name: "Carly Hikken", gender: .male),
-                                                   NameGenderPair(name: "Albert Fritz", gender: .male),
-                                                   NameGenderPair(name: "Candice Bril", gender: .female),
-                                                   NameGenderPair(name: "Bianca Green", gender: .female),
-                                                   NameGenderPair(name: "Gina Caprici", gender: .female),
-                                                   NameGenderPair(name: "Owen Walters", gender: .male),
-                                                   NameGenderPair(name: "Mark Sapporo", gender: .male),
-                                                   NameGenderPair(name: "Carl Collier", gender: .male),
-                                                   
-                                                   NameGenderPair(name: "Jena Thomson", gender: .female),
-                                                   NameGenderPair(name: "Roge Shimura", gender: .male),
-                                                   NameGenderPair(name: "Miranda Nile", gender: .female),
-                                                   NameGenderPair(name: "Elfie Shultz", gender: .female),
-                                                   NameGenderPair(name: "Dima Vasiliv", gender: .male),
-                                                   NameGenderPair(name: "Gene Rossini", gender: .male),
-                                                   NameGenderPair(name: "John Ferrari", gender: .male),
-                                                   NameGenderPair(name: "Angel Ballak", gender: .male),
-                                                   NameGenderPair(name: "David Mazzol", gender: .male),
-                                                   NameGenderPair(name: "Ricky Shultz", gender: .male),
-                                                   
-                                                   
-                                                   
-                                                   
-                                                   
-                ]
+        let allNameGenderPairs:[NameGenderPair] = [
+            
+            // Smaller
+            NameGenderPair(name: "Kevin Burke", gender: .male),
+            NameGenderPair(name: "Charly Ward", gender: .female),
+            NameGenderPair(name: "Darren Soto", gender: .male),
+            NameGenderPair(name: "Sadie Lopez", gender: .female),
+            NameGenderPair(name: "Levi Rogers", gender: .male),
+            
+            // Little Bigger
+            NameGenderPair(name: "Timothy Lyons", gender: .male),
+            NameGenderPair(name: "Charlie Walsh", gender: .female),
+            NameGenderPair(name: "Misty Swanson", gender: .female),
+            NameGenderPair(name: "Giovanni Piza", gender: .male),
+            NameGenderPair(name: "Yuri Levawski", gender: .male),
+            NameGenderPair(name: "Janis Ramirez", gender: .female),
+            
+            // Below are all equal width.
+            // Divide in
+            /*
+             Americans
+             Russians
+             Germans
+             Italians
+             Spanish
+             Other
+             */
+            
+            NameGenderPair(name: "Maura Pizani", gender: .female),
+            NameGenderPair(name: "Jeff Johnson", gender: .male),
+            NameGenderPair(name: "Carly Hikken", gender: .male),
+            NameGenderPair(name: "Albert Fritz", gender: .male),
+            NameGenderPair(name: "Candice Bril", gender: .female),
+            NameGenderPair(name: "Bianca Green", gender: .female),
+            NameGenderPair(name: "Gina Caprici", gender: .female),
+            NameGenderPair(name: "Owen Walters", gender: .male),
+            NameGenderPair(name: "Mark Sapporo", gender: .male),
+            NameGenderPair(name: "Carl Collier", gender: .male),
+            
+            NameGenderPair(name: "Jena Thomson", gender: .female),
+            NameGenderPair(name: "Roge Shimura", gender: .male),
+            NameGenderPair(name: "Miranda Nile", gender: .female),
+            NameGenderPair(name: "Elfie Shultz", gender: .female),
+            NameGenderPair(name: "Dima Vasiliv", gender: .male),
+            NameGenderPair(name: "Gene Rossini", gender: .male),
+            NameGenderPair(name: "John Ferrari", gender: .male),
+            NameGenderPair(name: "Angel Ballak", gender: .male),
+            NameGenderPair(name: "David Mazzol", gender: .male),
+            NameGenderPair(name: "Ricky Shultz", gender: .male),
+            
+            NameGenderPair(name: "Mark Trapuya", gender: .male),
+            NameGenderPair(name: "Anna Johnson", gender: .female),
+            NameGenderPair(name: "Julia Carson", gender: .female),
+            NameGenderPair(name: "Sakura Saito", gender: .female),
+            NameGenderPair(name: "Jeny Muligan", gender: .female),
+            NameGenderPair(name: "Guta Ramirez", gender: .female),
+            NameGenderPair(name: "Masha Ivanov", gender: .female),
+            NameGenderPair(name: "Lauren Gucci", gender: .female),
+            
+            NameGenderPair(name: "Mary Morales", gender: .female),
+            NameGenderPair(name: "Natty Carson", gender: .female),
+            NameGenderPair(name: "Angel Wagner", gender: .male),
+            NameGenderPair(name: "Amber Croser", gender: .female),
+            NameGenderPair(name: "Rene Goodwin", gender: .female),
+            NameGenderPair(name: "Shanon Cross", gender: .female),
+            NameGenderPair(name: "Trevor Baker", gender: .male),
+            
+            NameGenderPair(name: "Nettie Miles", gender: .male),
+            NameGenderPair(name: "Suzane Brady", gender: .female),
+            NameGenderPair(name: "Noel Baldwin", gender: .male),
+            NameGenderPair(name: "Renee Chavez", gender: .female),
+            NameGenderPair(name: "Boyd Collier", gender: .male),
+            NameGenderPair(name: "Rachel Wells", gender: .female),
+            NameGenderPair(name: "William Park", gender: .male),
+            
+            NameGenderPair(name: "Tiffany Love", gender: .female),
+            NameGenderPair(name: "Anita Norman", gender: .female),
+            NameGenderPair(name: "Salvador Lee", gender: .male),
+            NameGenderPair(name: "Cassy Howard", gender: .female),
+            NameGenderPair(name: "Ramiro Nunez", gender: .male),
+            NameGenderPair(name: "Edwin Greene", gender: .male),
+            NameGenderPair(name: "Judith Parks", gender: .female),
+            
+        ]
         return allNameGenderPairs.randomElement()!
     }
     

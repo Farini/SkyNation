@@ -73,10 +73,15 @@ struct BuildingVehicleView: View {
                 case .pickEngineers(let engine):
                     
                     // Skills and People
-                        ActivityStaffView(staff: builderController.availablePeople, selected: [], requiredSkills: engine.skills, chooseWithReturn: { (selectedPeople) in
-                            builderController.workersArray = selectedPeople
-                            builderController.updateStaffList()
-                        }, title: "Engine Skills Required", issue: "", message: "")
+                    ActivityStaffView(staff: builderController.availablePeople, requiredSkills: engine.skills) { selectedPeople in
+                        
+                        builderController.workersArray = selectedPeople
+                        builderController.updateStaffList()
+                    }
+//                        ActivityStaffView(staff: builderController.availablePeople, selected: [], requiredSkills: engine.skills, chooseWithReturn: { (selectedPeople) in
+//                            builderController.workersArray = selectedPeople
+//                            builderController.updateStaffList()
+//                        }, title: "Engine Skills Required", issue: "", message: "")
                     
                     
                     Divider()

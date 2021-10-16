@@ -69,10 +69,9 @@ struct CityLabTechView: View {
             Divider()
             
             // Skills and People
-            ActivityStaffView(staff: controller.availableStaff, selected: [], requiredSkills: tech.skillSet, chooseWithReturn: { (selectedPeople) in
-                
+            ActivityStaffView(staff: controller.availableStaff, requiredSkills: tech.skillSet) { selectedPeople in
                 controller.selectedStaff = selectedPeople
-            }, title: "\(tech.shortName) Skills Required", issue: "", message: "")
+            }
             
             Group {
                 // Empty Staff

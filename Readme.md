@@ -175,7 +175,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Settings - Game Autostart
 - [X] Model - Launching a Vehicle should also be an Achievement
 - [X] Tests - (Settings) - ServerTab - Test Leave Guild
-
+- [X] Basic Views - Error messages - GameResponse? (success, or error)
 
 - [ ] Mars Scene - Accounting happening every 10 seconds!
 - [ ] Mars Scene - Try to get accounting to be run on a background thread, or run accounting when settings are loading.
@@ -187,7 +187,6 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] GameCamera - Add/Remove relevant Cameras
 Discussion: Gate camera in Mars seems problematic.
 In SpaceStation, One camera can be removed (the one too close)
-
 
 - [ ] Tests - (Chat Bubble) - Test Election Results
 - [ ] Tests - Registering new vehicle should increase XP.
@@ -209,8 +208,8 @@ In SpaceStation, One camera can be removed (the one too close)
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
 - [ ] Sound - 2 more music (better ones)
 
-- [ ] Basic Views - Error messages (red)
 - [ ] Basic Views - Alert messages (orange)
+- [ ] Basic Views - Confirmation Alert Dialogues (Yes, No, Confirm, etc.)
 - [ ] Basic Views - Typography, and Fonts.
 
 - [ ] iOS - Views are too large
