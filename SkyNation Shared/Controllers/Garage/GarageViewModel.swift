@@ -808,6 +808,8 @@ class EDLSceneController:ObservableObject {
         SCNTransaction.begin()
         SCNTransaction.animationDuration = 2.0
         cameraNode.constraints = [constraint, follow]
+
+        
         SCNTransaction.commit()
         
         let waiter = SCNAction.wait(duration: 5)
@@ -826,6 +828,9 @@ class EDLSceneController:ObservableObject {
         let marsRot = SCNAction.rotate(by: GameLogic.radiansFrom(10), around: SCNVector3(0, 0, 1), duration: 60.0)
         self.mars.runAction(marsRot)
         
+        // Rotate Ship
+        let shipRotation = SCNAction.rotate(by: GameLogic.radiansFrom(-12), around: SCNVector3(0, 0, 1), duration: 2.0)
+        edlModule.runAction(shipRotation)
     }
     
     func atmoImpactAnimation() {
@@ -836,9 +841,11 @@ class EDLSceneController:ObservableObject {
         
         SCNTransaction.begin()
         SCNTransaction.animationDuration = 5.0
-        self.smallShock.geometry?.materials.first?.emission.intensity = 1.0
+        SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: .easeIn)
+        self.smallShock.geometry?.materials.first?.emission.intensity = 4.0
         self.emitter.birthRate = 500
-        self.burnMaterial.emission.intensity = 1.0
+        self.burnMaterial.emission.intensity = 4.0
+        
         SCNTransaction.commit()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.2) {
@@ -865,18 +872,33 @@ class EDLSceneController:ObservableObject {
         
         self.shootBase.isHidden = false
         camera.focalLength = 20
-        let wobble = SCNAction.rotate(by: GameLogic.radiansFrom(-12), around: SCNVector3(0, 0, 1), duration: 3.5)
-        let wobble2 = SCNAction.rotate(by: GameLogic.radiansFrom(5), around: SCNVector3(0, 1, 0), duration: 3.5)
-        let unwobble = SCNAction.rotate(by: GameLogic.radiansFrom(12), around: SCNVector3(0, 0, 1), duration: 3.5)
         
-        self.shootBase.runAction(SCNAction.group([wobble, wobble2])) {
-            let modTurn = SCNAction.rotate(by: GameLogic.radiansFrom(-45), around: SCNVector3(0, 0, 1), duration: 3.5)
-            self.edlModule.runAction(modTurn)
-            self.shootBase.runAction(unwobble) {
+        // The Shoot should wobble more
+        let waiter = SCNAction.wait(duration: 0.5)
+        
+        let shootLift = SCNAction.rotate(by: GameLogic.radiansFrom(-12), around: SCNVector3(0.1, 0, 1), duration: 2.5)
+        let shootWobble = SCNAction.rotate(by: GameLogic.radiansFrom(10), around: SCNVector3(0, 1, 0), duration: 1.0)
+        let shootUnwobble = SCNAction.rotate(by: GameLogic.radiansFrom(-10), around: SCNVector3(0, 1, 0), duration: 1.0)
+        let liftSequence = SCNAction.sequence([waiter, shootLift])
+        let wobbleSequence = SCNAction.sequence([shootWobble, shootUnwobble])
+        let shootGroup = SCNAction.group([liftSequence, wobbleSequence])
+        
+        self.shootBase.runAction(shootGroup) {
+            
+//            let modTurn = SCNAction.rotate(by: GameLogic.radiansFrom(-45), around: SCNVector3(0, 0, 1), duration: 0.8)
+//            let modTurn2 = SCNAction.rotate(by: GameLogic.radiansFrom(15), around: SCNVector3(0, 0, 1), duration: 1.5)
+//            modTurn2.timingMode = .easeIn
+            let modTurn3 = SCNAction.rotate(by: GameLogic.radiansFrom(-45), around: SCNVector3(0, 0, 1), duration: 3.2)
+            modTurn3.timingMode = .easeInEaseOut
+//            let seq = SCNAction.sequence([modTurn, modTurn2, modTurn3])
+            self.edlModule.runAction(modTurn3)
+            
+            self.shootBase.runAction(waiter) {
                 self.cameraNode.runAction(SCNAction.moveBy(x: 0, y: -5, z: 0, duration: 2.8))
                 self.dropFromShoot()
             }
         }
+        
     }
     
     func dropFromShoot() {
@@ -888,13 +910,21 @@ class EDLSceneController:ObservableObject {
         self.shootBase.eulerAngles = eul
         self.scene.rootNode.addChildNode(self.shootBase)
         
-        let fall = SCNAction.moveBy(x: 0, y: -50, z: 0, duration: 3.5)
-        let angleAdjust = SCNAction.rotate(by: GameLogic.radiansFrom(-45), around: SCNVector3(0, 0, 1), duration: 3.5)
+        let fall = SCNAction.moveBy(x: 0, y: -48, z: 0, duration: 5.2)
+        fall.timingMode = .easeOut
+        
+        let angleAdjust = SCNAction.rotate(by: GameLogic.radiansFrom(-33), around: SCNVector3(0, 0, 1), duration: 3.2)
         let group = SCNAction.group([fall, angleAdjust])
+        
         self.edlModule.runAction(group) {
+            
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             self.igniteThrusters()
         }
         
+        // animate camera?
         camera.focalLength = 45
         
         // remove mars
@@ -905,9 +935,22 @@ class EDLSceneController:ObservableObject {
     }
     
     func igniteThrusters() {
+        // self.actNames = ["POS: \(self.edlModule.worldPosition)"]
         for engine in self.engines {
             engine.isHidden = false
+            
         }
+        
+        let finalRot = SCNAction.rotateBy(x: GameLogic.radiansFrom(15), y: 0, z: 0, duration: 1.2)
+        let finalRot2 = SCNAction.rotateBy(x: GameLogic.radiansFrom(-15), y: 0, z: 0, duration: 2.2)
+        let finalRot3 = SCNAction.rotateBy(x: 0, y: GameLogic.radiansFrom(30), z: 0, duration: 1.2)
+        let finalRot4 = SCNAction.rotateBy(x: 0, y: GameLogic.radiansFrom(-30), z: 0, duration: 2.2)
+        
+        let wobble1 = SCNAction.sequence([finalRot, finalRot2])
+        let wobble2 = SCNAction.sequence([finalRot3, finalRot4])
+        
+        self.edlModule.runAction(SCNAction.group([wobble1, wobble2]))
+        
     }
     
     // FIXME: - Continue
