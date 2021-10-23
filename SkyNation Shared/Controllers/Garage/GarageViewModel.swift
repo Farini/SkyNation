@@ -699,7 +699,6 @@ import SwiftUI
 class EDLSceneController:ObservableObject {
     
     @Published var scene:SCNScene
-//    @Published var edlNode:SCNNode
     @Published var vehicle:SpaceVehicle
     @Published var actNames:[String] = []
     
@@ -708,6 +707,9 @@ class EDLSceneController:ObservableObject {
     
     private var camera:SCNCamera
     private var cameraNode:SCNNode
+    
+    /// Camera positions stored in array
+    private var otherCams:[SCNNode]
     private var floor:SCNNode
     private var mars:SCNNode
     
@@ -719,8 +721,12 @@ class EDLSceneController:ObservableObject {
     var shootBase:SCNNode
     
     // shock
-    var smallShock:SCNNode
+    var bigShock:SCNNode
+    var miniShock:SCNNode
+    
     var engines:[SCNNode] = []
+    
+    // MARK: - Animation v 1.3
     
     /*
      Emitters:
@@ -733,9 +739,57 @@ class EDLSceneController:ObservableObject {
      Other subdivided actions
      - Wobbles
      - shock emitter [rotation, intensity]
+     - try more transparent shock emitter
      - camera changes
      - move vehicle 33 in X
      - camera-002 to show parashooting (shooting)
+     - engine emitters
+     
+     */
+    
+    // Shock Nodes
+    /*
+     - Shock node
+     - Correct node scale
+     - material rotation
+     - material emission intensity
+     
+     - transluscent emitter
+     
+     - control emitter birth rate
+     -
+     */
+    
+    /*
+     Before start burning, needs to show particle emitter
+     Animate the burn stopping
+     Dim down particle Emitter
+     
+     Approach with camera and throw something in that direction
+     
+     Attempt # 2
+     
+     - Contact
+     * unhide shock
+     * start particle emitter
+     * start burning color
+     - burning
+     * animate shock (scale, rotate, etc.)
+     * unwind particle emitter
+     * reverse burning color
+     * dim shock until 0
+     - deploy shoot
+     * throw object blob
+     * scale parashoot
+     * rotate parashoot
+     * rotate ship
+     * slow down
+     - drop
+     * unhide engines
+     * run particle emitters (thrusters)
+     * slow down the drop
+     - land
+     
      
      
      */
@@ -782,24 +836,29 @@ class EDLSceneController:ObservableObject {
             }
         }
         
-        guard let cameraNode:SCNNode = scene.rootNode.childNode(withName: "Camparent", recursively: false)?.childNodes.first,
-              let camera = cameraNode.camera else {
+        // Camera
+        guard let cameraNode:SCNNode = scene.rootNode.childNode(withName: "Camera", recursively: false),
+              let camera = cameraNode.camera,
+              let cam2 = scene.rootNode.childNode(withName: "Campos", recursively: false) else {
             fatalError()
         }
         self.cameraNode = cameraNode
         self.camera = camera
+        self.otherCams = [cam2]
         
         // Load Secondary Nodes
-        guard let shock2 = module.childNode(withName: "Shock", recursively: false),
-              let particles:SCNParticleSystem = shock2.particleSystems?.first,
-                let shoot = module.childNode(withName: "ShootBase", recursively: false) else {
+        guard let shockBig = module.childNode(withName: "Shock", recursively: false),
+              let shockSmall = module.childNode(withName: "Shock-Mini", recursively: false),
+              let particles:SCNParticleSystem = shockBig.particleSystems?.first,
+              let shoot = module.childNode(withName: "ShootBase", recursively: false) else {
             fatalError("No Shock")
         }
-        shock2.isHidden = true
+        shockBig.isHidden = true
         shoot.isHidden = true
         
         self.emitter = particles
-        self.smallShock = shock2
+        self.bigShock = shockBig
+        self.miniShock = shockSmall
         self.shootBase = shoot
         
         // Post Init
@@ -852,19 +911,22 @@ class EDLSceneController:ObservableObject {
         edlModule.runAction(shipRotation)
     }
     
+    // MARK: - Impact + Friction
+    
     func atmoImpactAnimation() {
         
-        self.smallShock.isHidden = false
-        self.smallShock.geometry?.materials.first?.emission.intensity = 0.1
-        self.emitter.birthRate = 15
+        self.shockNodeHeatingAnimation()
         
+        self.emitter.birthRate = 15
+
+        // Increase Emitter power, move module
         SCNTransaction.begin()
         SCNTransaction.animationDuration = 5.0
         SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: .easeIn)
-        self.smallShock.geometry?.materials.first?.emission.intensity = 2.5
+        self.bigShock.geometry?.materials.first?.emission.intensity = 2.5
         self.emitter.birthRate = 500
         self.burnMaterial.emission.intensity = 4.0
-        
+        self.edlModule.position.x = -15
         SCNTransaction.commit()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.2) {
@@ -872,12 +934,32 @@ class EDLSceneController:ObservableObject {
         }
     }
     
+    func shockNodeHeatingAnimation() {
+        
+        // Scales of the Shock Node
+        let miniScale = SCNVector3(0.45, 0.2, 0.45)
+        // let bigScale = SCNVector3(x: 1, y: 1, z: 1)
+        
+        self.bigShock.scale = miniScale
+        self.bigShock.isHidden = false
+        self.bigShock.geometry?.materials.first?.emission.intensity = 0.1
+        
+        let shockScale = SCNAction.scale(to: 1, duration: 5.50)
+        shockScale.timingMode = .easeInEaseOut
+        
+        self.bigShock.runAction(shockScale) {
+            let shrink = SCNAction.scale(by: 0.4, duration: 4.5)
+            self.bigShock.runAction(shrink)
+        }
+        
+    }
+    
     func impactFadeAnimation() {
         
         SCNTransaction.begin()
         SCNTransaction.animationDuration = 5.0
-        self.smallShock.geometry?.materials.first?.emission.intensity = 0.0
-        self.smallShock.isHidden = true
+        self.bigShock.geometry?.materials.first?.emission.intensity = 0.0
+        self.bigShock.isHidden = true
         self.emitter.birthRate = 0
         self.burnMaterial.emission.intensity = 0.0
         SCNTransaction.commit()
@@ -887,37 +969,82 @@ class EDLSceneController:ObservableObject {
         }
     }
     
+    // MARK: - Parashoot
+    
     func launchShoot() {
         
+        // Get Shoot's geometries
+        guard let cord = shootBase.childNode(withName: "ShootCord", recursively: false),
+              let shoot = shootBase.childNode(withName: "Shoot", recursively: false) else {
+                  fatalError("no cord, no shoot")
+              }
+        shoot.isHidden = true
+        cord.isHidden = false
+        
+        // Change Camera
+        guard let nextCam = otherCams.first!.childNode(withName: "Cam2", recursively: false) else {
+            fatalError("no such camera")
+        }
+        
+        // nextCam.look(at: shoot.position)
+        self.cameraNode.position = nextCam.position
+        self.cameraNode.eulerAngles = nextCam.eulerAngles
+        self.cameraNode.look(at: shoot.position)
+        camera.focalLength = 12
+        
+        // Particle System
+        self.shootBase.particleSystems?.first?.birthRate = 1
         self.shootBase.isHidden = false
-        camera.focalLength = 20
         
-        // The Shoot should wobble more
-        let waiter = SCNAction.wait(duration: 0.5)
+        let shrinkCord = SCNAction.scale(to: 0.2, duration: 0.1)
+        let expandCord = SCNAction.scale(to: 4.0, duration: 1.5)
+        let throwingSequel = SCNAction.sequence([shrinkCord, expandCord])
+        cord.runAction(throwingSequel)
         
-        let shootLift = SCNAction.rotate(by: GameLogic.radiansFrom(-12), around: SCNVector3(0.1, 0, 1), duration: 2.5)
-        let shootWobble = SCNAction.rotate(by: GameLogic.radiansFrom(10), around: SCNVector3(0, 1, 0), duration: 1.0)
-        let shootUnwobble = SCNAction.rotate(by: GameLogic.radiansFrom(-10), around: SCNVector3(0, 1, 0), duration: 1.0)
-        let liftSequence = SCNAction.sequence([waiter, shootLift])
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.85) {
+            self.shootBase.particleSystems?.first?.birthRate = 0
+            for shootChild in self.shootBase.childNodes {
+                shootChild.isHidden = false
+                self.glideShoot()
+            }
+        }
+        
+    }
+    
+    func glideShoot() {
+        
+        // Rotating parashoot
+        let waiter = SCNAction.wait(duration: 1.6)
+        let shootLift = SCNAction.rotate(by: GameLogic.radiansFrom(12), around: SCNVector3(0.1, 0, 1), duration: 1.6)
+        let shootLift2 = SCNAction.rotate(by: GameLogic.radiansFrom(-8), around: SCNVector3(0.1, 0, 1), duration: 1.1)
+        
+        let shootWobble = SCNAction.rotate(by: GameLogic.radiansFrom(10), around: SCNVector3(0, 1, 0), duration: 1.9)
+        let shootUnwobble = SCNAction.rotate(by: GameLogic.radiansFrom(-10), around: SCNVector3(0, 1, 0), duration: 1.8)
+        
+        let liftSequence = SCNAction.sequence([waiter, shootLift, shootLift2])
         let wobbleSequence = SCNAction.sequence([shootWobble, shootUnwobble])
         let shootGroup = SCNAction.group([liftSequence, wobbleSequence])
         
+        // Moving EDL
+        let edlMove = SCNAction.move(to: SCNVector3(0, self.edlModule.position.y, self.edlModule.position.z), duration: 4.3)
+        let edlRotate = SCNAction.rotate(by: GameLogic.radiansFrom(-20), around: SCNVector3(0, 0, 1), duration: 3.2)
+        let mvGroup = SCNAction.group([edlMove, edlRotate])
+        self.edlModule.runAction(mvGroup)
+        
         self.shootBase.runAction(shootGroup) {
             
-//            let modTurn = SCNAction.rotate(by: GameLogic.radiansFrom(-45), around: SCNVector3(0, 0, 1), duration: 0.8)
-//            let modTurn2 = SCNAction.rotate(by: GameLogic.radiansFrom(15), around: SCNVector3(0, 0, 1), duration: 1.5)
-//            modTurn2.timingMode = .easeIn
-            let modTurn3 = SCNAction.rotate(by: GameLogic.radiansFrom(-45), around: SCNVector3(0, 0, 1), duration: 3.2)
+            // Rotate Module
+            let modTurn3 = SCNAction.rotate(by: GameLogic.radiansFrom(-25), around: SCNVector3(0, 0, 1), duration: 3.2)
             modTurn3.timingMode = .easeInEaseOut
-//            let seq = SCNAction.sequence([modTurn, modTurn2, modTurn3])
             self.edlModule.runAction(modTurn3)
             
-            self.shootBase.runAction(waiter) {
+            // Wobble some more
+            
+            self.shootBase.runAction(shootLift2) {
                 self.cameraNode.runAction(SCNAction.moveBy(x: 0, y: -5, z: 0, duration: 2.8))
                 self.dropFromShoot()
             }
         }
-        
     }
     
     func dropFromShoot() {
@@ -929,268 +1056,95 @@ class EDLSceneController:ObservableObject {
         self.shootBase.eulerAngles = eul
         self.scene.rootNode.addChildNode(self.shootBase)
         
-        let fall = SCNAction.moveBy(x: 0, y: -48, z: 0, duration: 5.2)
+        // Shoot goes up
+        let goUp = SCNAction.moveBy(x: 0, y: 30, z: 0, duration: 1.0)
+        self.shootBase.runAction(goUp) {
+            self.shootBase.removeFromParentNode()
+        }
+        
+        // Falling move anime
+        let fall = SCNAction.moveBy(x: 0, y: -23.5, z: 0, duration: 5.2)
         fall.timingMode = .easeOut
         
-        let angleAdjust = SCNAction.rotate(by: GameLogic.radiansFrom(-33), around: SCNVector3(0, 0, 1), duration: 3.2)
-        let group = SCNAction.group([fall, angleAdjust])
+        // Adjust angles of ship
+        let straight = SCNAction.rotateTo(x: 0, y: 0, z: 0, duration: 3.2)
+        let group = SCNAction.group([fall, straight])
         
+        // Module action fall
         self.edlModule.runAction(group) {
             
+            // Kill the Engines
+            var allEngines = Array(self.engines.compactMap({ $0.childNodes }).joined())
+            while !allEngines.isEmpty {
+                let first = allEngines.first
+                allEngines.append(contentsOf: first?.childNodes ?? [])
+                first?.particleSystems?.first?.birthRate = 0
+                allEngines.removeFirst()
+            }
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             self.igniteThrusters()
+            self.spreadEngines()
         }
         
         // animate camera?
-        camera.focalLength = 45
+        camera.focalLength = 50
         
-        // remove mars
-        // add floor
+        // remove mars, add floor
         mars.isHidden = true
         floor.isHidden = false
         
     }
     
+    // MARK: - Thrusters
+    
     func igniteThrusters() {
         // self.actNames = ["POS: \(self.edlModule.worldPosition)"]
         for engine in self.engines {
             engine.isHidden = false
-            
-        }
-        
-        let finalRot = SCNAction.rotateBy(x: GameLogic.radiansFrom(15), y: 0, z: 0, duration: 1.2)
-        let finalRot2 = SCNAction.rotateBy(x: GameLogic.radiansFrom(-15), y: 0, z: 0, duration: 2.2)
-        let finalRot3 = SCNAction.rotateBy(x: 0, y: GameLogic.radiansFrom(30), z: 0, duration: 1.2)
-        let finalRot4 = SCNAction.rotateBy(x: 0, y: GameLogic.radiansFrom(-30), z: 0, duration: 2.2)
-        
-        let wobble1 = SCNAction.sequence([finalRot, finalRot2])
-        let wobble2 = SCNAction.sequence([finalRot3, finalRot4])
-        
-        self.edlModule.runAction(SCNAction.group([wobble1, wobble2]))
-        
-    }
-    
-    // FIXME: - Continue
-    /*
-     Before start burning, needs to show particle emitter
-     Animate the burn stopping
-     Dim down particle Emitter
-     
-     Approach with camera and throw something in that direction
-     
-     Attempt # 2
-     
-     - Contact
-        * unhide shock
-        * start particle emitter
-        * start burning color
-     - burning
-        * animate shock (scale, rotate, etc.)
-        * unwind particle emitter
-        * reverse burning color
-        * dim shock until 0
-     - deploy shoot
-        * throw object blob
-        * scale parashoot
-        * rotate parashoot
-        * rotate ship
-        * slow down
-     - drop
-        * unhide engines
-        * run particle emitters (thrusters)
-        * slow down the drop
-     - land
-        
-     -------------------------------
-     
-     5 Stages - 2 sec each.
-     
-     - Touch Atmo
-        * start particle emitter
-        * start burning color (after 1s)
-     - Burn
-        * dim burn first
-        * dim emitter (reduce birthRate)
-     - Stabilize
-        * rotate ship
-        * load parashoot geometry
-        * move camera?
-     - Gliding (Parashoot)
-        * throw blob
-        * scale shoot?
-        * show parashoot
-        * release parashoot
-     - Landing (Engines)
-        * unhide engines
-        * engines emitters
-        * land on ground.
-     
-     */
-    
-    /*
-    func touchAtmosphere() {
-        
-        self.emitter.birthRate = 50
-        let emitterDuration = 2.5
-        
-        let emitAnimation = CABasicAnimation(keyPath: "birthRate")
-        emitAnimation.toValue = 300
-        emitAnimation.duration = emitterDuration
-        emitAnimation.autoreverses = false
-        
-        self.emitter.addAnimation(emitAnimation, forKey: "birthRate")
-        
-        let waiter = SCNAction.wait(duration: emitterDuration)
-        self.edlNode.runAction(waiter) {
-            self.emitter.birthRate = 300
-            self.move()
-            
-            self.burnMaterial.emission.contents = NSColor.red
-            self.burnMaterial.emission.intensity = 0.0
-            self.burnIntensity()
         }
     }
     
-    func move() {
-        camera.focalLength = 30
+    func spreadEngines() {
         
-        self.actNames.append("Ship Move")
-
-        let action = SCNAction.move(by: SCNVector3(40, 0, 0), duration: 12.0)
-        self.edlNode.runAction(action) {
-            print("Finished moving")
-            self.actNames.removeAll(where: { $0 == "Ship Move" })
-
-            self.parashoot()
-        }
-    }
-    
-    /// Increases the Burn Intensity
-    func burnIntensity() {
+        let waiter = SCNAction.wait(duration: 1.2)
+//        let rotX = SCNAction.rotateBy(x: 0, y: 0, z: GameLogic.radiansFrom(35), duration: 1.0)
+//        let sequel = SCNAction.sequence([waiter, rotX])
         
-        let burnAnime = CABasicAnimation(keyPath: "intensity")
-        burnAnime.toValue = 1.0
-        burnAnime.duration = 3
-        burnAnime.autoreverses = true
-        self.burnMaterial.emission.addAnimation(burnAnime, forKey: "intensity")
-        
-        let emitAnimation = CABasicAnimation(keyPath: "birthRate")
-        emitAnimation.toValue = 0
-        emitAnimation.duration = 6
-        emitAnimation.autoreverses = false
-        self.emitter.addAnimation(emitAnimation, forKey: "birthRate")
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
-            self.emitter.birthRate = 0
-            self.burnMaterial.emission.intensity = 0
-        }
-    }
-    
-    // MARK: - Shoot
-    
-    /// Launch Parashoot
-    func parashoot() {
-        
-        var pShoot:SCNNode!
-        
-        for eng in edlNode.childNodes {
-            let nodeName = eng.name ?? "na"
-            if nodeName == "Parashoot" {
-                eng.runAction(SCNAction.wait(duration: 0.25)) {
-                    eng.isHidden = false
-                    pShoot = eng
-                    
+        for engine in self.engines {
+            if engine.name == "EngineHolder-001" {
+                let rot = SCNAction.rotateBy(x: 0, y: GameLogic.radiansFrom(-20), z: 0, duration: 1.0)
+                let seq = SCNAction.sequence([waiter, rot])
+                engine.runAction(seq) {
+                    engine.particleSystems?.first?.birthRate = 0
+                }
+                
+            }
+            if engine.name == "EngineHolder-002" {
+                let rot = SCNAction.rotateBy(x: 0, y: 0, z: GameLogic.radiansFrom(20), duration: 1.0)
+                let seq = SCNAction.sequence([waiter, rot])
+                engine.runAction(seq){
+                    engine.particleSystems?.first?.birthRate = 0
                 }
             }
-            else if nodeName.contains("Engine") {
-                eng.runAction(SCNAction.wait(duration: 0.75)) {
-                    
-                    // unhide Engine
-                    eng.isHidden = false
-                    
-                    // hide mars
-                    self.mars.isHidden = true
-                    
-                    // unhide floor
-                    self.floor.isHidden = false
+            if engine.name == "EngineHolder-003" {
+                let rot = SCNAction.rotateBy(x: 0, y: 0, z: GameLogic.radiansFrom(-20), duration: 1.0)
+                let seq = SCNAction.sequence([waiter, rot])
+                engine.runAction(seq){
+                    engine.particleSystems?.first?.birthRate = 0
                 }
             }
-        }
-        
-        // Point Camera to Parashoot
-        // Look At
-        let constraint = SCNLookAtConstraint(target:pShoot)
-        constraint.isGimbalLockEnabled = true
-        constraint.influenceFactor = 0.3
-        
-        // -------------------
-        
-        SCNTransaction.begin()
-        SCNTransaction.animationDuration = 1.0
-        cameraNode.constraints = [constraint]
-        SCNTransaction.commit()
-        
-        
-        
-        let waiter = SCNAction.wait(duration: 1)
-        self.scene.rootNode.runAction(waiter) {
-            
-            // Turn on engines
-            self.throttleThrust()
-            
-            // Release Shoot
-            let posin = pShoot.worldPosition
-            pShoot.removeFromParentNode()
-            pShoot.position = posin
-            self.scene.rootNode.addChildNode(pShoot)
-            
-            let moveUp = SCNAction.moveBy(x: 0, y: 30, z: 0, duration: 0.5)
-            pShoot.runAction(moveUp) {
-                pShoot.removeFromParentNode()
+            if engine.name == "EngineHolder-004" {
+                let rot = SCNAction.rotateBy(x: 0, y: GameLogic.radiansFrom(20), z: 0, duration: 1.0)
+                let seq = SCNAction.sequence([waiter, rot])
+                engine.runAction(seq){
+                    engine.particleSystems?.first?.birthRate = 0
+                }
             }
+            
+            
         }
     }
-    
-    
-    func throttleThrust() {
-        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            let newConstraint = SCNLookAtConstraint(target:self.edlNode)
-            newConstraint.isGimbalLockEnabled = true
-            newConstraint.influenceFactor = 0.1
-            
-            // Follow
-            let follow = SCNDistanceConstraint(target: self.edlNode)
-            follow.minimumDistance = 5
-            follow.maximumDistance = 20
-            
-            SCNTransaction.begin()
-            SCNTransaction.animationDuration = 1.0
-            self.cameraNode.constraints = [newConstraint]
-            SCNTransaction.commit()
-//        }
-        
-        let rotation = SCNAction.rotate(by: GameLogic.radiansFrom(-45), around: SCNVector3(0, 0, 1), duration: 3.0)
-        self.edlNode.runAction(rotation) {
-            print("Finished rotating")
-            
-            
-            
-            
-            self.camera.focalLength = 15
-            
-            let fall = SCNAction.moveBy(x: 0, y: -25, z: 0, duration: 5)
-            let keepTurning = SCNAction.rotate(by: GameLogic.radiansFrom(-45), around: SCNVector3(0, 0, 1), duration: 3.0)
-            let group = SCNAction.group([fall, keepTurning])
-            
-            self.edlNode.runAction(group) {
-                self.camera.focalLength = 30
-                self.edlNode.runAction(fall)
-            }
-        }
-    }
-    */
     
 }
