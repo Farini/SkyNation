@@ -722,11 +722,29 @@ class EDLSceneController:ObservableObject {
     var smallShock:SCNNode
     var engines:[SCNNode] = []
     
+    /*
+     Emitters:
+     - Shock Emitter (impact)
+     - Engine Emitters
+     - Landpad
+     */
+    
+    /*
+     Other subdivided actions
+     - Wobbles
+     - shock emitter [rotation, intensity]
+     - camera changes
+     - move vehicle 33 in X
+     - camera-002 to show parashooting (shooting)
+     
+     
+     */
+    
     init(vehicle:SpaceVehicle) {
         
         self.vehicle = vehicle
         
-        let scene = SCNScene(named: "Art.scnassets/Vehicles/EDL2.scn")!
+        let scene = SCNScene(named: "Art.scnassets/Vehicles/EDL.scn")!
         
         self.scene = scene
         
@@ -735,6 +753,7 @@ class EDLSceneController:ObservableObject {
               let mars = scene.rootNode.childNode(withName: "Mars", recursively: false) else {
             fatalError("no floor")
         }
+        
         self.floor = floor
         self.mars = mars
         
@@ -763,7 +782,7 @@ class EDLSceneController:ObservableObject {
             }
         }
         
-        guard let cameraNode:SCNNode = scene.rootNode.childNode(withName: "Camera", recursively: false),
+        guard let cameraNode:SCNNode = scene.rootNode.childNode(withName: "Camparent", recursively: false)?.childNodes.first,
               let camera = cameraNode.camera else {
             fatalError()
         }
@@ -771,7 +790,7 @@ class EDLSceneController:ObservableObject {
         self.camera = camera
         
         // Load Secondary Nodes
-        guard let shock2 = module.childNode(withName: "Shock2", recursively: false),
+        guard let shock2 = module.childNode(withName: "Shock", recursively: false),
               let particles:SCNParticleSystem = shock2.particleSystems?.first,
                 let shoot = module.childNode(withName: "ShootBase", recursively: false) else {
             fatalError("No Shock")
@@ -842,7 +861,7 @@ class EDLSceneController:ObservableObject {
         SCNTransaction.begin()
         SCNTransaction.animationDuration = 5.0
         SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: .easeIn)
-        self.smallShock.geometry?.materials.first?.emission.intensity = 4.0
+        self.smallShock.geometry?.materials.first?.emission.intensity = 2.5
         self.emitter.birthRate = 500
         self.burnMaterial.emission.intensity = 4.0
         
