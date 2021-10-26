@@ -90,6 +90,7 @@ struct GameProduct:Identifiable, Hashable {
     }
 }
 
+
 extension SKProduct {
     /// - returns: The cost of the product formatted in the local currency.
     var regularPrice: String? {

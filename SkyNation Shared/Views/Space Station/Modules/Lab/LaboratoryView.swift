@@ -10,7 +10,7 @@ import SwiftUI
 
 struct LaboratoryView: View {
     
-    @ObservedObject var controller:LabViewModel // = LabViewModel()
+    @ObservedObject var controller:LabViewModel
     
     @State var popTutorial:Bool = false
     @State var popoverLab:Bool = false
@@ -33,7 +33,7 @@ struct LaboratoryView: View {
             HStack() {
                 
                 VStack(alignment:.leading) {
-                    Text("🔬 Laboratory Module")
+                    Text("🔬 Lab Module")
                         .font(.largeTitle)
                     
                     HStack(alignment: .lastTextBaseline) {
@@ -75,52 +75,8 @@ struct LaboratoryView: View {
                     })
                     .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
                     .popover(isPresented: $popoverLab, content: {
-                        VStack {
-                            HStack {
-                                Text("Rename")
-                                Spacer()
-                                Image(systemName: "textformat")
-                                    .fixedSize()
-                                    .scaledToFit()
-                            }
-                            
-                            .onTapGesture {
-                                print("Rename Action")
-                                popoverLab.toggle()
-                            }
-                            Divider()
-                            HStack {
-                                // Text
-                                Text("Change Skin")
-                                // Spacer
-                                Spacer()
-                                // Image
-                                Image(systemName: "circle.circle")
-                                    .fixedSize()
-                                    .scaledToFit()
-                            }
-                            .onTapGesture {
-                                print("Reskin Action")
-                                popoverLab.toggle()
-                            }
-                            
-                            HStack {
-                                Text("Tutorial")
-                                Spacer()
-                                Image(systemName: "questionmark.diamond")
-                                    .fixedSize()
-                                    .scaledToFit()
-                            }
-                            
-                            .onTapGesture {
-                                print("Reskin Action")
-                                popoverLab.toggle()
-                            }
-                        }
-                        .frame(width: 150)
-                        .font(.headline)
-                        .foregroundColor(.gray)
-                        .padding(.leading, 6)
+                        
+                        ModulePopView(name: controller.labModule.name, module:controller.station.modules.filter({ $0.id == controller.labModule.id }).first!)
                     })
                     
                     // Close

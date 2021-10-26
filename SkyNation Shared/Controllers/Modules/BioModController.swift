@@ -82,6 +82,9 @@ class BioModController: ObservableObject, BioController {
         self.availableWater = h2o
         let zzz = station.truss.getAvailableEnergy()
         self.availableEnergy = zzz
+        
+        // Notification Observer
+        NotificationCenter.default.addObserver(self, selector: #selector(changeModuleNotification(_:)), name: .changeModule, object: nil)
     }
     
     // MARK: - Selection
@@ -479,6 +482,66 @@ class BioModController: ObservableObject, BioController {
             try LocalDatabase.shared.saveStation(station)
         } catch {
             print("Could not save Station.: \(error.localizedDescription)")
+        }
+    }
+    
+    // MARK: - Change Module
+    // Module
+    @objc func changeModuleNotification(_ notification:Notification) {
+        
+        guard let object = notification.object as? [String:Any] else {
+            print("no object passed in this notification")
+            return
+        }
+        
+        print("Change Module Notification. Object:\n\(object.description)")
+        var shouldCloseView:Bool = false
+        
+        if let moduleID = object["id"] as? UUID {
+            if moduleID == self.module.id {
+                
+                // id checked
+                if let name = object["name"] as? String {
+                    self.module.name = name
+                    station.labModules.first(where: { $0.id == moduleID })!.name = name
+                } else
+                if let skin = object["skin"] as? String {
+                    // Skin
+                    if let modSkin = ModuleSkin(rawValue: skin) {
+                        print("Change skin to: \(modSkin.displayName)")
+                        self.module.skin = modSkin
+                        let rawModule = station.lookupRawModule(id: self.module.id)
+                        rawModule.skin = modSkin
+                        station.bioModules.first(where: { $0.id == moduleID })!.skin = modSkin
+                    }
+                } else
+                if let unbuild = object["unbuild"] as? Bool, unbuild == true {
+                    
+                    // Unbuild Module.
+                    print("Danger! Wants to unbuild module")
+                    let idx = station.bioModules.firstIndex(where: { $0.id == moduleID })!
+                    station.bioModules.remove(at: idx)
+                    
+                    shouldCloseView = true
+                }
+            }
+        } else {
+            print("Error: ID doesnt check")
+            return
+        }
+        
+        do {
+            try LocalDatabase.shared.saveStation(self.station)
+            
+            // Close the view
+            if shouldCloseView == true {
+                let closeNotification = Notification(name: .closeView)
+                NotificationCenter.default.post(closeNotification)
+            }
+        } catch {
+            // Deal with error
+            print("Error saving station: \(error.localizedDescription)")
+            // self.problems = "Could not save station"
         }
     }
     

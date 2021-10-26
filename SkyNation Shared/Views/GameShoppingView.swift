@@ -103,7 +103,7 @@ struct GameShoppingView: View {
                             ProgressView()
                         } else {
                             ForEach(controller.gameProducts, id:\.self) { gameProduct in
-                                ShopProductRow(product: gameProduct.type)
+                                ShopProductRow(product: gameProduct)
                                     .onTapGesture {
                                         controller.didSelectProduct(gameProduct)
                                     }
@@ -119,7 +119,6 @@ struct GameShoppingView: View {
                             // Text(kit.rawValue).font(.title)
                             ShopKitRow(kit: kit, product: product.type)
                                 .onTapGesture {
-//                                    self.purchaseProduct(product: product, kit: kit)
                                     controller.didSelectKit(kit)
                                 }
                             
@@ -176,17 +175,6 @@ struct GameShoppingView: View {
         }
         .frame(minWidth: 500, idealWidth: 600, maxWidth: 800, minHeight:400, maxHeight:700, alignment: .top)
     }
-    
-    /*
-    func nextStep() {
-        switch step {
-            case .product: self.step = .kit
-            case .kit: self.step = .appStore
-            case .appStore: self.step = .receipt
-            case .receipt: self.step = .product
-        }
-    }
-    */
     
     // Token Validation
     func validateToken() {
@@ -355,7 +343,7 @@ struct ShopKitRow:View {
 
 struct ShopProductRow: View {
     
-    var product:GameProductType
+    var product:GameProduct
     
     var body: some View {
         // Product Row
@@ -367,12 +355,9 @@ struct ShopProductRow: View {
                     .font(.largeTitle)
                     .padding(6)
                 
-                Text(product.displayName)
+                Text(product.type.displayName)
                     .foregroundColor(.orange)
                     .font(.title2)
-                
-                //                            Text(package.rawValue.uppercased()).foregroundColor(.orange)
-                //                            Text("$ \(package.moneyAmount)")
             }
             .frame(width:120)
             
@@ -394,7 +379,7 @@ struct ShopProductRow: View {
                         .frame(width: 28, height: 28, alignment: .center)
                     #endif
                     
-                    Text("x\(product.tokenAmount) ")
+                    Text("x\(product.type.tokenAmount) ")
                         .font(.headline)
                 }
                 
@@ -409,12 +394,12 @@ struct ShopProductRow: View {
                         .resizable()
                         .frame(width: 28, height: 28, alignment: .center)
                     #endif
-                    Text("$ \(GameFormatters.numberFormatter.string(from: NSNumber(value:product.moneyAmount))!)")
+                    Text("$ \(GameFormatters.numberFormatter.string(from: NSNumber(value:product.type.moneyAmount))!)")
                         .font(.headline)
                     
                 }
                 
-                Text("Token \(product.tokenAmount)")
+                Text("Token \(product.type.tokenAmount)")
             }
             .frame(width:150)
             
@@ -422,18 +407,15 @@ struct ShopProductRow: View {
             
             // Button
             VStack {
-                //                            Button(action: {
-                ////                                self.purchasePackage(package: package)
-                //                                self.purchaseProduct(product: package)
-                //                            }, label: {
-                //                                HStack {
-                //                                    Image(systemName: "cart")
-                //                                    Text("Buy")
-                //                                }
-                //                            })
-                //                            .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                
                 generateBarcode(from: LocalDatabase.shared.player.id)
+                Button(action: {}) {
+                    HStack {
+                        Image(systemName: "cart")
+                        Text(product.priceString)
+                    }
+                    
+                }
+                .buttonStyle(GameButtonStyle())
             }
             
             // Chevron

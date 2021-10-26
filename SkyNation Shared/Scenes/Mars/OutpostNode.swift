@@ -233,6 +233,7 @@ class LandingPadNode:SCNNode {
         
         self.name = posdex.sceneName
         
+        
         // MARK: - Children
         
         for baseChild in baseNode.childNodes {
@@ -255,7 +256,7 @@ class LandingPadNode:SCNNode {
             }
         }
         
-        self.scale = SCNVector3(0.5, 0.5, 0.5)
+        self.scale = SCNVector3(0.25, 0.25, 0.25)
         
         self.performAnimationLoop()
     }

@@ -17,7 +17,11 @@ struct NetResponseView: View {
             // Header
             Group {
                 VStack(spacing:6) {
-                    Text("Game Status Messages").font(.title)
+                    // Text("Game Status Messages").font(.title)
+                    Text("🏠 Hab Module View")
+                        .font(Font.custom("Ailerons", size: 24))
+                        .padding(.leading)
+                    
                     Text("Displays an error, or a successfull message after an action.")
                         .foregroundColor(.gray)
                 }
@@ -29,9 +33,7 @@ struct NetResponseView: View {
             
             // Random View
             Group {
-                Text("Random View")
-                    .font(Font.custom("Ailerons", size: 24))
-                    .padding(.leading)
+                
                 
                 HStack {
                     PeripheralObject(peripheral: .PowerGen).getImage()

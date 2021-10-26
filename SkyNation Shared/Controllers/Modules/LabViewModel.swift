@@ -558,6 +558,66 @@ class LabViewModel: ObservableObject {
         print("Saved")
     }
     
+    // MARK: - Change Module
+    // Module
+    @objc func changeModuleNotification(_ notification:Notification) {
+        
+        guard let object = notification.object as? [String:Any] else {
+            print("no object passed in this notification")
+            return
+        }
+        
+        print("Change Module Notification. Object:\n\(object.description)")
+        var shouldCloseView:Bool = false
+        
+        if let moduleID = object["id"] as? UUID {
+            if moduleID == labModule.id {
+                
+                // id checked
+                if let name = object["name"] as? String {
+                    self.labModule.name = name
+                    station.labModules.first(where: { $0.id == moduleID })!.name = name
+                } else
+                if let skin = object["skin"] as? String {
+                    // Skin
+                    if let modSkin = ModuleSkin(rawValue: skin) {
+                        print("Change skin to: \(modSkin.displayName)")
+                        self.labModule.skin = modSkin
+                        let rawModule = station.lookupRawModule(id: self.labModule.id)
+                        rawModule.skin = modSkin
+                        station.labModules.first(where: { $0.id == moduleID })!.skin = modSkin
+                    }
+                } else
+                if let unbuild = object["unbuild"] as? Bool, unbuild == true {
+                    
+                    // Unbuild Module.
+                    print("Danger! Wants to unbuild module")
+                    let idx = station.labModules.firstIndex(where: { $0.id == moduleID })!
+                    station.labModules.remove(at: idx)
+                    
+                    shouldCloseView = true
+                }
+            }
+        } else {
+            print("Error: ID doesnt check")
+            return
+        }
+        
+        do {
+            try LocalDatabase.shared.saveStation(self.station)
+            
+            // Close the view
+            if shouldCloseView == true {
+                let closeNotification = Notification(name: .closeView)
+                NotificationCenter.default.post(closeNotification)
+            }
+        } catch {
+            // Deal with error
+            print("Error saving station: \(error.localizedDescription)")
+            self.problems = "Could not save station"
+        }
+    }
+    
     // MARK: - Init
     
     init(lab:LabModule) {
@@ -595,6 +655,9 @@ class LabViewModel: ObservableObject {
         for item in tree.showUnlocked() ?? [] {
             self.unlockedItems.append(item.item)
         }
+        
+        // Notification Observer
+        NotificationCenter.default.addObserver(self, selector: #selector(changeModuleNotification(_:)), name: .changeModule, object: nil)
     }
     
     /// Initializes an instance for `Previews` only!

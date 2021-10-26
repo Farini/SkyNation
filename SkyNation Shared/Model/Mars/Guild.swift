@@ -90,7 +90,8 @@ enum Posdex:Int, Codable, CaseIterable {
             case .arena: return "Arena"
             case .biosphere1: return "Biosphere-01"
             case .biosphere2: return "Biosphere-02"
-            case .launchPad: return "LandingPad"
+            case .launchPad: return "LPad"
+                
             case .mining1: return "Mining-01"
             case .mining2: return "Mining-02"
             case .mining3: return "Mining-03"

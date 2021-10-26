@@ -27,6 +27,7 @@ struct HabModuleView: View {
             // Header
             HStack (alignment: .center, spacing: nil) {
                 
+                
                 HabModuleHeaderView(module: controller.habModule)
                 
                 Spacer()
@@ -56,10 +57,8 @@ struct HabModuleView: View {
                     ModulePopView(name: controller.habModule.name, module:controller.station.modules.filter({ $0.id == controller.habModule.id }).first!)
                 }
                 
-                
                 // Close
                 Button(action: {
-//                    print("Close action")
                     NotificationCenter.default.post(name: .closeView, object: self)
                 }, label: {
                     Image(systemName: "xmark.circle")
@@ -160,7 +159,7 @@ struct HabModuleHeaderView: View {
                 HStack {
                     Text("🏠").font(.largeTitle)
                         .padding(.leading, 6)
-                    Text("Habitation Module")
+                    Text("Hab Module")
                         .font(.largeTitle)
                         .padding([.leading], 6)
                         .foregroundColor(.green)

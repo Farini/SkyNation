@@ -432,6 +432,9 @@
 		8569A3E325A8D7870057A518 /* BoosterDiagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3E225A8D7870057A518 /* BoosterDiagramView.swift */; };
 		8569A3E425A8D7870057A518 /* BoosterDiagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3E225A8D7870057A518 /* BoosterDiagramView.swift */; };
 		8569A3E525A8D7870057A518 /* BoosterDiagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8569A3E225A8D7870057A518 /* BoosterDiagramView.swift */; };
+		856A64A52727B5050075CC04 /* TypographyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856A64A42727B5050075CC04 /* TypographyView.swift */; };
+		856A64A62727B5050075CC04 /* TypographyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856A64A42727B5050075CC04 /* TypographyView.swift */; };
+		856A64A72727B5050075CC04 /* TypographyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856A64A42727B5050075CC04 /* TypographyView.swift */; };
 		8579750F259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
 		85797510259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
 		85797511259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
@@ -804,6 +807,7 @@
 		8569A3D025A6353C0057A518 /* GameActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameActivityView.swift; sourceTree = "<group>"; };
 		8569A3D925A799840057A518 /* LaunchingVehicleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchingVehicleView.swift; sourceTree = "<group>"; };
 		8569A3E225A8D7870057A518 /* BoosterDiagramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoosterDiagramView.swift; sourceTree = "<group>"; };
+		856A64A42727B5050075CC04 /* TypographyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypographyView.swift; sourceTree = "<group>"; };
 		85761806268EC2680024233D /* DataPlan.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = DataPlan.md; sourceTree = "<group>"; };
 		8579750E259B9E70004C54D2 /* FlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipView.swift; sourceTree = "<group>"; };
 		85797517259BD394004C54D2 /* ItemCollectionViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCollectionViews.swift; sourceTree = "<group>"; };
@@ -1299,6 +1303,7 @@
 				8536F3C6258D47D000B509D2 /* AnimationsTest.swift */,
 				8536F3C7258D47D000B509D2 /* Parafernalia.swift */,
 				85108372271B16D8004D6D00 /* NetResponseView.swift */,
+				856A64A42727B5050075CC04 /* TypographyView.swift */,
 			);
 			path = TestViews;
 			sourceTree = "<group>";
@@ -2093,6 +2098,7 @@
 				85A6F7A826E52728003F9924 /* OutpostInfoView.swift in Sources */,
 				8536F481258D481700B509D2 /* TravelersScene.swift in Sources */,
 				8517EE5225FE8C9C00C34C54 /* ServerData.swift in Sources */,
+				856A64A52727B5050075CC04 /* TypographyView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2257,6 +2263,7 @@
 				8504A52F25C6872B00739C58 /* Tanks.swift in Sources */,
 				8536F44A258D47EA00B509D2 /* VehicleBuilderViewModel.swift in Sources */,
 				8536F482258D481700B509D2 /* TravelersScene.swift in Sources */,
+				856A64A62727B5050075CC04 /* TypographyView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2365,6 +2372,7 @@
 				85CD46A925D1199A000D9C64 /* EarthNode.swift in Sources */,
 				85351E7926FE373000EEE04C /* CityOPCollectView.swift in Sources */,
 				8536F394258D475D00B509D2 /* BioModule.swift in Sources */,
+				856A64A72727B5050075CC04 /* TypographyView.swift in Sources */,
 				85927D9725DB1D800071D98B /* VehicleTrunkView.swift in Sources */,
 				8536F400258D47D000B509D2 /* IngredientView.swift in Sources */,
 				8536F41C258D47D000B509D2 /* VehicleInventoryView.swift in Sources */,

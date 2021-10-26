@@ -50,6 +50,7 @@ class StoreController: ObservableObject, StoreManagerDelegate {
     @Published var appStoreProducts:[SKProduct] = []
     @Published var gameProducts:[GameProduct] = []
     
+    
     // Selection
     @Published var selectedProduct:GameProduct?
     @Published var selectedKit:Purchase.Kit = Purchase.Kit.SurvivalKit

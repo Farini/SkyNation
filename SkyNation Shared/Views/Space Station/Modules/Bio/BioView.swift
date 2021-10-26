@@ -86,52 +86,7 @@ struct BioView: View {
                     })
                     .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
                     .popover(isPresented: $menuPopover, content: {
-                        VStack {
-                            HStack {
-                                Text("Rename")
-                                Spacer()
-                                Image(systemName: "textformat")
-                                    .fixedSize()
-                                    .scaledToFit()
-                            }
-                            
-                            .onTapGesture {
-                                print("Rename Action")
-                                menuPopover.toggle()
-                            }
-                            Divider()
-                            HStack {
-                                // Text
-                                Text("Change Skin")
-                                // Spacer
-                                Spacer()
-                                // Image
-                                Image(systemName: "circle.circle")
-                                    .fixedSize()
-                                    .scaledToFit()
-                            }
-                            .onTapGesture {
-                                print("Reskin Action")
-                                menuPopover.toggle()
-                            }
-                            
-                            HStack {
-                                Text("Tutorial")
-                                Spacer()
-                                Image(systemName: "questionmark.diamond")
-                                    .fixedSize()
-                                    .scaledToFit()
-                            }
-                            
-                            .onTapGesture {
-                                print("Reskin Action")
-                                menuPopover.toggle()
-                            }
-                        }
-                        .frame(width: 150)
-                        .font(.headline)
-                        .foregroundColor(.gray)
-                        .padding(.leading, 6)
+                        ModulePopView(name: controller.module.name, module:controller.station.modules.filter({ $0.id == controller.module.id }).first!)
                     })
                     
                     // Close

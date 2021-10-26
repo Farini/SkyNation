@@ -177,6 +177,16 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Tests - (Settings) - ServerTab - Test Leave Guild
 - [X] Basic Views - Error messages - GameResponse? (success, or error)
 
+- [X] Store - Fix Price not showing.
+- [X] Modules Views - Be able to change all modules
+- [X] Import and fix Landpad
+
+- Add Sound
+- Add Credits
+- Typography?
+- Split Chat Bubble in [Guild] vs [Player], or just [Credits]?
+- Accounting with Totals
+
 - [ ] Mars Scene - Accounting happening every 10 seconds!
 - [ ] Mars Scene - Try to get accounting to be run on a background thread, or run accounting when settings are loading.
 
@@ -203,6 +213,7 @@ In SpaceStation, One camera can be removed (the one too close)
 - [ ] Blender - Reduce Vertex Count, and make scene "DecorKit", to gather resources from there.
 - [ ] Blender - Observatory - Add new geometries (see kit)
 - [ ] Blender - All Vehicle Paths
+- [ ] Blender - Fix roads weird angles
 - [ ] Blender - Export Roads
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds

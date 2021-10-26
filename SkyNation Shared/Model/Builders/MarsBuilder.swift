@@ -290,6 +290,7 @@ extension MarsBuilder {
         let outpostsParent = root.childNode(withName: "Outposts", recursively: false)!
         for child in outpostsParent.childNodes {
             let opNodeName = child.name ?? "unknown"
+            
             if let pp:Posdex = Posdex.allCases.filter({ $0.sceneName == opNodeName }).first {
                 
                 // Check New Nodes
@@ -319,6 +320,7 @@ extension MarsBuilder {
                     
                     // Landing Pad - Also Too Big! (0.25?)
                     if pp == .launchPad {
+                        print("Launch Pad - Landing Pad")
                         let lPad = LandingPadNode(posdex: pp, outpost: outpost)
                         lPad.position = child.position
                         lPad.eulerAngles = child.eulerAngles

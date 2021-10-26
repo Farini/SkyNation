@@ -886,8 +886,6 @@ class EDLSceneController:ObservableObject {
         SCNTransaction.begin()
         SCNTransaction.animationDuration = 2.0
         cameraNode.constraints = [constraint, follow]
-
-        
         SCNTransaction.commit()
         
         let waiter = SCNAction.wait(duration: 5)
@@ -909,6 +907,25 @@ class EDLSceneController:ObservableObject {
         // Rotate Ship
         let shipRotation = SCNAction.rotate(by: GameLogic.radiansFrom(-12), around: SCNVector3(0, 0, 1), duration: 2.0)
         edlModule.runAction(shipRotation)
+    }
+    
+    // Easy move of camera
+    func cameraSmoothLookAt(node:SCNNode) {
+        
+        // Look At
+        let constraint = SCNLookAtConstraint(target:node)
+        constraint.isGimbalLockEnabled = true
+        constraint.influenceFactor = 0.1
+        
+        // Follow (always follow EDL Module)
+        let follow = SCNDistanceConstraint(target: edlModule)
+        follow.minimumDistance = 15
+        follow.maximumDistance = 50
+        
+        SCNTransaction.begin()
+        SCNTransaction.animationDuration = 2.0
+        cameraNode.constraints = [constraint, follow]
+        SCNTransaction.commit()
     }
     
     // MARK: - Impact + Friction
@@ -985,64 +1002,77 @@ class EDLSceneController:ObservableObject {
         guard let nextCam = otherCams.first!.childNode(withName: "Cam2", recursively: false) else {
             fatalError("no such camera")
         }
-        
-        // nextCam.look(at: shoot.position)
         self.cameraNode.position = nextCam.position
         self.cameraNode.eulerAngles = nextCam.eulerAngles
-        self.cameraNode.look(at: shoot.position)
-        camera.focalLength = 12
+        self.cameraSmoothLookAt(node: shoot)
+        // Adjust focus
+        SCNTransaction.begin()
+        SCNTransaction.animationDuration = 1.0
+        camera.focalLength = 20
+        SCNTransaction.commit()
         
-        // Particle System
+        // Shoot Particle System
         self.shootBase.particleSystems?.first?.birthRate = 1
         self.shootBase.isHidden = false
-        
+        // Shoot expansion animation
         let shrinkCord = SCNAction.scale(to: 0.2, duration: 0.1)
-        let expandCord = SCNAction.scale(to: 4.0, duration: 1.5)
+        let expandCord = SCNAction.scale(to: 4.0, duration: 1.2)
         let throwingSequel = SCNAction.sequence([shrinkCord, expandCord])
-        cord.runAction(throwingSequel)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.85) {
+        let expandShoot = SCNAction.scale(to: 4.0, duration: 0.85)
+        
+        
+        shoot.runAction(shrinkCord)
+        cord.runAction(throwingSequel) {
             self.shootBase.particleSystems?.first?.birthRate = 0
-            for shootChild in self.shootBase.childNodes {
-                shootChild.isHidden = false
+            shoot.isHidden = false
+            shoot.runAction(expandShoot) {
                 self.glideShoot()
             }
         }
-        
     }
     
     func glideShoot() {
         
+        // Point camera back at the Module
+        self.cameraSmoothLookAt(node: edlModule)
+        
         // Rotating parashoot
-        let waiter = SCNAction.wait(duration: 1.6)
-        let shootLift = SCNAction.rotate(by: GameLogic.radiansFrom(12), around: SCNVector3(0.1, 0, 1), duration: 1.6)
-        let shootLift2 = SCNAction.rotate(by: GameLogic.radiansFrom(-8), around: SCNVector3(0.1, 0, 1), duration: 1.1)
-        
-        let shootWobble = SCNAction.rotate(by: GameLogic.radiansFrom(10), around: SCNVector3(0, 1, 0), duration: 1.9)
-        let shootUnwobble = SCNAction.rotate(by: GameLogic.radiansFrom(-10), around: SCNVector3(0, 1, 0), duration: 1.8)
-        
+        let waiter = SCNAction.wait(duration: 1.9)
+        let shootLift = SCNAction.rotate(by: GameLogic.radiansFrom(-12), around: SCNVector3(0.1, 0, 1), duration: 0.6)
+        let shootLift2 = SCNAction.rotate(by: GameLogic.radiansFrom(-8), around: SCNVector3(0.1, 0, 1), duration: 0.8)
+        // Another rotate
+        let shootWobble = SCNAction.rotate(by: GameLogic.radiansFrom(10), around: SCNVector3(0, 1, 0), duration: 1.1)
+        let shootUnwobble = SCNAction.rotate(by: GameLogic.radiansFrom(-10), around: SCNVector3(0, 1, 0), duration: 1.5)
+        // Parashoot actions
         let liftSequence = SCNAction.sequence([waiter, shootLift, shootLift2])
         let wobbleSequence = SCNAction.sequence([shootWobble, shootUnwobble])
         let shootGroup = SCNAction.group([liftSequence, wobbleSequence])
         
         // Moving EDL
         let edlMove = SCNAction.move(to: SCNVector3(0, self.edlModule.position.y, self.edlModule.position.z), duration: 4.3)
-        let edlRotate = SCNAction.rotate(by: GameLogic.radiansFrom(-20), around: SCNVector3(0, 0, 1), duration: 3.2)
-        let mvGroup = SCNAction.group([edlMove, edlRotate])
-        self.edlModule.runAction(mvGroup)
+        let edlRotate = SCNAction.rotate(by: GameLogic.radiansFrom(-20), around: SCNVector3(0, 0, 1), duration: 2.1)
+        let edlRotate2 = SCNAction.rotate(by: GameLogic.radiansFrom(5), around: SCNVector3(0, 0, 1), duration: 1.0)
+        let edlRotSeq = SCNAction.sequence([edlRotate2, edlRotate])
+        let mvGroup = SCNAction.group([edlMove, edlRotSeq])
         
-        self.shootBase.runAction(shootGroup) {
-            
+        
+        self.edlModule.runAction(mvGroup) {
             // Rotate Module
-            let modTurn3 = SCNAction.rotate(by: GameLogic.radiansFrom(-25), around: SCNVector3(0, 0, 1), duration: 3.2)
+            let modTurn3 = SCNAction.rotate(by: GameLogic.radiansFrom(-30), around: SCNVector3(0, 0, 1), duration: 2.2)
             modTurn3.timingMode = .easeInEaseOut
-            self.edlModule.runAction(modTurn3)
-            
-            // Wobble some more
-            
-            self.shootBase.runAction(shootLift2) {
-                self.cameraNode.runAction(SCNAction.moveBy(x: 0, y: -5, z: 0, duration: 2.8))
+            self.edlModule.runAction(modTurn3) {
                 self.dropFromShoot()
+                self.cameraNode.runAction(SCNAction.moveBy(x: 0, y: -15, z: 0, duration: 2.8))
+            }
+        }
+        
+        // shoot
+        self.shootBase.runAction(shootGroup) {
+            let shootRotBack = SCNAction.rotate(by: GameLogic.radiansFrom(15), around: SCNVector3(0.1, 0, 1), duration: 2.1)
+            // Wobble some more
+            self.shootBase.runAction(shootRotBack) {
+                // finished shooting anime
             }
         }
     }
@@ -1063,7 +1093,7 @@ class EDLSceneController:ObservableObject {
         }
         
         // Falling move anime
-        let fall = SCNAction.moveBy(x: 0, y: -23.5, z: 0, duration: 5.2)
+        let fall = SCNAction.moveBy(x: 0, y: -47.5, z: 0, duration: 5.2)
         fall.timingMode = .easeOut
         
         // Adjust angles of ship
