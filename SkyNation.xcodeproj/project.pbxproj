@@ -435,6 +435,27 @@
 		856A64A52727B5050075CC04 /* TypographyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856A64A42727B5050075CC04 /* TypographyView.swift */; };
 		856A64A62727B5050075CC04 /* TypographyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856A64A42727B5050075CC04 /* TypographyView.swift */; };
 		856A64A72727B5050075CC04 /* TypographyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856A64A42727B5050075CC04 /* TypographyView.swift */; };
+		856A64A92728885F0075CC04 /* CreditsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856A64A82728885F0075CC04 /* CreditsView.swift */; };
+		856A64AA2728885F0075CC04 /* CreditsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856A64A82728885F0075CC04 /* CreditsView.swift */; };
+		856A64AB2728885F0075CC04 /* CreditsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856A64A82728885F0075CC04 /* CreditsView.swift */; };
+		856A64B0272892F80075CC04 /* Indreams.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 856A64AD272892F80075CC04 /* Indreams.mp3 */; };
+		856A64B1272892F80075CC04 /* Indreams.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 856A64AD272892F80075CC04 /* Indreams.mp3 */; };
+		856A64B2272892F80075CC04 /* Indreams.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 856A64AD272892F80075CC04 /* Indreams.mp3 */; };
+		856A64B3272892F80075CC04 /* MainTheme.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 856A64AE272892F80075CC04 /* MainTheme.mp3 */; };
+		856A64B4272892F80075CC04 /* MainTheme.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 856A64AE272892F80075CC04 /* MainTheme.mp3 */; };
+		856A64B5272892F80075CC04 /* MainTheme.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 856A64AE272892F80075CC04 /* MainTheme.mp3 */; };
+		856A64B6272892F80075CC04 /* Adventure.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 856A64AF272892F80075CC04 /* Adventure.mp3 */; };
+		856A64B7272892F80075CC04 /* Adventure.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 856A64AF272892F80075CC04 /* Adventure.mp3 */; };
+		856A64B8272892F80075CC04 /* Adventure.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 856A64AF272892F80075CC04 /* Adventure.mp3 */; };
+		856A64BB27289D8F0075CC04 /* Ailerons-Typeface.otf in Resources */ = {isa = PBXBuildFile; fileRef = 856A64BA27289D8F0075CC04 /* Ailerons-Typeface.otf */; };
+		856A64BC27289D8F0075CC04 /* Ailerons-Typeface.otf in Resources */ = {isa = PBXBuildFile; fileRef = 856A64BA27289D8F0075CC04 /* Ailerons-Typeface.otf */; };
+		856A64BD27289D8F0075CC04 /* Ailerons-Typeface.otf in Resources */ = {isa = PBXBuildFile; fileRef = 856A64BA27289D8F0075CC04 /* Ailerons-Typeface.otf */; };
+		856A64BF27289DB70075CC04 /* RobotoMono-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 856A64BE27289DB70075CC04 /* RobotoMono-VariableFont_wght.ttf */; };
+		856A64C027289DB70075CC04 /* RobotoMono-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 856A64BE27289DB70075CC04 /* RobotoMono-VariableFont_wght.ttf */; };
+		856A64C127289DB70075CC04 /* RobotoMono-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 856A64BE27289DB70075CC04 /* RobotoMono-VariableFont_wght.ttf */; };
+		856A64C327289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 856A64C227289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf */; };
+		856A64C427289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 856A64C227289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf */; };
+		856A64C527289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 856A64C227289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf */; };
 		8579750F259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
 		85797510259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
 		85797511259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
@@ -808,6 +829,13 @@
 		8569A3D925A799840057A518 /* LaunchingVehicleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchingVehicleView.swift; sourceTree = "<group>"; };
 		8569A3E225A8D7870057A518 /* BoosterDiagramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoosterDiagramView.swift; sourceTree = "<group>"; };
 		856A64A42727B5050075CC04 /* TypographyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypographyView.swift; sourceTree = "<group>"; };
+		856A64A82728885F0075CC04 /* CreditsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsView.swift; sourceTree = "<group>"; };
+		856A64AD272892F80075CC04 /* Indreams.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Indreams.mp3; sourceTree = "<group>"; };
+		856A64AE272892F80075CC04 /* MainTheme.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = MainTheme.mp3; sourceTree = "<group>"; };
+		856A64AF272892F80075CC04 /* Adventure.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Adventure.mp3; sourceTree = "<group>"; };
+		856A64BA27289D8F0075CC04 /* Ailerons-Typeface.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ailerons-Typeface.otf"; sourceTree = "<group>"; };
+		856A64BE27289DB70075CC04 /* RobotoMono-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoMono-VariableFont_wght.ttf"; sourceTree = "<group>"; };
+		856A64C227289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoSlab-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		85761806268EC2680024233D /* DataPlan.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = DataPlan.md; sourceTree = "<group>"; };
 		8579750E259B9E70004C54D2 /* FlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipView.swift; sourceTree = "<group>"; };
 		85797517259BD394004C54D2 /* ItemCollectionViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCollectionViews.swift; sourceTree = "<group>"; };
@@ -942,11 +970,9 @@
 		8517EE6A26093C4100C34C54 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				856A64AC272892D20075CC04 /* Music */,
 				85D3BB2626AF244400B6AA36 /* SFXClose.wav */,
 				85D3BB2726AF244400B6AA36 /* SFXSelected.wav */,
-				8595402726197A17001D9040 /* SKN_T1.m4a */,
-				8595402626197A17001D9040 /* SKN_T2.m4a */,
-				8595402826197A17001D9040 /* SKN_T3.m4a */,
 			);
 			path = Sounds;
 			sourceTree = "<group>";
@@ -1012,6 +1038,7 @@
 				85487F3126C9930500EBC070 /* GuildChatView.swift */,
 				85351EA127078B2400EEE04C /* ChatBubbleGuildTab.swift */,
 				85351EA627078BFA00EEE04C /* GuildElectionsView.swift */,
+				856A64A82728885F0075CC04 /* CreditsView.swift */,
 			);
 			path = "Chat Bubble";
 			sourceTree = "<group>";
@@ -1438,6 +1465,7 @@
 		85487F4B26CD98A700EBC070 /* Game Assets */ = {
 			isa = PBXGroup;
 			children = (
+				856A64B927289D090075CC04 /* Fonts */,
 				85487F4C26CD98E900EBC070 /* GameImages.swift */,
 				85487F5126CD9B1900EBC070 /* GameSounds.swift */,
 				85487F5626CD9B3D00EBC070 /* GameFonts.swift */,
@@ -1497,6 +1525,29 @@
 				8569A310259F81110057A518 /* TransitionShader.fsh */,
 			);
 			path = FSH;
+			sourceTree = "<group>";
+		};
+		856A64AC272892D20075CC04 /* Music */ = {
+			isa = PBXGroup;
+			children = (
+				8595402726197A17001D9040 /* SKN_T1.m4a */,
+				8595402626197A17001D9040 /* SKN_T2.m4a */,
+				8595402826197A17001D9040 /* SKN_T3.m4a */,
+				856A64AF272892F80075CC04 /* Adventure.mp3 */,
+				856A64AD272892F80075CC04 /* Indreams.mp3 */,
+				856A64AE272892F80075CC04 /* MainTheme.mp3 */,
+			);
+			path = Music;
+			sourceTree = "<group>";
+		};
+		856A64B927289D090075CC04 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				856A64C227289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf */,
+				856A64BE27289DB70075CC04 /* RobotoMono-VariableFont_wght.ttf */,
+				856A64BA27289D8F0075CC04 /* Ailerons-Typeface.otf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		857A35632696AE1F0020ADF2 /* RSS */ = {
@@ -1827,10 +1878,13 @@
 				8569A32E259F81110057A518 /* MapShapeGradient.fsh in Resources */,
 				85D3BB2826AF244400B6AA36 /* SFXClose.wav in Resources */,
 				8536F2F0258D330300B509D2 /* Assets.xcassets in Resources */,
+				856A64B6272892F80075CC04 /* Adventure.mp3 in Resources */,
 				8536F471258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F495258D481700B509D2 /* SparkEmitter.sks in Resources */,
 				85E2C41D26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
 				85A59EA0270CB6C90049AFC1 /* PlayerCardLayout.sks in Resources */,
+				856A64BB27289D8F0075CC04 /* Ailerons-Typeface.otf in Resources */,
+				856A64B0272892F80075CC04 /* Indreams.mp3 in Resources */,
 				8569A304259F7F990057A518 /* dissolve.fragment.txt in Resources */,
 				8569A31C259F81110057A518 /* InterlaceShader.fsh in Resources */,
 				8569A331259F81110057A518 /* HealthShader.fsh in Resources */,
@@ -1844,10 +1898,13 @@
 				8569A31F259F81110057A518 /* TransitionShader.fsh in Resources */,
 				8569A32B259F81110057A518 /* CautionStripes.fsh in Resources */,
 				8595402C26197A18001D9040 /* SKN_T1.m4a in Resources */,
+				856A64C327289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf in Resources */,
 				8536F489258D481700B509D2 /* GameOverlay.sks in Resources */,
+				856A64BF27289DB70075CC04 /* RobotoMono-VariableFont_wght.ttf in Resources */,
 				8536F47D258D481700B509D2 /* MapIndicators.sks in Resources */,
 				8536F491258D481700B509D2 /* Assets.xcassets in Resources */,
 				8536F2ED258D330300B509D2 /* Art.scnassets in Resources */,
+				856A64B3272892F80075CC04 /* MainTheme.mp3 in Resources */,
 				8569A325259F81110057A518 /* RadarShader.fsh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1861,10 +1918,13 @@
 				8569A32F259F81110057A518 /* MapShapeGradient.fsh in Resources */,
 				85D3BB2926AF244400B6AA36 /* SFXClose.wav in Resources */,
 				8536F2F1258D330300B509D2 /* Assets.xcassets in Resources */,
+				856A64B7272892F80075CC04 /* Adventure.mp3 in Resources */,
 				8536F472258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F496258D481700B509D2 /* SparkEmitter.sks in Resources */,
 				85E2C41E26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
 				85A59EA1270CB6C90049AFC1 /* PlayerCardLayout.sks in Resources */,
+				856A64BC27289D8F0075CC04 /* Ailerons-Typeface.otf in Resources */,
+				856A64B1272892F80075CC04 /* Indreams.mp3 in Resources */,
 				8569A305259F7F990057A518 /* dissolve.fragment.txt in Resources */,
 				8569A31D259F81110057A518 /* InterlaceShader.fsh in Resources */,
 				8569A332259F81110057A518 /* HealthShader.fsh in Resources */,
@@ -1878,10 +1938,13 @@
 				8569A320259F81110057A518 /* TransitionShader.fsh in Resources */,
 				8569A32C259F81110057A518 /* CautionStripes.fsh in Resources */,
 				8595402D26197A18001D9040 /* SKN_T1.m4a in Resources */,
+				856A64C427289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf in Resources */,
 				8536F48A258D481700B509D2 /* GameOverlay.sks in Resources */,
+				856A64C027289DB70075CC04 /* RobotoMono-VariableFont_wght.ttf in Resources */,
 				8536F47E258D481700B509D2 /* MapIndicators.sks in Resources */,
 				8536F492258D481700B509D2 /* Assets.xcassets in Resources */,
 				8536F2EE258D330300B509D2 /* Art.scnassets in Resources */,
+				856A64B4272892F80075CC04 /* MainTheme.mp3 in Resources */,
 				8569A326259F81110057A518 /* RadarShader.fsh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1895,10 +1958,13 @@
 				85D3BB2A26AF244400B6AA36 /* SFXClose.wav in Resources */,
 				8569A321259F81110057A518 /* TransitionShader.fsh in Resources */,
 				8536F2F2258D330300B509D2 /* Assets.xcassets in Resources */,
+				856A64B8272892F80075CC04 /* Adventure.mp3 in Resources */,
 				8569A336259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
 				85E2C41F26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
 				85487F3F26CC65E000EBC070 /* Main.storyboard in Resources */,
 				85A59EA2270CB6C90049AFC1 /* PlayerCardLayout.sks in Resources */,
+				856A64BD27289D8F0075CC04 /* Ailerons-Typeface.otf in Resources */,
+				856A64B2272892F80075CC04 /* Indreams.mp3 in Resources */,
 				8569A31B259F81110057A518 /* CutionStripesColored.fsh in Resources */,
 				857D9A1925BF42CB00626884 /* Entry.storyboard in Resources */,
 				8536F47F258D481700B509D2 /* MapIndicators.sks in Resources */,
@@ -1912,10 +1978,13 @@
 				8569A327259F81110057A518 /* RadarShader.fsh in Resources */,
 				8569A330259F81110057A518 /* MapShapeGradient.fsh in Resources */,
 				8536F497258D481700B509D2 /* SparkEmitter.sks in Resources */,
+				856A64C527289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf in Resources */,
 				8595402E26197A18001D9040 /* SKN_T1.m4a in Resources */,
+				856A64C127289DB70075CC04 /* RobotoMono-VariableFont_wght.ttf in Resources */,
 				8536F473258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F493258D481700B509D2 /* Assets.xcassets in Resources */,
 				8569A333259F81110057A518 /* HealthShader.fsh in Resources */,
+				856A64B5272892F80075CC04 /* MainTheme.mp3 in Resources */,
 				8536F48B258D481700B509D2 /* GameOverlay.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1977,6 +2046,7 @@
 				85351E8726FF644800EEE04C /* CityLabActivityView.swift in Sources */,
 				85D3BAAA269DF75000B6AA36 /* MarsCityView.swift in Sources */,
 				85D3BB1726AB24F700B6AA36 /* GameDialogueModifiers.swift in Sources */,
+				856A64A92728885F0075CC04 /* CreditsView.swift in Sources */,
 				8536F3F2258D47D000B509D2 /* ProgressViews.swift in Sources */,
 				85487F5226CD9B1900EBC070 /* GameSounds.swift in Sources */,
 				85C3418E2591078700BF82F9 /* PlayerCardNode.swift in Sources */,
@@ -2142,6 +2212,7 @@
 				8592821325EA3287001233BE /* City.swift in Sources */,
 				85CD46A825D1199A000D9C64 /* EarthNode.swift in Sources */,
 				85E2C43326BE5753003315F2 /* Wallet.swift in Sources */,
+				856A64AA2728885F0075CC04 /* CreditsView.swift in Sources */,
 				85B34B1D26FA21FD007178F5 /* ContributionRoundView.swift in Sources */,
 				850A1B1025ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */,
 				85487F0D26C0DF6000EBC070 /* OPSupply+Job.swift in Sources */,
@@ -2324,6 +2395,7 @@
 				8536F420258D47D000B509D2 /* BuildingVehicleView.swift in Sources */,
 				85B34B1426F71164007178F5 /* PowerPlantNode.swift in Sources */,
 				8536F3A8258D475D00B509D2 /* Player.swift in Sources */,
+				856A64AB2728885F0075CC04 /* CreditsView.swift in Sources */,
 				85D3BB2526AC9C9800B6AA36 /* CityTechDiagram.swift in Sources */,
 				8536F43F258D47EA00B509D2 /* GarageViewModel.swift in Sources */,
 				8536F3FC258D47D000B509D2 /* PersonViews.swift in Sources */,

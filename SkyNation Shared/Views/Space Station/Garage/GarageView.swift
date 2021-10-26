@@ -11,7 +11,7 @@ import SwiftUI
 struct GarageView: View {
     
     // Popovers
-    @State var popoverGarage:Bool = false
+//    @State var popoverGarage:Bool = false
     @State var popoverTutorial:Bool = false
     
     @State var selectedEngine:EngineType?
@@ -52,63 +52,6 @@ struct GarageView: View {
                     TutorialView(tutType: .Garage)
                 })
                 
-                // Settings
-                Button(action: {
-                    print("Question ?")
-                    popoverGarage.toggle()
-                }, label: {
-                    Image(systemName: "ellipsis.circle")
-                        .font(.title2)
-                })
-                .buttonStyle(SmallCircleButtonStyle(backColor: .blue))
-                .popover(isPresented: $popoverGarage, content: {
-                    VStack {
-                        HStack {
-                            Text("Rename")
-                            Spacer()
-                            Image(systemName: "textformat")
-                                .fixedSize()
-                                .scaledToFit()
-                        }
-                        
-                        .onTapGesture {
-                            print("Rename Action")
-                            popoverGarage.toggle()
-                        }
-                        Divider()
-                        HStack {
-                            // Text
-                            Text("Change Skin")
-                            // Spacer
-                            Spacer()
-                            // Image
-                            Image(systemName: "circle.circle")
-                                .fixedSize()
-                                .scaledToFit()
-                        }
-                        .onTapGesture {
-                            print("Reskin Action")
-                            popoverGarage.toggle()
-                        }
-                        
-                        HStack {
-                            Text("Tutorial")
-                            Spacer()
-                            Image(systemName: "questionmark.diamond")
-                                .fixedSize()
-                                .scaledToFit()
-                        }
-                        
-                        .onTapGesture {
-                            print("Reskin Action")
-                            popoverGarage.toggle()
-                        }
-                    }
-                    .frame(width: 150)
-                    .font(.headline)
-                    .foregroundColor(.gray)
-                    .padding(.leading, 6)
-                })
                 
                 // Close
                 Button(action: {

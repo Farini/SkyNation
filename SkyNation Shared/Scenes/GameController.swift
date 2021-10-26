@@ -396,19 +396,16 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         // Music
         if GameSettings.shared.musicOn {
             // Play a random track
-            let track = Soundtrack.allCases.randomElement()
-            if let source = SCNAudioSource(fileNamed: "\(track?.rawValue ?? "na").m4a") {
-                //                print("found audio file")
+            let track = Soundtrack.allCases.randomElement() ?? .MainTheme
+            if let source = SCNAudioSource(fileNamed: track.fileName) {
                 source.volume = 0.5
                 let action = SCNAction.playAudio(source, waitForCompletion: true)
                 scene.rootNode.runAction(action) {
-                    print("Music Finished")
+                    // print("Music Finished")
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                         self.playMusic()
                     }
                 }
-            } else {
-                print("cannot find audio file")
             }
         }
     }

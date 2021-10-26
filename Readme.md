@@ -86,7 +86,7 @@ The contributors to these projects shall have a **fair** share of the game, and 
  ## Art Assets - Audio
  
  - [ ] ★★☆☆☆ Sound Effects
- - [ ] ★★☆☆☆ Music / Soudtrack
+ - [ ] ★★★★☆ Music / Soudtrack
 
  
  ## Completeness
@@ -180,12 +180,19 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Store - Fix Price not showing.
 - [X] Modules Views - Be able to change all modules
 - [X] Import and fix Landpad
+- [X] Add Music: InDreams, Adventure, MainTheme
+- [X] Credits
+- [X] Sound - 2 more music (better ones)
+- [X] Garage Module - Remove Settings
+- [X] Added Fonts + Info.plist
 
-- Add Sound
-- Add Credits
-- Typography?
+
 - Split Chat Bubble in [Guild] vs [Player], or just [Credits]?
 - Accounting with Totals
+
+
+- [ ] Claim city - Needs to show success message and maybe close the window
+- [ ] Claim city - Not decoding from Server?
 
 - [ ] Mars Scene - Accounting happening every 10 seconds!
 - [ ] Mars Scene - Try to get accounting to be run on a background thread, or run accounting when settings are loading.
@@ -210,18 +217,23 @@ In SpaceStation, One camera can be removed (the one too close)
 
 - [ ] Mars Scene - Garage - Vehicle Validation (when arriving (orbit)) - needs a token, if not valid.
 
+- [ ] BioModule - Extra functions (expand, shrink)
+- [ ] BioModule - DNA Animation remake
+- [ ] BioModule - Auto crop - Adjust population going over limit
+- [ ] BioModule - Accouting
+
 - [ ] Blender - Reduce Vertex Count, and make scene "DecorKit", to gather resources from there.
-- [ ] Blender - Observatory - Add new geometries (see kit)
 - [ ] Blender - All Vehicle Paths
 - [ ] Blender - Fix roads weird angles
 - [ ] Blender - Export Roads
+- [ ] Blender - Consistent Materials - Metal1, Metal2, White, Rubber, etc.
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
-- [ ] Sound - 2 more music (better ones)
 
 - [ ] Basic Views - Alert messages (orange)
 - [ ] Basic Views - Confirmation Alert Dialogues (Yes, No, Confirm, etc.)
 - [ ] Basic Views - Typography, and Fonts.
+- [ ] Basic Views - Consistent Background Colors
 
 - [ ] iOS - Views are too large
 - [ ] iOS - Font modifiers

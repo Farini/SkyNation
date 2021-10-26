@@ -273,12 +273,15 @@ struct ChatBubbleView: View {
                             .foregroundColor(controller.tokenMessage.contains("Error") ? .red:.white)
                     }
                     
-                default:
-                    VStack {
-                        Spacer()
-                        Text("Not Implemented")
-                        Spacer()
-                    }
+                case .Tutorial:
+                    CreditsView()
+                    
+//                default:
+//                    VStack {
+//                        Spacer()
+//                        Text("Not Implemented")
+//                        Spacer()
+//                    }
             }
         }
         .frame(minWidth: 500, idealWidth: 600, maxWidth: 900, minHeight:300, idealHeight:500, maxHeight:600, alignment: .topLeading)

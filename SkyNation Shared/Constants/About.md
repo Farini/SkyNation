@@ -36,6 +36,60 @@ SUM:                           242           7404           7201          26645
 -------------------------------------------------------------------------------
 PROJECT SIZE: 572MB
 
+## Credits
+
+### Music:
+App: DM1
+App: GarageBand
+
+In Dreams by Scott Buckley | www.scottbuckley.com.au
+Music promoted by https://www.chosic.com/free-music/all/
+Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+
+Adventure by Alexander Nakarada | https://www.serpentsoundstudios.com
+Music promoted by https://www.chosic.com/free-music/all/
+Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+
+Main Theme (Overture) | The Grand Score by Alexander Nakarada | https://www.serpentsoundstudios.com
+Music promoted by https://www.chosic.com/free-music/all/
+Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+
+### Sound FX:
+App: DM1
+App: GarageBand
+
+### Programming - SwiftUI
+Code With Chris: https://www.youtube.com/channel/UC2D6eRvCeMtcF5OGHf1-trw
+
+
+### Server side
+Vapor: https://docs.vapor.codes/4.0/
+Tim (Swift Vapor Team)
+
+### Shaders (Programming)
+Shadertoy: https://www.shadertoy.com
+Inigo Quilez: https://iquilezles.org
+
+### 2D Images
+NASA: Reference Images
+Naun Project: TheNaunProject.com
+Google: Reference Images
+
+### Fonts
+Google Fonts: https://fonts.google.com
+
+
+### 3D Models
+App: Blender https://blender.org
+Blender Guru: https://www.youtube.com/channel/UCOKHwx1VCdgnxwbjyb9Iu1g
+Josh Gambrell: https://www.youtube.com/channel/UCXfGjwohMgPm4Ng2e1FXySw
+
+ 
+PBX Texturing (Atlasses)
+Animations
 
 
 ## 📝 Done Items - Past
