@@ -51,13 +51,13 @@ The contributors to these projects shall have a **fair** share of the game, and 
  - [ ] ★★★☆☆ Accounting System
  - [ ] ★★★★☆ Truss
  - [ ] ★★★★☆ Life Support Systems
- - [ ] ★★★☆☆ Vehicles Travelling Views/Scenes
+ - [ ] ★★★★☆ Vehicles Travelling Views/Scenes
  
- - [ ] ★★★☆☆ Mars Scene
- - [ ] ★★☆☆☆ Mars City
+ - [ ] ★★★★☆ Mars Scene
+ - [ ] ★★★★☆ Mars City
  - [ ] ★★★☆☆ Mars Outposts
- - [ ] ★★★☆☆ Game Chats, Messages, Achievements
- - [ ] ★★★☆☆ Game Store + Use of `GameToken`
+ - [ ] ★★★★☆ Game Chats, Messages, Achievements
+ - [ ] ★★★★☆ Game Store + Use of `GameToken`
  - [ ] ★★★☆☆ Player(object) + settings + playability + Purchases
  
  ## Programming (Back End)
@@ -66,7 +66,7 @@ The contributors to these projects shall have a **fair** share of the game, and 
  - [ ] ★★★☆☆ Guild
  - [ ] ★★★☆☆ City + Outposts
  - [ ] ★★★☆☆ Guild Chat
- - [ ] ★☆☆☆☆ Bonus - New Features
+ - [ ] ★★☆☆☆ Bonus - New Features
  
  ## Art Assets -  Graphics 2D
  
@@ -92,12 +92,12 @@ The contributors to these projects shall have a **fair** share of the game, and 
  ## Completeness
  Example calculation of *fair share*
  
- @ October 29, 2020
+@ October 29, 2020
 - ★/☆: 5/70 = 7.14%
 - ★ (1 Star) = 1.43%
 - To Do's: 6/64 = 9.37%
  
- @ December 24, 2020
+@ December 24, 2020
 - ★/☆: 26/105 = 24.76%
 - ★ (1 Star) = 0.95%
 - To Do's: 52/152 = 34.21%
@@ -107,92 +107,19 @@ The contributors to these projects shall have a **fair** share of the game, and 
 - ★ (1 Star) = 0.69%
 - To Do's: 239/289 = 83%
 
+@ October 27, 2021
+- ★/☆: 101/150 = 67.33%
+- ★ (1 Star) = 0.66%
+- To Do's: 402/437 = 92%
 
 ## 📝 Doing - Present
 If looking for things to do and don't know where to start, go to *Find Navigator* and search for **FIXME**, or **TODO**
-
-10/03/2021
-- [X] Game Shopping Testable
-- [X] Game Shopping Player not receiving anything
-- [X] Station - HabModule - End of study with Tokens result in Person NOT learning!
-- [X] City View - Outpost RSS Collection
-- [X] City View - Hab - Show population limit
-- [X] City View - Bio View
-- [X] City View - Person Details
-- [X] Outpost - supply method
-- [X] Outpost View - Contribution Request
-- [X] Outpost View - Contribution Ranking
-- [X] Chat Bubble (Reorganize)
-- [X] Chat Bubble - Election
-- [X] Chat Bubble - Vote in an Election
-- [X] Chat Bubble - Search Icon - View Other Players (Search by name) + Request
-- [X] Chat Bubble - Test Search Player
-- [X] Model - Election
-- [X] Model - City - Energy Collection
-- [X] Model - Guild - Invite Request
-- [X] Model - Outpost rss Collecting
-- [X] Model - Accounting Improve Human (PHI - Person Happiness Index)
-- [X] Overlay - Remake PlayerCard
-- [X] City View - Test Tech Tree
-- [X] City View - Review Outpost RSS Collection
-- [X] City Peripherals (AirTrap, AlloyMaker, PowerGenerator(ch4))
-- [X] City Model Add Tech BioTech, (number of boxes of food allowed)
-- [X] City View - Tech tree not showing completed items
-- [X] City View - Calculate how much food is allowed in BioTab
-- [X] City View - Vehicle Arrival - Dismiss food if not enough bioboxes
-- [X] City View - Test Lab Recipes
-- [X] City View - Lab Recipes - DetailView(making recipe)
-- [X] City View - Bio View Improvements
-- [X] Overlays - CamControl - Fix Buttons & reverse actions (forward = backward)
-- [X] Overlays - SpaceVehicle - Progress is wrong
-- [X] Chat Bubble - Fix Freebie
-- [X] Chat Bubble - Fix Callouts
-- [X] Chat Bubble - Gift `.Entry` token. -> Or transform into 10 tokens.
-- [X] Chat Bubble - Invite Player, when there is no Guild President
-- [X] Chat Bubble - Receive, Claim Gift `.Entry` token. -> Or transform into 10 tokens.
-- [X] Mars Scene - Go back to Space Station
-- [X] Station Scene - SceneBuilder Improvements (to reload scene back from Mars)
-- [X] Outpost - SKNS request for `Outpost` upgrades
-- [X] Outpost - fix bug with contribution - SKNS can't decode OutpostData
-- [X] Outpost View - non .contributing states views
-- [X] Accounting - Implement (Station+Account.swift)
-- [X] Accounting - Finish Accounting cycle (Station+Account.swift)
-- [X] Accounting - Fix Human Report Lines w/ weird emojis
-- [X] Accounting - Copy Station - in Mars (New Methods)
-- [X] Model - Outpost `Posdex` remake with Hotel, Arena, Observatory, 2x Biospheres, 4x Power Plants, Etc.
-- [X] Blender - Observatory - Make UVs
-- [X] Blender - Biosphere -> WallL3 needs grass UV
-- [X] Blender - Biosphere -> Add trees
-- [X] Blender - Biosphere -> Add new geometries
-- [X] Blender - Station Truss -> Use Trimsheet
-- [X] Station Scene - New Modules not 'clickable' after Tech research.
-- [X] Station Scene - Background HDRI image
-- [X] Tests - (Outpost) - Test SKNS request for `Outpost` upgrades. -> Server side working, but needs to update the view with ".finished" state
-- [X] Blender - Arrival Scene - Animations - SpaceVehicle Sub-Materials
-- [X] 2D Graphics - iOS app icon
-- [X] Chat Bubble - Chat not showing after posting a message
-- [X] Settings - Better Player Registration
-- [X] Settings - Game Autostart
-- [X] Model - Launching a Vehicle should also be an Achievement
-- [X] Tests - (Settings) - ServerTab - Test Leave Guild
-- [X] Basic Views - Error messages - GameResponse? (success, or error)
-
-- [X] Store - Fix Price not showing.
-- [X] Modules Views - Be able to change all modules
-- [X] Import and fix Landpad
-- [X] Add Music: InDreams, Adventure, MainTheme
-- [X] Credits
-- [X] Sound - 2 more music (better ones)
-- [X] Garage Module - Remove Settings
-- [X] Added Fonts + Info.plist
 
 
 - Split Chat Bubble in [Guild] vs [Player], or just [Credits]?
 - Accounting with Totals
 
-
-- [ ] Claim city - Needs to show success message and maybe close the window
-- [ ] Claim city - Not decoding from Server?
+- [ ] Use EDLSceneView wherever appropriate
 
 - [ ] Mars Scene - Accounting happening every 10 seconds!
 - [ ] Mars Scene - Try to get accounting to be run on a background thread, or run accounting when settings are loading.
@@ -211,11 +138,13 @@ In SpaceStation, One camera can be removed (the one too close)
 - [ ] Model - Fix cost of Outpost level ups
 - [ ] Model - Road Updates
 
-- [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards.
-
+- [ ] New Warning Messages (from people selector)  - use everywhere that can throw an error.
+- [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
 - [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
+- [ ] Claim city - Needs to show success message and maybe close the window
+- [ ] Claim city - Not decoding from Server? But later it shows as your city.
 
-- [ ] Mars Scene - Garage - Vehicle Validation (when arriving (orbit)) - needs a token, if not valid.
+- [ ] Mars Scene - City Garage - Vehicle Validation (when arriving (orbit)) - needs a token, if not valid.
 
 - [ ] BioModule - Extra functions (expand, shrink)
 - [ ] BioModule - DNA Animation remake
@@ -223,15 +152,12 @@ In SpaceStation, One camera can be removed (the one too close)
 - [ ] BioModule - Accouting
 
 - [ ] Blender - Reduce Vertex Count, and make scene "DecorKit", to gather resources from there.
-- [ ] Blender - All Vehicle Paths
 - [ ] Blender - Fix roads weird angles
-- [ ] Blender - Export Roads
 - [ ] Blender - Consistent Materials - Metal1, Metal2, White, Rubber, etc.
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
 
 - [ ] Basic Views - Alert messages (orange)
-- [ ] Basic Views - Confirmation Alert Dialogues (Yes, No, Confirm, etc.)
 - [ ] Basic Views - Typography, and Fonts.
 - [ ] Basic Views - Consistent Background Colors
 

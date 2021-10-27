@@ -423,3 +423,79 @@ Animations
 - [X] Station Garage View - Improve departure animation
 - [X] Station Garage View - Register Vehicle with Authentication (server side)
 - [X] Station Garage View - Vehicles not updating correctly upon selection (travelling ones)
+
+[10/03/2021 - 10/27/2021]
+- [X] Game Shopping Testable
+- [X] Game Shopping Player not receiving anything
+- [X] Station - HabModule - End of study with Tokens result in Person NOT learning!
+- [X] City View - Outpost RSS Collection
+- [X] City View - Hab - Show population limit
+- [X] City View - Bio View
+- [X] City View - Person Details
+- [X] Outpost - supply method
+- [X] Outpost View - Contribution Request
+- [X] Outpost View - Contribution Ranking
+- [X] Chat Bubble (Reorganize)
+- [X] Chat Bubble - Election
+- [X] Chat Bubble - Vote in an Election
+- [X] Chat Bubble - Search Icon - View Other Players (Search by name) + Request
+- [X] Chat Bubble - Test Search Player
+- [X] Model - Election
+- [X] Model - City - Energy Collection
+- [X] Model - Guild - Invite Request
+- [X] Model - Outpost rss Collecting
+- [X] Model - Accounting Improve Human (PHI - Person Happiness Index)
+- [X] Overlay - Remake PlayerCard
+- [X] City View - Test Tech Tree
+- [X] City View - Review Outpost RSS Collection
+- [X] City Peripherals (AirTrap, AlloyMaker, PowerGenerator(ch4))
+- [X] City Model Add Tech BioTech, (number of boxes of food allowed)
+- [X] City View - Tech tree not showing completed items
+- [X] City View - Calculate how much food is allowed in BioTab
+- [X] City View - Vehicle Arrival - Dismiss food if not enough bioboxes
+- [X] City View - Test Lab Recipes
+- [X] City View - Lab Recipes - DetailView(making recipe)
+- [X] City View - Bio View Improvements
+- [X] Overlays - CamControl - Fix Buttons & reverse actions (forward = backward)
+- [X] Overlays - SpaceVehicle - Progress is wrong
+- [X] Chat Bubble - Fix Freebie
+- [X] Chat Bubble - Fix Callouts
+- [X] Chat Bubble - Gift `.Entry` token. -> Or transform into 10 tokens.
+- [X] Chat Bubble - Invite Player, when there is no Guild President
+- [X] Chat Bubble - Receive, Claim Gift `.Entry` token. -> Or transform into 10 tokens.
+- [X] Mars Scene - Go back to Space Station
+- [X] Station Scene - SceneBuilder Improvements (to reload scene back from Mars)
+- [X] Outpost - SKNS request for `Outpost` upgrades
+- [X] Outpost - fix bug with contribution - SKNS can't decode OutpostData
+- [X] Outpost View - non .contributing states views
+- [X] Accounting - Implement (Station+Account.swift)
+- [X] Accounting - Finish Accounting cycle (Station+Account.swift)
+- [X] Accounting - Fix Human Report Lines w/ weird emojis
+- [X] Accounting - Copy Station - in Mars (New Methods)
+- [X] Model - Outpost `Posdex` remake with Hotel, Arena, Observatory, 2x Biospheres, 4x Power Plants, Etc.
+- [X] Blender - Observatory - Make UVs
+- [X] Blender - Biosphere -> WallL3 needs grass UV
+- [X] Blender - Biosphere -> Add trees
+- [X] Blender - Biosphere -> Add new geometries
+- [X] Blender - Station Truss -> Use Trimsheet
+- [X] Station Scene - New Modules not 'clickable' after Tech research.
+- [X] Station Scene - Background HDRI image
+- [X] Tests - (Outpost) - Test SKNS request for `Outpost` upgrades. -> Server side working, but needs to update the view with ".finished" state
+- [X] Blender - Arrival Scene - Animations - SpaceVehicle Sub-Materials
+- [X] 2D Graphics - iOS app icon
+- [X] Chat Bubble - Chat not showing after posting a message
+- [X] Settings - Better Player Registration
+- [X] Settings - Game Autostart
+- [X] Model - Launching a Vehicle should also be an Achievement
+- [X] Tests - (Settings) - ServerTab - Test Leave Guild
+- [X] Basic Views - Error messages - GameResponse? (success, or error)
+- [X] Store - Fix Price not showing.
+- [X] Modules Views - Be able to change all modules
+- [X] Import and fix Landpad
+- [X] Add Music: InDreams, Adventure, MainTheme
+- [X] Credits
+- [X] Sound - 2 more music (better ones)
+- [X] Garage Module - Remove Settings
+- [X] Added Fonts + Info.plist
+- [X] Blender - All Vehicle Paths
+- [X] Blender - Export Roads

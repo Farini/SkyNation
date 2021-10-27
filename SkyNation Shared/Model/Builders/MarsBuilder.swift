@@ -240,10 +240,10 @@ extension MarsBuilder {
         print("\nTerrain.: Vertex Count: \(terrain.geometry?.sources.filter({ $0.semantic == .vertex }).compactMap({ $0.vectorCount }).reduce(0, +) ?? 0)")
         
         // Light
-//        let lightNode:SCNNode = root.childNode(withName: "Light", recursively: false)!
         let lightNode:SCNNode = root.childNode(withName: "Lights", recursively: false)?.childNodes.first ?? SCNNode()
         // light position: 4.076,34.945,-1.005
         // light euler: 29.656, 49.397, 93.817
+        
         if let light = lightNode.light {
             print("\n [ * Light ]")
             print("Intensity: \(light.intensity)")
@@ -374,7 +374,6 @@ extension MarsBuilder {
         // Camera + POVs
         // CamPovs
         let camParent = scene.rootNode.childNode(withName: "CamPovs", recursively: false)!
-//        let camParent = scene.rootNode.childNode(withName: "OtherCams", recursively: false)!
         let topCam = camParent.childNode(withName: "TopCam", recursively: false)!
         let topPov = GamePOV(position: topCam.position, target: terrain, name: "Eagle eye", yRange: nil, zRange: nil, zoom: nil)
         
@@ -382,9 +381,7 @@ extension MarsBuilder {
         
         for camChild in camParent.childNodes {
             if (camChild.name ?? "").contains("Camera-") {
-//                if (camChild.name ?? "").contains("Diag") {
                 let dPov = GamePOV(copycat: camChild, name: camChild.name!, yRange: nil, zRange: nil, zoom: nil)
-//                let diagPov = GamePOV(position: camChild.position, target: camParent, name: camChild.name!, yRange: nil, zRange: nil, zoom: nil)
                 cameraPOVs.append(dPov)
             }
         }
@@ -392,6 +389,13 @@ extension MarsBuilder {
         let gameCam = GameCamera(pov: cameraPOVs.first!, array: cameraPOVs)
         scene.rootNode.addChildNode(gameCam)
         
+        // Roads
+        let roadsScene = SCNScene(named: "Art.scnassets/Mars/MarsRoads.scn")!
+        for roadNode in roadsScene.rootNode.childNodes {
+            print("Adding road \(roadNode.name ?? "n/a")")
+            let roadClone = roadNode.clone()
+            scene.rootNode.addChildNode(roadClone)
+        }
         
         // EVehicle Animation
         let vehicleScene = SCNScene(named: "Art.scnassets/Mars/EVehicle.scn")

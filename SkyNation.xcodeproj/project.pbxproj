@@ -836,7 +836,6 @@
 		856A64BA27289D8F0075CC04 /* Ailerons-Typeface.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ailerons-Typeface.otf"; sourceTree = "<group>"; };
 		856A64BE27289DB70075CC04 /* RobotoMono-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoMono-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		856A64C227289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoSlab-VariableFont_wght.ttf"; sourceTree = "<group>"; };
-		85761806268EC2680024233D /* DataPlan.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = DataPlan.md; sourceTree = "<group>"; };
 		8579750E259B9E70004C54D2 /* FlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipView.swift; sourceTree = "<group>"; };
 		85797517259BD394004C54D2 /* ItemCollectionViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCollectionViews.swift; sourceTree = "<group>"; };
 		857A3562269607300020ADF2 /* Scene Assets.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "Scene Assets.md"; sourceTree = "<group>"; };
@@ -1602,7 +1601,6 @@
 		8592821025EA3254001233BE /* Mars */ = {
 			isa = PBXGroup;
 			children = (
-				85761806268EC2680024233D /* DataPlan.md */,
 				8517EE3325FC11EF00C34C54 /* Guild.swift */,
 				85487F2126C63F4E00EBC070 /* City */,
 				85487F0A26C0DF2400EBC070 /* Outpost */,
