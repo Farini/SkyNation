@@ -19,6 +19,7 @@ class LaunchSceneController:ObservableObject {
         
         self.vehicle = vehicle
         
+        // Load Scene with vehicle
         let scene = SCNScene(named: "Art.scnassets/Vehicles/SpaceVehicle3.scn")!
         for childnode in scene.rootNode.childNodes {
             if !["Camera", "Light"].contains(childnode.name ?? "") {
@@ -50,15 +51,20 @@ class LaunchSceneController:ObservableObject {
             camera.constraints = [constraint, follow]
             SCNTransaction.commit()
             
-            let waiter = SCNAction.wait(duration: 5)
-            let move = SCNAction.move(by: SCNVector3(100, 0, 0), duration: 10)
-            
-            let group = SCNAction.sequence([waiter, move])
-            camera.runAction(group) {
-                print("Finished camera move")
-            }
+//            let waiter = SCNAction.wait(duration: 2.5)
+//            let move = SCNAction.move(by: SCNVector3(100, 0, 0), duration: 10)
+//
+//            let group = SCNAction.sequence([waiter, move])
+//            camera.runAction(group) {
+//                print("Finished camera move")
+//                // self.runSmallParticles()
+//            }
         }
+        
+//        self.runSmallParticles()
         
         
     }
+    
+   
 }

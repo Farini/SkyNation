@@ -118,7 +118,6 @@ struct PostLaunchVehicleView: View {
     
     @ObservedObject var garageController:GarageViewModel
     @ObservedObject var launchController:LaunchSceneController
-//    let renderer = LaunchSceneRendererMan()
     
     // Shows the Vehicle launching, and later its status
     
