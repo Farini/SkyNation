@@ -118,13 +118,13 @@ struct PostLaunchVehicleView: View {
     
     @ObservedObject var garageController:GarageViewModel
     @ObservedObject var launchController:LaunchSceneController
-    let renderer = LaunchSceneRendererMan()
+//    let renderer = LaunchSceneRendererMan()
     
     // Shows the Vehicle launching, and later its status
     
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
-            SceneView(scene: launchController.scene, pointOfView: nil, options: .allowsCameraControl, preferredFramesPerSecond: 30, antialiasingMode: .none, delegate: renderer, technique: nil)
+            SceneView(scene: launchController.scene, pointOfView: nil, options: .allowsCameraControl, preferredFramesPerSecond: 30, antialiasingMode: .none, delegate: nil, technique: nil)
             VStack {
                 Text("V: \(launchController.vehicle.name)")
                 Button("Close") {

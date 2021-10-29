@@ -490,6 +490,14 @@
 		858D7C5425D60FA300A45CF9 /* GameButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C5325D60FA300A45CF9 /* GameButtons.swift */; };
 		858D7C5525D60FA300A45CF9 /* GameButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C5325D60FA300A45CF9 /* GameButtons.swift */; };
 		858D7C5625D60FA300A45CF9 /* GameButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7C5325D60FA300A45CF9 /* GameButtons.swift */; };
+		858E81A9272B7AE500122F59 /* LaunchSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858E81A8272B7AE500122F59 /* LaunchSceneController.swift */; };
+		858E81AA272B7AE500122F59 /* LaunchSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858E81A8272B7AE500122F59 /* LaunchSceneController.swift */; };
+		858E81AB272B7AE500122F59 /* LaunchSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858E81A8272B7AE500122F59 /* LaunchSceneController.swift */; };
+		858E81AC272B7AE500122F59 /* LaunchSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858E81A8272B7AE500122F59 /* LaunchSceneController.swift */; };
+		858E81AE272B7B4200122F59 /* EDLSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858E81AD272B7B4200122F59 /* EDLSceneController.swift */; };
+		858E81AF272B7B4200122F59 /* EDLSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858E81AD272B7B4200122F59 /* EDLSceneController.swift */; };
+		858E81B0272B7B4200122F59 /* EDLSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858E81AD272B7B4200122F59 /* EDLSceneController.swift */; };
+		858E81B1272B7B4200122F59 /* EDLSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858E81AD272B7B4200122F59 /* EDLSceneController.swift */; };
 		85927D9525DB1D800071D98B /* VehicleTrunkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85927D9425DB1D800071D98B /* VehicleTrunkView.swift */; };
 		85927D9625DB1D800071D98B /* VehicleTrunkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85927D9425DB1D800071D98B /* VehicleTrunkView.swift */; };
 		85927D9725DB1D800071D98B /* VehicleTrunkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85927D9425DB1D800071D98B /* VehicleTrunkView.swift */; };
@@ -848,6 +856,8 @@
 		857FE6362715548D00B06FF4 /* ObservatoryNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservatoryNode.swift; sourceTree = "<group>"; };
 		858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCamera.swift; sourceTree = "<group>"; };
 		858D7C5325D60FA300A45CF9 /* GameButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameButtons.swift; sourceTree = "<group>"; };
+		858E81A8272B7AE500122F59 /* LaunchSceneController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchSceneController.swift; sourceTree = "<group>"; };
+		858E81AD272B7B4200122F59 /* EDLSceneController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EDLSceneController.swift; sourceTree = "<group>"; };
 		85927D9425DB1D800071D98B /* VehicleTrunkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTrunkView.swift; sourceTree = "<group>"; };
 		859281FB25E9529C001233BE /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		8592821125EA3287001233BE /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
@@ -1653,6 +1663,8 @@
 			children = (
 				8536F436258D47EA00B509D2 /* VehicleBuilderViewModel.swift */,
 				8536F433258D47EA00B509D2 /* GarageViewModel.swift */,
+				858E81A8272B7AE500122F59 /* LaunchSceneController.swift */,
+				858E81AD272B7B4200122F59 /* EDLSceneController.swift */,
 			);
 			path = Garage;
 			sourceTree = "<group>";
@@ -2024,6 +2036,7 @@
 				85487F1E26C5BB2000EBC070 /* SettingsServerTab.swift in Sources */,
 				8559201525959A4300CF5467 /* SideMenuNode.swift in Sources */,
 				8536F46D258D481700B509D2 /* CamControlNode.swift in Sources */,
+				858E81AE272B7B4200122F59 /* EDLSceneController.swift in Sources */,
 				85108373271B16D9004D6D00 /* NetResponseView.swift in Sources */,
 				85487F3726CC221E00EBC070 /* CityLabRecipeView.swift in Sources */,
 				85487F6726CD9D2500EBC070 /* GameSettings.swift in Sources */,
@@ -2043,6 +2056,7 @@
 				8510837C271B5293004D6D00 /* EDLSceneView.swift in Sources */,
 				85351E8726FF644800EEE04C /* CityLabActivityView.swift in Sources */,
 				85D3BAAA269DF75000B6AA36 /* MarsCityView.swift in Sources */,
+				858E81A9272B7AE500122F59 /* LaunchSceneController.swift in Sources */,
 				85D3BB1726AB24F700B6AA36 /* GameDialogueModifiers.swift in Sources */,
 				856A64A92728885F0075CC04 /* CreditsView.swift in Sources */,
 				8536F3F2258D47D000B509D2 /* ProgressViews.swift in Sources */,
@@ -2190,6 +2204,7 @@
 				85B34B2126FA929D007178F5 /* BioBoxViews.swift in Sources */,
 				85E2C41926B9A960003315F2 /* GuildMakerView.swift in Sources */,
 				85487F6326CD9CB100EBC070 /* GameErrors.swift in Sources */,
+				858E81AF272B7B4200122F59 /* EDLSceneController.swift in Sources */,
 				85108374271B16D9004D6D00 /* NetResponseView.swift in Sources */,
 				8536F3DB258D47D000B509D2 /* LabActivityView.swift in Sources */,
 				8536F2D3258D330300B509D2 /* GameViewController.swift in Sources */,
@@ -2209,6 +2224,7 @@
 				8510837D271B5293004D6D00 /* EDLSceneView.swift in Sources */,
 				8592821325EA3287001233BE /* City.swift in Sources */,
 				85CD46A825D1199A000D9C64 /* EarthNode.swift in Sources */,
+				858E81AA272B7AE500122F59 /* LaunchSceneController.swift in Sources */,
 				85E2C43326BE5753003315F2 /* Wallet.swift in Sources */,
 				856A64AA2728885F0075CC04 /* CreditsView.swift in Sources */,
 				85B34B1D26FA21FD007178F5 /* ContributionRoundView.swift in Sources */,
@@ -2449,6 +2465,7 @@
 				85A59ECB271351C70049AFC1 /* City+Account.swift in Sources */,
 				85351EA427078B2400EEE04C /* ChatBubbleGuildTab.swift in Sources */,
 				85B34B2226FA929D007178F5 /* BioBoxViews.swift in Sources */,
+				858E81AB272B7AE500122F59 /* LaunchSceneController.swift in Sources */,
 				8569A3D325A6353C0057A518 /* GameActivityView.swift in Sources */,
 				8579751A259BD394004C54D2 /* ItemCollectionViews.swift in Sources */,
 				85351E98270784BE00EEE04C /* ChatBubbleController.swift in Sources */,
@@ -2475,6 +2492,7 @@
 				8597BBAA25BF40AB00C705A0 /* StartingWindow.swift in Sources */,
 				8536F410258D47D000B509D2 /* AnimationsTest.swift in Sources */,
 				85960B9925D9B3F000AC9592 /* EDLInventoryView.swift in Sources */,
+				858E81B0272B7B4200122F59 /* EDLSceneController.swift in Sources */,
 				8536F43B258D47EA00B509D2 /* ModulesViewModel.swift in Sources */,
 				85F6675825AF7BBE00E5003B /* DeliveryVehicleNode.swift in Sources */,
 				8536F32D258D412600B509D2 /* LocalDatabase.swift in Sources */,
@@ -2546,6 +2564,7 @@
 				85351E932706320400EEE04C /* Station+Account.swift in Sources */,
 				8569A34E25A3D9590057A518 /* AirComposition.swift in Sources */,
 				85487F6026CD9C1E00EBC070 /* GameLogic.swift in Sources */,
+				858E81AC272B7AE500122F59 /* LaunchSceneController.swift in Sources */,
 				8517EE3725FC11EF00C34C54 /* Guild.swift in Sources */,
 				85351E99270784BE00EEE04C /* ChatBubbleController.swift in Sources */,
 				85A585EB26E443700020CCBF /* RoadsBuilder.swift in Sources */,
@@ -2554,6 +2573,7 @@
 				8504A53E25C6875000739C58 /* Energy.swift in Sources */,
 				85487F6526CD9CB100EBC070 /* GameErrors.swift in Sources */,
 				8504A54B25C6884600739C58 /* Garage.swift in Sources */,
+				858E81B1272B7B4200122F59 /* EDLSceneController.swift in Sources */,
 				85C3418825905A7500BF82F9 /* TutorialNode.swift in Sources */,
 				8536F484258D481700B509D2 /* TravelersScene.swift in Sources */,
 				85487F5A26CD9B3D00EBC070 /* GameFonts.swift in Sources */,
