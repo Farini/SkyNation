@@ -172,11 +172,11 @@ struct Purchase:Codable, Identifiable, Hashable {
         var tanks:[TankType:Int] {
             switch self {
                 case .SurvivalKit:
-                    return [.o2:10, .h2o:10, .air:3]
+                    return [.o2:20, .h2o:20, .air:10]
                 case .BotanistGarden:
-                    return [.o2:5, .h2o:15, .air:3]
+                    return [.o2:5, .h2o:20, .air:5]
                 case .BuildersTech:
-                    return [.h2o:5, .air:3]
+                    return [.h2o:5, .air:3, .ch4:2]
                 case .Humanitarian:
                     return [:]
             }
@@ -187,11 +187,11 @@ struct Purchase:Codable, Identifiable, Hashable {
                 case .SurvivalKit:
                     return [.Food:15]
                 case .BotanistGarden:
-                    return [.Fertilizer:8]
+                    return [.Fertilizer:20, .Food:5]
                 case .BuildersTech:
                     return [.Aluminium:12, .Battery:6, .Copper:6, .Iron:3]
                 case .Humanitarian:
-                    return [.Food:10]
+                    return [.Food:50]
             }
         }
         

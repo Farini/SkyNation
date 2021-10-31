@@ -405,7 +405,7 @@ struct LSSEnergy: View {
                             .foregroundColor(.orange)
                         ZStack {
                             ProgressBar(min: 0.0, max: Double(controller.zCapLevel), value: .constant(Double(controller.zCurrentLevel)), color: .red)
-                            Text("Z Level: \(controller.zCurrentLevel, specifier:"%.2f")")
+                            Text("Charge: \(controller.zCurrentLevel) kW")
                         }
                     }
                     .frame(idealHeight: 20, maxHeight: 20)
@@ -540,7 +540,7 @@ struct LSSReportView: View {
                     
                     if wasteSolidCap > 0 {
                         let solidPCT:Double = max(1.0, Double(wasteSolid)) / max(1.0, Double(wasteSolidCap))
-                        let wasteSolidPct = Int(solidPCT) * 100
+                        let wasteSolidPct = Int(solidPCT * 100.0)
                         ProgressView("💩 solid |  \(wasteSolid) of \(wasteSolidCap). \(wasteSolidPct)%", value: Float(wasteSolid), total: Float(wasteSolidCap))
                     } else {
                         Text("< No solid waste container >").foregroundColor(.gray)

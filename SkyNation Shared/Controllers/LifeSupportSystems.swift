@@ -489,6 +489,7 @@ class LSSController: ObservableObject {
                     
                 }
                 
+                self.updateAllData()
                 self.saveStation(station: station)
                 
             case .MarsColony:

@@ -281,6 +281,23 @@ class BioModController: ObservableObject, BioController {
         }
     }
     
+    // Shrink
+    func shrink(box:BioBox) {
+        if box.populationLimit > box.population.count && box.population.count > 6 {
+            box.populationLimit = box.population.count
+            if self.station.truss.consumeEnergy(amount: 10) {
+                self.saveStation()
+                self.didSelect(box: box)
+                self.positiveMessage = "Biobox shrank to \(box.populationLimit)"
+            } else {
+                self.errorMessage = "BioBox needs 10 kw of energy to shrink."
+            }
+        } else {
+            self.positiveMessage = ""
+            self.errorMessage = "BioBox needs a minimum population of 6 items."
+        }
+    }
+    
     /// The cost (in energy) to multiply a box
     let multiplyEnergyCost:Int = 10
     

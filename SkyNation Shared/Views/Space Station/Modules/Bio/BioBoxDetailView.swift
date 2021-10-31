@@ -35,24 +35,22 @@ struct BioBoxDetailView:View {
                         Text("Mode  \(bioBox.mode.rawValue)")
                             .font(.headline)
                             .foregroundColor(.blue)
-                        //                        .padding()
                         
                         Text("Energy: \(controller.availableEnergy)")
                             .foregroundColor(.green)
-                        //                        .padding()
                     }
                     
                     Group {
                         
-                        Text("Generations \(controller.geneticLoops)")
+//                        Text("Generations \(controller.geneticLoops)")
                         Text("Score: \(controller.geneticScore) %")
                         Text("Population: \(controller.selectedPopulation.count) / \(bioBox.populationLimit)")
                         
                         ProgressView("Growth", value: Float(bioBox.population.count), total: Float(bioBox.populationLimit))
-                            .frame(width:200)
+                            .frame(width:180)
                         
-                        Text("Date")
-                        Text(GameFormatters.dateFormatter.string(from:bioBox.dateAccount))
+//                        Text("Date")
+//                        Text(GameFormatters.dateFormatter.string(from:bioBox.dateAccount))
                         
                         Text("🏆 Best fit")
                             .font(.title)
@@ -81,7 +79,6 @@ struct BioBoxDetailView:View {
             HStack {
                 
                 Button("Cancel") {
-                    print("Cancelling Selection")
                     controller.cancelBoxSelection()
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
@@ -89,33 +86,48 @@ struct BioBoxDetailView:View {
                 
                 Divider()
                 
-                Button("Grow") {
-                    print("Grow population")
-                    controller.growPopulation(box:bioBox)
+                switch bioBox.mode {
+                    case .grow:
+                        Button("Grow") {
+                            print("Grow population")
+                            controller.growPopulation(box:bioBox)
+                        }
+                        .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                        .disabled(controller.growDisabledState(box: bioBox))
+                    case .evolve:
+                        Button("Grow") {
+                            print("Grow population")
+                            controller.growPopulation(box:bioBox)
+                        }
+                        .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                        .disabled(controller.growDisabledState(box: bioBox))
+                        
+                        Button("Evolve") {
+                            controller.evolveBio(box:bioBox)
+                        }
+                        .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                        .disabled(controller.evolveDisabledState(box:bioBox))
+                        
+                    case .multiply:
+                        Button("Multiply") {
+                            controller.multiply(box: bioBox)
+                        }
+                        .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                        .disabled(controller.multiplyDisabledState(box: bioBox))
+                        
+                        Button("Shrink") {
+                            controller.shrink(box: bioBox)
+                        }
+                        .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                        .disabled(bioBox.population.count >= bioBox.populationLimit)
+                        
+                    case .serving:
+                        Button("Multiply") {
+                            controller.multiply(box: bioBox)
+                        }
+                        .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                        .disabled(controller.multiplyDisabledState(box: bioBox))
                 }
-                .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
-                .disabled(controller.growDisabledState(box: bioBox))
-                
-                Button("Crop") {
-                    print("Crop population")
-                }
-                .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
-                .disabled(controller.cropDisabledState(box: bioBox))
-                
-                Button("Evolve") {
-                    controller.evolveBio(box:bioBox)
-                }
-                .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
-                .disabled(controller.evolveDisabledState(box:bioBox))
-                
-                Button("Multiply") {
-                    controller.multiply(box: bioBox)
-                }
-                .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
-                .disabled(controller.multiplyDisabledState(box: bioBox))
-                
-                // Add Split Button -> Split the box in 2
-                // Add Shrink Button -> Give away free slots back to the Lab capacity
             }
         }
     }

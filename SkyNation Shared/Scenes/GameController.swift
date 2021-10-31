@@ -57,6 +57,9 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     /// Scene's SpriteKit Overlay
     var gameOverlay:GameOverlay
     
+    /// The news (if any) to display sometime during the render
+    var newsLines:[String] = []
+    
     // Data
     var gameNavDelegate:GameNavDelegate?
     var modules:[Module] = []
@@ -341,27 +344,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     func showCameraMenu() {
         gameOverlay.toggleCamControl()
-        
-        // Load Hand
-        let spriteTexture = SKTexture(imageNamed: "TapHand")
-        let sprite = SKSpriteNode(texture: spriteTexture, color: .white, size: CGSize(width: 128, height: 128))
-        
-        // SKSpriteNode(imageNamed: "TapHand")
-//        sprite.color = .white
-//        sprite.colorBlendFactor = 1.0
-        sprite.zPosition = 99
-        
-        let moduleA = station!.modules.first!
-        guard let node3 = scene.rootNode.childNode(withName: moduleA.id.uuidString, recursively: true) else {
-            fatalError("No such name")
-        }
-        let spriteLocation = self.sceneRenderer.projectPoint(node3.position)
-        
-        print("Sprite Location: \(spriteLocation)")
-        
-        sprite.position = CGPoint(x: spriteLocation.x, y: -spriteLocation.y * 2)
-        
-        gameOverlay.scene.addChild(sprite)
     }
     
     func hideCameraMenu() {
@@ -453,11 +435,16 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         station?.accountingLoop(recursive: false) { (messages) in
                             DispatchQueue.main.async {
                                 print("\(messages.first ?? "n/a")")
+                                
+                                // Update Player Card
                                 self.gameOverlay.updatePlayerCard()
+                                
+                                // Tutorial hand
+                                if LocalDatabase.shared.player.experience < 1 {
+                                    self.checkBeginnersHandTutorial()
+                                }
                             }
                         }
-                        
-                        
                         
                     case .MarsColony:
                         
@@ -898,7 +885,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         // NEWS
         var hasChanges:Bool = false
         // Check Activities
-        var newsLines:[String] = []
+        
         if gameScene == .SpaceStation {
             // Lab activities
             if let labs = station?.labModules {
@@ -944,8 +931,14 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             }
         }
         
+        // Beginners Guide
+        if self.station?.habModules.count ?? 0 < 1 {
+            newsLines.append("Tap on a Module (see hand) and create your first Hab Module.")
+            newsLines.append("Then click, or tap on the Earth, to order items for your Space Station.")
+        }
+        
         var newsDelay = 3.0
-        if !newsLines.isEmpty {
+        while !newsLines.isEmpty {
             for line in newsLines {
                 print("*** NEWS ***  (\(newsLines.count))")
                 let timeDelay = DispatchTime.now() + newsDelay
@@ -953,8 +946,10 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     self.gameOverlay.generateNews(string: line)
                 }
                 newsDelay += 5.0
+                self.newsLines.removeFirst()
             }
         }
+        
         // Save if needed
         if hasChanges {
             if let station = self.station {
@@ -967,6 +962,38 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 }
             }
         }
+    }
+    
+    func checkBeginnersHandTutorial() {
+        
+        // Load Hand
+        let spriteTexture = SKTexture(imageNamed: "TapHand")
+        let sprite = SKSpriteNode(texture: spriteTexture, color: .white, size: CGSize(width: 128, height: 128))
+        sprite.name = "TapHand"
+        sprite.zPosition = 99
+        
+        let moduleA = station!.modules.first!
+        guard let node3 = scene.rootNode.childNode(withName: moduleA.id.uuidString, recursively: true) else {
+            fatalError("No such name")
+        }
+        let spriteLocation = self.sceneRenderer.projectPoint(node3.position)
+        print("Sprite Location: \(spriteLocation)")
+        sprite.position = CGPoint(x: spriteLocation.x, y: -spriteLocation.y * 2)
+        
+        let scale1 = SKAction.scale(by: 0.85, duration: 0.6)
+        let scale2 = SKAction.scale(by: 1.25, duration: 0.6)
+        let waiter = SKAction.wait(forDuration: 0.4)
+        let sequence = SKAction.sequence([scale1, waiter, scale2, waiter, scale1, waiter, scale2])
+        
+        gameOverlay.scene.addChild(sprite)
+        
+        sprite.run(sequence) {
+            sprite.removeFromParent()
+            if self.station?.habModules.count ?? 0 < 1 {
+                self.checkBeginnersHandTutorial()
+            }
+        }
+        
     }
     
     /// Debugs - Prints information about the scene

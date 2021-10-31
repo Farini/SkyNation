@@ -385,6 +385,12 @@ extension CityData {
             mergeTanks()
         }
         
+        // BioBoxes
+        let allBoxes = bioBoxes
+        for bioBox in allBoxes {
+            self.bioAccounting(bioBox, report: report)
+        }
+        
 //        // Antenna & Money
 //        let antennaMoney = truss.moneyFromAntenna()
 //        print("\n 🤑 Antenna Money: \(antennaMoney)")
@@ -653,5 +659,75 @@ extension CityData {
     private func prepareDeath(of person:Person) {
         GameMessageBoard.shared.newAchievement(type: .experience, message: "💀 \(person.name) has passed away!")
         inhabitants.removeAll(where: { $0.id == person.id })
+    }
+    
+    /// Accounts for BioBoxes Operations
+    private func bioAccounting(_ bioBox:BioBox, report:AccountingReport) {
+        
+        let stage = bioBox.mode
+        let boxLimit = bioBox.populationLimit
+        let dnaOption = DNAOption(rawValue: bioBox.perfectDNA) ?? .banana
+        
+        switch stage {
+            case .grow:
+                // Check if population is over limit
+                if bioBox.population.count >= boxLimit {
+                    break
+                }
+                
+                // Population shouldn't be empty
+                if bioBox.population.count == 0 {
+                    let newPopulation = DNAGenerator.populate(dnaChoice: dnaOption, popSize: 1)
+                    bioBox.population = newPopulation
+                    break
+                }
+                
+                var newBorns:Int = 0
+                let pct = Double(bioBox.population.count) / Double(bioBox.populationLimit)
+                if pct < 0.25 {
+                    // double population
+                    newBorns = bioBox.population.count * 2
+                } else if pct < 0.5 {
+                    // 30%
+                    newBorns = Int(Double(bioBox.population.count) * 0.33)
+                } else if pct < 1.0 {
+                    // add 2
+                    newBorns = 2
+                }
+                
+                if consumeEnergyFromBatteries(amount: newBorns * 10) {
+                    let newPopulation = DNAGenerator.populate(dnaChoice: dnaOption, popSize: newBorns)
+                    bioBox.population.append(contentsOf: newPopulation)
+                } else {
+                    report.addProblem(string: "No energy to grow BioBox")
+                }
+                
+            case .evolve, .serving:
+                break
+                
+            case .multiply:
+                
+                // Check if population is over limit
+                if bioBox.population.count >= boxLimit {
+                    break
+                }
+                
+                let consume = consumeEnergyFromBatteries(amount: 10)
+                if consume {
+                    // multiply box
+                    // Check if perfect DNA already found
+                    let populi = bioBox.population
+                    // let perfect = bioBox.perfectDNA
+                    if populi.contains(dnaOption.rawValue) {
+                        // Already contains. No need to generate genetic code
+                        let countBegins = bioBox.population.filter({ $0 == dnaOption.rawValue })
+                        // Each perfect dna multiplies by 2
+                        let nextCount = min(countBegins.count * 2, bioBox.populationLimit)
+                        let newPopulation = Array(repeating: dnaOption.rawValue, count: nextCount)
+                        bioBox.population = newPopulation
+                        
+                    }
+                }
+        }
     }
 }
