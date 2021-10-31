@@ -2,12 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Constants/Game Assets/Fonts/RobotoMono-VariableFont_wght.ttf</string>
-		<string>Constants/Game Assets/Fonts/RobotoSlab-VariableFont_wght.ttf</string>
-		<string>Constants/Game Assets/Fonts/Ailerons-Typeface.otf</string>
-	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -39,5 +33,11 @@
 	<string>Entry</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Constants/Game Assets/Fonts/RobotoMono-VariableFont_wght.ttf</string>
+		<string>Constants/Game Assets/Fonts/RobotoSlab-VariableFont_wght.ttf</string>
+		<string>Constants/Game Assets/Fonts/Ailerons-Typeface.otf</string>
+	</array>
 </dict>
 </plist>

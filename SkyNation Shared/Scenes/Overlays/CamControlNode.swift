@@ -16,7 +16,7 @@ class CamControlNode:SKNode {
     
     var nodeSize:CGSize
     
-    var knob:SKNode
+//    var knob:SKNode
     var knobX:CGFloat = 0
     
     var gameCamera:GameCamera
@@ -30,10 +30,10 @@ class CamControlNode:SKNode {
         self.nodeSize = scene.size
 
         // Knob
-        let knob = SKShapeNode(circleOfRadius: 12)
-        knob.name = "knob"
-        knob.fillColor = .white
-        self.knob = knob
+//        let knob = SKShapeNode(circleOfRadius: 12)
+//        knob.name = "knob"
+//        knob.fillColor = .white
+//        self.knob = knob
         
         // Camera
         self.gameCamera = gCamera
@@ -56,6 +56,7 @@ class CamControlNode:SKNode {
         self.addChild(backShape)
         
         // Slider
+        /*
         let sliderSize = CGSize(width: nodeSize.width * 0.9, height: 12)
         let sliderBackground = SKShapeNode(rect: CGRect(origin: CGPoint(x: 0, y :0), size: sliderSize), cornerRadius: 4)
         sliderBackground.position.x = nodeSize.width * 0.05
@@ -67,6 +68,7 @@ class CamControlNode:SKNode {
         knob.position.y = sliderSize.height / 2
 //        knob.position.x = 0
         sliderBackground.addChild(knob)
+        */
         
         // Camera Image
         let camSprite = makeSprite(name: "camera.viewfinder")
@@ -76,14 +78,14 @@ class CamControlNode:SKNode {
         self.addChild(camSprite)
         
         // Rotate Left
-        let rotLSprite = makeSprite(name: "chevron.right.square")
-        rotLSprite.position = CGPoint(x: nodeSize.width - 40, y: 0)
+        let rotLSprite = makeSprite(name: "chevron.backward.square")
+        rotLSprite.position = CGPoint(x: nodeSize.width * 0.05, y: 0) // nodeSize.width - 40
         rotLSprite.zPosition = 90
         self.addChild(rotLSprite)
         
         // Rotate Right
-        let rotRSprite = makeSprite(name: "chevron.backward.square") // chevron.backward.square
-        rotRSprite.position = CGPoint(x: nodeSize.width * 0.05, y: 0)
+        let rotRSprite = makeSprite(name: "chevron.right.square") // chevron.backward.square
+        rotRSprite.position = CGPoint(x: nodeSize.width - 40, y: 0)
         rotRSprite.zPosition = 90
         self.addChild(rotRSprite)
         
@@ -126,50 +128,51 @@ class CamControlNode:SKNode {
     }
     
     /// Puts the slider in the correct position in relation to where the camera is
-    func adjustSliderPosition(camera:SCNNode) {
-        
-        let poz = camera.position.z
-        
-        #if os(macOS)
-        knobX = ((poz - 75) / 375) //(1 - x1) * maxWidth //x1 * maxWidth + 1
-        #else
-        knobX = CGFloat(((poz - 75) / 375))
-        #endif
-        knob.position.x = knobX
-    }
+//    func adjustSliderPosition(camera:SCNNode) {
+//
+//        let poz = camera.position.z
+//
+//        #if os(macOS)
+//        knobX = ((poz - 75) / 375) //(1 - x1) * maxWidth //x1 * maxWidth + 1
+//        #else
+//        knobX = CGFloat(((poz - 75) / 375))
+//        #endif
+//        knob.position.x = knobX
+//    }
     
     /// The position the camera needs to go to
     var camNormalizedPosition:CGFloat?
     
     
     #if os(macOS)
-    override func mouseDragged(with event: NSEvent) {
-        
-        let deltaX = event.deltaX
-        let previous = knobX
-        let maxWidth = nodeSize.width * 0.9
-        
-        if deltaX < 0 {
-            // move left
-            knobX = max(0, previous + deltaX)
-        }else if deltaX > 0 {
-            // move right
-            
-            knobX = min(maxWidth, previous + deltaX)
-        }
-        
-        knob.position.x = knobX
-        
-        let normalizedPosition = 1 - knobX / maxWidth
-        self.camNormalizedPosition = normalizedPosition
-    }
+//    override func mouseDragged(with event: NSEvent) {
+//
+//        let deltaX = event.deltaX
+//        let previous = knobX
+//        let maxWidth = nodeSize.width * 0.9
+//
+//        if deltaX < 0 {
+//            // move left
+//            knobX = max(0, previous + deltaX)
+//        }else if deltaX > 0 {
+//            // move right
+//
+//            knobX = min(maxWidth, previous + deltaX)
+//        }
+//
+//        knob.position.x = knobX
+//
+//        let normalizedPosition = 1 - knobX / maxWidth
+//        self.camNormalizedPosition = normalizedPosition
+//    }
     
-    override func mouseUp(with event: NSEvent) {
-        if let normalizedPosition = camNormalizedPosition {
-            overlay.moveCamera(x: normalizedPosition)
-            self.camNormalizedPosition = nil
-        }
-    }
+//    override func mouseUp(with event: NSEvent) {
+//        if let normalizedPosition = camNormalizedPosition {
+//            overlay.moveCamera(x: normalizedPosition)
+//            self.camNormalizedPosition = nil
+//        }
+//    }
+    
     #endif
     
     

@@ -267,20 +267,24 @@ extension MarsBuilder {
             
             let gateNode:CityGateNode = CityGateNode(posdex: posdex, city: optCity)
             
+            // Adjust position to Scene
+            gateNode.position = tmpCity.position
+            gateNode.eulerAngles = tmpCity.eulerAngles
+            citiesParent.addChildNode(gateNode)
+            
             if let mycid = LocalDatabase.shared.player.cityID, mycid == optCity?.id {
                 // My City
                 print("my city +++")
                 if let pov:SCNNode = gateNode.childNode(withName: "POV", recursively: true) {
                     print("*** my city *** - load special? ")
-                    let pov = GamePOV(position: pov.position, target: gateNode, name: "Gate", yRange: nil, zRange: nil, zoom: nil)
+                    let camPov = pov.childNode(withName: "Camera", recursively: false)!
+                    
+                    let pov = GamePOV(position: camPov.worldPosition, target: gateNode, name: "Gate", yRange: nil, zRange: nil, zoom: nil)
                     cameraPOVs.append(pov)
                 }
             }
             
-            // Adjust position to Scene
-            gateNode.position = tmpCity.position
-            gateNode.eulerAngles = tmpCity.eulerAngles
-            citiesParent.addChildNode(gateNode)
+            
             print("City: \(posdex.sceneName). Angles:\(gateNode.eulerAngles) - \(tmpCity.eulerAngles)")
             
         }
@@ -386,7 +390,7 @@ extension MarsBuilder {
             }
         }
         
-        let gameCam = GameCamera(pov: cameraPOVs.first!, array: cameraPOVs)
+        let gameCam = GameCamera(pov: cameraPOVs.first!, array: cameraPOVs, gameScene: .MarsColony)
         scene.rootNode.addChildNode(gameCam)
         
         // Roads

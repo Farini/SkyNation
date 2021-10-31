@@ -237,7 +237,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             // Camera Rotations
             if sprite.name == "chevron.right.square" {
                 
-                self.moveToPreviousCamera()
+                self.moveToNextCamera()
                 
                 if let camControl = sprite.parent as? CamControlNode {
                     
@@ -251,7 +251,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             
             if sprite.name == "chevron.backward.square" {
                 
-                self.moveToNextCamera()
+                self.moveToPreviousCamera()
                 if let camControl = sprite.parent as? CamControlNode {
                     
                     // Update the camcontrol.
@@ -341,6 +341,27 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     func showCameraMenu() {
         gameOverlay.toggleCamControl()
+        
+        // Load Hand
+        let spriteTexture = SKTexture(imageNamed: "TapHand")
+        let sprite = SKSpriteNode(texture: spriteTexture, color: .white, size: CGSize(width: 128, height: 128))
+        
+        // SKSpriteNode(imageNamed: "TapHand")
+//        sprite.color = .white
+//        sprite.colorBlendFactor = 1.0
+        sprite.zPosition = 99
+        
+        let moduleA = station!.modules.first!
+        guard let node3 = scene.rootNode.childNode(withName: moduleA.id.uuidString, recursively: true) else {
+            fatalError("No such name")
+        }
+        let spriteLocation = self.sceneRenderer.projectPoint(node3.position)
+        
+        print("Sprite Location: \(spriteLocation)")
+        
+        sprite.position = CGPoint(x: spriteLocation.x, y: -spriteLocation.y * 2)
+        
+        gameOverlay.scene.addChild(sprite)
     }
     
     func hideCameraMenu() {
@@ -435,6 +456,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                                 self.gameOverlay.updatePlayerCard()
                             }
                         }
+                        
+                        
                         
                     case .MarsColony:
                         
@@ -658,6 +681,15 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     return
                 }
                 
+                // Accounting
+                if let myCity:CityData = LocalDatabase.shared.cityData {
+                    DispatchQueue(label: "Accounting").async {
+                        myCity.accountingLoop(recursive: true) { messages in
+                            print("\(messages.first ?? "n/a")")
+                        }
+                    }
+                }
+                
                 // MARK: - Camera Setup
                 
                 let newScene:SCNScene = mBuilder.populateScene()
@@ -796,7 +828,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             renderer.pointOfView = camera.camNode
             
             let centralNode = SCNNode()
-            centralNode.position = SCNVector3(x: 0, y: -5, z: 0)
+            centralNode.position = SCNVector3(x: 0, y: -15, z: 0)
             camera.camNode.look(at: centralNode.position)
             
             camera.position.z += 40
@@ -804,9 +836,9 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             let waiter = SCNAction.wait(duration: 3.0)
             // let rotate = SCNAction.rotate(by: CGFloat(Double.pi / 8), around: SCNVector3(x: 0, y: 1, z: 0), duration: 2)
             // rotate.timingMode = .easeOut
-            let move1 = SCNAction.move(by: SCNVector3(-1, 1, -20), duration: 0.75)
+            let move1 = SCNAction.move(by: SCNVector3(-1, 6, -20), duration: 0.75)
             move1.timingMode = .easeIn
-            let move2 = SCNAction.move(by: SCNVector3(1, -1, -20), duration: 0.75)
+            let move2 = SCNAction.move(by: SCNVector3(1, -6, -20), duration: 0.75)
             move2.timingMode = .easeOut
             
             let sequence = SCNAction.sequence([waiter, move1, move2])
@@ -839,6 +871,9 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
         // Fetch Mars Data?
         _ = MarsBuilder.shared
+        
+        
+        
     }
     
     /// Reloads the Station Scene with new tech items

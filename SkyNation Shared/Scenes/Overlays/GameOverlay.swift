@@ -251,7 +251,7 @@ class GameOverlay:NSObject, SKSceneDelegate {
             }
             
             // Adjust Slider
-            node.adjustSliderPosition(camera: sceneCamera)
+//            node.adjustSliderPosition(camera: sceneCamera)
         }
     }
     

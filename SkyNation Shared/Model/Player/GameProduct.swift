@@ -31,14 +31,14 @@ enum GameProductType:Int, Codable, CaseIterable {
     }
     
     var moneyAmount:Int {
-        return self.rawValue * 1500
+        return self.rawValue * 8500
     }
     
     var displayName:String {
         switch self {
             case .five: return "Push Package"
             case .ten: return "Big Package"
-            case .twenty: return "Hude Deal"
+            case .twenty: return "Huge Deal"
         }
     }
     

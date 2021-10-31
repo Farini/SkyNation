@@ -608,7 +608,7 @@ class DNAGenerator {
         self.populationDNAs = popDNAs
         self.dnaSize = perfect.count
         self.popCount = popStrings.count
-        self.generations = 20
+        self.generations = 10
         self.mutationChance = 20
         
         self.bestFit = populationStrings.first ?? "A"
@@ -739,7 +739,7 @@ class DNAGenerator {
                 population = []
                 
                 // create a new generation using the individuals in the origional population
-                for _ in 0...self.popCount/2 {
+                for _ in 0..<self.popCount/2 {
                     let ind1 = self.weightedChoice(items: weightedPopulation)
                     let ind2 = self.weightedChoice(items: weightedPopulation)
                     

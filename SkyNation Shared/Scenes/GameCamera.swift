@@ -205,7 +205,7 @@ class GameCamera:SCNNode {
     
     // MARK: - Init & Cycle
 
-    init(pov:GamePOV, array:[GamePOV]) {
+    init(pov:GamePOV, array:[GamePOV], gameScene:GameSceneType) {
         
         // Position, Constraints & Setup
         self.currentPOV = pov
@@ -219,6 +219,15 @@ class GameCamera:SCNNode {
         camera.sensorHeight = 24
         camera.zNear = 0.1
         camera.zFar = 500
+        
+        camera.wantsHDR = true
+        camera.exposureOffset = 0
+        if gameScene == .SpaceStation {
+            camera.averageGray = 0.015
+        } else if gameScene == .MarsColony {
+            camera.averageGray = 0.18
+        }
+        
         
         // Camera Node (Handle)
         let cameraNode = SCNNode()

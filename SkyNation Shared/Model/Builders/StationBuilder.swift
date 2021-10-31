@@ -398,11 +398,11 @@ extension StationBuilder {
         var camArray:[GamePOV] = []
         
         // Other Cameras
-        if let dock = scene.rootNode.childNode(withName: "Dock", recursively: false) {
-            let pos = SCNVector3(15, 10, 8)
-            let cam = GamePOV(position: pos, target: dock, name: "Dock", yRange: nil, zRange: nil, zoom: nil)
-            camArray.append(cam)
-        }
+//        if let dock = scene.rootNode.childNode(withName: "Dock", recursively: false) {
+//            let pos = SCNVector3(15, 10, 8)
+//            let cam = GamePOV(position: pos, target: dock, name: "Dock", yRange: nil, zRange: nil, zoom: nil)
+//            camArray.append(cam)
+//        }
         camArray.append(tCam)
         
         if let cuppola = scene.rootNode.childNode(withName: "Cuppola", recursively: false) {
@@ -427,7 +427,7 @@ extension StationBuilder {
         
         
         // Game Camera
-        let newCamera = GameCamera(pov: camArray.first!, array: camArray)
+        let newCamera = GameCamera(pov: camArray.first!, array: camArray, gameScene: .SpaceStation)
         self.gameCamera = newCamera
         
         scene.rootNode.addChildNode(newCamera)

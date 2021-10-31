@@ -29,10 +29,10 @@ class GameViewController: UIViewController {
         self.gameController.gameNavDelegate = self
         
         // Allow the user to manipulate the camera
-        self.gameView.allowsCameraControl = true
+        self.gameView.allowsCameraControl = false
         
         // Show statistics such as fps and timing information
-        self.gameView.showsStatistics = true
+        self.gameView.showsStatistics = false
         
         // Configure the view
         self.gameView.backgroundColor = UIColor.black

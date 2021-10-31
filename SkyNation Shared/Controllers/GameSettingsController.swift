@@ -157,6 +157,14 @@ class GameSettingsController:ObservableObject {
         
         self.updateLoadedList()
         
+        // Accounting
+        if let myCity:CityData = LocalDatabase.shared.cityData {
+            DispatchQueue(label: "Accounting").async {
+                myCity.accountingLoop(recursive: true) { messages in
+                    print("Mars Accounting Finished: \(messages.joined(separator: " ,"))")
+                }
+            }
+        }
     }
     
     /// Updates the front list showing the loading status of Data

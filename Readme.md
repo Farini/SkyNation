@@ -23,6 +23,7 @@ The contributors to these projects shall have a **fair** share of the game, and 
 - [X] SkyNation Project created: 12/18/2020
 - [X] Server Project SKNServer - A server for this game written in Vapor.
 - [X] Apple Store Product Registration
+- [X] TestFlight: https://testflight.apple.com/join/lGBrKxTQ
 - [ ] Product Version 1.0
 
 ### Methodology 
@@ -115,28 +116,30 @@ The contributors to these projects shall have a **fair** share of the game, and 
 ## 📝 Doing - Present
 If looking for things to do and don't know where to start, go to *Find Navigator* and search for **FIXME**, or **TODO**
 
-
-- Split Chat Bubble in [Guild] vs [Player], or just [Credits]?
-- Accounting with Totals
+10/29/2021 - ?
+- [X] Camera brightness (too dark)
+- [X] GameCamera - Fix Awkward cam transitions
+- [X] GameCamera - Add/Remove relevant Cameras
+- [X] GameCamera - Correct Directions
+- [X] Mars Scene - Accounting happening every 10 seconds!
+- [X] Mars Scene - Try to get accounting to be run on a background thread, or run accounting when settings are loading.
+- [X] Store - Fix Logic, Button, etc. Button not working, has to click on row.
 
 - [ ] Use EDLSceneView wherever appropriate
 
-- [ ] Mars Scene - Accounting happening every 10 seconds!
-- [ ] Mars Scene - Try to get accounting to be run on a background thread, or run accounting when settings are loading.
-
 - [ ] Chat Bubble - President functions (Invite, Kickout, Modify Guild)
 - [ ] Chat Bubble - If no president, move election to earlier
-
-- [ ] GameCamera - Fix Awkward cam transitions
-- [ ] GameCamera - Add/Remove relevant Cameras
-Discussion: Gate camera in Mars seems problematic.
-In SpaceStation, One camera can be removed (the one too close)
+- [ ] Split Chat Bubble in [Guild] vs [Player], or just [Credits]?
 
 - [ ] Tests - (Chat Bubble) - Test Election Results
 - [ ] Tests - Registering new vehicle should increase XP.
 
 - [ ] Model - Fix cost of Outpost level ups
+- [ ] Model - Fix GameProduct kits. They don't make sense.
 - [ ] Model - Road Updates
+- [ ] Model - Accounting with Totals (total oxygen, total water, total energy)
+
+- [ ] Tutorial - Add Hand, tapping on top of Model (First tutorial) - When Player XP is 0?
 
 - [ ] New Warning Messages (from people selector)  - use everywhere that can throw an error.
 - [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
@@ -146,10 +149,10 @@ In SpaceStation, One camera can be removed (the one too close)
 
 - [ ] Mars Scene - City Garage - Vehicle Validation (when arriving (orbit)) - needs a token, if not valid.
 
+- [X] BioModule - Auto crop - Adjust population going over limit
 - [ ] BioModule - Extra functions (expand, shrink)
 - [ ] BioModule - DNA Animation remake
-- [ ] BioModule - Auto crop - Adjust population going over limit
-- [ ] BioModule - Accouting
+- [ ] BioModule - (Accounting)
 
 - [ ] Blender - Reduce Vertex Count, and make scene "DecorKit", to gather resources from there.
 - [ ] Blender - Fix roads weird angles
