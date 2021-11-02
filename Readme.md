@@ -134,7 +134,6 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Model - Fix GameProduct kits. They don't make sense.
 - [X] Blender - Fix roads weird angles
 
-
 - [ ] Use EDLSceneView wherever appropriate
 
 - [ ] Chat Bubble - President functions (Invite, Kickout, Modify Guild)
@@ -159,6 +158,8 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Blender - Consistent Materials - Metal1, Metal2, White, Rubber, etc.
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
+
+- [ ] UI Responsiveness - Add more feedback.
 
 - [ ] Basic Views - Alert messages (orange)
 - [ ] Basic Views - Typography, and Fonts.

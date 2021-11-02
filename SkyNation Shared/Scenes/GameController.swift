@@ -440,9 +440,9 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                                 self.gameOverlay.updatePlayerCard()
                                 
                                 // Tutorial hand
-                                if LocalDatabase.shared.player.experience < 1 {
+//                                if LocalDatabase.shared.player.experience < 1 {
                                     self.checkBeginnersHandTutorial()
-                                }
+//                                }
                             }
                         }
                         
@@ -967,6 +967,14 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     func checkBeginnersHandTutorial() {
         
         // Load Hand
+        // Hand Animation
+        let atlas = SKTextureAtlas(named: "HandFrames")
+        var handTextures:[SKTexture] = []
+        for idx in 1...15 {
+            handTextures.append(atlas.textureNamed("HandTap\(idx).png"))
+        }
+        
+        // Old
         let spriteTexture = SKTexture(imageNamed: "TapHand")
         let sprite = SKSpriteNode(texture: spriteTexture, color: .white, size: CGSize(width: 128, height: 128))
         sprite.name = "TapHand"
@@ -986,6 +994,9 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         let sequence = SKAction.sequence([scale1, waiter, scale2, waiter, scale1, waiter, scale2])
         
         gameOverlay.scene.addChild(sprite)
+        
+        // Hand Animation Sequence
+        // sprite.run(SKAction.repeatForever(SKAction.animate(with: handTextures, timePerFrame: 0.125)))
         
         sprite.run(sequence) {
             sprite.removeFromParent()

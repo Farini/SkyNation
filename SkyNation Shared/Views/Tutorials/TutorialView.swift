@@ -61,8 +61,8 @@ struct TutorialView: View {
                     VStack(alignment:.leading, spacing:6) {
                         Text("Order").font(.title)
                         Divider()
-                        Text("You may order Boxes of Ingredients, Tanks, and hire people here.")
-                        Text("The list of candidates is renewed every hour.")
+                        Text("You may order Boxes of Ingredients, Tanks, and hire astronauts here.")
+                        Text("The list of candidates is renewed every hour, but if you need them renewed earlier, you can spend a token to get that list refreshed, and new astronauts will appear.")
                         Text("If you hire more people than you can host, they will be rejected because there is no room for them. Make sure you have enough Hab modules before hiring new staff.")
                         Text("Take your time, and plan ahead. Look and analyze how much your resources are going to last. Running out of oxygen (O2) may be deadly to your staff.")
                     }
@@ -73,42 +73,90 @@ struct TutorialView: View {
             
             case .LabView:
                 ScrollView {
-                    VStack(alignment:.leading, spacing:6) {
-                        Text("Tutorial").font(.title)
+                    VStack(alignment:.leading, spacing:8) {
+                        Text("Lab Module Tutorial")
+                            .font(.title)
+                            .foregroundColor(.blue)
                         Divider()
-                        Text("Here you can make recipes, research the tech tree, and more.")
-                        Text("To your left there is a list divided in two sections. Recipes and Tech Tree.")
-                        Text("You can also click on the tree itself")
-                        Text("Once you have one of these items selected, the view to your right displays the ingredients necessary to make the product, and the skills required to perform the task.")
-                        Text("You can also pay tokens to reduce the time of making such product.")
+                        Text("Here you can make recipes, research the tech tree and more.")
+                        Text("On the left there is a list which is divided in two sections. Recipes and Tech Tree.")
+                        Text("To work on the tech tree, you can click on the tech tree item of your choice, or select from the list on the left.")
+                        Text("Once you have one of these items selected, the view to your right displays the ingredients required to make the product, and the skills needed to perform the task. You should select the astronauts that have those skills, to work on the subject.")
+                        Text("You may use tokens to reduce the time of making such product, or completing a tech tree task.")
                     }
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 6)
+                    .padding(.vertical, 8)
                 }
                 .frame(maxWidth: 400, maxHeight: 600, alignment: .top)
                 
             case .HabView:
                 ScrollView {
-                    VStack(alignment:.leading, spacing:6) {
-                        Text("Tutorial").font(.title)
+                    VStack(alignment:.leading, spacing:8) {
+                        Text("Hab Module Tutorial").font(.title).foregroundColor(.green)
                         Divider()
-                        Text("This is where your inhabitants stay. Take good care of them")
+                        Text("This is where your inhabitants stay. You should take good care of them, if you want them to live a long life.")
+                        Text("Astronauts need food, water, good air quality and other things to be happier and more productive.")
                         Text("Select one of the inhabitants to view them in detail.")
                         Text("You may perform one of the tasks listed here in order to keep your staff happy and healthy. All of their other tasks depend on it.")
+                        
+                        Text("Happiness, health, and life expectancy are all related. A happy person may heal faster, and when the happiness is maintained, their life expectancy will also increase.")
+                        
+                        Divider()
+                        Text("👨‍🚀 Actions").font(.title2).foregroundColor(.green)
+                        
+                        // Actions
+                        Group {
+                            Text("Study").font(.title2).foregroundColor(.green)
+                            Text("An astronaut may gain skills by studying. Sometimes they don't want to study. You may try again, but don't persist too much, or they can get upset. It takes 3 days for an astronaut to gain some skills, and they are more likely to want to learn every 10 years of age. (i.e. Someone who is 30 is likely to learn a third skill.)")
+                            
+                            Text("Workout").font(.title2).foregroundColor(.green)
+                            Text("In just one minute, a workout can improve the health, and happiness of astronauts. Repeating this action every now and then is recommended.")
+                            
+                            Text("Fire").font(.title2).foregroundColor(.green)
+                            Text("Tired of an astronaut? No problem. You may fire the astronaut.")
+                            
+                            Text("Medicate").font(.title2).foregroundColor(.green)
+                            Text("If you have a doctor in the station, you may use them to heal (cure) other astronauts.")
+                        }
                     }
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 6)
+                    .padding(.vertical, 8)
                 }
                 .frame(maxWidth: 400, maxHeight: 600, alignment: .top)
                 
             case .BioView:
                 ScrollView {
-                    VStack(alignment:.leading, spacing:6) {
-                        Text("Biology Module Tutorial").font(.title)
+                    VStack(alignment:.leading, spacing:8) {
+                        Text("Bio Module Tutorial").font(.title).foregroundColor(.red)
                         Divider()
-                        Text("In this module you may create Bio Boxes")
-                        Text("A BioBox is a set of life beings that may be adible, once the DNA is matched.")
-                        Text("This is a way for the Space Station to produce food.")
+                        Group {
+                            Text("In this module you may create Bio Boxes")
+                            Text("A BioBox is a set of life beings that become edible, once the DNA is matched.")
+                            Text("Using Bio Boxes is a way for the Space Station to produce food, so you don't have to order very often.")
+                            Text("Astronauts can get tired of eating the same food all the time, so a little bit of food ordering may help to get them happier, and increase their health.")
+                            Divider()
+                        }
+                        
+                        Text("🧬 Actions").font(.title2).foregroundColor(.red)
+                        Text("When you create a BioBox, it comes with a population of genes. You need to evolve those genes, to make the food edible.")
+                        
+                        // Actions
+                        Group {
+                            Text("Grow").font(.title2).foregroundColor(.red)
+                            Text("If the Biobox is not full, growing the biobox makes the population grow until it reaches the limit that the Biobox can handle.")
+                            
+                            Text("Evolve").font(.title2).foregroundColor(.red)
+                            Text("This function makes the genes in the bio box evolve. 15 rounds (iterations) of generations, and mutations are created, and the gene evolves. This action needs to be repeated many times until the DNA of the population matches the DNA of the food you want to produce.")
+                            
+                            Text("Trim").font(.title2).foregroundColor(.red)
+                            Text("During the 'evolve' stage, you may trim out the unneeded individuals of the population, which will alter the outcome of the next round of evolving.")
+                            
+                            Text("Shrink").font(.title2).foregroundColor(.red)
+                            Text("You may make the biobox smaller. Either to fit in your Space Vehicle, or to fit in your Mars' Biolab. However, you cannot grow the size of the Biobox.")
+                        }
+                        
                     }
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 6)
@@ -122,9 +170,13 @@ struct TutorialView: View {
                         Divider()
                         Text("The Garage allows you to build SpaceVehicles to send to Mars.")
                         Text("Bigger Vehicles need more experience to be built. They also need more ingredients and skills.")
-                        Text("After you build your first Vehicle, you will be able to join a Guild")
                         Text("Planning").foregroundColor(.orange).font(.title3)
-                        Text("The trip to Mars takes a long time. Make sure to plan well to be sustainable with your supplies.")
+                        Text("The trip to Mars takes a long time. Make sure to plan well and be sustainable with your supplies. Make sure you take peripherals that recycle parts of the air, water and solid waste, to increase the longevity of your Mars colony inhabitants.")
+                        
+                        Text("Vehicles Spcecifics").foregroundColor(.orange).font(.title3)
+                        Text("The T12 engine (second vehicle available) is able to carry bioboxes to Mars.")
+                        Text("The T18 engine (third vehicle available) is able to carry astronauts to Mars.")
+                        
                     }
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 6)
@@ -137,8 +189,9 @@ struct TutorialView: View {
                         Text("Truss").font(.title).foregroundColor(.orange)
                         Divider()
                         Text("The Truss is responsible for several unpressurized storage cargo.")
-                        Text("It also connects the Solar Panels with the batteries, to charge them, and the radiators are also installed here.")
-                        Text("You may rearrange the Solar Panels and Radiators as you wish.")
+                        Text("It also connects the Solar Panels with the batteries, to charge them. Radiators are also installed here. They keep the station at a perfect temperature to make your astronauts happier and healthier.")
+                        
+                        Text("You may rearrange the Solar Panels and Radiators as you wish. Tap on the origin, and then on the destination, and watch your Solar Panel, or Radiator move to the desired location.")
                     }
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 6)
@@ -154,6 +207,6 @@ struct TutorialView: View {
 
 struct TutorialView_Previews: PreviewProvider {
     static var previews: some View {
-        TutorialView(tutType: .LabView)
+        TutorialView(tutType: .HabView)
     }
 }

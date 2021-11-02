@@ -80,8 +80,8 @@ struct HabModuleView: View {
                                 .foregroundColor(.gray)
                                 .font(.largeTitle)
                                 .padding()
-                            Text("No one lives here. Call for Dropoff, and hire people.")
-                                .foregroundColor(.gray)
+                            Text("No one lives in this Hab. Close this view, then tap on the Earth to hire Astronauts.")
+                                .foregroundColor(.orange)
                                 .font(.subheadline)
                             Spacer()
                         }
@@ -103,17 +103,27 @@ struct HabModuleView: View {
                             // No Selection
                             HStack {
                                 Spacer()
-                                VStack {
-                                    Image(systemName: "camera.metering.none")
-                                        .font(.largeTitle)
-                                        .padding()
-                                    Text("No One selected")
-                                    Text("Hab module shelters people")
+                                ZStack {
+                                    Image("HabInside")
+                                        .resizable()
+                                        .aspectRatio(contentMode: ContentMode.fit)
+                                    
+                                    VStack {
+                                        Image(systemName: "camera.metering.none")
+                                            .font(.largeTitle)
+                                            .padding()
+                                        Text("No One selected")
+                                        Text("Select someone to view details.")
+                                    }
+                                    .padding()
+                                    .background(Color.black.opacity(0.5))
+                                    .cornerRadius(12)
+                                    .foregroundColor(.white)
+                                    
+                                    Spacer()
                                 }
-                                .foregroundColor(.gray)
-                                Spacer()
                             }
-                            .padding()
+                            //.padding()
                         }
                     }
                 case .selected(_):
