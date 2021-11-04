@@ -433,16 +433,16 @@ class LSSController: ObservableObject {
                     case .WaterFilter:
                         
                         // 4. WaterFilter
-                        let sewerUsage = 10
+                        let sewerUsage = 12
                         if let sewer = station.truss.extraBoxes.filter({ $0.type == .wasteLiquid }).sorted(by: { $0.current > $1.current }).first, sewer.current >= sewerUsage {
                             
-                            let multiplier = 0.5 + 0.1 * Double(peripheral.level) // 50% + 10% each level
+                            let multiplier = 0.75 + 0.1 * Double(peripheral.level) // 50% + 10% each level
                             let waterGain = Int(multiplier * Double(sewerUsage))
                             
                             if let waterTank = station.truss.tanks.filter({ $0.type == .h2o}).sorted(by: { $0.current < $1.current}).first {
                                 waterTank.current = min((waterTank.current + waterGain), waterTank.capacity)
                                 sewer.current -= sewerUsage
-                                periUseMessages.append("\(waterGain)L of water has been added to tank, thats now \(waterTank.current)L.")
+                                periUseMessages.append("\(waterGain)L of water has been added to tank, which now has \(waterTank.current)L.")
                                 return
                             } else {
                                 periUseMessages.append("No water tank (H2O) was found. Had to throw the water away.")
@@ -456,11 +456,12 @@ class LSSController: ObservableObject {
                     case .BioSolidifier:
                         
                         // 5. BioSolidifier     -wasteSolid, + Fertilizer
-                        let sewerUsage = 10
+                        let sewerUsage = 12
                         if let sewer = station.truss.extraBoxes.filter({ $0.type == .wasteSolid }).sorted(by: { $0.current > $1.current }).first, sewer.current >= sewerUsage {
                             
                             if Bool.random() == true {
-                                let multiplier = 0.6 + 0.1 * Double(peripheral.level) // 60% + 10% each level
+                                // Make Fertilizer
+                                let multiplier = 0.75 + 0.1 * Double(peripheral.level) // 60% + 10% each level
                                 let fertilizerGain = Int(multiplier * Double(sewerUsage))
                                 
                                 if let fertBox = station.truss.extraBoxes.filter({ $0.type == .Fertilizer }).sorted(by: { $0.current < $1.current }).first {
@@ -470,11 +471,12 @@ class LSSController: ObservableObject {
                                     periUseMessages.append("Could not find a Fertilizer storage box to store the fertilizer produced. Throwing it away.")
                                 }
                             } else {
+                                // Make Methane
                                 let multiplier = 0.6 + 0.1 * Double(peripheral.level) // 60% + 10% each level
                                 let methaneGain = Int(multiplier * Double(sewerUsage))
                                 if let methaneTank = station.truss.tanks.filter({ $0.type == .ch4 }).sorted(by: { $0.current < $1.current }).first {
                                     methaneTank.current = min(TankType.ch4.capacity, methaneTank.current + methaneGain)
-                                    periUseMessages.append("Methande Tank gained \(methaneGain)L.")
+                                    periUseMessages.append("Methande Tank gained \(methaneGain)L. Now has \(methaneTank.current)L.")
                                 }
                             }
                             

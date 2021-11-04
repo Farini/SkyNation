@@ -238,7 +238,7 @@ class PeripheralObject:Codable, Identifiable, Equatable {
             case .Condensator: return [TankType.h2o.rawValue: 3, "vapor": -3]
             case .Electrolizer: return [TankType.h2o.rawValue: -2, "oxygen":2, TankType.h2.rawValue:4]
             case .Methanizer: return ["CarbDiox":-4, TankType.h2.rawValue:-4, TankType.ch4.rawValue:4, TankType.o2.rawValue:4]
-            case .WaterFilter: return [Ingredient.wasteLiquid.rawValue: -2, TankType.h2o.rawValue:2]
+            case .WaterFilter: return [Ingredient.wasteLiquid.rawValue: -5, TankType.h2o.rawValue:5]
             case .BioSolidifier:
                 var random:[String:Int] = Bool.random() == true ? ([Ingredient.Fertilizer.rawValue:2]):[TankType.ch4.rawValue:4]
                 random[Ingredient.wasteSolid.rawValue] = -2
@@ -297,9 +297,6 @@ class PeripheralObject:Codable, Identifiable, Equatable {
             dirty.current -= amt
             drinkable.current = min(cleanAmount + amt, drinkable.capacity)
         }
-        
-        
-        
     }
     
     static func == (lhs: PeripheralObject, rhs: PeripheralObject) -> Bool {

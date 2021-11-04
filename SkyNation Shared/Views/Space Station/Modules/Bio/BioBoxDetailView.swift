@@ -94,6 +94,13 @@ struct BioBoxDetailView:View {
                         }
                         .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
                         .disabled(controller.growDisabledState(box: bioBox))
+                        
+                        Button("Evolve") {
+                            controller.evolveBio(box:bioBox)
+                        }
+                        .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                        .disabled(controller.evolveDisabledState(box:bioBox))
+                        
                     case .evolve:
                         Button("Grow") {
                             print("Grow population")

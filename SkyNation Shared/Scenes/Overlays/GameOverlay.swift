@@ -308,8 +308,11 @@ class GameOverlay:NSObject, SKSceneDelegate {
         let runner = SKAction.fadeAlpha(to: 0, duration: 0.75)
         let sequel = SKAction.sequence([waiter, runner])
         label.run(sequel) {
-            //            print("Finished generating news")
-            backNode.removeFromParent()
+//            print("Finished generating news")
+            DispatchQueue.main.async {
+                backNode.removeFromParent()
+            }
+//            backNode.removeFromParent()
         }
     }
     
