@@ -114,6 +114,7 @@ class SKNPlayer:Codable, Identifiable {
     
     // MARK: - Tokens
     
+    /// .Entry tokens that haven't been used.
     func countTokens() -> [GameToken] {
         return wallet.tokens.filter({ $0.origin != .Entry && $0.usedDate == nil })
     }
@@ -302,7 +303,7 @@ struct PlayerCreate: Codable {
 }
 
 /// Used when Updating a Player
-struct PlayerUpdate: Codable {
+struct PlayerUpdate: Codable, Equatable {
     
     /// ID of `DBPlayer`
     var id:UUID

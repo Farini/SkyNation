@@ -21,6 +21,15 @@ enum GameSettingsTab: String, CaseIterable {
             case .EditingPlayer: return "Player"
         }
     }
+    
+    var imageName:String {
+        switch self {
+            case .Loading: return "opticaldisc"
+            case .EditingPlayer: return "person"
+            case .Server: return "shield"
+            case .Settings: return "gearshape"
+        }
+    }
 }
 
 /// A state to display about the status of the `Player` in relation to `Guild`
@@ -209,6 +218,26 @@ class GameSettingsController:ObservableObject {
         self.loadedList = items
     }
     
+    /// TABS - Called when Player selects a different tab.
+    func didSelectTab(newTab:GameSettingsTab) {
+        print("Did select tab !!!")
+        switch newTab {
+            case .Server:
+                print("Selected Server")
+                self.viewState = .Server
+                self.enterServerTab()
+            case .EditingPlayer:
+                print("Selected `Player` \(self.viewState)")
+                self.viewState = .EditingPlayer
+            case .Settings:
+                print("Selected `Settings` \(self.viewState)")
+                self.viewState = .Settings
+            case .Loading:
+                print("Back to Loading \(self.viewState)")
+                self.viewState = .Loading
+        }
+    }
+    
     // MARK: - Player Editing
     
     /// Saving Player
@@ -233,22 +262,7 @@ class GameSettingsController:ObservableObject {
         self.viewState = .EditingPlayer
     }
     
-    /// Called when Player selects a different tab.
-    func didSelectTab(newTab:GameSettingsTab) {
-        print("Did select tab !!!")
-        switch newTab {
-            case .Server:
-                print("Selected Server")
-                self.viewState = .Server
-                self.enterServerTab()
-            case .EditingPlayer:
-                print("Selected `Player` \(self.viewState)")
-            case .Settings:
-                print("Selected `Settings` \(self.viewState)")
-            case .Loading:
-                print("Back to Loading \(self.viewState)")
-        }
-    }
+    // MARK: - Guild Tab + Online
     
     func updateServerWith(player:SKNPlayer) {
         
@@ -266,8 +280,6 @@ class GameSettingsController:ObservableObject {
             }
         }
     }
-    
-    // MARK: - Guild Tab + Online
     
     /// Entering Server Tab - Fetch Player's Guild, (or list), and Player status
     func enterServerTab() {

@@ -30,6 +30,7 @@ struct SelectModuleTypeView: View {
         
         VStack {
             
+            // Title
             HStack {
                 
                 VStack(alignment: .leading) {
@@ -93,6 +94,24 @@ struct SelectModuleTypeView: View {
                         Text("Active Modules: \(controller.countOfModules)")
                     }
                     .foregroundColor(controller.canBuild ? GameColors.airBlue:Color.red)
+                    
+                    Spacer()
+                    
+                    if controller.reqAirFromTanks > controller.availableAirInTanks {
+                        VStack {
+                            Text("⚠️ Need more air tanks!")
+                                .foregroundColor(.red)
+                                .fixedSize(horizontal: false, vertical: true)
+                            Text("Order air tanks to build a module. There isn't enough air at the moment.")
+                                .foregroundColor(.gray)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .frame(width:220)
+                        .padding(6)
+                        .background(Color.black.opacity(0.5))
+                        .cornerRadius(8)
+                        .padding(.trailing)
+                    }
                 }
                 
                 // Problems
@@ -218,6 +237,8 @@ struct SelectModuleTypeView: View {
                     }
                 }
         }
+        .padding(.vertical, 6)
+        
     }
 }
 

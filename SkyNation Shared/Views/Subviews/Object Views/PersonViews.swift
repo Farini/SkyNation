@@ -108,7 +108,8 @@ struct PersonSmallView:View {
                 HStack {
                     Text(person.name)
                         .font(.headline)
-                    Text(" (\(person.age))")
+                    Text("\(person.age)").font(GameFont.mono.makeFont())
+                        .foregroundColor(.gray)
                 }
                 
                 ProgressView(value: Float(person.intelligence), total:100.0) {
@@ -119,23 +120,17 @@ struct PersonSmallView:View {
                                 .aspectRatio(contentMode:.fit)
                                 .frame(width:22, height:22)
                         }
-                        //                        ForEach(0..<person.skills.count) { idx in
-                        //                            GameImages.imageForSkill(skill: person.skills[idx].skill)
-                        //                                .resizable()
-                        //                                .aspectRatio(contentMode:.fit)
-                        //                                .frame(width:22, height:22)
-                        //                            // Text("x\(person.skills[idx].level) ")
-                        //                        }
+                        
                     }
                 }
                 .foregroundColor(.blue)
                 .accentColor(.orange)
                 
             }
-            .padding([.trailing])
+            .padding([.trailing], 8)
         }
-        .frame(minWidth: 80, maxWidth: 180, minHeight: 56, maxHeight: 72, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-        .padding(4)
+        .frame(minWidth: 80, maxWidth: 190, minHeight: 56, maxHeight: 72, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        .padding([.top, .leading, .bottom], 4)
         .background(Color.black.opacity(0.5))
         .overlay(
             shape
@@ -262,8 +257,6 @@ struct PersonDetail:View {
                                     controller.save()
                                     controller.didSelect(person: person)
                                 }
-                                
-                                
                             }
                         }
                         .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
@@ -638,17 +631,11 @@ struct PersonOrderView:View {
                     HStack {
                         Text(person.name)
                             .font(.headline)
-                        Text(" (\(person.age))")
+                        
                     }
                     
                     ProgressView(value: Float(person.intelligence), total:100.0) {
                         HStack {
-                            //                            person.skills.forEach { skset in
-                            //                                GameImages.imageForSkill(skill: skset.skill)
-                            //                                    .resizable()
-                            //                                    .aspectRatio(contentMode:.fit)
-                            //                                    .frame(width:22, height:22)
-                            //                            }
                             let map = person.skills.compactMap({ $0.skill })
                             ForEach(map, id:\.self) { skill in
                                 GameImages.imageForSkill(skill: skill)
@@ -656,13 +643,9 @@ struct PersonOrderView:View {
                                     .aspectRatio(contentMode:.fit)
                                     .frame(width:22, height:22)
                             }
-                            //                            ForEach(0..<person.skills) { idx in
-                            //                                GameImages.imageForSkill(skill: person.skills[idx].skill)
-                            //                                    .resizable()
-                            //                                    .aspectRatio(contentMode:.fit)
-                            //                                    .frame(width:22, height:22)
-                            //                                // Text("x\(person.skills[idx].level) ")
-                            //                            }
+                            Spacer()
+                            Text("\(person.age)").font(GameFont.mono.makeFont())
+                                .foregroundColor(.gray)
                         }
                     }
                     .foregroundColor(.blue)

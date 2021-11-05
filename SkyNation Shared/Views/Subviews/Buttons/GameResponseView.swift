@@ -72,7 +72,7 @@ struct GameResponseView: View {
                 }
                 .background(Color.black.opacity(0.5))
                 .transition(AnyTransition.move(edge: .top))
-                .animation(.spring(response: 0.7, dampingFraction: 0.45))
+                .animation(.spring(response: 0.5, dampingFraction: 0.75))
                 
             } else {
                 EmptyView()
@@ -103,8 +103,5 @@ struct GameResponseView_Previews:PreviewProvider {
             Divider()
             GameResponseView(gameResponse: GameResponse(error: OPContribError.badSupplyData))
         }
-        
     }
-    
-    
 }

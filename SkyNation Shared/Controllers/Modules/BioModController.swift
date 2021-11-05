@@ -470,15 +470,21 @@ class BioModController: ObservableObject, BioController {
     /// Creates a new box
     func createNewBox(dna:DNAOption, size:Int) {
         print("Creating New Box. DNA: \(dna)")
+        guard let bModule = self.station.bioModules.first(where: { $0.id == self.module.id }) else {
+            print("Error: Could not find BioModule")
+            return
+        }
+        
         let box = BioBox(chosen: dna, size: size)
-        module.boxes.append(box)
+        bModule.boxes.append(box)
+        self.module = bModule
         
         // Update The Available Slots
         // Get the BioModule's limit
         let limitation = BioModule.foodLimit
         // subtract all other boxes
         var currentPopulations:Int = 0
-        for box in module.boxes {
+        for box in bModule.boxes {
             currentPopulations += box.population.count
         }
         let availableLimit = limitation - currentPopulations
@@ -487,9 +493,8 @@ class BioModController: ObservableObject, BioController {
         // Population is created at init of BioBox
         
         // Update Selection
-        selection = .notSelected
-        
-        // Alternatively, we can set the selection to the newly created box
+        selection = .selected(box: box)
+        self.saveStation()
     }
  
     // MARK: - Saving

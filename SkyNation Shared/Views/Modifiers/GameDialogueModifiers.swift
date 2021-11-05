@@ -43,23 +43,23 @@ struct GameTypography: ViewModifier {
     }
     
     func makeFont() -> Font {
-        #if os(macOS)
-        switch gFont {
-            case .title: return .title
-            case .section: return .title2
-            case .writing: return .body
-            case .little: return .footnote
-        }
-        #else
-        switch gFont {
-            case .title: return .title2
-            case .section: return .title3
-            case .writing: return .body
-            case .little: return .footnote
-        }
-        #endif
+        return gFont.makeFont()
+//        #if os(macOS)
+//        switch gFont {
+//            case .title: return (Font.custom("Ailerons", size: 24))
+//            case .section: return (Font.custom("Roboto Slab", size: 16))
+//            case .writing: return .body
+//            case .little: return .footnote
+//        }
+//        #else
+//        switch gFont {
+//            case .title: return (Font.custom("Ailerons", size: 22))
+//            case .section: return (Font.custom("Roboto Slab", size: 15))
+//            case .writing: return .body
+//            case .little: return .footnote
+//        }
+//        #endif
     }
-    
 }
 
 struct Badged: ViewModifier {
@@ -74,5 +74,14 @@ struct Badged: ViewModifier {
                 .background(Color.red)
                 .clipShape(Circle())
         }
+    }
+}
+
+/// The Game's Degault Background Color
+struct GColored: ViewModifier {
+    
+    func body(content: Content) -> some View {
+        return content
+            .background(GameColors.darkGray)
     }
 }

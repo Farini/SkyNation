@@ -256,6 +256,11 @@ struct EarthRequestView: View {
                                     ForEach(Ingredient.allCases.filter{$0.orderable}, id:\.self) { ingredient in
                                         
                                         IngredientOrderView(ingredient: ingredient)
+                                            .overlay(
+                                                shape
+                                                    .inset(by: 0.5)
+                                                    .stroke((controller.currentOrder?.ingredients.compactMap({ $0.type }) ?? []).contains(ingredient) ? Color.blue.opacity(0.9):Color.clear, lineWidth: 1)
+                                            )
                                             .onTapGesture {
                                                 controller.addToCart(ingredient: ingredient)
                                             }
@@ -268,6 +273,11 @@ struct EarthRequestView: View {
                                     ForEach(TankType.allCases, id:\.self) { tankType in
                                         
                                         TankOrderView(tank: tankType)
+                                            .overlay(
+                                                shape
+                                                    .inset(by: 0.5)
+                                                    .stroke((controller.currentOrder?.tanks.compactMap({ $0.type }) ?? []).contains(tankType) ? Color.blue.opacity(0.9):Color.clear, lineWidth: 1)
+                                            )
                                             .onTapGesture {
                                                 controller.addToCart(tankType: tankType)
                                             }
@@ -563,7 +573,7 @@ struct EarthRequestView: View {
             .padding(.vertical)
         }
         .frame(height: 550)
-        
+        .background(GameColors.darkGray)
     }
     
     func confirmOrder() -> Bool {
@@ -575,6 +585,7 @@ struct EarthRequestView: View {
 struct EarthRequestView_Previews: PreviewProvider {
     static var previews: some View {
         EarthRequestView()
+            .preferredColorScheme(.dark)
             .frame(maxWidth:.infinity)
     }
 }

@@ -15,7 +15,7 @@ struct TypographyView: View {
                 Text("Ailerons")
                     .font(Font.custom("Ailerons", size: 24))
                     .padding(.horizontal)
-                    .padding(.top)
+                    .padding(.top, 8)
                     .foregroundColor(Color("LightBlue"))
                 Text("Title: Ailerons, 24")
                 Spacer()
@@ -179,8 +179,8 @@ struct GameColorsView: View {
                 Text("Game Colors")
                     .font(Font.custom("Ailerons", size: 24))
                     .padding(.horizontal)
-                    .padding(.top)
-                    .foregroundColor(Color("LightBlue"))
+                    .padding(.top, 6)
+                    .foregroundColor(GameColors.airBlue) // Color("LightBlue")
                 Spacer()
             }
             Divider()
@@ -269,7 +269,7 @@ struct GameColorsView: View {
             .padding(.horizontal)
             
             
-            
+            // Containers + Selection
             HStack {
                 Rectangle()
                     .foregroundColor(Color.clear)

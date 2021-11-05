@@ -78,6 +78,5 @@ struct GameLoadingTab: View {
                 Spacer(minLength: 8)
             }
         }
-        
     }
 }

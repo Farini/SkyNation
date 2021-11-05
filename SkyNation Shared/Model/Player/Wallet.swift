@@ -108,6 +108,10 @@ class Wallet:Codable {
         var gen:[Person] = []
         for i in 1...amt {
             let newPerson = Person(random: true)
+            if Bool.random() == true && Bool.random() == true {
+                let learnable:Skills = [.Material, .Datacomm, .Electric, .Mechanic].randomElement()!
+                newPerson.learnNewSkill(type: learnable)
+            }
             print("Generating #\(i), \(newPerson.name)")
             gen.append(newPerson)
         }
@@ -142,7 +146,7 @@ class Wallet:Codable {
         let lastGen:Date = self.freebiesLast
         
         // Get the date its supposed to generate freebie
-        let deadline:Date = lastGen.addingTimeInterval(TimeInterval.oneDay)
+        let deadline:Date = lastGen.addingTimeInterval(TimeInterval.oneDay / 3.0)
 
         let delta = deadline.timeIntervalSinceNow
         

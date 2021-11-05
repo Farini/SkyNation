@@ -113,30 +113,35 @@ enum GameFont {
     /// Default title (.title2 on iOS)
     case title
     
-    /// mac title2 ios title3
+    /// Roboto Slab, 16 (15 on iOS)
     case section
     
     /// body
-    case writing
+    case body
     
     /// footnote
     case little
+    
+    /// Monospaced - Roboto Mono, 12 (14 on macOS)
+    case mono
     
     /// Returns the SwiftUI's Font
     func makeFont() -> Font {
         #if os(macOS)
         switch self {
-            case .title: return .title
-            case .section: return .title2
-            case .writing: return .body
+            case .title: return Font.custom("Ailerons", size: 22)
+            case .section: return Font.custom("Roboto Slab", size: 16)
+            case .body: return .body
             case .little: return .footnote
+            case .mono: return Font.custom("Roboto Mono", size: 14)
         }
         #else
         switch self {
-            case .title: return .title2
-            case .section: return .title3
-            case .writing: return .body
+            case .title: return Font.custom("Ailerons", size: 20)
+            case .section: return Font.custom("Roboto Slab", size: 15)
+            case .body: return .body
             case .little: return .footnote
+            case .mono: return Font.custom("Roboto Mono", size: 12)
         }
         #endif
     }

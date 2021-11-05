@@ -28,11 +28,9 @@ struct PlayerEditorView: View {
             VStack(alignment:.leading) {
                 
                 // Header
-               
-                    
-                
                 Text("Player")
-                    .font(.title)
+//                    .font(.title)
+                    .modifier(GameTypography(.title))
                     .padding(.vertical)
                 
                 Divider()
@@ -57,7 +55,7 @@ struct PlayerEditorView: View {
                         Divider()
                         
                         HStack {
-                            Button("Update Player") {
+                            Button("Edit Player") {
                                 self.editorStep = .TypingName
                             }
                             .buttonStyle(GameButtonStyle())
@@ -103,7 +101,8 @@ struct PlayerEditorView: View {
                             .buttonStyle(GameButtonStyle())
                         }
                         .padding(.vertical, 6)
-                        
+                        .transition(AnyTransition.move(edge: .leading))
+                        .animation(.spring(response: 0.5, dampingFraction: 0.75))
                         
                         
                     case .ChoosingAvatar:
@@ -145,8 +144,14 @@ struct PlayerEditorView: View {
                                 controller.updateServerWith(player: controller.player)
                             }
                             .buttonStyle(GameButtonStyle())
+                            .onChange(of: controller.updatedPlayer) { newUpdatedPlayer in
+                                self.editorStep = .Confirming
+                            }
                         }
                         .padding(.vertical, 6)
+                        .transition(AnyTransition.move(edge: .leading))
+                        .animation(.spring(response: 0.5, dampingFraction: 0.75))
+                        
                         
                     case .Confirming:
                         
@@ -174,10 +179,15 @@ struct PlayerEditorView: View {
                             Button("Start Over") {
                                 self.editorStep = .TypingName
                             }
+                            .buttonStyle(GameButtonStyle())
+                            
                             Button("View Player") {
                                 self.editorStep = .Displaying
                             }
+                            .buttonStyle(GameButtonStyle())
                         }
+                        .transition(AnyTransition.move(edge: .leading))
+                        .animation(.spring(response: 0.5, dampingFraction: 0.75))
                 }
             }
             .padding(.horizontal)

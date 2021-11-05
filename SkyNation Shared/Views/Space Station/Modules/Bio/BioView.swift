@@ -34,9 +34,9 @@ struct BioView: View {
         self.controller = BioModController(module: bioMod)
         // After init
         // *** This is for debugging only ***
-        if let bioBox = bioMod.boxes.first {
-            controller.didSelect(box: bioBox)
-        }
+//        if let bioBox = bioMod.boxes.first {
+//            controller.didSelect(box: bioBox)
+//        }
         
     }
     

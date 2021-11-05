@@ -31,72 +31,121 @@ struct GameSettingsTabView: View {
         ScrollView {
             VStack(alignment:.leading) {
                 
-                Text("Graphics").font(.title)
+                Text("📺 Graphics")
+                    .modifier(GameTypography(.title))
+                    .padding(.top)
+                
                 Toggle("Show Lights", isOn:$showLights)
+                    .onChange(of: showLights) { _ in self.saveSettings() }
+                
+                // Enhanced Shadows
+                // Enhanced Emitters
+                // Complex Lighting (scenes with more lighting details)
                 
                 Divider()
                 
-                HStack(alignment:.top) {
+                HStack(alignment:.top, spacing:12) {
                     VStack(alignment: .leading) {
-                        Text("Gameplay").font(.title)
-                        Picker(selection: $startingScene, label: Text("Main Scene")) {
-                            ForEach(GameSceneType.allCases, id:\.self) { sceneCase in
-                                Text(sceneCase.rawValue)
-                                    .onTapGesture {
-                                        print("Set another scene")
-                                    }
-                            }
-                        }
-                        .frame(maxWidth: 200)
+                        Text("🎮 Gameplay")//.font(.title)
+                            .modifier(GameTypography(.title))
+                        
+//                        Picker(selection: $startingScene, label: Text("Main Scene")) {
+//                            ForEach(GameSceneType.allCases, id:\.self) { sceneCase in
+//                                Text(sceneCase.rawValue)
+//                                    .onTapGesture {
+//                                        print("Set another scene")
+//                                    }
+//                            }
+//                        }
+//                        .frame(maxWidth: 200)
+                        
                         Toggle("Clear empty tanks", isOn:$clearTanks)
+                        // Explanation
+                        Text("* When a tank is empty, it is thrown away whether it is reusable or not.")
+                            .foregroundColor(.gray)
+                            .font(.footnote)
+                            .frame(maxWidth:250)
+                            .onChange(of: clearTanks) { _ in self.saveSettings() }
+                        
                         Toggle("Auto merge Tanks", isOn:$mergeTanks)
+                        Text("* Marries tanks of the same type that are half-full, so you can get empty tanks faster.")
+                            .foregroundColor(.gray)
+                            .font(.footnote)
+                            .frame(maxWidth:250)
+                            .onChange(of: mergeTanks) { _ in self.saveSettings() }
+                        
+                        
                         Toggle("Show Tutorial", isOn:$showTutorial)
+                            .onChange(of: showTutorial) { _ in self.saveSettings() }
                     }
                     Spacer()
                     VStack(alignment: .leading) {
-                        Text("Sounds").font(.title)
-                        Toggle("Music", isOn:$musicOn)
+                        Text("🔉 Sounds")//.font(.title)
+                            .modifier(GameTypography(.title))
+                        
+                        Toggle("Sound Track (music)", isOn:$musicOn)
+                            .onChange(of: musicOn) { _ in self.saveSettings() }
+                        Text("* Plays music during the game.")
+                            .foregroundColor(.gray)
+                            .font(.footnote)
+                            .frame(maxWidth:250)
+                        
                         Toggle("Sound FX", isOn:$soundFXOn)
-                        Toggle("Dialogue", isOn:$soundFXOn)
+                            .onChange(of: soundFXOn) { _ in self.saveSettings() }
+                        Text("* Plays Game Sound FX.")
+                            .foregroundColor(.gray)
+                            .font(.footnote)
+                            .frame(maxWidth:250)
                     }
                     Spacer()
                 }
                 
                 Divider()
                 Group {
-                    Text("Data").font(.title)
+                    Text("💾 Data")//.font(.title)
+                        .modifier(GameTypography(.title))
+                    
                     Toggle("Auto Start", isOn:$autoStart)
-//                    Toggle("Use iCloud", isOn:$useCloudData)
                 }
                 
                 Divider()
                 
-                Button("Save") {
-                    print("Save Settings")
-                    
-                    // Data
-//                    settings.useCloud = self.useCloudData
-                    settings.autoStartScene = self.autoStart
-                    
-                    // Graphics
-                    settings.showLights = self.showLights
-                    
-                    // Logic preferences
-                    settings.clearEmptyTanks = self.clearTanks
-                    settings.showTutorial = self.showTutorial
-                    
-                    // Sounds
-                    settings.musicOn = self.musicOn
-                    settings.soundFXOn = self.soundFXOn
-                    settings.dialogueOn = self.soundFXOn
-                    
-                    settings.save()
+                if isSaving {
+                    Image(systemName: "square.and.arrow.down")
+                        .font(.title)
+                        .transition(AnyTransition.opacity)
+                        .animation(.spring(response: 0.5, dampingFraction: 0.75))
                 }
-                .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
             }
             .padding(.horizontal)
         }
+    }
+    
+    @State private var isSaving:Bool = false
+    
+    func saveSettings() {
+        self.isSaving = true
         
+        // Data
+        settings.autoStartScene = self.autoStart
+        
+        // Graphics
+        settings.showLights = self.showLights
+        
+        // Logic preferences
+        settings.clearEmptyTanks = self.clearTanks
+        settings.showTutorial = self.showTutorial
+        
+        // Sounds
+        settings.musicOn = self.musicOn
+        settings.soundFXOn = self.soundFXOn
+        settings.dialogueOn = self.soundFXOn
+        
+        settings.save()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
+            self.isSaving = false
+        }
     }
     
 }
@@ -129,6 +178,7 @@ struct SettingsPlayerPreview: PreviewProvider {
                     Label("Player", systemImage:"gamecontroller")
                 }
         }
+        .preferredColorScheme(.dark)
     }
 }
 

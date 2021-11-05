@@ -64,16 +64,11 @@ struct GameSettingsView: View {
                 header
             }
             
-            // Segment Control (Tab)
-            Picker("", selection: $controller.viewState) {
-                let options = inGame ? [GameSettingsTab.EditingPlayer, GameSettingsTab.Server, GameSettingsTab.Settings]:GameSettingsTab.allCases
-                ForEach(options, id:\.self) { tabName in
-                    Text(tabName.tabString)
-                }
-            }.pickerStyle(SegmentedPickerStyle())
-            .onChange(of: controller.viewState, perform: { value in
-                controller.didSelectTab(newTab: value)
-            })
+            let options = inGame ? [GameSettingsTab.EditingPlayer, GameSettingsTab.Server, GameSettingsTab.Settings]:GameSettingsTab.allCases
+            
+            GameSettingsViewTabs(selection: $controller.viewState, options: options) { selectedTab in
+                controller.didSelectTab(newTab: selectedTab)
+            }
             
             Divider()
             
@@ -98,21 +93,29 @@ struct GameSettingsView: View {
             // Buttons Bar
             HStack {
                 if (!inGame) {
-                    Button("Start Game") {
+                    Button(action: {
                         controller.startGame()
+                    }) {
+                        HStack {
+                            Image(systemName: "play")
+                            Text("Start")
+                        }
                     }
-                    .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
+                    .buttonStyle(GameButtonStyle())
                     .disabled(controller.startGameDisabled())
+                    
                 } else {
                     Button("Save") {
                         controller.savePlayer()
                     }
-                    .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
+                    .buttonStyle(GameButtonStyle())
                     .disabled(!controller.hasChanges)
                 }
             }
         }
         .padding()
+        .frame(minWidth:600, idealWidth:800, maxWidth:.infinity, minHeight:450, maxHeight:.infinity)
+        .background(GameColors.darkGray)
         .onAppear() {
             viewDidAppear()
         }
@@ -174,7 +177,21 @@ struct GameSettingsView: View {
 
 struct GameSettingsView_Previews: PreviewProvider {
     static var previews: some View {
+#if os(macOS)
         GameSettingsView()
+            .preferredColorScheme(.dark)
+#elseif os(iOS)
+        if #available(iOS 15.0, *) {
+            GameSettingsView()
+                .preferredColorScheme(.dark)
+                .previewInterfaceOrientation(.landscapeLeft)
+        } else {
+            // Fallback on earlier versions
+            GameSettingsView()
+                .preferredColorScheme(.dark)
+        }
+#endif
+        
     }
 }
 
@@ -203,10 +220,6 @@ struct GameTabs_Previews: PreviewProvider {
             // Player
             PlayerEditorView(controller: controller)
             
-//            PlayerEditView(controller:GameSettingsController())
-//                .tabItem {
-//                    Text("Player")
-//                }
         }
     }
 }
