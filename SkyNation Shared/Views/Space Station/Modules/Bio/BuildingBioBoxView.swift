@@ -28,22 +28,18 @@ struct BuildingBioBoxView: View {
         VStack {
             
             // Title
-            Text("New Bio Box")
-                .font(.title)
-                .padding()
-            Text("The longer the name, the harder it is to evolve to its DNA")
-                .foregroundColor(.gray)
+            Group {
+                Label("New Bio Box", systemImage:"archivebox")
+                //                .font(.title)
+                    .font(GameFont.title.makeFont())
+                    .padding()
+                Text("The longer the name, the harder it is to evolve to its DNA")
+                    .foregroundColor(.gray)
+                
+                Divider()
+            }
             
-            Divider()
-            
-            // ---
-            // Add a picker to select mode (if population hasn't grown yet, we cant move forward)
-            // Allow the user to "trim" population
-            
-            // Add an outter HStack
-            // To the right, insert Timer (So the population can grow, and user may "crop")
-            // ---
-            
+            // Selection + Details
             HStack(alignment:.top) {
                 
                 // Pickers
@@ -51,18 +47,18 @@ struct BuildingBioBoxView: View {
                     
                     // Picker Perfect DNA
                     HStack {
-                        Text("Box DNA").padding(.leading, 6)
+                        Text("🧬 DNA")// .padding(.leading, 6)
                         Picker(selection: $chosenDNA, label: Text("")){
                             ForEach(self.dnaOptions, id:\.self) { dna in
                                 Text("\(dna.emoji) | \(dna.rawValue)")
                             }
                         }
-                        .frame(maxWidth: 200, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                        .frame(maxWidth: 220)
                     }
                     
                     // Box Size
                     HStack {
-                        Text("Box Size").padding(.leading, 8)
+                        Text("Box Size").padding(.leading, 4)
                         
                         VStack(alignment: .leading) {
                             ZStack {
@@ -81,38 +77,48 @@ struct BuildingBioBoxView: View {
                                     .foregroundColor(.gray)
                             }
                         }
+                        .frame(maxWidth: 220)
                     }
                     
                     HStack {
+                        
+                        // Tokens
+                        Label {
+                            Text("Tokens")
+                        } icon: {
+#if os(macOS)
+                            Image(nsImage: GameImages.tokenImage)
+                                .resizable()
+                                .frame(width: 22, height: 22, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                                .aspectRatio(contentMode: .fill)
+#else
+                            Image(uiImage: GameImages.tokenImage)
+                                .resizable()
+                                .frame(width:22, height:22, alignment:.center)
+                                .aspectRatio(contentMode: .fill)
+#endif
+                        }
+                        .font(GameFont.mono.makeFont())
+                        
                         Spacer()
-                        Image(systemName: "timer")
-                        Text("Time: 1h")
-                        Spacer()
+                        
+                        Label("Time: 1h", systemImage: "timer")
+                            .font(GameFont.mono.makeFont())
                     }
                     .frame(minWidth: 200, maxWidth:280, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                     .font(.headline)
                     
-                    HStack {
-                        Spacer()
-                        #if os(macOS)
-                        Image(nsImage: GameImages.tokenImage)
-                            .resizable()
-                            .frame(width: 22, height: 22, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                            .aspectRatio(contentMode: .fill)
-                        #else
-                        Image(uiImage: GameImages.tokenImage)
-                            .resizable()
-                            .frame(width:22, height:22, alignment:.center)
-                            .aspectRatio(contentMode: .fill)
-                        #endif
-                        Text("Tokens 2")
-                        Spacer()
-                    }
-                    .frame(minWidth: 200, maxWidth:280, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                    .font(.headline)
+                    Text("* You may create a BioBox by using tokens, or the ingredients shown on the right. Either a biologist is needed for the task.")
+                        .fixedSize(horizontal: false, vertical: true)
+                        .foregroundColor(.gray)
+                        .padding(.top, 6)
+                        .frame(maxWidth: 265)
                 }
                 .padding([.trailing], 10)
+                
+                Spacer()
                 Divider()
+                Spacer()
                 
                 // Costs
                 VStack(alignment:.leading) {
@@ -156,7 +162,7 @@ struct BuildingBioBoxView: View {
                 .background(Color.black)
                 .cornerRadius(12)
                 .padding(.horizontal)
-                Spacer()
+                // Spacer()
             }
             .padding()
             
@@ -166,9 +172,6 @@ struct BuildingBioBoxView: View {
             ActivityStaffView(staff: controller.availablePeople, requiredSkills: [.Biologic:1]) { selectedPeople in
                 controller.selectedPeople = selectedPeople
             }
-//            ActivityStaffView(staff: controller.availablePeople, selected: [], requiredSkills: [.Biologic:1], chooseWithReturn: { (selectedPeople) in
-//                controller.selectedPeople = selectedPeople
-//            }, title: "Select Biologist", issue: "", message: "")
             
             // Warnings
             Group {
@@ -181,12 +184,12 @@ struct BuildingBioBoxView: View {
                 }
             }
             
+            Divider()
             
             // Buttons (Confirm, Cancel)
             HStack {
                 
                 Button(action: {
-                    print("Back Button Pressed")
                     controller.cancelBoxSelection()
                 }) {
                     HStack {
@@ -196,8 +199,27 @@ struct BuildingBioBoxView: View {
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
                 .help("Go back")
-                .frame(width:100)
                 
+                Divider()
+                
+                Button(action: {
+                    let problems = controller.validadeTokenPayment(box: Int(sliderValue), tokens: Int(sliderValue/10.0) + 1)
+                    self.problems = problems
+                    if problems.isEmpty {
+                        self.confirmBioBox()
+                    }
+                }) {
+                    HStack {
+                        Image(nsImage:GameImages.tokenImage)
+                            .resizable()
+                            .aspectRatio(1, contentMode: .fit)
+                            .frame(width:16, height:16)
+                        Text("Token")
+                    }
+                }
+                .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                .help("Use Token")
+                    
                 Button("Create") {
                     let possibleProblems = controller.validateResources(box: Int(sliderValue))
                     self.problems = possibleProblems
@@ -209,20 +231,12 @@ struct BuildingBioBoxView: View {
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                 .disabled(Int(sliderValue) < minimumLimit)
                 
-                Button("Use \(Int(sliderValue/10.0) + 1) Tokens ") {
-                    print("Pay with tokens ??? ^^")
-                    let problems = controller.validadeTokenPayment(box: Int(sliderValue), tokens: Int(sliderValue/10.0) + 1)
-                    self.problems = problems
-                    if problems.isEmpty {
-                        self.confirmBioBox()
-                    }
-                }
-                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                .disabled(Int(sliderValue) < minimumLimit)
-                
             }
-            .padding()
+            .padding(.bottom)
+            .padding(.top, 6)
+            
         }
+        .frame(minWidth:630, maxWidth:900, minHeight:630, maxHeight:.infinity)
     }
     
     func confirmBioBox() {

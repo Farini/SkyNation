@@ -42,15 +42,12 @@ struct BioBoxDetailView:View {
                     
                     Group {
                         
-//                        Text("Generations \(controller.geneticLoops)")
                         Text("Score: \(controller.geneticScore) %")
                         Text("Population: \(controller.selectedPopulation.count) / \(bioBox.populationLimit)")
                         
                         ProgressView("Growth", value: Float(bioBox.population.count), total: Float(bioBox.populationLimit))
                             .frame(width:180)
                         
-//                        Text("Date")
-//                        Text(GameFormatters.dateFormatter.string(from:bioBox.dateAccount))
                         
                         Text("🏆 Best fit")
                             .font(.title)

@@ -27,7 +27,6 @@ struct HabModuleView: View {
             // Header
             HStack (alignment: .center, spacing: nil) {
                 
-                
                 HabModuleHeaderView(module: controller.habModule)
                 
                 Spacer()
@@ -67,8 +66,9 @@ struct HabModuleView: View {
                 .buttonStyle(SmallCircleButtonStyle(backColor: .red))
                 .padding(.trailing, 6)
             }
+            .padding([.horizontal, .top], 6)
             
-            Divider()
+            Divider().offset(x: 0, y: -5)
             
             switch controller.viewState {
                 case .noSelection:
@@ -97,7 +97,8 @@ struct HabModuleView: View {
                                     })
                                 
                             }
-                            .frame(minWidth: 100, maxWidth: 220, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
+                            .frame(minWidth: 100, maxWidth: 215, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
+                            .background(GameColors.darkGray)
                             
                             Divider()
                             // No Selection
@@ -147,6 +148,7 @@ struct HabModuleView: View {
             
         }
         .frame(minWidth: 650, idealWidth: 750, maxWidth: 1000, minHeight: 350, idealHeight: 500, maxHeight: 900, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        .background(GameColors.darkGray)
     }
     
     func workoutAction() {
@@ -162,6 +164,16 @@ struct HabModuleView: View {
 struct HabModuleHeaderView: View {
     
     var module:HabModule
+    private var title = "Hab Module"
+    
+    init(module:HabModule) {
+        self.module = module
+        if module.name == "untitled" || module.name == "Untitled" {
+            self.title = "Hab Module"
+        } else {
+            self.title = module.name
+        }
+    }
     
     var body: some View {
         VStack(alignment:.leading) {
@@ -169,21 +181,22 @@ struct HabModuleHeaderView: View {
                 HStack {
                     Text("🏠").font(.largeTitle)
                         .padding(.leading, 6)
-                    Text("Hab Module")
-                        .font(.largeTitle)
+                    Text(title)
+//                        .font(.largeTitle)
+                        .font(GameFont.title.makeFont())
                         .padding([.leading], 6)
-                        .foregroundColor(.green)
+//                        .foregroundColor(.green)
                 }
                 
-                HStack(alignment: .lastTextBaseline) {
-                    Text("ID: \(module.id)")
-                        .foregroundColor(.gray)
-                        .font(.caption)
-                        .padding(.leading, 6)
-                    Text("\(module.name)")
-                        .foregroundColor(.green)
-                        .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
-                }
+//                HStack(alignment: .lastTextBaseline) {
+//                    Text("ID: \(module.id)")
+//                        .foregroundColor(.gray)
+//                        .font(.caption)
+//                        .padding(.leading, 6)
+//                    Text("\(module.name)")
+//                        .foregroundColor(.green)
+//                        .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+//                }
             }
         }
     }

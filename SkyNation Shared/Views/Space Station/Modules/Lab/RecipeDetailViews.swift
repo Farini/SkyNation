@@ -36,16 +36,28 @@ struct RecipeDetailView:View {
         VStack {
                 
             Group {
-                Text("Recipe \(recipe.rawValue)")
+                
+                Text("Recipe")
+                    .font(GameFont.title.makeFont())
+                    .padding()
+                
+                Text("\(recipe.rawValue)")
                     .foregroundColor(.orange)
-                    .font(.largeTitle)
+                    .font(.title)
                 
                 Text("\(recipe.elaborate)")
                     .foregroundColor(.gray)
-                    .font(.caption)
-                Text("⏱ \(TimeInterval(recipe.getDuration()).stringFromTimeInterval())")
-                    .font(.title)
-                    .padding()
+                    .frame(width:400, height: 50)
+                    .fixedSize(horizontal: true, vertical: false)
+                    .multilineTextAlignment(.leading)
+                    
+                VStack {
+                    Text("⏱ \(TimeInterval(recipe.getDuration()).stringFromTimeInterval())")
+                        .font(.title)
+                    Text("* Time to complete this research.").foregroundColor(.gray)
+                }
+                .padding()
+                
             }
             
             Divider()
@@ -133,6 +145,7 @@ struct RecipeDetailView:View {
                 
             }
         }
+        .frame(minHeight:750, maxHeight:.infinity)
     }
 }
 

@@ -36,11 +36,20 @@ struct LabActivityView:View {
             Divider()
             
             Group {
-                Text("Started: \(GameFormatters.dateFormatter.string(from: activity.dateStarted))")
-                Text("Total: \(Int(viewModel.totalTime)) seconds")
-                Text("⏱ Remaining: \(Int(viewModel.timeRemaining)) seconds")
-                Text("Ends: \(GameFormatters.dateFormatter.string(from:activity.dateEnds))")
+                VStack {
+                    Text("Start: \(GameFormatters.dateFormatter.string(from: activity.dateStarted))")
+                        .font(GameFont.monospacedBodyFont)
+                        .foregroundColor(.gray)
+                    Text("Total: \(Int(viewModel.totalTime)) seconds")
+                }
+                VStack {
+                    Text("⏱ Remaining: \(Int(viewModel.timeRemaining)) seconds")
+                    Text("End: \(GameFormatters.dateFormatter.string(from:activity.dateEnds))")
+                        .font(GameFont.monospacedBodyFont)
+                        .foregroundColor(.gray)
+                }
             }
+            .padding(6)
             
             GameActivityView(activity: activity)
             

@@ -45,19 +45,24 @@ struct BioView: View {
             HStack() {
                 
                 VStack(alignment:.leading) {
-                    Text("🧬 Biology Module")
-                        .font(.largeTitle)
-                    
-                    HStack(alignment: .lastTextBaseline) {
-                        Text("ID: \(controller.module.id)")
-                            .foregroundColor(.gray)
-                            .font(.caption)
-                            .padding(.leading, 6)
-                        Text("Name: \(controller.module.name)")
-                            .foregroundColor(.blue)
-                            .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
-                        Spacer()
+                    if controller.module.name != "untitled" && controller.module.name != "Untitled" && !controller.module.name.isEmpty{
+                        Text("🧬 \(controller.module.name)")
+                            .font(GameFont.title.makeFont())
+                    } else {
+                        Text("🧬 Bio Module")
+                            .font(GameFont.title.makeFont())
                     }
+                    
+//                    HStack(alignment: .lastTextBaseline) {
+//                        Text("ID: \(controller.module.id)")
+//                            .foregroundColor(.gray)
+//                            .font(.caption)
+//                            .padding(.leading, 6)
+//                        Text("Name: \(controller.module.name)")
+//                            .foregroundColor(.blue)
+//                            .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+//                        Spacer()
+//                    }
                 }
                 
                 Spacer()
@@ -120,21 +125,23 @@ struct BioView: View {
                 HStack {
                     
                     // TABLE Bio Boxes
-                    List() {
-                        Section(header: Text("Bio Boxes")) {
-                            ForEach(module.boxes) { box in
-                                Text(box.perfectDNA.isEmpty ? "Sprout":box.perfectDNA)
-                                    .font(.callout)
-                                    .foregroundColor(controller.selectedBioBox?.id ?? UUID() == box.id ? Color.orange:Color.white)
-                                    .onTapGesture {
-                                        controller.didSelect(box: box)
-                                        if let dna = DNAOption(rawValue: box.perfectDNA) {
-                                            self.dnaChoice = dna
-                                        }else{
-                                            self.dnaChoice = .banana
-                                        }
+                    List {
+                        ForEach(module.boxes) { box in
+                            
+                            BioBoxRow(box: box)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 4, style: .continuous)
+                                        .inset(by: 0.5)
+                                        .stroke((box == controller.selectedBioBox) == true ? Color.blue.opacity(0.9):Color.clear, lineWidth: 1)
+                                )
+                                .onTapGesture {
+                                    self.controller.didSelect(box: box)
+                                    if let dna = DNAOption(rawValue: box.perfectDNA) {
+                                        self.dnaChoice = dna
+                                    } else {
+                                        self.dnaChoice = .banana
                                     }
-                            }
+                                }
                         }
                     }
                     .frame(minWidth: 80, maxWidth: 150, alignment: .leading)
@@ -142,39 +149,54 @@ struct BioView: View {
                     switch controller.selection {
                         case .notSelected:
                             // Default Detail
-                            ScrollView([.vertical, .horizontal], showsIndicators: true) {
+                            ScrollView([.vertical], showsIndicators: true) {
                                 
                                 VStack {
                                     
                                     Group {
                                         
-                                        Text("Bio Module").font(.headline).padding()
-                                        Text("Boxes \(module.boxes.count)").foregroundColor(.gray)
-                                        Text("Slots Available:\(controller.availableSlots) of \(BioModule.foodLimit)")
-                                        Text("Energy: \(controller.availableEnergy)")
-                                            .foregroundColor(controller.availableEnergy > 100 ? .green:.red)
+                                        // No Selection Detail
+                                        Text("Bio Boxes \(module.boxes.count)").foregroundColor(.gray)
                                         
-                                        Text("⚠️  Do not leave food out of the boxes.")
-                                            .foregroundColor(.orange)
-                                            .padding()
+                                        ProgressView("Slots Available: \(controller.availableSlots) of \(BioModule.foodLimit)", value: Double(controller.availableSlots)/Double(BioModule.foodLimit))
+                                                .frame(width:200)
+                                                .padding(.top, 8)
                                         
-                                        Text("Select a box to continue, or build a new one")
+                                        Divider()
+                                        
+                                        Label("\(controller.availableEnergy) kW", systemImage:"bolt.circle").font(.title2)
+                                            .foregroundColor(controller.availableEnergy > 100 ? .white:.red)
+                                        
+                                        VStack(alignment:.leading, spacing:6) {
+                                            
+                                            Text("Select a box to continue, or create a new one.")
+                                            
+                                            Text("Food is really important for your astronauts to survive. A BioBox can feed the astronauts, and helps the station to produce food, so you don't have to keep ordering.")
+                                                .fixedSize(horizontal: false, vertical: true)
+                                            
+                                                .foregroundColor(.gray)
+                                        }
+                                        .padding(.vertical, 8)
+                                        .padding(.horizontal)
+                                        
+                                        Spacer(minLength: 50)
+                                        
+                                        Divider()
+                                        
+                                        HStack {
+                                            Button(action: {
+                                                controller.startAddingBox()
+                                            }, label: {
+                                                HStack {
+                                                    Image(systemName:"staroflife")
+                                                    Text("Create")
+                                                }
+                                            })
+                                                .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                                                .disabled(model.isRunning)
+                                        }
+                                        .padding()
                                     }
-                                    
-                                    HStack {
-                                        Button(action: {
-                                            controller.startAddingBox()
-                                        }, label: {
-                                            HStack {
-                                                Image(systemName:"staroflife")
-                                                Text("Create")
-                                            }
-                                        })
-                                        .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
-                                        .disabled(model.isRunning)
-                                        
-                                    }
-                                    .padding()
                                 }
                             }
                             
@@ -183,17 +205,16 @@ struct BioView: View {
                             // Selected BioBox
                             HStack {
                                 
+                                // Box Details
                                 ScrollView([.vertical], showsIndicators: true) {
-                                    
-                                    // BioBox
                                     BioBoxDetailView(controller:controller, bioBox:bioBox)
-                                    
                                 }
                                 
                                 // Population Display
                                 List(controller.selectedPopulation, id:\.self) { dna in
                                     Text(dna)
                                         .foregroundColor(.gray)
+                                        .font(GameFont.mono.makeFont())
                                         .onTapGesture {
                                             controller.trimItem(string: dna)
                                         }
@@ -207,12 +228,48 @@ struct BioView: View {
                                 BuildingBioBoxView(controller:controller)
                             }
                     }
-                    
                 }
             }
-            
         }
         .frame(minWidth: 600, idealWidth: 700, maxWidth: 800, minHeight:400, maxHeight:700, alignment: .top)
+    }
+}
+
+struct BioBoxRow: View {
+    
+    var box:BioBox
+    
+    var body: some View {
+        HStack {
+            
+            if box.population.first ?? "" == box.perfectDNA {
+                Text(box.convertToDNA().emoji).font(.title)
+            } else {
+                Text("🌱")
+            }
+            
+            VStack(alignment:.leading) {
+                Group {
+                    // DNA
+                    Text(box.perfectDNA.isEmpty ? "Sprout":box.perfectDNA)
+                        .font(.callout)
+                        .foregroundColor(box.mode.color)
+                    
+                    HStack {
+                        // Count
+                        Text("\(box.population.count)/\(box.populationLimit)")
+                            .font(GameFont.monoTiny.makeFont())
+                            .foregroundColor(.gray)
+                        
+                        Spacer()
+                        
+                        // Mode
+                        Text("\(box.mode.short)")
+                            .font(GameFont.monoTiny.makeFont())
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -229,12 +286,24 @@ struct BioView_Previews: PreviewProvider {
     }
 }
 
-struct BioBuilder_Previews: PreviewProvider {
-    static var previews: some View {
-        if let bioModule = LocalDatabase.shared.station.bioModules.first {
-            return BuildingBioBoxView(controller: BioModController(module: bioModule)) //BioView(bioMod: bioModule)
-        }else{
-            return BuildingBioBoxView(controller: BioModController(module: BioModule.example))
+
+
+extension BioBoxMode {
+    var color:Color {
+        switch self {
+            case .grow: return Color.orange
+            case .evolve: return Color.blue
+            case .multiply: return Color.white
+            case .serving: return GameColors.airBlue
+        }
+    }
+    
+    var short:String {
+        switch self {
+            case .grow: return "⏫"
+            case .evolve: return "🔡"
+            case .multiply: return "🔀"
+            case .serving: return "🍦" // GameColors.airBlue
         }
     }
 }

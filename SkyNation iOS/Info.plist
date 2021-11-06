@@ -22,9 +22,9 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Constants/Game Assets/Fonts/RobotoMono-VariableFont_wght.ttf</string>
-		<string>Constants/Game Assets/Fonts/RobotoSlab-VariableFont_wght.ttf</string>
-		<string>Constants/Game Assets/Fonts/Ailerons-Typeface.otf</string>
+		<string>Ailerons-Typeface.otf</string>
+		<string>RobotoMono-VariableFont_wght.ttf</string>
+		<string>RobotoSlab-VariableFont_wght.ttf</string>
 	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>

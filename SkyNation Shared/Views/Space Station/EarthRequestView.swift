@@ -31,16 +31,28 @@ struct EarthRequestView: View {
         Group {
             HStack() {
                 VStack(alignment:.leading) {
-                    Text("🌎 Earth").font(.largeTitle)
-                    Text("Request ingredients from Earth")
+                    Text("🌎 Earth")
+                        .font(GameFont.title.makeFont())
+                        //.font(.largeTitle)
+                    Text("Order items needed.")
                         .foregroundColor(.gray)
                 }
                 
                 Spacer()
                 
                 // Money
-                Text("S$: \(GameFormatters.numberFormatter.string(from: NSNumber(value: controller.money))!)")
-                    .foregroundColor(.green)
+                HStack {
+                    Image("Currency")
+                        .renderingMode(.template)
+                        .resizable()
+                        .fixedSize()
+                        .frame(width: 16, height: 16, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                        .aspectRatio(contentMode: .fill)
+                    
+                    Text(" \(GameFormatters.numberFormatter.string(from: NSNumber(value: controller.money))!)")
+                        .foregroundColor(.green)
+                }
+                
                 
                 // Tutorial
                 Button(action: {
@@ -68,6 +80,8 @@ struct EarthRequestView: View {
             Divider()
                 .offset(x: 0, y: -5)
         }
+        
+        // Add Picker, Summary, and costs here
     }
     
     var body: some View {
@@ -84,20 +98,32 @@ struct EarthRequestView: View {
                     
                     // Summary + Aisle
                     Group {
-                        HStack {
+                        HStack(spacing:12) {
+                            
+                            // New Picker
+                            EarthRequestTabView(selection: $controller.orderAisle) { selectedAisle in
+                                self.controller.orderAisle = selectedAisle
+                            }
+                            Spacer()
                             
                             // Summary
-                            VStack(alignment:.leading) {
-                                Text("Summary")
-                                    .font(.title2)
-                                    .foregroundColor(.gray)
+                            VStack {
+                                HStack {
+                                    Text("Net Weight")
+                                        .font(GameFont.section.makeFont())
+                                        .foregroundColor(.gray)
+                                    Image(systemName: "scalemass")
+                                        .font(.title3)
+                                        .foregroundColor(.gray)
+                                }
+                                
                                 
                                 // Quantity / Weight
                                 HStack {
-                                    Image(systemName: "scalemass")
+                                    
                                     Text("\(controller.orderQuantity)00 / \(GameLogic.earthOrderLimit)00 Kg")
                                 }
-                                .font(.title2)
+                                .font(.title3)
                             }
                             
                             Spacer()
@@ -172,12 +198,12 @@ struct EarthRequestView: View {
                         }
                         
                         // Aisle Picker
-                        Picker(selection: $controller.orderAisle, label: Text("")) {
-                            ForEach(EarthViewPicker.allCases, id:\.self) { earth in
-                                Text(earth.rawValue)
-                            }
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
+//                        Picker(selection: $controller.orderAisle, label: Text("")) {
+//                            ForEach(EarthViewPicker.allCases, id:\.self) { earth in
+//                                Text(earth.rawValue)
+//                            }
+//                        }
+//                        .pickerStyle(SegmentedPickerStyle())
                         
                         Divider()
                     }
@@ -582,10 +608,85 @@ struct EarthRequestView: View {
     
 }
 
+struct EarthRequestTabView:View {
+    
+    @Binding var selection:EarthViewPicker
+    var callBack:((EarthViewPicker) -> ()) = { _ in }
+    
+    // MARK: - Gradients
+    private static let myGradient = Gradient(colors: [Color.red.opacity(0.6), Color.blue.opacity(0.7)])
+    private static let unseGradient = Gradient(colors: [Color.red.opacity(0.3), Color.blue.opacity(0.3)])
+    private let selLinear = LinearGradient(gradient: myGradient, startPoint: .topLeading, endPoint: .bottomTrailing)
+    private let unselinear = LinearGradient(gradient: unseGradient, startPoint: .topLeading, endPoint: .bottomTrailing)
+    
+    var body: some View {
+        HStack {
+            ForEach(EarthViewPicker.allCases, id:\.self) { aisle in
+                switch aisle {
+                    case .Ingredients:
+                        Image(systemName: "archivebox")
+                            .resizable()
+                            .frame(width:26, height:24)
+                            .padding(8)
+                            .background(selection == .Ingredients ? selLinear:unselinear)
+                            .cornerRadius(4)
+                            .clipped()
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 4, style: .continuous)
+                                    .inset(by: 0.5)
+                                    .stroke(selection == .Ingredients ? Color.blue:Color.clear, lineWidth: 2)
+                            )
+                            .help("Ingredients")
+                            .onTapGesture {
+                                callBack(.Ingredients)
+                            }
+                    case .Tanks:
+                        GameImages.imageForTank()
+                            .resizable()
+                            .frame(width:34, height:32)
+                            .padding(4)
+                            .background(selection == .Tanks ? selLinear:unselinear)
+                            .cornerRadius(4)
+                            .clipped()
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 4, style: .continuous)
+                                    .inset(by: 0.5)
+                                    .stroke(selection == .Tanks ? Color.blue:Color.clear, lineWidth: 2)
+                            )
+                            .help("Tanks")
+                            .onTapGesture {
+                                callBack(.Tanks)
+                            }
+                    case .People:
+                        Image(systemName: "person")
+                            .resizable()
+                            .frame(width:26, height:24)
+                            .padding(8)
+                            .background(selection == .People ? selLinear:unselinear)
+                            .cornerRadius(4)
+                            .clipped()
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 4, style: .continuous)
+                                    .inset(by: 0.5)
+                                    .stroke(selection == .People ? Color.blue:Color.clear, lineWidth: 2)
+                            )
+                            .help("Tanks")
+                            .onTapGesture {
+                                callBack(.People)
+                            }
+                        
+                }
+            }
+        }
+    }
+}
+
 struct EarthRequestView_Previews: PreviewProvider {
     static var previews: some View {
         EarthRequestView()
             .preferredColorScheme(.dark)
             .frame(maxWidth:.infinity)
+        
+        EarthRequestTabView(selection: .constant(.Ingredients)) { _ in }
     }
 }

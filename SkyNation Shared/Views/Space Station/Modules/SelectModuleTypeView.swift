@@ -10,11 +10,6 @@ import SwiftUI
 
 struct SelectModuleTypeView: View {
     
-//#if os(macOS)
-//    @Environment(\.presentationMode) var presentationMode // To Dismiss
-//#elseif os(iOS)
-//#endif
-    
     @ObservedObject var controller:ModulesViewModel
     let modOptions:[ModuleType] = [.Hab, .Lab, .Bio]
     
@@ -34,9 +29,10 @@ struct SelectModuleTypeView: View {
             HStack {
                 
                 VStack(alignment: .leading) {
-                    Text("Base Module")
-                        .font(.largeTitle)
-                        .foregroundColor(.orange)
+                    Text("Select Module")
+//                        .font(.largeTitle)
+                        .font(GameFont.title.makeFont())
+                        
                     Text("Choose a Module type to build")
                         .foregroundColor(.gray)
                 }
@@ -62,7 +58,8 @@ struct SelectModuleTypeView: View {
                 }.buttonStyle(SmallCircleButtonStyle(backColor: .pink))
                 
             }
-            .padding([.leading, .trailing, .top], 8)
+            .padding(.horizontal, 8)
+            .padding(.top, 8)
             
             Divider()
                 .offset(x: 0, y: -5)
@@ -85,15 +82,16 @@ struct SelectModuleTypeView: View {
                     
                     VStack(alignment:.leading) {
                         HStack {
-                            Text("Air volume: \(controller.airVolume)")
+                            Text("Air volume: \(controller.airVolume)L")
                             Text("+ \(controller.reqVolume - controller.airVolume)")
                         }
                         
-                        Text("Adding air: \(controller.reqAirFromTanks)")
-                        Text("Available air: \(controller.availableAirInTanks)")
-                        Text("Active Modules: \(controller.countOfModules)")
+                        Text("Needs more: \(controller.reqAirFromTanks)L")
+                        Text("Available: \(controller.availableAirInTanks)L")
+                        Text("Modules: \(controller.countOfModules)")
                     }
                     .foregroundColor(controller.canBuild ? GameColors.airBlue:Color.red)
+                    .font(GameFont.mono.makeFont())
                     
                     Spacer()
                     
@@ -102,7 +100,7 @@ struct SelectModuleTypeView: View {
                             Text("⚠️ Need more air tanks!")
                                 .foregroundColor(.red)
                                 .fixedSize(horizontal: false, vertical: true)
-                            Text("Order air tanks to build a module. There isn't enough air at the moment.")
+                            Text("Order air tanks to build this module. There isn't enough air at the moment.")
                                 .foregroundColor(.gray)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
@@ -237,7 +235,7 @@ struct SelectModuleTypeView: View {
                     }
                 }
         }
-        .padding(.vertical, 6)
+        .padding(.bottom, 10)
         
     }
 }
@@ -245,5 +243,6 @@ struct SelectModuleTypeView: View {
 struct SelectModuleTypeView_Previews: PreviewProvider {
     static var previews: some View {
         SelectModuleTypeView(name: UUID().uuidString)
+            .frame(height:437)
     }
 }

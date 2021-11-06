@@ -16,6 +16,18 @@ struct LaboratoryView: View {
     @State var popoverLab:Bool = false
     @State var errorMessage:String = ""
     
+    /// Whether `recipes` info is displaying
+    @State private var infoRecipes:Bool = false
+    
+    /// Whether `tech` info is displaying
+    @State private var infoTech:Bool = false
+    
+    /// Track  `recipe` selected for indicator
+    @State private var selectedRecipe:Recipe? = nil
+    
+    /// Track `tech`  Selection for indicator
+    @State private var selectedTech:TechItems? = nil
+    
     var labModule:LabModule
     
     init(module:LabModule) {
@@ -26,6 +38,11 @@ struct LaboratoryView: View {
             print("No Activity")
         }
         self.controller = LabViewModel(lab: module) //.labModule = module
+        
+        if LocalDatabase.shared.player.experience < 3 {
+            self.infoRecipes = true
+            self.infoTech = true
+        }
     }
     
     var header: some View {
@@ -33,18 +50,13 @@ struct LaboratoryView: View {
             HStack() {
                 
                 VStack(alignment:.leading) {
-                    Text("🔬 Lab Module")
-                        .font(.largeTitle)
                     
-                    HStack(alignment: .lastTextBaseline) {
-                        Text("ID: \(labModule.id)")
-                            .foregroundColor(.gray)
-                            .font(.caption)
-                            .padding(.leading, 6)
-                        Text("Name: \(labModule.name)")
-                            .foregroundColor(.blue)
-                            .padding(.leading, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
-                        Spacer()
+                    if labModule.name == "untitled" || labModule.name == "Untitled" {
+                        Text("🔬 Lab Module")
+                            .font(GameFont.title.makeFont())
+                    } else {
+                        Text("🔬 \(labModule.name)")
+                            .font(GameFont.title.makeFont())
                     }
                 }
                 
@@ -116,13 +128,25 @@ struct LaboratoryView: View {
                         ForEach(controller.unlockedRecipes, id:\.self) { recipe in
                             HStack(alignment:.bottom) {
                                 
-                                recipe.image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 26, height: 26)
-                                Text(recipe.rawValue)
-                                    //.foregroundColor(.yellow)
+                                Label {
+                                    Text(recipe.rawValue)
+                                        .padding(.leading, 2)
+                                } icon: {
+                                    recipe.image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 26, height: 26)
+                                }
+                                .padding(.leading, 6)
+                                .padding(.vertical, 4)
+                                //.font(GameFont.mono.makeFont())
+                                Spacer()
                             }
+                            .background(Color.black.opacity(0.3))
+                            .overlay(RoundedRectangle(cornerSize: CGSize(width: 4, height: 4))
+                                        .strokeBorder(style: StrokeStyle())
+                                        .foregroundColor(recipe == selectedRecipe ? Color.blue:Color.clear)
+                            )
                             
                             .onTapGesture {
                                 
@@ -130,8 +154,12 @@ struct LaboratoryView: View {
                                     case .activity:
                                         print("Activity going on. Can't choose")
                                         errorMessage = "Wait for activity to be over"
+                                        self.selectedRecipe = nil
+                                        
                                     default:
                                         controller.selection = LabSelectState.recipe(name: recipe)
+                                        self.selectedRecipe = recipe
+                                        self.selectedTech = nil
                                 }
                             }
                         }
@@ -143,19 +171,34 @@ struct LaboratoryView: View {
                         ForEach(0..<TechItems.allCases.count) { idx in
                             
                             VStack(alignment: .leading, spacing: nil) {
-                                Text(TechItems.allCases[idx].shortName)
-                                    .foregroundColor(self.controller.unlockedItems.contains(TechItems.allCases[idx]) ? .orange:.gray)
+                                HStack {
+                                    Text(TechItems.allCases[idx].shortName)
+                                        .foregroundColor(self.controller.unlockedItems.contains(TechItems.allCases[idx]) ? .orange:.gray)
+                                    Spacer()
+                                }
+                                
+                                
                                     
                                 Text(TechItems.allCases[idx].rawValue)
                                     .font(.caption)
                                     .foregroundColor(.gray)
                             }
+                            .padding(.leading, 6)
+                            .padding(.vertical, 4)
+                            .background(Color.black.opacity(0.3))
+                            .overlay(RoundedRectangle(cornerSize: CGSize(width: 4, height: 4))
+                                        .strokeBorder(style: StrokeStyle())
+                                        .foregroundColor(TechItems.allCases[idx] == selectedTech ? Color.blue:Color.clear)
+                            )
+                            
                             .onTapGesture {
                                 switch controller.selection {
                                     case .activity:
                                         print("Activity going on. Can't choose")
                                     default:
                                         controller.selection = LabSelectState.techTree(name: TechItems.allCases[idx])
+                                        self.selectedRecipe = nil
+                                        self.selectedTech = TechItems.allCases[idx]
                                 }
                             }
                             
@@ -168,10 +211,117 @@ struct LaboratoryView: View {
                 case .NoSelection:
                     // Show Tech Tree
                     ScrollView([.vertical, .horizontal], showsIndicators: true) {
-                        VStack {
-                            Spacer()
-                            Text("Tech Tree").font(.largeTitle)
+                        VStack(spacing:6) {
+                            
+                            if infoRecipes == true {
+                                Group {
+                                    HStack(alignment:.bottom) {
+                                        Label("Recipes", systemImage: "info.circle")
+                                            .foregroundColor(.yellow)
+                                            .padding(6)
+                                            .background(Color.black.opacity(0.5))
+                                            .cornerRadius(6)
+                                            .onTapGesture {
+                                                self.infoRecipes.toggle()
+                                            }
+                                        
+                                        Text("transform").foregroundColor(.gray)
+                                        Text("ingredients").foregroundColor(.blue)
+                                        Text("into")
+                                        Text("Peripherals").foregroundColor(.orange)
+                                        
+                                        Spacer()
+                                    }
+                                    
+                                    HStack {
+                                        Text("Peripherals").foregroundColor(.orange)
+                                        Text("recycle the Space Station's resources").foregroundColor(.gray)
+                                        Spacer()
+                                    }
+                                    
+                                    HStack {
+                                        Text("A well planned set of Peripherals can make a Space Station sustainable for a long time.")
+                                        Spacer()
+                                    }
+                                }
+                                .transition(.slide)
+                                
+                                Divider()
+                                
+                            } else {
+                                HStack {
+                                    Label("Recipes", systemImage: "info.circle")
+                                        .foregroundColor(.yellow)
+                                        .padding(6)
+                                        .background(Color.black.opacity(0.5))
+                                        .cornerRadius(6)
+                                        .onTapGesture {
+                                            self.infoRecipes.toggle()
+                                        }
+                                    
+                                    Spacer()
+                                }
+                                .transition(.move(edge: .leading))
+                            }
+                            
+                            if infoTech == true {
+                                Group {
+                                    HStack {
+                                        
+                                        Label("Tech Tree", systemImage: "info.circle")
+                                            .foregroundColor(.blue)
+                                            .padding(6)
+                                            .background(Color.black.opacity(0.5))
+                                            .cornerRadius(6)
+                                            .onTapGesture {
+                                                self.infoTech.toggle()
+                                            }
+                                        
+                                        Spacer()
+                                    }
+                                    HStack {
+                                        Text("Research on tech tree items lead to the expansion of the Space Station").foregroundColor(.gray)
+                                        Spacer()
+                                    }
+                                    
+                                    HStack {
+                                        Text("The items with a").foregroundColor(.gray)
+                                        Text("blue").foregroundColor(.blue)
+                                        Text("blue background indicate that you have comlpeted researching that tech.").foregroundColor(.gray)
+                                        Spacer()
+                                    }
+                                    
+                                    HStack {
+                                        Text("The items with a black background haven't been researched yet.").foregroundColor(.gray)
+                                        Spacer()
+                                    }
+                                    
+                                    HStack {
+                                        Text("One may only research items immediately below another research item.")
+                                        Spacer()
+                                    }
+                                }
+                                .transition(.slide)
+                                
+                            } else {
+                                HStack {
+                                    
+                                    Label("Tech Tree", systemImage: "info.circle")
+                                        .foregroundColor(.blue)
+                                        .padding(6)
+                                        .background(Color.black.opacity(0.5))
+                                        .cornerRadius(6)
+                                        .onTapGesture {
+                                            self.infoTech.toggle()
+                                        }
+                                    
+                                    Spacer()
+                                }
+                                .transition(.slide)
+                            }
+                        
                             Divider()
+                            
                             DiagramContent(controller:controller)
                             Divider()
                         }

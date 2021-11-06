@@ -27,12 +27,13 @@ struct TrussLayoutView: View {
             
             HStack {
                 Text("Truss Arrangement")
-                    .font(.largeTitle)
+//                    .font(.largeTitle)
+                    .font(GameFont.title.makeFont())
                     .padding([.top])
                 Spacer()
+    
                 // Tutorial
                 Button(action: {
-                    print("Question ?")
                     popTutorial.toggle()
                 }, label: {
                     Image(systemName: "questionmark.circle")
@@ -42,6 +43,14 @@ struct TrussLayoutView: View {
                 .popover(isPresented: $popTutorial) {
                     TutorialView(tutType: .Truss)
                 }
+                
+                // Close
+                Button(action: {
+                    NotificationCenter.default.post(name: .closeView, object: self)
+                }) {
+                    Image(systemName: "xmark.circle")
+                        .font(.title2)
+                }.buttonStyle(SmallCircleButtonStyle(backColor: .pink))
             }
             .padding(.horizontal, 6)
             
@@ -97,11 +106,6 @@ struct TrussLayoutView: View {
                             .foregroundColor(.gray)
                     }
                     
-                    Button("Close") {
-                        controller.saveSetup()
-                        GameWindow.closeWindow()
-                    }
-                    .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                 }
                 
                 if let message = controller.selectionMessage {

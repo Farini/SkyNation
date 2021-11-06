@@ -71,9 +71,15 @@ enum TechItems:String, Codable, CaseIterable, Identifiable {
         switch self {
             case .Cuppola: return [.Aluminium:25, .Circuitboard:1, .Polimer:10]
             case .Roboarm: return [.Circuitboard:8, .Iron:5, .Aluminium:15, .Polimer:25]
-        case .node2, .node3, .node4: return Recipe.Node.ingredients()
-        case .module4, .module5, .module6: return Recipe.Module.ingredients()
-        default: return [.Aluminium:15, .Polimer:8, .Copper:4]
+            case .node2, .node3, .node4: return Recipe.Node.ingredients()
+            case .module4, .module5, .module6, .module7, .module8, .module9, .module10: return Recipe.Module.ingredients()
+            case .recipeScrubber: return [.Copper:8, .Lithium:5, .DCMotor:1]
+            case .recipeMethane: return [.Iron:4, .Ceramic:1, .Polimer:9]
+            case .recipeWaterFilter: return [.Aluminium:12, .Copper:5, .Ceramic:3]
+            case .recipeBioSolidifier: return [.Aluminium:12, .Lithium:5, .Ceramic:4]
+            case .Airlock: return [.Ceramic:5, .Aluminium:12, .Iron:2, .DCMotor:2]
+            case .GarageArm: return [.Aluminium:35, .Polimer:22, .Copper:12, .Lithium:4, .Ceramic:4, .DCMotor:4]
+            default: return [.Aluminium:15, .Polimer:8, .Copper:4]
         }
     }
     
@@ -135,19 +141,19 @@ enum TechItems:String, Codable, CaseIterable, Identifiable {
     /// Returns a full description of what this `TechItem` does.
     func elaborate() -> String {
         switch self {
-            case .AU1, .AU2, .AU3, .AU4, .AntennaUp: return "Upgrade the antenna. It brings more money to the station."
-            case .module10, .module9, .module8, .module7, .module6, .module5, .module4: return "Builds another module, and makes progress toward the garage."
-            case .node2, .node3, .node4: return "Builds a node. Nodes connect modules, which makes more progress towards the Garage."
-            case .Cuppola: return "Cuppola may make your inhabitants happier"
-            case .recipeMethane: return "The Methanizer transforms carbon dioxide and water into methane."
-            case .recipeScrubber: return "A scrubber cleans up the carboin dioxide from the air."
-            case .recipeWaterFilter: return "Transforms the liquid waste back into water."
-            case .recipeBioSolidifier: return "Transforms poop into fertilizer."
-            case .Airlock: return "Airlock makes inhabitants happier."
-            case .Roboarm: return "Makes fixing faster and and inhabitants happier."
-            case .garage: return "Allows the Station to make vehicles to transport things to Mars"
-            case .rootItem: return "Builds the first nodes and modukes that belong to the initial state of the station."
-            case .GarageArm: return "Makes the building of vehicles faster."
+            case .AU1, .AU2, .AU3, .AU4, .AntennaUp: return "Upgrade the antenna. Each upgrade allows the station to collect more data. Data collection from the Antenna brings more Sky Coins to the station, which is used to order things from Earth."
+            case .module10, .module9, .module8, .module7, .module6, .module5, .module4: return "Builds another module for the Space Station, and makes progress toward the garage. You may choose any type of module you want, when the research is completed."
+            case .node2, .node3, .node4: return "Builds a node. Nodes connect modules together, and are essential for the development of the Space Station."
+            case .Cuppola: return "The Cuppola is a high tech module of the Space Station, designed to give a little space for your astronauts to vent, or simply enjoy the view. Researching this item will generally make your astronauts happier."
+            case .recipeMethane: return "The Methanizer is a Peripheral that transforms carbon dioxide and water into methane and oxygen. Researching this item will add the Methanizer recipe to your list of recipes."
+            case .recipeScrubber: return "The Scrubber is a Peripheral that cleans up the carbon dioxide (CO2) from the air, and stores the CO2 in a tank, when available. Researching this item will add the Scrubber recipe to your list of recipes."
+            case .recipeWaterFilter: return "Water Filter is a Peripheral that transforms liquid waste back into water. It is an essential tool, for the path towards sustainability. Researching this item will add the Water Filter recipe to your list of recipes."
+            case .recipeBioSolidifier: return "Bio Solidifier is a Peripheral that transforms solid waste 💩 into fertilizer, which feeds the plants. Occasionally, it may transform the same solid waste into Methane. Researching this item will add the 'Bio Solidifier' recipe to your list of recipes."
+            case .Airlock: return "Similar to the Cuppola, the Airlock makes inhabitants happier. It helps them to feel safer, when performing a space walk. The Airlock is built immediately after the research is completed."
+            case .Roboarm: return "Another piece of high tech that contributes for the safety (and therefore happiness) of your astronauts."
+            case .garage: return "The Garage is a special module of the Space Station that allows the Station to make vehicles to transport things and people to Mars. Once the Garage is built, we recommend joining a Guild to colonize Mars."
+            case .rootItem: return "Builds the first nodes and modules that belong to the initial state of the station. This item comes completed before a player even begins. You're welcome 😉"
+            case .GarageArm: return "This special tech helps the Garage to build Space Vehicles faster, which could save time, in case the player needs to send things to Mars urgently."
         }
     }
     

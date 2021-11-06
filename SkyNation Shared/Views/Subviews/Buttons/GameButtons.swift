@@ -230,7 +230,7 @@ struct GameButtonStyle:ButtonStyle {
                             .strokeBorder(configuration.isPressed ? Color.orange:Color.gray)
                     }
                 )
-                .scaleEffect(configuration.isPressed ? 0.95: 1)
+                .scaleEffect(configuration.isPressed ? 0.82: 1)
                 
                 // Disabled State
                 .foregroundColor(isEnabled ? labelColor : Color.gray)

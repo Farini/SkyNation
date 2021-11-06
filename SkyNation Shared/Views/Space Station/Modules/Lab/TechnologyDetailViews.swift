@@ -36,6 +36,11 @@ struct TechnologyDetailView: View {
             
             // Head / Definitions
             Group {
+                
+                Text("Tech Research")
+                    .font(GameFont.title.makeFont())
+                    .padding()
+                
                 Text(tech.shortName)
                     .font(.largeTitle)
                     .foregroundColor(.orange)
@@ -45,14 +50,15 @@ struct TechnologyDetailView: View {
                 
                 // Description text
                 Text(tech.elaborate())
-                    .frame(width:300, height: 50)
-                    .lineLimit(3)
+                    .frame(width:400, height: 50)
+                    .fixedSize(horizontal: true, vertical: false)
                     .multilineTextAlignment(.leading)
                     .foregroundColor(.gray)
                     
                 Text("⏱ \(TimeInterval(tech.getDuration()).stringFromTimeInterval())")
-                    .font(.largeTitle)
-                
+                    .font(.title)
+                    .padding(.top)
+                Text("* Time to complete this research.").foregroundColor(.gray)
             }
             Divider()
             
@@ -117,9 +123,10 @@ struct TechnologyDetailView: View {
                     
                 }
             }
-            Spacer()
+            .padding(.bottom, 8)
+            
         }
-        
+        .frame(minHeight:700)
     }
 }
 

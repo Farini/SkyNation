@@ -105,8 +105,10 @@ class BioModController: ObservableObject, BioController {
     
     /// Selected **BioBox**
     func didSelect(box:BioBox) {
+        
         self.selectedBioBox = box
         self.selection = .selected(box: box)
+        
         guard let dna = DNAOption(rawValue: box.perfectDNA) else {
             return
         }
@@ -130,9 +132,11 @@ class BioModController: ObservableObject, BioController {
     
     /// Sets the state to the default .notSelected
     func cancelBoxSelection() {
+        
         self.selection = .notSelected
         self.selectedBioBox = nil
         self.selectedPopulation = []
+        
         errorMessage = nil
         positiveMessage = nil
     }
@@ -469,7 +473,9 @@ class BioModController: ObservableObject, BioController {
     
     /// Creates a new box
     func createNewBox(dna:DNAOption, size:Int) {
+        
         print("Creating New Box. DNA: \(dna)")
+        
         guard let bModule = self.station.bioModules.first(where: { $0.id == self.module.id }) else {
             print("Error: Could not find BioModule")
             return
@@ -491,7 +497,6 @@ class BioModController: ObservableObject, BioController {
         availableSlots = availableLimit
         
         // Population is created at init of BioBox
-        
         // Update Selection
         selection = .selected(box: box)
         self.saveStation()
@@ -525,7 +530,7 @@ class BioModController: ObservableObject, BioController {
                 // id checked
                 if let name = object["name"] as? String {
                     self.module.name = name
-                    station.labModules.first(where: { $0.id == moduleID })!.name = name
+                    station.bioModules.first(where: { $0.id == moduleID })?.name = name
                 } else
                 if let skin = object["skin"] as? String {
                     // Skin
@@ -534,15 +539,19 @@ class BioModController: ObservableObject, BioController {
                         self.module.skin = modSkin
                         let rawModule = station.lookupRawModule(id: self.module.id)
                         rawModule.skin = modSkin
-                        station.bioModules.first(where: { $0.id == moduleID })!.skin = modSkin
+                        station.bioModules.first(where: { $0.id == moduleID })?.skin = modSkin
                     }
                 } else
                 if let unbuild = object["unbuild"] as? Bool, unbuild == true {
                     
                     // Unbuild Module.
                     print("Danger! Wants to unbuild module")
-                    let idx = station.bioModules.firstIndex(where: { $0.id == moduleID })!
-                    station.bioModules.remove(at: idx)
+                    if let idx = station.bioModules.firstIndex(where: { $0.id == moduleID }) {
+                        station.bioModules.remove(at: idx)
+                    } else {
+                        print("ERROR: No such module.")
+                    }
+                    
                     
                     shouldCloseView = true
                 }

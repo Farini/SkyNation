@@ -27,14 +27,16 @@ struct GarageView: View {
             HStack {
                 
                 VStack(alignment:.leading) {
-                    Text("🚀 Garage Module")
-                        .font(.largeTitle)
+                    Text("🚀 Garage")
+//                        .font(.largeTitle)
+                        .font(GameFont.title.makeFont())
                         .padding([.leading], 6)
-                        .foregroundColor(.orange)
-                    Text("ID: \(UUID().uuidString)")
-                        .foregroundColor(.gray)
-                        .font(.caption)
-                        .padding(.leading, 6)
+//                        .foregroundColor(.orange)
+                    
+//                    Text("ID: \(UUID().uuidString)")
+//                        .foregroundColor(.gray)
+//                        .font(.caption)
+//                        .padding(.leading, 6)
                 }
                 Spacer()
                 
@@ -69,6 +71,7 @@ struct GarageView: View {
             }
             Divider()
                 .offset(x: 0, y: -5)
+                
         }
     }
     
@@ -127,6 +130,7 @@ struct GarageView: View {
             
             // Top - Header
             header
+                .padding(.top, 6)
             
             // Body
             switch controller.garageStatus {
@@ -141,24 +145,45 @@ struct GarageView: View {
                     // Main
                     ScrollView {
                         VStack {
-                            Text("GARAGE")
-                                .padding(.bottom, 8)
-                            Text("Build vehicles to send to Mars")
-                                .foregroundColor(.gray)
-                                .padding()
+                            Group {
+                                Text("Build vehicles, and use them to transport supplies and astronauts to the Mars colony.")
+                                    .foregroundColor(.gray)
+                                    .font(GameFont.mono.makeFont())
+                                    .padding()
+                                
+                                Text("Garage XP: \(controller.garage.xp)")
+                                    .font(.headline)
+                                    .foregroundColor(.blue)
+                            }
                             
-                            Text("Current XP: \(controller.garage.xp)")
-                                .font(.headline)
-                                .foregroundColor(.blue)
-                            
-                            Text("Building: \(controller.garage.buildingVehicles.count)")
-                            Text("Travelling: \(controller.travellingVehicles.count)")
+                            Group {
+                                Text("Vehicles")
+                                    .font(GameFont.section.makeFont())
+                                    .foregroundColor(.orange)
+                                    .padding(.top)
+                                    .padding(.bottom, 4)
+                                
+                                
+                                HStack {
+                                    Text("Building:")
+//                                    ForEach(0..<controller.buildingVehicles.count) {
+//                                        Text("🚀")
+//                                    }
+//                                    Text("🚀 x\(controller.buildingVehicles.count)")
+                                    
+                                }
+                                HStack {
+                                    Text("Travelling:")
+                                    Text("🚀 x\(controller.travellingVehicles.count)")
+                                    
+                                }
+                            }
                             
                             Divider()
                             
                             Text(tokenSpendError).foregroundColor(.red)
                         
-                            // Text("Actions")
+                            // Buttons
                             HStack {
                                 Button("Build Space Vehicle") {
                                     print("Starting a new vehicle")
@@ -226,16 +251,18 @@ struct GarageView: View {
                                 
                             }
                             
+                            Group {
+                                Text("Status: \(sev.status.rawValue)")
+                                    .padding()
+                                    .font(.title)
+                                    .foregroundColor(.orange)
+                                
+                                // Progress
+                                GameActivityView(vehicle: sev)
+                                
+                                Divider()
+                            }
                             
-                            Text("Status: \(sev.status.rawValue)")
-                                .padding()
-                                .font(.title)
-                                .foregroundColor(.orange)
-                            
-                            // Progress
-                            GameActivityView(vehicle: sev)
-                            
-                            Divider()
                             
                             HStack {
                                 
@@ -423,11 +450,29 @@ struct SpaceVehicleRow: View {
         let ttlCount = vehicle.calculateWeight()
         
         HStack {
-            Text(selected ? "●":"○")
             
             VStack(alignment: .leading) {
-                Text("🚀 \(vehicle.name): \(vehicle.engine.rawValue)")
-                    .font(.headline)
+                switch vehicle.status {
+                    case .Creating:
+                        HStack {
+                            Text("🚀 \(vehicle.name)")
+                                .font(GameFont.mono.makeFont())
+                            Spacer()
+                            
+                        }
+                    case .Mars:
+                        // Travelling
+                        HStack {
+                            Text("🚀 \(vehicle.name)")
+                                .font(.headline)
+                            Text("\(vehicle.calculateWeight())")
+                                .foregroundColor(.gray)
+                        }
+                    default:
+                        Text("? Unidentified Vehicle ?!?")
+                        
+                }
+                
                 
                 // Add Weight
                 HStack {
@@ -444,7 +489,18 @@ struct SpaceVehicleRow: View {
                 }
                 .foregroundColor(ttlCount == vehicle.engine.payloadLimit ? .orange:.gray)
             }
+            
+            Spacer()
+            
         }
+        .padding(6)
+        .background(Color.black.opacity(0.3))
+        .cornerRadius(4)
+        .overlay(RoundedRectangle(cornerSize: CGSize(width: 4, height: 4))
+                    .strokeBorder(style: StrokeStyle())
+                    .foregroundColor(selected == true ? Color.blue:Color.clear)
+        )
+        
     }
 }
 
