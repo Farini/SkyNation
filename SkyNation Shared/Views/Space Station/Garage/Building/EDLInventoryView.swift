@@ -271,6 +271,7 @@ struct EDLInventoryView: View {
             .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: 500, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             
         }
+        .background(GameColors.darkGray)
     }
     
     func toggleSelection(ingredient:StorageBox) {

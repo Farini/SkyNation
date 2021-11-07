@@ -534,21 +534,21 @@ class TrussComponent:Codable, Identifiable, Equatable {
             case 0: return Vector3D.zero
             
             // Solar Panels
-            case 11: return Vector3D(x: 0, y: -18, z: 2.42)
-            case 12: return Vector3D(x: 0, y: -14, z: 2.42)
-            case 13: return Vector3D(x: 0, y: -18, z: -2.42)
-            case 14: return Vector3D(x: 0, y: -14, z: -2.42)
+            case 11: return Vector3D(x: -18, y: 1.26, z: 0) // Vector3D(x: 0, y: -18, z: 2.42)
+            case 12: return Vector3D(x: -14, y: 1.26, z: 0) // Vector3D(x: 0, y: -14, z: 2.42)
+            case 13: return Vector3D(x: -18, y: -1.26, z: 0) // case 13: return Vector3D(x: 0, y: -18, z: -2.42)
+            case 14: return Vector3D(x: -14, y: -1.26, z: 0) // case 14: return Vector3D(x: 0, y: -14, z: -2.42)
             
-            case 15: return Vector3D(x: 0, y: 14, z: 2.42)
-            case 16: return Vector3D(x: 0, y: 18, z: 2.42)
-            case 17: return Vector3D(x: 0, y: 14, z: -2.42)
-            case 18: return Vector3D(x: 0, y: 18, z: -2.42)
+            case 15: return Vector3D(x: 14, y: 1.26, z: 0) // Vector3D(x: 0, y: 14, z: 2.42)
+            case 16: return Vector3D(x: 18, y: 1.26, z: 0) // Vector3D(x: 0, y: 18, z: 2.42)
+            case 17: return Vector3D(x: 14, y: -1.26, z: 0) // Vector3D(x: 0, y: 14, z: -2.42)
+            case 18: return Vector3D(x: 18, y: -1.26, z: 0) // Vector3D(x: 0, y: 18, z: -2.42)
             
             // Radiators
-            case 31: return Vector3D(x: 0, y: -18, z: 0) // Vector3D(x: -2.42, y: -18, z: 0)
-            case 32: return Vector3D(x: 0, y: -14, z: 0)
-            case 33: return Vector3D(x: 0, y: 14, z: 0)
-            case 34: return Vector3D(x: 0, y: 18, z: 0)
+            case 31: return Vector3D(x: -18, y: 0, z: -1.26) // Vector3D(x: -2.42, y: -18, z: 0)
+            case 32: return Vector3D(x: -14, y: 0, z: -1.26) // Vector3D(x: 0, y: -14, z: 0)
+            case 33: return Vector3D(x: 14, y: 0, z: -1.26) // Vector3D(x: 0, y: 14, z: 0)
+            case 34: return Vector3D(x: 18, y: 0, z: -1.26) // Vector3D(x: 0, y: 18, z: 0)
             
             default: return nil
         }
@@ -560,21 +560,25 @@ class TrussComponent:Codable, Identifiable, Equatable {
             case 0: return Vector3D.zero
                 
             // Solar Panels
-            case 11: return Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: GameLogic.radiansFrom(90))
-            case 12: return Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: GameLogic.radiansFrom(90))
-            case 13: return Vector3D(x: GameLogic.radiansFrom(-90), y: 0, z: GameLogic.radiansFrom(90))
-            case 14: return Vector3D(x: GameLogic.radiansFrom(-90), y: 0, z: GameLogic.radiansFrom(90))
+            case 11: return Vector3D(x: 0, y: 0, z: 0) // Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: GameLogic.radiansFrom(90))
+            case 12: return Vector3D(x: 0, y: 0, z: 0) // Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: GameLogic.radiansFrom(90))
+            case 13: return Vector3D(x: GameLogic.radiansFrom(180), y: 0, z: 0) // Vector3D(x: GameLogic.radiansFrom(-90), y: 0, z: GameLogic.radiansFrom(90))
+            case 14: return Vector3D(x: GameLogic.radiansFrom(180), y: 0, z: 0) // Vector3D(x: GameLogic.radiansFrom(-90), y: 0, z: GameLogic.radiansFrom(90))
                 
-            case 15: return Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: GameLogic.radiansFrom(90))
-            case 16: return Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: GameLogic.radiansFrom(90))
-            case 17: return Vector3D(x: GameLogic.radiansFrom(-90), y: 0, z: GameLogic.radiansFrom(90))
-            case 18: return Vector3D(x: GameLogic.radiansFrom(-90), y: 0, z: GameLogic.radiansFrom(90))
+            case 15: return Vector3D(x: 0, y: 0, z: 0) // Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: GameLogic.radiansFrom(90))
+            case 16: return Vector3D(x: 0, y: 0, z: 0) // Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: GameLogic.radiansFrom(90))
+            case 17: return Vector3D(x: GameLogic.radiansFrom(180), y: 0, z: 0) // Vector3D(x: GameLogic.radiansFrom(-90), y: 0, z: GameLogic.radiansFrom(90))
+            case 18: return Vector3D(x: GameLogic.radiansFrom(180), y: 0, z: 0) // Vector3D(x: GameLogic.radiansFrom(-90), y: 0, z: GameLogic.radiansFrom(90))
                 
             // Radiators
-            case 31: return Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: GameLogic.radiansFrom(90))
-            case 32: return Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: GameLogic.radiansFrom(90))
-            case 33: return Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: GameLogic.radiansFrom(90))
-            case 34: return Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: GameLogic.radiansFrom(90))
+            case 31: return Vector3D(x: 0, y: 0, z: 0)
+            case 32: return Vector3D(x: 0, y: 0, z: 0)
+            case 33: return Vector3D(x: 0, y: 0, z: 0)
+            case 34: return Vector3D(x: 0, y: 0, z: 0)
+//            case 31: return Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: GameLogic.radiansFrom(90))
+//            case 32: return Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: GameLogic.radiansFrom(90))
+//            case 33: return Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: GameLogic.radiansFrom(90))
+//            case 34: return Vector3D(x: GameLogic.radiansFrom(90), y: 0, z: GameLogic.radiansFrom(90))
                 
             default: return nil
         }

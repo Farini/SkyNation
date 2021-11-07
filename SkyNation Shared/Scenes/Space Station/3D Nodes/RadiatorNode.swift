@@ -42,7 +42,7 @@ class RadiatorNode:SCNNode {
         var opposedFold:Bool = false
         var waiterTime:Double = 5
         var childIndex:Int = 0
-        self.eulerAngles.x = 1.9154
+        self.eulerAngles.x = 0.326 //1.9154
         
         while let current:SCNNode = nextChild?.childNodes.first {
             

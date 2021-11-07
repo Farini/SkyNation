@@ -275,7 +275,7 @@ extension StationBuilder {
         // 4. Accessories (Antenna)
         let antennaPeripheral = station.truss.antenna
         let antenna = Antenna3DNode(peripheral: antennaPeripheral)
-        antenna.position = SCNVector3(21.5, 1.5, 0.0)
+        antenna.position = SCNVector3(20.7, 1.5, 0.0)
         scene.rootNode.addChildNode(antenna)
         
         // 5. Lights
@@ -299,6 +299,7 @@ extension StationBuilder {
 //            print("Truss Component: \(item.posIndex)")
             guard let pos = item.getPosition() else { continue }
             guard let eul = item.getRotation() else { continue }
+            
             switch item.allowedType {
                 case .Solar:
                     if item.itemID != nil {
@@ -311,6 +312,7 @@ extension StationBuilder {
                             trussNode.addChildNode(solarPanel)
                         }
                     }
+                    
                 case .Radiator:
 //                    print("Radiator slot: \(item.posIndex) pos:\(pos), euler:\(eul)")
                     if item.itemID != nil {

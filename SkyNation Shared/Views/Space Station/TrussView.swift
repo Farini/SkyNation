@@ -307,6 +307,7 @@ class TrussLayoutController: ObservableObject {
                     component.itemID = previousID
                     selectedComponent = nil
                     selectionMessage = "Swapped Components"
+                    self.saveSetup()
                     return
                 } else if let currentID = component.itemID, previous.itemID == nil {
                     print("Swapping current")
@@ -314,6 +315,7 @@ class TrussLayoutController: ObservableObject {
                     previous.itemID = currentID
                     selectedComponent = nil
                     selectionMessage = "Swapped Components"
+                    self.saveSetup()
                     return
                 } else {
                     // They are either both busy, or both free. Set the selected to the current

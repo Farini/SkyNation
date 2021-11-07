@@ -9,6 +9,7 @@ import SwiftUI
 
 // How to show FULL text
 // https://stackoverflow.com/questions/58675220/how-to-show-full-text-in-scroll-view-in-swift-ui
+
 enum TutorialType {
     case LSSView
     case OrderView
@@ -20,6 +21,8 @@ enum TutorialType {
     case Garage
     case Truss
     
+    case GameRoom
+    case GuildRoom
 }
 
 struct TutorialView: View {
@@ -198,7 +201,32 @@ struct TutorialView: View {
                 }
                 .frame(maxWidth: 400, maxHeight: 600, alignment: .top)
             
-//            default: Text("Other Tutorial")
+            case .GameRoom:
+                ScrollView {
+                    VStack(alignment:.leading, spacing:6) {
+                        Text("Game Room").font(.title).foregroundColor(.orange)
+                        Divider()
+                        Text("The Game Room is intended to display game achievements and other messages to players.")
+                        Text("Collect Freebies.")
+                        Text("Exchange Tokens for SkyCoins")
+                        Text("See Game Credits")
+                    }
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 6)
+                }
+                .frame(maxWidth: 400, maxHeight: 600, alignment: .top)
+                
+            case .GuildRoom:
+                ScrollView {
+                    VStack(alignment:.leading, spacing:6) {
+                        Text("Guild Room").font(.title).foregroundColor(.orange)
+                        Divider()
+                        Text("In the Guild Room, one can vote for elections, perform actions, see president preferences, search for another player, and communicate with Guildmates.")
+                    }
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 6)
+                }
+                .frame(maxWidth: 400, maxHeight: 600, alignment: .top)
         }
         
         

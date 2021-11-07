@@ -76,7 +76,7 @@ struct SettingsServerTab:View {
                                 case .joined(let guild):
                                     
                                     Text("You have joined this Guild.")
-                                        .transition(AnyTransition.move(edge: .top))
+                                        .transition(.move(edge:.top).combined(with:AnyTransition.opacity))
                                         .animation(.spring(response: 0.5, dampingFraction: 0.75))
                                     
                                     Text("Although it may be sad, you can leave the Guild at anytime.").foregroundColor(.gray)

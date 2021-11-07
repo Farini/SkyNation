@@ -56,7 +56,6 @@ class ModulesViewModel: ObservableObject {
     init() {
         
         let db = LocalDatabase.shared
-//        let station = db.station
         
         self.station = db.station
         

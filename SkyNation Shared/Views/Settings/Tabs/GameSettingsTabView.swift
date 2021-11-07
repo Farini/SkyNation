@@ -113,7 +113,7 @@ struct GameSettingsTabView: View {
                 if isSaving {
                     Image(systemName: "square.and.arrow.down")
                         .font(.title)
-                        .transition(AnyTransition.opacity)
+                        .transition(.slide.combined(with:AnyTransition.opacity))
                         .animation(.spring(response: 0.5, dampingFraction: 0.75))
                 }
             }

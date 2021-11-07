@@ -14,9 +14,7 @@ struct VehicleTrunkView: View {
     
     var vehicle:SpaceVehicle
     
-//    @State var addedPeripherals:[PeripheralObject] = []
-//    @State var addedIngredients:[StorageBox] = []
-    
+    // Trunk Items (Temporary)
     var boxes:[StorageBox] = []
     var tanks:[Tank] = []
     var batteries:[Battery] = []
@@ -65,12 +63,14 @@ struct VehicleTrunkView: View {
             // Batteries
             Section(header: Text("Batteries").font(.title2)) {
                 ForEach(vehicle.batteries) { battery in
+                    let idx = vehicle.batteries.firstIndex(of: battery) ?? 0
                     HStack {
                         Text("Battery")
                         Spacer()
                         Text("\(battery.current)/\(battery.capacity)")
                     }
                     .padding([.leading, .trailing], 6)
+                    .listRowBackground((idx  % 2 == 0) ? rowColor1 : rowColor2)
                 }
                 ForEach(batteries) { battery in
                     HStack {
@@ -80,6 +80,7 @@ struct VehicleTrunkView: View {
                     }
                     .padding([.leading, .trailing], 6)
                     .foregroundColor(.red)
+                    // .listRowBackground((index  % 2 == 0) ? rowColor1 : rowColor2)
                 }
                 if vehicle.batteries.isEmpty && batteries.isEmpty {
                     Text("< No batteries >").foregroundColor(.gray)
@@ -89,11 +90,14 @@ struct VehicleTrunkView: View {
             // + Peripherals
             Section(header: Text("Peripherals").font(.title2)) {
                 ForEach(vehicle.peripherals) { peripheral in
+                    let idx = vehicle.peripherals.firstIndex(of: peripheral) ?? 0
                     Text("\(peripheral.peripheral.rawValue): \(peripheral.isBroken ? "Broken":"") Powered \(peripheral.powerOn.description)")
+                        .listRowBackground((idx % 2 == 0) ? rowColor1 : rowColor2)
                 }
                 ForEach(peripherals) { peripheral in
                     Text("\(peripheral.peripheral.rawValue): \(peripheral.isBroken ? "Broken":"") Powered \(peripheral.powerOn.description)")
                         .foregroundColor(.red)
+                        // .listRowBackground((index  % 2 == 0) ? rowColor1 : rowColor2)
                 }
                 if vehicle.peripherals.isEmpty && peripherals.isEmpty {
                     Text("< No peripherals >").foregroundColor(.gray)
@@ -133,7 +137,9 @@ struct VehicleTrunkView: View {
             // People
             Section(header: Text("People").font(.title3)) {
                 ForEach(vehicle.passengers) { person in
+                    let idx = vehicle.passengers.firstIndex(of: person) ?? 0
                     PersonRow(person: person)
+                        .listRowBackground((idx % 2 == 0) ? GameColors.darkGray : Color(.sRGBLinear, red: 0.1, green: 0.1, blue: 0.1, opacity: 0.3))
                 }
                 ForEach(passengers) { person in
                     PersonRow(person: person).foregroundColor(.red)
@@ -166,5 +172,11 @@ struct VehicleTrunkView: View {
         }
         .frame(width: 250, height: 300, alignment: .top)
         
+    }
+}
+
+struct VehicleTrunkPreview:PreviewProvider {
+    static var previews: some View {
+        VehicleTrunkView(vehicle: SpaceVehicle.biggerExample())
     }
 }

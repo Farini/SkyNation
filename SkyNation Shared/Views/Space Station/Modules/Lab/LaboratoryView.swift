@@ -244,7 +244,7 @@ struct LaboratoryView: View {
                                         Spacer()
                                     }
                                 }
-                                .transition(.slide)
+                                .transition(.slide.combined(with:AnyTransition.opacity))
                                 
                                 Divider()
                                 
@@ -261,7 +261,7 @@ struct LaboratoryView: View {
                                     
                                     Spacer()
                                 }
-                                .transition(.move(edge: .leading))
+                                .transition(.move(edge:.leading).combined(with:AnyTransition.opacity))
                             }
                             
                             if infoTech == true {
@@ -301,7 +301,7 @@ struct LaboratoryView: View {
                                         Spacer()
                                     }
                                 }
-                                .transition(.slide)
+                                .transition(.slide.combined(with:AnyTransition.opacity))
                                 
                             } else {
                                 HStack {
@@ -317,7 +317,7 @@ struct LaboratoryView: View {
                                     
                                     Spacer()
                                 }
-                                .transition(.slide)
+                                .transition(.slide.combined(with:AnyTransition.opacity))
                             }
                         
                             Divider()

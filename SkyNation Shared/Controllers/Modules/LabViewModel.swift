@@ -545,17 +545,19 @@ class LabViewModel: ObservableObject {
         return false
     }
     
+    /// Finishes (Collect Button) a reccipe or tech tree research actrivity.
     func finishActivity(module:LabModule) {
-        print("Finishing Activity")
+        
         module.activity = nil
         self.selection = .NoSelection
+        
         // Save
         do {
             try LocalDatabase.shared.saveStation(station)
         } catch {
             print("‼️ Could not save station.: \(error.localizedDescription)")
         }
-        print("Saved")
+        
     }
     
     // MARK: - Change Module

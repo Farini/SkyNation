@@ -50,7 +50,7 @@ struct PlayerEditorView: View {
                                     // .foregroundColor(.green)
                             }
                         }
-                        .transition(.slide)
+                        .transition(.slide.combined(with:AnyTransition.opacity))
                         
                         Divider()
                         
@@ -75,7 +75,7 @@ struct PlayerEditorView: View {
                                 .frame(width: 150)
                                 .cornerRadius(8)
                                 .padding(.bottom, 6)
-                                .transition(AnyTransition.slide)
+                                .transition(.slide.combined(with:AnyTransition.opacity))
                             
                         Text("\(controller.playerName.count) of max 12 characters")
                                 .foregroundColor(controller.playerName.count == 12 ? .red:.gray)
@@ -101,7 +101,7 @@ struct PlayerEditorView: View {
                             .buttonStyle(GameButtonStyle())
                         }
                         .padding(.vertical, 6)
-                        .transition(AnyTransition.move(edge: .leading))
+                        .transition(.move(edge:.leading).combined(with:AnyTransition.opacity))
                         .animation(.spring(response: 0.5, dampingFraction: 0.75))
                         
                         
@@ -149,7 +149,7 @@ struct PlayerEditorView: View {
                             }
                         }
                         .padding(.vertical, 6)
-                        .transition(AnyTransition.move(edge: .leading))
+                        .transition(.move(edge:.leading).combined(with:AnyTransition.opacity))
                         .animation(.spring(response: 0.5, dampingFraction: 0.75))
                         
                         
@@ -186,7 +186,7 @@ struct PlayerEditorView: View {
                             }
                             .buttonStyle(GameButtonStyle())
                         }
-                        .transition(AnyTransition.move(edge: .leading))
+                        .transition(.move(edge:.leading).combined(with:AnyTransition.opacity))
                         .animation(.spring(response: 0.5, dampingFraction: 0.75))
                 }
             }

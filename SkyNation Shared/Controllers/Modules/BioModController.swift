@@ -499,6 +499,8 @@ class BioModController: ObservableObject, BioController {
         // Population is created at init of BioBox
         // Update Selection
         selection = .selected(box: box)
+        self.selectedBioBox = box
+        
         self.saveStation()
     }
  

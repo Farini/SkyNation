@@ -18,15 +18,18 @@ struct BuildingVehicleView: View {
         
         VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 12) {
             
-            Text("Building Vehicle")
-                .font(.title)
-                .foregroundColor(.orange)
+            Label("Building Vehicle", systemImage: "wrench.and.screwdriver")
+                .font(GameFont.title.makeFont())
             
             switch builderController.buildStage {
                 case .engineType:
                     
-                    Text("Choose Engine Type").font(.title)
-                        .padding()
+                    Text("Choose Engine Type")
+                        .font(GameFont.section.makeFont())
+                        .foregroundColor(.orange)
+                        //.padding()
+                    
+                    Divider()
                     
                     HStack {
                         Spacer()
@@ -34,19 +37,22 @@ struct BuildingVehicleView: View {
                             ForEach(EngineType.allCases, id:\.self) { engine in
                                 VStack(spacing:8) {
                                     Text("Engine \(engine.rawValue)").font(.headline)
-                                        .padding([.top])
-                                    Text("Payload \(engine.payloadLimit)00 Kg")
+                                        .padding([.top], 6)
+                                    Text("Max \(engine.payloadLimit)00 Kg")
                                     Image(systemName: engine.imageSName).font(.title)
                                     Text(engine.about)
+                                        .font(.footnote)
                                         .foregroundColor(.gray)
                                         .lineLimit(6)
                                         .frame(maxWidth:130, maxHeight:.infinity)
                                         .padding(4)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                    
                                     Text("XP > \(engine.requiredXP)")
                                         .foregroundColor(.gray)
                                         .lineLimit(nil)
                                         .frame(maxWidth:130, maxHeight:20)
-                                        .padding(4)
+                                        // .padding(4)
                                     Text("⏱ \(engine.time.stringFromTimeInterval())")
                                     Button("Build") {
                                         print("Making some")
@@ -56,6 +62,7 @@ struct BuildingVehicleView: View {
                                     .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                                     .padding([.bottom])
                                 }
+                                .padding(.vertical, 8)
                                 .background(Color.black)
                                 .cornerRadius(12)
                                 .frame(height: 250, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
@@ -63,12 +70,6 @@ struct BuildingVehicleView: View {
                         }
                         Spacer()
                     }
-                
-//                case .solarPanels:
-//                    VehicleSolarChoice(controller: builderController, engine: builderController.selectedEngine!)
-//
-//                case .marsBot:
-//                    VehicleBotTech(controller: builderController, engine: builderController.selectedEngine!)
                     
                 case .pickEngineers(let engine):
                     
@@ -78,11 +79,6 @@ struct BuildingVehicleView: View {
                         builderController.workersArray = selectedPeople
                         builderController.updateStaffList()
                     }
-//                        ActivityStaffView(staff: builderController.availablePeople, selected: [], requiredSkills: engine.skills, chooseWithReturn: { (selectedPeople) in
-//                            builderController.workersArray = selectedPeople
-//                            builderController.updateStaffList()
-//                        }, title: "Engine Skills Required", issue: "", message: "")
-                    
                     
                     Divider()
                     
@@ -104,11 +100,11 @@ struct BuildingVehicleView: View {
                         .disabled(!builderController.hasSkills)
                         .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                     }
+                    .transition(.slide.combined(with: .opacity))
                     
                 case .pickMaterials(let engine):
                     
                     // Ingredients
-//                    let dicSort = engine.ingredients.sorted(by: {$0.key.rawValue < $1.key.rawValue })
                     let dicSort = builderController.ingredients.sorted(by: {$0.key.rawValue < $1.key.rawValue })
                     Text("Engine \(engine.rawValue)")
                     
@@ -128,13 +124,14 @@ struct BuildingVehicleView: View {
                         }
                         .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                         
-                        Button("Charge Ingredients") {
+                        Button("Charge") {
                             builderController.chargeIngredients()
                         }
                         .disabled(!builderController.hasIngredients)
-                        .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
+                        .buttonStyle(GameButtonStyle(labelColor: .red))
                         
                     }
+                    .transition(.slide.combined(with: .opacity))
                     
                 case .namingVehicle(let vehicle):
                     
@@ -145,6 +142,7 @@ struct BuildingVehicleView: View {
             }
         }
         .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: .center)
+        .background(GameColors.darkGray)
     }
 }
 /*

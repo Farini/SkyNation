@@ -210,10 +210,18 @@ struct BuildingBioBoxView: View {
                     }
                 }) {
                     HStack {
+#if os(macOS)
                         Image(nsImage:GameImages.tokenImage)
                             .resizable()
                             .aspectRatio(1, contentMode: .fit)
                             .frame(width:16, height:16)
+#elseif os(iOS)
+                        Image(uiImage:GameImages.tokenImage)
+                            .resizable()
+                            .aspectRatio(1, contentMode: .fit)
+                            .frame(width:16, height:16)
+#endif
+                        
                         Text("Token")
                     }
                 }

@@ -17,6 +17,8 @@ struct LabActivityView:View {
     var activity:LabActivity
     var labModule:LabModule
     
+    @State private var animatingCollection:Bool = false
+    
     init(activity:LabActivity, controller:LabViewModel, module:LabModule) {
         
         self.activity = activity
@@ -51,7 +53,31 @@ struct LabActivityView:View {
             }
             .padding(6)
             
-            GameActivityView(activity: activity)
+            
+            
+            if animatingCollection {
+                VStack {
+                    Image(systemName: "square.and.arrow.down").font(.largeTitle)
+                        
+                    
+                    Text("Congrats !")
+                        .font(GameFont.mono.makeFont())
+                        .foregroundColor(.gray)
+                        .padding(.top)
+                    
+                    Text("Activity: \(activity.activityName) finished.")
+                        .font(GameFont.mono.makeFont())
+                        .foregroundColor(.green)
+                }
+                .padding()
+                .background(Color.black.opacity(0.5))
+                .cornerRadius(8)
+                .transition(.slide.combined(with: .opacity).combined(with: .scale))
+                
+                
+            } else {
+                GameActivityView(activity: activity)
+            }
             
             if viewModel.timeRemaining > 0 {
                 HStack {
@@ -78,57 +104,66 @@ struct LabActivityView:View {
                     })
                     .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
                 }
-            }else{
-                HStack {
-                    
-                    // Throw away
-                    Button(action: {
-                        print("Throw out")
-                        controller.throwAwayTech()
+            } else {
+                if !animatingCollection {
+                    HStack {
                         
-                    }, label:{
-                        Text("Throw Away")
-                    })
-                    .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
-                    
-                    // Collect
-                    Button(action: {
-                        
-                        print("Collect activity")
-                        
-                        if let recipe = Recipe(rawValue: self.activity.activityName) {
+                        // Throw away
+                        Button(action: {
+                            print("Throw out")
+                            controller.throwAwayTech()
                             
-                            if controller.collectRecipe(recipe: recipe, from: self.labModule) == true {
-                                print("Collected Recipe & Saved: \(recipe.rawValue)")
-                                
+                        }, label:{
+                            Label("Discard", systemImage: "arrow.uturn.backward.circle")//Text("Throw Away")
+                        })
+                            .buttonStyle(GameButtonStyle(labelColor: .red))
+                        
+                        // Collect
+                        Button(action: {
+                            
+                            print("Collect activity")
+                            withAnimation (Animation.easeInOut(duration:  2.0)) {
+                                self.animatingCollection = true
                             }
                             
-                        } else if let tech = TechItems(rawValue: self.activity.activityName) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                                
+                                self.animatingCollection = false
+                                
+                                if let recipe = Recipe(rawValue: self.activity.activityName) {
+                                    
+                                    if controller.collectRecipe(recipe: recipe, from: self.labModule) == true {
+                                        print("Collected Recipe & Saved: \(recipe.rawValue)")
+                                        
+                                    }
+                                    
+                                } else if let tech = TechItems(rawValue: self.activity.activityName) {
+                                    
+                                    // We have a tech value !!!
+                                    print("Should make tech: \(tech)")
+                                    print("Still needs implementation")
+                                    
+                                    self.viewModel.stop()
+                                    self.viewModel.timer.invalidate()
+                                    controller.collectTech(activity: activity, tech: tech)
+                                    
+                                } else {
+                                    print("WARNING Couldn't find anything to do with it....")
+                                    self.viewModel.stop()
+                                    self.viewModel.timer.invalidate()
+                                }
+                            }
                             
-                            // We have a tech value !!!
-                            print("Should make tech: \(tech)")
-                            print("Still needs implementation")
-                            
-                            self.viewModel.stop()
-                            self.viewModel.timer.invalidate()
-                            controller.collectTech(activity: activity, tech: tech)
-                            
-                        } else {
-                            print("WARNING Couldn't find anything to do with it....")
-                            self.viewModel.stop()
-                            self.viewModel.timer.invalidate()
-                        }
-                        
-                    }, label:{
-                        Text("Collect")
-                    })
-                    .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
+                        }, label:{
+                            Label("Collect", systemImage:"square.and.arrow.down")//Text("Collect")
+                        })
+                            .buttonStyle(GameButtonStyle(labelColor: .green))
+                    }
+                    .transition(.slide.combined(with: .opacity))
                 }
             }
             
         }.padding()
-        
-        
         
         .onAppear() {
             self.percentor = Double(viewModel.timeRemaining)/viewModel.totalTime
@@ -145,7 +180,7 @@ struct LabActivity_Previews: PreviewProvider {
     
     static let tech:TechItems = TechItems.allCases.randomElement()!
     static let model:LabViewModel = LabViewModel(demo: tech)
-    static let act = LabActivity(time: 100, name: "Test Lab Act")
+    static let act = LabActivity(time: 30, name: "Test Lab Act")
     
     static var previews: some View {
         VStack {

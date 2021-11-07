@@ -174,9 +174,11 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Basic Views - Consistent Background Colors
 - [ ] UI Responsiveness - Add more feedback.
 ---------
+Folders Done
 - [X] Views Started
 - [X] Settings Folder
-- [ ] Space Station Folder
+- [X] Space Station Folder
+- [ ] Mars
 
 
 - [ ] iOS - Views are too large

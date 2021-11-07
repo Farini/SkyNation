@@ -31,6 +31,8 @@ struct LaunchingVehicleView: View {
                     // Checklist
                     VStack(spacing:4) {
                         Text("Propulsion Checklist")
+                            //.font(GameFont.mono.makeFont())
+                        
                         Divider().offset(x:0, y:-3)
                         HStack {
                             Text(launchController.propulsionCheck.ch4Check ? "✅":"❌")
@@ -38,6 +40,7 @@ struct LaunchingVehicleView: View {
                             Spacer()
                             Text("\(launchController.propulsionCheck.ch4)")
                         }
+                        .font(GameFont.mono.makeFont())
                         .padding([.leading, .trailing])
                         HStack {
                             Text(launchController.propulsionCheck.o2Check ? "✅":"❌")
@@ -45,6 +48,7 @@ struct LaunchingVehicleView: View {
                             Spacer()
                             Text("\(launchController.propulsionCheck.o2)")
                         }
+                        .font(GameFont.mono.makeFont())
                         .padding([.leading, .trailing])
                         HStack {
                             Text(launchController.propulsionCheck.n2Check ? "✅":"❌")
@@ -52,6 +56,7 @@ struct LaunchingVehicleView: View {
                             Spacer()
                             Text("\(launchController.propulsionCheck.n2)")
                         }
+                        .font(GameFont.mono.makeFont())
                         .padding([.leading, .trailing])
                     }
                     .padding(6)
