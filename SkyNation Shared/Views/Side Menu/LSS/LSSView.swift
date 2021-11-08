@@ -185,10 +185,7 @@ struct LSSView: View {
             HStack() {
                 VStack(alignment:.leading) {
                     Text("♻️ Life Support Systems")
-                        .font(.largeTitle)
-                    Text("Where life is supported")
-                        .foregroundColor(.gray)
-                        .font(.caption)
+                        .font(GameFont.title.makeFont())
                 }
                 Spacer()
                 
@@ -261,15 +258,18 @@ struct LSSAirView:View {
                 Spacer()
                 
             }
-            .padding()
+            .padding(.leading)
+            .padding(.bottom, 6)
+            
+            Divider()
             
             VStack(alignment: .leading, spacing: 4) {
                 Text("Air Composition")
                     .font(.title)
                     .foregroundColor(.blue)
-                    .padding()
+                    .padding(.leading)
                 AirCompositionView(air: air)
-                    .padding([.bottom, .top], 20)
+                    .padding(.bottom, 20)
             }
             .padding([.bottom], 10)
         }
@@ -667,7 +667,9 @@ struct AccountingReportView: View {
                     Divider()
                     
                     ForEach(report.listProblems(), id:\.self) { aProblem in
-                        Text(aProblem).foregroundColor(.red)
+                        Text(aProblem)
+                            .foregroundColor(.red)
+                            .font(GameFont.mono.makeFont())
                     }
                 }
                 
@@ -679,7 +681,7 @@ struct AccountingReportView: View {
                     Divider()
                     
                     ForEach(report.peripheralNotes, id:\.self) { perinote in
-                        Text(perinote)
+                        Text(perinote).font(GameFont.mono.makeFont())
                     }
                 }
                 
@@ -701,13 +703,14 @@ struct AccountingReportView: View {
                     Divider()
                 }
                 
-                
                 Text("🗒 Notes")
                     .foregroundColor(.blue)
                     .font(.title3)
                     .padding(.vertical, 6)
                 ForEach(report.listNotes(), id:\.self) { aNote in
-                    Text(aNote).foregroundColor(.gray)
+                    Text(aNote)
+                        .foregroundColor(.gray)
+                        .font(GameFont.mono.makeFont())
                 }
             }
             

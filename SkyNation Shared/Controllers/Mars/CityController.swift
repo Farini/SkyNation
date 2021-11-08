@@ -303,7 +303,7 @@ class CityController:ObservableObject, BioController {
                     city.garage.vehicles.append(vehicle)
                     
                     // Achievement
-                    GameMessageBoard.shared.newAchievement(type: .vehicleLanding(vehicle: vehicle), message: nil)
+                    GameMessageBoard.shared.newAchievement(type: .vehicleLanding(vehicle: vehicle), money: 100, message: nil)
                     
                     // FIXME: - Create Notification
                     // Let the scene know that there is a new vehicle arriving

@@ -27,6 +27,8 @@ enum GuildRoomTab:String, CaseIterable {
 
 struct GuildRoom: View {
     
+    @ObservedObject var controller = GuildRoomController()
+    
     @State private var popTutorial:Bool = false
     @State private var selection:GuildRoomTab = .elections
     
@@ -62,7 +64,6 @@ struct GuildRoom: View {
                 
                 // Close
                 Button(action: {
-//                    controller.cancelSelection()
                     NotificationCenter.default.post(name: .closeView, object: self)
                 }, label: {
                     Image(systemName: "xmark.circle")
@@ -101,7 +102,7 @@ struct GuildRoom: View {
                         .help("\(tab.rawValue)")
                         .onTapGesture {
                             print("Call me")
-//                            callBack(.Ingredients)
+                            self.selection = tab
                         }
                 }
                 Spacer()
@@ -110,14 +111,91 @@ struct GuildRoom: View {
             
             Divider()
             
-            Text("Tabs:")
-            
-            
-            Text("Guild Elections")
-            Text("Guild Actions + (President)")
-            
-            Text("Search")
-            Text("Chat, or Doc.")
+            switch selection {
+                case .elections:
+                    if let guild = controller.guild {
+                        Text("Guild: \(guild.name)")
+                        
+                        Group {
+                            HStack {
+                                Image(systemName: guild.icon)
+                                Text("\(guild.name)").foregroundColor(.orange)
+                            }
+                            .font(.title3)
+                            
+                            Divider()
+                            
+                            Spacer()
+                        }
+                    } else {
+                        Spacer()
+                        Text("No Guild")
+                        Spacer()
+                    }
+                case .actions:
+                    Spacer()
+                    Text("Actions")
+                    Spacer()
+                case .president:
+                    Spacer()
+                    Text("President")
+                    Spacer()
+                case .search:
+                    Group {
+                        let entryTokens:Int = controller.player.wallet.tokens.filter({ $0.origin == .Entry && $0.usedDate != nil }).count
+                        
+                        Text("Search")
+                        HStack {
+                            Text("Search")
+                            TextField("Search", text: $controller.searchText)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .frame(width:250)
+                            Button("Search") {
+                                print("Searching")
+                                controller.searchPlayerByName()
+                            }
+                            .buttonStyle(GameButtonStyle())
+                        }
+                        .padding(.horizontal)
+                        
+                        let guildHasPresident:Bool = controller.guild?.president != nil
+                        let inviteEnabled:Bool = guildHasPresident ? controller.iAmPresident():true
+                        
+                        List(controller.searchPlayerResult) { sPlayer in
+                            VStack {
+                                PlayerCardView(pCard: PlayerCard(playerContent: sPlayer))
+                                HStack {
+                                    Button("🎁 Token") {
+                                        controller.giftToken(to: sPlayer)
+                                    }
+                                    .buttonStyle(GameButtonStyle())
+                                    .disabled(entryTokens < 1)
+                                    
+                                    Button("Invite to Guild") {
+                                        print("Invite")
+                                        controller.inviteToGuild(playerContent: sPlayer)
+                                    }
+                                    .buttonStyle(GameButtonStyle())
+                                    .disabled(!inviteEnabled)
+                                }
+                            }
+                        }
+                        if controller.searchPlayerResult.isEmpty {
+                            Text("No Players been found").foregroundColor(.gray)
+                        }
+                        
+                        
+                        Text("You have \(entryTokens) Entry tokens. You may gift it to someone else.")
+                        
+                        Text(controller.tokenMessage)
+                            .font(.headline)
+                            .foregroundColor(controller.tokenMessage.contains("Error") ? .red:.white)
+                    }
+                case .chatDoc:
+                    Spacer()
+                    Text("Documentation")
+                    Spacer()
+            }
             
         }
     }

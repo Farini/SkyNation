@@ -1,61 +1,16 @@
 //
-//  ChatBubbleController.swift
+//  GuildRoomController.swift
 //  SkyNation
 //
-//  Created by Carlos Farini on 10/1/21.
+//  Created by Carlos Farini on 11/8/21.
 //
 
+import Foundation
 import SwiftUI
 
-// Deprecate this class.....
-
-
-enum ChatBubbleTab:String, CaseIterable {
-    case Achievement
-    case Freebie
+class GuildRoomController:ObservableObject {
     
-    case Chat
-    case Guild
-    case Tutorial
-    
-    case Search
-    
-    var emoji:String {
-        switch self {
-            case .Achievement: return "🏆"
-            case .Freebie: return "🎁"
-            case .Chat: return "💬"
-            case .Guild: return "🔰" // ⚙️
-            case .Tutorial: return "🎓"
-            case .Search: return "🔎" // 🔎❓
-        }
-    }
-}
-
-enum GuildElectionState {
-    
-    /// No election happening
-    case noElection
-    
-    /// Election hasn't started. Will start on 'until'
-    case waiting(until:Date)
-    
-    /// Election with an Object
-    case voting(election:Election)
-}
-
-
-class ChatBubbleController:ObservableObject {
-    
-    // Tab
-    @Published var selectedTab:ChatBubbleTab = .Achievement
-    
-    // Game Messages
-    @Published var gameMessages:[GameMessage] = []
-    
-    // Player + Freebies
     @Published var player:SKNPlayer
-    @Published var freebiesAvailable:Bool = false
     
     // The Guild
     @Published var guild:GuildFullContent?
@@ -70,49 +25,25 @@ class ChatBubbleController:ObservableObject {
     @Published var chatWarnings:[String] = []
     @Published var currentText:String = ""
     
-    init(simulating simChat:Bool, simElection:Bool) {
+    private var serverManager = ServerManager.shared
+    
+    init() {
         
         let player = LocalDatabase.shared.player
         self.player = player
         
-        // Game Messages (Achievements)
-        let gameMessages = LocalDatabase.shared.gameMessages
-        self.gameMessages = gameMessages
-        
-        // Freebies
-        let delta = player.wallet.timeToGenerateNextFreebie()
-        if delta > 0 {
-            self.freebiesAvailable = false
-        } else {
-            self.freebiesAvailable = true
-        }
-        
         // Server Info
         if GameSettings.onlineStatus == true {
-            if simChat == false {
-                self.requestChat()
-            } else {
-                // Simulate Chat
-                self.guildChat = []
-            }
-            if simElection == false {
-                self.getGuildInfo()
-            } else {
-                print("Simulating Election")
-            }
+            
+            self.requestChat()
+            self.getGuildInfo()
+            
         } else {
             self.guildChat = []
         }
     }
     
-    // MARK: - Control + Updates
-    
-    func didSelectTab(tab:ChatBubbleTab) {
-        self.selectedTab = tab
-    }
-    
-    private var serverManager = ServerManager.shared
-    
+    /// Retrieves Data about Guild
     func getGuildInfo() {
         
         self.serverManager.inquireFullGuild(force: false) { fullGuild, error in
@@ -130,14 +61,6 @@ class ChatBubbleController:ObservableObject {
                 }
             }
         }
-    }
-    
-    // MARK: - Achievements
-    
-    func updateAchievements() {
-        // Game Messages (Achievements)
-        let gameMessages = LocalDatabase.shared.gameMessages
-        self.gameMessages = gameMessages
     }
     
     // MARK: - Chat
@@ -265,118 +188,6 @@ class ChatBubbleController:ObservableObject {
             return guild.president == pid
         }
         return false
-        
-    }
-    
-    // MARK: - Freebies Tab
-    
-    func seeFreebies() -> [String] {
-        
-        var freebiesMade = player.wallet.freebiesMade
-        if freebiesMade.isEmpty {
-            freebiesMade = player.wallet.generateFreebie()
-        }
-        
-        return Array(freebiesMade.keys)
-    }
-    
-    func retrieveFreebies(using tokens:Bool? = false) {
-        
-        if tokens == true {
-            if let token = player.requestToken() {
-                print("Using token: \(token.id)")
-                let res = player.spendToken(token: token, save: false)
-                if res == false { return }
-            } else {
-                print("Not enough tokens")
-                return
-            }
-        }
-        
-        var freebiesMade = player.wallet.freebiesMade
-        if freebiesMade.isEmpty {
-            freebiesMade = player.wallet.generateFreebie()
-        }
-        
-        player.wallet.freebiesLast = Date()
-        let next = player.wallet.generateFreebie() // sets the new freebies made
-        print("Next freebie: \(next)")
-        
-        
-        for (key, _) in freebiesMade {
-            if key == "token" {
-                player.wallet.tokens.append(GameToken(beginner: player.playerID ?? player.localID))
-                print("Token added.")
-            } else if key == "money" {
-                player.money += 1000
-                print("Money added")
-                
-            } else if let tank = TankType(rawValue: key) {
-                let station = LocalDatabase.shared.station
-                station.truss.tanks.append(Tank(type: tank, full: true))
-                // Save
-                do {
-                    try LocalDatabase.shared.saveStation(station)
-                } catch {
-                    print("‼️ Could not save station.: \(error.localizedDescription)")
-                }
-            }
-        }
-        
-        // Save
-        do {
-            try LocalDatabase.shared.savePlayer(player)
-        } catch {
-            print("‼️ Could not save station.: \(error.localizedDescription)")
-        }
-        
-        let delta = player.wallet.timeToGenerateNextFreebie()
-        if delta > 0 {
-            self.freebiesAvailable = false
-        } else {
-            self.freebiesAvailable = true
-        }
-        
-        self.selectedTab = .Achievement
-        self.selectedTab = .Freebie
-        
-    }
-    
-    @Published var giftedTokenMessage:String = ""
-    func searchGiftedToken() {
-        if !giftedTokenMessage.isEmpty { return }
-        
-        SKNS.requestGiftedToken { gameToken, message in
-            if let gameToken = gameToken {
-                guard self.player.wallet.tokens.contains(where: { $0.id == gameToken.id }) == false else {
-                    print("You already have this token")
-                    return
-                }
-                DispatchQueue.main.async {
-                    self.player.wallet.tokens.append(gameToken)
-                    self.giftedTokenMessage = "Received Token type \(gameToken.origin)"
-                    do {
-                        try LocalDatabase.shared.savePlayer(self.player)
-                    } catch {
-                        print("Error saving gifted token on player.")
-                        return
-                    }
-                }
-                
-            } else {
-                DispatchQueue.main.async {
-                    self.giftedTokenMessage = message ?? "Could not find any token gifted to you."
-                }
-            }
-        }
-    }
-    
-    // MARK: - Tutorial
-    
-    /// Current Tutorial Page
-    @Published var tutPage:Int = 0
-    
-    func updateTutorialPage(page:Int) {
         
     }
     

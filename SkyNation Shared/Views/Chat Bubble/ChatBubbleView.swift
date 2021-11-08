@@ -207,6 +207,7 @@ struct ChatBubbleView: View {
                     
                     GuildChatView(controller:controller)
                     
+                    
                 case .Guild:
                     if let guild = controller.guild {
                         ChatBubbleGuildTab(controller: controller, guild: guild)
@@ -220,7 +221,6 @@ struct ChatBubbleView: View {
                     }
                     
                 case .Search:
-                    
                     
                     Group {
                         let entryTokens:Int = controller.player.wallet.tokens.filter({ $0.origin == .Entry && $0.usedDate != nil }).count

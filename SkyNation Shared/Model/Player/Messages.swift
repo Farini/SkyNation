@@ -33,6 +33,43 @@ enum GameAchievementType {
     }
 }
 
+/*
+ Achievement Types
+ - lab recipe (recipe, tech)
+ - lab tech
+ - person study
+ - person workout
+ - biobox dna found
+ - biobox created
+ - vehicle built
+ - vehicle launched
+ - vehicle arrived
+ - mars tech
+ - mars guild tech
+ */
+
+/*
+ Reward Types
+ - money
+ - token
+ - experience
+ */
+
+/*
+ Mission List
+ - cleanup
+ - change air filters
+ - private sector experiment
+ - broadcast, webinar
+ - move dna to food
+ - perform distance maneuver
+ - remote work
+ - system update
+ - blog, vlog
+ - documentation
+ - perform spacewalk
+ */
+
 class GameMessageBoard {
     
     static let shared:GameMessageBoard = GameMessageBoard()
@@ -43,10 +80,13 @@ class GameMessageBoard {
         messages = LocalDatabase.shared.gameMessages
     }
     
-    func newAchievement(type:GameAchievementType, message:String?) {
+    func newAchievement(type:GameAchievementType, money:Int, message:String?) {
 
-        let theMessage = message ?? "Achievement \(type.preString())."
-        let newMessage = GameMessage(type: .Achievement, message: theMessage, rewards: nil)
+        let theMessage = message ?? "\(type.preString())."
+        var newMessage = GameMessage(type: .Achievement, message: theMessage, rewards: nil)
+        if money > 0 {
+            newMessage.moneyRewards = money
+        }
         self.messages.append(newMessage)
 
         // Save
@@ -62,15 +102,14 @@ class GameMessageBoard {
         // Increase Player XP
         let player = LocalDatabase.shared.player
             player.experience += 1
+//            player.money += money
+        
         // Save
         do {
             try LocalDatabase.shared.savePlayer(player)
         } catch {
             print("‼️ Could not save station.: \(error.localizedDescription)")
         }
-//            let result = LocalDatabase.shared.savePlayer(player: player)
-//            print("Saved Player \(result)")
-        
     }
 }
 
@@ -98,8 +137,17 @@ struct GameMessage:Codable {
         self.ingredientRewards = rewards
     }
     
+    mutating func collectReward() {
+        self.isCollected = true
+    }
+    
 }
 
+
+
+
+
+/// Deprecate after stop using **Chat Bubble**
 enum GameMessageType:String, Codable, CaseIterable {
     
     case Achievement

@@ -136,7 +136,7 @@ enum GameFont {
             case .section: return Font.custom("RobotoSlab-Regular", size: 16)
             case .body: return .body
             case .little: return .footnote
-            case .mono: return Font.custom("RobotoMono-Regular", size: 14)
+            case .mono: return Font.custom("RobotoMono-Regular", size: 12)
             case .monoTiny: return Font.custom("RobotoMono-Regular", size: 10)
         }
         #else
@@ -145,7 +145,7 @@ enum GameFont {
             case .section: return Font.custom("RobotoSlab-Regular", size: 15)
             case .body: return .body
             case .little: return .footnote
-            case .mono: return Font.custom("RobotoMono-Regular", size: 12)
+            case .mono: return Font.custom("RobotoMono-Regular", size: 11)
             case .monoTiny: return Font.custom("RobotoMono-Regular", size: 9)
         }
         #endif

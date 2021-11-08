@@ -116,7 +116,7 @@ class GarageViewModel:ObservableObject {
                 travellingVehicles.removeAll(where: { $0.id == vehicle.id })
                 city.garage.vehicles.append(vehicle)
                 // Achievement
-                GameMessageBoard.shared.newAchievement(type: .vehicleLanding(vehicle: vehicle), message: nil)
+                GameMessageBoard.shared.newAchievement(type: .vehicleLanding(vehicle: vehicle), money: 500, message: nil)
             }
         }
     }
@@ -574,7 +574,7 @@ class GarageViewModel:ObservableObject {
                             // Save Vehicles
                             try LocalDatabase.shared.saveVehicles(LocalDatabase.shared.vehicles)
                             // Achievement
-                            GameMessageBoard.shared.newAchievement(type: .experience, message: "Space Vehicle Registered.")
+                            GameMessageBoard.shared.newAchievement(type: .experience, money: 200, message: "Space Vehicle Registered.")
                         } catch {
                             print("‼️ Could not save station.: \(error.localizedDescription)")
                         }

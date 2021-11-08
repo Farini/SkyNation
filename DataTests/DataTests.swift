@@ -72,8 +72,6 @@ class DataTests: XCTestCase {
         
     }
     
-    
-    
     func testOutpostContribution() {
         
         print("\n\n Testing Outpost Contribution.")

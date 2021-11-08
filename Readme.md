@@ -178,6 +178,11 @@ Folders Done
 - [X] Views Started
 - [X] Settings Folder
 - [X] Space Station Folder
+- [ ] Side Menu
+    - [ ] LSS View
+    - [ ] Guild Room
+    - [ ] Game Room
+    
 - [ ] Mars
 
 
