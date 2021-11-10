@@ -79,9 +79,7 @@ class GameViewController: NSViewController, NSWindowDelegate {
 
 #if os(macOS)
 extension GameViewController: GameNavDelegate {
-    
-    
-    
+
     func didSelectEarth() {
         
         let controller = NSHostingController(rootView: EarthRequestView()) //UIHostingController(rootView:EarthRequestView())
@@ -284,7 +282,7 @@ extension GameViewController: GameNavDelegate {
     }
     
     func didSelectMessages() {
-        let controller = NSHostingController(rootView: ChatBubbleView())
+        let controller = NSHostingController(rootView: GuildRoom())
         controller.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(controller.view)
         controller.view.centerXAnchor.constraint(
@@ -333,6 +331,20 @@ extension GameViewController: GameNavDelegate {
     func openOutpostView(posdex: Posdex, outpost:DBOutpost) {
         
         let controller = NSHostingController(rootView: OutpostView(controller: OutpostController(dbOutpost: outpost)))
+        
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controller.view)
+        controller.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        controller.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        self.openedView = controller.view
+        self.presentAsSheet(controller)
+    }
+    
+    func openGameRoom() {
+        let controller = NSHostingController(rootView: GameRoomView())
         
         controller.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(controller.view)

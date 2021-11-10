@@ -137,13 +137,12 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] BioModule - Save after creating box
 - [X] BioModule - Use (no selection)
 - [X] Freebies are now every 8 hrs.
-
+- [X] Split Chat Bubble in `GuildRoom` vs `GameRoom`
 
 - [ ] Use EDLSceneView wherever appropriate
 
-- [ ] Chat Bubble - President functions (Invite, Kickout, Modify Guild)
-- [ ] Chat Bubble - If no president, move election to earlier
-- [ ] Split Chat Bubble in [Guild] vs [Player], or just [Credits]?
+- [ ] Guild Room - President functions (Invite, Kickout, Modify Guild)
+- [ ] Guild Room - If no president, move election to earlier
 
 - [ ] Tests - (Chat Bubble) - Test Election Results
 - [ ] BioModule - Inside View
@@ -180,8 +179,11 @@ Folders Done
 - [X] Space Station Folder
 - [ ] Side Menu
     - [ ] LSS View
+        - [ ] Fix Tank Selection
     - [ ] Guild Room
+        - [ ] Fix Election Vote - crashing server 
     - [ ] Game Room
+        - [ ] Build **XChangeView**
     
 - [ ] Mars
 

@@ -343,6 +343,8 @@ struct Election:Codable {
     
     var createdAt:Date?
     
+    var start:Date?
+    
     /// The date election should start
     func startDate() -> Date {
         let prestart = self.createdAt ?? Date.distantPast

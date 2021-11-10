@@ -29,6 +29,7 @@ struct GuildElectionsView:View {
         self.castedVotes = vtCount
         
         
+        
     }
     
     var body: some View {

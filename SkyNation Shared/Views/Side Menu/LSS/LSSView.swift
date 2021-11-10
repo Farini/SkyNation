@@ -51,10 +51,21 @@ struct LSSView: View {
                                             .padding(.trailing, 6)
                                         }) {
                                 ForEach(controller.tanks) { tank in
-                                    TankRow(tank: tank)
-                                        .onTapGesture(count: 1, perform: {
-                                            controller.updateState(newState: .Resources(type: .Tank(tank: tank)))
-                                        })
+                                    
+                                    switch type {
+                                        case .Tank(let selTank):
+                                            // Tank here
+                                            TankRow(tank: tank, selected: selTank == tank)
+                                                .onTapGesture(count: 1, perform: {
+                                                    controller.updateState(newState: .Resources(type: .Tank(tank: tank)))
+                                                })
+                                        default:
+                                            TankRow(tank: tank, selected: false)
+                                                .onTapGesture(count: 1, perform: {
+                                                    controller.updateState(newState: .Resources(type: .Tank(tank: tank)))
+                                                })
+                                    }
+                                    
                                 }
                             }
                             
@@ -88,7 +99,9 @@ struct LSSView: View {
                             case .Tank(let tankObject):
                                 
                                 ScrollView {
-                                    TankDetailView(tank: tankObject, controller: controller)
+//                                    TankDetailView(tank: tankObject, controller: controller)
+                                    let idx = controller.tanks.firstIndex(of: tankObject)!
+                                    TankDetailView(controller: controller, tank: $controller.tanks[idx])
                                 }
                                 .frame(maxWidth:.infinity, minHeight:200, maxHeight:.infinity)
                                 

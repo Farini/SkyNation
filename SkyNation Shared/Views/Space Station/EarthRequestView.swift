@@ -296,13 +296,16 @@ struct EarthRequestView: View {
                             case .Tanks:
                                 LazyVGrid(columns: ingredientColumns, alignment:.center, spacing:8, pinnedViews:[]) {
                                     
+                                    let typesSelected:[TankType] = controller.currentOrder?.tanks.compactMap({ $0.type }) ?? []
+                                    
                                     ForEach(TankType.allCases, id:\.self) { tankType in
+                                        let tSelected:Bool = typesSelected.contains(tankType)
                                         
                                         TankOrderView(tank: tankType)
                                             .overlay(
                                                 shape
                                                     .inset(by: 0.5)
-                                                    .stroke((controller.currentOrder?.tanks.compactMap({ $0.type }) ?? []).contains(tankType) ? Color.blue.opacity(0.9):Color.clear, lineWidth: 1)
+                                                    .stroke(tSelected ? Color.blue.opacity(0.9):Color.clear, lineWidth: 1)
                                             )
                                             .onTapGesture {
                                                 controller.addToCart(tankType: tankType)
@@ -470,7 +473,7 @@ struct EarthRequestView: View {
                                 // Tanks
                                 ForEach(controller.currentOrder!.tanks) { tank in
                                     //                                    Text("Ingredient: \(tank.type.rawValue)")
-                                    TankRow(tank: tank)
+                                    TankRow(tank: tank, selected:false)
                                 }
                                 // People
                                 ForEach(controller.currentOrder!.people) { person in

@@ -17,7 +17,7 @@ class SKNS {
     
     /**
         Routes & Queries - Records
-        // Queries should have *route, *date, *objectRetrieved, *
+        // Queries should have *route, *date, *objectRetrieved, *errorType
      */
     
     /// Use this to have a reference for the queries we already performed
@@ -1178,6 +1178,11 @@ class SKNS {
                         return
                     }catch{
                         
+                        if let string = String(data: data, encoding: .utf8) {
+                            print("\n UpRestartElection return String:")
+                            print(string)
+                            print("--- eof")
+                        }
                         if let gameError = try? decoder.decode(GameError.self, from: data) {
                             print("Error decoding.: \(gameError.reason)")
                             if gameError.reason == "Election not started" {

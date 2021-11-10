@@ -57,6 +57,9 @@
 		8516AD73273905B400392C4F /* GuildRoomController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD72273905B400392C4F /* GuildRoomController.swift */; };
 		8516AD74273905B400392C4F /* GuildRoomController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD72273905B400392C4F /* GuildRoomController.swift */; };
 		8516AD75273905B400392C4F /* GuildRoomController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD72273905B400392C4F /* GuildRoomController.swift */; };
+		8516AD77273B1E8500392C4F /* GuildElectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD76273B1E8500392C4F /* GuildElectionView.swift */; };
+		8516AD78273B1E8500392C4F /* GuildElectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD76273B1E8500392C4F /* GuildElectionView.swift */; };
+		8516AD79273B1E8500392C4F /* GuildElectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD76273B1E8500392C4F /* GuildElectionView.swift */; };
 		8517EE2B25F7C3AB00C34C54 /* MarsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE2A25F7C3AB00C34C54 /* MarsBuilder.swift */; };
 		8517EE2C25F7C3AB00C34C54 /* MarsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE2A25F7C3AB00C34C54 /* MarsBuilder.swift */; };
 		8517EE2D25F7C3AB00C34C54 /* MarsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE2A25F7C3AB00C34C54 /* MarsBuilder.swift */; };
@@ -721,6 +724,7 @@
 		8516AD682737B03500392C4F /* GuildRoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildRoom.swift; sourceTree = "<group>"; };
 		8516AD6D2738CE8800392C4F /* GameRoomController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRoomController.swift; sourceTree = "<group>"; };
 		8516AD72273905B400392C4F /* GuildRoomController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildRoomController.swift; sourceTree = "<group>"; };
+		8516AD76273B1E8500392C4F /* GuildElectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildElectionView.swift; sourceTree = "<group>"; };
 		8517EE2A25F7C3AB00C34C54 /* MarsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarsBuilder.swift; sourceTree = "<group>"; };
 		8517EE3325FC11EF00C34C54 /* Guild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Guild.swift; sourceTree = "<group>"; };
 		8517EE4025FC124200C34C54 /* Outpost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Outpost.swift; sourceTree = "<group>"; };
@@ -1005,6 +1009,7 @@
 			isa = PBXGroup;
 			children = (
 				8516AD642737AF0800392C4F /* GameRoomView.swift */,
+				856A64A82728885F0075CC04 /* CreditsView.swift */,
 			);
 			path = "Game Room";
 			sourceTree = "<group>";
@@ -1013,6 +1018,7 @@
 			isa = PBXGroup;
 			children = (
 				8516AD682737B03500392C4F /* GuildRoom.swift */,
+				8516AD76273B1E8500392C4F /* GuildElectionView.swift */,
 			);
 			path = Guild;
 			sourceTree = "<group>";
@@ -1108,7 +1114,6 @@
 				85487F3126C9930500EBC070 /* GuildChatView.swift */,
 				85351EA127078B2400EEE04C /* ChatBubbleGuildTab.swift */,
 				85351EA627078BFA00EEE04C /* GuildElectionsView.swift */,
-				856A64A82728885F0075CC04 /* CreditsView.swift */,
 			);
 			path = "Chat Bubble";
 			sourceTree = "<group>";
@@ -1263,11 +1268,11 @@
 				8536F2B5258D330200B509D2 /* GameController.swift */,
 				8536F4A1258D484B00B509D2 /* SceneDirector.swift */,
 				858D7C4625D4F0AD00A45CF9 /* GameCamera.swift */,
+				8536F45D258D481700B509D2 /* Overlays */,
 				8536F465258D481700B509D2 /* Space Station */,
 				8592824E25EED6C6001233BE /* SpaceVehicle */,
 				85487F4026CC68CF00EBC070 /* Mars */,
 				8536F460258D481700B509D2 /* Mars Map */,
-				8536F45D258D481700B509D2 /* Overlays */,
 				8569A302259F7F7A0057A518 /* Shaders */,
 				8536F46A258D481700B509D2 /* ParticleEmitters */,
 				8517EE6A26093C4100C34C54 /* Sounds */,
@@ -2136,6 +2141,7 @@
 				8536F3EA258D47D000B509D2 /* PersonControl.swift in Sources */,
 				8536F41E258D47D000B509D2 /* BuildingVehicleView.swift in Sources */,
 				85B34B1226F71164007178F5 /* PowerPlantNode.swift in Sources */,
+				8516AD77273B1E8500392C4F /* GuildElectionView.swift in Sources */,
 				8536F3A6258D475D00B509D2 /* Player.swift in Sources */,
 				85D3BB2326AC9C9800B6AA36 /* CityTechDiagram.swift in Sources */,
 				85108377271B2E63004D6D00 /* GameResponseView.swift in Sources */,
@@ -2308,6 +2314,7 @@
 				85D3BAB3269DF79800B6AA36 /* ForeignCityView.swift in Sources */,
 				8536F43E258D47EA00B509D2 /* GarageViewModel.swift in Sources */,
 				8536F3FB258D47D000B509D2 /* PersonViews.swift in Sources */,
+				8516AD78273B1E8500392C4F /* GuildElectionView.swift in Sources */,
 				8536F39F258D475D00B509D2 /* TechTreeDisplay.swift in Sources */,
 				8536F44E258D47EA00B509D2 /* LifeSupportSystems.swift in Sources */,
 				85108378271B2E63004D6D00 /* GameResponseView.swift in Sources */,
@@ -2458,6 +2465,7 @@
 				85CD46B225D20B42000D9C64 /* ModulePopView.swift in Sources */,
 				85351E8926FF644800EEE04C /* CityLabActivityView.swift in Sources */,
 				85D3BAAC269DF75000B6AA36 /* MarsCityView.swift in Sources */,
+				8516AD79273B1E8500392C4F /* GuildElectionView.swift in Sources */,
 				85D3BB1926AB24F800B6AA36 /* GameDialogueModifiers.swift in Sources */,
 				8536F3F4258D47D000B509D2 /* ProgressViews.swift in Sources */,
 				85487F5426CD9B1900EBC070 /* GameSounds.swift in Sources */,

@@ -20,12 +20,17 @@ class GuildRoomController:ObservableObject {
     @Published var electionState:GuildElectionState = .noElection
     @Published var electionData:GuildElectionData?
     
+    @Published var castedVotes:Int = 0
+    
     // Guild Chat
     @Published var guildChat:[ChatMessage] = []
     @Published var chatWarnings:[String] = []
     @Published var currentText:String = ""
     
     private var serverManager = ServerManager.shared
+    
+//    let myPid = LocalDatabase.shared.player.playerID ?? UUID()
+    
     
     init() {
         
@@ -128,7 +133,7 @@ class GuildRoomController:ObservableObject {
     
     func updateElectionData() {
         
-        print("Should restart election date")
+        print("Update Election Data")
         
         SKNS.upRestartElection { newElection, error in
             DispatchQueue.main.async {
@@ -145,6 +150,9 @@ class GuildRoomController:ObservableObject {
                             self.electionState = .voting(election: newElection.election)
                     }
                     
+                    let vtCount = newElection.election.casted[self.player.playerID ?? UUID(), default:0]
+                    self.castedVotes = vtCount
+                    
                 } else if let error = error {
                     // Error
                     print("Got error: \(error.localizedDescription)")
@@ -158,17 +166,7 @@ class GuildRoomController:ObservableObject {
     
     func voteForPresident(citizen:PlayerCard) {
         
-        switch self.electionState {
-            case .voting(let election):
-                guard election.electionHasEnded() == false else {
-                    print("Election has ended")
-                    return
-                }
-                print("Voting for \(citizen.name)")
-            default:
-                print("Can only vote when election is running.")
-                return
-        }
+        print("Voting for President -> \(citizen.name)")
         
         SKNS.voteOnElection(candidate: citizen) { newElection, error in
             if let election = newElection {

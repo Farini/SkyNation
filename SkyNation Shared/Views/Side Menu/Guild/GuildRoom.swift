@@ -8,6 +8,7 @@
 import SwiftUI
 
 enum GuildRoomTab:String, CaseIterable {
+    
     case elections
     case actions
     case president
@@ -113,34 +114,81 @@ struct GuildRoom: View {
             
             switch selection {
                 case .elections:
-                    if let guild = controller.guild {
-                        Text("Guild: \(guild.name)")
+                    
+                    VStack {
                         
-                        Group {
-                            HStack {
-                                Image(systemName: guild.icon)
-                                Text("\(guild.name)").foregroundColor(.orange)
+                        Text("My Guild")
+                            .font(.title)
+                            .padding(.top, 8)
+                        
+                        Divider()
+                        
+                        if let guild = controller.guild {
+                            
+                            VStack(spacing: 8) {
+                                // Guild Presentation
+                                Text(guild.name).font(.title2)
+                                
+                                Image(systemName:GuildIcon(rawValue:"\(guild.icon)")!.imageName)
+                                    .font(.largeTitle)
+                                    .foregroundColor(GuildColor(rawValue:guild.color)!.color)
+                                
+                                // Text("Color: \(guild.color)")
                             }
-                            .font(.title3)
+                            .padding(8)
                             
-                            Divider()
+                            Text("Election: \(GameFormatters.fullDateFormatter.string(from: guild.election))")
+                            Text("Election State: \(controller.electionState.displayString)")
                             
-                            Spacer()
+                            
+                            if let presidentID = guild.president {
+                                Text("President: \(presidentID.uuidString)")
+                            } else {
+                                
+                                // No President
+                                Text("No President")
+                                    .foregroundColor(.red)
+                                    .padding(4)
+                                    .background(Color.black.opacity(0.5))
+                                    .cornerRadius(4)
+                            }
+                            
+                            
+                        } else {
+                            Text("No Guild")
+                                .font(.title2)
+                                .foregroundColor(.red)
+                                .padding(6)
+                                .background(Color.black.opacity(0.5))
+                                .cornerRadius(6)
+                            
+                            Text("Go to Settings, under player on top-left of the screen and join a guild from there.").foregroundColor(.gray)
                         }
-                    } else {
-                        Spacer()
-                        Text("No Guild")
+                        
                         Spacer()
                     }
+                    
                 case .actions:
+                    
                     Spacer()
                     Text("Actions")
                     Spacer()
+                    
+                    VStack {
+                        Text("Citizens").font(.title)
+                        ForEach(controller.citizens) { citizen in
+                            PlayerCardView(pCard: citizen.makePlayerCard())
+                        }
+                    }
+                    
+                    // Show Players (Citizens) for now
+                    
                 case .president:
-                    Spacer()
-                    Text("President")
-                    Spacer()
+                    
+                    GuildElectionView(controller: controller)
+                    
                 case .search:
+                    
                     Group {
                         let entryTokens:Int = controller.player.wallet.tokens.filter({ $0.origin == .Entry && $0.usedDate != nil }).count
                         
@@ -191,13 +239,18 @@ struct GuildRoom: View {
                             .font(.headline)
                             .foregroundColor(controller.tokenMessage.contains("Error") ? .red:.white)
                     }
+                    
                 case .chatDoc:
+                    
                     Spacer()
                     Text("Documentation")
                     Spacer()
+                    
             }
             
         }
+        .frame(minWidth:600, maxWidth:1000, minHeight:400, maxHeight:700)
+        
     }
 }
 

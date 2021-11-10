@@ -30,6 +30,9 @@ protocol GameNavDelegate {
     // Mars
     func openCityView(posdex:Posdex, city:DBCity?)
     func openOutpostView(posdex:Posdex, outpost:DBOutpost)
+    
+    func openGameRoom()
+    
 }
 
 enum GameSceneType: String, Codable, CaseIterable {
@@ -288,8 +291,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             }
             
             // Side Menu Buttons
-            if sprite.name == "LightsButton" {
-                print("⚙️ Lets play with some lights!")
+            if sprite.name == "GameRoomButton" {
+                gameNavDelegate?.openGameRoom()
                 return
             }
             if sprite.name == "ChatButton" {

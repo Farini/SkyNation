@@ -129,6 +129,11 @@ extension Station {
                 report.addProblem(string: "⛔️ Peripheral \(peripheral.peripheral.rawValue) is broken")
             }
             
+            if useResult == 0 {
+                report.addNote(string: "\(peripheral.peripheral.rawValue) is turned off.")
+                continue
+            }
+            
             if useResult > 0 {
                 
                 // Energy

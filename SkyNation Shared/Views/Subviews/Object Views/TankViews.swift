@@ -26,8 +26,10 @@ struct TankViewSmall:View {
                 .resizable()
                 .frame(width: 32.0, height: 32.0)
             
-            Text("Tank: \(tank.type.rawValue)")
-                .font(.subheadline)
+            Text("\(tank.type.rawValue.uppercased())")
+                .font(.headline)
+            
+            Spacer()
             
             Text("\(tank.current) of \(tank.capacity)")
                 .font(.subheadline)
@@ -36,6 +38,7 @@ struct TankViewSmall:View {
             
         }
         .padding(6)
+        .frame(maxWidth:180)
         .overlay(
             shape
                 .inset(by: selected ? 1.0:0.5)
@@ -46,7 +49,8 @@ struct TankViewSmall:View {
 
 struct TankRow:View {
     
-    var tank:Tank
+    @State var tank:Tank
+    var selected:Bool
     
     var body: some View {
         HStack {
@@ -56,7 +60,8 @@ struct TankRow:View {
             
             ProgressView(value: Float(tank.current), total:Float(tank.capacity)) {
                 HStack {
-                    Text(tank.type.rawValue)
+                    Text(tank.type.rawValue.uppercased())
+                    Spacer()
                     Text("\(tank.current) of \(tank.capacity)")
                         .font(.subheadline)
                         // Colors (GREEN > 50%, ORANGE > 0, RED == 0)
@@ -66,6 +71,14 @@ struct TankRow:View {
             .foregroundColor(.blue)
             .accentColor(.orange)
         }
+        .padding(6)
+        .background(Color.black.opacity(0.5))
+        .cornerRadius(6)
+        .overlay(
+            RoundedRectangle(cornerRadius: 6)
+                .stroke(lineWidth: 1.5)
+                .foregroundColor(selected ? Color.blue:Color.clear)
+        )
         .frame(minWidth: 50, maxWidth: 200, minHeight: 15, maxHeight: 40, alignment: .leading)
         
     }
@@ -74,37 +87,39 @@ struct TankRow:View {
 struct TankDetailView: View {
     
     @ObservedObject var controller:LSSController
+    @Binding var tank:Tank
     
     @State var sliderValue:Float = 0
     
     var current:Float
     var max:Float
-    var tank:Tank
+    
     
     @State var discardWhenEmpty:Bool = false
     
     // Popover to change tank type
-    @State var popTankType:Bool = false
+    @State private var popTankType:Bool = false
     
-    init(tank:Tank, controller:LSSController) {
-        
+//    init(tank:Tank, controller:LSSController) {
+//
+//        self.controller = controller
+//
+//        let cap = Float(tank.capacity)
+//        self.max = cap
+//        self.tank = tank
+//
+//        self.current = Float(tank.current)
+//    }
+    
+    init(controller:LSSController, tank:Binding<Tank>) {
         self.controller = controller
-        
-        let cap = Float(tank.capacity)
+        self._tank = tank
+        let cap = Float(tank.wrappedValue.capacity)
+        self.current = Float(tank.wrappedValue.current)
         self.max = cap
-        self.tank = tank
-        
-        self.current = Float(tank.current)
     }
     
-    func tankDiscard(tank:Tank) {
-        // Checkbox discard empty
-        if tank.discardEmpty == true {
-            self.discardWhenEmpty = true
-        } else {
-            self.discardWhenEmpty = false
-        }
-    }
+    
     
     var body: some View {
         
@@ -229,6 +244,15 @@ struct TankDetailView: View {
         }
     }
     
+    func tankDiscard(tank:Tank) {
+        // Checkbox discard empty
+        if tank.discardEmpty == true {
+            self.discardWhenEmpty = true
+        } else {
+            self.discardWhenEmpty = false
+        }
+    }
+    
     /// Makes the BarCode from a UUID
     func generateBarcode(from uuid: UUID) -> Image? {
         
@@ -309,10 +333,12 @@ struct TankOrderView: View {
 struct TankRowPreviews:PreviewProvider {
     static var previews: some View {
         VStack {
-            TankRow(tank: LocalDatabase.shared.station.truss.getTanks().first!)
-                .padding()
+            TankRow(tank: LocalDatabase.shared.station.truss.getTanks().first!, selected: false)
+            TankRow(tank: LocalDatabase.shared.station.truss.getTanks().first!, selected: true)
+                
             
         }
+        .padding()
     }
 }
 
@@ -330,7 +356,7 @@ struct TankSmallPreview1: PreviewProvider {
 struct TankDetailsPreviews:PreviewProvider {
     static var previews: some View {
         VStack {
-            TankDetailView(tank: LocalDatabase.shared.station.truss.getTanks().first!, controller: LSSController(scene: .SpaceStation))
+            TankDetailView(controller: LSSController(scene: .SpaceStation), tank: .constant(LocalDatabase.shared.station.truss.getTanks().first!))
         }
     }
 }

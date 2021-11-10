@@ -22,7 +22,7 @@ extension CityData {
             for op:Outpost in outposts {
                 if op.type == .Energy {
                     let pEnergy = op.energy() / (sknsData?.cities.count ?? 2)
-                    energyCollection = max(5, pEnergy)
+                    energyCollection = 30 + max(5, pEnergy)
                 }
             }
         }
@@ -44,13 +44,18 @@ extension CityData {
             
             // Energy.
             // Increase power consumption if working
-            // Check if peripheral will consume power (when broken, useResult will be 0)
+            // Check if peripheral will consume power (when off, useResult will be 0)
             let useResult:Int = peripheral.powerConsume(crack: true)
             
             // Check if peripheral is broken
             if peripheral.isBroken {
                 report.brokenPeripherals.append(peripheral.id)
                 report.addProblem(string: "⛔️ Peripheral \(peripheral.peripheral.rawValue) is broken")
+            }
+            
+            if useResult == 0 {
+                report.addNote(string: "\(peripheral.peripheral.rawValue) is turned off.")
+                continue
             }
             
             if useResult > 0 {

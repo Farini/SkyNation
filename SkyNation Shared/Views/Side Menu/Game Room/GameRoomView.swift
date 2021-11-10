@@ -260,6 +260,8 @@ struct GameRoomView: View {
                     CreditsView()
             }
         }
+        .frame(minWidth:700, maxWidth:1200, maxHeight:600)
+        
     }
     
 #if os(macOS)

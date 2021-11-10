@@ -42,6 +42,15 @@ enum GuildElectionState {
     
     /// Election with an Object
     case voting(election:Election)
+    
+    /// A simple String that summarizes this object, for display.
+    var displayString:String {
+        switch self {
+            case .noElection: return "No election"
+            case .waiting(until: let until): return "Waiting until \(GameFormatters.dateFormatter.string(from: until))"
+            case .voting(election: let election): return "Voting Election object ID: \(String(describing: election.id))"
+        }
+    }
 }
 
 
@@ -267,6 +276,7 @@ class ChatBubbleController:ObservableObject {
         return false
         
     }
+    
     
     // MARK: - Freebies Tab
     

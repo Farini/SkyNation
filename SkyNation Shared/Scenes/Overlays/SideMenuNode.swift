@@ -29,8 +29,6 @@ class SideMenuNode:SKNode {
     
     func setupMenu() {
         
-        print("Seting up side menu node")
-        
         var pos:CGPoint = .zero
         // Side Warning pattern
         
@@ -69,9 +67,13 @@ class SideMenuNode:SKNode {
         self.cameraPlaceholder = holder
         addChild(holder)
         
+        // Changes:
+        // 1. Sub lights for Game Room
+        // 2. Sub chat sprite for Guild Room
+        
         // Lights
-        if let lightsSprite:SKSpriteNode = makeButton("lightbulb") {
-            lightsSprite.name = "LightsButton"
+        if let lightsSprite:SKSpriteNode = makeButton("house") {
+            lightsSprite.name = "GameRoomButton"
             lightsSprite.color = .white
             lightsSprite.colorBlendFactor = 1.0
             pos.y -= lightsSprite.calculateAccumulatedFrame().size.height
@@ -83,13 +85,6 @@ class SideMenuNode:SKNode {
         pos.y -= 6
         
         // Tutorial
-//        let tutImage = GameImages.commonSystemImage(name: "questionmark.diamond")!.image(with: .white)
-//        let tutTexture = SKTexture(image: tutImage)
-//        let tutSprite = SKSpriteNode(texture: tutTexture, size: CGSize(width: 36, height: 36))
-//        tutSprite.anchorPoint = CGPoint(x: 0.5, y: 0)
-//        tutSprite.name = "tutorial"
-//        self.tutorialButton = tutSprite
-        
         if let tutorialSprite:SKSpriteNode = makeButton("questionmark.diamond") {
             tutorialSprite.name = "tutorial"
             tutorialSprite.color = .white
@@ -103,7 +98,7 @@ class SideMenuNode:SKNode {
         pos.y -= 6
         
         // Chat
-        if let chatSprite:SKSpriteNode = makeButton("bubble.left") {
+        if let chatSprite:SKSpriteNode = makeButton("shield") {
             chatSprite.name = "ChatButton"
             chatSprite.color = .white
             chatSprite.colorBlendFactor = 1.0
