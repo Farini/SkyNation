@@ -49,7 +49,7 @@ struct TankViewSmall:View {
 
 struct TankRow:View {
     
-    @State var tank:Tank
+    @Binding var tank:Tank
     var selected:Bool
     
     var body: some View {
@@ -333,8 +333,8 @@ struct TankOrderView: View {
 struct TankRowPreviews:PreviewProvider {
     static var previews: some View {
         VStack {
-            TankRow(tank: LocalDatabase.shared.station.truss.getTanks().first!, selected: false)
-            TankRow(tank: LocalDatabase.shared.station.truss.getTanks().first!, selected: true)
+            TankRow(tank: .constant(LocalDatabase.shared.station.truss.getTanks().first!), selected: false)
+            TankRow(tank: .constant(LocalDatabase.shared.station.truss.getTanks().first!), selected: true)
                 
             
         }

@@ -29,15 +29,15 @@ enum Recipe:String, Codable, CaseIterable, Hashable {
     case WaterFilter      // Transforms part of wasteLiquid back into water (or water vapor, to be easier)
     case BioSolidifier    // Transforms wasteSolid into fertilizer?
     
-    // Cement           puzzlepiece
+    // Cement
     case Cement
-    // ChargedGlass     plus.circle
+    // ChargedGlass
     case ChargedGlass
-    // Alloy            triangle.circle
+    // Alloy
     case Alloy
     
-    // [ MARS ]
-    // PowerGen
+    // Mars Peripherals
+    
     /// A Power Generator (Mars)
     case PowerGen
     case AirTrapper

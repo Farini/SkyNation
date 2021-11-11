@@ -50,19 +50,19 @@ struct LSSView: View {
                                             }
                                             .padding(.trailing, 6)
                                         }) {
-                                ForEach(controller.tanks) { tank in
+                                            ForEach($controller.tanks, id:\.id) { tank in
                                     
                                     switch type {
                                         case .Tank(let selTank):
                                             // Tank here
-                                            TankRow(tank: tank, selected: selTank == tank)
+                                            TankRow(tank: tank, selected: selTank == tank.wrappedValue)
                                                 .onTapGesture(count: 1, perform: {
-                                                    controller.updateState(newState: .Resources(type: .Tank(tank: tank)))
+                                                    controller.updateState(newState: .Resources(type: .Tank(tank: selTank)))
                                                 })
                                         default:
                                             TankRow(tank: tank, selected: false)
                                                 .onTapGesture(count: 1, perform: {
-                                                    controller.updateState(newState: .Resources(type: .Tank(tank: tank)))
+                                                    controller.updateState(newState: .Resources(type: .Tank(tank: tank.wrappedValue)))
                                                 })
                                     }
                                     
@@ -169,6 +169,7 @@ struct LSSView: View {
     }
     
     var tabber: some View {
+        
         // Tabs
         VStack {
             HStack {
@@ -231,6 +232,7 @@ struct LSSView: View {
             Divider().offset(x: 0, y: -5)
         }
     }
+    
     
     var noSelectionView: some View {
         // No Selection

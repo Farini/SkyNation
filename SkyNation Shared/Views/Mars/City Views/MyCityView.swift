@@ -8,34 +8,27 @@
 import SwiftUI
 
 /// A View Containing the CityTabs
-struct CityMenu: View {
-    
-    @Binding var menuItem:CityMenuItem
-    
-    var body: some View {
-        
-        HStack {
-            ForEach(CityMenuItem.allCases, id:\.self) { mitem in
-                ZStack {
-                    Circle()
-                        .strokeBorder(menuItem == mitem ? Color.red:Color.gray, lineWidth: 2, antialiased: false)
-                        .frame(width: 32, height: 32, alignment: .center)
-                    Text(mitem.string)
-                }
-                .onTapGesture {
-                    self.menuItem = mitem
-                }
-                .modifier(Badged())
-            }
-            
-            
-            
-        }
-        .font(.title)
-        .padding(.horizontal)
-        .padding(.vertical, 4)
-    }
-}
+//struct CityMenu: View {
+//
+//    @Binding var menuItem:CityMenuItem
+//
+//    var body: some View {
+//
+//        HStack {
+//            ForEach(CityMenuItem.allCases, id:\.self) { mitem in
+//                Text(mitem.string)
+//                    .modifier(GameTabModifier("", selected: menuItem == mitem))
+//                .onTapGesture {
+//                    self.menuItem = mitem
+//                }
+//                .modifier(Badged("-"))
+//            }
+//        }
+//        .font(.title)
+//        .padding(.horizontal)
+//        .padding(.vertical, 4)
+//    }
+//}
 
 // MARK: - My City
 
@@ -44,41 +37,68 @@ struct LocalCityView: View {
     
     @ObservedObject var controller:LocalCityController = LocalCityController()
     @State private var menuItem:CityMenuItem = .hab
+    @State private var popTutorial:Bool = false
     
     /// The City Menu (Tabs)
     var header: some View {
-        HStack {
-            ForEach(CityMenuItem.allCases, id:\.self) { mitem in
-                ZStack {
-                    Circle()
-                        .strokeBorder(menuItem == mitem ? Color.red:Color.gray, lineWidth: 2, antialiased: false)
-                        .frame(width: 32, height: 32, alignment: .center)
+        VStack {
+            
+            // Title, Tutorial, and Close Buttons
+            HStack {
+                Text("My City")
+                    .font(GameFont.title.makeFont())
+                Spacer()
+                // Tutorial
+                Button(action: {
+                    print("Question ?")
+                    popTutorial.toggle()
+                }, label: {
+                    Image(systemName: "questionmark.circle")
+                        .font(.title2)
+                })
+                    .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
+                    .popover(isPresented: $popTutorial) {
+                        TutorialView(tutType: .GuildCity)
+                    }
+                
+                // Close
+                Button(action: {
+                    NotificationCenter.default.post(name: .closeView, object: self)
+                }) {
+                    Image(systemName: "xmark.circle")
+                        .font(.title2)
+                }.buttonStyle(SmallCircleButtonStyle(backColor: .pink))
+            }
+            .padding([.leading, .trailing, .top])
+            
+            // Tab Items
+            HStack {
+                ForEach(CityMenuItem.allCases, id:\.self) { mitem in
                     Text(mitem.string)
+                        .modifier(GameTabModifier("", selected: menuItem == mitem))
+                        .onTapGesture {
+                            self.menuItem = mitem
+                            controller.didSelectTab(tab: mitem)
+                        }
+                        .modifier(Badged("-"))
                 }
-                .onTapGesture {
-                    self.menuItem = mitem
-                    controller.didSelectTab(tab: mitem)
-                }
-                .modifier(Badged())
+                Spacer()
+                Text(menuItem.string)
             }
+            .font(.title)
+            .padding(.horizontal)
             
-            Spacer()
-            Button("X") {
-                NotificationCenter.default.post(name: .closeView, object: self)
-            }
-            .buttonStyle(SmallCircleButtonStyle(backColor: .blue))
-            
+            Divider()
+                .offset(x:0, y:-3)
+
         }
-        .font(.title)
-        .padding(.horizontal)
-        .padding(.vertical, 4)
+        
     }
     
     var body: some View {
         VStack {
                         
             header
-            Divider()
 
             switch controller.cityTab {
                     
@@ -128,14 +148,14 @@ struct MyCityView_Previews: PreviewProvider {
     
     static var previews: some View {
         VStack {
-            CityMenu(menuItem: .constant(menu))
+//            CityMenu(menuItem: .constant(menu))
             LocalCityView()
         }
     }
 }
 
-struct CityMenu_Previews: PreviewProvider {
-    static var previews: some View {
-        CityMenu(menuItem: .constant(.hab))
-    }
-}
+//struct CityMenu_Previews: PreviewProvider {
+//    static var previews: some View {
+//        CityMenu(menuItem: .constant(.hab))
+//    }
+//}

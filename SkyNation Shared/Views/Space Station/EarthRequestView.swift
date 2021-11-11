@@ -33,7 +33,6 @@ struct EarthRequestView: View {
                 VStack(alignment:.leading) {
                     Text("🌎 Earth")
                         .font(GameFont.title.makeFont())
-                        //.font(.largeTitle)
                     Text("Order items needed.")
                         .foregroundColor(.gray)
                 }
@@ -196,14 +195,6 @@ struct EarthRequestView: View {
                                 }
                             }
                         }
-                        
-                        // Aisle Picker
-//                        Picker(selection: $controller.orderAisle, label: Text("")) {
-//                            ForEach(EarthViewPicker.allCases, id:\.self) { earth in
-//                                Text(earth.rawValue)
-//                            }
-//                        }
-//                        .pickerStyle(SegmentedPickerStyle())
                         
                         Divider()
                     }
@@ -472,8 +463,7 @@ struct EarthRequestView: View {
                                 }
                                 // Tanks
                                 ForEach(controller.currentOrder!.tanks) { tank in
-                                    //                                    Text("Ingredient: \(tank.type.rawValue)")
-                                    TankRow(tank: tank, selected:false)
+                                    TankRow(tank: .constant(tank), selected:false)
                                 }
                                 // People
                                 ForEach(controller.currentOrder!.people) { person in

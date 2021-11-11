@@ -13,8 +13,9 @@ struct MarsCityView: View {
     
     @State var posdex:Posdex
     @State private var cityMenuItem:CityMenuItem = .hab
+    @State private var popTutorial:Bool = false
     
-    // MOVE THIS TO MyCityView or LocalCityView
+    
     var header: some View {
         VStack {
             // Title
@@ -23,22 +24,39 @@ struct MarsCityView: View {
                 switch controller.viewState {
                     case .loading:
                         ProgressView()
-                        Text("Loading city").font(.title).foregroundColor(.gray)
+                        Text("Loading city").font(GameFont.title.makeFont()).foregroundColor(.gray)
                     case .mine(_):
-                        Text(controller.cityTitle).font(.title)
-                        CityMenu(menuItem: $cityMenuItem)
+                        Text(controller.cityTitle).font(GameFont.title.makeFont())
+//                        CityMenu(menuItem: $cityMenuItem)
                     case .foreign(_):
-                        Text(controller.cityTitle).font(.title)
+                        Text(controller.cityTitle).font(GameFont.title.makeFont())
                     // If President -> Delete Button
                     case .unclaimed:
-                        Text(controller.cityTitle).font(.title)
+                        Text(controller.cityTitle).font(GameFont.title.makeFont())
                 }
                 
                 Spacer()
-                Button("X") {
+                
+                // Tut
+                Button(action: {
+                    print("Question ?")
+                    popTutorial.toggle()
+                }, label: {
+                    Image(systemName: "questionmark.circle")
+                        .font(.title2)
+                })
+                    .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
+                    .popover(isPresented: $popTutorial) {
+                        TutorialView(tutType: .GuildCity)
+                    }
+                
+                // Close
+                Button(action: {
                     NotificationCenter.default.post(name: .closeView, object: self)
-                }
-                .buttonStyle(SmallCircleButtonStyle(backColor: .blue))
+                }) {
+                    Image(systemName: "xmark.circle")
+                        .font(.title2)
+                }.buttonStyle(SmallCircleButtonStyle(backColor: .pink))
             }
             .padding(.horizontal, 8)
             .padding(.top, 6)
@@ -75,29 +93,33 @@ struct MarsCityView: View {
                     // Header
                     header
                     
-                    Group {
+                    UnclaimedCityView()
+                    
+                    if controller.isClaimable() == true {
+                        Text("Cities are the building blocks of the Mars Colony.")
+                        Text("Select a city that you like the most, and claim it, to get started.")
                         
-                        Image(systemName: "mappin.and.ellipse").font(.title)
-                        Text("Unclaimed City").foregroundColor(.gray)
-                        Text("Posdex: \(posdex.rawValue) \(posdex.sceneName)").padding()
-                        Text("If you don't have a city yet, you may claim this one to get started.").foregroundColor(.gray)
+                        Divider()
                         
-                        Spacer()
-                        
-                        // Button to Claim City (if player doesn't have one)
-                        if controller.isClaimable() == true {
-                            Button("Claim City") {
-                                controller.claimCity(posdex: posdex)
-                            }
-                            .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
-                            .padding(.bottom, 8)
+                        Button("Claim City") {
+                            controller.claimCity(posdex: posdex)
                         }
+                        .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
+                        .padding(.bottom, 8)
+                    } else {
+                        Text("Cities are the building blocks of the Mars Colony.")
+                        Text("This city is available for any Guild member to claim.")
                         
+                        Divider()
+                        
+                        Button("Claim City") {
+                            controller.claimCity(posdex: posdex)
+                        }
+                        .disabled(true)
+                        .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
+                        .padding(.bottom, 8)
                     }
-                    
                 case .mine(_):
-                    
-//                    MyCityView(controller: controller, cityData: cityData, cityTab: $cityMenuItem)
                     
                     LocalCityView()
                     
@@ -118,8 +140,23 @@ struct MarsCityView: View {
     }
 }
 
+struct UnclaimedCityView:View {
+    var body: some View {
+        VStack {
+            Text("Unclaimed")
+            
+            Image(systemName: "mappin.and.ellipse").font(.title)
+            Text("Unclaimed City").foregroundColor(.gray)
+            Text("If you don't have a city yet, you may claim this one to get started.").foregroundColor(.gray)
+            
+            Spacer()
+        }
+    }
+}
+
 struct MarsCityView_Previews: PreviewProvider {
     static var previews: some View {
         MarsCityView(posdex: .city9)
+        UnclaimedCityView()
     }
 }

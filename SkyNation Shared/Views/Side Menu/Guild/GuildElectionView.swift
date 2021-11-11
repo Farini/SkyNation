@@ -18,7 +18,7 @@ struct GuildElectionView: View {
             VStack {
                 
                 Text("Guild Election")
-                    .font(.title)
+                    .font(GameFont.section.makeFont())
                     .padding(.top, 8)
                 
                 Divider()

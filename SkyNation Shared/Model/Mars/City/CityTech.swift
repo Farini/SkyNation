@@ -71,18 +71,21 @@ enum CityTech:String, Codable, CaseIterable, Identifiable {
             default: return nil
         }
     }
-    //    var unlocks:[CityTech] {
-    //        switch self {
-    //            case .Hab1: return [.Hab2, .recipeVehicle]
-    //            default: return []
-    //        }
-    //    }
     
     // MARK: - Display
     
     var shortName:String {
         switch self {
-            case .Hab1, .Hab2, .Hab3, .Hab4, .Hab5, .Hab6: return "Hab Module"
+            case .Hab1, .Hab2, .Hab3, .Hab4, .Hab5, .Hab6: return "Habitation"
+            case .Biosphere2, .Biosphere3, .Biosphere4, .Biosphere5: return "Bio Upgrade"
+            case .recipeCement: return "Cement"
+            case .recipeGlass: return "Glass"
+            case .recipeVehicle   : return "Vehicle"       // Can be split in different resources
+            case .recipeAirTrap   : return "Air Trap"       // Can be split
+            case .recipeBig: return "Big Tanks"
+            case .recipeWaterSanitizer: return "Sanitation"
+            case .recipeAlloy: return "Alloy"
+            case .recipeGenerator: return "Generator"
             default: return self.rawValue
         }
     }
@@ -145,8 +148,10 @@ struct CityTechTree {
         
         let cement = Tree(CityTech.recipeCement)
         let glass = Tree(CityTech.recipeGlass)
-        let airTrap = Tree(CityTech.recipeAirTrap)
+        
         let alloy = Tree(CityTech.recipeAlloy)
+        let generator = Tree(CityTech.recipeGenerator)
+        let airTrap = Tree(CityTech.recipeAirTrap, children: [generator])
         
         let hab6 = Tree(CityTech.Hab6)
         let hab5 = Tree(CityTech.Hab5, children:[hab6])

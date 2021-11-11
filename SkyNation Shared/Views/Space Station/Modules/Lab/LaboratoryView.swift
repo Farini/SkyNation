@@ -323,6 +323,7 @@ struct LaboratoryView: View {
                             Divider()
                             
                             DiagramContent(controller:controller)
+                            
                             Divider()
                         }
                         .padding()

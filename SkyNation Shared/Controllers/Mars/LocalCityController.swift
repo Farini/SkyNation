@@ -87,6 +87,7 @@ enum CityLabState {
 
 enum CityGarageState {
     case noSelection
+    case arrival
     case selected(vehicle:SpaceVehicle)
 }
 
@@ -608,9 +609,12 @@ class LocalCityController:ObservableObject, BioController {
         
         if let guild = sd.guildfc {
             for dbOutpost in guild.outposts {
-                collectables.append("\(dbOutpost.type.rawValue): POS.: \(dbOutpost.posdex)")
-                let colModel = CityCollectOutpostModel(dbOutpost: dbOutpost, opCollect: self.cityData.opCollection ?? [:])
-                self.opCollectArray.append(colModel)
+                if !dbOutpost.type.productionForCollection(level: dbOutpost.level).isEmpty {
+                    collectables.append("\(dbOutpost.type.rawValue): POS.: \(dbOutpost.posdex)")
+                    let colModel = CityCollectOutpostModel(dbOutpost: dbOutpost, opCollect: self.cityData.opCollection ?? [:])
+                    self.opCollectArray.append(colModel)
+                }
+                
             }
         }
     }
@@ -620,7 +624,7 @@ class LocalCityController:ObservableObject, BioController {
         
         let outpostType = outpost.type
         
-        // What to collect?
+        // Base Product (See OP+Enums.swift)
         if let baseProduce = outpostType.baseProduce() {
             if let ingredient = Ingredient(rawValue: baseProduce.name) {
                 switch ingredient {
@@ -675,7 +679,10 @@ class LocalCityController:ObservableObject, BioController {
             } else if baseProduce.name == "Energy" {
                 
                 print("Energy")
-                let res = cityData.refillBatteries(amount: baseProduce.quantity)
+                let level = outpost.level
+                let fib = baseProduce.quantity + (GameLogic.fibonnaci(index: level) * baseProduce.quantity)
+                
+                let res = cityData.refillBatteries(amount: fib)
                 print("CityData refilled energy: \(res)")
                 if res > 0 {
                     print("Spilling energy!! QTTY: \(res)")
@@ -949,7 +956,22 @@ struct CityCollectOutpostModel:Identifiable {
         }
     }
     
-    /// Returns whether this can be collected.
+    /// A Bool indicating if this item is usually collectable (independent of when)
+    var isCollectable:Bool {
+        if outpost.type.productionBase.isEmpty {
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    /// Seconds until it can collect
+    var timeToCollect:Double {
+        let deadline = collected.addingTimeInterval(60.0 * 60.0)
+        return deadline.timeIntervalSinceNow
+    }
+    
+    /// Returns whether this can be collected. (Depends on Cooldown)
     func canCollect() -> Bool {
         let deadline = collected.addingTimeInterval(60.0 * 60.0)
         if outpost.type.productionBase.isEmpty {

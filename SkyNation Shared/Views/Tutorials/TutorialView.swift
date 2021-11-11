@@ -23,6 +23,8 @@ enum TutorialType {
     
     case GameRoom
     case GuildRoom
+    
+    case GuildCity
 }
 
 struct TutorialView: View {
@@ -222,6 +224,18 @@ struct TutorialView: View {
                         Text("Guild Room").font(.title).foregroundColor(.orange)
                         Divider()
                         Text("In the Guild Room, one can vote for elections, perform actions, see president preferences, search for another player, and communicate with Guildmates.")
+                    }
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 6)
+                }
+                .frame(maxWidth: 400, maxHeight: 600, alignment: .top)
+                
+            case .GuildCity:
+                ScrollView {
+                    VStack(alignment:.leading, spacing:6) {
+                        Text("Guild City").font(.title).foregroundColor(.orange)
+                        Divider()
+                        Text("Each member gets a city. Build your city.")
                     }
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 6)

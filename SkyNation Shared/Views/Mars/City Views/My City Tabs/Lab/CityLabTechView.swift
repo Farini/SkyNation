@@ -46,7 +46,7 @@ struct CityLabTechView: View {
                 Text(tech.elaborated)
                     .frame(width:300, height: 50)
                     .lineLimit(3)
-                    .multilineTextAlignment(.leading)
+                    .multilineTextAlignment(.center)
                     .foregroundColor(.gray)
                 
                 Text("⏱ \(TimeInterval(tech.duration).stringFromTimeInterval())")
@@ -136,6 +136,7 @@ struct CityLabTechView: View {
                     }
                 }
             }
+            
             Spacer()
         }
     }

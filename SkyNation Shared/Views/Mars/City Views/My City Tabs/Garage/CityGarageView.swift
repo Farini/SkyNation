@@ -12,15 +12,19 @@ struct CityGarageView: View {
     @ObservedObject var controller:LocalCityController
     @State var garageState:CityGarageState
     
+    @State private var popTrunk:Bool = false
+    @State private var selectedVehicle:SpaceVehicle? = nil
+    
     var body: some View {
         HStack {
             
             List {
                 Section(header: Text("Arrived")) {
                     ForEach(controller.arrivedVehicles) { vehicle in
-                        SpaceVehicleRow(vehicle: vehicle)
+                        SpaceVehicleRow(vehicle: vehicle, selected: vehicle == self.selectedVehicle)
                             .onTapGesture {
                                 self.garageState = .selected(vehicle: vehicle)
+                                self.selectedVehicle = vehicle
                             }
                     }
                     if controller.arrivedVehicles.isEmpty {
@@ -31,9 +35,10 @@ struct CityGarageView: View {
                 
                 Section(header: Text("Travelling")) {
                     ForEach(controller.travelVehicles) { vehicle in
-                        SpaceVehicleRow(vehicle: vehicle)
+                        SpaceVehicleRow(vehicle: vehicle, selected: vehicle == self.selectedVehicle)
                             .onTapGesture {
                                 self.garageState = .selected(vehicle: vehicle)
+                                self.selectedVehicle = vehicle
                             }
                     }
                     if controller.travelVehicles.isEmpty {
@@ -55,6 +60,23 @@ struct CityGarageView: View {
                                 .padding()
                             Spacer()
                         }
+                    case .arrival:
+                        
+                        let ctrl = EDLSceneController(vehicle: controller.arrivedVehicles.first ?? SpaceVehicle(engine: .T12))
+                        ZStack(alignment: Alignment.topTrailing) {
+                            EDLSceneView(edlController: ctrl)
+                            VStack {
+                                Text("Vehicle Arriving")
+                                Button("Close") {
+                                    self.garageState = .noSelection
+                                }
+                                .buttonStyle(GameButtonStyle())
+                                .padding(.top, 6)
+                            }
+                            .padding()
+                        }
+                        
+                        
                     case .selected(let vehicle):
                         HStack {
                             Spacer()
@@ -65,11 +87,26 @@ struct CityGarageView: View {
                                 
                                 GameActivityView(vehicle: vehicle)
                                 
-                                Button("Unload") {
-                                    controller.unload(vehicle: vehicle)
+                                Divider()
+                                
+                                HStack {
+                                    
+                                    Button("Trunk") {
+                                        popTrunk.toggle()
+                                    }
+                                    .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
+                                    .popover(isPresented: $popTrunk) {
+                                        VehicleTrunkView(vehicle: vehicle)
+                                    }
+                                    
+                                    
+                                    Button("Unload") {
+                                        controller.unload(vehicle: vehicle)
+                                    }
+                                    .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
+                                    .disabled(controller.travelVehicles.contains(vehicle))
+                                    
                                 }
-                                .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
-                                .disabled(controller.travelVehicles.contains(vehicle))
                                 
                             }
                             Spacer()
@@ -79,7 +116,9 @@ struct CityGarageView: View {
             .frame(minWidth: 400, idealWidth: 500, maxWidth:700)
         }
         .onAppear() {
-//            controller.updateVehiclesLists()
+            if let _ = controller.arrivedVehicles.first {
+                self.garageState = .arrival
+            }
         }
     }
 }

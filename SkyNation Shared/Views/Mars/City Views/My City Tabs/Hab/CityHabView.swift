@@ -57,8 +57,21 @@ struct CityHabView: View {
                     switch habState {
                         case .noSelection:
                             Spacer()
-                            Text("< No Selection >").foregroundColor(.gray)
+                            VStack {
+                                Text("< No Selection >").foregroundColor(.gray)
+                                
+                                if controller.allStaff.isEmpty {
+                                    Group {
+                                        Text("Build a Space Vehicle that can transport passengers.")
+                                        Text("Add passengers to the Space Vehicle.")
+                                        Text("Launch Space Vehicle")
+                                    }
+                                    .foregroundColor(.gray)
+                                }
+                            }
+                            
                             Spacer()
+                            
                         case .selected(let person):
                             ScrollView {
                                 PersonDetailView(person: person) { personAction in

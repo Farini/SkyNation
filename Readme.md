@@ -137,14 +137,15 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] BioModule - Save after creating box
 - [X] BioModule - Use (no selection)
 - [X] Freebies are now every 8 hrs.
-- [X] Split Chat Bubble in `GuildRoom` vs `GameRoom`
 
-- [ ] Use EDLSceneView wherever appropriate
+- [X] Split Chat Bubble in `GuildRoom` vs `GameRoom`
+- [X] LSS View - Tank Selection Row not updating
+- [X] Use EDLSceneView wherever appropriate
 
 - [ ] Guild Room - President functions (Invite, Kickout, Modify Guild)
 - [ ] Guild Room - If no president, move election to earlier
+- [ ] Guild Room - Test Election Results
 
-- [ ] Tests - (Chat Bubble) - Test Election Results
 - [ ] BioModule - Inside View
 
 - [ ] Model - Fix cost of Outpost level ups
@@ -177,14 +178,7 @@ Folders Done
 - [X] Views Started
 - [X] Settings Folder
 - [X] Space Station Folder
-- [ ] Side Menu
-    - [ ] LSS View
-        - [ ] Fix Tank Selection
-    - [ ] Guild Room
-        - [ ] Fix Election Vote - crashing server 
-    - [ ] Game Room
-        - [ ] Build **XChangeView**
-    
+- [X] Side Menu: 11/11/2021
 - [ ] Mars
 
 

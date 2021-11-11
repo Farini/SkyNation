@@ -36,6 +36,9 @@ extension Notification.Name {
  Use this class to set limits, boundaries, and constraints */
 struct GameLogic {
     
+    /// Amount of Sky Coins that a Token is worth.
+    static let moneyForToken:Int = 10_000
+    
     /// The maximum amount of items in a new order (EarthOrder)
     static let earthOrderLimit:Int = 6
     static let orderTankPrice:Int = 10

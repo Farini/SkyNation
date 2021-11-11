@@ -17,14 +17,15 @@ struct PlayerCardView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 64, height: 64, alignment: .center)
-            VStack(alignment:.leading) {
-                Text(pCard.name).font(.title2)
-                Text("XP: \(pCard.experience)")
+            VStack(alignment:.leading, spacing:3) {
+                Text(pCard.name).font(GameFont.section.makeFont())
+                Text("XP: \(pCard.experience)").font(GameFont.mono.makeFont())
                 HStack {
                     Image(systemName: "wave.3.right.circle")
                     Text("\(self.activeString(date: pCard.lastSeen))").foregroundColor(self.colorActivity(date: pCard.lastSeen))
                 }
             }
+            Spacer()
         }
         .frame(width: 180)
         .padding(6)
@@ -75,6 +76,7 @@ struct SmallPlayerCardView: View {
                 Text(pCard.name)//.font(.title2)
                 Text("XP: \(pCard.experience)").font(.footnote)
             }
+            Spacer()
         }
         .padding(4)
         .frame(width:130)

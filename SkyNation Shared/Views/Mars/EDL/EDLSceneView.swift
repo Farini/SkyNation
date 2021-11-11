@@ -19,10 +19,10 @@ struct EDLSceneView: View {
             VStack {
                 Text("V: \(edlController.vehicle.name)")
                 
-                Button("Close") {
-                    print("Close view")
-                }
-                .buttonStyle(GameButtonStyle())
+//                Button("Close") {
+//                    print("Close view")
+//                }
+//                .buttonStyle(GameButtonStyle())
                 
                 Text(edlController.actNames.joined(separator: " ,"))
                 

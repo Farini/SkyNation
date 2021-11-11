@@ -35,6 +35,8 @@ struct CityLabRecipeView: View {
                 
                 Text("\(recipe.elaborate)")
                     .foregroundColor(.gray)
+                    .frame(maxWidth:400)
+                    .multilineTextAlignment(.center)
                 
             }
             

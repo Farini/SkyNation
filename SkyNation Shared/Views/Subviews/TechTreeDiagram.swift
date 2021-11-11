@@ -21,21 +21,23 @@ struct DiagramContent: View {
             Diagram(tree: tree, node: { value in
                 
 //                Text("\(value.value.rawValue): \(value.value.getDuration())")
-                VStack {
-                    
-                    Text("\(value.value.shortName)")
-                        .font(.callout)
-                        .padding([.top, .leading, .trailing], 6)
-                    
-                    Text("\(value.value.rawValue)")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-//                        .padding([.bottom], /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
-                        
-                }
-                .background(value.isUnlocked(station:station) ? Color.blue:Color.black)
-                .cornerRadius(6)
-                .padding(6)
+//                VStack {
+//
+//                    Text("\(value.value.shortName)")
+//                        .font(.callout)
+//                        .padding([.top, .leading, .trailing], 6)
+//
+//                    Text("\(value.value.rawValue)")
+//                        .font(.caption)
+//                        .foregroundColor(.gray)
+////                        .padding([.bottom], /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+//
+//                }
+//                .background(value.isUnlocked(station:station) ? Color.blue:Color.black)
+//                .cornerRadius(6)
+//                .padding(6)
+                
+                StationTechItemView(item: value.value, status: statusFor(value.value, val: value))
                 .onTapGesture {
                     controller.selectedFromDiagram(value.value)
                 }
@@ -43,7 +45,19 @@ struct DiagramContent: View {
             })
         }
     }
+    
+    func statusFor(_ tech:TechItems, val:(Unique<TechItems>)) -> StationTechStatus {
+        
+        if self.station.unlockedTechItems.contains(tech) {
+            return .researched
+        } else if val.isUnlocked(station:station) == true {
+            return .unlocked
+        } else {
+            return .locked
+        }
+    }
 }
+
 
 struct DiagramContent_Previews: PreviewProvider {
     static var module = LocalDatabase.shared.station.labModules.first ?? LabModule(module: Module(id: UUID(), modex: .mod0))
@@ -101,5 +115,64 @@ struct Line: Shape {
             p.move(to: self.from)
             p.addLine(to: self.to)
         }
+    }
+}
+
+public enum StationTechStatus {
+    case locked
+    case unlocked
+    case researched
+}
+
+struct StationTechItemView: View {
+    
+    var item:TechItems
+    var status:StationTechStatus
+    
+    var body: some View {
+        VStack(spacing:3) {
+            Text(item.shortName)
+                .font(GameFont.section.makeFont())
+                .padding([.top, .leading, .trailing], 6)
+            
+            //            Divider()
+            //                .frame(width:100)
+            Image(systemName: imageName)
+                .font(.title)
+                .foregroundColor(status == StationTechStatus.researched ? Color.green:Color.white)
+            
+        }
+        .padding(5)
+        .background(makeGradient())
+        .cornerRadius(5)
+        .padding(4)
+        
+    }
+    
+    var statusColor:Color {
+        switch self.status {
+            case .locked: return Color(.sRGB, red: 0.5, green: 0.1, blue: 0.1, opacity: 1.0)
+            case .unlocked: return .blue//Color(.sRGB, red: 0.1, green: 0.1, blue: 0.6, opacity: 1.0)
+            case .researched: return Color.black.opacity(1.0)
+        }
+    }
+    
+    var imageName:String {
+        switch self.status {
+            case .locked: return "lock"
+            case .unlocked: return "lock.open"
+            case .researched: return "checkmark.circle"
+        }
+    }
+    
+    func makeGradient() -> LinearGradient {
+        return LinearGradient(colors: [statusColor, GameColors.darkGray, GameColors.darkGray, Color.black], startPoint: .bottom, endPoint: .top)
+    }
+    
+}
+
+struct StationTech_Previews: PreviewProvider {
+    static var previews: some View {
+        StationTechItemView(item: TechItems.allCases.randomElement()!, status: .researched)
     }
 }

@@ -34,7 +34,7 @@ enum OutpostType:String, CaseIterable, Codable {
             
             // Others -> Energy, or Food
             case .Energy: return [.Battery:20]
-            case .Biosphere: return [.Food:25]
+            case .Biosphere: return [.Food:9]
 
             case .Observatory: return [:]
             case .Antenna: return [:]
@@ -48,7 +48,6 @@ enum OutpostType:String, CaseIterable, Codable {
     func baseProduce() -> (name:String, quantity:Int)? {
         switch self {
             
-                
             // Mining -> Ingredient
             case .Water: return (Ingredient.Water.rawValue, 18)
             case .Silica: return (Ingredient.Silica.rawValue, 10)
@@ -59,6 +58,82 @@ enum OutpostType:String, CaseIterable, Codable {
             case .Biosphere: return (Ingredient.Food.rawValue, 25)
                 
             default: return nil
+        }
+    }
+    
+    func productionForCollection(level:Int) -> [String:Int] {
+        
+        switch self {
+                
+            // Mining -> Ingredient
+            case .Water:
+                // How much to get at level 0
+                let lvlZero:Int = 9
+                
+                // How much it gets for each level
+                let lvlDelta:Int = 18
+                
+                let fiboRes:Int = level == 0 ? 0:GameLogic.fibonnaci(index: level) * lvlDelta
+                let totalOutput = lvlZero + fiboRes
+                
+                return [Ingredient.Water.rawValue:totalOutput]
+                
+            case .Silica:
+                
+                // How much to get at level 0
+                let lvlZero:Int = 9
+                
+                // How much it gets for each level
+                let lvlDelta:Int = 9
+                
+                let fiboRes:Int = level == 0 ? 0:GameLogic.fibonnaci(index: level) * lvlDelta
+                let totalOutput = lvlZero + fiboRes
+                
+                return [Ingredient.Silica.rawValue:totalOutput]
+                
+            case .Titanium:
+                
+                // How much to get at level 0
+                let lvlZero:Int = 9
+                
+                // How much it gets for each level
+                let lvlDelta:Int = 9
+                
+                let fiboRes:Int = level == 0 ? 0:GameLogic.fibonnaci(index: level) * lvlDelta
+                let totalOutput = lvlZero + fiboRes
+                
+                return [Ingredient.Iron.rawValue:totalOutput]
+                
+                // return (Ingredient.Iron.rawValue, 5)
+                
+                // Others -> Energy, or Food
+            case .Energy:
+                
+                // How much to get at level 0
+                let lvlZero:Int = 27
+                
+                // How much it gets for each level
+                let lvlDelta:Int = 18
+                
+                let fiboRes:Int = level == 0 ? 0:GameLogic.fibonnaci(index: level) * lvlDelta
+                let totalOutput = lvlZero + fiboRes
+                
+                return ["Energy":totalOutput]
+                
+            case .Biosphere:
+                
+                // How much to get at level 0
+                let lvlZero:Int = 18
+                
+                // How much it gets for each level
+                let lvlDelta:Int = 18
+                
+                let fiboRes:Int = level == 0 ? 0:GameLogic.fibonnaci(index: level) * lvlDelta
+                let totalOutput = lvlZero + fiboRes
+                
+                return [Ingredient.Food.rawValue:totalOutput]
+                
+            default: return [:]
         }
     }
     
@@ -136,7 +211,6 @@ enum OutpostType:String, CaseIterable, Codable {
 enum OutpostState:String, CaseIterable, Codable {
     
     case collecting     // accepting contributions
-//    case full           // can upgrade. Set date and proceed to cooldown
     case cooldown       // wait for the date
     case finished       // ready for level upgrade
     case maxed          // no more upgrades

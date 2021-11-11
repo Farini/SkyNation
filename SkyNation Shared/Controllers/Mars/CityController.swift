@@ -15,20 +15,6 @@ enum MarsCityStatus {
     case mine(cityData:CityData)    // Belongs to Player
 }
 
-/// The selected tab for MyCityView
-//enum MarsCityTab {
-//    case Hab
-//    case Lab
-//    case RSS
-//    case EVs // Electric Vehicles
-//}
-
-
-
-
-
-
-
 /**
     My CityController vs. ForeignCityController
         
@@ -44,7 +30,6 @@ class CityController:ObservableObject, BioController {
     
     // View States
     @Published var viewState:MarsCityStatus
-//    @Published var cityTab:MarsCityTab = .Hab
     
     // City Info
     @Published var city:DBCity?
@@ -305,7 +290,7 @@ class CityController:ObservableObject, BioController {
                     // Achievement
                     GameMessageBoard.shared.newAchievement(type: .vehicleLanding(vehicle: vehicle), money: 100, message: nil)
                     
-                    // FIXME: - Create Notification
+                    // FIXME: - Create Scene Notification
                     // Let the scene know that there is a new vehicle arriving
                 }
             }

@@ -44,30 +44,52 @@ struct GameTypography: ViewModifier {
     
     func makeFont() -> Font {
         return gFont.makeFont()
-//        #if os(macOS)
-//        switch gFont {
-//            case .title: return (Font.custom("Ailerons", size: 24))
-//            case .section: return (Font.custom("Roboto Slab", size: 16))
-//            case .writing: return .body
-//            case .little: return .footnote
-//        }
-//        #else
-//        switch gFont {
-//            case .title: return (Font.custom("Ailerons", size: 22))
-//            case .section: return (Font.custom("Roboto Slab", size: 15))
-//            case .writing: return .body
-//            case .little: return .footnote
-//        }
-//        #endif
     }
 }
 
-struct Badged: ViewModifier {
+struct GameTabModifier: ViewModifier {
+    
+    var string:String
+    var isSelected:Bool = false
+    
+    init(_ string:String, selected:Bool = false) {
+        self.string = string
+        self.isSelected = selected
+    }
     
     func body(content: Content) -> some View {
         ZStack(alignment: .bottomTrailing) {
             content
-            Text("!")
+                .font(.title)
+                .padding(5)
+                .background(isSelected ? selLinear:unselinear)
+                .cornerRadius(4)
+                .clipped()
+                .border(isSelected ? Color.blue:Color.clear, width: 1)
+                .cornerRadius(6)
+            //  .help(controller.selectedTab.rawValue)
+        }
+    }
+    
+    // MARK: - Gradients Used
+    private static let myGradient = Gradient(colors: [Color.red.opacity(0.6), Color.blue.opacity(0.7)])
+    private static let unseGradient = Gradient(colors: [Color.red.opacity(0.3), Color.blue.opacity(0.3)])
+    private let selLinear = LinearGradient(gradient: myGradient, startPoint: .topLeading, endPoint: .bottomTrailing)
+    private let unselinear = LinearGradient(gradient: unseGradient, startPoint: .topLeading, endPoint: .bottomTrailing)
+}
+
+struct Badged: ViewModifier {
+    
+    var string:String
+    
+    init(_ string:String) {
+        self.string = string
+    }
+    
+    func body(content: Content) -> some View {
+        ZStack(alignment: .bottomTrailing) {
+            content
+            Text(string)
                 .font(.caption)
                 .foregroundColor(.white)
                 .padding([.top, .leading, .trailing], 5)

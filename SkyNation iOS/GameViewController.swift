@@ -105,6 +105,8 @@ class GameViewController: UIViewController {
 
 extension GameViewController:GameNavDelegate {
     
+    
+    
     func openCityView(posdex: Posdex, city: DBCity?) {
         
         clearInterface()
@@ -325,7 +327,7 @@ extension GameViewController:GameNavDelegate {
     
     func didSelectMessages() {
         clearInterface()
-        let newHost = UIHostingController(rootView: ChatBubbleView())
+        let newHost = UIHostingController(rootView: GuildRoom())
         
         newHost.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(newHost.view)
@@ -353,6 +355,20 @@ extension GameViewController:GameNavDelegate {
         self.openedView = newHost.view
     }
     
-    
+    func openGameRoom() {
+        clearInterface()
+        
+        let newHost = UIHostingController(rootView:GameRoomView())
+        
+        newHost.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(newHost.view)
+        newHost.view.centerXAnchor.constraint(
+            equalTo: view.centerXAnchor).isActive = true
+        newHost.view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor).isActive = true
+        
+        newHost.didMove(toParent: self)
+        self.openedView = newHost.view
+    }
     
 }

@@ -412,33 +412,3 @@ struct DBOutpost:Codable {
         self.state = .collecting
     }
 }
-
-/*
-// Deprecate?
-/** Energy, Water, Oxygen, Food */
-struct Ewolf {
-    
-    var energy:Int
-    var water:Int
-    var oxygen:Int
-    var food:Int
-    
-    init?(array:[Int]) {
-        
-        self.energy = 0
-        self.water = 0
-        self.food = 0
-        self.oxygen = 0
-        
-        for idx in 0...3 {
-            switch idx {
-                case 0: self.energy = array[idx]
-                case 1: self.water = array[idx]
-                case 2: self.oxygen = array[idx]
-                case 3: self.food = array[idx]
-                default: print("Ewolf array count should be 4")
-            }
-        }
-    }
-}
-*/

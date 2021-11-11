@@ -12,11 +12,14 @@ struct CreditsView: View {
         VStack {
             
             HStack {
-                Text("Credits").font(.title)
+                Text("Credits")
+                    .font(GameFont.section.makeFont())
+                    .padding(.top, 8)
+                
                 Spacer()
             }
             .padding(.horizontal)
-            .background(Color.black.opacity(0.5))
+//            .background(Color.black.opacity(0.5))
             
             ScrollView {
                 VStack(alignment:.leading) {

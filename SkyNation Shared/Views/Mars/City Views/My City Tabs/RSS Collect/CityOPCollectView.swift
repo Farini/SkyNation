@@ -16,10 +16,15 @@ struct CityOPCollectView: View {
         VStack {
             
             Group {
-                Text("Outpost Collection")
-                    .font(.title2)
-                    .foregroundColor(.orange)
-                    .padding(.top)
+                HStack {
+                    Text("Outpost Collection")
+                        .font(GameFont.section.makeFont())
+//                        .foregroundColor(.orange)
+                        
+                    Spacer()
+                }
+                .padding([.horizontal, .top])
+                
                 
                 Divider()
             }
@@ -30,9 +35,15 @@ struct CityOPCollectView: View {
                     ForEach(controller.opCollectArray, id:\.id) { collectable in
                         HStack {
                             VStack(alignment:.leading) {
-                                Text(collectable.outpost.type.rawValue)
-                                    .font(.title3)
-                                    .foregroundColor(.orange)
+                                HStack(spacing:12) {
+                                    Text(collectable.outpost.type.rawValue)
+                                        .font(.title3)
+                                        .foregroundColor(.orange)
+                                    
+                                    Text("+ \(collectable.outpost.type.productionForCollection(level: collectable.outpost.level).makeString())")
+                                        .foregroundColor(.green)
+                                }
+                                
                                 
                                 HStack {
                                     Text("Date \(GameFormatters.dateFormatter.string(from: collectable.collected))")
@@ -43,12 +54,19 @@ struct CityOPCollectView: View {
                             
                             Spacer()
                             
-                            Button("Collect") {
-                                print("Collect")
-                                controller.collectFromOutpost(outpost: collectable.outpost)
+                            if collectable.isCollectable {
+                                if collectable.canCollect() {
+                                    Button("Collect") {
+                                        controller.collectFromOutpost(outpost: collectable.outpost)
+                                    }
+                                    .disabled(!collectable.canCollect())
+                                    .buttonStyle(GameButtonStyle())
+                                } else {
+                                    Text("\(collectable.timeToCollect.stringFromTimeInterval())")
+                                        .foregroundColor(.gray)
+                                }
                             }
-                            .disabled(!collectable.canCollect())
-                            .buttonStyle(GameButtonStyle())
+                            
                         }
                     }
                 }
@@ -61,5 +79,15 @@ struct CityOPCollectView: View {
 struct CityOPCollectView_Previews: PreviewProvider {
     static var previews: some View {
         CityOPCollectView(controller: LocalCityController())
+    }
+}
+
+extension Dictionary {
+    func makeString() -> String {
+        var result:String = ""
+        for (key, value) in self {
+            result += "\(key):\(value)"
+        }
+        return result
     }
 }

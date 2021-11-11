@@ -12,23 +12,66 @@ struct CityLabView: View {
     @ObservedObject var controller:LocalCityController
     @State var labState:CityLabState = .NoSelection
     
+    @State private var selectedRecipe:Recipe?
+    
     var body: some View {
         
         HStack {
             List() {
                 Section(header: recipeHeader) {
                     ForEach(controller.unlockedRecipes, id:\.self) { recipe in
-                        Text(recipe.rawValue).foregroundColor(.blue)
-                            .onTapGesture {
-                                self.labState = .recipe(name: recipe)
+                        
+                        HStack(alignment:.bottom) {
+                            
+                            Label {
+                                Text(recipe.rawValue)
+                                    .padding(.leading, 2)
+                            } icon: {
+                                recipe.image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 26, height: 26)
                             }
+                            .padding(.leading, 6)
+                            .padding(.vertical, 4)
+                            //.font(GameFont.mono.makeFont())
+                            Spacer()
+                        }
+                        .background(Color.black.opacity(0.3))
+                        .overlay(RoundedRectangle(cornerSize: CGSize(width: 4, height: 4))
+                                    .strokeBorder(style: StrokeStyle())
+                                    .foregroundColor(recipe == selectedRecipe ? Color.blue:Color.clear)
+                        )
+                        
+                        .onTapGesture {
+                            
+                            switch labState {
+                                case .activity(let object):
+                                    print("Activity going on:\(object.activityName). Can't choose ")
+//                                    errorMessage = "Wait for activity to be over"
+                                    self.selectedRecipe = nil
+                                    self.labState = .activity(object: object)
+                                    
+                                default:
+                                    self.selectedRecipe = recipe
+                                    self.labState = .recipe(name: recipe)
+                                    
+                            }
+                        }
                     }
                 }
                 Section(header: techHeader) {
                     ForEach(controller.unlockedTech, id:\.self) { tech in
                         Text(tech.rawValue).foregroundColor(.blue)
                             .onTapGesture {
-                                self.labState = .tech(name: tech)
+                                switch labState {
+                                    case .activity(let object):
+                                        print("Activity going on:\(object.activityName). Can't choose ")
+                                        self.selectedRecipe = nil
+                                        self.labState = .activity(object: object)
+                                    default:
+                                        self.labState = .tech(name: tech)
+                                }
                             }
                     }
                 }
@@ -79,6 +122,7 @@ struct CityLabView: View {
             }
         }
         .onAppear() {
+            
             if let activity = controller.labActivity {
                 self.labState = .activity(object: activity)
             }

@@ -60,6 +60,9 @@
 		8516AD77273B1E8500392C4F /* GuildElectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD76273B1E8500392C4F /* GuildElectionView.swift */; };
 		8516AD78273B1E8500392C4F /* GuildElectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD76273B1E8500392C4F /* GuildElectionView.swift */; };
 		8516AD79273B1E8500392C4F /* GuildElectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD76273B1E8500392C4F /* GuildElectionView.swift */; };
+		8516AD7B273CD98700392C4F /* TokenXChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD7A273CD98700392C4F /* TokenXChangeView.swift */; };
+		8516AD7C273CD98700392C4F /* TokenXChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD7A273CD98700392C4F /* TokenXChangeView.swift */; };
+		8516AD7D273CD98700392C4F /* TokenXChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD7A273CD98700392C4F /* TokenXChangeView.swift */; };
 		8517EE2B25F7C3AB00C34C54 /* MarsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE2A25F7C3AB00C34C54 /* MarsBuilder.swift */; };
 		8517EE2C25F7C3AB00C34C54 /* MarsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE2A25F7C3AB00C34C54 /* MarsBuilder.swift */; };
 		8517EE2D25F7C3AB00C34C54 /* MarsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE2A25F7C3AB00C34C54 /* MarsBuilder.swift */; };
@@ -725,6 +728,7 @@
 		8516AD6D2738CE8800392C4F /* GameRoomController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRoomController.swift; sourceTree = "<group>"; };
 		8516AD72273905B400392C4F /* GuildRoomController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildRoomController.swift; sourceTree = "<group>"; };
 		8516AD76273B1E8500392C4F /* GuildElectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildElectionView.swift; sourceTree = "<group>"; };
+		8516AD7A273CD98700392C4F /* TokenXChangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenXChangeView.swift; sourceTree = "<group>"; };
 		8517EE2A25F7C3AB00C34C54 /* MarsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarsBuilder.swift; sourceTree = "<group>"; };
 		8517EE3325FC11EF00C34C54 /* Guild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Guild.swift; sourceTree = "<group>"; };
 		8517EE4025FC124200C34C54 /* Outpost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Outpost.swift; sourceTree = "<group>"; };
@@ -1010,6 +1014,7 @@
 			children = (
 				8516AD642737AF0800392C4F /* GameRoomView.swift */,
 				856A64A82728885F0075CC04 /* CreditsView.swift */,
+				8516AD7A273CD98700392C4F /* TokenXChangeView.swift */,
 			);
 			path = "Game Room";
 			sourceTree = "<group>";
@@ -2087,6 +2092,7 @@
 				8504A51425C5D3B800739C58 /* CautionStripes.swift in Sources */,
 				85351EAB2709253700EEE04C /* GuildCreatorView.swift in Sources */,
 				85B34B1C26FA21FD007178F5 /* ContributionRoundView.swift in Sources */,
+				8516AD7B273CD98700392C4F /* TokenXChangeView.swift in Sources */,
 				857DDEC725E4DCAD00E64752 /* Messages.swift in Sources */,
 				8536F441258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				85E2C43226BE5753003315F2 /* Wallet.swift in Sources */,
@@ -2260,6 +2266,7 @@
 				856081FD26EE952F00C2418E /* LSSView.swift in Sources */,
 				8536F442258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				85487F4326CC691300EBC070 /* CityGateNode.swift in Sources */,
+				8516AD7C273CD98700392C4F /* TokenXChangeView.swift in Sources */,
 				85797510259B9E70004C54D2 /* FlipView.swift in Sources */,
 				8569A34C25A3D9590057A518 /* AirComposition.swift in Sources */,
 				8536F39B258D475D00B509D2 /* TechTree.swift in Sources */,
@@ -2569,6 +2576,7 @@
 				8597BBAA25BF40AB00C705A0 /* StartingWindow.swift in Sources */,
 				8536F410258D47D000B509D2 /* AnimationsTest.swift in Sources */,
 				85960B9925D9B3F000AC9592 /* EDLInventoryView.swift in Sources */,
+				8516AD7D273CD98700392C4F /* TokenXChangeView.swift in Sources */,
 				858E81B0272B7B4200122F59 /* EDLSceneController.swift in Sources */,
 				8536F43B258D47EA00B509D2 /* ModulesViewModel.swift in Sources */,
 				85F6675825AF7BBE00E5003B /* DeliveryVehicleNode.swift in Sources */,

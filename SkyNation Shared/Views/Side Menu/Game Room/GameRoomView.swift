@@ -136,8 +136,11 @@ struct GameRoomView: View {
                 case .freebie:
                     VStack {
                         Text("Freee Drop-off Supply")
-                            .font(.title2)
-                            .foregroundColor(.orange)
+//                            .font(.title2)
+                            .font(GameFont.section.makeFont())
+//                            .foregroundColor(.orange)
+                        
+                        Divider()
                         
                         HStack {
                             
@@ -188,7 +191,7 @@ struct GameRoomView: View {
                             }
                         }
                         
-                        Divider()
+                        
                         Spacer()
                         
                         if controller.freebiesAvailable == true {
@@ -240,22 +243,9 @@ struct GameRoomView: View {
                         }
                     }
                 case .xchange:
-                    VStack {
-                        Spacer()
-                        Text("XChange")
-                        Spacer()
-                        
-//                        if controller.giftedTokenMessage.isEmpty {
-//                            Text("Gifts ?").font(.title2)
-//                            Button(" 🎁 ") {
-//                                controller.searchGiftedToken()
-//                            }
-//                            .buttonStyle(GameButtonStyle())
-//                        } else {
-//                            Text(controller.giftedTokenMessage)
-//                        }
-                        
-                    }
+                    
+                    TokenXChangeView()
+                    
                 case .credits:
                     CreditsView()
             }

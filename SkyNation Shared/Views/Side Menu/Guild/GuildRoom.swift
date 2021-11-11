@@ -118,7 +118,7 @@ struct GuildRoom: View {
                     VStack {
                         
                         Text("My Guild")
-                            .font(.title)
+                            .font(GameFont.section.makeFont())
                             .padding(.top, 8)
                         
                         Divider()
@@ -170,18 +170,21 @@ struct GuildRoom: View {
                     
                 case .actions:
                     
-                    Spacer()
-                    Text("Actions")
-                    Spacer()
-                    
-                    VStack {
-                        Text("Citizens").font(.title)
-                        ForEach(controller.citizens) { citizen in
-                            PlayerCardView(pCard: citizen.makePlayerCard())
+                    // Show Players (Citizens) for now
+                    ScrollView {
+                        VStack {
+                            Text("Citizens")
+                                .font(GameFont.section.makeFont())
+                                .padding(.top, 8)
+                            
+                            Divider()
+                            ForEach(controller.citizens) { citizen in
+                                PlayerCardView(pCard: citizen.makePlayerCard())
+                            }
+                            Spacer()
                         }
                     }
                     
-                    // Show Players (Citizens) for now
                     
                 case .president:
                     
@@ -193,6 +196,9 @@ struct GuildRoom: View {
                         let entryTokens:Int = controller.player.wallet.tokens.filter({ $0.origin == .Entry && $0.usedDate != nil }).count
                         
                         Text("Search")
+                            .font(GameFont.section.makeFont())
+                            .padding(.top, 8)
+                        
                         HStack {
                             Text("Search")
                             TextField("Search", text: $controller.searchText)
@@ -249,7 +255,7 @@ struct GuildRoom: View {
             }
             
         }
-        .frame(minWidth:600, maxWidth:1000, minHeight:400, maxHeight:700)
+        .frame(minWidth:600, maxWidth:1000, minHeight:500, maxHeight:700)
         
     }
 }
