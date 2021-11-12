@@ -121,7 +121,6 @@ struct BioView: View {
             
             // Main Body
             Group {
-                
                 HStack {
                     
                     // TABLE Bio Boxes

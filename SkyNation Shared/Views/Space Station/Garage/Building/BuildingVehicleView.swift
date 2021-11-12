@@ -16,10 +16,11 @@ struct BuildingVehicleView: View {
     
     var body: some View {
         
-        VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 12) {
+        VStack(spacing: 12) {
             
             Label("Building Vehicle", systemImage: "wrench.and.screwdriver")
                 .font(GameFont.title.makeFont())
+                .padding(.top, 8)
             
             switch builderController.buildStage {
                 case .engineType:
@@ -33,7 +34,7 @@ struct BuildingVehicleView: View {
                     
                     HStack {
                         Spacer()
-                        LazyHGrid(rows: [GridItem(.flexible(minimum: 180, maximum: 250))], alignment: .top, spacing: /*@START_MENU_TOKEN@*/nil/*@END_MENU_TOKEN@*/, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
+                        LazyHGrid(rows: [GridItem(.flexible(minimum: 200, maximum: 250))], alignment: .top, spacing: /*@START_MENU_TOKEN@*/nil/*@END_MENU_TOKEN@*/, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
                             ForEach(EngineType.allCases, id:\.self) { engine in
                                 VStack(spacing:8) {
                                     Text("Engine \(engine.rawValue)").font(.headline)
@@ -139,87 +140,20 @@ struct BuildingVehicleView: View {
                         garageController.didSetupEngine(vehicle: vehicle, workers:builderController.workersArray)
                     }, controller: builderController)
                     
+                    
             }
+            Spacer()
         }
         .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: .center)
         .background(GameColors.darkGray)
     }
 }
-/*
-struct VehicleSolarChoice: View {
-    
-    @ObservedObject var controller:VehicleBuilderViewModel
-    @State var engine:EngineType
-    
-    var body: some View {
-        VStack {
-            Text("If you want to keep your batteries charged, you should use a solr panel")
-            HStack {
-                Spacer()
-                Button("Add 1") {
-                    controller.solarChoice(solar: 1)
-                }
-                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                Button("Add 2") {
-                    controller.solarChoice(solar: 2)
-                }
-                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                Button("Continue") {
-                    controller.solarChoice(solar: 0)
-                }
-                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                Spacer()
-            }
-        }
-    }
-}
 
-struct VehicleBotTech: View {
-    
-    @ObservedObject var controller:VehicleBuilderViewModel
-    @State var engine:EngineType
-    
-    var body: some View {
-        VStack {
-            Text("Add Bot?")
-            HStack {
-                Spacer()
-                Button("Skip") {
-                    controller.robotChoice(robot: nil)
-                }
-                .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                if engine == EngineType.Hex6 {
-                    Button("Satellite lid") {
-                        controller.robotChoice(robot: .Satellite)
-                    }
-                    .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                }
-                if engine == EngineType.T12 {
-                    Button("Rover") {
-                        controller.robotChoice(robot: .Rover)
-                    }
-                    .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                }
-                if engine == EngineType.T18 || engine == EngineType.T22 {
-                    Button("Terraformer") {
-                        controller.robotChoice(robot: .Terraformer)
-                    }
-                    .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                    Button("Transporter") {
-                        controller.robotChoice(robot: .Transporter)
-                    }
-                    .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                }
-                Spacer()
-            }
-        }
-    }
-}
-*/
 
 struct BuildingVehicleView_Previews: PreviewProvider {
     static var previews: some View {
         BuildingVehicleView(garageController: GarageViewModel())
+            .preferredColorScheme(.dark)
     }
 }
 
@@ -283,7 +217,7 @@ struct NameVehicleCard: View {
                 Divider()
                 
                 Text("\(vehicle.name)")
-                    .font(.title)
+                    // .font(.title)
                     .foregroundColor(.orange)
                 
                 HStack(alignment:.center) {
@@ -295,11 +229,11 @@ struct NameVehicleCard: View {
                             .fontWeight(.bold)
                     }
                 }
-                .padding([.top, .bottom])
+                .padding([.top, .bottom], 8)
                 .frame(width: 170)
                 .background(Color("Prograd2"))
                 .cornerRadius(4.0)
-                .padding([.top])
+                .padding([.top], 8)
                 
                 HStack(alignment:.center) {
                     Image(systemName: "scalemass")
@@ -310,11 +244,11 @@ struct NameVehicleCard: View {
                             .fontWeight(.bold)
                     }
                 }
-                .padding([.top, .bottom])
+                .padding([.top, .bottom], 8)
                 .frame(width: 170)
                 .background(Color("Prograd1"))
                 .cornerRadius(4.0)
-                .padding([.top])
+                .padding([.top], 8)
                 
                 Divider()
                 

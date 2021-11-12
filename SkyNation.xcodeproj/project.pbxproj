@@ -63,6 +63,9 @@
 		8516AD7B273CD98700392C4F /* TokenXChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD7A273CD98700392C4F /* TokenXChangeView.swift */; };
 		8516AD7C273CD98700392C4F /* TokenXChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD7A273CD98700392C4F /* TokenXChangeView.swift */; };
 		8516AD7D273CD98700392C4F /* TokenXChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD7A273CD98700392C4F /* TokenXChangeView.swift */; };
+		8516AD7F273E2C4600392C4F /* StepperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD7E273E2C4500392C4F /* StepperView.swift */; };
+		8516AD80273E2C4600392C4F /* StepperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD7E273E2C4500392C4F /* StepperView.swift */; };
+		8516AD81273E2C4600392C4F /* StepperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8516AD7E273E2C4500392C4F /* StepperView.swift */; };
 		8517EE2B25F7C3AB00C34C54 /* MarsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE2A25F7C3AB00C34C54 /* MarsBuilder.swift */; };
 		8517EE2C25F7C3AB00C34C54 /* MarsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE2A25F7C3AB00C34C54 /* MarsBuilder.swift */; };
 		8517EE2D25F7C3AB00C34C54 /* MarsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8517EE2A25F7C3AB00C34C54 /* MarsBuilder.swift */; };
@@ -729,6 +732,7 @@
 		8516AD72273905B400392C4F /* GuildRoomController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildRoomController.swift; sourceTree = "<group>"; };
 		8516AD76273B1E8500392C4F /* GuildElectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildElectionView.swift; sourceTree = "<group>"; };
 		8516AD7A273CD98700392C4F /* TokenXChangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenXChangeView.swift; sourceTree = "<group>"; };
+		8516AD7E273E2C4500392C4F /* StepperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperView.swift; sourceTree = "<group>"; };
 		8517EE2A25F7C3AB00C34C54 /* MarsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarsBuilder.swift; sourceTree = "<group>"; };
 		8517EE3325FC11EF00C34C54 /* Guild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Guild.swift; sourceTree = "<group>"; };
 		8517EE4025FC124200C34C54 /* Outpost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Outpost.swift; sourceTree = "<group>"; };
@@ -1409,6 +1413,7 @@
 				8536F3C7258D47D000B509D2 /* Parafernalia.swift */,
 				85108372271B16D8004D6D00 /* NetResponseView.swift */,
 				856A64A42727B5050075CC04 /* TypographyView.swift */,
+				8516AD7E273E2C4500392C4F /* StepperView.swift */,
 			);
 			path = TestViews;
 			sourceTree = "<group>";
@@ -2219,6 +2224,7 @@
 				85B34B0926F703B4007178F5 /* GameLoadingTab.swift in Sources */,
 				857D9A2E25C088AD00626884 /* PeripheralDetailView.swift in Sources */,
 				8592822D25EC44F7001233BE /* GuildExplorerView.swift in Sources */,
+				8516AD7F273E2C4600392C4F /* StepperView.swift in Sources */,
 				8504A51D25C6845200739C58 /* StationBuilder.swift in Sources */,
 				8592824325EC74FD001233BE /* GuildView.swift in Sources */,
 				8592825025EED6EF001233BE /* SpaceVehicleNode.swift in Sources */,
@@ -2393,6 +2399,7 @@
 				8536F4B0258D49C900B509D2 /* TravelersView.swift in Sources */,
 				8504A51E25C6845200739C58 /* StationBuilder.swift in Sources */,
 				8536F3D3258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */,
+				8516AD80273E2C4600392C4F /* StepperView.swift in Sources */,
 				85487F5826CD9B3D00EBC070 /* GameFonts.swift in Sources */,
 				85A6590725E4178F008AA9BA /* GameSettingsController.swift in Sources */,
 				8536F3E3258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */,
@@ -2438,6 +2445,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8504A51625C5D3B800739C58 /* CautionStripes.swift in Sources */,
+				8516AD81273E2C4600392C4F /* StepperView.swift in Sources */,
 				85351EAD2709253700EEE04C /* GuildCreatorView.swift in Sources */,
 				85B34B1E26FA21FD007178F5 /* ContributionRoundView.swift in Sources */,
 				85E2C41A26B9A960003315F2 /* GuildMakerView.swift in Sources */,

@@ -47,6 +47,7 @@ struct GameTypography: ViewModifier {
     }
 }
 
+/// All Tabs should use this modifier
 struct GameTabModifier: ViewModifier {
     
     var string:String
@@ -78,6 +79,7 @@ struct GameTabModifier: ViewModifier {
     private let unselinear = LinearGradient(gradient: unseGradient, startPoint: .topLeading, endPoint: .bottomTrailing)
 }
 
+/// Add a Badge to a Tab. Useful to display new stuff.
 struct Badged: ViewModifier {
     
     var string:String

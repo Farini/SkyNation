@@ -17,9 +17,6 @@ struct CityBioView: View {
     
     @State private var bioLimit:Int = 30
     
-    // Available slots
-    // available energy
-    
     var body: some View {
         VStack {
             
@@ -33,10 +30,14 @@ struct CityBioView: View {
                         Text("Max Boxes: \(bioLimit)")
                         
                         Section(header: Text("Bio Boxes")) {
+                            
                             ForEach(controller.cityData.bioBoxes) { biobox in
-                                Text(biobox.perfectDNA.isEmpty ? "Sprout":biobox.perfectDNA)
-                                    .font(.callout)
-                                    .foregroundColor(selectedBiobox?.id ?? UUID() == biobox.id ? Color.orange:Color.white)
+                                BioBoxRow(box: biobox)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 4, style: .continuous)
+                                            .inset(by: 0.5)
+                                            .stroke((biobox == selectedBiobox) == true ? Color.blue.opacity(0.9):Color.clear, lineWidth: 1)
+                                    )
                                     .onTapGesture {
                                         self.selectedBiobox = biobox
                                         self.selection = .selected(box: biobox)

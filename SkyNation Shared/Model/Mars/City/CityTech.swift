@@ -22,7 +22,6 @@ enum CityTech:String, Codable, CaseIterable, Identifiable {
     case Hab5
     case Hab6
     
-//    case OutsideDome1
     // biosphere
     case Biosphere2 // up to 50?
     case Biosphere3 // up to 100
@@ -80,8 +79,8 @@ enum CityTech:String, Codable, CaseIterable, Identifiable {
             case .Biosphere2, .Biosphere3, .Biosphere4, .Biosphere5: return "Bio Upgrade"
             case .recipeCement: return "Cement"
             case .recipeGlass: return "Glass"
-            case .recipeVehicle   : return "Vehicle"       // Can be split in different resources
-            case .recipeAirTrap   : return "Air Trap"       // Can be split
+            case .recipeVehicle   : return "Vehicle"
+            case .recipeAirTrap   : return "Air Trap"
             case .recipeBig: return "Big Tanks"
             case .recipeWaterSanitizer: return "Sanitation"
             case .recipeAlloy: return "Alloy"
@@ -93,6 +92,15 @@ enum CityTech:String, Codable, CaseIterable, Identifiable {
     var elaborated:String {
         switch self {
             case .Hab1, .Hab2, .Hab3, .Hab4, .Hab5, .Hab6: return "Adds room for more people"
+            case .Biosphere2, .Biosphere3, .Biosphere4, .Biosphere5: return "Additional slots for Biosphere. They serve as a source of food and DNA for the Guild's Biospheres."
+            case .recipeCement: return "Makes a compost of Mars' soil. Equivalent to the Earth's Cement"
+            case .recipeGlass: return "Enables the sunlight to pass through, while blocking all the radiation."
+           
+            case .recipeAirTrap   : return "Traps the martian air, for consumption. Mostly CO2 and some Hydrogen. Needs to be trnsformed into breathable air."
+            case .recipeBig: return "Make Big Tanks"
+            case .recipeWaterSanitizer: return "Sanitize the water found in Mars and is a better filter than the water filter itself."
+            case .recipeAlloy: return "Makes Alloy"
+            case .recipeGenerator: return "Generator makes electricity from CH4 + O2 combustion."
             default: return "Tech description goes here"
         }
     }
@@ -105,6 +113,21 @@ enum CityTech:String, Codable, CaseIterable, Identifiable {
             case .Hab1: return [.Iron:1]
             case .Hab2: return [.Iron:14, .Ceramic:8, .DCMotor:1]
             case .Hab3: return [.Iron:20, .Ceramic:16, .Silica:2]
+                
+            case .Hab4, .Hab5, .Hab6: return [.Iron:25, .Ceramic:18, .Silica:12]
+                
+            case .Biosphere2, .Biosphere3, .Biosphere4, .Biosphere5: return [.Fertilizer:25, .Iron:6, .Sensor:6]
+            case .recipeCement: return [.Fertilizer:6, .Aluminium:3, .Silica:8]
+                
+            case .recipeGlass: return [.Aluminium:16, .Copper:3, .Lithium:8]
+            case .recipeVehicle   : return [.Aluminium:16, .Copper:3, .DCMotor:8]
+            case .recipeAirTrap   : return [.DCMotor:6, .Sensor:3, .Lithium:8, .Copper:13]
+                
+            case .recipeBig: return [.Aluminium:8, .Copper:3, .Sensor:2]
+            case .recipeWaterSanitizer: return [.Fertilizer:6, .Aluminium:3, .Silica:8, .Copper:8, .Polimer:12]
+            case .recipeAlloy: return [.Aluminium:6, .Silica:8, .Copper:8, .Polimer:12]
+            case .recipeGenerator: return [.DCMotor:16, .Lithium:22]
+            
             default: return [:]
         }
     }
@@ -112,33 +135,68 @@ enum CityTech:String, Codable, CaseIterable, Identifiable {
     /// Amount of seconds it takes to complete this tech research
     var duration:Int {
         switch self {
-            default: return 1
+            
+            case .Hab1: return 60       // 1m
+            case .Hab2: return 360      // 6m
+            case .Hab3: return 60 * 60  // 1h
+            case .Hab4: return 80 * 80
+            case .Hab5: return 100 * 100
+            case .Hab6: return 100 * 100
+                
+                
+            case .Biosphere2: return 360
+            case .Biosphere3: return 60 * 60
+            case .Biosphere4: return 60 * 60
+            case .Biosphere5: return 60 * 60
+                
+            case .VehicleRoom1: return 360
+            case .VehicleRoom2: return 60 * 60
+            case .VehicleRoom3: return 60 * 60
+            case .VehicleRoom4: return 80 * 80
+            
+            case .recipeCement: return 360
+            case .recipeGlass: return 3600
+            case .recipeVehicle: return 3600
+            case .recipeAirTrap: return 360
+            case .recipeBig: return 360
+            case .recipeWaterSanitizer: return 3600
+            case .recipeAlloy: return 360
+            case .recipeGenerator: return 1200
         }
     }
     
     /// `Human` Skills required to research this tech
     var skillSet:[Skills:Int] {
         switch self {
-            default: return [.Handy:1]
+                
+            // default: return [.Handy:1]
+            case .Hab1: return [.Handy:1]
+            case .Hab2: return [.Handy:2]
+            case .Hab3: return [.Handy:1, .Material:1]
+            case .Hab4: return [.Handy:2, .Material:2]
+            case .Hab5: return [.Handy:2, .Datacomm:1, .Material:1]
+            case .Hab6: return [.Handy:2, .SystemOS:1, .Material:1]
+                
+            case .Biosphere2: return [.Biologic:1]
+            case .Biosphere3: return [.Handy:1, .Biologic:1]
+            case .Biosphere4: return [.Handy:2, .Biologic:2, .Datacomm:1]
+            case .Biosphere5: return [.Handy:2, .Biologic:2, .SystemOS:1]
+                
+            case .VehicleRoom1: return [.Handy:1, .Mechanic:1]
+            case .VehicleRoom2: return [.Handy:1, .Mechanic:1, .Datacomm:1]
+            case .VehicleRoom3: return [.Handy:1, .Mechanic:1, .SystemOS:1]
+            case .VehicleRoom4: return [.Handy:1, .Mechanic:1, .Datacomm:2, .SystemOS:1]
+                
+            case .recipeCement: return [.Handy:1]
+            case .recipeGlass:  return [.Handy:2, .Material:2, .Electric:2]
+            case .recipeVehicle:return [.Handy:2, .Mechanic:2, .Electric:1]
+            case .recipeAirTrap:return [.Handy:1, .Mechanic:1]
+            case .recipeBig:    return [.Handy:1]
+            case .recipeWaterSanitizer: return [.Handy:1, .Electric:1, .Biologic:2]
+            case .recipeAlloy:          return [.Handy:1, .Material:1]
+            case .recipeGenerator:      return [.Handy:1, .Electric:1, .Datacomm:1]
         }
     }
-}
-
-enum MarsRecipe:String, Codable, CaseIterable {
-    
-    case Cement     // Any Structure
-    case Glass      // Any Structure
-    case Alloy      // Any Structure
-    
-    case Generator  // Make energy from Methane
-    
-    case SolarCell
-    case Polimer
-    
-    case MegaTank
-    case MegaBox
-    
-    case EVehicle   // Extract Silica, Iron, Lithium, Crystals
 }
 
 struct CityTechTree {

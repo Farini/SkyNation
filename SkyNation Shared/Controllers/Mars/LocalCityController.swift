@@ -466,6 +466,24 @@ class LocalCityController:ObservableObject, BioController {
             cityData.labActivity = nil
             cityData.tech.append(tech)
             
+            // if tech is a recipe, add the recipe to the list
+            if tech == .recipeCement {
+                cityData.unlockedRecipes.append(Recipe.Cement)
+            }
+            if tech == .recipeGenerator {
+                cityData.unlockedRecipes.append(Recipe.PowerGen)
+            }
+            if tech == .recipeAlloy {
+                cityData.unlockedRecipes.append(Recipe.Alloy)
+            }
+            if tech == .recipeGlass {
+                cityData.unlockedRecipes.append(.ChargedGlass)
+            }
+            if tech == .recipeAirTrap {
+                cityData.unlockedRecipes.append(Recipe.AirTrapper)
+            }
+            // just missing big tank recipe
+            
             self.didSelectTab(tab: .lab)
             
             self.labActivity = nil

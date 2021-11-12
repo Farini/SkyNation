@@ -19,7 +19,6 @@ struct CityOPCollectView: View {
                 HStack {
                     Text("Outpost Collection")
                         .font(GameFont.section.makeFont())
-//                        .foregroundColor(.orange)
                         
                     Spacer()
                 }
