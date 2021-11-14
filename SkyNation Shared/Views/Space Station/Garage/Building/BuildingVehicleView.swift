@@ -12,65 +12,58 @@ struct BuildingVehicleView: View {
     
     @ObservedObject var builderController:VehicleBuilderViewModel = VehicleBuilderViewModel()
     @ObservedObject var garageController:GarageViewModel
+    
     @State var vehicleName:String = "Untitled"
+    
+    @State private var selectedType:EngineType? = nil
+    @State private var currentStep:Int = 1
     
     var body: some View {
         
         VStack(spacing: 12) {
             
-            Label("Building Vehicle", systemImage: "wrench.and.screwdriver")
+            Label("Building Space Vehicle", systemImage: "wrench.and.screwdriver")
                 .font(GameFont.title.makeFont())
                 .padding(.top, 8)
+            
+            StepperView(stepCounts: 4, current: self.currentStep, stepDescription: self.descriptionFor(step: currentStep))
             
             switch builderController.buildStage {
                 case .engineType:
                     
-                    Text("Choose Engine Type")
-                        .font(GameFont.section.makeFont())
-                        .foregroundColor(.orange)
-                        //.padding()
+                    LazyVGrid(columns: columns, alignment: HorizontalAlignment.leading, spacing: 20) {
+                        ForEach(EngineType.allCases, id:\.self) { eType in
+                            EngineCardHolder(eType: eType) { tappedEngine in
+                                print("Tapped Engine: \(tappedEngine)")
+                                self.selectedType = tappedEngine
+                                // builderController.newEngine(type: tappedEngine)
+                            }
+                        }
+                    }
+                    .padding(8)
                     
                     Divider()
                     
+                    // Buttons
                     HStack {
-                        Spacer()
-                        LazyHGrid(rows: [GridItem(.flexible(minimum: 200, maximum: 250))], alignment: .top, spacing: /*@START_MENU_TOKEN@*/nil/*@END_MENU_TOKEN@*/, pinnedViews: /*@START_MENU_TOKEN@*/[]/*@END_MENU_TOKEN@*/) {
-                            ForEach(EngineType.allCases, id:\.self) { engine in
-                                VStack(spacing:8) {
-                                    Text("Engine \(engine.rawValue)").font(.headline)
-                                        .padding([.top], 6)
-                                    Text("Max \(engine.payloadLimit)00 Kg")
-                                    Image(systemName: engine.imageSName).font(.title)
-                                    Text(engine.about)
-                                        .font(.footnote)
-                                        .foregroundColor(.gray)
-                                        .lineLimit(6)
-                                        .frame(maxWidth:130, maxHeight:.infinity)
-                                        .padding(4)
-                                        .fixedSize(horizontal: false, vertical: true)
-                                    
-                                    Text("XP > \(engine.requiredXP)")
-                                        .foregroundColor(.gray)
-                                        .lineLimit(nil)
-                                        .frame(maxWidth:130, maxHeight:20)
-                                        // .padding(4)
-                                    Text("⏱ \(engine.time.stringFromTimeInterval())")
-                                    Button("Build") {
-                                        print("Making some")
-                                        builderController.newEngine(type: engine)
-                                    }
-                                    .disabled(builderController.disabledEngine(type: engine))
-                                    .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
-                                    .padding([.bottom])
-                                }
-                                .padding(.vertical, 8)
-                                .background(Color.black)
-                                .cornerRadius(12)
-                                .frame(height: 250, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                            }
+                        Button("Cancel") {
+                            print("Cancel")
                         }
-                        Spacer()
+                        .buttonStyle(GameButtonStyle())
+                        
+                        if let selected = selectedType {
+                            Button {
+                                print("Continue with selected \(selected.rawValue)")
+                                builderController.newEngine(type: selected)
+                                self.currentStep = 2
+                            } label: {
+                                Label("Build \(selected.rawValue)", systemImage: "play.circle")
+                            }
+                            .buttonStyle(GameButtonStyle())
+                            .disabled(!isUnlocked(type: selected))
+                        }
                     }
+                    .padding(.bottom)
                     
                 case .pickEngineers(let engine):
                     
@@ -83,6 +76,7 @@ struct BuildingVehicleView: View {
                     
                     Divider()
                     
+                    // Buttons
                     HStack {
                         Button(action: {
                             garageController.cancelSelection()
@@ -97,6 +91,7 @@ struct BuildingVehicleView: View {
                         
                         Button("Build Engine") {
                             builderController.checkIngredients(engine: engine)
+                            self.currentStep = 3
                         }
                         .disabled(!builderController.hasSkills)
                         .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
@@ -127,6 +122,7 @@ struct BuildingVehicleView: View {
                         
                         Button("Charge") {
                             builderController.chargeIngredients()
+                            self.currentStep = 4
                         }
                         .disabled(!builderController.hasIngredients)
                         .buttonStyle(GameButtonStyle(labelColor: .red))
@@ -138,15 +134,43 @@ struct BuildingVehicleView: View {
                     
                     NameVehicleCard(vehicle: vehicle, closeAction: {
                         garageController.didSetupEngine(vehicle: vehicle, workers:builderController.workersArray)
+                        self.currentStep = 5
                     }, controller: builderController)
                     
                     
             }
             Spacer()
         }
-        .frame(minWidth: 600, minHeight: 500, maxHeight: 600, alignment: .center)
+        .frame(minWidth: 620, maxWidth:900, minHeight: 500, maxHeight: 600, alignment: .center)
         .background(GameColors.darkGray)
     }
+    
+    func isUnlocked(type:EngineType) -> Bool {
+        let xp = LocalDatabase.shared.station.garage.xp
+        if type.requiredXP <= xp {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func descriptionFor(step:Int) -> String {
+        switch step {
+            case 1: return "Choose an engine"
+            case 2: return "Select staff"
+            case 3: return "Charge Ingredients"
+            case 4: return "Name it"
+            case 5: return "You're all set"
+            default: return ""
+        }
+    }
+    
+    let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
 }
 
 

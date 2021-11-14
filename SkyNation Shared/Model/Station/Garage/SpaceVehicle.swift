@@ -81,6 +81,15 @@ enum EngineType:String, Codable, CaseIterable, Hashable {
             case .T22: return "snow"
         }
     }
+    
+    var imgSysName:String {
+        switch self {
+            case .Hex6: return  "EngineH6"
+            case .T12: return   "EngineT12"
+            case .T18: return   "EngineT18"
+            case .T22: return   "EngineT20"
+        }
+    }
 }
 
 enum VehicleStatus:String, CaseIterable, Codable, Hashable {

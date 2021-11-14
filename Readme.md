@@ -137,22 +137,24 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] BioModule - Save after creating box
 - [X] BioModule - Use (no selection)
 - [X] Freebies are now every 8 hrs.
-
 - [X] Split Chat Bubble in `GuildRoom` vs `GameRoom`
 - [X] LSS View - Tank Selection Row not updating
 - [X] Use EDLSceneView wherever appropriate
+- [X] Blender - Better Engines
+- [X] Garage View - Better Engines
 
-- [ ] Guild Room - President functions (Invite, Kickout, Modify Guild)
+- [ ] Guild Room - President functions (Kickout, Modify Guild)
+- [ ] Guild Room - Invite should work for everyone
 - [ ] Guild Room - If no president, move election to earlier
 - [ ] Guild Room - Test Election Results
 
+- [ ] Tech Tree Item View - Improve
 - [ ] BioModule - Inside View
+- [ ] Garage View - Fuel Vehicle to Launch, or Fail!
 
 - [ ] Model - Fix cost of Outpost level ups
 - [ ] Model - Road Updates
 - [ ] Model - Accounting with Totals (total oxygen, total water, total energy)
-
-- [ ] Images - Better Engines
 
 - [ ] New Warning Messages (from people selector)  - use everywhere that can throw an error.
 - [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
@@ -163,8 +165,9 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Mars Scene - City Garage - Vehicle Validation (when arriving (orbit)) - needs a token, if not valid.
 
 - [ ] Blender - Reduce Vertex Count, and make scene "DecorKit", to gather resources from there.
-- [ ] Blender - Consistent Materials - Metal1, Metal2, White, Rubber, etc.
-- [ ] Blender - Better Engines
+- [ ] Blender - Consistent Materials - Metal1(Aluminium), Metal2(Copper), White, Rubber, Solar Panels, etc
+- [ ] Blender - EDL Remake #5
+- [ ] Blender - All Solar Panels
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
 

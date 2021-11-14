@@ -10,7 +10,8 @@ import SwiftUI
 struct StepperView: View {
     
     var stepCounts:Int
-    @State var current:Int = 1
+    var current:Int = 1
+    var stepDescription:String?
     
     var grayBright:Color = Color.init(white: 0.75)
     var grayDark:Color = Color.init(white: 0.4)
@@ -24,10 +25,10 @@ struct StepperView: View {
                     ZStack {
                         Text("\(stepNum)")
                             .font(.title2).foregroundColor(current == stepNum ? Color.orange:current > stepNum ? grayDark:grayBright)
-                            .padding()
+                            .padding(12)
                             .background(
                                 Circle()
-                                    .stroke(lineWidth: 2.5)
+                                    .stroke(lineWidth: 1.5)
                                     .foregroundColor(current == stepNum ? Color.orange:current > stepNum ? grayDark:grayBright))
                     }
                     
@@ -46,19 +47,25 @@ struct StepperView: View {
             }
             .padding(.top, 6)
             
-            RoundedRectangle(cornerRadius: 3)
-                .background(LinearGradient(colors: [Color.red, Color.orange, Color.yellow, Color.green], startPoint: .leading, endPoint: .trailing))
-                .frame(height:6)
-                .padding(.bottom, 6)
+            Divider()
             
+            if let stepString = self.stepDescription {
+                HStack {
+                    Text("Step \(current).")
+                    Text(stepString)
+                    Spacer()
+                }
+                .font(GameFont.section.makeFont())
+                .foregroundColor(current > stepCounts ? .green:.orange)
+                .padding(.bottom, 6)
+            }
         }
         .padding(.horizontal)
-        
     }
 }
 
 struct StepperView_Previews: PreviewProvider {
     static var previews: some View {
-        StepperView(stepCounts: 4, current: 3)
+        StepperView(stepCounts: 4, current: 4, stepDescription: "Choose your engine")
     }
 }

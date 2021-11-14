@@ -93,7 +93,6 @@ struct LaboratoryView: View {
                     
                     // Close
                     Button(action: {
-//                        print("Close action")
                         NotificationCenter.default.post(name: .closeView, object: self)
                     }, label: {
                         Image(systemName: "xmark.circle")

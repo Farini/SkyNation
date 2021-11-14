@@ -33,24 +33,6 @@ struct CityTechDiagram: View {
                                 .onTapGesture {
                                     self.action(value.value)
                                 }
-//                VStack {
-//
-//                    Text("\(value.value.shortName)")
-//                        .font(.callout)
-//                        .padding([.top, .leading, .trailing], 6)
-//
-//                    Text("\(value.value.rawValue)")
-//                        .font(.caption)
-//                        .foregroundColor(.gray)
-//
-//                }
-//                .background(CityTechTree().unlockedTechAfter(doneTech: self.cityData.tech).contains(value.value) ? Color.blue:Color.black)
-//
-//                .cornerRadius(6)
-//                .padding(6)
-//                .onTapGesture {
-//                    self.action(value.value)
-//                }
                 
             })
         }
@@ -95,8 +77,6 @@ struct TechTreeItemView: View {
                 .font(GameFont.section.makeFont())
                 .padding([.top, .leading, .trailing], 6)
             
-//            Divider()
-//                .frame(width:100)
             Image(systemName: imageName)
                 .font(.title)
                 .foregroundColor(status == TechStatus.researched ? Color.green:Color.white)
