@@ -116,7 +116,7 @@ class GarageViewModel:ObservableObject {
                 travellingVehicles.removeAll(where: { $0.id == vehicle.id })
                 city.garage.vehicles.append(vehicle)
                 // Achievement
-                GameMessageBoard.shared.newAchievement(type: .vehicleLanding(vehicle: vehicle), money: 500, message: nil)
+                // GameMessageBoard.shared.newAchievement(type: .vehicleLanding(vehicle: vehicle), money: 500, message: nil)
             }
         }
     }

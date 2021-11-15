@@ -17,6 +17,7 @@ struct GameSettingsTabView: View {
     @State var showLights:Bool = GameSettings.shared.showLights
     @State var clearTanks:Bool = GameSettings.shared.clearEmptyTanks
     @State var mergeTanks:Bool = GameSettings.shared.autoMergeTanks
+    @State var serveBiobox:Bool = GameSettings.shared.serveBioBox
     @State var startingScene:GameSceneType = GameSettings.shared.startingScene
     @State var autoStart:Bool = GameSettings.shared.autoStartScene ?? false
     
@@ -49,16 +50,6 @@ struct GameSettingsTabView: View {
                         Text("🎮 Gameplay")//.font(.title)
                             .modifier(GameTypography(.title))
                         
-//                        Picker(selection: $startingScene, label: Text("Main Scene")) {
-//                            ForEach(GameSceneType.allCases, id:\.self) { sceneCase in
-//                                Text(sceneCase.rawValue)
-//                                    .onTapGesture {
-//                                        print("Set another scene")
-//                                    }
-//                            }
-//                        }
-//                        .frame(maxWidth: 200)
-                        
                         Toggle("Clear empty tanks", isOn:$clearTanks)
                         // Explanation
                         Text("* When a tank is empty, it is thrown away whether it is reusable or not.")
@@ -73,6 +64,13 @@ struct GameSettingsTabView: View {
                             .font(.footnote)
                             .frame(maxWidth:250)
                             .onChange(of: mergeTanks) { _ in self.saveSettings() }
+                        
+                        Toggle("Serve Biobox", isOn: $serveBiobox)
+                        Text("* In the Station, you may serve the food from the Biobox, or save it to transport.")
+                            .foregroundColor(.gray)
+                            .font(.footnote)
+                            .frame(maxWidth:250)
+                            .onChange(of: serveBiobox) { _ in self.saveSettings() }
                         
                         
                         Toggle("Show Tutorial", isOn:$showTutorial)
@@ -135,6 +133,7 @@ struct GameSettingsTabView: View {
         // Logic preferences
         settings.clearEmptyTanks = self.clearTanks
         settings.showTutorial = self.showTutorial
+        settings.serveBioBox = self.serveBiobox
         
         // Sounds
         settings.musicOn = self.musicOn

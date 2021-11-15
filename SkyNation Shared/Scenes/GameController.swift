@@ -115,8 +115,10 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                                     if let city = self.mars?.didTap(city: posdex) {
                                         // Open City View
                                         gameNavDelegate?.openCityView(posdex: posdex, city: city)
+                                        return
                                     } else {
                                         gameNavDelegate?.openCityView(posdex: posdex, city: nil)
+                                        return
                                     }
                                 }
                             }
@@ -130,6 +132,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                                     print("Found Outpost! Posdex:\(posdex.rawValue) \(posdex.sceneName)")
                                     if let outpost = self.mars?.didTap(on: posdex) {
                                         gameNavDelegate?.openOutpostView(posdex: posdex, outpost: outpost)
+                                        return
                                     }
                                     
                                 }
@@ -148,21 +151,37 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             if let modName = result.node.name {
                 print("Mod Name: \(modName)")
                 
-                for mod in modules {
-                    if mod.id.uuidString == modName {
-                        if let lab = station?.lookupModule(id: mod.id) as? LabModule {
-                            print("Lab: \(lab.name)")
-                            gameNavDelegate?.didSelectLab(module: lab)
-                        }else if let hab = station?.lookupModule(id: mod.id) as? HabModule {
-                            gameNavDelegate?.didSelectHab(module: hab)
-                        }else if let bio = station?.lookupModule(id: mod.id) as? BioModule {
-                            gameNavDelegate?.didSelectBio(module: bio)
-                        }else if let lab = station?.lookupModule(id: mod.id) as? Module {
-                            print("It is indeed a crude module: [\(lab.type)]")
-                            gameNavDelegate?.didChooseModule(name: modName)
-                        }
+                if let mod = modules.filter({ $0.id.uuidString == modName }).first {
+                    if let lab = station?.lookupModule(id: mod.id) as? LabModule {
+                        gameNavDelegate?.didSelectLab(module: lab)
+                        return
+                    }else if let hab = station?.lookupModule(id: mod.id) as? HabModule {
+                        gameNavDelegate?.didSelectHab(module: hab)
+                        return
+                    }else if let bio = station?.lookupModule(id: mod.id) as? BioModule {
+                        gameNavDelegate?.didSelectBio(module: bio)
+                        return
+                    }else if let _ = station?.lookupModule(id: mod.id) as? Module {
+                        gameNavDelegate?.didChooseModule(name: modName)
+                        return
                     }
                 }
+                
+//                for mod in modules {
+//                    if mod.id.uuidString == modName {
+//                        if let lab = station?.lookupModule(id: mod.id) as? LabModule {
+//                            print("Lab: \(lab.name)")
+//                            gameNavDelegate?.didSelectLab(module: lab)
+//                        }else if let hab = station?.lookupModule(id: mod.id) as? HabModule {
+//                            gameNavDelegate?.didSelectHab(module: hab)
+//                        }else if let bio = station?.lookupModule(id: mod.id) as? BioModule {
+//                            gameNavDelegate?.didSelectBio(module: bio)
+//                        }else if let lab = station?.lookupModule(id: mod.id) as? Module {
+//                            print("It is indeed a crude module: [\(lab.type)]")
+//                            gameNavDelegate?.didChooseModule(name: modName)
+//                        }
+//                    }
+//                }
                 
                 if modName == "Truss" || "Truss" == result.node.parent?.name {
                     gameNavDelegate?.didSelectTruss(station: self.station!)

@@ -600,8 +600,6 @@ extension Station {
         // Air
         let quality = air.airQuality()
         
-        
-        
         if air.o2 >= 2 {
             // ok
             air.o2 -= 2

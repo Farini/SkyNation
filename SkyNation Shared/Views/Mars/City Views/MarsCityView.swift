@@ -101,16 +101,29 @@ struct MarsCityView: View {
                         
                         Divider()
                         
+                        if !controller.warnings.isEmpty {
+                            Text(controller.warnings.joined(separator: ", "))
+                                .foregroundColor(.orange)
+                                .transition(.slide)
+                        }
+                        
                         Button("Claim City") {
                             controller.claimCity(posdex: posdex)
                         }
                         .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
                         .padding(.bottom, 8)
+                        
                     } else {
                         Text("Cities are the building blocks of the Mars Colony.")
                         Text("This city is available for any Guild member to claim.")
                         
                         Divider()
+                        
+                        if !controller.warnings.isEmpty {
+                            Text(controller.warnings.joined(separator: ", "))
+                                .foregroundColor(.orange)
+                                .transition(.slide)
+                        }
                         
                         Button("Claim City") {
                             controller.claimCity(posdex: posdex)

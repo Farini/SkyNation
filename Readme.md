@@ -142,10 +142,11 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Use EDLSceneView wherever appropriate
 - [X] Blender - Better Engines
 - [X] Garage View - Better Engines
+- [X] Claim city - Needs to show success message and maybe close the window
+- [X] Settings - Serve Biobox
 
 - [ ] Guild Room - President functions (Kickout, Modify Guild)
 - [ ] Guild Room - Invite should work for everyone
-- [ ] Guild Room - If no president, move election to earlier
 - [ ] Guild Room - Test Election Results
 
 - [ ] Tech Tree Item View - Improve
@@ -153,14 +154,12 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Garage View - Fuel Vehicle to Launch, or Fail!
 
 - [ ] Model - Fix cost of Outpost level ups
-- [ ] Model - Road Updates
+- [ ] Model - Guild Missions (About.MD)
 - [ ] Model - Accounting with Totals (total oxygen, total water, total energy)
 
 - [ ] New Warning Messages (from people selector)  - use everywhere that can throw an error.
 - [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
 - [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
-- [ ] Claim city - Needs to show success message and maybe close the window
-- [ ] Claim city - Not decoding from Server? But later it shows as your city.
 
 - [ ] Mars Scene - City Garage - Vehicle Validation (when arriving (orbit)) - needs a token, if not valid.
 
@@ -183,6 +182,10 @@ Folders Done
 - [X] Space Station Folder
 - [X] Side Menu: 11/11/2021
 - [ ] Mars
+    - [ ] Outpost View - Show State, and be more responsive
+    - [ ] City View - Hab - Remake with new Views
+    - [ ] City View - Lab - Remake with new Views
+    - [ ] City View - Bio - Remake with new Views
 
 
 - [ ] iOS - Views are too large

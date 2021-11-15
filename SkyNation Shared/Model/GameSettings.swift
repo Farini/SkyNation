@@ -65,7 +65,7 @@ class GameSettings:Codable {
         self.showLights = true
         self.clearEmptyTanks = false
         self.autoMergeTanks = true
-        self.serveBioBox = false
+        self.serveBioBox = true
         
         // Sounds
         self.musicOn = true

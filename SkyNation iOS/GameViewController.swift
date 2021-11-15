@@ -211,7 +211,7 @@ extension GameViewController:GameNavDelegate {
     func didSelectTruss(station: Station) {
         print("Truss View")
         clearInterface()
-        let newHost = UIHostingController(rootView: LSSView(scene: .SpaceStation))
+        let newHost = UIHostingController(rootView: TrussLayoutView())
         
         newHost.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(newHost.view)

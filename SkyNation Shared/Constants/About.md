@@ -91,6 +91,20 @@ Josh Gambrell: https://www.youtube.com/channel/UCXfGjwohMgPm4Ng2e1FXySw
 PBX Texturing (Atlasses)
 Animations
 
+## Guild Missions
+
+- GuildMission - Equivalent to GameCenter's Achievements
+    - Update Roads
+    - Other Updates
+    - Unlock Outposts
+    - Rewards
+
+- GuildMapItem - Items posted in map scene
+    - road segments
+    - Guild E-Vehicle
+    - Unlock Outposts
+
+
 
 ## 📝 Done Items - Past
 
