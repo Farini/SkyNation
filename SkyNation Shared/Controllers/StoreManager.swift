@@ -45,11 +45,9 @@ enum ShoppingStep {
 
 class StoreController: ObservableObject, StoreManagerDelegate {
     
-    
     /// Keeps track of all valid products. These products are available for sale in the App Store.
     @Published var appStoreProducts:[SKProduct] = []
     @Published var gameProducts:[GameProduct] = []
-    
     
     // Selection
     @Published var selectedProduct:GameProduct?
@@ -168,7 +166,8 @@ class StoreController: ObservableObject, StoreManagerDelegate {
         SKPaymentQueue.default().restoreCompletedTransactions()
     }
     
-    func getReceipt() {
+    func getReceipt() -> String {
+        
         // Get the receipt if it's available
         if let appStoreReceiptURL = Bundle.main.appStoreReceiptURL,
            FileManager.default.fileExists(atPath: appStoreReceiptURL.path) {
@@ -177,12 +176,18 @@ class StoreController: ObservableObject, StoreManagerDelegate {
                 let receiptData = try Data(contentsOf: appStoreReceiptURL, options: .alwaysMapped)
                 print(receiptData)
                 
-                let receiptString = receiptData.base64EncodedString(options: [])
-                print("Receipt: \(receiptString)")
+                let dd = Data(base64Encoded: receiptData)
+                let receiptString = String(data: dd ?? receiptData, encoding: .utf8) ?? "Incorrect"
                 
-                // FIXME: - Read receiptData
+                print("Receipt: \(receiptString)")
+                return receiptString
             }
-            catch { print("Couldn't read receipt data with error: " + error.localizedDescription) }
+            catch {
+                print("Couldn't read receipt data with error: " + error.localizedDescription)
+                return "Failed to get receipt. Reason \(error.localizedDescription)"
+            }
+        } else {
+            return "\(selectedProduct?.type.storeIdentifier ?? UUID().uuidString)"
         }
     }
     
@@ -241,6 +246,8 @@ class StoreController: ObservableObject, StoreManagerDelegate {
     func handlePurchased(_ transaction: SKPaymentTransaction) {
         
         let player = LocalDatabase.shared.player
+        self.errorMessage = ""
+        self.alertMessage = nil
         
         if let gProduct:GameProduct = gameProducts.first(where: { $0.id == transaction.payment.productIdentifier }) {
             
@@ -249,7 +256,6 @@ class StoreController: ObservableObject, StoreManagerDelegate {
             let moneyAmount = gProduct.type.moneyAmount
             
             // FIXME: - unique receipt for token
-//            let p = transaction.scriptingProperties.
             
             print("Player about to get \(tokenAmount) tokens, and \(moneyAmount) SkyCoins")
             if let date = transaction.transactionDate {
@@ -259,40 +265,39 @@ class StoreController: ObservableObject, StoreManagerDelegate {
                 let fullDateString = GameFormatters.fullDateFormatter.string(from: date)
                 let productIDString = transaction.payment.productIdentifier
                 let completeString = "\(fullDateString)|\(productIDString)"
-                print("\n\n String Before Encoding: \n\(completeString)")
-                // let encodedString = Data(base64Encoded: completeString)
                 
-                // print("Encoded String: \(encodedString?.count)")
+                print("\n\n String Before Encoding: \n\(completeString)")
             }
-            
-            
-            
             
             // Purchase
             let purch = Purchase(product: gProduct.type, kit: self.selectedKit, receipt: transaction.payment.productIdentifier)
             
             
-            // Add the tokens
+            // Create both regular Tokens and Invite Tokens
             let tokens = purch.getTokens()
             player.wallet.tokens.append(contentsOf: tokens)
-            
-            // FIXME: - add 'invite' token
-            // Invite tokens
+            // Invite tokens are created and returned above
             
             // Add the money
             let money = player.money + moneyAmount
             player.money = money
             
             // Save Player
-            // Save
             do {
                 try LocalDatabase.shared.savePlayer(player)
+                purchased.append(transaction)
+                // Finish the successful transaction.
+                SKPaymentQueue.default().finishTransaction(transaction)
+                self.alertMessage = "Purchase registered"
+                
             } catch {
                 print("‼️ Could not save player.: \(error.localizedDescription)")
+                self.errorMessage = "‼️ Could not save player.: \(error.localizedDescription)"
+                return
             }
             
             // Kit
-            // Add items from Kit
+            // Add items from Kit to Station
             print("Adding items from Kit")
             let station = LocalDatabase.shared.station
             for (tank, value) in selectedKit.tanks {
@@ -325,32 +330,40 @@ class StoreController: ObservableObject, StoreManagerDelegate {
                 try LocalDatabase.shared.saveStation(station)
             } catch {
                 print("‼️ Could not save station.: \(error.localizedDescription)")
+                self.errorMessage = "‼️ Could not save player.: \(error.localizedDescription)"
+                return
             }
             
-            
+            if self.errorMessage.isEmpty {
+                // Register in server
+                SKNS.registerPurchase(purchase: purch) { gameTokens, errorString in
+                    print("Registering purchase response. \nTokens \(gameTokens.count) \nError:\(errorString ?? "n/a")\n")
+                    self.alertMessage = "Purchase registered"
+                }
+                // updates
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    self.step = .receipt
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        self.step = .product
+                    }
+                }
+            }
         }
-//        transaction.payment.rece
-        purchased.append(transaction)
-        
-        // Finish the successful transaction.
-        SKPaymentQueue.default().finishTransaction(transaction)
     }
     
     /// Handles failed purchase transactions.
     func handleFailed(_ transaction: SKPaymentTransaction) {
-        //        var message = "\(Messages.purchaseOf) \(transaction.payment.productIdentifier) \(Messages.failed)"
         
         if let error = transaction.error {
-            //            message += "\n\(Messages.error) \(error.localizedDescription)"
             print("Failed Transaction: \(error.localizedDescription)")
+            self.errorMessage = "Transaction failed. Reason: \(error.localizedDescription)"
         }
         
         // Do not send any notifications when the user cancels the purchase.
         if (transaction.error as? SKError)?.code != .paymentCancelled {
-            //            DispatchQueue.main.async {
-            //                self.delegate?.storeObserverDidReceiveMessage(message)
-            //            }
+            self.errorMessage = "Payment Cancelled"
         }
+        
         // Finish the failed transaction.
         SKPaymentQueue.default().finishTransaction(transaction)
     }

@@ -113,16 +113,18 @@ struct StationTechItemView: View {
     var status:StationTechStatus
     
     var body: some View {
-        VStack(spacing:3) {
+        ZStack(alignment:status == StationTechStatus.researched ? .top:.bottom) {
             Text(item.shortName)
-                .font(GameFont.section.makeFont())
-                .padding([.top, .leading, .trailing], 6)
+                .font(status == StationTechStatus.researched ? .body:GameFont.section.makeFont())
+                .foregroundColor(status == StationTechStatus.researched ? Color.gray:Color.white)
+                .padding(status == StationTechStatus.researched ? .top:.bottom)
             
-            //            Divider()
-            //                .frame(width:100)
             Image(systemName: imageName)
-                .font(.title)
-                .foregroundColor(status == StationTechStatus.researched ? Color.green:Color.white)
+                .font(status == StationTechStatus.researched ? .body:.title)
+                .foregroundColor(status == StationTechStatus.researched ? Color.green: status == StationTechStatus.unlocked ? Color.blue:Color.gray.opacity(0.5))
+                .padding(status == StationTechStatus.researched ? 3:2)
+                .background(Color.black.opacity(0.5))
+                .cornerRadius(4)
             
         }
         .padding(5)
@@ -135,7 +137,7 @@ struct StationTechItemView: View {
     var statusColor:Color {
         switch self.status {
             case .locked: return Color(.sRGB, red: 0.5, green: 0.1, blue: 0.1, opacity: 1.0)
-            case .unlocked: return .blue//Color(.sRGB, red: 0.1, green: 0.1, blue: 0.6, opacity: 1.0)
+            case .unlocked: return .blue
             case .researched: return Color.black.opacity(1.0)
         }
     }

@@ -90,6 +90,24 @@ enum EngineType:String, Codable, CaseIterable, Hashable {
             case .T22: return   "EngineT20"
         }
     }
+    
+    var propulsionNitro:Int {
+        switch self {
+            case .Hex6: return 5
+            case .T12:  return 10
+            case .T18:  return -1
+            case .T22:  return -1
+        }
+    }
+    
+    var propulsionCH4:Int {
+        switch self {
+            case .Hex6: return 3
+            case .T12:  return 5
+            case .T18:  return 20
+            case .T22:  return 22
+        }
+    }
 }
 
 enum VehicleStatus:String, CaseIterable, Codable, Hashable {

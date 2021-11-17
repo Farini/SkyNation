@@ -144,14 +144,27 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Garage View - Better Engines
 - [X] Claim city - Needs to show success message and maybe close the window
 - [X] Settings - Serve Biobox
+- [X] Player password recovery (Better method)
+- [X] Garage View - Fuel Vehicle to Launch, or Fail!
+
+- [ ] Tests
+- [ ] Store receipt view
+- [ ] Election Results
 
 - [ ] Guild Room - President functions (Kickout, Modify Guild)
 - [ ] Guild Room - Invite should work for everyone
 - [ ] Guild Room - Test Election Results
 
+- [ ] LSSView Poop not going away
+- [ ] LSSView Fix List cells
+
+- [X] Store - Improve the view where the purchase happens
+- [X] Store - Improvements (Button, Sub-list)
+- [ ] Store - Save receipt in a file
+- [ ] Store - Use Promocode underneath products AND use a button to get there.
+
 - [ ] Tech Tree Item View - Improve
 - [ ] BioModule - Inside View
-- [ ] Garage View - Fuel Vehicle to Launch, or Fail!
 
 - [ ] Model - Fix cost of Outpost level ups
 - [ ] Model - Guild Missions (About.MD)

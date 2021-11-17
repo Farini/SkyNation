@@ -185,7 +185,10 @@ class BioBox:Codable, Identifiable {
             let ascii = dna.asciiArray
             var fitness = 0
             for c in 0...ascii.count-1 {
-                fitness += abs(Int(ascii[c]) - Int(optimal[c]))
+                if c < optimal.count {
+                    fitness += abs(Int(ascii[c]) - Int(optimal[c]))
+                }
+                
             }
             if fitness < bestFit {
                 bestFitString = dna

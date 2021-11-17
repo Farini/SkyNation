@@ -126,7 +126,7 @@ enum TechItems:String, Codable, CaseIterable, Identifiable {
             case .module7, .module8, .module9, .module10: return "Opt. Module"
             case .garage: return "Garage"
             case .GarageArm: return "GarageBot"
-            case .AU1, .AU2, .AU3, .AU4: return "⬆️ Antenna"
+            case .AU1, .AU2, .AU3, .AU4: return "Antenna"
             case .recipeMethane: return "Methanizer"
             case .recipeScrubber: return "Scrubber"
             case .recipeBioSolidifier: return "💩 Biosolids"

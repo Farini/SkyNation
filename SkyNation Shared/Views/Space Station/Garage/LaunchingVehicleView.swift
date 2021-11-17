@@ -11,15 +11,18 @@ import SceneKit
 struct LaunchingVehicleView: View {
     
     @ObservedObject var controller:GarageViewModel
-    @ObservedObject var launchController:VehicleLaunchControl
+    var vehicle:SpaceVehicle
     
     init(vehicle:SpaceVehicle, controller:GarageViewModel) {
-        self.launchController = VehicleLaunchControl(vehicle: vehicle)
+        self.vehicle = vehicle
         self.controller = controller
     }
     
     var body: some View {
         VStack {
+
+            let propulsionCheck = controller.runPropulsionCheck(vehicle: vehicle)
+            
             Text("Prepare for launch").font(.largeTitle)
                 .padding(.top)
                 .foregroundColor(.orange)
@@ -31,61 +34,72 @@ struct LaunchingVehicleView: View {
                     // Checklist
                     VStack(spacing:4) {
                         Text("Propulsion Checklist")
-                            //.font(GameFont.mono.makeFont())
+                            .font(GameFont.section.makeFont())
                         
-                        Divider().offset(x:0, y:-3)
+                        Divider().offset(x:0, y:-2)
                         HStack {
-                            Text(launchController.propulsionCheck.ch4Check ? "✅":"❌")
-                            Text("CH4")
+                            Text("tank")
                             Spacer()
-                            Text("\(launchController.propulsionCheck.ch4)")
+                            Text("req")
+                            Text("av.")
                         }
                         .font(GameFont.mono.makeFont())
                         .padding([.leading, .trailing])
+                        
                         HStack {
-                            Text(launchController.propulsionCheck.o2Check ? "✅":"❌")
-                            Text("O2")
-                            Spacer()
-                            Text("\(launchController.propulsionCheck.o2)")
-                        }
-                        .font(GameFont.mono.makeFont())
-                        .padding([.leading, .trailing])
-                        HStack {
-                            Text(launchController.propulsionCheck.n2Check ? "✅":"❌")
+                            Text(propulsionCheck.n2Check == true ? "✅":"❌")
                             Text("N2")
                             Spacer()
-                            Text("\(launchController.propulsionCheck.n2)")
+                            Text("\(propulsionCheck.n2Needed)")
+                            Text("\(propulsionCheck.n2Available)")
                         }
                         .font(GameFont.mono.makeFont())
                         .padding([.leading, .trailing])
+                        
+                        HStack {
+                            Text(propulsionCheck.ch4Check == true ? "✅":"❌")
+                            Text("CH4")
+                            Spacer()
+                            Text("\(propulsionCheck.ch4Needed)")
+                            Text("\(propulsionCheck.ch4Available)")
+                        }
+                        .font(GameFont.mono.makeFont())
+                        .padding([.leading, .trailing])
+                        
                     }
                     .padding(6)
                     .background(Color.black)
                     .cornerRadius(8)
-                    .frame(width: 150)
+                    .padding(.bottom, 8)
                     
-                    // Warnings
-                    VStack(spacing:4) {
-                        Text("⚠️ Warnings")
-                            .padding([.bottom], 6)
-                        ForEach(launchController.primaryWarnings, id:\.self) { warning in
-                            Text(warning).foregroundColor(.red)
+                    if propulsionCheck.n2Check == false && propulsionCheck.ch4Check == false {
+                        Group {
+                            Text("⚠️")
+                            Divider()
+                            Text("Need Propulsion.")
+                            Text("Nitrogen (N2), or Methane (CH4) tanks")
+                            Text("provide fuel to your vehicle.")
                         }
-                        ForEach(launchController.sencondWarnings, id:\.self) { warning in
-                            Text(warning).foregroundColor(.orange)
+                        .foregroundColor(.red)
+                    } else {
+                        Group {
+                            Text("⚠️")
+                            Divider()
+                            Text("\(vehicle.name) is ready to launch.")
                         }
+                        .foregroundColor(.green)
+                        
                     }
-                    .padding(6)
-                    .background(Color.black)
-                    .cornerRadius(8)
                 }
                 
                 Spacer()
                 
-                VehicleTrunkView(vehicle: launchController.vehicle)
+                VehicleTrunkView(vehicle: vehicle)
             }
             
             Divider()
+            
+            
             
             HStack {
                 
@@ -109,11 +123,13 @@ struct LaunchingVehicleView: View {
                 
                 Button("Launch") {
                     print("Launch Vehicle")
-                    controller.launch(vehicle: launchController.vehicle)
+                    controller.launch(vehicle: vehicle)
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
+                .disabled(propulsionCheck.n2Check == false && propulsionCheck.ch4Check == false)
                 
             }
+            .padding(.bottom, 8)
         }
         .padding()
     }
@@ -144,6 +160,7 @@ struct PostLaunchVehicleView: View {
     }
 }
 
+/*
 struct PropulsionChecklistObject {
     
     var ch4:Int
@@ -186,7 +203,9 @@ struct PropulsionChecklistObject {
         }
     }
 }
+*/
 
+/*
 class VehicleLaunchControl:ObservableObject {
     
     @Published var vehicle:SpaceVehicle
@@ -224,6 +243,7 @@ class VehicleLaunchControl:ObservableObject {
         }
     }
 }
+*/
 
 struct LaunchingVehicleView_Previews: PreviewProvider {
     

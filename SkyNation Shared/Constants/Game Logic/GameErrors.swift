@@ -53,6 +53,9 @@ enum ServerDataError:Error, CustomStringConvertible, LocalizedError  {
     /// Returned when performing player authorized login
     case failedAuthorization
     
+    case localCoding
+    case remoteCoding
+    
     // MARK: - Descriptions
     
     var description: String {
@@ -60,6 +63,8 @@ enum ServerDataError:Error, CustomStringConvertible, LocalizedError  {
             case .noOutpostFile: return "No Outpost File found."
             case .noServerDataFile: return "Could not find server data."
             case .failedAuthorization: return "Failed server authorization."
+            case .localCoding: return "Could not [decode|encode] object locally."
+            case .remoteCoding: return "Server Could not [decode|encode] object."
         }
     }
     

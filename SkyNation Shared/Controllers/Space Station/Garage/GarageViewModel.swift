@@ -491,12 +491,57 @@ class GarageViewModel:ObservableObject {
             }
         }
         
-        // Check if over limit?
-        
-        // Save
-        
         didSelectBuildEnd(vehicle: vehicle)
-//        cancelSelection()
+    }
+    
+    func runPropulsionCheck(vehicle:SpaceVehicle) -> PropulsionCheckObject {
+        
+        let types:[TankType] = [TankType.ch4, TankType.n2]
+        let propulsionTanks:[Tank] = station.truss.tanks.filter({ types.contains($0.type) && $0.current > 0 })
+        
+        let nitroAmount = vehicle.engine.propulsionNitro
+        let ch4Amount = vehicle.engine.propulsionCH4
+        
+        // Check Nitro
+        var nitroCheck:Bool = false
+        let nitroNeeded:Int = vehicle.engine.propulsionNitro
+        var nitroAvailable:Int = 0
+        
+        if nitroAmount > 0 {
+            let result = propulsionTanks.filter({ $0.type == .n2 }).compactMap({ $0.current }).reduce(0, +)
+            nitroAvailable = result
+            
+            if result > nitroAmount {
+                // ok
+                nitroCheck = true
+            } else {
+                // not enough
+            }
+        } else {
+            // not needed
+        }
+        
+        var chCheck:Bool = false
+        let chNeeded:Int = vehicle.engine.propulsionCH4
+        var chAvailable:Int = 0
+        
+        if ch4Amount > 0 {
+            let result = propulsionTanks.filter({ $0.type == .n2 }).compactMap({ $0.current }).reduce(0, +)
+            chAvailable = result
+            
+            if result > nitroAmount {
+                // ok
+                chCheck = true
+                
+            } else {
+                // not enough
+            }
+        } else {
+            // not needed
+        }
+        
+        let obj = PropulsionCheckObject(ch4Available: chAvailable, ch4Needed: chNeeded, ch4Check: chCheck, n2Available: nitroAvailable, n2Needed: nitroNeeded, n2Check: nitroCheck)
+        return obj
     }
     
     /// Launches a SpaceVehicle to travel to Mars
@@ -518,8 +563,22 @@ class GarageViewModel:ObservableObject {
             
         // XP
         self.garage.xp += 1
-            
-        // Save
+        
+        // Charge propulsion
+        var chargeRes:Bool = false
+        if vehicle.engine.propulsionNitro > 0 {
+            let res = station.truss.chargeFrom(tank: .n2, amount: vehicle.engine.propulsionNitro)
+            chargeRes = res > 0
+        }
+        if chargeRes == false {
+            if vehicle.engine.propulsionCH4 > 0 {
+                let res = station.truss.chargeFrom(tank: .ch4, amount: vehicle.engine.propulsionCH4)
+                // if res > 0, we can't charge (not enough)
+                chargeRes = res > 0
+            }
+        }
+        print("Charging propulsion result: \(chargeRes)")
+        
         // Save
         do {
             // Save Station
@@ -534,17 +593,12 @@ class GarageViewModel:ObservableObject {
         } catch {
             print("‼️ Could not save station.: \(error.localizedDescription)")
         }
-//        LocalDatabase.shared.saveVehicles()
-//        LocalDatabase.shared.saveStation(station: self.station)
             
         // Update View
         self.garageStatus = .planning(stage: .Launching)
-        // self.cancelSelection()
         
         // Update Scene
-        
         self.registerVehicle(vehicle: vehicle, completion: nil)
-        
     }
     
     // MARK: - Server
@@ -558,8 +612,6 @@ class GarageViewModel:ObservableObject {
     func registerVehicle(vehicle:SpaceVehicle, completion:((SpaceVehicleTicket?, Error?) -> ())?) {
         print("Registering Vehicle in Server")
         
-//        let user = SKNUserPost(player: player)
-//        var allVehicles = LocalDatabase.shared.vehicles
         SKNS.registerSpace(vehicle: vehicle) { (ticket, error) in
             
             if let ticket = ticket {
@@ -639,4 +691,15 @@ class LaunchSceneRendererMan:NSObject, SCNSceneRendererDelegate {
     }
 }
 */
+struct PropulsionCheckObject {
+    
+    var ch4Available:Int
+    var ch4Needed:Int
+    var ch4Check:Bool
+    
+    var n2Available:Int
+    var n2Needed:Int
+    var n2Check:Bool
+    
+}
 

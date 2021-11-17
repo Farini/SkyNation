@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 /// Where purchases get stored. (JSON) This object holds the purchases and tokens
 class Wallet:Codable {
@@ -233,7 +234,9 @@ struct Purchase:Codable, Identifiable, Hashable {
         self.addedKit = false
     }
     
+    /// Generates the Tokens for this purchase
     func getTokens() -> [GameToken] {
+        
         var gTokens:[GameToken] = []
         
         let amt:Int = self.storeProduct.tokenAmount
@@ -244,10 +247,25 @@ struct Purchase:Codable, Identifiable, Hashable {
             gTokens.append(newToken)
         }
         
-        // 1 entry token
-        // ADD REAL PLAYER ID
-        let entryToken = GameToken(entry: UUID())
-        gTokens.append(entryToken)
+        var entryTokensAmount:Int = 1
+        var entryTokens:[GameToken] = []
+        let entryID = LocalDatabase.shared.player.serverID ?? UUID()
+        
+        switch storeProduct {
+            case .five:
+                break
+            case .ten:
+                entryTokensAmount = 2
+            case .twenty:
+                entryTokensAmount = 3
+        }
+        
+        // Add the Entry Tokens
+        while entryTokensAmount > 0 {
+            let newToken = GameToken(entry: entryID)
+            entryTokens.append(newToken)
+            entryTokensAmount -= 1
+        }
         
         return gTokens
     }

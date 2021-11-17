@@ -88,6 +88,19 @@ struct GameProduct:Identifiable, Hashable {
         
         self.storeProduct = storeProduct
     }
+    
+    /// Initializer for TESTING ONLY!
+//    init(faking type:GameProductType) {
+//        self.id = type.storeIdentifier
+//        self.type = type
+//        self.price = type.fakePrice
+//
+//        let formatter = NumberFormatter()
+//        formatter.numberStyle = .currency
+//
+//        self.priceString = formatter.string(from: storeProduct.price) ?? "unknown"
+//
+//    }
 }
 
 

@@ -23,6 +23,15 @@ struct GameFormatters {
         return formatter
     }()
     
+    /// A Formatter to display currency style anywhere.
+    static let currency:NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.alwaysShowsDecimalSeparator = true
+        formatter.hasThousandSeparators = true
+        return formatter
+    }()
+    
     /// Longer date formatter
     static let fullDateFormatter:DateFormatter = {
         let formatter = DateFormatter()

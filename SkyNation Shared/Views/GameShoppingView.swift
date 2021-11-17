@@ -13,26 +13,21 @@ import SwiftUI
 // 3. Make Purchase
 // 4. Add to Player + Station
 
-
-
 struct GameShoppingView: View {
     
     @ObservedObject var controller:StoreController
     
-//    @State var step:ShoppingStep = .product
     @State var promoCode:String = ""
     @State private var isValidatingToken:Bool = false
     @State private var validationMessage:String?
-    
-//    var packages = GameProductType.allCases//GameRawPackage.allCases
-    
     
     var header: some View {
         Group {
             HStack() {
                 
                 VStack(alignment:.leading) {
-                    Text("⚙️ Shopping (\(controller.step.displayName))").font(.largeTitle)
+                    Text("⚙️ Shopping")
+                        .font(GameFont.title.makeFont())
                     Text("Details")
                         .foregroundColor(.gray)
                 }
@@ -73,116 +68,142 @@ struct GameShoppingView: View {
                 
                 switch controller.step {
                     case .product:
-                        
-                        // Promo Code
-                        VStack(alignment:.leading, spacing:4) {
-                            Text("Enter promo code:")
-                            HStack {
-                                if isValidatingToken {
+                        VStack {
+                            
+                            if controller.gameProducts.isEmpty {
+                                VStack {
+                                    Text("Fetching products from App Store")
                                     ProgressView()
+                                    Spacer()
                                 }
-                                TextField("Promo Code", text: $promoCode)
-                                    .padding(.trailing, 20)
-                                Button("Verify") {
-                                    print("Verifying Promo code: \(promoCode)")
-                                    self.validateToken()
-                                }
-                                .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
-                                .disabled(isValidatingToken)
-                            }
-                            if let msg = self.validationMessage {
-                                Text(msg)
-                            }
-                        }
-                        .padding(.horizontal)
-                        
-                        Divider()
-                        
-                        if controller.gameProducts.isEmpty {
-                            Text("Fetching products from App Store")
-                            ProgressView()
-                        } else {
-                            ForEach(controller.gameProducts, id:\.self) { gameProduct in
-                                ShopProductRow(product: gameProduct)
-                                    .onTapGesture {
-                                        controller.didSelectProduct(gameProduct)
-                                    }
                                 
-                                Divider()
+                            } else {
+                                HStack {
+                                    ForEach(controller.gameProducts, id:\.self) { gameProduct in
+                                        PackageCardView(productType: gameProduct.type) {
+                                            controller.didSelectProduct(gameProduct)
+                                        }
+                                    }
+                                }
                             }
+                            
+                            // Promo Code
+                            VStack(alignment:.leading, spacing:4) {
+                                Divider()
+                                Text("Enter promo code:")
+                                HStack {
+                                    if isValidatingToken {
+                                        ProgressView()
+                                    }
+                                    TextField("Promo Code", text: $promoCode)
+                                        .padding(.trailing, 20)
+                                    Button("Verify") {
+                                        print("Verifying Promo code: \(promoCode)")
+                                        self.validateToken()
+                                    }
+                                    .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
+                                    .disabled(isValidatingToken)
+                                }
+                                if let msg = self.validationMessage {
+                                    Text(msg).foregroundColor(.orange)
+                                }
+                            }
+                            .padding([.horizontal, .bottom])
                         }
                         
                     case .kit(let product):
-                    VStack {
-                        Text("Show the Kits")
-                        ForEach(Purchase.Kit.allCases, id:\.self) { kit in
-                            // Text(kit.rawValue).font(.title)
-                            ShopKitRow(kit: kit, product: product.type)
-                                .onTapGesture {
-                                    controller.didSelectKit(kit)
-                                }
-                            
-                            // Color
-                            // Gradient
-                            // Description
-                            // Items
-                            // Image
-                            // Button (select)
-                        }
-                    }
-                        
-                    case .buying(let product):
-                        
-                        VStack {
-                            Text("App Store").font(.largeTitle)
-                            Image(systemName: "creditcard").font(.title)
-                            
-                            ProgressView()
-                            
-                            Divider()
-                            
-                            Text("Product Info:")
-                            Text("ID: \(product.id)")
-                            Text("Price: \(product.priceString)").foregroundColor(.orange)
-                            
-                            HStack {
-                                Button("Buy") {
-                                    controller.confirmPurchase()
-                                }
-                                .disabled(controller.selectedProduct == nil)
-                                
-                                Button("Cancel") {
-                                    controller.cancelPurchase()
+                        HStack {
+                            GeometryReader { geometry in
+                                LazyVGrid(
+                                    columns: [GridItem(.fixed(geometry.size.width / 2), spacing:1), GridItem(.fixed(geometry.size.width / 2), spacing:1)],
+                                    alignment: .center,
+                                    spacing: 12,
+                                    pinnedViews: []
+                                ) {
+                                    ForEach(Purchase.Kit.allCases, id:\.self) { kit in
+                                        KitCardView(kit: kit, product: product.type) {
+                                            controller.didSelectKit(kit)
+                                        }
+                                    }
                                 }
                             }
                         }
+                        
+                    case .buying(let product):
+                        
+                        if let message = controller.alertMessage {
+                            Text(message).foregroundColor(.orange)
+                                .transition(.slide)
+                        }
+                        
+                        if !controller.errorMessage.isEmpty {
+                            Text(controller.errorMessage).foregroundColor(.red)
+                                .transition(.slide)
+                        }
+                        
+                        PurchasingView(product: product, productType: product.type, kit: controller.selectedKit) { didBuy in
+                            if didBuy == true {
+                                controller.confirmPurchase()
+                            } else {
+                                controller.cancelPurchase()
+                            }
+                        }
+
                     case .receipt:
                         VStack {
-                            Text("Receipt").font(.largeTitle)
-                            Image(systemName: "tag.circle").font(.largeTitle)
+                            
+                            if !controller.errorMessage.isEmpty {
+                                Text(controller.errorMessage).foregroundColor(.red)
+                                    .transition(.slide)
+                            } else if let message = controller.alertMessage {
+                                Text(message).foregroundColor(.orange)
+                                    .transition(.slide)
+                            } else {
+                                Text("Purchase success").foregroundColor(.green)
+                            }
+                            
+                            Image(systemName: "tag.circle").font(.title)
+                            
+                            Spacer()
+                            Divider()
+                            
+                            Button("Ok") {
+                                self.controller.step = .product
+                            }
+                            .buttonStyle(GameButtonStyle())
+                            .padding(.bottom)
                         }
                         
                     case .error(let message):
-                        VStack {
-                            Text("Error")
+                        VStack(spacing:8) {
+                            Text("Error").font(.title)
                             Text(message).foregroundColor(Color.red)
                             Button("Go back") {
                                 controller.cancelPurchase()
                             }
+                            .buttonStyle(GameButtonStyle())
+                            .padding(.bottom)
                         }
                 }
             }
         }
-        .frame(minWidth: 500, idealWidth: 600, maxWidth: 800, minHeight:400, maxHeight:700, alignment: .top)
+        .frame(minWidth: 620, idealWidth: 620, maxWidth: 800, minHeight:400, maxHeight:700, alignment: .top)
     }
     
     // Token Validation
     func validateToken() {
         
         guard !promoCode.isEmpty else { return }
+        
+        guard let uid = UUID(uuidString: self.promoCode) else {
+            print("Not a valid ID")
+            validationMessage = "Not a valid ID"
+            return
+        }
+        
         self.isValidatingToken = true
         
-        SKNS.validateTokenFromTextInput(text: self.promoCode) { token, errorString in
+        SKNS.validateTokenFromTextInput(text: uid.uuidString) { token, errorString in
             if let token = token {
                 print("Got a token: \(token.id)")
                 let player = LocalDatabase.shared.player
@@ -218,258 +239,278 @@ struct GameShoppingView: View {
         }
     }
     
-    // Purchase
-    
-    
-    // Barcode
-    
-    func generateBarcode(from uuid: UUID) -> Image? {
-        let data = uuid.uuidString.prefix(8).data(using: String.Encoding.ascii)
-        
-        if let filter = CIFilter(name: "CICode128BarcodeGenerator") {
-            filter.setValue(data, forKey: "inputMessage")
-            
-            if let output:CIImage = filter.outputImage {
-                
-                if let inverter = CIFilter(name:"CIColorInvert") {
-                    
-                    inverter.setValue(output, forKey:"inputImage")
-                    
-                    if let invertedOutput = inverter.outputImage {
-                        #if os(macOS)
-                        let rep = NSCIImageRep(ciImage: invertedOutput)
-                        let nsImage = NSImage(size: rep.size)
-                        nsImage.addRepresentation(rep)
-                        return Image(nsImage:nsImage)
-                        #else
-                        let uiImage = UIImage(ciImage: invertedOutput)
-                        return Image(uiImage: uiImage)
-                        #endif
-                    }
-                    
-                } else {
-                    #if os(macOS)
-                    let rep = NSCIImageRep(ciImage: output)
-                    let nsImage = NSImage(size: rep.size)
-                    nsImage.addRepresentation(rep)
-                    return Image(nsImage:nsImage)
-                    #else
-                    let uiimage = UIImage(ciImage: output)
-                    return Image(uiImage: uiimage)
-                    #endif
-                }
-            }
-        }
-        
-        return nil
-    }
-    
 }
 
-struct ShopKitRow:View {
+/// View that represents a `GameProductType` object
+struct PackageCardView:View {
+    
+    var productType:GameProductType
+    var action:(() -> Void)
+    
+    var body: some View {
+        
+        VStack(spacing: 8) {
+            
+            Label(productType.displayName, systemImage: "bag")
+                    .font(GameFont.section.makeFont())
+            .padding(.top, 8)
+            
+            
+            Divider()
+            
+            HStack {
+                tokenImage()
+                    .resizable()
+                    .frame(width: 28, height: 28, alignment: .center)
+                
+                Text("x\(productType.tokenAmount) ")
+                    .font(GameFont.section.makeFont())
+                Spacer()
+            }
+            .padding(.leading, 8)
+            
+            HStack {
+                currencyImage()
+                    .resizable()
+                    .frame(width: 28, height: 28, alignment: .center)
+                
+                Text("\(GameFormatters.currency.string(from: NSNumber(value:productType.moneyAmount))!)")
+                    .font(GameFont.section.makeFont())
+                Spacer()
+            }
+            .padding(.leading, 8)
+            
+            HStack {
+                Image(systemName: "arrow.right.to.line.circle")
+                    .resizable()
+                    .frame(width: 28, height: 28, alignment: .center)
+                    .font(Font.system(size: 16, weight: .light, design: .default))
+                Text("2 Entry Tokens")
+                Spacer()
+            }
+            .padding(.leading, 8)
+            
+            Divider()
+            
+            VStack(alignment:.center) {
+                Label("\(GameFormatters.currency.string(from: NSNumber(value:productType.fakePrice)) ?? "---")", systemImage:"tag")
+                    .font(GameFont.section.makeFont())
+            }
+            Divider()
+            
+            Button("Get it") {
+                print("get")
+                self.action()
+            }
+            .buttonStyle(GameButtonStyle())
+            .padding([.bottom], 8)
+            
+        }
+        .frame(width:200)
+        .background(LinearGradient(colors: [Color.black.opacity(0.1), Color.black.opacity(0.4), Color.black.opacity(0.2)], startPoint: .topLeading, endPoint: .bottomTrailing))
+        .cornerRadius(8)
+        
+        
+    }
+    
+    func tokenImage() -> Image {
+#if os(macOS)
+        return Image(nsImage: GameImages.tokenImage)
+#else
+        return Image(uiImage: GameImages.tokenImage)
+#endif
+    }
+    
+    func currencyImage() -> Image {
+#if os(macOS)
+        return Image(nsImage: GameImages.currencyImage)
+#else
+        return Image(uiImage: GameImages.currencyImage)
+#endif
+    }
+}
+
+/// View that represents a `Purchase.Kit` object
+struct KitCardView:View {
     
     var kit:Purchase.Kit
     var product:GameProductType
+    var action:(() -> Void)
+    
+    private let columns: [GridItem] = [
+        GridItem(.fixed(110), spacing: 16),
+        GridItem(.fixed(110), spacing: 16)
+    ]
     
     var body: some View {
-        HStack {
-            VStack {
-//                Text("Kit")
-                ZStack(alignment: .top) {
-                    
-                    Rectangle()
-                        .foregroundColor(.clear)
-                        .background(LinearGradient(gradient: Gradient(colors: [Color.clear, kit.color.opacity(0.5)]), startPoint: .bottom, endPoint: .top))
-                        .frame(height:64)
-                    
-                    HStack {
-                        VStack {
-                            Text(kit.displayName).font(.title)
-                            Image(systemName: kit.imageName)
-                                .font(.largeTitle)
-                        }
-                        .padding()
-                        
-                        Spacer()
-                        
-                        VStack(alignment:.leading) {
-                            
-                            // Tanks
-                            HStack {
-                                GameImages.imageForTank()
-                                    .resizable()
-                                    .frame(width: 20, height: 20, alignment: .center)
-                                ForEach(kit.tanks.sorted(by: {$0.value > $1.value}), id:\.key) { k, v in
-                                    Text("\(k.rawValue.uppercased()): \(v * product.rawValue)")
-                                }
-                            }
-                            
-                            // Ingredients
-                            HStack {
-                                GameImages.boxImage
-                                    .resizable()
-                                    .frame(width:20, height: 20, alignment: .center)
-                                ForEach(kit.boxes.sorted(by: { $0.value > $1.value }), id:\.key) { k, v in
-                                    Text("\(k.rawValue.uppercased()): \(v * product.rawValue)")
-                                }
-                            }
-                            
-                        }
-                        
-                        Spacer()
-                        
+        VStack {
+            
+            Label(kit.displayName, systemImage: kit.imageName)
+                .font(GameFont.section.makeFont())
+                .padding(6)
+                .background(Color.black.opacity(0.5))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color.clear)
+                )
+            
+            Divider()
+            
+            LazyVGrid(
+                columns: columns,
+                alignment: .center,
+                spacing: 12,
+                pinnedViews: []
+            ) {
+                Section(header: Text("Bonus")) {
+                    ForEach(kit.tanks.sorted(by: {$0.value > $1.value}), id:\.key) { k, v in
                         HStack {
-                            Text("Next")//.padding(.top, 6)
-                            Image(systemName: "chevron.right").font(.title)
-                            
+                            GameImages.imageForTank()
+                                .resizable()
+                                .frame(width: 20, height: 20, alignment: .center)
+                            Spacer()
+                            Text("\(k.rawValue.uppercased()): \(v * product.rawValue)")
                         }
-                        .padding(.trailing, 8)
+                        .padding(.horizontal, 8)
                     }
-                    
+                    ForEach(kit.boxes.sorted(by: { $0.value > $1.value }), id:\.key) { k, v in
+                        HStack {
+                            GameImages.boxImage
+                                .resizable()
+                                .frame(width:16, height: 16, alignment: .center)
+                            
+                            Text("\(k.rawValue): \(v * product.rawValue)")
+                        }
+                    }
                 }
                 
                 
-                // Color
-                // Gradient
-                // Description
-                // Items
-                // Image
-                // Button (select)
+            }
+            Spacer()
+            Divider()
+            Button("Get it") {
+                action()
+            }
+            .buttonStyle(GameButtonStyle())
+            .padding(.bottom, 6)
+        }
+        .frame(minWidth:220, maxWidth:240, minHeight:220, maxHeight:240)
+    }
+}
+
+struct PurchasingView:View {
+    
+    var product:GameProduct?
+    var productType:GameProductType
+    var kit:Purchase.Kit?
+    
+    /// The responding action when user clicks "buy"
+    var buyAction:((Bool) -> Void)
+    
+    @State private var isSpinningWheel:Bool = true
+    
+    var body: some View {
+        
+        VStack {
+            
+            VStack(spacing:8) {
+                
+                HStack {
+                    Image(systemName: "cart").font(.largeTitle)
+                    Text("Review Purchase").font(GameFont.title.makeFont())
+                }
+                .padding(.bottom, 8)
+                
+                if isSpinningWheel {
+                    ProgressView()
+                        .padding(.bottom, 8)
+                        .hueRotation(Angle(degrees: 30))
+                        .transition(.asymmetric(insertion: .opacity.combined(with: .move(edge: Edge.leading)), removal: .slide.combined(with: .scale)))
+                } else {
+                    EmptyView().frame(height:32)
+                }
+            }
+            .padding(.vertical, 8)
+            
+            Divider()
+            
+            VStack(spacing:8) {
+                Text("Product Info:")
+                    .font(GameFont.section.makeFont())
+                
+                if let product = product {
+                    Text("Product ID: \(product.id)")
+                    Text("Product Price: \(product.priceString)").foregroundColor(.orange)
+                    Text("Tokens: \(product.type.tokenAmount)").foregroundColor(.orange)
+                    Text("Sky Coins: \(product.type.moneyAmount)").foregroundColor(.orange)
+                    
+                } else {
+                    Text("Fake Product. PREVIEW MODE").foregroundColor(.red)
+                    Text("Product ID: \(productType.storeIdentifier)")
+                    Text("Product Price: \(GameFormatters.currency.string(from: NSNumber(value:productType.fakePrice)) ?? "n/a")")
+                        .foregroundColor(.orange)
+                }
+                
+                Divider()
+                
+                if let kit = kit {
+                    Text("Bonus").font(GameFont.section.makeFont()).foregroundColor(.green)
+                    Text("Tanks \(Array(kit.tanks.map({ $0.key.rawValue })).joined(separator:", "))")
+                        .foregroundColor(.gray)
+                    Text("Ingredients \(Array(kit.boxes.map({ $0.key.rawValue })).joined(separator:", "))")
+                        .foregroundColor(.gray)
+                }
             }
             
+            Spacer()
+            Divider()
+            
+            HStack {
+                
+                Button {
+                    buyAction(true)
+                } label: {
+                    Label("Cancel", systemImage: "nosign")
+                }
+                .buttonStyle(GameButtonStyle(labelColor: .red))
+                
+                Button {
+                    buyAction(true)
+                } label: {
+                    Label("Buy", systemImage: "suitcase.cart.fill")
+                }
+                .buttonStyle(GameButtonStyle(labelColor: .green))
+                
+            }
+            .padding(.bottom)
+        }
+        .onAppear {
+            DispatchQueue.init(label: "Wheel").asyncAfter(deadline: .now() + 2) {
+                self.toggleWheel()
+            }
+        }
+    }
+    
+    func toggleWheel() {
+        DispatchQueue.main.async {
+            self.isSpinningWheel.toggle()
         }
     }
 }
 
-struct ShopProductRow: View {
-    
-    var product:GameProduct
-    
-    var body: some View {
-        // Product Row
-        HStack(spacing: 22) {
-            
-            // Title
-            VStack {
-                Image(systemName: "bag")
-                    .font(.largeTitle)
-                    .padding(6)
-                
-                Text(product.type.displayName)
-                    .foregroundColor(.orange)
-                    .font(.title2)
-            }
-            .frame(width:120)
-            
-            Divider()
-            
-            // Benefits
-            VStack(alignment:.leading) {
-                
-                // Tokens
-                HStack {
-                    
-                    #if os(macOS)
-                    Image(nsImage: GameImages.tokenImage)
-                        .resizable()
-                        .frame(width: 28, height: 28, alignment: .center)
-                    #else
-                    Image(uiImage: GameImages.tokenImage)
-                        .resizable()
-                        .frame(width: 28, height: 28, alignment: .center)
-                    #endif
-                    
-                    Text("x\(product.type.tokenAmount) ")
-                        .font(.headline)
-                }
-                
-                // Sky Coins
-                HStack {
-                    #if os(macOS)
-                    Image(nsImage: GameImages.currencyImage)
-                        .resizable()
-                        .frame(width: 28, height: 28, alignment: .center)
-                    #else
-                    Image(uiImage: GameImages.currencyImage)
-                        .resizable()
-                        .frame(width: 28, height: 28, alignment: .center)
-                    #endif
-                    Text("$ \(GameFormatters.numberFormatter.string(from: NSNumber(value:product.type.moneyAmount))!)")
-                        .font(.headline)
-                    
-                }
-                
-                Text("Token \(product.type.tokenAmount)")
-            }
-            .frame(width:150)
-            
-            Divider()
-            
-            // Button
-            VStack {
-                generateBarcode(from: LocalDatabase.shared.player.id)
-                Button(action: {}) {
-                    HStack {
-                        Image(systemName: "cart")
-                        Text(product.priceString)
-                    }
-                    
-                }
-                .buttonStyle(GameButtonStyle())
-            }
-            
-            // Chevron
-            Image(systemName: "chevron.right").font(.largeTitle)
-        }
-    }
-    
-    func generateBarcode(from uuid: UUID) -> Image? {
-        let data = uuid.uuidString.prefix(8).data(using: String.Encoding.ascii)
-        
-        if let filter = CIFilter(name: "CICode128BarcodeGenerator") {
-            filter.setValue(data, forKey: "inputMessage")
-            
-            if let output:CIImage = filter.outputImage {
-                
-                if let inverter = CIFilter(name:"CIColorInvert") {
-                    
-                    inverter.setValue(output, forKey:"inputImage")
-                    
-                    if let invertedOutput = inverter.outputImage {
-                        #if os(macOS)
-                        let rep = NSCIImageRep(ciImage: invertedOutput)
-                        let nsImage = NSImage(size: rep.size)
-                        nsImage.addRepresentation(rep)
-                        return Image(nsImage:nsImage)
-                        #else
-                        let uiImage = UIImage(ciImage: invertedOutput)
-                        return Image(uiImage: uiImage)
-                        #endif
-                    }
-                    
-                } else {
-                    #if os(macOS)
-                    let rep = NSCIImageRep(ciImage: output)
-                    let nsImage = NSImage(size: rep.size)
-                    nsImage.addRepresentation(rep)
-                    return Image(nsImage:nsImage)
-                    #else
-                    let uiimage = UIImage(ciImage: output)
-                    return Image(uiImage: uiimage)
-                    #endif
-                }
-            }
-        }
-        
-        return nil
-    }
-}
+// MARK: - Previews
 
 struct GameShoppingView_Previews: PreviewProvider {
     static var previews: some View {
         GameShoppingView(controller: StoreController())
-        ShopKitRow(kit: .SurvivalKit, product: .five)
+//        KitCardView(kit: .SurvivalKit, product: .ten, action: {})
+//        PackageCardView(productType: .ten, action: {})
+        PurchasingView(product: nil, productType: .ten) { buyAction in
+            print("buy action: \(buyAction)")
+        }
     }
+    
+    static var controller:StoreController = StoreController()
 }
 
 extension Purchase.Kit {

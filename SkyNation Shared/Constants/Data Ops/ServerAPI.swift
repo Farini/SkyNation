@@ -148,6 +148,7 @@ class SKNS {
                             }
                         }
                     } else {
+                        // All Checkpoints match. Player hasn't been altered.
                         DispatchQueue.main.async {
                             completion?(responsePlayer, nil)
                         }
@@ -156,9 +157,36 @@ class SKNS {
                     
                 } else {
                     
+                    // Check if error is that User lost password.
+                    if let gameError = try? decoder.decode(GameError.self, from: data) {
+                        // game error
+                        print("\n\n *** Login Failed. Game Error: \(gameError) ***")
+                        
+                        if gameError.reason.contains("not authenticated.") {
+                            
+                            // Request New Password
+                            SKNS.requestNewPass { playerNewPass, passError in
+                                
+                                if let playerNewPass = playerNewPass {
+                                    completion?(playerNewPass, nil)
+                                    return
+                                } else {
+                                    // No player returned
+                                    // Something went terribly wrong
+                                    print("‼️⚠️ Failed attempt to restore password !!!")
+                                    completion?(nil, ServerDataError.failedAuthorization)
+                                    return
+                                }
+                            }
+                        }
+                        
+                    } else if let errString:String = String(data: data, encoding: .utf8) {
+                        print("\n\n *** Login Failed. String Error: \(errString)")
+                    }
+                    
                     // Request returned data, but its not a `PlayerUpdate` object.
-                    // This should only happen if the object has been changed
                     DispatchQueue.main.async {
+                        print("Returning error.: \(error?.localizedDescription ?? "n/a")")
                         completion?(nil, error ?? ServerDataError.failedAuthorization)
                     }
                 }
@@ -172,6 +200,30 @@ class SKNS {
             }
         }
         task.resume()
+    }
+    
+    static func logoutPlayer() {
+        
+        let url = URL(string: "\(baseAddress)/player/credentials/logout")!
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            
+            if let error = error {
+                print("Logout Error: \(error.localizedDescription)")
+            } else {
+                if let response = response {
+                    print("Logout response: \(response)")
+                } else if let data = data {
+                    let dataString = String(data:data, encoding: .utf8) ?? "Empty"
+                    print("Logout response (String):\n \(dataString)")
+                }
+            }
+        }
+        task.resume()
+        
     }
     
     /// Update Player
@@ -272,7 +324,7 @@ class SKNS {
         guard let playerUpdate:PlayerUpdate = pUpdate else {
             fatalError()
         }
-        
+       
         // Build Request
         let address = "\(baseAddress)/player/newpass"
         
@@ -282,19 +334,34 @@ class SKNS {
         request.httpMethod = HTTPMethod.POST.rawValue
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         
+        // Encrypt the LocalID as 64bit
+        let lid = (localPlayer.localID.uuidString.data(using: .utf8) ?? Data()).base64EncodedString()
+        request.setValue(lid, forHTTPHeaderField: "lid")
+        
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .secondsSince1970
         encoder.outputFormatting = .prettyPrinted
         
+        print("\n\n*** REQUESTING NEW PASS *** ")
+        
         // Body with `PlayerUpdate`
         if let data = try? encoder.encode(playerUpdate) {
-            print("\n\nAdding Data")
+            
             request.httpBody = data
             let dataString = String(data:data, encoding: .utf8) ?? "n/a"
-            print("DS: \(dataString)")
+            print("Pass Body Data: \n\(dataString)")
+            
+        } else {
+            // print("Awful Errror. Cannot encode data")
+            print("‼️ FATAL ERROR ENCODING. Request new pass - Cannot encode data")
+            print("The only way to recover from this, is to create a new player in the Database")
+            
+            completion?(nil, ServerDataError.failedAuthorization)
+            return
         }
         
         let task = session.dataTask(with: request) { (data, response, error) in
+            
             if let data = data {
                 
                 let decoder = JSONDecoder()
@@ -302,35 +369,68 @@ class SKNS {
                 
                 if let responsePlayer:PlayerUpdate = try? decoder.decode(PlayerUpdate.self, from: data) {
                     
-                    print("Response user: \(responsePlayer.name)")
+                    print("New Pass Response for player: \(responsePlayer.name)")
                     
                     // Update Player Properties
                     localPlayer.keyPass = responsePlayer.pass
                     
-                    // Guild ID
-//                    if let oldGuild = localPlayer.guildID,
-//                       oldGuild != responsePlayer.guildID {
-//                        print("Attention! - Guild ID changing!\n Old Guild:\(oldGuild), New Guild:\(responsePlayer.guildID?.uuidString ?? "none")")
-//                        localPlayer.guildID = responsePlayer.guildID
-//                    }
-                    
                     // Save
                     do {
+                        
                         try LocalDatabase.shared.savePlayer(localPlayer)
+                        // Success
+                        DispatchQueue.main.async {
+                            completion?(responsePlayer, nil)
+                        }
+                        return
                     } catch {
-                        print("‼️ Could not save station.: \(error.localizedDescription)")
+                        
+                        // Could not save
+                        print("‼️ Could not save player. Reason:\(error.localizedDescription)")
+                        DispatchQueue.main.async {
+                            completion?(nil, error)
+                        }
+                        return
                     }
+                } else {
                     
-                    DispatchQueue.main.async {
-                        completion?(responsePlayer, nil)
+                    /// No `PlayerUpdate` object found
+                    if let gameError:GameError = try? decoder.decode(GameError.self, from: data) {
+                        if gameError.reason.contains("Decoding") {
+                            // Server could not decode
+                            completion?(nil, ServerDataError.remoteCoding)
+                            return
+                        } else if gameError.reason.contains("Incorrect") {
+                            // localID don't match
+                            completion?(nil, ServerDataError.failedAuthorization)
+                            return
+                        }
+                    } else {
+                        // failed to return object, and failed to return gameerror
+                        print("Failed to return object, and failed to return GameError.")
+                        // try to decode string?
+                        if let string = String(data: data, encoding: .utf8) {
+                            print("Found String:\n\(string)")
+                            completion?(nil, ServerDataError.localCoding)
+                            return
+                        } else {
+                            // Nothing was decoded at this point
+                            print("‼️ New Pass Response.: Didn't find any data to fix this error.")
+                            completion?(nil, error ?? ServerDataError.failedAuthorization)
+                            return
+                        }
                     }
-                    return
                 }
+            } else {
+                
+                // no data returned
+                DispatchQueue.main.async {
+                    print("Error: \(error?.localizedDescription ?? "n/a")")
+                    completion?(nil, error)
+                }
+                return
             }
-            DispatchQueue.main.async {
-                print("Error: \(error?.localizedDescription ?? "n/a")")
-                completion?(nil, error)
-            }
+            
         }
         task.resume()
         
@@ -422,9 +522,10 @@ class SKNS {
         task.resume()
     }
     
+    /// Search Player
     static func searchPlayerByName(name:String, completion:(([PlayerContent], Error?) -> ())?) {
         
-        let url = URL(string: "\(baseAddress)/player/search/name/\(name)")!
+        let url = URL(string: "\(baseAddress)/player/credentials/search/name/\(name)")!
         let session = URLSession.shared
         var request = URLRequest(url: url)
         request.httpMethod = HTTPMethod.GET.rawValue
@@ -704,9 +805,6 @@ class SKNS {
         request.httpMethod = HTTPMethod.GET.rawValue
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         
-        // Set the playerID if there is one
-//        request.setValue(pid.uuidString, forHTTPHeaderField: "pid")
-        
         let task = session.dataTask(with: request) { (data, response, error) in
             if let data = data {
                 let decoder = JSONDecoder()
@@ -758,7 +856,6 @@ class SKNS {
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .secondsSince1970
                 do {
-//                    let guilds:[GuildSummary] = try decoder.decode([GuildSummary].self, from: data)
                     let guild:GuildFullContent = try decoder.decode(GuildFullContent.self, from: data)
                     DispatchQueue.main.async {
                         print("Data returning")
@@ -853,6 +950,7 @@ class SKNS {
         task.resume()
     }
     
+    /// Builds the Guild Outposts and setup after creating a new Guild
     static func postCreate(newGuildID:UUID, completion:((GuildFullContent?, Error?) -> ())?) {
         
         let address = "\(baseAddress)/guilds/player/postcreate/\(newGuildID)"
@@ -896,6 +994,7 @@ class SKNS {
         task.resume()
     }
     
+    /// Creates a new Guild
     static func createGuild(creator:GuildCreate, completion:((GuildSummary?, Error?) -> ())?) {
         // guilds/player/create
         // Build Request
@@ -1066,7 +1165,6 @@ class SKNS {
         request.httpMethod = HTTPMethod.GET.rawValue
         
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-//        request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
         
         let task = session.dataTask(with: request) { (data, response, error) in
             if let data = data {
@@ -1424,10 +1522,8 @@ class SKNS {
         let session = URLSession.shared
         var request = URLRequest(url: url)
         
-        request.httpMethod = HTTPMethod.POST.rawValue // (Post): HTTPMethod.POST.rawValue // (Get): HTTPMethod.GET.rawValue
+        request.httpMethod = HTTPMethod.POST.rawValue
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-//        request.setValue(localPlayer.id.uuidString, forHTTPHeaderField: "playerid")
-//        request.setValue(guildName, forHTTPHeaderField: "guildname")
         
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .secondsSince1970
