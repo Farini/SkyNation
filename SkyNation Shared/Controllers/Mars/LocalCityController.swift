@@ -23,7 +23,7 @@ enum CityMenuItem:Int, CaseIterable {
             case .lab: return "🔬"
             case .bio: return "🧬"
             case .rss: return "♻️"
-            case .collect: return "↯"
+            case .collect: return "📁"
             case .rocket: return "🚀"
         }
     }
@@ -163,6 +163,7 @@ class LocalCityController:ObservableObject, BioController {
         // Vehicles
         self.travelVehicles = LocalDatabase.shared.vehicles
         self.arrivedVehicles = cityData.garage.vehicles
+        self.updateVehiclesLists()
         
         // OpCollection
         self.updateCityOutpostCollection()
@@ -756,14 +757,13 @@ class LocalCityController:ObservableObject, BioController {
         }
         
         // Save the travelling back in LocalDatabase
-//        LocalDatabase.shared.vehicles = travelling
+        LocalDatabase.shared.vehicles = travelling
         // Save
         do {
             try LocalDatabase.shared.saveVehicles(travelling)
         } catch {
             print("‼️ Could not save vehicles.: \(error.localizedDescription)")
         }
-//        LocalDatabase.shared.saveVehicles()
         
         // Save the City with the arrived vehicles
         
@@ -854,6 +854,8 @@ class LocalCityController:ObservableObject, BioController {
         } catch {
             print("Error Saving City: \(error.localizedDescription)")
         }
+        
+        self.updateVehiclesLists()
         
         // FIXME: - Server Update:
         // Delete vehicles that arrived and has unpacked

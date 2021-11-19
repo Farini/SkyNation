@@ -116,6 +116,67 @@ struct StaffSelectionView:View {
     }
 }
 
+// MARK: - New People Row
+struct HabPersonRow:View {
+    
+    @Binding var person:Person
+    var selected:Bool
+    
+    var body: some View {
+        
+        HStack {
+            
+            // Avatar
+            ZStack(alignment: .leading) {
+                Image(person.avatar)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 56, height: 56)
+                    .foregroundColor(person.isBusy() ? .blue:.orange)
+            }
+            
+            // Name, Skills, Intelligence
+            VStack(alignment: .leading, spacing: 2) {
+                
+                HStack {
+                    Text(person.name)
+                        .font(.subheadline)
+                        .foregroundColor(person.isBusy() ? .red:.white)
+                    Spacer()
+                }
+                
+                ProgressView(value: Float(person.intelligence), total:100.0) {
+                    if person.skills.isEmpty {
+                        Text("No skills").foregroundColor(.gray)
+                    }
+                    HStack {
+                        ForEach(0..<person.skills.count) { idx in
+                            GameImages.imageForSkill(skill: person.skills[idx].skill)
+                                .resizable()
+                                .aspectRatio(contentMode:.fill)
+                                .frame(width:22, height:22)
+                        }
+                    }
+                }
+                .foregroundColor(.blue)
+                .accentColor(.orange)
+                
+            }
+            .padding([.trailing], 4)
+            
+            // Selection Detail
+            Text(person.isBusy() ? "-":selected ? "●":"○")
+                .foregroundColor(selected ? .green:.gray)
+                .offset(x:-6, y:-20)
+            
+        }
+        .frame(width: 185, height: 60, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        .background(self.selected ? Color.green.opacity(0.25):Color.black.opacity(0.1))
+        .cornerRadius(8)
+        .padding([.top, .bottom], 4)
+    }
+}
+
 // MARK: - New People Picker
 
 struct ActivityPersonCell:View {

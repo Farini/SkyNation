@@ -181,7 +181,7 @@ class BioModController: ObservableObject, BioController {
         }
         
         if station.truss.consumeEnergy(amount: newBorns * 10) {
-            let newPopulation = DNAGenerator.populate(dnaChoice: self.dnaOption, popSize: newBorns)
+            let newPopulation = DNAGenerator.populate(dnaChoice: DNAOption(rawValue:box.perfectDNA)!, popSize: newBorns)
             box.population.append(contentsOf: newPopulation)
         } else {
             errorMessage = "Did not have enough energy. Requires 10KW"
@@ -665,7 +665,7 @@ class DNAGenerator {
         // Generate Arrays of UInt8
         var pop = [[UInt8]]()
         for _ in 0..<popSize {
-            var newDNA = [UInt8]()
+            var newDNA:[UInt8] = []
             for _ in 0..<dnaChoice.rawValue.count {
                 let rand = arc4random_uniform(len)
                 let nextChar = letters[Int(rand)]
@@ -677,9 +677,16 @@ class DNAGenerator {
         // Convert Array to strings
         var popStrings:[String] = []
         for dna in pop {
-            let dnaString = String(bytes: dna, encoding: .ascii) ?? ""
-            if !dnaString.isEmpty {
-                popStrings.append(dnaString.uppercased())
+            if let dnaString = String(bytes: dna, encoding: .ascii) {
+                var finalString = dnaString.uppercased()
+                if finalString.count == dnaChoice.rawValue.count {
+                    popStrings.append(finalString)
+                } else if finalString.count > dnaChoice.rawValue.count {
+                    finalString = String(finalString.prefix(dnaChoice.rawValue.count))
+                    if finalString.count == dnaChoice.rawValue.count {
+                        popStrings.append(finalString)
+                    }
+                }
             }
         }
         

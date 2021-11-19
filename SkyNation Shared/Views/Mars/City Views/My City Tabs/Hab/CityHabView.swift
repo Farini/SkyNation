@@ -38,10 +38,12 @@ struct CityHabView: View {
                 // Left List
                 List {
                     Section(header:Text("Hab Limit: \(controller.cityData.checkForRoomsAvailable())")) {
-                        ForEach(controller.allStaff) { person in
-                            ActivityPersonCell(person: person, selected: person == selectedPerson)
+                        ForEach($controller.allStaff) { person in
+//                            ActivityPersonCell(person: person, selected: person == selectedPerson)
+                            HabPersonRow(person: person, selected: person.wrappedValue == selectedPerson)
                                 .onTapGesture {
-                                    self.habState = .selected(person: person)
+                                    self.habState = .selected(person: person.wrappedValue)
+                                    self.selectedPerson = person.wrappedValue
                                 }
                         }
                     }

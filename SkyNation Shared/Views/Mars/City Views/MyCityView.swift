@@ -7,29 +7,6 @@
 
 import SwiftUI
 
-/// A View Containing the CityTabs
-//struct CityMenu: View {
-//
-//    @Binding var menuItem:CityMenuItem
-//
-//    var body: some View {
-//
-//        HStack {
-//            ForEach(CityMenuItem.allCases, id:\.self) { mitem in
-//                Text(mitem.string)
-//                    .modifier(GameTabModifier("", selected: menuItem == mitem))
-//                .onTapGesture {
-//                    self.menuItem = mitem
-//                }
-//                .modifier(Badged("-"))
-//            }
-//        }
-//        .font(.title)
-//        .padding(.horizontal)
-//        .padding(.vertical, 4)
-//    }
-//}
-
 // MARK: - My City
 
 /// The View of the `CityData` that belongs to the `Player`
@@ -148,14 +125,7 @@ struct MyCityView_Previews: PreviewProvider {
     
     static var previews: some View {
         VStack {
-//            CityMenu(menuItem: .constant(menu))
             LocalCityView()
         }
     }
 }
-
-//struct CityMenu_Previews: PreviewProvider {
-//    static var previews: some View {
-//        CityMenu(menuItem: .constant(.hab))
-//    }
-//}

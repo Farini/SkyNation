@@ -197,7 +197,16 @@ class Outpost:Codable {
                     default: return nil
                 }
                 
-            case .power3, .power4: return nil
+            case .power3, .power4:
+                switch level {
+                    case 0: return OutpostJob(wantedIngredients: [.Polimer:18, .SolarCell:55, .Circuitboard:8], wantedSkills: [.Electric:2, .Material:1, .Handy:3])
+                    case 1: return OutpostJob(wantedIngredients: [.Polimer:60, .Aluminium:35, .SolarCell:320, .Circuitboard:18, .Sensor:5], wantedSkills: [.Electric:8, .Material:3, .Handy:9])
+                    case 2: return OutpostJob(wantedIngredients: [.Polimer:150, .Aluminium:65, .SolarCell:550, .Circuitboard:22, .Sensor:8], wantedSkills: [.Electric:21, .Material:14, .Handy:30, .Mechanic:8])
+                    case 3: return OutpostJob(wantedIngredients: [.Polimer:680, .Aluminium:750, .SolarCell:2500, .Circuitboard:64, .Sensor:128], wantedSkills: [.Electric:32, .Material:24, .Handy:32, .Mechanic:18, .SystemOS:8])
+                    case 4: return OutpostJob(wantedIngredients: [.Polimer:1200, .Aluminium:600, .SolarCell:4000, .Circuitboard:128, .Sensor:256], wantedSkills: [.Electric:40, .Material:30, .Handy:50, .Mechanic:15, .Datacomm:8, .SystemOS:12])
+                    default: return nil
+                }
+                
                 
             // Bio
             case .biosphere1:
@@ -210,7 +219,16 @@ class Outpost:Codable {
                         
                     default: return nil
                 }
-            case .biosphere2: return nil
+            case .biosphere2:
+                switch level {
+                    case 0: return OutpostJob(wantedIngredients: [.Fertilizer:100, .Aluminium:50, .Polimer:22, .Silica:8, .Battery:4], wantedSkills: [.Biologic:10, .Medic:4, .Handy:10])
+                        
+                    case 1: return OutpostJob(wantedIngredients: [.Fertilizer:250, .Aluminium:80, .Polimer:32, .Silica:16, .Battery:12, .Circuitboard:5], wantedSkills: [.Biologic:16, .Medic:8, .Handy:20, .SystemOS:3])
+                        
+                    case 2: return OutpostJob(wantedIngredients: [.Fertilizer:450, .Aluminium:120, .Polimer:80, .Battery:50, .Silica:20, .Circuitboard:15], wantedSkills: [.Biologic:26, .Medic:18, .Handy:22, .SystemOS:6, .Datacomm:2])
+                        
+                    default: return nil
+                }
                 
             case .antenna: return nil
             case .arena: return nil

@@ -72,27 +72,82 @@ struct TechTreeItemView: View {
     var status:TechStatus
     
     var body: some View {
-        VStack(spacing:3) {
-            Text(item.shortName)
-                .font(GameFont.section.makeFont())
-                .padding([.top, .leading, .trailing], 6)
-            
-            Image(systemName: imageName)
-                .font(.title)
-                .foregroundColor(status == TechStatus.researched ? Color.green:Color.white)
-            
-        }
-        .padding(5)
-        .background(makeGradient())
-        .cornerRadius(5)
-        .padding(4)
         
+        switch status {
+            case .locked:
+                ZStack {
+                    // Name
+                    Text(item.shortName)
+                        .font(GameFont.section.makeFont())
+                        .padding([.top, .leading, .trailing], 6)
+                    
+                    // Image
+                    Image(systemName: imageName)
+                        .font(imageFont)
+                        .padding(4)
+                        .background(Color.black.opacity(0.5))
+                        .cornerRadius(4)
+                        .foregroundColor(Color.red)
+                    
+                }
+                .padding(5)
+                .background(makeGradient())
+                .cornerRadius(5)
+                .padding(4)
+            case .unlocked:
+                VStack(spacing:3) {
+                    // Name
+                    Text(item.shortName)
+                        .font(GameFont.section.makeFont())
+                        .padding([.top, .leading, .trailing], 6)
+                    
+                    // Image
+                    Image(systemName: imageName)
+                        .font(imageFont)
+                        .foregroundColor(status == TechStatus.researched ? Color.green:Color.white)
+                    
+                }
+                .padding(5)
+                .background(makeGradient())
+                .cornerRadius(5)
+                .padding(4)
+            case .researched:
+                ZStack(alignment:.leading) {
+                    // Name
+                    Text(item.shortName)
+                        .font(GameFont.section.makeFont())
+                        .padding([.horizontal], 8)
+                        .padding(.top, 8)
+                        .foregroundColor(.gray)
+                    
+                    // Image
+                        Image(systemName: imageName)
+                            .font(.title2)
+                            .background(Color.black.opacity(0.5))
+                            .cornerRadius(4)
+                            .foregroundColor(status == TechStatus.researched ? Color.green:Color.white)
+                            .padding(.leading, 2)
+                }
+                .padding(5)
+                .background(Color.black)
+                .cornerRadius(5)
+                .padding(4)
+        }
+    }
+    
+    var imageFont:Font {
+        switch self.status {
+        
+            case .locked: return .title
+            case .unlocked: return .title
+            case .researched: return .title3
+        }
     }
     
     var statusColor:Color {
         switch self.status {
             case .locked: return Color(.sRGB, red: 0.5, green: 0.1, blue: 0.1, opacity: 1.0)
-            case .unlocked: return .blue//Color(.sRGB, red: 0.1, green: 0.1, blue: 0.6, opacity: 1.0)
+            case .unlocked: return Color(.sRGB, red: 0.2, green: 0.3, blue: 0.8, opacity: 1.0)
             case .researched: return Color.black.opacity(1.0)
         }
     }

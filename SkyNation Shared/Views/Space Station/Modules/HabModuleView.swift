@@ -89,11 +89,12 @@ struct HabModuleView: View {
                     } else {
                         HStack {
                             // Left List
-                            List(controller.inhabitants) { person in
+                            List($controller.inhabitants) { person in
                                 
-                                ActivityPersonCell(person: person, selected: person == controller.selectedPerson)
+//                                ActivityPersonCell(person: person, selected: person == controller.selectedPerson)
+                                HabPersonRow(person: person, selected: person.wrappedValue == controller.selectedPerson)
                                     .onTapGesture(count: 1, perform: {
-                                        controller.didSelect(person: person)
+                                        controller.didSelect(person: person.wrappedValue)
                                     })
                                 
                             }
@@ -127,14 +128,15 @@ struct HabModuleView: View {
                             //.padding()
                         }
                     }
-                case .selected(_):
+                case .selected(let selPerson):
                     HStack {
                         
                         // Left List
-                        List(controller.inhabitants) { person in
-                            ActivityPersonCell(person: person, selected: person == controller.selectedPerson)
+                        List($controller.inhabitants) { person in
+//                            ActivityPersonCell(person: person, selected: person == controller.selectedPerson)
+                            HabPersonRow(person: person, selected: selPerson == person.wrappedValue)
                                 .onTapGesture(count: 1, perform: {
-                                    controller.didSelect(person: person)
+                                    controller.didSelect(person: person.wrappedValue)
                                 })
                         }
                         .frame(minWidth: 150, maxWidth: 230, maxHeight: .infinity, alignment: .leading)

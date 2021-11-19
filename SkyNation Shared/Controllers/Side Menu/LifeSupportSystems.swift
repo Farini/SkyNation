@@ -78,6 +78,12 @@ enum MachineSelectType {
     }
 }
 
+// New
+enum TankSorting {
+    case byEmptiness
+    case byType
+}
+
 /**
  Life Support Systems Controller
  
@@ -96,10 +102,12 @@ class LSSController: ObservableObject {
     // Resources
     @Published var air:AirComposition
     @Published var batteries:[Battery] = []
-    @Published var tanks:[Tank] = []
     @Published var boxes:[StorageBox] = []
     @Published var peripherals:[PeripheralObject] = []
     @Published var food:[String] = []
+    
+    @Published var tanks:[Tank] = []
+    @Published var tankSorting:TankSorting = .byType
     
     @Published var headCount:Int = 0
     
@@ -271,6 +279,17 @@ class LSSController: ObservableObject {
         return false
     }
     
+    func reorderTanks() {
+        switch tankSorting {
+            case .byType:
+                self.tankSorting = .byEmptiness
+                self.updateAllData()
+            case .byEmptiness:
+                self.tankSorting = .byType
+                self.updateAllData()
+        }
+    }
+    
     /// Throw away tank
     func discardTank(tank:Tank) {
         
@@ -334,7 +353,7 @@ class LSSController: ObservableObject {
         self.periUseIssues = []
         self.periUseMessages = []
         
-        // 100 Energy
+        // Charge Energy
         var charge:Bool = false
         switch gameScene {
             case .SpaceStation:
@@ -351,8 +370,7 @@ class LSSController: ObservableObject {
             periUseIssues.append("Not enough energy to use this peripheral.")
             return
         }
-                
-        // 1. Scrubber
+ 
         switch gameScene {
             case .SpaceStation:
                 guard let station = station else { fatalError() }
@@ -459,13 +477,19 @@ class LSSController: ObservableObject {
                         let sewerUsage = 12
                         if let sewer = station.truss.extraBoxes.filter({ $0.type == .wasteSolid }).sorted(by: { $0.current > $1.current }).first, sewer.current >= sewerUsage {
                             
+                            // Reduce Sewage
+                            sewer.current = max(0, sewer.current - sewerUsage)
+                            
                             if Bool.random() == true {
                                 // Make Fertilizer
                                 let multiplier = 0.75 + 0.1 * Double(peripheral.level) // 60% + 10% each level
-                                let fertilizerGain = Int(multiplier * Double(sewerUsage))
                                 
                                 if let fertBox = station.truss.extraBoxes.filter({ $0.type == .Fertilizer }).sorted(by: { $0.current < $1.current }).first {
+                                    let fertilizerGain = Int(multiplier * Double(sewerUsage))
                                     fertBox.current = fertBox.current + fertilizerGain
+                                    
+                                    
+                                    
                                     periUseMessages.append("Fertilizer box gained \(fertilizerGain)Kg.")
                                 } else {
                                     periUseMessages.append("Could not find a Fertilizer storage box to store the fertilizer produced. Throwing it away.")
@@ -477,6 +501,7 @@ class LSSController: ObservableObject {
                                 if let methaneTank = station.truss.tanks.filter({ $0.type == .ch4 }).sorted(by: { $0.current < $1.current }).first {
                                     methaneTank.current = min(TankType.ch4.capacity, methaneTank.current + methaneGain)
                                     periUseMessages.append("Methande Tank gained \(methaneGain)L. Now has \(methaneTank.current)L.")
+                                    
                                 }
                             }
                             
@@ -491,8 +516,8 @@ class LSSController: ObservableObject {
                     
                 }
                 
-                self.updateAllData()
                 self.saveStation(station: station)
+                
                 
             case .MarsColony:
                 guard let city = city else { fatalError() }
@@ -597,6 +622,8 @@ class LSSController: ObservableObject {
                             
                             let multiplier = 0.6 + 0.1 * Double(peripheral.level) // 60% + 10% each level
                             let methaneGain = Int(multiplier * Double(sewerUsage))
+                            
+                            sewer.current = max(0, sewer.current - sewerUsage)
                             
                             if Bool.random() == true {
                                 // Make Fertilizer
@@ -734,9 +761,16 @@ class LSSController: ObservableObject {
         // Resources
         self.air = city.air
         self.batteries = tmpBatteries
-        self.tanks = city.tanks
+        // self.tanks = city.tanks
         self.boxes = city.boxes
         self.peripherals = city.peripherals
+        
+        switch tankSorting {
+            case .byEmptiness:
+                self.tanks = city.tanks.sorted(by: { $0.current < $1.current })
+            case .byType:
+                self.tanks = city.tanks.sorted(by: { $0.type.rawValue < $1.type.rawValue })
+        }
         
         // Headcount
         self.headCount = city.inhabitants.count
@@ -766,22 +800,18 @@ class LSSController: ObservableObject {
         // Consumption
         let modulesCount = city.tech.count
         let modulesConsume = modulesCount * GameLogic.energyPerModule
+        // Peripherals Consumption
+        let consumptions:Int = peripherals.filter({$0.powerOn == true}).compactMap({ $0.peripheral.energyConsumption }).reduce(0, +)
+        self.zConsumeMachine = consumptions
         self.zConsumeModules = modulesConsume
         self.zConsumeHumans = Array(repeating: GameLogic.personalEnergyConsumption(), count: headCount).reduce(0, +)
         
         // Energy Collection
         var energyCollection:Int = 5
-        if let sknsData = LocalDatabase.shared.serverData {
-            // get power sources
-            let outposts = sknsData.outposts
-            for op:Outpost in outposts {
-                if op.type == .Energy {
-                    let pEnergy = op.energy() / sknsData.cities.count
-                    energyCollection += pEnergy
-                }
-            }
-        }
-        self.zProduction = city.solarPanels.compactMap({ $0.maxCurrent() }).reduce(0, +) + energyCollection
+        let mb = max(energyCollection, ServerManager.shared.serverData?.outposts.filter({ $0.type == .Energy }).compactMap({ $0.type.energyDelta }).reduce(0, +) ?? 0)
+        energyCollection = mb
+        
+        self.zProduction = city.powerGeneration() + energyCollection
         let totalConsume = zConsumeModules + zConsumeMachine + zConsumeHumans
         self.zDelta = self.zProduction - totalConsume
         
@@ -809,9 +839,16 @@ class LSSController: ObservableObject {
         // Resources
         self.air = station.air
         self.batteries = tmpBatteries
-        self.tanks = station.truss.tanks
         self.boxes = station.truss.extraBoxes
         self.peripherals = station.peripherals
+        
+        switch tankSorting {
+            case .byEmptiness:
+                self.tanks = station.truss.tanks.sorted(by: { $0.current < $1.current })
+            case .byType:
+                self.tanks = station.truss.tanks.sorted(by: { $0.type.rawValue < $1.type.rawValue })
+        }
+        
         
         // Headcount
         self.headCount = station.habModules.map({ $0.inhabitants.count }).reduce(0, +)
@@ -844,6 +881,9 @@ class LSSController: ObservableObject {
         let modulesCount = station.labModules.count + station.habModules.count + station.bioModules.count
         let modulesConsume = modulesCount * GameLogic.energyPerModule
         self.zConsumeModules = modulesConsume
+        // Peripherals Consumption
+        let consumptions:Int = peripherals.filter({ $0.powerOn == true}).compactMap({ $0.peripheral.energyConsumption }).reduce(0, +)
+        self.zConsumeMachine = consumptions
         self.zConsumeHumans = Array(repeating: GameLogic.personalEnergyConsumption(), count: headCount).reduce(0, +)
         self.zProduction = station.truss.solarPanels.compactMap({ $0.maxCurrent() }).reduce(0, +)
         let totalConsume = zConsumeModules + zConsumeMachine + zConsumeHumans

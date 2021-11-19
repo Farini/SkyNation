@@ -319,10 +319,12 @@ class CityData:Codable, Identifiable {
     
     /// Power Generated (Max 2 Solar Panels)
     func powerGeneration() -> Int {
-        let maxSolar:[SolarPanel] = Array(solarPanels.prefix(2))
-        return  maxSolar.compactMap({ $0.maxCurrent() }).reduce(0, +)
+        // Solar
+        let maxSolar:Int = Array(solarPanels.prefix(2)).compactMap({ $0.maxCurrent() }).reduce(0, +)
+        // Powergen peripheral
+        let powerGen:Int = peripherals.filter({ $0.peripheral == .PowerGen }).count * 25
+        return maxSolar + powerGen
         
-//        return maxSolar.compactMap({ $0.maxCurrent }).reduce(0, +)
     }
     
     func availableEnergy() -> Int {

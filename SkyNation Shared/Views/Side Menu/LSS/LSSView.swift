@@ -43,12 +43,21 @@ struct LSSView: View {
                                         HStack {
                                             Text("Tanks")
                                             Spacer()
+                                /*
                                             Button("⇣") {
-                                                let tks = self.controller.tanks
-                                                let tks2 = tks.sorted(by: { $0.current < $1.current })
-                                                self.controller.tanks = tks2
+                                                
+//                                                switch controller.tankSorting {
+//
+//                                                    case .byEmptiness:
+//                                                        controller.tankSorting = .byType
+//                                                    case .byType:
+//                                                        controller.tankSorting = .byEmptiness
+//                                                }
+//                                                controller.updateAllData()
+                                                controller.reorderTanks()
                                             }
                                             .padding(.trailing, 6)
+                                 */
                                         }) {
                                             ForEach($controller.tanks, id:\.id) { tank in
                                     
@@ -57,7 +66,7 @@ struct LSSView: View {
                                             // Tank here
                                             TankRow(tank: tank, selected: selTank == tank.wrappedValue)
                                                 .onTapGesture(count: 1, perform: {
-                                                    controller.updateState(newState: .Resources(type: .Tank(tank: selTank)))
+                                                    controller.updateState(newState: .Resources(type: .Tank(tank: tank.wrappedValue)))
                                                 })
                                         default:
                                             TankRow(tank: tank, selected: false)
@@ -71,23 +80,23 @@ struct LSSView: View {
                             
                             // Ingredients - Boxes
                             Section(header: Text("Ingredients")) {
-                                ForEach(controller.boxes) { storageBox in
+                                ForEach($controller.boxes) { storageBox in
                                     HStack {
-                                        storageBox.type.image()! //?? Image(systemName:"questionmark")
+                                        storageBox.wrappedValue.type.image()! //?? Image(systemName:"questionmark")
                                             .resizable()
                                             .frame(width:28, height:28)
                                             .aspectRatio(contentMode: .fit)
                                         
                                         VStack(alignment:.leading) {
-                                            Text("\(storageBox.type.rawValue)")
-                                            Text("\(storageBox.current)/\(storageBox.type.boxCapacity())")
+                                            Text("\(storageBox.wrappedValue.type.rawValue)")
+                                            Text("\(storageBox.wrappedValue.current)/\(storageBox.wrappedValue.type.boxCapacity())")
                                         }
                                         
                                     }
                                     .onTapGesture(count: 1, perform: {
                                         // Select Box Here
 //                                        controller.didSelect(utility: storageBox)
-                                        controller.updateState(newState: .Resources(type: .Box(box: storageBox)))
+                                        controller.updateState(newState: .Resources(type: .Box(box: storageBox.wrappedValue)))
                                     })
                                 }
                             }
@@ -117,37 +126,24 @@ struct LSSView: View {
                         }
                     }
                 
+                // Peripherals
                 case .Machinery(let mType):
                     HStack {
-                        List(controller.peripherals) { peripheral in
-                            HStack {
-                                // Image
-                                peripheral.getImage()
-                                    .frame(width:42, height:42)
-                                VStack {
-                                    Text("\(peripheral.peripheral.rawValue)")
-                                    Text("Power: \(peripheral.powerOn ? "on":"false")\(peripheral.isBroken ? " broken":"")")
-                                        .foregroundColor((peripheral.isBroken || !peripheral.powerOn) ? .red:.white)
-                                }
-                            }
-                            .background(mType.isSelected(peripheral:peripheral) == true ? Color.blue.opacity(0.3):Color.clear)
+                        List($controller.peripherals) { peripheral in
+                            PeripheralRowView(peripheral: peripheral, isSelected: mType.isSelected(peripheral: peripheral.wrappedValue))
                             .onTapGesture {
-                                controller.updateState(newState: .Machinery(type: .Machine(peripheral: peripheral)))
+                                controller.updateState(newState: .Machinery(type: .Machine(peripheral: peripheral.wrappedValue)))
                             }
                         }
                         .frame(minWidth:180, maxWidth:220, minHeight:200, maxHeight: .infinity)
                         
-                        // Detail View
-                        // ScrollView {
-                            switch mType {
-                                case .None:
-                                    noSelectionView
-                                    
-                                case .Machine(let peripheral):
-                                    LSSMachineView(controller:controller, peripheral:peripheral)
-                            }
-                        // }
-//                        .frame(minWidth: 400, maxWidth:.infinity)
+                        switch mType {
+                            case .None:
+                                noSelectionView
+                                
+                            case .Machine(let peripheral):
+                                LSSMachineView(controller:controller, peripheral:peripheral)
+                        }
                     }
                     
                 case .Energy:
@@ -159,9 +155,12 @@ struct LSSView: View {
                     
                 case .Systems:
                     ScrollView {
-                        LSSReportView(controller:controller)
+                        VStack {
+                            LSSReportView(controller:controller)
+                            Spacer()
+                        }
                     }
-                    .frame(maxHeight:800)
+                    //.frame(maxHeight:800)
                     
             }
         }
@@ -729,6 +728,7 @@ struct AccountingReportView: View {
                 }
             }
             
+            Spacer()
         }
         .padding()
         
@@ -746,6 +746,6 @@ struct LSSView_Previews: PreviewProvider {
 struct StationAccounting_Previews: PreviewProvider {
     static var previews: some View {
         AccountingReportView(report: AccountingReport.example()!)
-            .frame(height:1500)
+            .frame(height:1200)
     }
 }

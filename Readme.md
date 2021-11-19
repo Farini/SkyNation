@@ -146,8 +146,18 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Settings - Serve Biobox
 - [X] Player password recovery (Better method)
 - [X] Garage View - Fuel Vehicle to Launch, or Fail!
+- [X] City Vehicle Unload button disabled
+- [X] Store - Improve the view where the purchase happens
+- [X] Store - Improvements (Button, Sub-list)
+- [X] LSSView - Poop not going away
+- [X] LSSView - Fix Boxes Selection
+- [X] LSSView - Fix [Rows: Peripherals, Tanks?]
+- [X] Tech Tree Item View - Improve
+- [X] BioModule - Sometimes generating longer strings on "grow"
+- [X] BioModule - Inside View
+- [X] Model - Fix cost of Outpost level ups
 
-- [ ] Tests
+- [ ] All Tests
 - [ ] Store receipt view
 - [ ] Election Results
 
@@ -155,22 +165,15 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Guild Room - Invite should work for everyone
 - [ ] Guild Room - Test Election Results
 
-- [ ] LSSView Poop not going away
-- [ ] LSSView Fix List cells
+- [ ] LSSView - (Tanks) No Selection (Merge all tanks, Discard all empty) - Put it on top of (no selection)
+- [ ] LSSView - (Peripherals) No Selection (Fix all peripherals, Power off all peripherals) - Put it on top of (no selection)
 
-- [X] Store - Improve the view where the purchase happens
-- [X] Store - Improvements (Button, Sub-list)
-- [ ] Store - Save receipt in a file
-- [ ] Store - Use Promocode underneath products AND use a button to get there.
-
-- [ ] Tech Tree Item View - Improve
-- [ ] BioModule - Inside View
-
-- [ ] Model - Fix cost of Outpost level ups
 - [ ] Model - Guild Missions (About.MD)
 - [ ] Model - Accounting with Totals (total oxygen, total water, total energy)
 
-- [ ] New Warning Messages (from people selector)  - use everywhere that can throw an error.
+- [ ] Store - Save receipt in a file
+- [ ] Store - Use Promocode underneath products AND use a button to get there.
+
 - [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
 - [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
 
@@ -184,6 +187,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
 
 - [ ] All Views Remake - Consistency
+- [ ] New Warning Messages (from people selector)  - use everywhere that can throw an error.
 - [ ] Basic Views - Alert messages (orange)
 - [ ] Basic Views - Typography, and Fonts.
 - [ ] Basic Views - Consistent Background Colors
@@ -201,6 +205,11 @@ Folders Done
     - [ ] City View - Bio - Remake with new Views
 
 
+- [X] Tutorial 1 - Build a Hab module
+- [ ] Tutorial 2 - Order: people
+- [ ] Tutorial 3 - Build a Lab module
+- [ ] Tutorial 4 - Work on the lab (recipe, or tech tree)
+
 - [ ] iOS - Views are too large
 - [ ] iOS - Font modifiers
 - [ ] iOS - Window Sizes + View Sizes
@@ -215,13 +224,11 @@ Features that are requested, but are not required to launch the game
 - [X] Free Supply Drop-offs -> Tokens for more 
 - [ ] Reskin Delivery Vehicle
 - [ ] Remodel Space Vehicle
-- [ ] Person var stress?
 - [ ] Peripheral Upgrades
 - [ ] Activity name enum?
 - [ ] BioBox DNA enum
 - [ ] 2D Graphics - Custom SFFonts
 - [ ] 2D Graphics - Blender individual tanks
-- [ ] 2D Graphics - Better Engine Icons
 - [ ] Mars Scene - Random Rocks
 - [ ] Mars Scene - City - Gate Color?
 - [ ] Mars Scene - City + Solar Panel(s)

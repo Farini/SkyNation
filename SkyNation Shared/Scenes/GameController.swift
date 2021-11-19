@@ -945,9 +945,12 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             if station?.truss.getAvailableWater() ?? 0 < 20 {
                 newsLines.append("Water running low")
             }
-            if station?.air.needsOxygen() ?? 0 > 5 {
+            
+            let totalO2 = station?.truss.tanks.filter({ $0.type == .o2 }).compactMap({ $0.current }).reduce(0, +) ?? 0
+            if totalO2 < 20 {
                 newsLines.append("Oxygen running low")
             }
+            
             let qt:[AirQuality] = [.Lethal, .Bad]
             if qt.contains(station?.air.airQuality() ?? .Good) {
                 newsLines.append("Air quality is bad. Check air components.")

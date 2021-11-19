@@ -148,56 +148,68 @@ struct BioView: View {
                     switch controller.selection {
                         case .notSelected:
                             // Default Detail
-                            ScrollView([.vertical], showsIndicators: true) {
+                            
                                 
-                                VStack {
                                     
-                                    Group {
+                                ScrollView([.vertical], showsIndicators: true) {
+                                    ZStack {
+                                        Image("BioInside")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                    VStack {
                                         
-                                        // No Selection Detail
-                                        Text("Bio Boxes \(module.boxes.count)").foregroundColor(.gray)
-                                        
-                                        ProgressView("Slots Available: \(controller.availableSlots) of \(BioModule.foodLimit)", value: Double(controller.availableSlots)/Double(BioModule.foodLimit))
+                                        Group {
+                                            
+                                            // No Selection Detail
+                                            Text("Bio Boxes \(module.boxes.count)").foregroundColor(.gray)
+                                            
+                                            ProgressView("Slots Available: \(controller.availableSlots) of \(BioModule.foodLimit)", value: Double(controller.availableSlots)/Double(BioModule.foodLimit))
                                                 .frame(width:200)
                                                 .padding(.top, 8)
-                                        
-                                        Divider()
-                                        
-                                        Label("\(controller.availableEnergy) kW", systemImage:"bolt.circle").font(.title2)
-                                            .foregroundColor(controller.availableEnergy > 100 ? .white:.red)
-                                        
-                                        VStack(alignment:.leading, spacing:6) {
                                             
-                                            Text("Select a box to continue, or create a new one.")
+                                            Divider()
                                             
-                                            Text("Food is really important for your astronauts to survive. A BioBox can feed the astronauts, and helps the station to produce food, so you don't have to keep ordering.")
-                                                .fixedSize(horizontal: false, vertical: true)
+                                            Label("\(controller.availableEnergy) kW", systemImage:"bolt.circle").font(.title2)
+                                                .foregroundColor(controller.availableEnergy > 100 ? .white:.red)
                                             
-                                                .foregroundColor(.gray)
+                                            VStack(alignment:.leading, spacing:6) {
+                                                
+                                                Text("Select a box to continue, or create a new one.")
+                                                
+                                                Text("Food is really important for your astronauts to survive. A BioBox can feed the astronauts, and helps the station to produce food, so you don't have to keep ordering.")
+                                                    .fixedSize(horizontal: false, vertical: true)
+                                                    .foregroundColor(.gray)
+                                                    .padding(4)
+                                                    .background(Color.black.opacity(0.4))
+                                                    .cornerRadius(4)
+                                            }
+                                            .padding(.vertical, 8)
+                                            .padding(.horizontal)
+                                            
+                                            Spacer(minLength: 50)
+                                            
+                                            Divider()
+                                            
+                                            HStack {
+                                                Button(action: {
+                                                    controller.startAddingBox()
+                                                }, label: {
+                                                    HStack {
+                                                        Image(systemName:"staroflife")
+                                                        Text("Create")
+                                                    }
+                                                })
+                                                    .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                                                    .disabled(model.isRunning)
+                                            }
+                                            .padding()
                                         }
-                                        .padding(.vertical, 8)
-                                        .padding(.horizontal)
-                                        
-                                        Spacer(minLength: 50)
-                                        
-                                        Divider()
-                                        
-                                        HStack {
-                                            Button(action: {
-                                                controller.startAddingBox()
-                                            }, label: {
-                                                HStack {
-                                                    Image(systemName:"staroflife")
-                                                    Text("Create")
-                                                }
-                                            })
-                                                .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
-                                                .disabled(model.isRunning)
-                                        }
-                                        .padding()
+                                        Spacer()
                                     }
+                                    .background(Color.black.opacity(0.35))
                                 }
                             }
+                            
                             
                         case .selected(let bioBox):
                             

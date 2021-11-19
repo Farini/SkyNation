@@ -101,7 +101,7 @@ Animations
 
 - GuildMapItem - Items posted in map scene
     - road segments
-    - Guild E-Vehicle
+    - Guild E-Vehicle(s)
     - Unlock Outposts
 
 

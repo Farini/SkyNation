@@ -104,7 +104,7 @@ struct CityGarageView: View {
                                         controller.unload(vehicle: vehicle)
                                     }
                                     .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
-                                    .disabled(controller.travelVehicles.contains(vehicle))
+                                    .disabled(vehicle.arriveDate().compare(Date()) == .orderedDescending)
                                     
                                 }
                                 

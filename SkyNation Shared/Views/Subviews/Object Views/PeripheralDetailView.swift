@@ -50,12 +50,81 @@ struct PeripheralSmallSelectView: View {
     }
 }
 
+struct PeripheralRowView: View {
+    
+    @Binding var peripheral:PeripheralObject
+    var isSelected:Bool
+    
+    var body: some View {
+        HStack {
+            // Image
+            peripheral.getImage()!
+                .resizable()
+                .frame(width:42, height:42)
+            
+            VStack(alignment:.leading) {
+                Text("\(peripheral.peripheral.rawValue)")
+                    .font(GameFont.section.makeFont())
+                
+                HStack {
+                    Image(systemName: "power.circle")
+                        .foregroundColor(peripheral.powerOn ? peripheral.isBroken ? .red:.green:.gray)
+                    if peripheral.powerOn {
+                        if peripheral.isBroken {
+                            Text("broken").foregroundColor(.red)
+                        } else {
+                            Text("working")
+                        }
+                    } else {
+                        Text("off").foregroundColor(.gray)
+                    }
+                }
+            }
+            
+            Spacer()
+        }
+        .frame(width:180)
+        .padding(6)
+        .background(isSelected == true ? Color.blue.opacity(0.3):Color.clear)
+        .cornerRadius(6)
+        
+    }
+}
+
+// MARK: - Previews
+
+/*
 struct Peripheral_Previews: PreviewProvider {
     
     static var previews: some View {
         PeripheralSmallView(peripheral: PeripheralObject(peripheral: .Electrolizer))
     }
 }
+*/
+
+struct PeripheralRow_Previews: PreviewProvider {
+    static let peri = PeripheralObject(peripheral: .Condensator)
+//    static let peri2 = PeripheralObject(peripheral: .WaterFilter)
+    
+    static var previews: some View {
+        VStack {
+            ForEach(makePeripherals()){ peripheral in
+                PeripheralRowView(peripheral: .constant(peripheral), isSelected: false)
+//                PeripheralRowView(peripheral: .constant(peri2), isSelected: true)
+            }
+            PeripheralRowView(peripheral: .constant(peri), isSelected: true)
+        }
+    }
+    
+    static func makePeripherals() -> [PeripheralObject] {
+        let peri = PeripheralObject(peripheral: .Condensator)
+        let peri2 = PeripheralObject(peripheral: .WaterFilter)
+        let peri3 = PeripheralObject(peripheral: .Electrolizer)
+        peri3.powerOn = false
+        return [peri, peri2, peri3]
+    }
+}
+
 
 struct PeripheralSmallSelect_Previews: PreviewProvider {
     
