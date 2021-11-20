@@ -211,6 +211,7 @@ class Person:Codable, Identifiable, Equatable {
     
     /// Sets a random mood
     /// [DEPRECATE]
+    /*
     func randomMood(tech:[TechItems]) {
         
         var happyDeltas:[Int] = [-1, 0, 1]
@@ -365,6 +366,7 @@ class Person:Codable, Identifiable, Equatable {
             }
         }
     }
+    */
     
     // MARK: - Skills
     
@@ -404,6 +406,38 @@ class Person:Codable, Identifiable, Equatable {
         else if balance == -1 { return 0.75 }
         else if balance < -1 { return 1.0 }
         return 0.5
+    }
+    
+    func attemptStudy() -> Skills? {
+        
+        if isBusy() == true {
+            print("busy")
+            return nil
+        } else {
+            if healthPhysical < 50 {
+                return nil
+            }
+        }
+        
+        let maxSkills:Int = Int((Double(age) / 10.0).rounded()) - 1
+        let curSkills:Int = sumOfSkills()
+        let learnable:[Skills] = [.Biologic, .Datacomm, .Medic, .Electric, .Material]
+        let learned:[Skills] = self.skills.compactMap({ $0.skill }).filter({ $0 != .Medic && $0 != .Handy })
+        
+        if curSkills < maxSkills {
+            if curSkills > 2 {
+                // repeat a skill
+                if let l1 = learned.shuffled().first {
+                    return l1
+                } else {
+                    return learnable.shuffled().first!
+                }
+            } else {
+                return learnable.shuffled().first!
+            }
+        } else {
+            return nil
+        }
     }
     
     /// Learn new Skill (Called when clearActivity() is being called) - after the study is complete

@@ -87,28 +87,16 @@ struct GameShoppingView: View {
                                 }
                             }
                             
+                            Spacer()
+                            Divider()
+                            
                             // Promo Code
-                            VStack(alignment:.leading, spacing:4) {
-                                Divider()
-                                Text("Enter promo code:")
-                                HStack {
-                                    if isValidatingToken {
-                                        ProgressView()
-                                    }
-                                    TextField("Promo Code", text: $promoCode)
-                                        .padding(.trailing, 20)
-                                    Button("Verify") {
-                                        print("Verifying Promo code: \(promoCode)")
-                                        self.validateToken()
-                                    }
-                                    .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
-                                    .disabled(isValidatingToken)
-                                }
-                                if let msg = self.validationMessage {
-                                    Text(msg).foregroundColor(.orange)
-                                }
+                            Button("Promo Code") {
+                                controller.step = .promocode
                             }
-                            .padding([.horizontal, .bottom])
+                            .buttonStyle(GameButtonStyle())
+                            .padding(.bottom)
+                            
                         }
                         
                     case .kit(let product):
@@ -184,59 +172,16 @@ struct GameShoppingView: View {
                             .buttonStyle(GameButtonStyle())
                             .padding(.bottom)
                         }
+                        
+                    case .promocode:
+                        ShopPromoInputView(cancelAction: {
+                            controller.step = .product
+                        })
+                        
                 }
             }
         }
         .frame(minWidth: 620, idealWidth: 620, maxWidth: 800, minHeight:400, maxHeight:700, alignment: .top)
-    }
-    
-    // Token Validation
-    func validateToken() {
-        
-        guard !promoCode.isEmpty else { return }
-        
-        guard let uid = UUID(uuidString: self.promoCode) else {
-            print("Not a valid ID")
-            validationMessage = "Not a valid ID"
-            return
-        }
-        
-        self.isValidatingToken = true
-        
-        SKNS.validateTokenFromTextInput(text: uid.uuidString) { token, errorString in
-            if let token = token {
-                print("Got a token: \(token.id)")
-                let player = LocalDatabase.shared.player
-                player.wallet.tokens.append(token)
-                
-                // Save
-                do {
-                    try LocalDatabase.shared.savePlayer(player)
-                } catch {
-                    print("‼️ Could not save station.: \(error.localizedDescription)")
-                }
-                
-//                let r = LocalDatabase.shared.savePlayer(player: player)
-//                print("Saved Player after getting token: \(r)")
-                DispatchQueue.main.async {
-                    self.validationMessage = "You got an Entry token to Mars !"
-                    self.isValidatingToken = false
-                }
-            } else {
-                print("Could not get a token")
-                if let string = errorString {
-                    DispatchQueue.main.async {
-                        self.validationMessage = "Not a valid token. \(string)"
-                        self.isValidatingToken = false
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.validationMessage = "Invalid token."
-                        self.isValidatingToken = false
-                    }
-                }
-            }
-        }
     }
     
 }

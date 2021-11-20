@@ -567,6 +567,9 @@
 		859D683A25DD91DB005DD42C /* GameShoppingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683925DD91DB005DD42C /* GameShoppingView.swift */; };
 		859D683B25DD91DB005DD42C /* GameShoppingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683925DD91DB005DD42C /* GameShoppingView.swift */; };
 		859D683C25DD91DB005DD42C /* GameShoppingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683925DD91DB005DD42C /* GameShoppingView.swift */; };
+		85A1D25C27497DEB00C2D163 /* ShopPromoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */; };
+		85A1D25D27497DEB00C2D163 /* ShopPromoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */; };
+		85A1D25E27497DEB00C2D163 /* ShopPromoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */; };
 		85A585E826E443700020CCBF /* RoadsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A585E726E443700020CCBF /* RoadsBuilder.swift */; };
 		85A585E926E443700020CCBF /* RoadsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A585E726E443700020CCBF /* RoadsBuilder.swift */; };
 		85A585EA26E443700020CCBF /* RoadsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A585E726E443700020CCBF /* RoadsBuilder.swift */; };
@@ -903,6 +906,7 @@
 		85969835260E8FD400BF1860 /* OutpostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutpostController.swift; sourceTree = "<group>"; };
 		8597BBA925BF40AB00C705A0 /* StartingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingWindow.swift; sourceTree = "<group>"; };
 		859D683925DD91DB005DD42C /* GameShoppingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameShoppingView.swift; sourceTree = "<group>"; };
+		85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopPromoInputView.swift; sourceTree = "<group>"; };
 		85A585E726E443700020CCBF /* RoadsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadsBuilder.swift; sourceTree = "<group>"; };
 		85A59E9F270CB6C90049AFC1 /* PlayerCardLayout.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = PlayerCardLayout.sks; sourceTree = "<group>"; };
 		85A59EC8271351C70049AFC1 /* City+Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "City+Account.swift"; sourceTree = "<group>"; };
@@ -1013,6 +1017,7 @@
 				856081FA26EE94F700C2418E /* LSS */,
 				8516AD622737AE9C00392C4F /* Game Room */,
 				8516AD632737AEB000392C4F /* Guild */,
+				85A1D25A27497DBC00C2D163 /* Shopping */,
 			);
 			path = "Side Menu";
 			sourceTree = "<group>";
@@ -1269,7 +1274,6 @@
 				85D3BB1526AB249700B6AA36 /* Modifiers */,
 				85351E9A2707876500EEE04C /* Chat Bubble */,
 				85E6ED1C25CF518500229E18 /* BackendView.swift */,
-				859D683925DD91DB005DD42C /* GameShoppingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1737,6 +1741,15 @@
 			path = Building;
 			sourceTree = "<group>";
 		};
+		85A1D25A27497DBC00C2D163 /* Shopping */ = {
+			isa = PBXGroup;
+			children = (
+				859D683925DD91DB005DD42C /* GameShoppingView.swift */,
+				85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */,
+			);
+			path = Shopping;
+			sourceTree = "<group>";
+		};
 		85A62F0B26222A9800D7B7C8 /* Garage */ = {
 			isa = PBXGroup;
 			children = (
@@ -2202,6 +2215,7 @@
 				85351E8326FEEA6800EEE04C /* CityBioboxDetailView.swift in Sources */,
 				858D7C4725D4F0AD00A45CF9 /* GameCamera.swift in Sources */,
 				8536F475258D481700B509D2 /* MarsMapScene.swift in Sources */,
+				85A1D25C27497DEB00C2D163 /* ShopPromoInputView.swift in Sources */,
 				85B34B1726F711C5007178F5 /* BiosphereNode.swift in Sources */,
 				85D3BB3026AFD28100B6AA36 /* BioBoxDetailView.swift in Sources */,
 				8536F38E258D475D00B509D2 /* LabModule.swift in Sources */,
@@ -2378,6 +2392,7 @@
 				85927D9625DB1D800071D98B /* VehicleTrunkView.swift in Sources */,
 				8517EE4225FC124200C34C54 /* Outpost.swift in Sources */,
 				8536F3DF258D47D000B509D2 /* LaboratoryView.swift in Sources */,
+				85A1D25D27497DEB00C2D163 /* ShopPromoInputView.swift in Sources */,
 				857D9A3A25C0B69800626884 /* HabModuleController.swift in Sources */,
 				8517EE642605DC8800C34C54 /* CityController.swift in Sources */,
 				858D7C4825D4F0AD00A45CF9 /* GameCamera.swift in Sources */,
@@ -2575,6 +2590,7 @@
 				85E2C42426BD8A6E003315F2 /* StoreManager.swift in Sources */,
 				8536F380258D475D00B509D2 /* Station.swift in Sources */,
 				85487F5F26CD9C1E00EBC070 /* GameLogic.swift in Sources */,
+				85A1D25E27497DEB00C2D163 /* ShopPromoInputView.swift in Sources */,
 				85487F2526C63F9800EBC070 /* CityTech.swift in Sources */,
 				8536F4B1258D49C900B509D2 /* TravelersView.swift in Sources */,
 				8517EE2D25F7C3AB00C34C54 /* MarsBuilder.swift in Sources */,

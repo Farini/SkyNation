@@ -30,6 +30,7 @@ enum ShoppingStep {
     
     case receipt
     case error(message:String)
+    case promocode
     
     var displayName:String {
         switch self {
@@ -39,6 +40,7 @@ enum ShoppingStep {
                 
             case .receipt: return "Receipt"
             case .error(message: _): return "Error"
+            case .promocode: return "Promo code"
         }
     }
 }

@@ -170,6 +170,8 @@ struct PersonDetail:View {
     
     @State var fireAlert:Bool = false
     
+    @State private var warning:String?
+    
     var body: some View {
         
         VStack(alignment: .leading) {
@@ -220,6 +222,8 @@ struct PersonDetail:View {
             }
             
             Divider()
+            
+            
             
             // Activity
             Group {
@@ -325,23 +329,23 @@ struct PersonDetail:View {
             
             Divider()
             
+            // Warnings
+            if let warning = warning {
+                Text(warning).foregroundColor(.red)
+                    .transition(.slide)
+            }
+            
             // Buttons
             HStack {
                 Spacer()
                 Button("Study") {
-                    print("\(person.name) Try Studying...")
                     
-                    var randomSubject = Skills.allCases.randomElement() ?? Skills.Handy
-                    
-                    if person.skills.count > 3 {
-                        randomSubject = person.skills.filter({$0.skill != .Handy }).randomElement()!.skill
-                    } else if person.skills.count > 2 {
-                        if Bool.random() {
-                            randomSubject = person.skills.filter({$0.skill != .Handy }).randomElement()!.skill
-                        }
+                    if let subject:Skills = person.attemptStudy() {
+                        controller.study(person: person, subject: subject)
+                    } else {
+                        self.warning = "\(person.name) can't study right now."
                     }
                     
-                    controller.study(person: person, subject: randomSubject)
                 }
                 .disabled(person.isBusy())
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
@@ -550,17 +554,17 @@ struct PersonDetailView:View {
                 Button("Study") {
                     print("\(person.name) Try Studying...")
                     
-                    let pskills = person.skills.filter({ $0.skill != .Handy }).compactMap({ $0.skill })
+                    let pskills = person.skills.filter({ $0.skill != .Handy && $0.skill != .Medic }).compactMap({ $0.skill })
                     let randSkill = Skills.allCases.filter({ $0 != .Handy }).randomElement()!
                     
                     var chosenSubject:Skills = randSkill
                     
-                    if pskills.count > 3 {
+                    if pskills.count > 2 {
                         chosenSubject = pskills.randomElement()!
                     } else {
                         if Bool.random() == true {
                             // RepeatSkill
-                            if let first = pskills.shuffled().first, first != .Handy {
+                            if let first = pskills.shuffled().first, first != .Handy, first != .Medic {
                                 chosenSubject = first
                             }
                         }

@@ -579,36 +579,43 @@ class SKNS {
         request.httpMethod = HTTPMethod.GET.rawValue
         
         let task = session.dataTask(with: request) { (data, response, error) in
+            
             if let data = data {
-                DispatchQueue.main.async {
+                
                     print("Data returning")
-                    
                     let decoder = JSONDecoder()
                     decoder.dateDecodingStrategy = .secondsSince1970
-                    let string = String(data:data, encoding:.utf8)
                     
                     do {
                         let token = try decoder.decode(GameToken.self, from: data)
                         completion?(token, nil)
                         return
-                    }catch{
-                        print("Error decoding: \(error.localizedDescription)")
-                        print("\n\nString:")
-                        print(string ?? "n/a")
-                        
-                        completion?(nil, error.localizedDescription)
+                    } catch {
+                        // Deal with error
+                        print("Error getting Token from text input: \(error.localizedDescription)")
+                        if let gameError = try? decoder.decode(GameError.self, from: data) {
+                            completion?(nil, gameError.reason)
+                            return
+                        } else {
+                            completion?(nil, error.localizedDescription)
+                            return
+                        }
                     }
-                }
                 
             } else {
-                print("Error returning")
-                DispatchQueue.main.async {
-                    completion?(nil, error?.localizedDescription)
+                if let error = error {
+                    print("Error returning")
+                    DispatchQueue.main.async {
+                        completion?(nil, error.localizedDescription)
+                        return
+                    }
+                } else {
+                    completion?(nil, "Unknown error occurred")
+                    return
                 }
             }
         }
         task.resume()
-        
     }
     
     // Register Purchase (post)

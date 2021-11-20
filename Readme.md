@@ -161,6 +161,8 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Tutorial 1 - Build a Hab module
 - [X] Tutorial 2 - Build a Lab module
 - [X] Tutorial 3 - Order: people
+- [X] Person - Learning Skills (bigger than 2, repeat a skill)
+- [X] Store - Use Promocode underneath products AND use a button to get there.
 
 - [ ] All Tests
 - [ ] Store receipt view
@@ -176,14 +178,13 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Model - Guild Missions (About.MD)
 - [ ] Model - Accounting with Totals (total oxygen, total water, total energy)
 
-- [ ] Person - Learning Skills (bigger than 2, repeat a skill)
 - [ ] Store - Save receipt in a file
-- [ ] Store - Use Promocode underneath products AND use a button to get there.
 
 - [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
 - [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
 
 - [ ] Mars Scene - City Garage - Vehicle Validation (when arriving (orbit)) - needs a token, if not valid.
+- [ ] Mars Scene - City Garage - Delete Vehicle from Guild at end of `unload`
 
 - [ ] Blender - Reduce Vertex Count, and make scene "DecorKit", to gather resources from there.
 - [ ] Blender - Consistent Materials - Metal1(Aluminium), Metal2(Copper), White, Rubber, Solar Panels, etc

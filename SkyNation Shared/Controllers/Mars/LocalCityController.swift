@@ -806,6 +806,10 @@ class LocalCityController:ObservableObject, BioController {
         
         guard cityVehicles.contains(vehicle) else { return }
         
+//        if vehicle.registration == nil {
+//            print("WARNING No Vehicle Registration.")
+//        }
+        
         // Transfer Vehicle's Contents
         
         for box in vehicle.boxes {
@@ -861,6 +865,9 @@ class LocalCityController:ObservableObject, BioController {
         // Delete vehicles that arrived and has unpacked
         if let registration = vehicle.registration {
             print("Delete vehicle from Server Database. VID: \(registration)")
+            
+        } else {
+            print("WARNING No Vehicle Registration.")
         }
     }
     
