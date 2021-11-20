@@ -48,8 +48,8 @@ The contributors to these projects shall have a **fair** share of the game, and 
  
  - [ ] ★★★★☆ Module, Hab, Lab, Bio
  - [ ] ★★★★★ Earth Order
- - [ ] ★★★☆☆ Garage
- - [ ] ★★★☆☆ Accounting System
+ - [ ] ★★★★☆ Garage
+ - [ ] ★★★★☆ Accounting System
  - [ ] ★★★★☆ Truss
  - [ ] ★★★★☆ Life Support Systems
  - [ ] ★★★★☆ Vehicles Travelling Views/Scenes
@@ -59,7 +59,8 @@ The contributors to these projects shall have a **fair** share of the game, and 
  - [ ] ★★★☆☆ Mars Outposts
  - [ ] ★★★★☆ Game Chats, Messages, Achievements
  - [ ] ★★★★☆ Game Store + Use of `GameToken`
- - [ ] ★★★☆☆ Player(object) + settings + playability + Purchases
+ - [ ] ★★★★☆ Player(object) + settings + playability + Purchases
+ - [ ] ★★☆☆☆ Tutorials
  
  ## Programming (Back End)
  
@@ -73,9 +74,10 @@ The contributors to these projects shall have a **fair** share of the game, and 
  
  - [ ] ★★★★☆ Humans + Skills
  - [ ] ★★★★☆ Tanks, Containers, Ingredients, Peripherals
- - [ ] ★★★☆☆ Scenes Overlay (Camera, Vehicles list, etc.)
- - [ ] ★★★☆☆ Action Icons - Buy, Cancel, Cheat, Tokens, etc.
- - [ ] ★★☆☆☆ Icons - App Icon
+ - [ ] ★★★★☆ Scenes Overlay (Camera, Vehicles list, etc.)
+ - [ ] ★★★★☆ Action Icons - Buy, Cancel, Cheat, Tokens, etc.
+ - [ ] ★★★★☆ Icons - App Icon
+ - [ ] ★★★☆☆ Typography
  
  ## Art Assets -  Scenes 3D
  
@@ -156,6 +158,9 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] BioModule - Sometimes generating longer strings on "grow"
 - [X] BioModule - Inside View
 - [X] Model - Fix cost of Outpost level ups
+- [X] Tutorial 1 - Build a Hab module
+- [X] Tutorial 2 - Build a Lab module
+- [X] Tutorial 3 - Order: people
 
 - [ ] All Tests
 - [ ] Store receipt view
@@ -171,6 +176,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Model - Guild Missions (About.MD)
 - [ ] Model - Accounting with Totals (total oxygen, total water, total energy)
 
+- [ ] Person - Learning Skills (bigger than 2, repeat a skill)
 - [ ] Store - Save receipt in a file
 - [ ] Store - Use Promocode underneath products AND use a button to get there.
 
@@ -203,12 +209,6 @@ Folders Done
     - [ ] City View - Hab - Remake with new Views
     - [ ] City View - Lab - Remake with new Views
     - [ ] City View - Bio - Remake with new Views
-
-
-- [X] Tutorial 1 - Build a Hab module
-- [ ] Tutorial 2 - Order: people
-- [ ] Tutorial 3 - Build a Lab module
-- [ ] Tutorial 4 - Work on the lab (recipe, or tech tree)
 
 - [ ] iOS - Views are too large
 - [ ] iOS - Font modifiers

@@ -28,7 +28,12 @@ struct GameFormatters {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.alwaysShowsDecimalSeparator = true
+#if os(macOS)
         formatter.hasThousandSeparators = true
+#elseif os(iOS)
+        formatter.usesGroupingSeparator = true
+#endif
+        
         return formatter
     }()
     
