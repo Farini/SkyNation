@@ -108,8 +108,7 @@ struct LSSView: View {
                             case .Tank(let tankObject):
                                 
                                 ScrollView {
-//                                    TankDetailView(tank: tankObject, controller: controller)
-                                    let idx = controller.tanks.firstIndex(of: tankObject)!
+                                    let idx = controller.tanks.firstIndex(of: tankObject) ?? 0
                                     TankDetailView(controller: controller, tank: $controller.tanks[idx])
                                 }
                                 .frame(maxWidth:.infinity, minHeight:200, maxHeight:.infinity)
@@ -122,7 +121,23 @@ struct LSSView: View {
                                 
                             case .None:
                                 // No Selection
-                                noSelectionView
+                                VStack(spacing:6) {
+                                    Spacer()
+                                    Text("Tanks: \(controller.tanks.count)")
+                                    Text("Empty Tanks: \(controller.tanks.filter({ $0.current == 0 }).count)")
+                                    
+                                    Button("Discard Empties") {
+                                        controller.discardAllEmptyTanks()
+                                    }
+                                    .buttonStyle(GameButtonStyle())
+                                    .padding(8)
+                                    
+                                    Text("Ingredient Boxes: \(controller.boxes.count)")
+                                    Spacer()
+                                    noSelectionView
+                                    Spacer()
+                                }
+                                
                         }
                     }
                 
@@ -139,7 +154,33 @@ struct LSSView: View {
                         
                         switch mType {
                             case .None:
-                                noSelectionView
+                                // No Selection
+                                VStack(spacing:6) {
+                                    Spacer()
+                                    Text("Peripherals: \(controller.peripherals.count)")
+                                    Text("Broken: \(controller.peripherals.filter({ $0.isBroken == true }).count)").foregroundColor(.red)
+                                    Text("Powered off: \(controller.peripherals.filter({ $0.powerOn == false }).count)").foregroundColor(.gray)
+                                    
+                                    // Peripherals issues + Fix all
+                                    Text(controller.periUseIssues.joined(separator: ", "))
+                                        .foregroundColor(.red)
+                                    let pArray = controller.peripherals.filter({ $0.isBroken == true })
+                                    if !pArray.isEmpty {
+                                        Button("Fix \(pArray.count) broken") {
+                                            for peripheral in pArray {
+                                                controller.fixBroken(peripheral: peripheral)
+                                                if controller.periUseIssues.isEmpty == false {
+                                                    break
+                                                }
+                                            }
+                                        }
+                                        .buttonStyle(GameButtonStyle())
+                                        .padding(8)
+                                    }
+                                    
+                                    noSelectionView
+                                    Spacer()
+                                }
                                 
                             case .Machine(let peripheral):
                                 LSSMachineView(controller:controller, peripheral:peripheral)
@@ -494,26 +535,37 @@ struct LSSReportView: View {
     var body: some View {
         VStack {
             
-            HStack(spacing:12) {
+            HStack(alignment:.top, spacing:8) {
                 
                 // General Status
                 VStack(alignment:.leading) {
-                    Text("★ Status").foregroundColor(.orange)
+                    Text("★ Status")
+                        .font(GameFont.section.makeFont())
+                        .padding(.vertical, 4)
+                        //.foregroundColor(.orange)
+                    
+                    HStack {
+                        CautionStripeShape()
+                            .fill(Color.orange.opacity(0.5), style: FillStyle(eoFill: false, antialiased: true))
+                            .frame(width:64, height:8)
+                        Spacer()
+                    }
+                    
                     Text("👤 Head count: \(controller.headCount)")
-                    Text("☀️ Energy Input: \(controller.zProduction)")
+                    // Text("☀️ Energy Input: \(controller.zProduction)")
                     Text("☁️ Air Quality: \(controller.air.airQuality().rawValue)")
                         .padding([.bottom])
                         .foregroundColor([AirQuality.Good, AirQuality.Great].contains(controller.air.airQuality()) ? Color.green:Color.orange)
                     
-                    HStack(spacing:12) {
+                    HStack(spacing:8) {
                         #if os(macOS)
                         Image(nsImage: GameImages.currencyImage)
                             .aspectRatio(contentMode: .fit)
-                            .frame(width:22, height:22)
+                            .frame(width:20, height:20)
                         #else
                         Image(uiImage: GameImages.currencyImage)
                             .aspectRatio(contentMode: .fit)
-                            .frame(width:22, height:22)
+                            .frame(width:20, height:20)
                         #endif
                         
                         VStack(alignment:.leading) {
@@ -522,7 +574,7 @@ struct LSSReportView: View {
                             let pot = LocalDatabase.shared.player.money
                             
                             Text("\(GameFormatters.numberFormatter.string(from:NSNumber(value:pot)) ?? "---") Sky Coins")//.font(.title2)
-                            Text("📡 lvl \(controller.station?.truss.antenna.level ?? 0), + 🪙 \(mot)").foregroundColor(.gray)
+                            Text("📡 lvl \(controller.station?.truss.antenna.level ?? 0), +  \(mot)/Hr").foregroundColor(.gray)
                         }
                     }
                 }
@@ -533,10 +585,17 @@ struct LSSReportView: View {
                 // Waste Management
                 VStack(alignment:.leading) {
                     
-                    Text("♳ Waste Management")
-                        .font(.title2)
-                        .foregroundColor(.orange)
-                        .padding([.bottom])
+                    Text("♳ Waste")
+                        .font(GameFont.section.makeFont())
+                        //.foregroundColor(.orange)
+                        .padding(.vertical, 4)
+                    
+                    HStack {
+                        CautionStripeShape()
+                            .fill(Color.orange.opacity(0.5), style: FillStyle(eoFill: false, antialiased: true))
+                            .frame(width:64, height:8)
+                        Spacer()
+                    }
                     
                     let wasteLiquid = controller.wLiquidCurrent
                     let wasteLiquidCap = controller.wLiquidCapacity
@@ -560,7 +619,7 @@ struct LSSReportView: View {
                         Text("< No solid waste container >").foregroundColor(.gray)
                     }
                 }
-                .padding(8)
+                .padding(6)
                 .frame(maxWidth:250)
                 
                 Divider()
@@ -573,13 +632,14 @@ struct LSSReportView: View {
                     let oxygenLasting = Int(controller.air.o2 / max(1, (controller.headCount * 2)))
                     
                     Text("⏱ Future")
-                        .font(.title3)
-                        .foregroundColor(.orange)
+                        .font(GameFont.section.makeFont())
+                        .padding(.vertical, 4)
+//                        .foregroundColor(.orange)
                     
                     HStack {
                         CautionStripeShape()
                             .fill(Color.orange.opacity(0.5), style: FillStyle(eoFill: false, antialiased: true))
-                            .frame(width:64, height:14)
+                            .frame(width:64, height:8)
                         Spacer()
                     }
                     
@@ -590,7 +650,7 @@ struct LSSReportView: View {
                     Text("☁️ Oxygen: \(Int(controller.air.o2)). ⏱ \(oxygenLasting) hrs.")
                         .foregroundColor(oxygenLasting > 8 ? .blue:.red)
                     
-                    Spacer()
+                    // Spacer()
                 }
                 .padding(8)
             }
@@ -598,6 +658,8 @@ struct LSSReportView: View {
             if let report = controller.accountingReport {
                 AccountingReportView(report: report)
             }
+            
+            Spacer()
         }
     }
 }
@@ -610,10 +672,11 @@ struct AccountingReportView: View {
         VStack {
             
             HStack(spacing:12) {
-                Text("🗒 Accounting").font(.title).foregroundColor(.orange)
-                Text("📆 \(GameFormatters.dateFormatter.string(from: report.date))")
-                    .font(.title).foregroundColor(.orange)
+                Text("🗒 Report").font(GameFont.section.makeFont()) //.foregroundColor(.orange)
                 Spacer()
+                Text("\(GameFormatters.dateFormatter.string(from: report.date))")
+                    .font(GameFont.section.makeFont()).foregroundColor(.gray)
+                
             }
             .padding(6)
             .padding(.top, 10)
@@ -624,7 +687,7 @@ struct AccountingReportView: View {
                 
                 // Compare Table
                 VStack {
-                    Text("Start vs End of last accounting").foregroundColor(.orange).font(.title2)
+                    Text("Last Accounting Cycle").foregroundColor(.orange).font(.title2)
                         .padding(.bottom, 4)
                     
                     HStack(spacing:12) {
@@ -708,7 +771,8 @@ struct AccountingReportView: View {
                     Divider()
                     ForEach(report.humanNotes, id:\.self) { humannote in
                         Text(humannote)
-                            .font(.system(.body, design: .monospaced))
+                            //.font(.system(.body, design: .monospaced))
+                            .font(GameFont.mono.makeFont())
                     }
                     
                     Text("--- Waste Production ----").foregroundColor(.gray)
@@ -737,15 +801,22 @@ struct AccountingReportView: View {
 
 // MARK: - Previews
 
-struct LSSView_Previews: PreviewProvider {
+//struct LSSView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        LSSView(scene: .SpaceStation)
+//    }
+//}
+
+struct LSSView2_Previews: PreviewProvider {
     static var previews: some View {
-        LSSView(scene: .SpaceStation)
+        LSSReportView(controller: LSSController(scene: .SpaceStation))
+            .frame(height:1500)
     }
 }
 
-struct StationAccounting_Previews: PreviewProvider {
-    static var previews: some View {
-        AccountingReportView(report: AccountingReport.example()!)
-            .frame(height:1200)
-    }
-}
+//struct StationAccounting_Previews: PreviewProvider {
+//    static var previews: some View {
+//        AccountingReportView(report: AccountingReport.example()!)
+//            .frame(height:1200)
+//    }
+//}

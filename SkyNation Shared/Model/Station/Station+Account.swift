@@ -164,7 +164,7 @@ extension Station {
                             didFail = true
                         } else {
                             let payment = truss.payForResources(ingredients: [ingredient:abs(value)])
-                            report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value)) \(ingredient.rawValue)Kg.")
+                            report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed \(abs(value)) Kg of \(ingredient.rawValue)")
                             print("Account Pay: \(payment)")
                         }
                         
@@ -183,7 +183,7 @@ extension Station {
                                 didFail = true
                             } else {
                                 let _ = truss.chargeFrom(tank: tank, amount: value)
-                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value)) \(tank.rawValue)L.")
+                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value))L of \(tank.rawValue)")
                             }
                         }
                         
@@ -251,7 +251,7 @@ extension Station {
                                 // Other Tanks
                                 let spill = truss.refillTanks(of: tank, amount: value)
                                 if spill > 0 {
-                                    report.problems.append("Could not refill \(tank) completely")
+                                    report.problems.append("Could not refill \(tank)")
                                 } else {
                                     report.notes.append("\(peripheral.peripheral) refilled \(key) with \(value)L.")
                                 }

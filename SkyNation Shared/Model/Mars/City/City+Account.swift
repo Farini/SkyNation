@@ -88,7 +88,7 @@ extension CityData {
                             didFail = true
                         } else {
                             let payment = payForResources(ingredients: [ingredient:abs(value)])
-                            report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value)) \(ingredient.rawValue)Kg.")
+                            report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value))Kg of \(ingredient.rawValue).")
                             print("Account Pay: \(payment)")
                         }
                         
@@ -107,7 +107,7 @@ extension CityData {
                                 didFail = true
                             } else {
                                 let _ = payForTanks(dictionary: [tank:value]) //chargeFrom(tank: tank, amount: value)
-                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value)) \(tank.rawValue)L.")
+                                report.peripheralNotes.append("\(peripheral.peripheral.rawValue) consumed: \(abs(value))L of \(tank.rawValue)")
                             }
                         }
                         
@@ -175,7 +175,7 @@ extension CityData {
                                 // Other Tanks
                                 let spill = refillTanks(of: tank, amount: value)
                                 if spill > 0 {
-                                    report.problems.append("Could not refill \(tank) completely")
+                                    report.problems.append("Could not refill \(tank).")
                                 } else {
                                     report.notes.append("\(peripheral.peripheral) refilled \(key) with \(value)L.")
                                 }

@@ -136,9 +136,7 @@ struct GameRoomView: View {
                 case .freebie:
                     VStack {
                         Text("Freee Drop-off Supply")
-//                            .font(.title2)
                             .font(GameFont.section.makeFont())
-//                            .foregroundColor(.orange)
                         
                         Divider()
                         
@@ -158,6 +156,9 @@ struct GameRoomView: View {
                                     .padding()
                                     .background(Color.black)
                                     .cornerRadius(8)
+                                    .transition(AnyTransition.modifier(active: SlidingDoorEffect(shift: 170), identity: SlidingDoorEffect(shift: 0)))
+                                    
+                                    
                                     
                                 } else if string == "token" {
                                     
@@ -172,6 +173,7 @@ struct GameRoomView: View {
                                     .padding()
                                     .background(Color.black)
                                     .cornerRadius(8)
+                                    .transition(AnyTransition.modifier(active: SlidingDoorEffect(shift: 170), identity: SlidingDoorEffect(shift: 0)))
                                     
                                 } else if let _ = TankType(rawValue: string) {
                                     
@@ -185,11 +187,14 @@ struct GameRoomView: View {
                                     .padding()
                                     .background(Color.black)
                                     .cornerRadius(8)
+                                    .transition(AnyTransition.modifier(active: SlidingDoorEffect(shift: 170), identity: SlidingDoorEffect(shift: 0)))
+                                    
                                 } else {
                                     EmptyView()
                                 }
                             }
                         }
+                        //.transition(AnyTransition.modifier(active: SlidingDoorEffect(shift: 170), identity: SlidingDoorEffect(shift: 0)))
                         
                         
                         Spacer()
@@ -227,8 +232,11 @@ struct GameRoomView: View {
                                 
                                 // Not available
                                 Button {
-                                    print("get")
-                                    controller.retrieveFreebies(using: true)
+//                                    print("get")
+                                    withAnimation() {
+                                        controller.retrieveFreebies(using: true)
+                                    }
+                                    
                                 } label: {
                                     HStack {
                                         Image("Helmet")
@@ -317,11 +325,51 @@ struct AchievementRowView:View {
     }
 }
 
+// MARK: - Previews
+
 struct GameRoomView_Previews: PreviewProvider {
     static var previews: some View {
         GameRoomView()
 //        if let m1 = LocalDatabase.shared.gameMessages.first {
 //            AchievementRowView(message: m1)
 //        }
+    }
+}
+
+// MARK: - Other
+
+struct SlidingDoorEffect: ViewModifier {
+    let shift: CGFloat
+    
+    func body(content: Content) -> some View {
+        let c = content
+        return ZStack {
+            c.clipShape(HalfClipShape(left: false)).offset(x: -shift, y: 0)
+            c.clipShape(HalfClipShape(left: true)).offset(x: shift, y: 0)
+        }
+    }
+}
+
+struct HalfClipShape: Shape {
+    var left: Bool
+    
+    func path(in rect: CGRect) -> Path {
+        // shape covers lef or right part of rect
+        return Path { path in
+            let width = rect.width
+            let height = rect.height
+            
+            let startx:CGFloat = left ? 0 : width/2
+            let shapeWidth:CGFloat = width/2
+            
+            path.move(to: CGPoint(x: startx, y: 0))
+            
+            path.addLines([
+                CGPoint(x: startx+shapeWidth, y: 0),
+                CGPoint(x: startx+shapeWidth, y: height),
+                CGPoint(x: startx, y: height),
+                CGPoint(x: startx, y: 0)
+            ])
+        }
     }
 }

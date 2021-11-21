@@ -309,6 +309,40 @@ class LSSController: ObservableObject {
         self.viewState = .Resources(type: .None)
     }
     
+    /// Discards all empty, except 'Empty' types.
+    func discardAllEmptyTanks() {
+        switch gameScene {
+            case .SpaceStation:
+                guard let station = station else { return }
+                let deletingTanks = station.truss.tanks.filter({ $0.current < 1 && $0.type != .empty })
+                let tanksIDs = deletingTanks.compactMap({ $0.id })
+                station.truss.tanks.removeAll(where: { tanksIDs.contains($0.id) })
+                
+                do {
+                    try LocalDatabase.shared.saveStation(station)
+                    self.tanks = station.truss.tanks
+                    self.updateAllData()
+                } catch {
+                    print("Error saving station on discard all tanks")
+                }
+                
+                
+            case .MarsColony:
+                guard let city = city else { return }
+                let deletingTanks = city.tanks.filter({ $0.current < 1 && $0.type != .empty })
+                let tanksIDs = deletingTanks.compactMap({ $0.id })
+                city.tanks.removeAll(where: { tanksIDs.contains($0.id) })
+                
+                do {
+                    try LocalDatabase.shared.saveCity(city)
+                    self.tanks = city.tanks
+                    self.updateAllData()
+                } catch {
+                    print("Error saving city on discard all tanks")
+                }
+        }
+    }
+    
     func defineTankType(tank:Tank, newType:TankType) {
         
         switch gameScene {
