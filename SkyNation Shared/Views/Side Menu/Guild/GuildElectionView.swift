@@ -23,74 +23,132 @@ struct GuildElectionView: View {
                 
                 Divider()
                 
-                if let guild = controller.guild {
+                if let guild:GuildFullContent = controller.guild {
                     
-                    Text("My Guild: \(guild.name)")
-                    Text("Election: \(GameFormatters.fullDateFormatter.string(from: guild.election))")
-                    Text("Election State: \(controller.electionState.displayString)")
-                    
-                    if let eData = controller.electionData {
-                        Text("Election Data: \(eData.electionStage.rawValue)")
-                    } else {
-                        Text("Election Data: none")
-                    }
-                    
-                    if let presidentID = guild.president {
-                        Text("President: \(presidentID.uuidString)")
-                    } else {
-                        
-                        // No President
-                        Text("No President")
-                            .foregroundColor(.red)
-                            .padding(4)
-                            .background(Color.black.opacity(0.5))
-                            .cornerRadius(4)
-                    }
-                    
-                    Group {
-                        // Candidates
-                        Text("All Candidates").font(.title3).foregroundColor(.orange)
-                        Divider()
-                        ForEach(controller.citizens, id:\.id) { citizen in
-                            HStack {
+                    // 2 Columns: Election Info vs Candidates
+                    HStack(alignment:.top) {
+                        // Election Info
+                        VStack(alignment:.leading) {
+                            Text("Election").font(GameFont.section.makeFont()).foregroundColor(.orange)
+                            Divider()
+                            
+                            // Text("My Guild: \(guild.name)")
+                            // Text("Election: \(GameFormatters.fullDateFormatter.string(from: guild.election))")
+                            // Text("Election State: \(controller.electionState.displayString)")
+                            
+                            if let eData:GuildElectionData = controller.electionData {
                                 
-                                let pCard = PlayerCard(playerContent: citizen)
-                                SmallPlayerCardView(pCard: pCard)
+                                Text("Election: \(eData.electionStage.rawValue)")
                                 
-                                // Count Votes
-                                let voteCount:Int = controller.electionData?.election.voted[citizen.id] ?? 0
+                                Text("Start: \(GameFormatters.dateFormatter.string(from:eData.election.startDate()))")
+                                Text("Ending: \(GameFormatters.dateFormatter.string(from:eData.election.endDate()))")
                                 
-                                Text("\(voteCount)")
-                                    .font(GameFont.section.makeFont())
-                                    .padding(6)
-                                    .background(Color.black.opacity(0.5))
-                                    .cornerRadius(6)
+                                let elProg:Double = eData.progress()
+                                let stProg:String = "\(GameFormatters.numberFormatter.string(from: NSNumber(value: eData.progress() * 100.0)) ?? "") %"
                                 
-                                // Vote
-                                Button("Vote") {
-                                    // Count Remaining Votes
-                                    let remainingVotes:Int = voteLimit - controller.castedVotes
-                                    print("Remaining Votes: \(remainingVotes)")
-                                    
-                                    controller.castedVotes += 1
-                                    
-                                    controller.voteForPresident(citizen: pCard)
-                                }
-                                .buttonStyle(GameButtonStyle())
+                                ProgressView(stProg, value:elProg)
+                                    .frame(width:200)
+                                
+                            } else {
+                                Text("Election Data: none")
                             }
                             
+                            
+                            // President
+                            if let presidentID = guild.president {
+                                // Crown and Name
+                                if let presidentContent = controller.citizens.first(where: { $0.id == presidentID}) {
+                                    Label(presidentContent.name, systemImage:"crown.fill")
+                                        .foregroundColor(.red)
+                                        .padding(4)
+                                        .background(Color.black.opacity(0.5))
+                                        .cornerRadius(4)
+                                    
+                                } else {
+                                    // Unknown President
+                                    Text("President: \(presidentID.uuidString)")
+                                        .foregroundColor(.red)
+                                        .padding(4)
+                                        .background(Color.black.opacity(0.5))
+                                        .cornerRadius(4)
+                                }
+                                
+                                
+                            } else {
+                                
+                                // No President
+                                Text("No President")
+                                    .foregroundColor(.red)
+                                    .padding(4)
+                                    .background(Color.black.opacity(0.5))
+                                    .cornerRadius(4)
+                            }
+                        }
+                        .padding(.horizontal, 8)
+                        .frame(minWidth:220)
+                        
+                        Divider()
+                        
+                        // Candidates
+                        VStack(alignment:.leading) {
+                            Group {
+                                // Candidates
+                                Text("Candidates").font(GameFont.section.makeFont()).foregroundColor(.orange)
+                                Divider()
+                                ForEach(controller.citizens, id:\.id) { citizen in
+                                    HStack {
+                                        
+                                        let pCard = PlayerCard(playerContent: citizen)
+                                        if citizen.id == guild.president {
+                                            
+                                            // President gets a crown on top
+                                            ZStack(alignment:.topLeading) {
+                                                SmallPlayerCardView(pCard: pCard)
+                                                Image(systemName:"crown.fill").font(.title).foregroundColor(.orange)
+                                            }
+                                            
+                                        } else {
+                                            
+                                            // Ordinary Citizen
+                                            SmallPlayerCardView(pCard: pCard)
+                                        }
+                                        
+                                        
+                                        // Count Votes
+                                        let voteCount:Int = controller.electionData?.election.voted[citizen.id] ?? 0
+                                        
+                                        Text("\(voteCount)")
+                                            .font(GameFont.section.makeFont())
+                                            .padding(6)
+                                            .background(Color.black.opacity(0.5))
+                                            .cornerRadius(6)
+                                        
+                                        // Vote
+                                        Button("Vote") {
+                                            // Count Remaining Votes
+                                            let remainingVotes:Int = voteLimit - controller.castedVotes
+                                            print("Remaining Votes: \(remainingVotes)")
+                                            
+                                            controller.castedVotes += 1
+                                            
+                                            controller.voteForPresident(citizen: pCard)
+                                        }
+                                        .buttonStyle(GameButtonStyle())
+                                    }
+                                    
+                                }
+                            }
+                            
+                            let remainingVotes:Int = voteLimit - controller.castedVotes
+                            Text("Remaining Votes x \(remainingVotes)")
+                                .font(GameFont.section.makeFont())
+                                .foregroundColor(remainingVotes < 1 ? .red:.orange)
+                            
+                            Spacer()
                         }
                     }
-                    
-                    let remainingVotes:Int = voteLimit - controller.castedVotes
-                    Text("Remaining Votes x \(remainingVotes)")
-                        .font(GameFont.section.makeFont())
-                        .foregroundColor(remainingVotes < 1 ? .red:.orange)
-                    
-                    Spacer()
-                    
-                    
                 } else {
+                    
                     Text("No Guild")
                         .font(.title2)
                         .foregroundColor(.red)

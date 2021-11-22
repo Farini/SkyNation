@@ -530,6 +530,12 @@ class SKNS {
         var request = URLRequest(url: url)
         request.httpMethod = HTTPMethod.GET.rawValue
         
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        // Set Credentials for authorization.
+        let basicCredential = "\(LocalDatabase.shared.player.playerID?.uuidString ?? UUID().uuidString):\(LocalDatabase.shared.player.keyPass ?? "XXX")".data(using: .utf8)!.base64EncodedString()
+        request.setValue("Basic \(basicCredential)", forHTTPHeaderField: "Authorization")
+        
+        
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .secondsSince1970
         
@@ -1473,6 +1479,9 @@ class SKNS {
         
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         //        request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
+        // Set Credentials for authorization.
+        let basicCredential = "\(LocalDatabase.shared.player.playerID?.uuidString ?? UUID().uuidString):\(LocalDatabase.shared.player.keyPass ?? "XXX")".data(using: .utf8)!.base64EncodedString()
+        request.setValue("Basic \(basicCredential)", forHTTPHeaderField: "Authorization")
         
         let task = session.dataTask(with: request) { (data, response, error) in
             if let data = data {

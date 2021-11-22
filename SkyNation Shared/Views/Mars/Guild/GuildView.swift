@@ -336,7 +336,6 @@ struct GuildView: View {
 struct GuildView_Previews: PreviewProvider {
     
     static let rGuild = GuildFullContent(data: true)
-    //Guild.example.makeSummary()
     
     static var previews: some View {
         Group {

@@ -71,8 +71,6 @@ struct GuildRoom: View {
                         .font(.title2)
                 })
                     .buttonStyle(SmallCircleButtonStyle(backColor: .red))
-                
-                
                     .padding(.trailing, 6)
                 
             }
@@ -112,16 +110,17 @@ struct GuildRoom: View {
             
             Divider()
             
+            // Main View
             switch selection {
                 case .elections:
                     
+                    // Same as ".president" -> Election View. Change this.
+                    // Just show basic info
                     VStack {
                         
                         Text("My Guild")
                             .font(GameFont.section.makeFont())
                             .padding(.top, 8)
-                        
-                        Divider()
                         
                         if let guild = controller.guild {
                             
@@ -129,13 +128,13 @@ struct GuildRoom: View {
                                 // Guild Presentation
                                 Text(guild.name).font(.title2)
                                 
+                                // Guild Icon
                                 Image(systemName:GuildIcon(rawValue:"\(guild.icon)")!.imageName)
                                     .font(.largeTitle)
                                     .foregroundColor(GuildColor(rawValue:guild.color)!.color)
-                                
-                                // Text("Color: \(guild.color)")
                             }
                             .padding(8)
+                            .transition(AnyTransition.modifier(active: SlidingDoorEffect(shift: 170), identity: SlidingDoorEffect(shift: 0)))
                             
                             Text("Election: \(GameFormatters.fullDateFormatter.string(from: guild.election))")
                             Text("Election State: \(controller.electionState.displayString)")
@@ -171,6 +170,7 @@ struct GuildRoom: View {
                 case .actions:
                     
                     // Show Players (Citizens) for now
+                    // This is where the missions going to be?
                     ScrollView {
                         VStack {
                             Text("Citizens")
@@ -225,7 +225,7 @@ struct GuildRoom: View {
                                     .buttonStyle(GameButtonStyle())
                                     .disabled(entryTokens < 1)
                                     
-                                    Button("Invite to Guild") {
+                                    Button("Invite") {
                                         print("Invite")
                                         controller.inviteToGuild(playerContent: sPlayer)
                                     }

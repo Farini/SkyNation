@@ -570,6 +570,9 @@
 		85A1D25C27497DEB00C2D163 /* ShopPromoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */; };
 		85A1D25D27497DEB00C2D163 /* ShopPromoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */; };
 		85A1D25E27497DEB00C2D163 /* ShopPromoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */; };
+		85A1D261274AC9BF00C2D163 /* PersonSmallViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1D260274AC9BF00C2D163 /* PersonSmallViews.swift */; };
+		85A1D262274AC9BF00C2D163 /* PersonSmallViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1D260274AC9BF00C2D163 /* PersonSmallViews.swift */; };
+		85A1D263274AC9BF00C2D163 /* PersonSmallViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1D260274AC9BF00C2D163 /* PersonSmallViews.swift */; };
 		85A585E826E443700020CCBF /* RoadsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A585E726E443700020CCBF /* RoadsBuilder.swift */; };
 		85A585E926E443700020CCBF /* RoadsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A585E726E443700020CCBF /* RoadsBuilder.swift */; };
 		85A585EA26E443700020CCBF /* RoadsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A585E726E443700020CCBF /* RoadsBuilder.swift */; };
@@ -907,6 +910,7 @@
 		8597BBA925BF40AB00C705A0 /* StartingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingWindow.swift; sourceTree = "<group>"; };
 		859D683925DD91DB005DD42C /* GameShoppingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameShoppingView.swift; sourceTree = "<group>"; };
 		85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopPromoInputView.swift; sourceTree = "<group>"; };
+		85A1D260274AC9BF00C2D163 /* PersonSmallViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonSmallViews.swift; sourceTree = "<group>"; };
 		85A585E726E443700020CCBF /* RoadsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadsBuilder.swift; sourceTree = "<group>"; };
 		85A59E9F270CB6C90049AFC1 /* PlayerCardLayout.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = PlayerCardLayout.sks; sourceTree = "<group>"; };
 		85A59EC8271351C70049AFC1 /* City+Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "City+Account.swift"; sourceTree = "<group>"; };
@@ -1661,13 +1665,9 @@
 			isa = PBXGroup;
 			children = (
 				8569A3D025A6353C0057A518 /* GameActivityView.swift */,
-				8536F3C0258D47CF00B509D2 /* PersonViews.swift */,
-				8536F3BB258D47CF00B509D2 /* PersonControl.swift */,
-				8536F3C1258D47D000B509D2 /* IngredientView.swift */,
-				8536F3BF258D47CF00B509D2 /* TankViews.swift */,
-				857D9A2225BF5E6D00626884 /* PeripheralDetailView.swift */,
+				85A1D25F274AC91E00C2D163 /* Person Views */,
+				85A1D264274AD6B100C2D163 /* Resources */,
 				8523338B25D76A9B004CB638 /* AirCompositionView.swift */,
-				85B34B1F26FA929D007178F5 /* BioBoxViews.swift */,
 				8516AD5D273789A300392C4F /* SpaceVehicleRow.swift */,
 			);
 			path = "Object Views";
@@ -1748,6 +1748,27 @@
 				85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */,
 			);
 			path = Shopping;
+			sourceTree = "<group>";
+		};
+		85A1D25F274AC91E00C2D163 /* Person Views */ = {
+			isa = PBXGroup;
+			children = (
+				8536F3C0258D47CF00B509D2 /* PersonViews.swift */,
+				85A1D260274AC9BF00C2D163 /* PersonSmallViews.swift */,
+				8536F3BB258D47CF00B509D2 /* PersonControl.swift */,
+			);
+			path = "Person Views";
+			sourceTree = "<group>";
+		};
+		85A1D264274AD6B100C2D163 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8536F3BF258D47CF00B509D2 /* TankViews.swift */,
+				8536F3C1258D47D000B509D2 /* IngredientView.swift */,
+				857D9A2225BF5E6D00626884 /* PeripheralDetailView.swift */,
+				85B34B1F26FA929D007178F5 /* BioBoxViews.swift */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		85A62F0B26222A9800D7B7C8 /* Garage */ = {
@@ -2147,6 +2168,7 @@
 				85487F4226CC691300EBC070 /* CityGateNode.swift in Sources */,
 				8592823625EC4DD3001233BE /* GuildController.swift in Sources */,
 				85CD46B025D20B42000D9C64 /* ModulePopView.swift in Sources */,
+				85A1D261274AC9BF00C2D163 /* PersonSmallViews.swift in Sources */,
 				8510837C271B5293004D6D00 /* EDLSceneView.swift in Sources */,
 				85351E8726FF644800EEE04C /* CityLabActivityView.swift in Sources */,
 				85D3BAAA269DF75000B6AA36 /* MarsCityView.swift in Sources */,
@@ -2324,6 +2346,7 @@
 				85A6F7A926E52728003F9924 /* OutpostInfoView.swift in Sources */,
 				8536F3CF258D47D000B509D2 /* BioView.swift in Sources */,
 				8536F407258D47D000B509D2 /* EarthRequestView.swift in Sources */,
+				85A1D262274AC9BF00C2D163 /* PersonSmallViews.swift in Sources */,
 				8510837D271B5293004D6D00 /* EDLSceneView.swift in Sources */,
 				8592821325EA3287001233BE /* City.swift in Sources */,
 				85CD46A825D1199A000D9C64 /* EarthNode.swift in Sources */,
@@ -2565,6 +2588,7 @@
 				85351E8526FEEA6800EEE04C /* CityBioboxDetailView.swift in Sources */,
 				858D7C4925D4F0AD00A45CF9 /* GameCamera.swift in Sources */,
 				8536F477258D481700B509D2 /* MarsMapScene.swift in Sources */,
+				85A1D263274AC9BF00C2D163 /* PersonSmallViews.swift in Sources */,
 				85B34B1926F711C5007178F5 /* BiosphereNode.swift in Sources */,
 				85D3BB3226AFD28100B6AA36 /* BioBoxDetailView.swift in Sources */,
 				8536F390258D475D00B509D2 /* LabModule.swift in Sources */,

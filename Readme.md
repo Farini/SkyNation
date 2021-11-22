@@ -165,22 +165,19 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Store - Use Promocode underneath products AND use a button to get there.
 - [X] LSSView - (Tanks) No Selection (Discard all empty)
 - [X] LSSView - (Peripherals) No Selection (Fix all peripherals, Power off all peripherals)
-
+- [X] Person Detail View - Skill Table
 
 - [ ] All Tests
 - [ ] Store receipt view
 - [ ] Election Results
 
+- [X] Guild Room - Invite should work for everyone
 - [ ] Guild Room - President functions (Kickout, Modify Guild)
-- [ ] Guild Room - Invite should work for everyone
 - [ ] Guild Room - Test Election Results
 
 - [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
 - [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
 - [ ] Outpost - Split the view in outpost states
-
-- [ ] Mars Scene - City Garage - Vehicle Validation (when arriving (orbit)) - needs a token, if not valid.
-- [ ] Mars Scene - City Garage - Delete Vehicle from Guild at end of `unload`
 
 - [ ] Blender - "DecorKit" scene (rocks, tanks, textures, trimsheets).
 - [ ] Blender - Consistent Materials - Metal1(Aluminium), Metal2(Copper), White, Rubber, Solar Panels, etc
@@ -237,3 +234,5 @@ Features that are requested, but are not required to launch the game
 - [ ] BioModule - DNA Animation remake
 - [ ] BioModule - Extra functions (expand)
 - [ ] Store - Save receipt in a file
+- [ ] Mars Scene - City Garage - Vehicle Validation (when arriving (orbit)) - needs a token, if not valid.
+- [ ] Mars Scene - City Garage - Delete Vehicle from Guild at end of `unload`

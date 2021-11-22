@@ -60,7 +60,7 @@ struct GameActivityView: View {
     var body: some View {
         VStack {
             Text("\(activity.activityName)")
-                .font(.title3)
+                .font(GameFont.section.makeFont())
                 .foregroundColor(.orange)
             
             ZStack {
@@ -158,7 +158,7 @@ struct PersonActivityView: View {
     var body: some View {
         VStack {
             Text("\(activity.activityName)")
-                .font(.title3)
+                .font(GameFont.section.makeFont())
                 .foregroundColor(.green)
             
             ZStack {

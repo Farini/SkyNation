@@ -352,6 +352,10 @@ struct Election:Codable {
         return realStart
     }
     
+    func endDate() -> Date {
+        return self.startDate().addingTimeInterval(60.0 * 60.0 * 24.0)
+    }
+    
     func electionHasEnded() -> Bool {
         let electionStarts = self.startDate()
         let electionEnds = electionStarts.addingTimeInterval(60.0 * 60.0 * 24.0)
@@ -371,9 +375,7 @@ struct Election:Codable {
 //        return guild.election.addingTimeInterval(60.0 * 60.0 * 24.0 * 7.0)
 //    }
 //
-//    func endDate() -> Date {
-//        return self.startDate().addingTimeInterval(60.0 * 60.0 * 24.0)
-//    }
+    
     
     // Voting Functions
 //    func vote(from:UUID, to:UUID, token:GameToken?) -> Bool {
@@ -449,5 +451,25 @@ struct GuildElectionData:Codable {
     var president:PlayerContent?
     var election:Election
     var electionStage:GuildElectionStage
+    
+    /// Election progress comparing start, end and now.
+    func progress() -> Double {
+        
+        let start = election.startDate()
+        let finish = election.endDate()
+        let dateNow = Date()
+        
+        if dateNow.compare(start) == .orderedAscending {
+            return 0
+        } else {
+            if dateNow.compare(finish) == .orderedAscending {
+                let totalInterval = finish.timeIntervalSince(start)
+                let partInterval = dateNow.timeIntervalSince(start)
+                return partInterval / totalInterval
+            } else {
+                return 1.0
+            }
+        }
+    }
     
 }

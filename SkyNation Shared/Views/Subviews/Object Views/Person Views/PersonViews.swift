@@ -8,48 +8,6 @@
 
 import SwiftUI
 
-struct LivingControl: View {
-    
-    @State var selected:Skills?
-    
-    var body: some View {
-        List(selection: $selected) {
-            ForEach(0..<Skills.allCases.count) { idx in
-                SkillView(skill: Skills.allCases[idx])
-            }
-            
-            IngredientView(ingredient: .Aluminium, hasIngredient: true, quantity: nil)
-            IngredientView(ingredient: .Copper, hasIngredient: false, quantity: nil)
-            IngredientView(ingredient: .Battery, hasIngredient: nil, quantity: nil)
-        }
-    }
-}
-
-struct SkillView: View {
-    
-    @State var skill:Skills
-    
-    var body: some View {
-        Text(skill.short())
-            .foregroundColor(self.getColor())
-            .padding(4)
-            .background(Color.black)
-            .cornerRadius(8)
-    }
-    
-    func getColor() -> Color {
-        switch self.skill {
-            case .Biologic, .Medic:
-                return .red
-            case .Electric, .Datacomm:
-                return .blue
-            default:
-                return .gray
-        }
-    }
-    
-}
-
 struct PersonRow: View {
     
     var person:Person
@@ -85,61 +43,8 @@ struct PersonRow: View {
     }
 }
 
-struct PersonSmallView:View {
-    
-    var person:Person
-    @State var selected:Bool = false
-    
-    private let shape = RoundedRectangle(cornerRadius: 8, style: .continuous)
-    private let unselectedColor:Color = Color.white.opacity(0.4)
-    private let selectedColor:Color = Color.blue
-    
-    var body: some View {
-        
-        HStack {
-            Image(person.avatar)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 48, height: 48)
-                .padding([.leading], 6)
-            
-            VStack(alignment: .leading, spacing: 2) {
-                
-                HStack {
-                    Text(person.name)
-                        .font(.headline)
-                    Text("\(person.age)").font(GameFont.mono.makeFont())
-                        .foregroundColor(.gray)
-                }
-                
-                ProgressView(value: Float(person.intelligence), total:100.0) {
-                    HStack {
-                        ForEach(person.skills.compactMap({ $0.skill }), id:\.self) { skill in
-                            GameImages.imageForSkill(skill:skill)
-                                .resizable()
-                                .aspectRatio(contentMode:.fit)
-                                .frame(width:22, height:22)
-                        }
-                        
-                    }
-                }
-                .foregroundColor(.blue)
-                .accentColor(.orange)
-                
-            }
-            .padding([.trailing], 8)
-        }
-        .frame(minWidth: 80, maxWidth: 190, minHeight: 56, maxHeight: 72, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-        .padding([.top, .leading, .bottom], 4)
-        .background(Color.black.opacity(0.5))
-        .overlay(
-            shape
-                .inset(by: selected ? 1.0:0.5)
-                .stroke(selected ? selectedColor:unselectedColor, lineWidth: selected ? 1.5:1.0)
-        )
-    }
-}
 
+/*
 struct SkillsetView:View {
     
     var skillset:SkillSet
@@ -158,6 +63,7 @@ struct SkillsetView:View {
         
     }
 }
+*/
 
 /**
  The old Person Detail.
@@ -387,6 +293,9 @@ struct PersonDetail:View {
 }
 
 
+/**
+ Person Detail View that works without any controller. It passes back the action.
+ */
 struct PersonDetailView:View {
     
     var person:Person
@@ -504,6 +413,22 @@ struct PersonDetailView:View {
             VStack {
                 
                 Text("Work Skills").font(.title2).foregroundColor(.blue)
+                
+                // Skill Table
+                HStack(spacing:10) {
+                    ForEach(person.skills, id:\.skill) { skillSet in
+                        HStack {
+                            GameImages.imageForSkill(skill: skillSet.skill)
+                                .resizable()
+                                .aspectRatio(contentMode:.fit)
+                                .frame(width:22, height:22)
+                            Text("x\(skillSet.level)")
+                        }
+                        Divider().frame(height:10)
+                    }
+                }
+                
+                // Intel + Adaptation
                 HStack(spacing:12) {
                     FixedLevelBar(min: 0, max: 100, current: Double(person.intelligence), title: "Intel", color: .blue)
                         .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
@@ -515,13 +440,16 @@ struct PersonDetailView:View {
                 
                 Divider()
                 
-                Text("Conditions").font(.title2).foregroundColor(.green)
+                Text("Living Conditions").font(.title2).foregroundColor(.green)
                 
                 HStack(spacing:12) {
+                    
                     ProgressView("Life Expectancy: \(person.lifeExpectancy)", value: Float(person.age), total: Float(person.lifeExpectancy))
                         .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                         .padding(.top, 4)
+                    
                     Divider()
+                    
                     VStack(alignment:.leading) {
                         Text("Recently eaten")
                         HStack {
@@ -530,10 +458,12 @@ struct PersonDetailView:View {
                                     Text(dna.emoji)
                                 }
                             }
+                            if person.foodEaten.isEmpty {
+                                Text("🤢 Empty tummy").foregroundColor(.gray)
+                            }
                         }
-                        .padding(.top, 2)
                     }
-                    
+                    .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: .leading)
                 }
                 
                 HStack(spacing:12) {
@@ -614,121 +544,53 @@ struct PersonDetailView:View {
 }
 
 
-struct PersonOrderView:View {
-    
-    var person:Person
-    
-    var body: some View {
-        
-        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top)) {
-            
-            HStack {
-                
-                Image(person.avatar)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 56, height: 56)
-                    .padding([.leading], 6)
-                
-                VStack(alignment: .leading, spacing: 2) {
-                    
-                    HStack {
-                        Text(person.name)
-                            .font(.headline)
-                        
-                    }
-                    
-                    ProgressView(value: Float(person.intelligence), total:100.0) {
-                        HStack {
-                            let map = person.skills.compactMap({ $0.skill })
-                            ForEach(map, id:\.self) { skill in
-                                GameImages.imageForSkill(skill: skill)
-                                    .resizable()
-                                    .aspectRatio(contentMode:.fit)
-                                    .frame(width:22, height:22)
-                            }
-                            Spacer()
-                            Text("\(person.age)").font(GameFont.mono.makeFont())
-                                .foregroundColor(.gray)
-                        }
-                    }
-                    .foregroundColor(.blue)
-                    .accentColor(.orange)
-                    
-                }
-                .padding([.trailing])
-            }
-            
-            Text("$\(GameLogic.orderPersonPrice)")
-                .foregroundColor(.gray)
-                .padding(4)
-                .background(Color.black)
-            
-        }
-        .padding(2)
-        .background(Color.black)
-        .cornerRadius(8)
-        .frame(maxWidth:200)
-    }
-}
-
-
 // MARK: - Previews
 
-struct PersonRow_Preview: PreviewProvider {
+//struct PersonRow_Preview: PreviewProvider {
+//    static var previews: some View {
+//        PersonRow(person: makePerson())
+//    }
+//    /// Makes a person with more than 1 skill
+//    static func makePerson() -> Person {
+//        let p = Person(random: true)
+//        p.skills.append(.init(skill: .Biologic, level: 1))
+//        p.skills.append(.init(skill: .Medic, level: 2))
+//        return p
+//    }
+//}
+
+
+//struct PersonDetail_Preview: PreviewProvider {
+//
+//    static var previews: some View {
+//        let busyPerson = Person(random: true)
+//
+//        // Uncomment the following for busy state
+//        //        busyPerson.activity = LabActivity(time: 12, name: "Test Busy")
+//        if let habModule = LocalDatabase.shared.station.habModules.first {
+//            let controller = HabModuleController(hab: habModule)
+//            controller.selectedPerson = habModule.inhabitants.first
+//            return PersonDetail(controller: controller, person:controller.selectedPerson!)
+//        } else {
+//            let habMod = HabModule.example
+//            let controller = HabModuleController(hab: habMod)
+//            controller.selectedPerson = busyPerson
+//            return PersonDetail(controller: controller, person: controller.selectedPerson!)
+//        }
+//    }
+//}
+
+struct PersonDetail2_Preview: PreviewProvider {
+    
     static var previews: some View {
-        PersonRow(person: makePerson())
+        PersonDetailView(person: Person(random: true))
+        PersonDetailView(person: makePerson())
     }
-    /// Makes a person with more than 1 skill
+    
     static func makePerson() -> Person {
         let p = Person(random: true)
         p.skills.append(.init(skill: .Biologic, level: 1))
         p.skills.append(.init(skill: .Medic, level: 2))
         return p
-    }
-}
-
-struct PersonSmall_Preview: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            PersonSmallView(person: makePerson())
-            PersonSmallView(person: makePerson(), selected:true)
-        }
-    }
-    
-    /// Makes a person with more than 1 skill
-    static func makePerson() -> Person {
-        let p = Person(random: true)
-        p.skills.append(.init(skill: .Biologic, level: 1))
-        p.skills.append(.init(skill: .Medic, level: 2))
-        return p
-    }
-}
-
-struct PersonOrder_Preview: PreviewProvider {
-    static var previews: some View {
-        PersonOrderView(person: Person(random: true))
-    }
-}
-
-struct PersonDetail_Preview: PreviewProvider {
-    
-    static var previews: some View {
-        let busyPerson = Person(random: true)
-        
-        // Uncomment the following for busy state
-        //        busyPerson.activity = LabActivity(time: 12, name: "Test Busy")
-        if let habModule = LocalDatabase.shared.station.habModules.first {
-            let controller = HabModuleController(hab: habModule)
-            controller.selectedPerson = habModule.inhabitants.first
-            return PersonDetail(controller: controller, person:controller.selectedPerson!)
-        } else {
-            let habMod = HabModule.example
-            let controller = HabModuleController(hab: habMod)
-            controller.selectedPerson = busyPerson
-            return PersonDetail(controller: controller, person: controller.selectedPerson!)
-        }
-        
-        
     }
 }

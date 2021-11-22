@@ -55,7 +55,12 @@ class GuildRoomController:ObservableObject {
             DispatchQueue.main.async {
                 
                 if let fullGuild = fullGuild {
-                    self.guild = fullGuild
+                    
+                    withAnimation() {
+                        self.guild = fullGuild
+                    }
+                    
+                    
                     self.citizens = fullGuild.citizens
                     
                     self.updateElectionData()
