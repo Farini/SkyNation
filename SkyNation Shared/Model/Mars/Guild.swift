@@ -362,20 +362,6 @@ struct Election:Codable {
         return Date().compare(electionEnds) != .orderedAscending
     }
     
-    /*
-//    init(guild:Guild) {
-//        self.guild = guild
-//        self.casted = [:]
-//        self.voted = [:]
-//    }
-    
-    // [Timing Functions]
-    
-//    func startDate() -> Date {
-//        return guild.election.addingTimeInterval(60.0 * 60.0 * 24.0 * 7.0)
-//    }
-//
-    
     
     // Voting Functions
 //    func vote(from:UUID, to:UUID, token:GameToken?) -> Bool {
@@ -429,11 +415,11 @@ struct Election:Codable {
 //            return nil
 //        }
 //    }
- */
+ 
     
 }
 
-enum GuildElectionStage:String, Codable, CaseIterable {
+enum GuildEventStage:String, Codable, CaseIterable {
     
     /// Election hasn't started.
     case notStarted
@@ -450,7 +436,7 @@ struct GuildElectionData:Codable {
     
     var president:PlayerContent?
     var election:Election
-    var electionStage:GuildElectionStage
+    var electionStage:GuildEventStage
     
     /// Election progress comparing start, end and now.
     func progress() -> Double {
@@ -470,6 +456,240 @@ struct GuildElectionData:Codable {
                 return 1.0
             }
         }
+    }
+}
+
+// MARK: - Missions
+
+// Testing...
+/*
+ How to test this?
+ Test that you gell all the possible missions until nextMission() == nil
+ Test that multiplayers can boost time effectively
+ Test that you can unlock an Outpost after certain mission
+ Test how we are going to deliver it to server
+ Outposts should have a "ghost" format, with a transluscent material
+ 
+ */
+
+enum MissionNumber:Int, CaseIterable, Codable {
+    case arrival = 0
+    case elevatorLift
+    
+    // road cases should be roadName. For now lets go with numbers
+    case roadOne
+    case roadTwo
+    case roadThree
+    
+    // outposts cases
+    case waterMining
+    // ... more outpost unlocks
+    
+    
+    // MARK: - Details
+    
+    var missionTitle:String { return "Mission # \(self.rawValue)" }
+    
+    /// Define the mission
+    var missionStatement:String { return "" }
+    
+    // MARK: - Requirements
+    
+    /// Any Skills, TankType, or Ingredient, energy or even Guild.XP that is required by mission
+    var requirements:[String:Int] {
+        switch self {
+            case .arrival: return [:]
+//            case .firstRoad: return [Skills.Handy.rawValue:1]
+            default: return [:]
+        }
+    }
+    
+    // var skippable:Bool // whether can skip
+    var skippable:Bool {
+        switch self {
+            default: return false
+        }
+    }
+    
+    /// How many times needs to repeat
+    var tasks:Int {
+        switch self {
+            case .roadTwo: return 2
+            default: return 0
+        }
+    }
+    
+    /// How long it takes for Mission to finish
+    var timing:Int {
+        
+        // timing should be a few hours
+        switch self {
+            default: return 1000
+        }
+        
+    }
+    
+    /// How much an additional player lowers the time
+    var timeKnock:Int {
+        // should knock half-hour?
+        return 50
+    }
+    
+    // MARK: - Rewards
+    
+    /// Scene Assets added to scene
+    var sceneAssetName:String? {
+        switch self {
+            case .elevatorLift: return "ElevatorLift"
+            default: return nil
+        }
+    }
+    
+    /// Anything that adds to the guild production goes here
+    var production:[String:Int] {
+        switch self {
+            default: return [:]
+        }
+    }
+    
+    /// experience added to Guild
+    var guildXP:Int {
+        switch self {
+            default: return 0
+        }
+    }
+    
+}
+
+class GuildMission:Codable, Identifiable {
+    
+    var id:UUID?
+    
+    /// This should also work as an ID
+    var mission:MissionNumber
+    var currentTask:Int
+    
+    var start:Date
+    var status:GuildEventStage
+    
+    /// Citizens ID that are working on it. (Optionally Token ID's to shorten time)
+    var workers:[UUID]
+    
+    func nextMission() -> MissionNumber? {
+        let cRaw = mission.rawValue + 1
+        if let mission = MissionNumber(rawValue: cRaw) {
+            return mission
+        } else {
+            // Finished?
+            return nil
+        }
+    }
+    
+    func calculatedEnding() -> Date {
+//        let reqTasks = missionNumber.tasks
+//        let donTasks = currentTask
+        
+        // ending a task
+        let missionTime:TimeInterval = TimeInterval(mission.timing)
+        
+        // Cut the time with players
+        let cutoff = Double(mission.timeKnock * workers.count)
+        let totalTime = missionTime - cutoff
+        
+        return start.addingTimeInterval(totalTime)
+        
+    }
+    
+    /// Returns a `page` of `total` style to see how many tasks are left
+    func pageOf() -> (page:Int, total:Int) {
+        return (page:currentTask, total:mission.tasks)
+    }
+    
+    /// Returns how many tasks (loops) until finish
+    func needsTasks() -> Int {
+        return mission.tasks - currentTask
+    }
+    
+    /// Moves to the next Task, if completed
+    func renew() {
+        
+        let finish = calculatedEnding()
+        if Date().compare(finish) == .orderedAscending {
+            // not finished
+            
+        } else {
+            // finished
+            if needsTasks() > 0 {
+                // Needs more tasks
+                self.currentTask += 1
+                self.reset()
+            } else {
+                // this is the last task, get the next mission
+                if let next = nextMission() {
+                    self.currentTask = 0
+                    self.reset()
+                    self.mission = next
+                } else {
+                    // All missions are finished
+                    
+                }
+            }
+        }
+    }
+    
+    /// Sets workers to empty, and status to 'notStarted'
+    func reset() {
+        self.workers = []
+        self.status = .notStarted
+//        self.currentTask = 0
+    }
+    
+    /// Gets the names for all assets until this mission
+    func getAllAssets() -> [String] {
+        var assets:[String] = []
+        for i in 0..<mission.rawValue {
+            if let missionAsset = MissionNumber(rawValue: i)?.sceneAssetName {
+                assets.append(missionAsset)
+            }
+        }
+        return assets
+    }
+    
+    // MARK: - Actions
+    
+    /// Adds a player to contributions, and reduces the time to be over. This needs to be updated to server anyways
+    func makeProgress(pid:UUID) {
+        
+        // let before = calculatedEnding()
+        let b4 = mission
+        
+        // update mission
+        self.renew()
+        
+        // Make sure it starts
+        if status == .notStarted {
+            self.status = .running
+            self.start = Date()
+        }
+        
+        self.workers.append(pid)
+        
+        // Check date again
+        self.renew()
+        
+        if b4 == self.mission {
+            print("same progress. nothing changed")
+        } else {
+            print("Did update to mission")
+        }
+    }
+    
+    init() {
+        self.mission = .arrival
+        self.currentTask = 0
+        self.start = Date()
+        self.status = .notStarted
+        self.workers = []
     }
     
 }

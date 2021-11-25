@@ -1860,6 +1860,76 @@ class SKNS {
         
     }
     
+    // MARK: - Missions
+    
+    /// Fetching existing mission (auto creates, if doesn't exist)
+    static func fetchMission(completion:((GuildMission?, Error?) -> ())?) {
+        
+        let url = URL(string: "\(baseAddress)/guilds/missions/fetch")!
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                if let mission:GuildMission = try? decoder.decode(GuildMission.self, from: data) {
+                    completion?(mission, nil)
+                }
+                else if let gameError:GameError = try? decoder.decode(GameError.self, from: data) {
+                    print("Game Error! Reason:\(gameError.reason)")
+                    completion?(nil, ServerDataError.remoteCoding)
+                } else if let strinf:String = String(data: data, encoding:.utf8) {
+                    print("Error with string: \(strinf)")
+                }
+            } else {
+                completion?(nil, error)
+            }
+        }
+        task.resume()
+    }
+    
+    /// Player cooperating on mission
+    static func cooperateMission(upMission:GuildMission, completion:((GuildMission?, Error?) -> ())?) {
+        
+        let url = URL(string: "\(baseAddress)/guilds/missions/coop/\(upMission.id ?? UUID())")!
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.POST.rawValue
+        
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        // data
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        if let encoded:Data = try? encoder.encode(upMission) {
+            request.httpBody = encoded
+        }
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                if let mission:GuildMission = try? decoder.decode(GuildMission.self, from: data) {
+                    completion?(mission, nil)
+                }
+                else if let gameError:GameError = try? decoder.decode(GameError.self, from: data) {
+                    print("Game Error! Reason:\(gameError.reason)")
+                    completion?(nil, ServerDataError.remoteCoding)
+                } else if let strinf:String = String(data: data, encoding:.utf8) {
+                    print("Error with string: \(strinf)")
+                }
+            } else {
+                completion?(nil, error)
+            }
+        }
+        task.resume()
+    }
     
     // MARK: - Space Vehicle
     

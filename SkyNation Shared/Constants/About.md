@@ -93,6 +93,10 @@ Animations
 
 ## Guild Missions
 
+- Namespaces
+    - GuildMap
+    - MarsMap
+
 - GuildMission - Equivalent to GameCenter's Achievements
     - Update Roads
     - Other Updates
