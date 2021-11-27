@@ -73,6 +73,40 @@ enum ServerDataError:Error, CustomStringConvertible, LocalizedError  {
     }
 }
 
+enum GuildMapError:Error, CustomStringConvertible, LocalizedError  {
+    
+    /// Also useful for when an OutpostData doesn't exist on server.
+    case localPlayerNoServerID  // Server response, that is
+    case localPlayerGuildless   // no guild id
+    
+    case playerNotInCitizens    // kicked?
+    case notFound               // Something wasn't found that is supposed to be there
+    
+    /// Returned when performing player authorized login
+    case failedAuthorization
+    
+    case localCoding
+    case remoteCoding
+    
+    // MARK: - Descriptions
+    
+    var description: String {
+        switch self {
+            case .localPlayerNoServerID: return "Local Player doesn't have a server ID"
+            case .localPlayerGuildless: return "Local Player doesn't have a Guild"
+            case .playerNotInCitizens: return "Local Player not in citizens. It is possible that player got booted."
+            case .notFound: return "Request not found."
+            case .failedAuthorization: return "Failed server authorization, or authentication. Please re-login."
+            case .localCoding: return "Could not [decode|encode] object locally."
+            case .remoteCoding: return "Server Could not [decode|encode] object."
+        }
+    }
+    
+    var errorDescription: String? {
+        return NSLocalizedString(description, comment: "Error")
+    }
+}
+
 /// An Error occurred when Contributing to Outpost (supply)
 enum OPContribError:Error, CustomStringConvertible, LocalizedError {
     

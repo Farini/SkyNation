@@ -842,8 +842,13 @@ class LSSController: ObservableObject {
         
         // Energy Collection
         var energyCollection:Int = 5
-        let mb = max(energyCollection, ServerManager.shared.serverData?.outposts.filter({ $0.type == .Energy }).compactMap({ $0.type.energyDelta }).reduce(0, +) ?? 0)
-        energyCollection = mb
+        let sknsData = ServerManager.shared.serverData
+        if let energyProduce = sknsData?.energyCollectionForAccounting() {
+            energyCollection = max(energyCollection, energyProduce)
+        }
+//        var energyCollection:Int = 5
+//        let mb = max(energyCollection, ServerManager.shared.serverData?.outposts.filter({ $0.type == .Energy }).compactMap({ $0.type.energyDelta }).reduce(0, +) ?? 0)
+//        energyCollection = mb
         
         self.zProduction = city.powerGeneration() + energyCollection
         let totalConsume = zConsumeModules + zConsumeMachine + zConsumeHumans

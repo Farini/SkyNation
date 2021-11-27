@@ -167,13 +167,14 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] LSSView - (Peripherals) No Selection (Fix all peripherals, Power off all peripherals)
 - [X] Person Detail View - Skill Table
 
-- [ ] All Tests
-- [ ] Store receipt view
-- [ ] Election Results
+- [ ] Server must update the Guild Election to elect a `governor`
 
+- [X] Guild Missions
 - [X] Guild Room - Invite should work for everyone
 - [ ] Guild Room - President functions (Kickout, Modify Guild)
 - [ ] Guild Room - Test Election Results
+- [ ] Guild Room - Guild Missions
+- [ ] Guild Room - Markdown Edit (Readme)
 
 - [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
 - [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
@@ -187,6 +188,10 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Model - Guild Missions (About.MD)
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
+
+- [ ] All Tests
+- [ ] Store receipt view
+- [ ] Election Results
 
 - [ ] All Views Remake - Consistency
 - [ ] New Warning Messages (from people selector)  - use everywhere that can throw an error.

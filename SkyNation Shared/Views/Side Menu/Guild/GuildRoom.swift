@@ -182,6 +182,21 @@ struct GuildRoom: View {
                                 PlayerCardView(pCard: citizen.makePlayerCard())
                             }
                             Spacer()
+                            
+                            if let map = controller.guildMap {
+                                Text("Guild Map")
+                                Text(map.name)
+                                Text("Color: \(map.color)")
+                                Text("Icon: \(map.icon)")
+                                
+                                // Text(map.mission?.status)
+                            } else {
+                                Button("Fetch map") {
+                                    // Fetch map
+                                    controller.getGuildMap()
+                                }
+                                
+                            }
                         }
                     }
                     

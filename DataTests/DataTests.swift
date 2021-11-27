@@ -454,20 +454,20 @@ class DataTests: XCTestCase {
         let contribu2 = UUID()
         let page = mission.pageOf()
         
-        let vvv = "\(mission.missionNumber.rawValue), page:\(page.page), of \(page.total)"
+        let vvv = "\(mission.mission.rawValue), page:\(page.page), of \(page.total)"
         print("Start: \(vvv) \t Ends:\(mission.calculatedEnding().timeIntervalSinceNow)")
         
         // contrib 1
         mission.makeProgress(pid: contrib1)
-        print("Contr 1: \t Ends:\(mission.calculatedEnding().timeIntervalSinceNow) + \(mission.missionNumber.rawValue), page:\(page.page), of \(page.total)")
+        print("Contr 1: \t Ends:\(mission.calculatedEnding().timeIntervalSinceNow) + \(mission.mission.rawValue), page:\(page.page), of \(page.total)")
         
         // contrib 2
         mission.makeProgress(pid: contribu2)
-        print("Contr 2: \t Ends:\(mission.calculatedEnding().timeIntervalSinceNow) + \(mission.missionNumber.rawValue), page:\(page.page), of \(page.total)")
+        print("Contr 2: \t Ends:\(mission.calculatedEnding().timeIntervalSinceNow) + \(mission.mission.rawValue), page:\(page.page), of \(page.total)")
         
         for i in 0...150 {
             let newPlayer = UUID()
-            print("Contrib # \(i). \(mission.missionNumber.rawValue), page:\(mission.currentTask), remains: \(mission.needsTasks())")
+            print("Contrib # \(i). \(mission.mission.rawValue), page:\(mission.currentTask), remains: \(mission.needsTasks())")
             mission.makeProgress(pid: newPlayer)
         }
         
@@ -480,7 +480,7 @@ class DataTests: XCTestCase {
             
             for i in 0...85 {
                 let newPlayer = UUID()
-                print("Contrib 2 # \(i). \(mission.missionNumber.rawValue), page:\(mission.currentTask), remains: \(mission.needsTasks())")
+                print("Contrib 2 # \(i). \(mission.mission.rawValue), page:\(mission.currentTask), remains: \(mission.needsTasks())")
                 mission.makeProgress(pid: newPlayer)
             }
             print("\n")

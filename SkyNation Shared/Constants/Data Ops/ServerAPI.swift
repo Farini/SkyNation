@@ -844,6 +844,75 @@ class SKNS {
         task.resume()
     }
     
+    // New!
+    /// Equivalent to fetch player's guild
+    static func buildGuildMap(completion:((GuildMap?, Error?) -> ())?) {
+        
+        let player = LocalDatabase.shared.player
+        
+        guard let pid = player.playerID else {
+            print("Cannot build GuildMap without a player ID")
+            completion?(nil, GuildMapError.localPlayerNoServerID)
+            return
+        }
+        
+        guard let gid = player.guildID else {
+            print("Cannot build GuildMap without a GuildID")
+            completion?(nil, GuildMapError.localPlayerGuildless)
+            return
+        }
+        
+        let url = URL(string: "\(baseAddress)/guilds/map/map/\(gid)")!
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        // Set the playerID if there is one
+        request.setValue(pid.uuidString, forHTTPHeaderField: "pid")
+        request.setValue(gid.uuidString, forHTTPHeaderField: "gid")
+        
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .secondsSince1970
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                if let guildMap = try? decoder.decode(GuildMap.self, from: data) {
+                    completion?(guildMap, nil)
+                    return
+                } else if let gameError = try? decoder.decode(GameError.self, from: data) {
+                    if gameError.reason.contains("unauthorized") {
+                        // unauthorized
+                        completion?(nil, GuildMapError.failedAuthorization)
+                        return
+                    } else if  gameError.reason == "not a citizen" {
+                        // not a citizen
+                        completion?(nil, GuildMapError.playerNotInCitizens)
+                        return
+                    } else if gameError.reason == "Not Found" {
+                        // not found
+                        completion?(nil, GuildMapError.notFound)
+                        return
+                    } else {
+                        // unknown
+                        print("Guild Error not accounted for. Reason:\(gameError.reason)")
+                        completion?(nil, error)
+                        return
+                    }
+                } else {
+                    // no guildmap, and no gameError
+                    if let string = String(data: data, encoding: .utf8) {
+                        print("Failed everything but string: \(string)")
+                    }
+                    completion?(nil, error)
+                }
+            } else {
+                completion?(nil, error)
+            }
+        }
+        task.resume()
+    }
+    
     /// Gets the details (GuildFullContent) about a Guild
     static func fetchGuildDetails(gid:UUID, completion:((GuildFullContent?, Error?) -> ())?) {
         

@@ -693,3 +693,82 @@ class GuildMission:Codable, Identifiable {
     }
     
 }
+
+/**
+ Content suitable for map
+ */
+final class GuildMap:Codable {
+    
+    // Description
+    var id:UUID
+    var name:String
+    var icon:String
+    var color:String
+    var experience:Int
+    var markdown:String
+    
+    // Citizens
+    var isOpen:Bool
+    var citizens:[PlayerContent]
+    
+    /// List of Players that got invited to Guild
+    var invites:[UUID]
+    
+    /// List of players that want to join Guild
+    var joinlist:[UUID]
+    
+    /// ID of the president
+    var president:UUID?
+    
+    // Map
+    var cities:[DBCity]
+    var outposts:[DBOutpost]
+    var mission:GuildMission?
+    var roads:String
+    var mapLevel:String
+    var terrain:GuildTerrainType // (String)
+    
+    // last
+    var lastUpdate:Date // updateAt, or distant past
+    var account:Date?
+    
+    var election:Election?
+    var chat:[ChatMessage]?
+    var vehicles:[SpaceVehicleTicket]?
+    
+    /*
+     Missing:
+     ✅ president   (set at init)
+     ✅ citizens    (set at init)
+     ✅ mission
+     ⚠️ chat
+     ⚠️ Vehicles
+     */
+    
+    /*
+    func addMission(mission:GuildMission) {
+        self.mission = mission
+    }
+    
+    // Upon Request...
+    
+    func addElection(election:Election) {
+        self.election = election
+    }
+    
+    func addChat(messages:[ChatMessage]) {
+        self.chat = messages
+    }
+    
+    func addVehicles(vehicles:[SpaceVehicleModel]) {
+        self.vehicles = vehicles
+    }
+    */
+    
+    /*
+     Notes:
+     Keeping the chat here allows you to increment the count of messages (client side)
+     This means we can send a notification when there is an unread message
+     */
+    
+}

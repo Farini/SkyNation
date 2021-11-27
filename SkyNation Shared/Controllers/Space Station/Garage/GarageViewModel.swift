@@ -526,7 +526,7 @@ class GarageViewModel:ObservableObject {
         var chAvailable:Int = 0
         
         if ch4Amount > 0 {
-            let result = propulsionTanks.filter({ $0.type == .n2 }).compactMap({ $0.current }).reduce(0, +)
+            let result = propulsionTanks.filter({ $0.type == .ch4 }).compactMap({ $0.current }).reduce(0, +)
             chAvailable = result
             
             if result > nitroAmount {

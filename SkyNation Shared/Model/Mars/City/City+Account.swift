@@ -11,21 +11,14 @@ extension CityData {
     
     func runAccountingCycle(_ start:Date) -> Date {
         
-        // FIXME: - Collect Energy
+        // MARK: - Collect Energy
         
         var energyCollection:Int = 5
         let sknsData = ServerManager.shared.serverData
-        
-        if let outposts = sknsData?.outposts {
-            // get power sources
-            // let outposts = sknsData.outposts
-            for op:Outpost in outposts {
-                if op.type == .Energy {
-                    let pEnergy = op.energy() / (sknsData?.cities.count ?? 2)
-                    energyCollection = 30 + max(5, pEnergy)
-                }
-            }
+        if let energyProduce = sknsData?.energyCollectionForAccounting() {
+            energyCollection = max(energyCollection, energyProduce)
         }
+        
         // Solar panels
         let powerGeneration = powerGeneration() + energyCollection
         let startingEnergy = batteries.compactMap({ $0.current }).reduce(0, +)

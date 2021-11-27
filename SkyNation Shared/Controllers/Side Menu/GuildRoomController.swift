@@ -15,6 +15,9 @@ class GuildRoomController:ObservableObject {
     // The Guild
     @Published var guild:GuildFullContent?
     @Published var citizens:[PlayerContent] = []
+    @Published var president:PlayerContent?
+    
+    @Published var guildMap:GuildMap?
     
     // Election
     @Published var electionState:GuildElectionState = .noElection
@@ -29,9 +32,6 @@ class GuildRoomController:ObservableObject {
     
     private var serverManager = ServerManager.shared
     
-//    let myPid = LocalDatabase.shared.player.playerID ?? UUID()
-    
-    
     init() {
         
         let player = LocalDatabase.shared.player
@@ -40,8 +40,9 @@ class GuildRoomController:ObservableObject {
         // Server Info
         if GameSettings.onlineStatus == true {
             
-            self.requestChat()
+//            self.requestChat()
             self.getGuildInfo()
+            self.getGuildMap()
             
         } else {
             self.guildChat = []
@@ -60,14 +61,47 @@ class GuildRoomController:ObservableObject {
                         self.guild = fullGuild
                     }
                     
-                    
                     self.citizens = fullGuild.citizens
                     
                     self.updateElectionData()
-                    self.requestChat()
+                    // self.requestChat()
                     
                 } else {
                     print("Possible error: \(error?.localizedDescription ?? "n/a")")
+                }
+            }
+        }
+    }
+    
+    // NEW - GuildMap
+    func getGuildMap() {
+        
+        SKNS.buildGuildMap { guildMap, error in
+            print("\n\n Guild Map...")
+            
+            if let map = guildMap {
+                print("Got Map for Guild: \(map.name)")
+                print(map.president?.uuidString ?? "no president")
+                
+                DispatchQueue.main.async {
+                    
+                    // President
+                    if let pres = map.president {
+                        if let presCitizen = map.citizens.first(where: { $0.id == pres}) {
+                            self.president = presCitizen
+                        }
+                    }
+                    
+                    self.guildMap = map
+                }
+                
+            } else {
+                print("no guild map was found")
+                
+                if let error = error {
+                    print("Error: \(error.localizedDescription)")
+                } else {
+                    print("no error either")
                 }
             }
         }
@@ -241,4 +275,11 @@ class GuildRoomController:ObservableObject {
             }
         }
     }
+    
+    // MARK: - Missions Tab
+    
+    @Published var mission:GuildMission?
+    // check whoelse is online
+    // check whoelse is cooperating
+    
 }

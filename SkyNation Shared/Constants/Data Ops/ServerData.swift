@@ -194,29 +194,6 @@ class ServerManager {
         }
     }
     
-    /// Get the `SKNPlayer` object from here.
-    /*
-    func inquireLogin(completion:@escaping(PlayerUpdate?, Error?) -> ()) {
-        
-        if let sd = serverData {
-            print("Previous Server Data. LastLogin: \(sd.lastLogin?.description ?? "---")")
-        } else {
-            
-            guard let player = LocalDatabase.shared.player else {
-                print("Server Data Crashing. Player doesn't exist")
-                return
-            }
-            
-            self.serverData = ServerData(player: player)
-        }
-        
-        serverData?.inquireLogin { pUpdate, error in
-            completion(pUpdate, error)
-        }
-        
-    }
-    */
-    
     /// Gets the Full Guild Content
     func inquireFullGuild(force:Bool, completion:@escaping(GuildFullContent?, Error?) -> ()) {
         
@@ -279,15 +256,6 @@ class ServerManager {
         }
     }
     
-    /*
-     Get Outpost Data (this may take a while) but it is necessary.
-        if outpostData does not exist, needs to create it.
-        
-     */
-    
-    // Elections
-    
-    
     // MARK: - Saving
     
     func saveServerData() {
@@ -314,6 +282,7 @@ class ServerData:Codable {
     // Guild
     var dbGuild:GuildSummary?
     var guildfc:GuildFullContent?
+    var guildMap:GuildMap?
     
     /// Other Players
     var partners:[PlayerContent] = []
@@ -337,82 +306,7 @@ class ServerData:Codable {
     // Status
 //    var status:ServerDatabaseStatus = .offline
     var errorMessage:String = ""
-    
-    // MARK: - Methods: Login
-    
-    // Sequential...
-    /*
-     1. SKNS.performLogin
-            Possible Errors:
-                a. Has no login,
-                b. PlayerLogin.LogFail
-                c. Abort(.badRequest, reason: "Wrong Pass")
-                d. Abort(.badRequest, reason: "Decoding Player Login")
-     
-     [Login Succeed] -> SKNS.updatePlayer -> SKNS.requestPlayersGuild -> SKNS.arrivedVehiclesInGuildMap
-     [Login Fail] -> SKNS.newLogin
-     
-     */
-    
-    /// Date last login was made
-    var lastLogin:Date?
-    
-    /*
-    fileprivate func performLogin() {
-        
-        print("Server Data Performing Login")
-        
-        SKNS.performLogin { playerUpdate, error in
-            
-            if let fail = error as? PlayerLogin.LogFail {
-                switch fail {
-                    case .noID:
-                        print("Player has No ID. Create one")
-                        // SKNS.newLogin
-                    case .noPass:
-                        print("Player has no pass. (SKNS.requestNewPass)")
-                        // SKNS.requestNewPass
-                }
-            } else if let error = error {
-                print(error.localizedDescription)
-                if error.localizedDescription.contains("Pass") {
-                    print("Wrong Pass")
-                    // SKNS.requestNewPass
-                } else if error.localizedDescription.contains("Decoding") {
-                    print("Error Decoding PlayerLogin. Make sure Models are identical")
-                } else {
-                    print("‼️ Another (unknown) type error performing Login: \(error.localizedDescription)")
-                }
-            } else {
-                if let update = playerUpdate {
-                    
-                    print("\(update.name) logged in. Pass:\(update.pass). Updating Player...")
-                    self.lastLogin = Date()
-                    
-//                    SKNS.updatePlayer { newUpdate, newError in
-//
-//                    }
-                    
-                }
-            }
-        }
-    }
-    
-    func inquireLogin(completion:@escaping(PlayerUpdate?, Error?) -> ()) {
-        
-        if let lastLogin = lastLogin {
-            if Date().timeIntervalSince(lastLogin) < 5 {
-                completion(nil, nil)
-                return
-            }
-        }
-        
-        SKNS.performLogin { playerUpdate, error in
-            
-            completion(playerUpdate, error)
-        }
-    }
-    */
+    // create errorLog:[String]
     
     // MARK: - Player's Guild
     
@@ -448,21 +342,49 @@ class ServerData:Codable {
 //                self.status = .online
                 
                 // Save
-                // Save
                 do {
                     try LocalDatabase.shared.saveServerData(self)
                 } catch {
                     print("‼️ Could not save Server Data.: \(error.localizedDescription)")
                 }
-//                if LocalDatabase.shared.saveServerData(skn: self) == false {
-//                    print("‼️ could not save ServerData")
-//                }
                 
             } else if let error = error {
                 print("ERROR Requesting Guild: \(error.localizedDescription)")
             }
             
             completion(fullGuild, error)
+        }
+    }
+    
+    func requestGuildMap(_ force:Bool = false, deadline:Int = 60, completion:@escaping(GuildMap?, Error?) -> ()) {
+        
+        // Check if needs update
+        let delay:TimeInterval = Double(deadline) // 60 seconds
+        let dateFetch = lastGuildFetch ?? Date.distantPast
+        
+        let currentDelay = Date().timeIntervalSince(dateFetch)
+        
+        if force == false {
+            if currentDelay < delay {
+                if let guildMap = guildMap {
+                    completion(guildMap, nil)
+                    return
+                }
+            }
+        }
+        
+        SKNS.buildGuildMap { guildMap, error in
+            if let guildMap = guildMap {
+                self.guildMap = guildMap
+                self.lastGuildFetch = Date()
+                
+                // Save
+                do {
+                    try LocalDatabase.shared.saveServerData(self)
+                } catch {
+                    print("‼️ Could not save Server Data.: \(error.localizedDescription)")
+                }
+            }
         }
     }
     
@@ -534,64 +456,37 @@ class ServerData:Codable {
     
     // MARK: - Reports and Updates
     
-    /*
-    private func login() {
-        // Check last login. Avoid redundant updates
-        if let log = lastLogin, Date().timeIntervalSince(log) < 60 {
-            return
-        }
-        SKNS.resolveLogin { (player, error) in
-            if let player = player {
-                DispatchQueue.main.async {
-
-                    self.lastLogin = Date()
-                    
-                    let updatePlayer = self.player
-                    updatePlayer.keyPass = player.keyPass
-                    updatePlayer.lastSeen = Date()
-                    
-                    if player.playerID != updatePlayer.playerID {
-                        print("‼️ Player Getting new 'playerID'")
-                    }
-                    if player.serverID != updatePlayer.serverID {
-                        print("‼️ Player Getting new 'serverID'")
-                    }
-                    if player.guildID != updatePlayer.guildID {
-                        print("‼️ Player Getting new 'guildID'")
-                    }
-                    
-                    self.user = SKNUserPost(player: updatePlayer)
-                    self.status = .online
-                    
-                    // Save
-                    if LocalDatabase.shared.saveServerData(skn: self) == false {
-                        print("could not save")
-                    }
-                    
-                    self.user = SKNUserPost(player: updatePlayer)
-//                    if let _ = player.guildID {
-//                        self.fetchGuild()
-//                    }
-                }
+    func energyCollectionForAccounting() -> Int {
+        
+        var energyCollection:Int = 0
+        
+        let outposts = guildfc?.outposts ?? []
+        // get power sources
+        
+        for op:DBOutpost in outposts {
+            if op.type == .Energy {
                 
-            } else {
-                // Error
-                self.errorMessage = error?.localizedDescription ?? "Could not connect to serer"
+                let totalEnergyProduce = op.type.productionForCollection(level: op.level)["Energy", default: 0]
+                let pEnergy = totalEnergyProduce / max(1, cities.count)
+                
+                energyCollection += pEnergy
             }
         }
+        
+        
+        return energyCollection
     }
-    */
-    
+
     func reportStatus() {
         print("\n * SERVER DATABASE STATUS")
         
         // Login
-        if let lastLog = lastLogin {
-            let deltaLogin = Date().timeIntervalSince(lastLog)
-            print("Last Login: \(deltaLogin)s ago.")
-        } else {
-            print("Never logged in remotely")
-        }
+//        if let lastLog = lastLogin {
+//            let deltaLogin = Date().timeIntervalSince(lastLog)
+//            print("Last Login: \(deltaLogin)s ago.")
+//        } else {
+//            print("Never logged in remotely")
+//        }
         
         // Guild
         if let lastGuild = lastGuildFetch {
@@ -630,7 +525,7 @@ class ServerData:Codable {
         
         self.player = LocalDatabase.shared.player
         
-        self.lastLogin = localData.lastLogin
+//        self.lastLogin = localData.lastLogin
         self.lastGuildFetch = localData.lastGuildFetch
         self.lastFetchedVehicles = localData.lastFetchedVehicles
         

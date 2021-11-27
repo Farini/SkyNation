@@ -614,6 +614,9 @@
 		85B34B2026FA929D007178F5 /* BioBoxViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B34B1F26FA929D007178F5 /* BioBoxViews.swift */; };
 		85B34B2126FA929D007178F5 /* BioBoxViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B34B1F26FA929D007178F5 /* BioBoxViews.swift */; };
 		85B34B2226FA929D007178F5 /* BioBoxViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B34B1F26FA929D007178F5 /* BioBoxViews.swift */; };
+		85BB67FB2750AC1600029477 /* GuildMissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB67FA2750AC1600029477 /* GuildMissionView.swift */; };
+		85BB67FC2750AC1600029477 /* GuildMissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB67FA2750AC1600029477 /* GuildMissionView.swift */; };
+		85BB67FD2750AC1600029477 /* GuildMissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB67FA2750AC1600029477 /* GuildMissionView.swift */; };
 		85C3418525905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
 		85C3418625905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
 		85C3418725905A7500BF82F9 /* TutorialNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C3418425905A7500BF82F9 /* TutorialNode.swift */; };
@@ -923,6 +926,7 @@
 		85B34B1626F711C5007178F5 /* BiosphereNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiosphereNode.swift; sourceTree = "<group>"; };
 		85B34B1B26FA21FD007178F5 /* ContributionRoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContributionRoundView.swift; sourceTree = "<group>"; };
 		85B34B1F26FA929D007178F5 /* BioBoxViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BioBoxViews.swift; sourceTree = "<group>"; };
+		85BB67FA2750AC1600029477 /* GuildMissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildMissionView.swift; sourceTree = "<group>"; };
 		85C3418425905A7500BF82F9 /* TutorialNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialNode.swift; sourceTree = "<group>"; };
 		85C3418D2591078700BF82F9 /* PlayerCardNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCardNode.swift; sourceTree = "<group>"; };
 		85C34196259139D800BF82F9 /* GameSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSettingsView.swift; sourceTree = "<group>"; };
@@ -1041,6 +1045,7 @@
 			children = (
 				8516AD682737B03500392C4F /* GuildRoom.swift */,
 				8516AD76273B1E8500392C4F /* GuildElectionView.swift */,
+				85BB67FA2750AC1600029477 /* GuildMissionView.swift */,
 			);
 			path = Guild;
 			sourceTree = "<group>";
@@ -2268,6 +2273,7 @@
 				8592822D25EC44F7001233BE /* GuildExplorerView.swift in Sources */,
 				8516AD7F273E2C4600392C4F /* StepperView.swift in Sources */,
 				8504A51D25C6845200739C58 /* StationBuilder.swift in Sources */,
+				85BB67FB2750AC1600029477 /* GuildMissionView.swift in Sources */,
 				8592824325EC74FD001233BE /* GuildView.swift in Sources */,
 				8592825025EED6EF001233BE /* SpaceVehicleNode.swift in Sources */,
 				8536F3D2258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */,
@@ -2446,6 +2452,7 @@
 				8536F3D3258D47D000B509D2 /* TechnologyDetailViews.swift in Sources */,
 				8516AD80273E2C4600392C4F /* StepperView.swift in Sources */,
 				85487F5826CD9B3D00EBC070 /* GameFonts.swift in Sources */,
+				85BB67FC2750AC1600029477 /* GuildMissionView.swift in Sources */,
 				85A6590725E4178F008AA9BA /* GameSettingsController.swift in Sources */,
 				8536F3E3258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */,
 				8592822E25EC44F7001233BE /* GuildExplorerView.swift in Sources */,
@@ -2645,6 +2652,7 @@
 				85487F3D26CC32F900EBC070 /* CityLabTechView.swift in Sources */,
 				85351E922706320400EEE04C /* Station+Account.swift in Sources */,
 				8536F37C258D475D00B509D2 /* Recipes.swift in Sources */,
+				85BB67FD2750AC1600029477 /* GuildMissionView.swift in Sources */,
 				8536F453258D47EA00B509D2 /* BioModController.swift in Sources */,
 				8536F364258D475D00B509D2 /* Person.swift in Sources */,
 				8536F418258D47D000B509D2 /* GarageView.swift in Sources */,

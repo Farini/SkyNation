@@ -55,9 +55,9 @@ struct GuildElectionView: View {
                             
                             
                             // President
-                            if let presidentID = guild.president {
+//                            if let presidentID = controller.president {
                                 // Crown and Name
-                                if let presidentContent = controller.citizens.first(where: { $0.id == presidentID}) {
+                                if let presidentContent = controller.president {
                                     Label(presidentContent.name, systemImage:"crown.fill")
                                         .foregroundColor(.red)
                                         .padding(4)
@@ -66,7 +66,14 @@ struct GuildElectionView: View {
                                     
                                 } else {
                                     // Unknown President
-                                    Text("President: \(presidentID.uuidString)")
+//                                    Text("President: \(presidentID.uuidString)")
+//                                        .foregroundColor(.red)
+//                                        .padding(4)
+//                                        .background(Color.black.opacity(0.5))
+//                                        .cornerRadius(4)
+                                    
+                                    // No President
+                                    Text("No President")
                                         .foregroundColor(.red)
                                         .padding(4)
                                         .background(Color.black.opacity(0.5))
@@ -74,15 +81,10 @@ struct GuildElectionView: View {
                                 }
                                 
                                 
-                            } else {
-                                
-                                // No President
-                                Text("No President")
-                                    .foregroundColor(.red)
-                                    .padding(4)
-                                    .background(Color.black.opacity(0.5))
-                                    .cornerRadius(4)
-                            }
+//                            } else {
+//
+//
+//                            }
                         }
                         .padding(.horizontal, 8)
                         .frame(minWidth:220)
@@ -99,7 +101,7 @@ struct GuildElectionView: View {
                                     HStack {
                                         
                                         let pCard = PlayerCard(playerContent: citizen)
-                                        if citizen.id == guild.president {
+                                        if citizen == controller.president {
                                             
                                             // President gets a crown on top
                                             ZStack(alignment:.topLeading) {
