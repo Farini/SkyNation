@@ -9,7 +9,8 @@ import SwiftUI
 
 struct GuildMissionView: View {
     
-    @State var mission:GuildMission = GuildMission()
+    @ObservedObject var controller:GuildRoomController
+    @State var mission:GuildMission
     @State var progress:Double = 0
     
     var body: some View {
@@ -39,13 +40,50 @@ struct GuildMissionView: View {
                 }
                 HStack(spacing:8) {
                     Text("Finish")
-                    Text(GameFormatters.dateFormatter.string(from: mission.calculatedEnding()))
+                    Text(GameFormatters.dateFormatter.string(from: mission.calculatedEnding() ?? Date.distantFuture))
                 }
             }
             .padding(.top)
             
             Text("Status: \(mission.status.rawValue)")
                 .padding(.top)
+            
+            if let message = controller.missionErrorMessage {
+                Text(message).foregroundColor(.red)
+            }
+            
+            switch mission.status {
+                case .notStarted:
+                    Button("Start") {
+                        print("Start")
+                        print("Register start of task")
+                        print("add token to workers")
+                        controller.cooperateMission(gMission: mission)
+                    }
+                case .running:
+                    
+                    if mission.workers.contains(where: { $0 == LocalDatabase.shared.player.playerID ?? UUID() }) {
+                        // Already Cooperating. Token Button?
+                        Button("Token") {
+                            controller.cooperateMission(gMission: mission, token: true)
+                            print("Token")
+                            print("add token to workers")
+                        }
+                    } else {
+                        Button("Cooperate") {
+                            controller.cooperateMission(gMission: mission)
+                            print("Cooperate")
+                            print("Add my ID to workers")
+                        }
+                    }
+                    
+                case .finished:
+                    Button("Finish") {
+                        print("Register end of work - End mission, get next mission = '.notStarted'")
+                        controller.finishMission(gMission: mission)
+                        
+                    }
+            }
             
             Spacer()
         }
@@ -55,16 +93,22 @@ struct GuildMissionView: View {
     func autoLoop() {
         
         let start = mission.start
-        let ends = mission.calculatedEnding()
-        
-        let totalDelta = ends.timeIntervalSince(start)
-        let nowDelta = ends.timeIntervalSinceNow
-        
-        self.progress = nowDelta / totalDelta
-        if self.progress > 0 && self.progress < 1 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                autoLoop()
+        if let ends = mission.calculatedEnding() {
+            let totalDelta = ends.timeIntervalSince(start)
+            let nowDelta = ends.timeIntervalSinceNow
+            
+            self.progress = nowDelta / totalDelta
+            if self.progress > 0 && self.progress < 1 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    autoLoop()
+                }
+            } else if self.progress < 0 {
+                mission.renew()
             }
+        } else {
+            // no ending in sight (.notStarted)
+            print("Stopping autoloop, because task was not started.")
+            return
         }
     }
     
@@ -73,6 +117,6 @@ struct GuildMissionView: View {
 
 struct GuildMissionView_Previews: PreviewProvider {
     static var previews: some View {
-        GuildMissionView()
+        GuildMissionView(controller: GuildRoomController(), mission: GuildMission())
     }
 }

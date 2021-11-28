@@ -1985,6 +1985,45 @@ class SKNS {
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .secondsSince1970
                 if let mission:GuildMission = try? decoder.decode(GuildMission.self, from: data) {
+                    print("got mission: \(mission.status)")
+                    completion?(mission, nil)
+                }
+                else if let gameError:GameError = try? decoder.decode(GameError.self, from: data) {
+                    print("Game Error! Reason:\(gameError.reason)")
+                    completion?(nil, ServerDataError.remoteCoding)
+                } else if let strinf:String = String(data: data, encoding:.utf8) {
+                    print("Error with string: \(strinf)")
+                }
+            } else {
+                completion?(nil, error)
+            }
+        }
+        task.resume()
+    }
+    
+    // Finish Mission
+    static func finishMission(upMission:GuildMission, completion:((GuildMission?, Error?) -> ())?) {
+        
+        let url = URL(string: "\(baseAddress)/guilds/missions/finish/\(upMission.id ?? UUID())")!
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.POST.rawValue
+        
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        // data
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        if let encoded:Data = try? encoder.encode(upMission) {
+            request.httpBody = encoded
+        }
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                if let mission:GuildMission = try? decoder.decode(GuildMission.self, from: data) {
                     completion?(mission, nil)
                 }
                 else if let gameError:GameError = try? decoder.decode(GameError.self, from: data) {

@@ -455,15 +455,15 @@ class DataTests: XCTestCase {
         let page = mission.pageOf()
         
         let vvv = "\(mission.mission.rawValue), page:\(page.page), of \(page.total)"
-        print("Start: \(vvv) \t Ends:\(mission.calculatedEnding().timeIntervalSinceNow)")
+        print("Start: \(vvv) \t Ends:\((mission.calculatedEnding() ?? Date.distantFuture).timeIntervalSinceNow)")
         
         // contrib 1
         mission.makeProgress(pid: contrib1)
-        print("Contr 1: \t Ends:\(mission.calculatedEnding().timeIntervalSinceNow) + \(mission.mission.rawValue), page:\(page.page), of \(page.total)")
+        print("Contr 1: \t Ends:\((mission.calculatedEnding() ?? Date.distantFuture).timeIntervalSinceNow) + \(mission.mission.rawValue), page:\(page.page), of \(page.total)")
         
         // contrib 2
         mission.makeProgress(pid: contribu2)
-        print("Contr 2: \t Ends:\(mission.calculatedEnding().timeIntervalSinceNow) + \(mission.mission.rawValue), page:\(page.page), of \(page.total)")
+        print("Contr 2: \t Ends:\((mission.calculatedEnding() ?? Date.distantFuture).timeIntervalSinceNow) + \(mission.mission.rawValue), page:\(page.page), of \(page.total)")
         
         for i in 0...150 {
             let newPlayer = UUID()

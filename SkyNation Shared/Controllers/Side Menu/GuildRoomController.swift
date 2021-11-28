@@ -94,6 +94,7 @@ class GuildRoomController:ObservableObject {
                     
                     self.guildMap = map
                 }
+                self.fetchGuildMission()
                 
             } else {
                 print("no guild map was found")
@@ -279,7 +280,116 @@ class GuildRoomController:ObservableObject {
     // MARK: - Missions Tab
     
     @Published var mission:GuildMission?
-    // check whoelse is online
-    // check whoelse is cooperating
+    @Published var missionErrorMessage:String?
     
+    
+    // Actions:
+    // Start Mission
+    // Cooperate
+    // Use Token
+    // Finish
+    
+    // Server Updates
+    
+    // Fetch Guild Mission
+    // Look for Guild Mission. Creates if doesn't exist in server.
+    func fetchGuildMission() {
+        
+        SKNS.fetchMission { gMission, error in
+            DispatchQueue.main.async {
+                if let gMission = gMission {
+                    // got mission
+                    print("Fetched mission")
+                    self.mission = gMission
+                    self.guildMap?.mission = gMission
+                    
+                } else if let error = error {
+                    // deal with error
+                    print("Error: \(error.localizedDescription)")
+                    self.missionErrorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+    
+    // Update request (Finish)
+    // post request with GuildMission
+    // on a request to update, it must be one of these cases:
+    // next (task) vs (task + 1),
+    // next (missionNumber) vs (missionNumber + 1)
+    //
+    
+    func finishMission(gMission:GuildMission) {
+        gMission.workers = []
+        
+        SKNS.finishMission(upMission: gMission) { newMission, error in
+            DispatchQueue.main.async {
+                if let newMission = newMission {
+                    print("new mission...")
+                    // got mission
+                    self.mission = newMission
+                } else if let error = error {
+                    // deal with error
+                    self.missionErrorMessage = error.localizedDescription
+                }
+            }
+        }
+        
+    }
+    
+    // Cooperate request (Start, Cooperate, or TokenPayment)
+    // post request with GuildMission
+    // count workers as a Set (eliminate duplicates)
+    // (workers.count) must be workers.count + 1
+    //
+    
+    func cooperateMission(gMission:GuildMission, token:Bool = false) {
+        
+        guard let pid = player.playerID else { return }
+        var coopID:UUID = pid
+        
+        if token == true {
+            // charge token first
+            if let token = player.requestToken() {
+                let result = player.spendToken(token: token, save: true)
+                if result == true {
+                    coopID = token.id
+                }
+            } else {
+                self.missionErrorMessage = "Not enough tokens"
+                return
+            }
+        } else {
+            // make sure player id is not there already. if it is, must charge token
+            guard gMission.workers.contains(coopID) == false else {
+                self.missionErrorMessage = "Already worked here."
+                return
+            }
+        }
+        
+        print("Mission status 1: \(gMission.status.rawValue), \(gMission.currentTask)")
+        
+        gMission.startWorking(pid: coopID)
+        print("Mission status 2: \(gMission.status.rawValue), \(gMission.currentTask)")
+        
+        SKNS.cooperateMission(upMission: gMission) { newMission, error in
+            
+                if let newMission = newMission {
+                    
+                    DispatchQueue.main.async {
+                        print("new mission...")
+                        // got mission
+                        self.mission = newMission
+                        self.guildMap?.mission = newMission
+                    }
+                } else if let error = error {
+                        DispatchQueue.main.async {
+                            // deal with error
+                            print("Error: \(error.localizedDescription)")
+                            self.missionErrorMessage = error.localizedDescription
+                    
+                }
+            }
+        }
+    }
 }

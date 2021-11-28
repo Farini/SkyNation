@@ -57,6 +57,7 @@ The contributors to these projects shall have a **fair** share of the game, and 
  - [ ] ★★★★☆ Mars Scene
  - [ ] ★★★★☆ Mars City
  - [ ] ★★★☆☆ Mars Outposts
+ - [ ] ★☆☆☆☆ Guild Missions
  - [ ] ★★★★☆ Game Chats, Messages, Achievements
  - [ ] ★★★★☆ Game Store + Use of `GameToken`
  - [ ] ★★★★☆ Player(object) + settings + playability + Purchases
@@ -166,15 +167,20 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] LSSView - (Tanks) No Selection (Discard all empty)
 - [X] LSSView - (Peripherals) No Selection (Fix all peripherals, Power off all peripherals)
 - [X] Person Detail View - Skill Table
+- [X] Model - Guild Missions
 
-- [ ] Server must update the Guild Election to elect a `governor`
+- [ ] Substitution: `GuildMap` for `GuildFullContent`
+- [ ] ServerData.swift improvements
 
 - [X] Guild Missions
+- [ ] Guild Missions - Add ALL roads, outpost Unlocks, and missions .production
 - [X] Guild Room - Invite should work for everyone
+- [X] Guild Room - Test Election Results
 - [ ] Guild Room - President functions (Kickout, Modify Guild)
-- [ ] Guild Room - Test Election Results
 - [ ] Guild Room - Guild Missions
 - [ ] Guild Room - Markdown Edit (Readme)
+
+- [ ] Mars Scene - Implement Guild Missions
 
 - [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
 - [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
@@ -184,14 +190,14 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Blender - Consistent Materials - Metal1(Aluminium), Metal2(Copper), White, Rubber, Solar Panels, etc
 - [ ] Blender - EDL Remake #5
 - [ ] Blender - All Solar Panels
-
-- [ ] Model - Guild Missions (About.MD)
+- [ ] Blender - Terrain remake -> Remake roads, and add paths
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
 
 - [ ] All Tests
 - [ ] Store receipt view
 - [ ] Election Results
+- [ ] Guild Missions
 
 - [ ] All Views Remake - Consistency
 - [ ] New Warning Messages (from people selector)  - use everywhere that can throw an error.
