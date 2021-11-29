@@ -10,6 +10,38 @@ import SceneKit
 
 struct RoadsBuilder {
     
+    enum MarsRoadNames:String, CaseIterable {
+        
+        case mainRoad
+        case westRoad
+        case eastTourRoad
+        case southTourRoad
+        case bioTourRoad
+        case northTourRoad
+        
+        var displayName:String {
+            switch self {
+                case .mainRoad: return      "Main Road"
+                case .westRoad: return      "West Road"
+                case .eastTourRoad: return  "East Tour Road"
+                case .southTourRoad: return "South Tour Road"
+                case .bioTourRoad: return   "Bio Tour Road"
+                case .northTourRoad: return "North Tour Road"
+            }
+        }
+    }
+    
+    func makeRoad(named:MarsRoadNames) -> [SCNVector3] {
+        switch named {
+            case .mainRoad: return makeMainRoad()
+            case .westRoad: return makeWestRoad()
+            case .eastTourRoad: return makeEastTourRoad()
+            case .southTourRoad: return makeSouthTourRoad()
+            case .bioTourRoad: return makeBioTourRoad()
+            case .northTourRoad: return makeNorthTourRoad()
+        }
+    }
+    
     // MARK: - Roads (To Cities)
     
     func makeMainRoad() -> [SCNVector3] {

@@ -176,11 +176,17 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Guild Missions - Add ALL roads, outpost Unlocks, and missions .production
 - [X] Guild Room - Invite should work for everyone
 - [X] Guild Room - Test Election Results
-- [ ] Guild Room - President functions (Kickout, Modify Guild)
+- [X] Guild Room - President functions (Kickout, Modify Guild)
 - [ ] Guild Room - Guild Missions
 - [ ] Guild Room - Markdown Edit (Readme)
 
+- [ ] Mars Scene - use extension GuildMission in MarsBuilder.swift 
+- [X] Mars Scene - Unlock roads
+- [ ] Mars Scene - Unlock posdexes
+- [ ] Mars Scene - load models
 - [ ] Mars Scene - Implement Guild Missions
+- [ ] Mars Scene - Add Elevator (mission)
+- [ ] Mars Scene - Outpost initial looks
 
 - [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
 - [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.

@@ -140,7 +140,7 @@ class Person:Codable, Identifiable, Equatable {
             if activity.activityName == "Workout" {
                 
                 // Workout
-                GameMessageBoard.shared.newAchievement(type: .experience, money:Int.random(in: 2...10), message: "\(name) finished a workout 💪")
+                // GameMessageBoard.shared.newAchievement(type: .experience, money:Int.random(in: 2...10), message: "\(name) finished a workout 💪")
                 self.healthPhysical = min(100, healthPhysical + 3)
                 
                 /// Randomly get happy

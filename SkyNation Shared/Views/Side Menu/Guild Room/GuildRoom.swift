@@ -116,40 +116,54 @@ struct GuildRoom: View {
                     
                     // Same as ".president" -> Election View. Change this.
                     // Just show basic info
-                    VStack {
-                        
-                        Text("My Guild")
-                            .font(GameFont.section.makeFont())
-                            .padding(.top, 8)
-                        
-                        if let guild = controller.guild {
+                    VStack(spacing:6) {
+                        if let guildMap = controller.guildMap {
+                            // General Info
                             
-                            VStack(spacing: 8) {
-                                // Guild Presentation
-                                Text(guild.name).font(.title2)
-                                
-                                // Guild Icon
-                                Image(systemName:GuildIcon(rawValue:"\(guild.icon)")!.imageName)
-                                    .font(.largeTitle)
-                                    .foregroundColor(GuildColor(rawValue:guild.color)!.color)
+                            // Guild Icon
+                            Image(systemName:GuildIcon(rawValue:"\(guildMap.icon)")!.imageName)
+                                .font(.largeTitle)
+                                .foregroundColor(GuildColor(rawValue:guildMap.color)!.color)
+                            
+                            
+                            VStack {
+                                // Main Info
+                                Text(guildMap.name).font(GameFont.section.makeFont())
+                                Text("XP: \(guildMap.experience)")
+                                Text("MD: \(guildMap.markdown)")
+//                                Text("Open: \(guildMap.isOpen)")
+                                Image(systemName:guildMap.isOpen ? "lock.open":"lock")
                             }
-                            .padding(8)
-                            .transition(AnyTransition.modifier(active: SlidingDoorEffect(shift: 170), identity: SlidingDoorEffect(shift: 0)))
+                            .padding(.top, 6)
                             
-                            Text("Election: \(GameFormatters.fullDateFormatter.string(from: guild.election))")
-                            Text("Election State: \(controller.electionState.displayString)")
+                            Divider()
                             
+                            VStack {
+                                // People + Citizens
+                                Text("Headcount: \(guildMap.citizens.count)")
+                                Text("Invites: \(guildMap.invites.count)")
+                                Text("Join list: \(guildMap.joinlist.count)")
+                            }
+                            .padding(.top, 6)
                             
-                            if let presidentID = guild.president {
-                                Text("President: \(presidentID.uuidString)")
-                            } else {
+                            Group {
+                                if let election = controller.electionData {
+                                    VStack {
+                                        Text("Election: \(election.electionStage.rawValue)")
+                                        Text("Election State: \(election.election.voted.count)")
+                                    }
+                                    .padding(.top, 6)
+                                }
                                 
-                                // No President
-                                Text("No President")
-                                    .foregroundColor(.red)
-                                    .padding(4)
-                                    .background(Color.black.opacity(0.5))
-                                    .cornerRadius(4)
+                                
+                                if let president = controller.president {
+                                    HStack {
+                                        Image(systemName:"crown.fill")
+                                        Text("President:")
+                                    }
+                                    
+                                    PlayerCardView(pCard: PlayerCard(playerContent: president))
+                                }
                             }
                             
                             
@@ -240,25 +254,70 @@ struct GuildRoom: View {
                         let guildHasPresident:Bool = controller.guild?.president != nil
                         let inviteEnabled:Bool = guildHasPresident ? controller.iAmPresident():true
                         
-                        List(controller.searchPlayerResult) { sPlayer in
-                            VStack {
-                                PlayerCardView(pCard: PlayerCard(playerContent: sPlayer))
-                                HStack {
-                                    Button("🎁 Token") {
-                                        controller.giftToken(to: sPlayer)
+                        if controller.searchPlayerResult.isEmpty {
+//                            List(controller.citizens) { citizen in
+//                                Text("\(citizen.name) XP:\(citizen.experience)")
+//                            }
+                            List {
+                                ForEach(controller.citizens.indices) { index in
+                                    let citizen = controller.citizens[index]
+                                    HStack {
+                                        Image(citizen.avatar)
+                                            .resizable()
+                                            .frame(width:36, height:36)
+                                        
+                                        VStack {
+                                            Text(citizen.name)
+                                            Text("XP: \(citizen.experience)")
+                                        }
+                                        Spacer()
+                                        Button("Gift") {
+                                            print("Send gift to \(citizen.name)")
+                                        }
+                                        .buttonStyle(GameButtonStyle())
+                                        .disabled(entryTokens < 1)
+                                        
+                                        if let president = controller.president {
+                                            if controller.player.playerID == president.id {
+                                                Button("Kick") {
+                                                    print("Kickout \(citizen.name)")
+                                                }
+                                                .buttonStyle(GameButtonStyle())
+                                            }
+                                        } else {
+                                            // no president
+                                            Button("Kick") {
+                                                print("Kickout \(citizen.name)")
+                                            }
+                                            .buttonStyle(GameButtonStyle())
+                                        }
                                     }
-                                    .buttonStyle(GameButtonStyle())
-                                    .disabled(entryTokens < 1)
-                                    
-                                    Button("Invite") {
-                                        print("Invite")
-                                        controller.inviteToGuild(playerContent: sPlayer)
+                                    .listRowBackground((index  % 2 == 0) ? Color.black : GameColors.darkGray)
+                                }
+                            }
+                            .padding(.horizontal)
+                        } else {
+                            List(controller.searchPlayerResult) { sPlayer in
+                                VStack {
+                                    PlayerCardView(pCard: PlayerCard(playerContent: sPlayer))
+                                    HStack {
+                                        Button("🎁 Token") {
+                                            controller.giftToken(to: sPlayer)
+                                        }
+                                        .buttonStyle(GameButtonStyle())
+                                        .disabled(entryTokens < 1)
+                                        
+                                        Button("Invite") {
+                                            print("Invite")
+                                            controller.inviteToGuild(playerContent: sPlayer)
+                                        }
+                                        .buttonStyle(GameButtonStyle())
+                                        .disabled(!inviteEnabled)
                                     }
-                                    .buttonStyle(GameButtonStyle())
-                                    .disabled(!inviteEnabled)
                                 }
                             }
                         }
+                        
                         if controller.searchPlayerResult.isEmpty {
                             Text("No Players been found").foregroundColor(.gray)
                         }

@@ -40,6 +40,7 @@ class GuildRoomController:ObservableObject {
         // Server Info
         if GameSettings.onlineStatus == true {
             
+            self.guildChat = []
 //            self.requestChat()
             self.getGuildInfo()
             self.getGuildMap()
@@ -227,6 +228,32 @@ class GuildRoomController:ObservableObject {
         }
         return false
         
+    }
+    
+    // MARK: - President Functions
+    
+    func kickout(kicked:PlayerContent) {
+        
+        print("Kicking player out \(kicked.name)")
+        
+        guard let fullContent = self.guild else {
+            print("Guild full Content couldn't be found. returning.")
+            return
+        }
+        guard let gcity = fullContent.cities.first(where: { $0.owner?.values.first == kicked.id }) else {
+            print("There is no city. Needs a city to kick out.")
+            return
+        }
+        
+        SKNS.kickPlayer(from: fullContent, city: gcity, booted: kicked) { success, error in
+            if let success = success {
+                if success == true {
+                    print("Successfully kicked player out. Update all lists")
+                    self.getGuildMap()
+                    
+                }
+            }
+        }
     }
     
     // MARK: - Search Tab

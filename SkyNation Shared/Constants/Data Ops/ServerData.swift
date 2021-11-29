@@ -210,6 +210,24 @@ class ServerManager {
         
     }
     
+    /// max delay is in seconds
+    ///  gets the map with instructions
+    ///  - parameters:
+    ///  - force: whether force to reload
+    ///  maxDelay: maximum allowed data delay (in seconds)
+    func requestGuildMap(force:Bool = false, maxDelay:Int = 60, completion:@escaping(GuildMap?, Error?) -> ()) {
+        
+        guard let serverData:ServerData = serverData else {
+            completion(nil, ServerDataError.noServerDataFile)
+            return
+        }
+        
+        serverData.requestGuildMap(force, deadline: maxDelay) { guildMap, error in
+            completion(guildMap, error)
+        }
+        
+    }
+    
     func notifyJoinedGuild(guildSum:GuildSummary) {
         guard let serverData:ServerData = serverData else {
             return
@@ -356,11 +374,13 @@ class ServerData:Codable {
         }
     }
     
+    var lastMapFetch:Date?
+    
     func requestGuildMap(_ force:Bool = false, deadline:Int = 60, completion:@escaping(GuildMap?, Error?) -> ()) {
         
         // Check if needs update
         let delay:TimeInterval = Double(deadline) // 60 seconds
-        let dateFetch = lastGuildFetch ?? Date.distantPast
+        let dateFetch = lastMapFetch ?? Date.distantPast
         
         let currentDelay = Date().timeIntervalSince(dateFetch)
         
@@ -376,14 +396,17 @@ class ServerData:Codable {
         SKNS.buildGuildMap { guildMap, error in
             if let guildMap = guildMap {
                 self.guildMap = guildMap
-                self.lastGuildFetch = Date()
+                self.lastMapFetch = Date()
                 
                 // Save
                 do {
                     try LocalDatabase.shared.saveServerData(self)
+                    completion(guildMap, nil)
                 } catch {
                     print("‼️ Could not save Server Data.: \(error.localizedDescription)")
+                    completion(nil, error)
                 }
+                
             }
         }
     }

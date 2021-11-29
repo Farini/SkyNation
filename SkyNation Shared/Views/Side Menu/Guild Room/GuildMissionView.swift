@@ -21,16 +21,66 @@ struct GuildMissionView: View {
             
             Divider()
             
-            VStack {
-                Text("Title")
+            VStack(alignment:.leading) {
+//                Text("Title")
                 Text(mission.mission.missionTitle)
-                Text("Statement")
-                Text(mission.mission.missionStatement)
+                    .font(GameFont.section.makeFont())
+                    .foregroundColor(.blue)
+                    .padding(.bottom, 6)
                 
-                Text("Timing: \(mission.mission.timing)")
-                Text("Progress: \(progress)")
+                // Images:
+                // deskclock
+                // stopwatch
+                // clock.badge.exclamationmark (v3.0)
+                // clock.arrow.circlepath (v2.0)
+                // hourglass
+                HStack(spacing:12) {
+                    Image(systemName:"clock.badge.exclamationmark")
+                        .font(.largeTitle)
+                    Divider()
+                        .frame(height:30)
+                    VStack(alignment:.leading) {
+                        Text("Timing: \(Double(mission.mission.timing).stringFromTimeInterval())")
+                            
+                        let dVal:Double = (1 - progress) * 100.0
+                        let dStr:String = String(format: "%.2f", dVal) + "%"
+//                        Text(dStr)
+                        ProgressView("Progress \(dStr)", value: max(0, min(1.0, (dVal / 100.0))))
+                            .frame(width:200)
+                        // Text(Double(1.0 - progress), format: "%.2d") //Text("Progress: \(progress)")
+                    }
+                }
+                .padding(8)
+                .background(Color.black)
+                .cornerRadius(8)
+                
+                HStack {
+                    // Citizens (colored by participation)
+                    ForEach(controller.citizens) { citizen in
+                        if mission.workers.contains(citizen.id) {
+                            Text(citizen.name).foregroundColor(.blue)
+                        } else {
+                            Text(citizen.name).foregroundColor(.gray)
+                        }
+                    }
+                    // Extra Tokens Spent?
+                    let citizensIDs:[UUID] = controller.citizens.compactMap({ $0.id })
+                    // The tokens (not citizens)
+                    let pTokens:[UUID] = mission.workers.filter({ citizensIDs.contains($0) == false })
+                    ForEach(pTokens, id:\.self) { _ in
+                        Text("🪙")
+                    }
+                        
+                }
+                
+                
+                Divider()
+                
+                Text("Statement").foregroundColor(.orange)
+                Text(mission.mission.missionStatement).foregroundColor(.gray)
+                
             }
-            .padding(.top)
+            .padding([.top, .horizontal])
             
             VStack {
                 Text("Dates")

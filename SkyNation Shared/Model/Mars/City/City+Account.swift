@@ -263,6 +263,7 @@ extension CityData {
             producedPee += Bool.random() ? 1:2
             producedPoo += Bool.random() ? 0:1
             
+            
             // Activity check (cleanup)
             person.clearActivity()
             
@@ -276,7 +277,7 @@ extension CityData {
             
             // DEATH
             if person.healthPhysical < 1 {
-                report.addProblem(string: "💀 \(person.name) is diying of age. Farewell!")
+                report.addProblem(string: "💀 \(person.name) is diying due to physical issues. Farewell!")
                 self.prepareDeath(of: person)
                 continue
             }
@@ -336,7 +337,7 @@ extension CityData {
         // put back poop
         let poopSpill = self.refillContainers(of: .wasteSolid, amount: producedPoo)
         if poopSpill > 0 {
-            report.addNote(string: "💩 Solid Waste containers are full")
+            report.addProblem(string: "💩 Solid Waste containers are full")
         } else {
             report.addNote(string: "💩 Solid Waste increased by \(producedPoo)")
         }
@@ -474,7 +475,7 @@ extension CityData {
             // Check Bioboxes
             if GameSettings.shared.serveBioBox == true {
                 let bboxes = bioBoxes.filter({ $0.mode == .multiply && $0.population.count > 2 })
-                if let nextBox = bboxes.sorted(by: { $0.population.count > $1.population.count }).first,
+                if let nextBox = bboxes.shuffled().filter({ $0.population.count > 2 }).first,
                    let nextFood = nextBox.population.last {
                     nextBox.population.removeLast()
                     // person.consumedFood(nextFood, bio:true)
@@ -700,8 +701,13 @@ extension CityData {
                     report.addProblem(string: "No energy to grow BioBox")
                 }
                 
-            case .evolve, .serving:
-                break
+            case .evolve:break
+            case .serving:
+                let food = bioBox.population.last ?? "--"
+                if let dna = DNAOption(rawValue: food), bioBox.population.count > 2 {
+                    bioBox.population.removeLast()
+                    self.food.append(dna.rawValue)
+                }
                 
             case .multiply:
                 

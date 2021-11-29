@@ -8,7 +8,9 @@
 import Foundation
 import SceneKit
 
-
+/**
+ This class is responsible for building the nodes required to present Mars Scene.
+ */
 class MarsBuilder {
     
     static var shared:MarsBuilder = MarsBuilder()
@@ -18,12 +20,17 @@ class MarsBuilder {
     var myCityData:CityData?
     
     var outposts:[DBOutpost] = []
+    
     var players:[PlayerContent] = []
     
     /// Vehicles stationed in Guild
     var guildGarage:[SpaceVehicleTicket] = []
     
     var guild:GuildFullContent?
+    
+    // New: 11/29/2021
+    var guildMap:GuildMap?
+    
     var scene:SCNScene
     
     /// Warning User has no guild, or been kicked out of previous
@@ -116,6 +123,27 @@ class MarsBuilder {
         
     }
     
+    func fetchGuildMap(randomized:Bool = false) {
+        
+        print("Requesting Guild Map for scene.")
+        
+        if randomized == false {
+            ServerManager.shared.requestGuildMap { gMap, error in
+                if let gMap = gMap {
+                    print("Guild map request returned for guild \(gMap.name)")
+                    self.guildMap = gMap
+                } else {
+                    print("Guild map request returned error: \(error?.localizedDescription ?? "n/a")")
+                }
+            }
+        } else {
+            // Make a Guildmap
+            // let guildmap = GuildMap()
+            print("Needs to build a Guildmap with some info")
+            self.guildMap = GuildMap()
+        }
+    }
+    
     /// Gets all vehicles that arrived
     func getArrivedVehicles() {
         print("Getting Arrived Vehicles")
@@ -206,15 +234,18 @@ class MarsBuilder {
         guard let scene = MarsBuilder.loadScene() else { fatalError() }
         self.scene = scene
         
+        // deprecate when ready.
         getServerInfo()
+        
+        // Get guildMap
+        fetchGuildMap(randomized: false)
         
         // Load CityData
         self.myCityData = LocalDatabase.shared.cityData
     }
     
     // Load Scene
-    class func loadScene() -> SCNScene? {
-//        let nextScene = SCNScene(named: "Art.scnassets/Mars/GuildMap.scn")
+    private class func loadScene() -> SCNScene? {
         let nextScene = SCNScene(named: "Art.scnassets/Mars/MarsMap.scn")
         return nextScene
     }
@@ -225,7 +256,7 @@ class MarsBuilder {
 
 extension MarsBuilder {
     
-    func populateScene() -> SCNScene { //[GamePOV] {
+    func populateScene() -> SCNScene {
         
         print("\n * GUILD SCENE\n-----------------")
         let root:SCNNode = scene.rootNode
@@ -254,6 +285,23 @@ extension MarsBuilder {
         
         var cameraPOVs:[GamePOV] = []
         
+        // Guild Mission
+        /*
+         Guild missions can add scene decorations, unlock outposts, unlock cities, and more.
+         
+         **
+         Instead of for loop in child nodes, check missions.sceneAssetName
+         */
+        if let guildMap = guildMap {
+            print("\n\n  Guild Map is here !!!")
+            if let mission = guildMap.mission {
+                print("Mission is here !!!")
+                print("Mission \(mission.mission.missionTitle)")
+            }
+        } else {
+            print("\n\n No Guildmap :(")
+        }
+        
         // Cities
         print("\n [ CITIES ] ")
         let citiesParent = root.childNode(withName: "Cities", recursively: false)!
@@ -272,11 +320,13 @@ extension MarsBuilder {
             gateNode.eulerAngles = tmpCity.eulerAngles
             citiesParent.addChildNode(gateNode)
             
+            // TODO: - Unnocupied Cities
+            // Substitute unoccupied cities for a node that representa a gate, but in monocolor, and transluscent.
+            
+            // My City
             if let mycid = LocalDatabase.shared.player.cityID, mycid == optCity?.id {
-                // My City
-                print("my city +++")
                 if let pov:SCNNode = gateNode.childNode(withName: "POV", recursively: true) {
-                    print("*** my city *** - load special? ")
+                    print("loading my city gate node.")
                     let camPov = pov.childNode(withName: "Camera", recursively: false)!
                     
                     let pov = GamePOV(position: camPov.worldPosition, target: gateNode, name: "Gate", yRange: nil, zRange: nil, zoom: nil)
@@ -284,9 +334,7 @@ extension MarsBuilder {
                 }
             }
             
-            
             print("City: \(posdex.sceneName). Angles:\(gateNode.eulerAngles) - \(tmpCity.eulerAngles)")
-            
         }
         
         // Outposts
@@ -366,7 +414,6 @@ extension MarsBuilder {
                         child.removeFromParentNode()
                     }
                     
-                    
                     print("\(pp.sceneName) | \(outpost.type.rawValue), lvl:\(outpost.level)")
                     
                 } else {
@@ -376,7 +423,6 @@ extension MarsBuilder {
         }
         
         // Camera + POVs
-        // CamPovs
         let camParent = scene.rootNode.childNode(withName: "CamPovs", recursively: false)!
         let topCam = camParent.childNode(withName: "TopCam", recursively: false)!
         let topPov = GamePOV(position: topCam.position, target: terrain, name: "Eagle eye", yRange: nil, zRange: nil, zoom: nil)
@@ -395,10 +441,25 @@ extension MarsBuilder {
         
         // Roads
         let roadsScene = SCNScene(named: "Art.scnassets/Mars/MarsRoads.scn")!
-        for roadNode in roadsScene.rootNode.childNodes {
-            print("Adding road \(roadNode.name ?? "n/a")")
-            let roadClone = roadNode.clone()
-            scene.rootNode.addChildNode(roadClone)
+        if let guildMap = guildMap,
+           let mission = guildMap.mission {
+            // load the correct roads
+            let roadNames = mission.unlockedRoads()
+            for roadNode in roadsScene.rootNode.childNodes {
+                if let roadName = RoadsBuilder.MarsRoadNames(rawValue: roadNode.name ?? "--") {
+                    if roadNames.contains(roadName) == true {
+                        let roadClone = roadNode.clone()
+                        scene.rootNode.addChildNode(roadClone)
+                    }
+                }
+            }
+        } else {
+            print("Loading all roads because couldn't find guildmap.mission")
+            for roadNode in roadsScene.rootNode.childNodes {
+                print("Adding road \(roadNode.name ?? "n/a")")
+                let roadClone = roadNode.clone()
+                scene.rootNode.addChildNode(roadClone)
+            }
         }
         
         // EVehicle Animation
@@ -406,8 +467,11 @@ extension MarsBuilder {
         if let vehicle = vehicleScene?.rootNode.childNode(withName: "EVehicle", recursively: false)?.clone() {
             print("Found Vehicle")
             
+            // Road Builder
+            let randomRoad = RoadsBuilder.MarsRoadNames.allCases.randomElement()!
+            
             let roadBuilder = RoadsBuilder()
-            var pathToFollow = roadBuilder.makeMainRoad()
+            var pathToFollow = roadBuilder.makeRoad(named: randomRoad) // roadBuilder.makeMainRoad()
             vehicle.position = pathToFollow.first!
             
             root.addChildNode(vehicle)
@@ -435,22 +499,16 @@ extension MarsBuilder {
                 pathToFollow.remove(at: 0)
                 if let next = pathToFollow.first {
                     
-                    let act = SCNAction.move(to: next, duration: 0.4)
+                    let act = SCNAction.move(to: next, duration: 0.9)
                     
                     if pathToFollow.count > 1 {
                         let dest = pathToFollow[1]
-                        let oriact = SCNAction.move(to: dest, duration: 0.4)
+                        let oriact = SCNAction.move(to: dest, duration: 0.9)
                         orientationActions.append(oriact)
                     }
                     
                     vehicleActions.append(act)
                     
-                    // add box
-//                    let box = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
-//                    let boxNode = SCNNode(geometry: box)
-//                    boxNode.geometry?.materials.first?.diffuse.contents = NSColor.blue
-//                    boxNode.position = SCNVector3(Double(next.x), Double(next.y + 0.4), Double(next.z))
-//                    scene.rootNode.addChildNode(boxNode)
                 }
             }
             
@@ -467,7 +525,6 @@ extension MarsBuilder {
         } else {
             print(" _+_+_+_+_+ No Vehicle")
         }
-        // EVehicle
         
         
         return self.scene
@@ -496,5 +553,71 @@ extension Posdex {
             case .observatory: return nil
             default: return nil
         }
+    }
+}
+
+extension GuildMission {
+    
+    /**
+     Gets the SceneKit models that should load up to this point in the mission.
+     note that this is not a recursive functio. It should be ran only once to load all models.
+     */
+    func getModels() -> [SCNNode] {
+        
+        var models:[SCNNode] = []
+        
+        // Notes:
+        /*
+         Don't forget to set the name of the node, location, euler angles, etc.
+         */
+        if mission.rawValue > MissionNumber.arrival.rawValue {
+            
+            // load arrival nodes
+            models.append(SCNNode())
+            
+            if mission.rawValue > MissionNumber.elevatorLift.rawValue {
+                // load elevator lift
+            }
+        }
+        
+        return models
+    }
+    
+    /**
+     The `Posdex` array that is currently unlocked at this stage of the mission.
+     */
+    func unlockedPosdexes() -> [Posdex] {
+        
+        var unlocked:[Posdex] = [.city1, .city2, .launchPad, .power1]
+        
+        // example code. Needs updating
+        // check if above certain part of mission, then add the posdex
+        if mission.rawValue > MissionNumber.roadOne.rawValue {
+            unlocked.append(.power2)
+        }
+        
+        return unlocked
+    }
+    
+    /**
+     The Roads of the map that should be displaying..
+     */
+    func unlockedRoads() -> [RoadsBuilder.MarsRoadNames] {
+        
+        var roadsUnlocked:[RoadsBuilder.MarsRoadNames] = [.mainRoad]
+        
+        // example code. Needs updating
+        // check if above certain part of mission, then add the posdex
+        if mission.rawValue > MissionNumber.roadOne.rawValue {
+            roadsUnlocked.append(.eastTourRoad)
+        }
+        if mission.rawValue > MissionNumber.roadTwo.rawValue {
+            roadsUnlocked.append(.westRoad)
+        }
+        if mission.rawValue > MissionNumber.roadThree.rawValue {
+            roadsUnlocked.append(.southTourRoad)
+        }
+        
+        return roadsUnlocked
     }
 }

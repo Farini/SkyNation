@@ -63,8 +63,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     /// The news (if any) to display sometime during the render
     var newsLines:[String] = []
     
-//    var isShowingHand:
-    
     // Data
     var gameNavDelegate:GameNavDelegate?
     var modules:[Module] = []
@@ -647,8 +645,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             // Loading Mars from Space Station
             case .SpaceStation:
                 
+                // Verify Player has .Entry token
                 let enter = self.verifyMarsEntry(player: player)
-                
                 guard enter == true else {
                     print("No Entry")
                     
@@ -668,6 +666,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     return
                 }
                 
+                // Verify Player has Guild
                 let mBuilder = MarsBuilder.shared
                 guard mBuilder.hasNoGuild == false else {
                     print("No Entry")
@@ -688,7 +687,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     return
                 }
                 
-                // Accounting
+                // City Accounting
                 if let myCity:CityData = LocalDatabase.shared.cityData {
                     DispatchQueue(label: "Accounting").async {
                         myCity.accountingLoop(recursive: true) { messages in
@@ -697,9 +696,10 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     }
                 }
                 
-                // MARK: - Camera Setup
-                
+                // Gather the nodes and build the scene
                 let newScene:SCNScene = mBuilder.populateScene()
+                
+                // Camera Setup
                 guard let cam:GameCamera = newScene.rootNode.childNode(withName: "Camera", recursively: false) as? GameCamera else {
                     fatalError()
                 }
@@ -708,7 +708,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 gameOverlay.didChangeScene(camNode: cam)
                 
                 // Present Scene
-                
                 self.sceneRenderer.present(newScene, with: .doorsCloseVertical(withDuration: 1.0), incomingPointOfView: cam.camNode) { // newGameCam.camNode
                     
                     self.scene = newScene
@@ -758,53 +757,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         }
                     }
                 }
-                /*
-                guard let stationScene = LocalDatabase.shared.stationBuilder.scene else { return }
-                
-                if let camera = stationScene.rootNode.childNode(withName: "Camera", recursively: false) as? GameCamera {
-                    
-                    
-                    
-                    self.sceneRenderer.present(stationScene, with: .doorsOpenVertical(withDuration: 1.0), incomingPointOfView: camera) {
-                        
-                        self.scene = stationScene
-                        
-                        self.gameScene = .SpaceStation
-                        self.cameraNode = camera
-                        
-                        
-                        let stationOverlay = GameOverlay(renderer: self.sceneRenderer, station: station, camNode: camera)
-                        self.sceneRenderer.overlaySKScene = stationOverlay.scene
-                        self.gameOverlay = stationOverlay
-                        
-                        let centralNode = SCNNode()
-                        centralNode.position = SCNVector3(x: 0, y: -5, z: 0)
-                        camera.camNode.look(at: centralNode.position)
-                        
-//                        camera.position.z += 40
-                        
-//                        let waiter = SCNAction.wait(duration: 3.0)
-//                        // let rotate = SCNAction.rotate(by: CGFloat(Double.pi / 8), around: SCNVector3(x: 0, y: 1, z: 0), duration: 2)
-//                        // rotate.timingMode = .easeOut
-//                        let move1 = SCNAction.move(by: SCNVector3(-1, 1, -20), duration: 0.75)
-//                        move1.timingMode = .easeIn
-//                        let move2 = SCNAction.move(by: SCNVector3(1, -1, -20), duration: 0.75)
-//                        move2.timingMode = .easeOut
-//
-//                        let sequence = SCNAction.sequence([waiter, move1, move2])
-//
-//                        camera.runAction(sequence) {
-//                            print("CamChild LOOK @ \(camera.eulerAngles)")
-//                        }
-                        
-                        //                    }
-                    }
-                }
-                
-                // Tell SceneDirector that scene is loaded
-                SceneDirector.shared.controllerDidLoadScene(controller: self)
-                */
-                
         }
     }
     
