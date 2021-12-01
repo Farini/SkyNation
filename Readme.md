@@ -172,13 +172,14 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Substitution: `GuildMap` for `GuildFullContent`
 - [ ] ServerData.swift improvements
 
-- [X] Guild Missions
-- [ ] Guild Missions - Add ALL roads, outpost Unlocks, and missions .production
 - [X] Guild Room - Invite should work for everyone
 - [X] Guild Room - Test Election Results
 - [X] Guild Room - President functions (Kickout, Modify Guild)
 - [ ] Guild Room - Guild Missions
 - [ ] Guild Room - Markdown Edit (Readme)
+
+- [X] Guild Missions
+- [ ] Guild Missions - Add ALL roads, outpost Unlocks, and missions .production
 
 - [ ] Mars Scene - use extension GuildMission in MarsBuilder.swift 
 - [X] Mars Scene - Unlock roads
@@ -188,15 +189,17 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Mars Scene - Add Elevator (mission)
 - [ ] Mars Scene - Outpost initial looks
 
-- [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
-- [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
-- [ ] Outpost - Split the view in outpost states
-
-- [ ] Blender - "DecorKit" scene (rocks, tanks, textures, trimsheets).
+- [X] Blender - Split Scene into collections: Collection, Roads, Outposts, Gates
+- [X] Blender - Terrain remake -> Remake roads, and add paths
+- [ ] Blender - Environment collection - (rocks, solar panels, tanks, elevator, electric box).
 - [ ] Blender - Consistent Materials - Metal1(Aluminium), Metal2(Copper), White, Rubber, Solar Panels, etc
 - [ ] Blender - EDL Remake #5
 - [ ] Blender - All Solar Panels
-- [ ] Blender - Terrain remake -> Remake roads, and add paths
+
+
+- [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
+- [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
+- [ ] Outpost - Split the view in outpost states
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
 
