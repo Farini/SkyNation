@@ -29,7 +29,7 @@ class CityGateNode:SCNNode {
         // add all the children from the first object to this node
         
         // Get Scene Root
-        guard let sceneRoot:SCNNode = SCNScene(named: "Art.scnassets/Mars/Gate5.scn")?.rootNode,
+        guard let sceneRoot:SCNNode = SCNScene(named: "Art.scnassets/Mars/CityGate.scn")?.rootNode, //"Art.scnassets/Mars/Gate5.scn"
               let baseNode:SCNNode = sceneRoot.childNode(withName: "Gate", recursively: false) else {
             fatalError("Could not find base nodes to build Gate Node")
         }

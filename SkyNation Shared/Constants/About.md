@@ -517,3 +517,53 @@ Animations
 - [X] Added Fonts + Info.plist
 - [X] Blender - All Vehicle Paths
 - [X] Blender - Export Roads
+
+[10/29/2021 - 12/01/2021]
+- [X] Camera brightness (too dark)
+- [X] GameCamera - Fix Awkward cam transitions
+- [X] GameCamera - Add/Remove relevant Cameras
+- [X] GameCamera - Correct Directions
+- [X] Mars Scene - Accounting happening every 10 seconds!
+- [X] Mars Scene - Try to get accounting to be run on a background thread, or run accounting when settings are loading.
+- [X] Store - Fix Logic, Button, etc. Button not working, has to click on row.
+- [X] Tutorial - Add Hand, tapping on top of Model (First tutorial) - When Player XP is 0?
+- [X] Tutorial - Beginner's Guide - let them know what to do
+- [X] BioModule - Auto crop - Adjust population going over limit
+- [X] BioModule - Extra functions (shrink)
+- [X] BioModule - (Accounting)
+- [X] LSS - Poop showing 0%
+- [X] LSS - Energy Level Z showing 0%
+- [X] Model - Fix GameProduct kits. They don't make sense.
+- [X] Blender - Fix roads weird angles
+- [X] Module Builder -> Indicate when not enough air. Currently too ugly, and not clear.
+- [X] BioModule - Save after creating box
+- [X] BioModule - Use (no selection)
+- [X] Freebies are now every 8 hrs.
+- [X] Split Chat Bubble in `GuildRoom` vs `GameRoom`
+- [X] LSS View - Tank Selection Row not updating
+- [X] Use EDLSceneView wherever appropriate
+- [X] Blender - Better Engines
+- [X] Garage View - Better Engines
+- [X] Claim city - Needs to show success message and maybe close the window
+- [X] Settings - Serve Biobox
+- [X] Player password recovery (Better method)
+- [X] Garage View - Fuel Vehicle to Launch, or Fail!
+- [X] City Vehicle Unload button disabled
+- [X] Store - Improve the view where the purchase happens
+- [X] Store - Improvements (Button, Sub-list)
+- [X] LSSView - Poop not going away
+- [X] LSSView - Fix Boxes Selection
+- [X] LSSView - Fix [Rows: Peripherals, Tanks?]
+- [X] Tech Tree Item View - Improve
+- [X] BioModule - Sometimes generating longer strings on "grow"
+- [X] BioModule - Inside View
+- [X] Model - Fix cost of Outpost level ups
+- [X] Tutorial 1 - Build a Hab module
+- [X] Tutorial 2 - Build a Lab module
+- [X] Tutorial 3 - Order: people
+- [X] Person - Learning Skills (bigger than 2, repeat a skill)
+- [X] Store - Use Promocode underneath products AND use a button to get there.
+- [X] LSSView - (Tanks) No Selection (Discard all empty)
+- [X] LSSView - (Peripherals) No Selection (Fix all peripherals, Power off all peripherals)
+- [X] Person Detail View - Skill Table
+- [X] Model - Guild Missions

@@ -119,58 +119,27 @@ The contributors to these projects shall have a **fair** share of the game, and 
 ## 📝 Doing - Present
 If looking for things to do and don't know where to start, go to *Find Navigator* and search for **FIXME**, or **TODO**
 
-10/29/2021 - ?
-- [X] Camera brightness (too dark)
-- [X] GameCamera - Fix Awkward cam transitions
-- [X] GameCamera - Add/Remove relevant Cameras
-- [X] GameCamera - Correct Directions
-- [X] Mars Scene - Accounting happening every 10 seconds!
-- [X] Mars Scene - Try to get accounting to be run on a background thread, or run accounting when settings are loading.
-- [X] Store - Fix Logic, Button, etc. Button not working, has to click on row.
-- [X] Tutorial - Add Hand, tapping on top of Model (First tutorial) - When Player XP is 0?
-- [X] Tutorial - Beginner's Guide - let them know what to do
-- [X] BioModule - Auto crop - Adjust population going over limit
-- [X] BioModule - Extra functions (shrink)
-- [X] BioModule - (Accounting)
-- [X] LSS - Poop showing 0%
-- [X] LSS - Energy Level Z showing 0%
-- [X] Model - Fix GameProduct kits. They don't make sense.
-- [X] Blender - Fix roads weird angles
-- [X] Module Builder -> Indicate when not enough air. Currently too ugly, and not clear.
-- [X] BioModule - Save after creating box
-- [X] BioModule - Use (no selection)
-- [X] Freebies are now every 8 hrs.
-- [X] Split Chat Bubble in `GuildRoom` vs `GameRoom`
-- [X] LSS View - Tank Selection Row not updating
-- [X] Use EDLSceneView wherever appropriate
-- [X] Blender - Better Engines
-- [X] Garage View - Better Engines
-- [X] Claim city - Needs to show success message and maybe close the window
-- [X] Settings - Serve Biobox
-- [X] Player password recovery (Better method)
-- [X] Garage View - Fuel Vehicle to Launch, or Fail!
-- [X] City Vehicle Unload button disabled
-- [X] Store - Improve the view where the purchase happens
-- [X] Store - Improvements (Button, Sub-list)
-- [X] LSSView - Poop not going away
-- [X] LSSView - Fix Boxes Selection
-- [X] LSSView - Fix [Rows: Peripherals, Tanks?]
-- [X] Tech Tree Item View - Improve
-- [X] BioModule - Sometimes generating longer strings on "grow"
-- [X] BioModule - Inside View
-- [X] Model - Fix cost of Outpost level ups
-- [X] Tutorial 1 - Build a Hab module
-- [X] Tutorial 2 - Build a Lab module
-- [X] Tutorial 3 - Order: people
-- [X] Person - Learning Skills (bigger than 2, repeat a skill)
-- [X] Store - Use Promocode underneath products AND use a button to get there.
-- [X] LSSView - (Tanks) No Selection (Discard all empty)
-- [X] LSSView - (Peripherals) No Selection (Fix all peripherals, Power off all peripherals)
-- [X] Person Detail View - Skill Table
-- [X] Model - Guild Missions
+- [X] Blender - Split Scene into collections: Collection, Roads, Outposts, Gates
+- [X] Blender - Terrain remake -> Remake roads, and add paths
+- [X] Blender - Gate Placeholders
+- [X] Blender - Terrain remake -> Surroundings - Fix and merge terrains into one Mesh
+- [X] Blender - Terrain remake -> Export New Terrain
+- [X] Blender - Build and export Gate with Gate Placeholder
+- [X] Blender - Build and export roads
+- [X] Blender - Build and export roads paths
+- [X] Blender - Substitute Outposts Solar Panels
+- [X] Blender - Build and export new outposts
+- [X] import gate to Xcode
+- [X] import GuildMap to Xcode
+- [X] Blender - Add Solar Panel material
+- [X] Blender - Export Elevator (Decor)
+- [X] Blender - Make Outposts Placeholders
+- [X] Blender - Export Gate Placeholders
 
 - [ ] Substitution: `GuildMap` for `GuildFullContent`
 - [ ] ServerData.swift improvements
+
+- [ ] No One can study?
 
 - [X] Guild Room - Invite should work for everyone
 - [X] Guild Room - Test Election Results
@@ -188,14 +157,15 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Mars Scene - Implement Guild Missions
 - [ ] Mars Scene - Add Elevator (mission)
 - [ ] Mars Scene - Outpost initial looks
+- [ ] Mars Scene - Import Road Paths (Copy)
+- [ ] Mars Scene - City Gate - Use Placeholders
 
-- [X] Blender - Split Scene into collections: Collection, Roads, Outposts, Gates
-- [X] Blender - Terrain remake -> Remake roads, and add paths
-- [ ] Blender - Environment collection - (rocks, solar panels, tanks, elevator, electric box).
-- [ ] Blender - Consistent Materials - Metal1(Aluminium), Metal2(Copper), White, Rubber, Solar Panels, etc
+- [ ] Blender - Animate Elevator
+- [ ] Blender - Substitute Space Vehicles Solar Panels
+- [ ] Blender - XCode - Delete old solar panels
+- [ ] Blender - Simplify EVehicle (20 MB is too much) maybe 5?
+- [ ] Blender - EVehicle remove/remake UV maps
 - [ ] Blender - EDL Remake #5
-- [ ] Blender - All Solar Panels
-
 
 - [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
 - [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
