@@ -246,7 +246,8 @@ class MarsBuilder {
     
     // Load Scene
     private class func loadScene() -> SCNScene? {
-        let nextScene = SCNScene(named: "Art.scnassets/Mars/MarsMap.scn")
+        // let nextScene = SCNScene(named: "Art.scnassets/Mars/MarsMap.scn")
+        let nextScene = SCNScene(named: "Art.scnassets/Mars/GuildMap.scn")
         return nextScene
     }
     
@@ -289,18 +290,35 @@ extension MarsBuilder {
         /*
          Guild missions can add scene decorations, unlock outposts, unlock cities, and more.
          
-         **
-         Instead of for loop in child nodes, check missions.sceneAssetName
          */
+        var unlockedPosdexes:[Posdex] = []
+        
         if let guildMap = guildMap {
             print("\n\n  Guild Map is here !!!")
-            if let mission = guildMap.mission {
+            if let mission:GuildMission = guildMap.mission {
                 print("Mission is here !!!")
                 print("Mission \(mission.mission.missionTitle)")
+                let models:[SCNNode] = mission.getModels()
+                let decoLayer = root.childNode(withName: "Environment", recursively: false)!
+                for model in models {
+                    decoLayer.addChildNode(model)
+                }
+                // let unlock:[Posdex] = mission.unlockedPosdexes()
+                unlockedPosdexes = mission.unlockedPosdexes()
             }
         } else {
             print("\n\n No Guildmap :(")
         }
+        
+        /*
+         Cities and Outposts are loaded from empty nodes. Make sure to add those nodes to the scene, and then cross-check with GuildMap
+         - Six Cities is the new limit
+         - check if they can be loaded with 'placeholder'
+         - Guilds should start with just one outpost (power plant)
+         - add more power with some missions
+         - observatory can generate money (Sky Coins)?
+         - Disable all 'president' keys from server. Use governor (UUID) instead
+         */
         
         // Cities
         print("\n [ CITIES ] ")
@@ -313,16 +331,19 @@ extension MarsBuilder {
             
             let optCity:DBCity? = cities.filter({ $0.posdex == posdex.rawValue }).first
             
+            // Hide the Cities that aren't unlocked
+            if optCity == nil && unlockedPosdexes.contains(posdex) == false {
+                continue
+            }
+            
+            // Create the gate node
             let gateNode:CityGateNode = CityGateNode(posdex: posdex, city: optCity)
             
             // Adjust position to Scene
             gateNode.position = tmpCity.position
             gateNode.eulerAngles = tmpCity.eulerAngles
             citiesParent.addChildNode(gateNode)
-            
-            // TODO: - Unnocupied Cities
-            // Substitute unoccupied cities for a node that representa a gate, but in monocolor, and transluscent.
-            
+        
             // My City
             if let mycid = LocalDatabase.shared.player.cityID, mycid == optCity?.id {
                 if let pov:SCNNode = gateNode.childNode(withName: "POV", recursively: true) {
@@ -344,6 +365,10 @@ extension MarsBuilder {
             let opNodeName = child.name ?? "unknown"
             
             if let pp:Posdex = Posdex.allCases.filter({ $0.sceneName == opNodeName }).first {
+                
+                if unlockedPosdexes.contains(pp) == false {
+                    continue
+                }
                 
                 // Check New Nodes
                 
@@ -440,7 +465,7 @@ extension MarsBuilder {
         scene.rootNode.addChildNode(gameCam)
         
         // Roads
-        let roadsScene = SCNScene(named: "Art.scnassets/Mars/MarsRoads.scn")!
+        let roadsScene = SCNScene(named: "Art.scnassets/Mars/MarsRoads2.scn")! // "Art.scnassets/Mars/MarsRoads.scn"
         if let guildMap = guildMap,
            let mission = guildMap.mission {
             // load the correct roads
@@ -566,6 +591,9 @@ extension GuildMission {
         
         var models:[SCNNode] = []
         
+        // Decor Scene
+        let decoLayer = SCNScene(named: "Art.scnassets/Mars/MarsDeco.scn")!.rootNode
+        
         // Notes:
         /*
          Don't forget to set the name of the node, location, euler angles, etc.
@@ -577,7 +605,26 @@ extension GuildMission {
             
             if mission.rawValue > MissionNumber.elevatorLift.rawValue {
                 // load elevator lift
+                if let elevator = decoLayer.childNode(withName: "Elevator", recursively: false)?.clone() {
+                    models.append(elevator)
+                    if let car = elevator.childNode(withName: "ElevatorCar", recursively: false),
+                       let posBottom = elevator.childNode(withName: "ElevPosBottom", recursively: false),
+                       let posTop = elevator.childNode(withName: "ElevPosTop", recursively: false) {
+                        car.position = posTop.position
+                        let wait = SCNAction.wait(duration: 8.0)
+                        let move = SCNAction.move(to: posBottom.position, duration: 8.0)
+                        let moveBack = SCNAction.move(to: posTop.position, duration: 8.0)
+                        let sequence = SCNAction.sequence([wait, move, wait, moveBack, wait])
+                        let rep = SCNAction.repeatForever(sequence)
+                        car.runAction(rep)
+                    } else {
+                        print("⚠️ Elevator car not animating")
+                    }
+                } else {
+                    print("⚠️ Elevator car not animating")
+                }
             }
+            
         }
         
         return models
@@ -588,12 +635,35 @@ extension GuildMission {
      */
     func unlockedPosdexes() -> [Posdex] {
         
-        var unlocked:[Posdex] = [.city1, .city2, .launchPad, .power1]
+        var unlocked:[Posdex] = [.city1, .city2, .launchPad, .power1, .power2]
         
         // example code. Needs updating
         // check if above certain part of mission, then add the posdex
-        if mission.rawValue > MissionNumber.roadOne.rawValue {
-            unlocked.append(.power2)
+        if mission.rawValue > MissionNumber.city3.rawValue {
+            unlocked.append(.city3)
+        }
+        if mission.rawValue > MissionNumber.city4.rawValue {
+            unlocked.append(.city4)
+        }
+        
+        // Outposts
+        // Water Mining
+        if mission.rawValue > MissionNumber.unlockWaterMining.rawValue {
+            unlocked.append(.mining1)
+        }
+        // Bio
+        if mission.rawValue > MissionNumber.unlockBiosphere1.rawValue {
+            unlocked.append(.biosphere1)
+        }
+        if mission.rawValue > MissionNumber.unlockBiosphere2.rawValue {
+            unlocked.append(.biosphere2)
+        }
+        // power
+        if mission.rawValue > MissionNumber.unlockPower3.rawValue {
+            unlocked.append(.power3)
+        }
+        if mission.rawValue > MissionNumber.unlockPower4.rawValue {
+            unlocked.append(.power4)
         }
         
         return unlocked
@@ -608,14 +678,12 @@ extension GuildMission {
         
         // example code. Needs updating
         // check if above certain part of mission, then add the posdex
-        if mission.rawValue > MissionNumber.roadOne.rawValue {
-            roadsUnlocked.append(.eastTourRoad)
-        }
-        if mission.rawValue > MissionNumber.roadTwo.rawValue {
-            roadsUnlocked.append(.westRoad)
-        }
-        if mission.rawValue > MissionNumber.roadThree.rawValue {
+        
+        if mission.rawValue > MissionNumber.southTourRoad.rawValue {
             roadsUnlocked.append(.southTourRoad)
+        }
+        if mission.rawValue > MissionNumber.westRoad.rawValue {
+            roadsUnlocked.append(.westRoad)
         }
         
         return roadsUnlocked

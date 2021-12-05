@@ -22,21 +22,53 @@ import Foundation
 
 enum MissionNumber:Int, CaseIterable, Codable {
     
+    /* [Starting Point]
+     
+     Power plant 1,
+     Power plant 2 (Placeholder),
+     Basic LPad,
+     Antenna,
+     City1,
+     City2
+     
+    */
+    
     // start
     case arrival = 0
     
     // decorative cases
     case elevatorLift
-    // remove some rock
-    // windmill (between power plants)
     
     // road cases should be roadName. For now lets go with numbers
-    case roadOne
-    case roadTwo
-    case roadThree
+    case mainRoad
+    case city3
+    case city4
+    
+    case southTourRoad
+    case upgradeLPad
+    
+    case westRoad
+    case city5
+    case city6
+    
+    case southBioRoad
+    case unlockBiosphere1
+    case unlockWaterMining
+    
+    case g5Road
+    case g6Road
+    
+    case northRoad
+    case unlockPower3
+    case unlockPower4
+    case unlockObservatory
+    
+    case eastTourRoad
+    case unlockBiosphere2
     
     // outposts cases
-    case waterMining
+    
+    
     // antenna
     // landing pad update
     // powerplant2
@@ -47,8 +79,10 @@ enum MissionNumber:Int, CaseIterable, Codable {
     // biosphere 1
     // biosphere 2
     // observatory
-    
+    // windmill (between power plants)
+    // remove some rock
     /*
+     
      [pre-made]: Power plant 1, City1
      in order...
      arrival, elevator lift, road1, antenna, windmill,      [5]
@@ -73,12 +107,25 @@ enum MissionNumber:Int, CaseIterable, Codable {
     /// Define the mission
     var missionStatement:String {
         switch self {
-            case .arrival: return "Arrival Statement"
-            case .elevatorLift: return "Build Elevator lift"
-            default: return "Default mission statement goes here"
+            case .arrival: return "Starts the Guild and sets up the main assets."
+            case .elevatorLift: return "An elevator that brings the recently arrived vechicles down to the cities level."
+            case .mainRoad: return "This road connects the four first cities to the rest of the guild map"
+            case .city3, .city4, .city5, .city6: return "Another city is available to be picked by a player"
+            case .southTourRoad: return "South Tour Road; A road that connects new outposts to the rest of the guild."
+            case .upgradeLPad: return "Upgrades the landing pad, to accomodate more Space Vehicles ariiving."
+            case .westRoad: return "West Road; A road that connects new cities to the rest of the guild."
+            case .southBioRoad: return "Bio Road; A road that connects a new Biosphere to the rest of the guild."
+            case .unlockBiosphere1: return "Unlocks the first Biosphere of the Guild. A Biosphere is an outpost that grows plants and food."
+            case .unlockWaterMining: return "Unlocks water mining, which gets the ice from the soil and converts it into H2O"
+            case .g5Road, .g6Road: return "Another road that connects cities to the rest of the Guild"
+            
+            case .northRoad: return "North Road; A road that connects more outposts to the rest of the guild."
+            case .unlockPower3: return "Power Plant 3 - Unlocks another Power Plant that generates power for the Guild's cities"
+            case .unlockPower4: return "Power Plant 4 - Unlocks another Power Plant that generates power for the Guild's cities"
+            case .unlockObservatory: return "Unlocks the observatory, where astronomers study the universe."
+            case .eastTourRoad: return "East Tour Road; A road that connects more outposts to the rest of the guild."
+            case .unlockBiosphere2:return "Biosphere 2 Unlocks tanother biosphere for the Guild. A Biosphere is an outpost that grows plants and food."
         }
-        
-        
     }
     
     // MARK: - Requirements
@@ -102,12 +149,27 @@ enum MissionNumber:Int, CaseIterable, Codable {
     /// How many times needs to repeat
     var tasks:Int {
         switch self {
-            case .roadTwo: return 2
-            default: return 0
+            case .arrival: return 0
+            case .elevatorLift: return 1
+            case .mainRoad: return 3
+            case .city3, .city4, .city5, .city6: return 1
+            case .southTourRoad: return 3
+            case .upgradeLPad: return 2
+            case .westRoad: return 1
+            case .southBioRoad: return 0
+            case .unlockBiosphere1: return 2
+            case .unlockWaterMining: return 2
+            case .g5Road: return 0
+            case .g6Road: return 0
+            case .northRoad: return 2
+            case .unlockPower3, .unlockPower4: return 2
+            case .unlockObservatory: return 5
+            case .eastTourRoad: return 3
+            case .unlockBiosphere2: return 2
         }
     }
     
-    /// How long it takes for Mission to finish
+    /// How long it takes for each task of Mission to finish
     var timing:Int {
         let minutes:Int = 60
         let hours:Int = minutes * 60
@@ -115,15 +177,41 @@ enum MissionNumber:Int, CaseIterable, Codable {
         // timing should be a few hours
         switch self {
             case .arrival: return 5 * minutes
-            case .roadTwo: return 2 * hours
-            default: return 4 * hours
+            case .elevatorLift: return 20 * minutes
+            case .mainRoad, .westRoad, .southTourRoad, .eastTourRoad, .northRoad, .southBioRoad: return 4 * hours
+            case .city3, .city4, .city5, .city6: return 2 * hours
+            case .upgradeLPad, .unlockBiosphere1, .unlockWaterMining: return 3 * hours
+            case .g5Road: return 1 * hours
+            case .g6Road: return 1 * hours
+            case .unlockPower3, .unlockPower4: return 4 * hours
+            case .unlockObservatory: return 2 * hours
+            case .unlockBiosphere2: return 2 * hours
+//            default: return 4 * hours
         }
     }
     
     /// How much an additional player lowers the time
     var timeKnock:Int {
         // should knock half-hour?
-        return 50
+        let minutes:Int = 60
+//        let hours:Int = minutes * 60
+        
+        // timing should be a few hours
+        switch self {
+            case .arrival: return 1 * minutes
+            case .elevatorLift: return 5 * minutes
+                // Roads
+            case .mainRoad, .westRoad, .southTourRoad: return 15 * minutes
+            case .eastTourRoad, .northRoad, .southBioRoad: return 3 * minutes
+            case .city3, .city4, .city5, .city6: return 10 * minutes
+            case .upgradeLPad, .unlockBiosphere1, .unlockWaterMining: return 15 * minutes
+            case .g5Road: return 10 * minutes
+            case .g6Road: return 10 * minutes
+            case .unlockPower3, .unlockPower4: return 20 * minutes
+            case .unlockObservatory: return 20 * minutes
+            case .unlockBiosphere2: return 20 * minutes
+                //            default: return 4 * hours
+        }
     }
     
     // MARK: - Rewards
@@ -249,19 +337,18 @@ class GuildMission:Codable, Identifiable {
     func reset() {
         self.workers = []
         self.status = .notStarted
-        //        self.currentTask = 0
     }
     
     /// Gets the names for all assets until this mission
-    func getAllAssets() -> [String] {
-        var assets:[String] = []
-        for i in 0..<mission.rawValue {
-            if let missionAsset = MissionNumber(rawValue: i)?.sceneAssetName {
-                assets.append(missionAsset)
-            }
-        }
-        return assets
-    }
+//    func getAllAssets() -> [String] {
+//        var assets:[String] = []
+//        for i in 0..<mission.rawValue {
+//            if let missionAsset = MissionNumber(rawValue: i)?.sceneAssetName {
+//                assets.append(missionAsset)
+//            }
+//        }
+//        return assets
+//    }
     
     // MARK: - Actions
     
@@ -289,8 +376,6 @@ class GuildMission:Codable, Identifiable {
         
         // Make sure it starts
         if status == .notStarted {
-            //            self.start = Date()
-            //            self.status = .running
             self.startWorking(pid: pid)
             return
         }

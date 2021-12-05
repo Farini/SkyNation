@@ -396,7 +396,9 @@ class GuildRoomController:ObservableObject {
         
         print("Mission status 1: \(gMission.status.rawValue), \(gMission.currentTask)")
         
-        gMission.startWorking(pid: coopID)
+        // gMission.startWorking(pid: coopID)
+        gMission.makeProgress(pid: coopID)
+        
         print("Mission status 2: \(gMission.status.rawValue), \(gMission.currentTask)")
         
         SKNS.cooperateMission(upMission: gMission) { newMission, error in

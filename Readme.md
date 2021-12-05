@@ -135,35 +135,34 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Blender - Export Elevator (Decor)
 - [X] Blender - Make Outposts Placeholders
 - [X] Blender - Export Gate Placeholders
+- [X] Mars Scene - use extension GuildMission in MarsBuilder.swift 
+- [X] Mars Scene - Unlock roads
+- [X] Mars Scene - City Gate - Use Placeholders
+- [X] Mars Scene - Add Elevator (mission)
+- [X] Mars Scene - Import new Road Paths (Copy)
+- [X] Mars Scene - Animate Elevator
+
 
 - [ ] Substitution: `GuildMap` for `GuildFullContent`
 - [ ] ServerData.swift improvements
-
-- [ ] No One can study?
 
 - [X] Guild Room - Invite should work for everyone
 - [X] Guild Room - Test Election Results
 - [X] Guild Room - President functions (Kickout, Modify Guild)
 - [ ] Guild Room - Guild Missions
 - [ ] Guild Room - Markdown Edit (Readme)
+- [ ] Guild Room - animations
 
-- [X] Guild Missions
-- [ ] Guild Missions - Add ALL roads, outpost Unlocks, and missions .production
+- [X] Guild Missions - Add ALL roads, outpost Unlocks, and missions .production
+- [ ] Guild Missions - .production:[String:Int]
 
-- [ ] Mars Scene - use extension GuildMission in MarsBuilder.swift 
-- [X] Mars Scene - Unlock roads
-- [ ] Mars Scene - Unlock posdexes
-- [ ] Mars Scene - load models
 - [ ] Mars Scene - Implement Guild Missions
-- [ ] Mars Scene - Add Elevator (mission)
-- [ ] Mars Scene - Outpost initial looks
-- [ ] Mars Scene - Import Road Paths (Copy)
-- [ ] Mars Scene - City Gate - Use Placeholders
+- [X] Mars Scene - Unlock posdexes
+- [X] Mars Scene - Unlock cities
+- [ ] Mars Scene - Outpost placeholders (Level 0)
 
-- [ ] Blender - Animate Elevator
 - [ ] Blender - Substitute Space Vehicles Solar Panels
 - [ ] Blender - XCode - Delete old solar panels
-- [ ] Blender - Simplify EVehicle (20 MB is too much) maybe 5?
 - [ ] Blender - EVehicle remove/remake UV maps
 - [ ] Blender - EDL Remake #5
 

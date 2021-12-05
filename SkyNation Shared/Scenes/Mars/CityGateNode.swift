@@ -30,7 +30,8 @@ class CityGateNode:SCNNode {
         
         // Get Scene Root
         guard let sceneRoot:SCNNode = SCNScene(named: "Art.scnassets/Mars/CityGate.scn")?.rootNode, //"Art.scnassets/Mars/Gate5.scn"
-              let baseNode:SCNNode = sceneRoot.childNode(withName: "Gate", recursively: false) else {
+              let baseNode:SCNNode = sceneRoot.childNode(withName: "Gate", recursively: false),
+              let placeHolder:SCNNode = sceneRoot.childNode(withName: "GatePlaceholder", recursively: false) else {
             fatalError("Could not find base nodes to build Gate Node")
         }
         
@@ -38,33 +39,47 @@ class CityGateNode:SCNNode {
         
         self.name = posdex.sceneName
         
-        for baseChild in baseNode.childNodes {
+        if let city = city {
             
-            let node = baseChild.clone()
-            self.addChildNode(node)
+            print("Gate Node with City \(city.name)")
             
-            // Cameras
-            if node.name == "POV", let camNode = node.childNodes.first, let _ = camNode.camera {
-                self.cameraNodes.append(camNode)
-            }
-            
-//            if let cam = node.camera {
-//                print("Camera: \(cam.description)")
-//                self.cameraNodes.append(node)
-//            } else if let cam = node.childNodes.first?.camera {
-//                print("Camera: \(cam.description)")
-//                self.cameraNodes.append(node.childNodes.first ?? SCNNode())
-//            }
-            
-            // Lights
-            if let childLight = node.childNodes.filter({ $0.light != nil }).first {
-                // Attention! For now this node is hidden, but at night, we can turn the light on!
-                if GameSettings.debugScene {
-                    print("Lights (C) On? \(!childLight.isHidden)")
-                    self.lightNodes.append(childLight)
+            for baseChild in baseNode.childNodes {
+                
+                let node = baseChild.clone()
+                self.addChildNode(node)
+                
+                // Cameras
+                if node.name == "POV", let camNode = node.childNodes.first, let _ = camNode.camera {
+                    self.cameraNodes.append(camNode)
+                }
+                
+                //            if let cam = node.camera {
+                //                print("Camera: \(cam.description)")
+                //                self.cameraNodes.append(node)
+                //            } else if let cam = node.childNodes.first?.camera {
+                //                print("Camera: \(cam.description)")
+                //                self.cameraNodes.append(node.childNodes.first ?? SCNNode())
+                //            }
+                
+                // Lights
+                if let childLight = node.childNodes.filter({ $0.light != nil }).first {
+                    // Attention! For now this node is hidden, but at night, we can turn the light on!
+                    if GameSettings.debugScene {
+                        print("Lights (C) On? \(!childLight.isHidden)")
+                        self.lightNodes.append(childLight)
+                    }
                 }
             }
+            
+        } else {
+            // use placeholer
+            let node = placeHolder.clone()
+            self.addChildNode(node)
         }
+        
+        
+        
+        
         
         // There are 3 types of city
         // 1. My City

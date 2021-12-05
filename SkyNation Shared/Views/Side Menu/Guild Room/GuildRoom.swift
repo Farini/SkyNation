@@ -199,13 +199,13 @@ struct GuildRoom: View {
                             Spacer()
                             */
                             
-                            if let map = controller.guildMap {
-                                Text("Guild Map")
-                                Text(map.name)
-                                Text("Color: \(map.color)")
-                                Text("Icon: \(map.icon)")
+                            if let _ = controller.guildMap {
+//                                Text("Guild Map")
+//                                Text(map.name)
+//                                Text("Color: \(map.color)")
+//                                Text("Icon: \(map.icon)")
                                 if let mission = controller.mission {
-                                    Text("map mission...").foregroundColor(.green)
+                                    // Text("map mission...").foregroundColor(.green)
                                     GuildMissionView(controller:controller, mission: mission, progress: 0.0)
                                 } else {
                                     

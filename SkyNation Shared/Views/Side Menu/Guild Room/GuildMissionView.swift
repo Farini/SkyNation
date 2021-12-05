@@ -22,11 +22,20 @@ struct GuildMissionView: View {
             Divider()
             
             VStack(alignment:.leading) {
-//                Text("Title")
-                Text(mission.mission.missionTitle)
-                    .font(GameFont.section.makeFont())
-                    .foregroundColor(.blue)
-                    .padding(.bottom, 6)
+                
+                // Mission Title
+                HStack {
+                    Text(mission.mission.missionTitle)
+                        .font(GameFont.section.makeFont())
+                        .foregroundColor(.blue)
+                    
+                    Spacer()
+                    Text("\(MissionNumber.allCases.count) total missions")
+                        .font(GameFont.section.makeFont())
+                        .foregroundColor(.gray)
+                }
+                .padding(.bottom, 6)
+                
                 
                 // Images:
                 // deskclock
@@ -34,25 +43,38 @@ struct GuildMissionView: View {
                 // clock.badge.exclamationmark (v3.0)
                 // clock.arrow.circlepath (v2.0)
                 // hourglass
-                HStack(spacing:12) {
-                    Image(systemName:"clock.badge.exclamationmark")
-                        .font(.largeTitle)
-                    Divider()
-                        .frame(height:30)
-                    VStack(alignment:.leading) {
-                        Text("Timing: \(Double(mission.mission.timing).stringFromTimeInterval())")
+                HStack(alignment:.top) {
+                    HStack(spacing:12) {
+                        Image(systemName:"clock.badge.exclamationmark")
+                            .font(.largeTitle)
+                        Divider()
+                            .frame(height:30)
+                        VStack(alignment:.leading) {
+                            Text("Timing: \(Double(mission.mission.timing).stringFromTimeInterval())")
                             
-                        let dVal:Double = (1 - progress) * 100.0
-                        let dStr:String = String(format: "%.2f", dVal) + "%"
-//                        Text(dStr)
-                        ProgressView("Progress \(dStr)", value: max(0, min(1.0, (dVal / 100.0))))
-                            .frame(width:200)
-                        // Text(Double(1.0 - progress), format: "%.2d") //Text("Progress: \(progress)")
+                            let dVal:Double = (1 - progress) * 100.0
+                            let dStr:String = String(format: "%.2f", dVal) + "%"
+                            //                        Text(dStr)
+                            ProgressView("Progress \(dStr)", value: max(0, min(1.0, (dVal / 100.0))))
+                                .frame(width:200)
+                            // Text(Double(1.0 - progress), format: "%.2d") //Text("Progress: \(progress)")
+                        }
                     }
+                    .padding(8)
+                    .background(Color.black)
+                    .cornerRadius(8)
+                    
+                    VStack(alignment:.leading) {
+                        Text("Info").foregroundColor(.orange)
+                        Text(mission.mission.missionStatement).foregroundColor(.gray)
+                    }
+                    
+                    
                 }
-                .padding(8)
-                .background(Color.black)
-                .cornerRadius(8)
+                
+                
+                let page = mission.pageOf()
+                Text("Task \(page.page + 1) of \(page.total + 1)").foregroundColor(.orange)
                 
                 HStack {
                     // Citizens (colored by participation)
@@ -76,24 +98,12 @@ struct GuildMissionView: View {
                 
                 Divider()
                 
-                Text("Statement").foregroundColor(.orange)
-                Text(mission.mission.missionStatement).foregroundColor(.gray)
+                
                 
             }
             .padding([.top, .horizontal])
             
-            VStack {
-                Text("Dates")
-                HStack(spacing:8) {
-                    Text("Start")
-                    Text(GameFormatters.dateFormatter.string(from: mission.start))
-                }
-                HStack(spacing:8) {
-                    Text("Finish")
-                    Text(GameFormatters.dateFormatter.string(from: mission.calculatedEnding() ?? Date.distantFuture))
-                }
-            }
-            .padding(.top)
+            
             
             Text("Status: \(mission.status.rawValue)")
                 .padding(.top)
@@ -110,7 +120,21 @@ struct GuildMissionView: View {
                         print("add token to workers")
                         controller.cooperateMission(gMission: mission)
                     }
+                    .buttonStyle(GameButtonStyle())
                 case .running:
+                    
+                    VStack {
+                        // Text("Dates")
+                        HStack(spacing:8) {
+                            Text("Start")
+                            Text(GameFormatters.dateFormatter.string(from: mission.start))
+                        }
+                        HStack(spacing:8) {
+                            Text("Finish")
+                            Text(GameFormatters.dateFormatter.string(from: mission.calculatedEnding() ?? Date.distantFuture))
+                        }
+                    }
+                    .padding(.top)
                     
                     if mission.workers.contains(where: { $0 == LocalDatabase.shared.player.playerID ?? UUID() }) {
                         // Already Cooperating. Token Button?
@@ -119,20 +143,37 @@ struct GuildMissionView: View {
                             print("Token")
                             print("add token to workers")
                         }
+                        .buttonStyle(GameButtonStyle())
                     } else {
                         Button("Cooperate") {
                             controller.cooperateMission(gMission: mission)
                             print("Cooperate")
                             print("Add my ID to workers")
                         }
+                        .buttonStyle(GameButtonStyle())
                     }
                     
                 case .finished:
+                    
+                    VStack {
+                        // Text("Dates")
+                        HStack(spacing:8) {
+                            Text("Start")
+                            Text(GameFormatters.dateFormatter.string(from: mission.start))
+                        }
+                        HStack(spacing:8) {
+                            Text("Finish")
+                            Text(GameFormatters.dateFormatter.string(from: mission.calculatedEnding() ?? Date.distantFuture))
+                        }
+                    }
+                    .padding(.top)
+                    
                     Button("Finish") {
                         print("Register end of work - End mission, get next mission = '.notStarted'")
                         controller.finishMission(gMission: mission)
                         
                     }
+                    .buttonStyle(GameButtonStyle())
             }
             
             Spacer()

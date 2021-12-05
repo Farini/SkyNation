@@ -132,8 +132,18 @@ class Wallet:Codable {
         var dictionary:[String:Int] = [:]
         
         let array:[String] = [TankType.h2o.rawValue, TankType.o2.rawValue, TankType.air.rawValue, "token", "money", "money", "money", "token"]
+        
         let rnd1 = array.randomElement()!
         dictionary[rnd1, default:0] += 1
+        
+        if Bool.random() == true {
+            let rnd2 = array.randomElement()!
+            dictionary[rnd2, default:0] += 1
+            if Bool.random() == true {
+                let rnd3 = array.randomElement()!
+                dictionary[rnd3, default:0] += 1
+            }
+        }
         
         self.freebiesMade = dictionary
         
