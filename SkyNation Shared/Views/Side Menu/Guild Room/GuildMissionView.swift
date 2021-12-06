@@ -23,7 +23,7 @@ struct GuildMissionView: View {
             
             VStack(alignment:.leading) {
                 
-                // Mission Title
+                // Mission Title, and total missions
                 HStack {
                     Text(mission.mission.missionTitle)
                         .font(GameFont.section.makeFont())
@@ -36,28 +36,39 @@ struct GuildMissionView: View {
                 }
                 .padding(.bottom, 6)
                 
-                
-                // Images:
-                // deskclock
-                // stopwatch
-                // clock.badge.exclamationmark (v3.0)
-                // clock.arrow.circlepath (v2.0)
-                // hourglass
+                // Mission Status View
                 HStack(alignment:.top) {
+                    
                     HStack(spacing:12) {
-                        Image(systemName:"clock.badge.exclamationmark")
+                        Image(systemName:imageNameForMissionStatus())
                             .font(.largeTitle)
                         Divider()
                             .frame(height:30)
                         VStack(alignment:.leading) {
-                            Text("Timing: \(Double(mission.mission.timing).stringFromTimeInterval())")
                             
-                            let dVal:Double = (1 - progress) * 100.0
-                            let dStr:String = String(format: "%.2f", dVal) + "%"
-                            //                        Text(dStr)
-                            ProgressView("Progress \(dStr)", value: max(0, min(1.0, (dVal / 100.0))))
-                                .frame(width:200)
-                            // Text(Double(1.0 - progress), format: "%.2d") //Text("Progress: \(progress)")
+                            let page = mission.pageOf()
+                            HStack {
+                                Text("Task \(page.page + 1) of \(page.total + 1)").foregroundColor(.orange)
+                                Spacer()
+                            }
+                            
+                            switch mission.status {
+                                case .notStarted:
+                                    Text("not started").foregroundColor(.red)
+                                    Text("press start")
+                                case .running:
+                                    Text("running").foregroundColor(.green)
+                                    let dVal:Double = (1 - progress) * 100.0
+                                    let dStr:String = String(format: "%.2f", dVal) + "%"
+                                    ProgressView("Progress \(dStr)", value: max(0, min(1.0, (dVal / 100.0))))
+                                        .frame(width:200)
+                                case .finished:
+                                    Text("finished").foregroundColor(.orange)
+                                    let dVal:Double = (1 - progress) * 100.0
+                                    let dStr:String = String(format: "%.2f", dVal) + "%"
+                                    ProgressView("Progress \(dStr)", value: max(0, min(1.0, (dVal / 100.0))))
+                                        .frame(width:200)
+                            }
                         }
                     }
                     .padding(8)
@@ -68,13 +79,7 @@ struct GuildMissionView: View {
                         Text("Info").foregroundColor(.orange)
                         Text(mission.mission.missionStatement).foregroundColor(.gray)
                     }
-                    
-                    
                 }
-                
-                
-                let page = mission.pageOf()
-                Text("Task \(page.page + 1) of \(page.total + 1)").foregroundColor(.orange)
                 
                 HStack {
                     // Citizens (colored by participation)
@@ -92,26 +97,23 @@ struct GuildMissionView: View {
                     ForEach(pTokens, id:\.self) { _ in
                         Text("🪙")
                     }
-                        
                 }
                 
-                
                 Divider()
-                
-                
-                
             }
             .padding([.top, .horizontal])
             
             
-            
-            Text("Status: \(mission.status.rawValue)")
+            // Status
+            Text("Status: \(mission.status.displayString)")
                 .padding(.top)
             
+            // Error
             if let message = controller.missionErrorMessage {
                 Text(message).foregroundColor(.red)
             }
             
+            // Buttons
             switch mission.status {
                 case .notStarted:
                     Button("Start") {
@@ -181,6 +183,15 @@ struct GuildMissionView: View {
         .onAppear(perform: autoLoop)
     }
     
+    func imageNameForMissionStatus() -> String {
+        switch mission.status {
+            case .notStarted: return "hourglass"
+            case .finished: return "clock.arrow.circlepath"
+            case .running: return "clock.badge.exclamationmark"
+        }
+    }
+    
+    /// Updates the timing of the view
     func autoLoop() {
         
         let start = mission.start

@@ -142,40 +142,50 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Mars Scene - Import new Road Paths (Copy)
 - [X] Mars Scene - Animate Elevator
 
-
 - [ ] Substitution: `GuildMap` for `GuildFullContent`
 - [ ] ServerData.swift improvements
 
 - [X] Guild Room - Invite should work for everyone
 - [X] Guild Room - Test Election Results
 - [X] Guild Room - President functions (Kickout, Modify Guild)
-- [ ] Guild Room - Guild Missions
+- [X] Guild Room - Guild Missions
 - [ ] Guild Room - Markdown Edit (Readme)
 - [ ] Guild Room - animations
 
 - [X] Guild Missions - Add ALL roads, outpost Unlocks, and missions .production
 - [ ] Guild Missions - .production:[String:Int]
 
+- [ ] GuildMap - Calculate entire production:[String:Int]
+
+- [ ] Guild Views (from GuildMap)
+- [ ] Guild Views - Banner (Icon, name, etc.)
+- [ ] Guild Views - FlipView (detailed)
+
+
 - [ ] Mars Scene - Implement Guild Missions
 - [X] Mars Scene - Unlock posdexes
 - [X] Mars Scene - Unlock cities
 - [ ] Mars Scene - Outpost placeholders (Level 0)
+- [ ] Mars Scene - Delete [MarsRoads, Gate5, MarsMap]
+- [ ] Mars Scene - Delete Textures [...]
+- [ ] Mars Scene - News
 
-- [ ] Blender - Substitute Space Vehicles Solar Panels
-- [ ] Blender - XCode - Delete old solar panels
-- [ ] Blender - EVehicle remove/remake UV maps
-- [ ] Blender - EDL Remake #5
-
-- [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
 - [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
 - [ ] Outpost - Split the view in outpost states
+- [ ] Outpost - Alternative view per outpost type, and each outpost type split in outpost states
+
+- [ ] Tutorial - Adjustments (padding)
+- [X] Tutorial - GuildRoom (improvements)
+- [ ] Tutorial - Mars City
+- [ ] Tutorial - Outpost
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
 
 - [ ] All Tests
+- [X] Guild Missions
 - [ ] Store receipt view
 - [ ] Election Results
-- [ ] Guild Missions
+- [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
 
 - [ ] All Views Remake - Consistency
 - [ ] New Warning Messages (from people selector)  - use everywhere that can throw an error.
@@ -194,6 +204,7 @@ Folders Done
     - [ ] City View - Lab - Remake with new Views
     - [ ] City View - Bio - Remake with new Views
 
+
 - [ ] iOS - Views are too large
 - [ ] iOS - Font modifiers
 - [ ] iOS - Window Sizes + View Sizes
@@ -201,6 +212,11 @@ Folders Done
 - [ ] iOS - Popover sizes
 - [ ] iOS - Semi-black background Color
 - [ ] iOS - increase bloom in camera? - or find a way to make scene brighter.
+
+- [ ] Blender - Substitute Space Vehicles Solar Panels
+- [ ] Blender - XCode - Delete old solar panels
+- [ ] Blender - EVehicle remove/remake UV maps
+- [ ] Blender - EDL Remake #5
 
 ## Wishlist + Questionable
 Features that are requested, but are not required to launch the game

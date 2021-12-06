@@ -39,6 +39,10 @@ class CityGateNode:SCNNode {
         
         self.name = posdex.sceneName
         
+        // There are 3 types of city
+        // 1. My City
+        // 2. Other's City
+        // 3. Unclaimed City (city = nil) -> Diamond geometry + placeholder material
         if let city = city {
             
             print("Gate Node with City \(city.name)")
@@ -52,14 +56,6 @@ class CityGateNode:SCNNode {
                 if node.name == "POV", let camNode = node.childNodes.first, let _ = camNode.camera {
                     self.cameraNodes.append(camNode)
                 }
-                
-                //            if let cam = node.camera {
-                //                print("Camera: \(cam.description)")
-                //                self.cameraNodes.append(node)
-                //            } else if let cam = node.childNodes.first?.camera {
-                //                print("Camera: \(cam.description)")
-                //                self.cameraNodes.append(node.childNodes.first ?? SCNNode())
-                //            }
                 
                 // Lights
                 if let childLight = node.childNodes.filter({ $0.light != nil }).first {
@@ -76,17 +72,6 @@ class CityGateNode:SCNNode {
             let node = placeHolder.clone()
             self.addChildNode(node)
         }
-        
-        
-        
-        
-        
-        // There are 3 types of city
-        // 1. My City
-        // 2. Other's City
-        // 3. Unclaimed City (city = nil) -> Needs to add "Diamond" Geometry
-        
-        // When city is nil, add the diamond, as an indicator, and to claim city
         
         if city == nil {
             guard let diamond = baseNode.childNode(withName: "Diamond", recursively: false)?.clone() else {

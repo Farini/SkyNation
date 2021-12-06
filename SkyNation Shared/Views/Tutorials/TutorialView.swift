@@ -25,6 +25,7 @@ enum TutorialType {
     case GuildRoom
     
     case GuildCity
+    case GuildOutpost
 }
 
 struct TutorialView: View {
@@ -221,12 +222,46 @@ struct TutorialView: View {
             case .GuildRoom:
                 ScrollView {
                     VStack(alignment:.leading, spacing:6) {
-                        Text("Guild Room").font(.title).foregroundColor(.orange)
-                        Divider()
-                        Text("In the Guild Room, one can vote for elections, perform actions, see president preferences, search for another player, and communicate with Guildmates.")
+                        // Header
+                        Group {
+                            Text("Guild Room").font(.title).foregroundColor(.orange)
+                            Divider()
+                            Text("In the Guild Room, one can vote for elections, perform actions, see president preferences, search for another player, and communicate with Guildmates.")
+                        }
+                        Group {
+                            Label("Guild Info", systemImage:"exclamationmark.shield")
+                                .foregroundColor(.blue)
+                            Text("Information about the guild.")
+                        }
+                        // Missions
+                        Group {
+                            Label("Missions", systemImage:"wand.and.stars.inverse")
+                                .foregroundColor(.blue)
+//                            Text("Missions").foregroundColor(.blue)
+                            Text("Help the Guild make progress in the map by cooperating in missions. Each player, or token that gets added to the cooperation of a mission takes some time away from the mission.")
+                            Text("When the mission finally finishes, some upgrades are added to the map.")
+                        }
+                        // Election + President
+                        Group {
+                            Label("Election", systemImage:"crown")
+                                .foregroundColor(.blue)
+                            Text("Elect a president. During election you can vote for president. You can even vote for yourself.")
+                            Label("President", systemImage:"crown.fill").foregroundColor(.blue)
+                            Text("The Guild's president can perform some special functions. A president can kick a player out from the Guild. This should be used mostly when non-active players are taking up precious space in the Guild.")
+                        }
+                        // Search
+                        Group {
+                            Label("Search", systemImage:"magnifyingglass.circle")
+                                .foregroundColor(.blue)
+                            Text("Search for a player inside or out of the Guild.")
+                            Text("You can send them a gift, or invite them to the Guild.")
+                            
+                        }
+                        
                     }
                     .fixedSize(horizontal: false, vertical: true)
-                    .padding(.horizontal, 6)
+                    .padding(8)
+                    .padding(.bottom)
                 }
                 .frame(maxWidth: 400, maxHeight: 600, alignment: .top)
                 
@@ -241,6 +276,19 @@ struct TutorialView: View {
                     .padding(.horizontal, 6)
                 }
                 .frame(maxWidth: 400, maxHeight: 600, alignment: .top)
+                
+            case .GuildOutpost:
+                ScrollView {
+                    VStack(alignment:.leading, spacing:6) {
+                        Text("Guild Outpost").font(.title).foregroundColor(.orange)
+                        Divider()
+                        Text("Outposts are great tools to collect resources for your city. Each outpost produces items that can be used by the city.")
+                        Text("Upgrading outposts is essential to make progress, unlock more parts of the game and collect more items for the city.")
+                    }
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 6)
+                }
+                .frame(maxWidth: 400, maxHeight: 600, alignment: .top)
         }
         
         
@@ -249,6 +297,6 @@ struct TutorialView: View {
 
 struct TutorialView_Previews: PreviewProvider {
     static var previews: some View {
-        TutorialView(tutType: .HabView)
+        TutorialView(tutType: .GuildRoom)
     }
 }

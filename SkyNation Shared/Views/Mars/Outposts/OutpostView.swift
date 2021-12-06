@@ -137,39 +137,6 @@ struct OutpostView: View {
                                 VStack {
                                     ContributionRoundView(controller: controller, contribRound: $controller.contribRound)
                                 }
-                                
-//                                Group {
-//                                    Text("Contributions").font(.title3).foregroundColor(.orange)
-//                                    ForEach(controller.contribList) { litem in
-//                                        HStack {
-//                                            SmallPlayerCardView(pCard: litem.citizen.makePlayerCard())
-//                                            Text("\(litem.score)").font(.title)
-//                                        }
-//                                    }
-//                                    if controller.contribList.isEmpty {
-//                                        Text("[ No contributors ]").foregroundColor(.gray)
-//                                    }
-//                                    Divider()
-//                                }.padding()
-                                
-//                                Group {
-//                                    Text("Citizens")
-//                                    ForEach(controller.citizens) { folk in
-//                                        Text("\(folk.id), \(folk.name)")
-//                                    }
-//                                    Divider()
-//                                }
-                                
-//                                Group {
-//                                    Text("Missing List")
-//                                        .font(.title3).foregroundColor(.orange)
-//                                    let kkeys = controller.remains.map{$0.key}
-//                                    let kvals = controller.remains.map{$0.value}
-//                                    ForEach(kkeys.indices) { index in
-//                                        Text("Missing \(kkeys[index]) | \(kvals[index])")
-//                                    }
-//                                }
-                                
                             }
                             .frame(minHeight:300)
                             

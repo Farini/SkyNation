@@ -35,12 +35,12 @@ struct OutpostInfoView: View {
                     }
                     
                     Spacer()
-                    VStack {
+                    VStack(alignment:.trailing) {
                         Text("📍\(controller.dbOutpost.posdex)").foregroundColor(.gray)
                         if let date = controller.outpostData.dateUpgrade {
                             Text(GameFormatters.fullDateFormatter.string(from: date))
                         } else {
-                            Text("---").foregroundColor(.gray)
+                            Text("-").foregroundColor(.gray)
                         }
                     }
                 }
@@ -115,6 +115,7 @@ struct OutpostInfoView: View {
                         levelView
                         Divider().frame(height:12)
                         
+                        // Cooldown label
                         VStack {
                             Text("Cooldown").font(.title3).foregroundColor(.red)
                                 .padding(6)
@@ -128,6 +129,7 @@ struct OutpostInfoView: View {
                             Text("Upgrading to \(controller.dbOutpost.level + 1)")
                         }
                         
+                        // Deadline + Update button
                         VStack {
                             let deadline = controller.outpostData.dateUpgrade ?? Date.distantFuture
                             Text("Date: \(GameFormatters.dateFormatter.string(from: deadline))")

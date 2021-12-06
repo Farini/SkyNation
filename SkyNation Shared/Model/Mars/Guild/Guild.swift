@@ -434,6 +434,14 @@ enum GuildEventStage:String, Codable, CaseIterable {
     /// Election Finished. Needs Updating
     case finished
     
+    /// A String to be displayed on UI about this status
+    var displayString:String {
+        switch self {
+            case .notStarted: return "not started"
+            default: return self.rawValue
+        }
+    }
+    
 }
 
 /// Contains president(PlayerContent), `Election` object and `GuildEventStage` of the election.
@@ -463,8 +471,6 @@ struct GuildElectionData:Codable {
         }
     }
 }
-
-
 
 /**
  Content suitable for map

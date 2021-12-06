@@ -124,21 +124,21 @@ class ChatBubbleController:ObservableObject {
     
     func getGuildInfo() {
         
-        self.serverManager.inquireFullGuild(force: false) { fullGuild, error in
-            DispatchQueue.main.async {
-                
-                if let fullGuild = fullGuild {
-                    self.guild = fullGuild
-                    self.citizens = fullGuild.citizens
-                    
-                    self.updateElectionData()
-                    self.requestChat()
-                    
-                } else {
-                    print("Possible error: \(error?.localizedDescription ?? "n/a")")
-                }
-            }
-        }
+//        self.serverManager.inquireFullGuild(force: false) { fullGuild, error in
+//            DispatchQueue.main.async {
+//
+//                if let fullGuild = fullGuild {
+//                    self.guild = fullGuild
+//                    self.citizens = fullGuild.citizens
+//
+//                    self.updateElectionData()
+//                    self.requestChat()
+//
+//                } else {
+//                    print("Possible error: \(error?.localizedDescription ?? "n/a")")
+//                }
+//            }
+//        }
     }
     
     // MARK: - Achievements

@@ -217,12 +217,12 @@ enum MissionNumber:Int, CaseIterable, Codable {
     // MARK: - Rewards
     
     /// Scene Assets added to scene
-    var sceneAssetName:String? {
-        switch self {
-            case .elevatorLift: return "ElevatorLift"
-            default: return nil
-        }
-    }
+//    var sceneAssetName:String? {
+//        switch self {
+//            case .elevatorLift: return "ElevatorLift"
+//            default: return nil
+//        }
+//    }
     
     /// Anything that adds to the guild production goes here
     var production:[String:Int] {
@@ -296,11 +296,14 @@ class GuildMission:Codable, Identifiable {
         // no workers = not started
         guard !workers.isEmpty else { return .notStarted }
         
-        let finish = calculatedEnding() ?? Date.distantFuture
-        if Date().compare(finish) == .orderedAscending {
-            return .running
+        if let finish = calculatedEnding() {
+            if Date().compare(finish) == .orderedAscending {
+                return .running
+            } else {
+                return .finished
+            }
         } else {
-            return .finished
+            return .notStarted
         }
     }
     
@@ -339,20 +342,9 @@ class GuildMission:Codable, Identifiable {
         self.status = .notStarted
     }
     
-    /// Gets the names for all assets until this mission
-//    func getAllAssets() -> [String] {
-//        var assets:[String] = []
-//        for i in 0..<mission.rawValue {
-//            if let missionAsset = MissionNumber(rawValue: i)?.sceneAssetName {
-//                assets.append(missionAsset)
-//            }
-//        }
-//        return assets
-//    }
-    
     // MARK: - Actions
     
-    func startWorking(pid:UUID) {
+    private func startWorking(pid:UUID) {
         
         if status != .notStarted {
             print("Attention. Start working on a status: \(status.rawValue). Should be not started.")

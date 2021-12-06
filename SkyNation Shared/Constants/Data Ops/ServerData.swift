@@ -194,6 +194,7 @@ class ServerManager {
         }
     }
     
+    
     /// Gets the Full Guild Content
     func inquireFullGuild(force:Bool, completion:@escaping(GuildFullContent?, Error?) -> ()) {
         
@@ -209,6 +210,7 @@ class ServerManager {
         }
         
     }
+    
     
     /// max delay is in seconds
     ///  gets the map with instructions
