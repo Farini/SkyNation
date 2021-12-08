@@ -172,7 +172,7 @@ class CityData:Codable, Identifiable {
         print("Boxes after taking: \(boxes.count)")
     }
     
-    /// Checks air for required vs supply
+    /// Returns the total amount of air needed
     func checkRequiredAir() -> Int {
         
         let base = GameLogic.airPerModule * 2 // 225 * 2 = 450

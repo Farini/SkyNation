@@ -49,12 +49,20 @@ struct OutpostInfoView: View {
             }
             .padding(.horizontal)
             
+            // Level View
+            // Make an hstack (2 views)
+            // each a vstack with.:
+            // level view
+            // Production
+            // upgradable (small gray)
+            
             switch controller.dbOutpost.state {
                 case .collecting:
-                    HStack(spacing:12) {
+                    
+                    HStack(spacing:20) {
                         
                         levelView
-                        Divider().frame(height:12)
+                        // Divider().frame(height:12)
                         
                         Spacer()
                         productionView
@@ -203,26 +211,84 @@ struct OutpostInfoView: View {
     
     var levelView: some View {
         // Level number
-        VStack {
+        HStack {
+            // This Level
+            VStack {
+                
+                Text("Level")
+                    .font(.title2)
+                    .foregroundColor(.orange)
+                    .padding(.vertical, 6)
+                
+                Text(" \(controller.dbOutpost.level) ").font(.title)
+                    .padding(6)
+                    .background(Color.black.opacity(0.5))
+                    .cornerRadius(4)
+                    .overlay(
+                        levelShape
+                            .inset(by: 1.5)
+                            .stroke(Color.white.opacity(0.2), lineWidth: 2)
+                    )
+                
+                Text(controller.dbOutpost.state.rawValue)
+                    .foregroundColor(controller.dbOutpost.state == .cooldown ? Color.red:(controller.dbOutpost.state == .maxed ? Color.gray:Color.orange))
+                
+                // Production
+                let prod = controller.dbOutpost.type.productionForCollection(level: controller.dbOutpost.level)
+                Text(prod.description)
+            }
             
-            Text("Level")
-                .font(.title2)
-                .foregroundColor(.orange)
-                .padding(.vertical, 6)
+            Divider().frame(height:30)
             
-            Text(" \(controller.dbOutpost.level) ").font(.title)
-                .padding(6)
-                .background(Color.black.opacity(0.5))
-                .cornerRadius(4)
-                .overlay(
-                    levelShape
-                        .inset(by: 1.5)
-                        .stroke(Color.white.opacity(0.2), lineWidth: 2)
-                )
             
-            Text(controller.dbOutpost.state.rawValue)
-                .foregroundColor(controller.dbOutpost.state == .cooldown ? Color.red:(controller.dbOutpost.state == .maxed ? Color.gray:Color.orange))
+            VStack {
+                
+                // Next Level
+                Text("Next")
+                    .font(.title2)
+                    .foregroundColor(.orange)
+                    .padding(.vertical, 6)
+                
+                if let nextJob = controller.dbOutpost.getNextJob() {
+                    Text(" \(controller.dbOutpost.level + 1) ").font(.title)
+                        .padding(6)
+                        .background(Color.black.opacity(0.5))
+                        .cornerRadius(4)
+                        .overlay(
+                            levelShape
+                                .inset(by: 1.5)
+                                .stroke(Color.white.opacity(0.2), lineWidth: 2)
+                        )
+                    Text("Needs \(nextJob.maxScore())").foregroundColor(.gray)
+                    
+                    // Production
+                    let prod = controller.dbOutpost.type.productionForCollection(level: controller.dbOutpost.level + 1)
+                    Text(prod.description)
+                    
+                    
+                } else {
+                    
+                    // No Upgrades
+                    Text(" - ").font(.title)
+                        .padding(6)
+                        .background(Color.black.opacity(0.5))
+                        .cornerRadius(4)
+                        .overlay(
+                            levelShape
+                                .inset(by: 1.5)
+                                .stroke(Color.white.opacity(0.2), lineWidth: 2)
+                        )
+                    Text("No upgrades").foregroundColor(.gray)
+                }
+                
+                
+//                Text(controller.dbOutpost.state.rawValue)
+//                    .foregroundColor(controller.dbOutpost.state == .cooldown ? Color.red:(controller.dbOutpost.state == .maxed ? Color.gray:Color.orange))
+            }
         }
+        
+        
+        
     }
     
     var productionView: some View {

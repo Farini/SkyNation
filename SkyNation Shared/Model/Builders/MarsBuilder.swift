@@ -565,6 +565,7 @@ extension Posdex {
 //                return SCNScene(named: "Art.scnassets/Mars/Gate2.scn")!.rootNode.childNodes.first!
             case .power1, .power2, .power3, .power4:
                 return SCNScene(named: "Art.scnassets/Mars/Outposts/PowerPlant.scn")!.rootNode
+                
             case .mining1, .mining2, .mining3:
                 return nil
             case .biosphere1, .biosphere2:

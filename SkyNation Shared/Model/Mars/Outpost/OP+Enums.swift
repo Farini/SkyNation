@@ -63,15 +63,41 @@ enum OutpostType:String, CaseIterable, Codable {
     
     func productionForCollection(level:Int) -> [String:Int] {
         
+        // Test results:
+        /*
+         * Water
+         Water level 0 -> ["Water": 2] L.
+         Water level 1 -> ["Water": 11] L.
+         Water level 2 -> ["Water": 20] L.
+         Water level 3 -> ["Water": 29] L.
+         Water level 4 -> ["Water": 47] L.
+         Water level 5 -> ["Water": 74] L.
+         
+         * Energy
+         Power level 0 -> ["Energy": 5] kw.
+         Power level 1 -> ["Energy": 24] kw.
+         Power level 2 -> ["Energy": 43] kw.
+         Power level 3 -> ["Energy": 62] kw.
+         Power level 4 -> ["Energy": 100] kw.
+         Power level 5 -> ["Energy": 157] kw.
+         
+         * Biosphere
+         Bio level 0 -> ["Food": 0] Food.
+         Bio level 1 -> ["Food": 5] Food.
+         Bio level 2 -> ["Food": 10] Food.
+         Bio level 3 -> ["Food": 15] Food.
+         Bio level 4 -> ["Food": 25] Food.
+         Bio level 5 -> ["Food": 40] Food.
+         */
         switch self {
                 
             // Mining -> Ingredient
             case .Water:
                 // How much to get at level 0
-                let lvlZero:Int = 9
+                let lvlZero:Int = 2
                 
                 // How much it gets for each level
-                let lvlDelta:Int = 18
+                let lvlDelta:Int = 9
                 
                 let fiboRes:Int = level == 0 ? 0:GameLogic.fibonnaci(index: level) * lvlDelta
                 let totalOutput = lvlZero + fiboRes
@@ -81,10 +107,10 @@ enum OutpostType:String, CaseIterable, Codable {
             case .Silica:
                 
                 // How much to get at level 0
-                let lvlZero:Int = 9
+                let lvlZero:Int = 0
                 
                 // How much it gets for each level
-                let lvlDelta:Int = 9
+                let lvlDelta:Int = 4
                 
                 let fiboRes:Int = level == 0 ? 0:GameLogic.fibonnaci(index: level) * lvlDelta
                 let totalOutput = lvlZero + fiboRes
@@ -94,10 +120,10 @@ enum OutpostType:String, CaseIterable, Codable {
             case .Titanium:
                 
                 // How much to get at level 0
-                let lvlZero:Int = 9
+                let lvlZero:Int = 0
                 
                 // How much it gets for each level
-                let lvlDelta:Int = 9
+                let lvlDelta:Int = 3
                 
                 let fiboRes:Int = level == 0 ? 0:GameLogic.fibonnaci(index: level) * lvlDelta
                 let totalOutput = lvlZero + fiboRes
@@ -110,10 +136,10 @@ enum OutpostType:String, CaseIterable, Codable {
             case .Energy:
                 
                 // How much to get at level 0
-                let lvlZero:Int = 27
+                let lvlZero:Int = 5
                 
                 // How much it gets for each level
-                let lvlDelta:Int = 18
+                let lvlDelta:Int = 19
                 
                 let fiboRes:Int = level == 0 ? 0:GameLogic.fibonnaci(index: level) * lvlDelta
                 let totalOutput = lvlZero + fiboRes
@@ -123,10 +149,10 @@ enum OutpostType:String, CaseIterable, Codable {
             case .Biosphere:
                 
                 // How much to get at level 0
-                let lvlZero:Int = 18
+                let lvlZero:Int = 0
                 
                 // How much it gets for each level
-                let lvlDelta:Int = 18
+                let lvlDelta:Int = 4
                 
                 let fiboRes:Int = level == 0 ? 0:GameLogic.fibonnaci(index: level) * lvlDelta
                 let totalOutput = lvlZero + fiboRes

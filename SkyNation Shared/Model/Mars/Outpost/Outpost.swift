@@ -422,9 +422,9 @@ struct DBOutpost:Codable {
     init(gid:UUID, type:OutpostType, posdex:Posdex) {
         self.id = UUID()
         self.model = "model"
-        self.guild = ["guild":gid]
+        self.guild = ["id":gid]
         self.type = type
-        self.level = Bool.random() ? 0:1
+        self.level = 1 // Bool.random() ? 0:1
         self.accounting = Date().addingTimeInterval(Double.random(in: 20...652) * -1)
         self.posdex = posdex.rawValue
         self.state = .collecting

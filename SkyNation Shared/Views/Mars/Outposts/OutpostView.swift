@@ -141,9 +141,10 @@ struct OutpostView: View {
                             .frame(minHeight:300)
                             
                         case .management:
-                            Group {
-                                Text("Manage")
-                            }
+//                            Group {
+//                                Text("Manage")
+//                            }
+                            OutpostSceneView(dbOutpost: controller.dbOutpost)
                         }
                     }
                     
@@ -151,6 +152,7 @@ struct OutpostView: View {
             } // scroll
         } // vstack
     }
+    
 }
 
 // Breaking down the views

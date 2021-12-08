@@ -13,7 +13,7 @@ import SceneKit
  */
 class PowerPlantNode:SCNNode {
     //    static let originScene:String = "Art.scnassets/Mars/Outposts/PowerPlant.scn"
-    static let originScene:String = "Art.scnassets/Mars/Outposts/PowerPlant2.scn"
+    static let originScene:String = "Art.scnassets/Mars/Outposts/PowerPlant3.scn"
     
     var posdex:Posdex
     var outpost:DBOutpost
@@ -63,6 +63,8 @@ class PowerPlantNode:SCNNode {
         // MARK: - Children
         
         for baseChild in baseNode.childNodes {
+            
+            // Clone node
             let node = baseChild.clone()
             self.addChildNode(node)
             
@@ -80,6 +82,10 @@ class PowerPlantNode:SCNNode {
                     self.lightNodes.append(childLight)
                 }
             }
+        }
+        
+        if let cam = self.childNode(withName: "Camera", recursively: true) {
+            self.cameraNodes.append(cam)
         }
         
         self.prepareForLevel(lvl: outpost.level)

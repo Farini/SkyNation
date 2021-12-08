@@ -231,6 +231,41 @@ class DataTests: XCTestCase {
         
     }
     
+    func testProductionOfOutpost() {
+        
+        print("\n * Water")
+        let water = OutpostType.Water
+        for level in 0...5 {
+            let prod = water.productionForCollection(level: level)
+            print("Water level \(level) -> \(prod) L.")
+            if level > 0 {
+                XCTAssert(prod.isEmpty == false)
+            }
+        }
+        
+        print("\n * Energy")
+        let power = OutpostType.Energy
+        for level in 0...5 {
+            let prod = power.productionForCollection(level: level)
+            print("Power level \(level) -> \(prod) kw.")
+            if level > 0 {
+                XCTAssert(prod.isEmpty == false)
+            }
+        }
+        
+        print("\n * Biosphere")
+        let bio = OutpostType.Biosphere
+        for level in 0...5 {
+            let prod = bio.productionForCollection(level: level)
+            print("Bio level \(level) -> \(prod) Food.")
+            if level > 0 {
+                XCTAssert(prod.isEmpty == false)
+            }
+        }
+        
+        print("\n End Test ---")
+    }
+    
     /** Tests if there is common strings between tanktype, ingredient, DNAOption and Skills,
      If this test fails, it makes building this game much harder. */
     func testModelTypesNames() {

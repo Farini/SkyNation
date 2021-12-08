@@ -410,6 +410,9 @@
 		8559201625959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
 		8559201725959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
 		8559201825959A4300CF5467 /* SideMenuNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8559201425959A4300CF5467 /* SideMenuNode.swift */; };
+		855F7C8C276025060070E7AE /* OutpostSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855F7C8B276025060070E7AE /* OutpostSceneView.swift */; };
+		855F7C8D276025060070E7AE /* OutpostSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855F7C8B276025060070E7AE /* OutpostSceneView.swift */; };
+		855F7C8E276025060070E7AE /* OutpostSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855F7C8B276025060070E7AE /* OutpostSceneView.swift */; };
 		856081FC26EE952F00C2418E /* LSSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856081FB26EE952F00C2418E /* LSSView.swift */; };
 		856081FD26EE952F00C2418E /* LSSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856081FB26EE952F00C2418E /* LSSView.swift */; };
 		856081FE26EE952F00C2418E /* LSSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856081FB26EE952F00C2418E /* LSSView.swift */; };
@@ -865,6 +868,7 @@
 		85487F6626CD9D2500EBC070 /* GameSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSettings.swift; sourceTree = "<group>"; };
 		85487F6C26CD9E4A00EBC070 /* About.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = About.md; sourceTree = "<group>"; };
 		8559201425959A4300CF5467 /* SideMenuNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuNode.swift; sourceTree = "<group>"; };
+		855F7C8B276025060070E7AE /* OutpostSceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutpostSceneView.swift; sourceTree = "<group>"; };
 		856081FB26EE952F00C2418E /* LSSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSSView.swift; sourceTree = "<group>"; };
 		8569A303259F7F990057A518 /* dissolve.fragment.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dissolve.fragment.txt; sourceTree = "<group>"; };
 		8569A30E259F81110057A518 /* CutionStripesColored.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CutionStripesColored.fsh; sourceTree = "<group>"; };
@@ -1807,6 +1811,7 @@
 				8517EE4925FC245D00C34C54 /* OutpostView.swift */,
 				85A6F7A726E52728003F9924 /* OutpostInfoView.swift */,
 				85B34B1B26FA21FD007178F5 /* ContributionRoundView.swift */,
+				855F7C8B276025060070E7AE /* OutpostSceneView.swift */,
 			);
 			path = Outposts;
 			sourceTree = "<group>";
@@ -2228,6 +2233,7 @@
 				8517EE3425FC11EF00C34C54 /* Guild.swift in Sources */,
 				85A658FA25E2251B008AA9BA /* PlayerEditView.swift in Sources */,
 				8516AD652737AF0800392C4F /* GameRoomView.swift in Sources */,
+				855F7C8C276025060070E7AE /* OutpostSceneView.swift in Sources */,
 				8516AD73273905B400392C4F /* GuildRoomController.swift in Sources */,
 				8536F3D6258D47D000B509D2 /* RecipeDetailViews.swift in Sources */,
 				857FE6372715548D00B06FF4 /* ObservatoryNode.swift in Sources */,
@@ -2408,6 +2414,7 @@
 				85E6ECF925C9D92B00229E18 /* ServerAPI.swift in Sources */,
 				8536F3A3258D475D00B509D2 /* SpaceVehicle.swift in Sources */,
 				8516AD662737AF0800392C4F /* GameRoomView.swift in Sources */,
+				855F7C8D276025060070E7AE /* OutpostSceneView.swift in Sources */,
 				8516AD74273905B400392C4F /* GuildRoomController.swift in Sources */,
 				85F6676025AF7CAB00E5003B /* RoboarmNode.swift in Sources */,
 				85D3BB1826AB24F800B6AA36 /* GameDialogueModifiers.swift in Sources */,
@@ -2570,6 +2577,7 @@
 				856A64AB2728885F0075CC04 /* CreditsView.swift in Sources */,
 				85D3BB2526AC9C9800B6AA36 /* CityTechDiagram.swift in Sources */,
 				8536F43F258D47EA00B509D2 /* GarageViewModel.swift in Sources */,
+				855F7C8E276025060070E7AE /* OutpostSceneView.swift in Sources */,
 				8536F3FC258D47D000B509D2 /* PersonViews.swift in Sources */,
 				8536F3A0258D475D00B509D2 /* TechTreeDisplay.swift in Sources */,
 				85487F0E26C0DF6000EBC070 /* OPSupply+Job.swift in Sources */,

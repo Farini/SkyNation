@@ -11,19 +11,32 @@ extension CityData {
     
     func runAccountingCycle(_ start:Date) -> Date {
         
-        // MARK: - Collect Energy
+        let sknsData:ServerData? = ServerManager.shared.serverData
+        let outpostArray:[DBOutpost] = sknsData?.guildMap?.outposts ?? []
         
-        var energyCollection:Int = 5
-        let sknsData = ServerManager.shared.serverData
-        if let energyProduce = sknsData?.energyCollectionForAccounting() {
-            energyCollection = max(energyCollection, energyProduce)
+        var inputEnergy:Int = 5
+        var inputWater:Int = 0
+        var inputFood:Int = 0
+        
+        for outpost in outpostArray {
+            let res = outpost.type.productionForCollection(level: outpost.level)
+            for (key, value) in res {
+                if key == "Energy" {
+                    inputEnergy += value
+                } else if key == Ingredient.Food.rawValue {
+                    inputFood += value
+                } else if key == Ingredient.Water.rawValue {
+                    inputWater += value
+                }
+            }
         }
         
+        // MARK: - Collect Energy
+        
         // Solar panels
-        let powerGeneration = powerGeneration() + energyCollection
+        let powerGeneration = powerGeneration() + inputEnergy
         let startingEnergy = batteries.compactMap({ $0.current }).reduce(0, +)
         var totalEnergy:Int = powerGeneration + startingEnergy
-        // print("Energy Spilling (extra): \(energySpill)")
         
         // Water + Air
         var water:Int = availableWater()
@@ -31,6 +44,7 @@ extension CityData {
         
         // Start Report
         let report = AccountingReport(time: start, powerGen: powerGeneration, energy: startingEnergy, water: water, air: currentAir)
+        water += inputWater
         
         // MARK: - Peripherals
         for peripheral:PeripheralObject in peripherals {
@@ -354,19 +368,21 @@ extension CityData {
         let currentVolume = self.air.getVolume()
         if airNeeded > currentVolume {
             let delta = airNeeded - currentVolume
-            if let airTank = tanks.filter({ $0.type == .air }).first {
+            if let airTank = tanks.filter({ $0.type == .air && $0.current > 0 }).first {
                 let airXfer = min(delta, airTank.current)
                 report.addNote(string: "💨 tanks released \(airXfer)L of air")
                 airTank.current -= airXfer
                 air.mergeWith(newAirAmount: airXfer)
                 report.reportNeededAir(amount: airXfer)
+            } else {
+                report.addNote(string: "City needs more air tanks")
             }
         }
         
         // Oxygen Adjust
         let oxyNeeded = self.air.needsOxygen()
         if oxyNeeded > 0 {
-            if let oxygenTank:Tank = tanks.filter({ $0.type == .o2 && $0.current > 10 }).first {
+            if let oxygenTank:Tank = tanks.filter({ $0.type == .o2 && $0.current > 0 }).first {
                 let oxygenUse = min(oxyNeeded, oxygenTank.current)
                 // Update Tank
                 oxygenTank.current -= oxygenUse
@@ -376,7 +392,9 @@ extension CityData {
         
         // Remove Empty Tanks - oxygen and water only
         if GameSettings.shared.clearEmptyTanks == true {
-            tanks.removeAll(where: { $0.current <= 0 && ($0.type == .o2 || $0.type == .h2o) })
+            tanks.removeAll(where: { $0.current <= 0 && $0.type != .empty && $0.discardEmpty != false })
+        } else {
+            tanks.removeAll(where: { $0.current <= 0 && $0.discardEmpty == true })
         }
         
         // Merge Tanks

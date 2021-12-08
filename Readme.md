@@ -141,56 +141,53 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Mars Scene - Add Elevator (mission)
 - [X] Mars Scene - Import new Road Paths (Copy)
 - [X] Mars Scene - Animate Elevator
-
-- [ ] Substitution: `GuildMap` for `GuildFullContent`
-- [ ] ServerData.swift improvements
-
 - [X] Guild Room - Invite should work for everyone
 - [X] Guild Room - Test Election Results
 - [X] Guild Room - President functions (Kickout, Modify Guild)
 - [X] Guild Room - Guild Missions
+- [X] Guild Missions - Add ALL roads, outpost Unlocks, and missions .production
+- [X] Mars Scene - Implement Guild Missions
+- [X] Mars Scene - Unlock posdexes
+- [X] Mars Scene - Unlock cities
+- [X] Tutorial - GuildRoom (improvements)
+
+- [ ] Substitution: `GuildMap` for `GuildFullContent`
+- [ ] ServerData.swift improvements - make most Guild requests there. Important to update
+
 - [ ] Guild Room - Markdown Edit (Readme)
 - [ ] Guild Room - animations
+- [ ] Guild Missions - unlock Outposts (Create DBOutpost in server)
 
-- [X] Guild Missions - Add ALL roads, outpost Unlocks, and missions .production
-- [ ] Guild Missions - .production:[String:Int]
-
-- [ ] GuildMap - Calculate entire production:[String:Int]
-
-- [ ] Guild Views (from GuildMap)
+- [ ] Guild Views (from GuildMap object)
 - [ ] Guild Views - Banner (Icon, name, etc.)
 - [ ] Guild Views - FlipView (detailed)
 
-
-- [ ] Mars Scene - Implement Guild Missions
-- [X] Mars Scene - Unlock posdexes
-- [X] Mars Scene - Unlock cities
 - [ ] Mars Scene - Outpost placeholders (Level 0)
-- [ ] Mars Scene - Delete [MarsRoads, Gate5, MarsMap]
+- [ ] Mars Scene - Delete [MarsRoads, Gate5, MarsMap, Duplicated Outposts]
+- [ ] Mars Scene - Every Outpost Node needs a camera! (in coding)
 - [ ] Mars Scene - Delete Textures [...]
 - [ ] Mars Scene - News
 
 - [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
 - [ ] Outpost - Split the view in outpost states
 - [ ] Outpost - Alternative view per outpost type, and each outpost type split in outpost states
+- [ ] Outpost - Scene View - all outposts need a camera that can fly around it.
+- [ ] Outpost - Cooldown mode - Activate a timer, use two level views with an arrow between
+- [ ] Outpost - Animations
 
 - [ ] Tutorial - Adjustments (padding)
-- [X] Tutorial - GuildRoom (improvements)
 - [ ] Tutorial - Mars City
 - [ ] Tutorial - Outpost
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
 
 - [ ] All Tests
-- [X] Guild Missions
 - [ ] Store receipt view
 - [ ] Election Results
 - [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
 
-- [ ] All Views Remake - Consistency
 - [ ] New Warning Messages (from people selector)  - use everywhere that can throw an error.
 - [ ] Basic Views - Alert messages (orange)
-- [ ] Basic Views - Typography, and Fonts.
 - [ ] Basic Views - Consistent Background Colors
 - [ ] UI Responsiveness - Add more feedback.
 ---------

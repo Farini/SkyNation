@@ -482,10 +482,11 @@ class ServerData:Codable {
     // MARK: - Reports and Updates
     
     func energyCollectionForAccounting() -> Int {
+        // LSS uses this to show how much its making
         
         var energyCollection:Int = 0
         
-        let outposts = guildfc?.outposts ?? []
+        let outposts = guildMap?.outposts ?? []
         // get power sources
         
         for op:DBOutpost in outposts {
@@ -501,7 +502,8 @@ class ServerData:Codable {
         
         return energyCollection
     }
-
+    
+    
     func reportStatus() {
         print("\n * SERVER DATABASE STATUS")
         
