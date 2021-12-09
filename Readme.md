@@ -151,16 +151,12 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Mars Scene - Unlock cities
 - [X] Tutorial - GuildRoom (improvements)
 
-- [ ] Substitution: `GuildMap` for `GuildFullContent`
-- [ ] ServerData.swift improvements - make most Guild requests there. Important to update
-
-- [ ] Guild Room - Markdown Edit (Readme)
-- [ ] Guild Room - animations
-- [ ] Guild Missions - unlock Outposts (Create DBOutpost in server)
-
-- [ ] Guild Views (from GuildMap object)
-- [ ] Guild Views - Banner (Icon, name, etc.)
-- [ ] Guild Views - FlipView (detailed)
+- [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
+- [ ] Outpost - Split the view in outpost states
+- [ ] Outpost - Alternative view per outpost type, and each outpost type split in outpost states
+- [ ] Outpost - Scene View - all outposts need a camera that can fly around it.
+- [ ] Outpost - Cooldown mode - Activate a timer, use two level views with an arrow between
+- [ ] Outpost - Animations
 
 - [ ] Mars Scene - Outpost placeholders (Level 0)
 - [ ] Mars Scene - Delete [MarsRoads, Gate5, MarsMap, Duplicated Outposts]
@@ -168,12 +164,14 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Mars Scene - Delete Textures [...]
 - [ ] Mars Scene - News
 
-- [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
-- [ ] Outpost - Split the view in outpost states
-- [ ] Outpost - Alternative view per outpost type, and each outpost type split in outpost states
-- [ ] Outpost - Scene View - all outposts need a camera that can fly around it.
-- [ ] Outpost - Cooldown mode - Activate a timer, use two level views with an arrow between
-- [ ] Outpost - Animations
+- [ ] Guild Missions - unlock Outposts (Create DBOutpost in server)
+- [ ] Guild Room - Markdown Edit (Readme)
+- [ ] Guild Room - animations
+- [ ] Guild Substitution: `GuildMap` for `GuildFullContent`
+- [ ] Guild Views (from GuildMap object)
+- [ ] Guild Views - Banner (Icon, name, etc.)
+- [ ] Guild Views - FlipView (detailed)
+- [ ] ServerData.swift improvements - make most Guild requests there. Important to update
 
 - [ ] Tutorial - Adjustments (padding)
 - [ ] Tutorial - Mars City
@@ -184,7 +182,8 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] All Tests
 - [ ] Store receipt view
 - [ ] Election Results
-- [ ] Settings (Entrance) - Leaving a Guild - must update the View afterwards. Use same logic as people selector (warning messages)
+- [ ] Outpost Update
+- [ ] Leaving a Guild
 
 - [ ] New Warning Messages (from people selector)  - use everywhere that can throw an error.
 - [ ] Basic Views - Alert messages (orange)

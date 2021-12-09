@@ -14,7 +14,6 @@ struct ContributionRoundView: View {
     @Binding var contribRound:OutpostSupply
     
     @State var deliveryError:String = ""
-//    @State var canUpdate:Bool = false
     
     var player = LocalDatabase.shared.player
     
@@ -98,16 +97,6 @@ struct ContributionRoundView: View {
             // Buttons
             HStack {
                 
-//                Button("Fake") {
-//
-//                    let faker:OutpostSupply = self.makeFake()
-//                    let old = self.contribRound
-//                    let new = OutpostSupply(merging: old, with: faker)
-//
-//                    self.contribRound = new
-//                }
-//                .buttonStyle(GameButtonStyle())
-                
                 Button("🚚 Deliver") {
                     print("Delivering...")
                     controller.prepareDelivery()
@@ -125,14 +114,6 @@ struct ContributionRoundView: View {
         .padding()
     }
     
-//    func makeFake() -> OutpostSupply {
-//        let fake = OutpostSupply()
-//        let ing1 = Ingredient.allCases.randomElement()!
-//        fake.ingredients.append(StorageBox(ingType: ing1, current: ing1.boxCapacity()))
-//        let tank1 = TankType.allCases.randomElement()!
-//        fake.tanks.append(Tank(type: tank1, full: true))
-//        return fake
-//    }
 }
 
 struct ContributionRoundView_Previews: PreviewProvider {

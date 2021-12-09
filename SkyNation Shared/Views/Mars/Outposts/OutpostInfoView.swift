@@ -61,8 +61,9 @@ struct OutpostInfoView: View {
                     
                     HStack(spacing:20) {
                         
-                        levelView
+                        // levelView
                         // Divider().frame(height:12)
+                        OutpostLevelView(outpost: $controller.dbOutpost)
                         
                         Spacer()
                         productionView
@@ -70,6 +71,7 @@ struct OutpostInfoView: View {
                     .padding(.horizontal)
                     
                     Divider()
+                    .padding(.horizontal)
                     
                     // Contributions
                     Group {
@@ -84,8 +86,8 @@ struct OutpostInfoView: View {
                         
                         HStack(spacing:12) {
                             
-                            VStack {
-                                Text("PROGRESS").foregroundColor(.gray)
+                            VStack(alignment:.leading) {
+                                Text("Progress").font(GameFont.section.makeFont())
                                 
                                 let totalSup = controller.outpostData.getNextJob()?.maxScore() ?? 0
                                 let supplied = max(controller.contribList.compactMap({ $0.score }).reduce(0, +), totalSup)
@@ -97,15 +99,16 @@ struct OutpostInfoView: View {
                             
                             Divider().frame(height:40)
                             
-                            VStack {
-                                Text("Contributors")
+                            VStack(alignment:.leading) {
+                                Text("Contributors").font(GameFont.section.makeFont())
                                 ForEach(controller.contribList) { contribution in
                                     PlayerScorePairView(playerPair: PlayerNumKeyPair(contribution.citizen, votes: contribution.score))
                                 }
                                 if controller.contribList.isEmpty {
                                     Text("< No Contributions >").foregroundColor(.gray)
-                                        .padding(.vertical)
+                                        .font(GameFont.mono.makeFont())
                                 }
+                                Spacer()
                             }
                             
                             Spacer()
@@ -120,8 +123,9 @@ struct OutpostInfoView: View {
                     
                     HStack(spacing:12) {
                         
-                        levelView
-                        Divider().frame(height:12)
+                        OutpostLevelView(outpost: $controller.dbOutpost)
+                        
+                        Spacer()
                         
                         // Cooldown label
                         VStack {
@@ -153,12 +157,13 @@ struct OutpostInfoView: View {
                         Spacer()
                         productionView
                     }
+                    .padding(.horizontal)
                     
                 case .finished:
                     
                     VStack {
                         
-                        levelView
+                        OutpostLevelView(outpost: $controller.dbOutpost)
                         Divider().frame(width:12)
                         
                         Text("Outpost Needs update.")
@@ -170,12 +175,13 @@ struct OutpostInfoView: View {
                         .buttonStyle(GameButtonStyle())
                         .disabled(!controller.outpostUpgradeMessage.isEmpty)
                     }
+                    .padding(.horizontal)
                     
                 case .maxed:
                     
                     HStack(spacing:12) {
                         
-                        levelView
+                        OutpostLevelView(outpost: $controller.dbOutpost)
                         Divider().frame(height:12)
                         
                         VStack {
@@ -194,8 +200,10 @@ struct OutpostInfoView: View {
                         Spacer()
                         productionView
                     }
+                    .padding(.horizontal)
             }
         
+            // Footnote + Errors
             Group {
                 Text(controller.serverError).foregroundColor(.red)
                 
@@ -209,97 +217,17 @@ struct OutpostInfoView: View {
         }
     }
     
-    var levelView: some View {
-        // Level number
-        HStack {
-            // This Level
-            VStack {
-                
-                Text("Level")
-                    .font(.title2)
-                    .foregroundColor(.orange)
-                    .padding(.vertical, 6)
-                
-                Text(" \(controller.dbOutpost.level) ").font(.title)
-                    .padding(6)
-                    .background(Color.black.opacity(0.5))
-                    .cornerRadius(4)
-                    .overlay(
-                        levelShape
-                            .inset(by: 1.5)
-                            .stroke(Color.white.opacity(0.2), lineWidth: 2)
-                    )
-                
-                Text(controller.dbOutpost.state.rawValue)
-                    .foregroundColor(controller.dbOutpost.state == .cooldown ? Color.red:(controller.dbOutpost.state == .maxed ? Color.gray:Color.orange))
-                
-                // Production
-                let prod = controller.dbOutpost.type.productionForCollection(level: controller.dbOutpost.level)
-                Text(prod.description)
-            }
-            
-            Divider().frame(height:30)
-            
-            
-            VStack {
-                
-                // Next Level
-                Text("Next")
-                    .font(.title2)
-                    .foregroundColor(.orange)
-                    .padding(.vertical, 6)
-                
-                if let nextJob = controller.dbOutpost.getNextJob() {
-                    Text(" \(controller.dbOutpost.level + 1) ").font(.title)
-                        .padding(6)
-                        .background(Color.black.opacity(0.5))
-                        .cornerRadius(4)
-                        .overlay(
-                            levelShape
-                                .inset(by: 1.5)
-                                .stroke(Color.white.opacity(0.2), lineWidth: 2)
-                        )
-                    Text("Needs \(nextJob.maxScore())").foregroundColor(.gray)
-                    
-                    // Production
-                    let prod = controller.dbOutpost.type.productionForCollection(level: controller.dbOutpost.level + 1)
-                    Text(prod.description)
-                    
-                    
-                } else {
-                    
-                    // No Upgrades
-                    Text(" - ").font(.title)
-                        .padding(6)
-                        .background(Color.black.opacity(0.5))
-                        .cornerRadius(4)
-                        .overlay(
-                            levelShape
-                                .inset(by: 1.5)
-                                .stroke(Color.white.opacity(0.2), lineWidth: 2)
-                        )
-                    Text("No upgrades").foregroundColor(.gray)
-                }
-                
-                
-//                Text(controller.dbOutpost.state.rawValue)
-//                    .foregroundColor(controller.dbOutpost.state == .cooldown ? Color.red:(controller.dbOutpost.state == .maxed ? Color.gray:Color.orange))
-            }
-        }
-        
-        
-        
-    }
     
     var productionView: some View {
         // Production
         VStack(alignment:.trailing) {
-            Text("Production").font(.title3) // .foregroundColor(.green)
-            Text(productionDisplay()).font(.title3).foregroundColor(.green)
+            Text("Production").font(GameFont.mono.makeFont()) // .foregroundColor(.green)
+            Text(productionDisplay()).font(GameFont.mono.makeFont()).foregroundColor(.green)
             
             // Upgradable?
             if let _ = controller.outpostData.getNextJob() {
-                Text("Upgradable to \(controller.dbOutpost.level + 1)")
+                Text("Upgradable to \(controller.dbOutpost.level + 1)").foregroundColor(.gray)
+                    .font(GameFont.mono.makeFont())
                 
             }
         }
@@ -317,12 +245,103 @@ struct OutpostInfoView: View {
     
 }
 
+struct OutpostLevelView:View {
+    
+    @Binding var outpost:DBOutpost
+    
+    let levelShape = RoundedRectangle(cornerRadius: 4, style: .continuous)
+    
+    var body: some View {
+        // Level number
+        HStack(spacing:24) {
+            // This Level
+            VStack(alignment: .leading) {
+                
+                Text("Level")
+                    .font(.title2)
+                    .foregroundColor(.orange)
+                    .padding(.vertical, 6)
+                
+                Text(" \(outpost.level) ").font(.title)
+                    .padding(6)
+                    .background(Color.black.opacity(0.5))
+                    .cornerRadius(4)
+                    .overlay(
+                        levelShape
+                            .inset(by: 1.5)
+                            .stroke(Color.white.opacity(0.2), lineWidth: 2)
+                    )
+                
+                Text(outpost.state.rawValue)
+                    .foregroundColor(outpost.state == .cooldown ? Color.red:(outpost.state == .maxed ? Color.gray:Color.orange))
+                
+                // Production
+                let prod = outpost.type.productionForCollection(level: outpost.level)
+                Text(prod.description)
+            }
+            .padding(8)
+            .transition(.move(edge: .leading).combined(with: .opacity))
+            
+            Divider().frame(height:30)
+            
+            // Next Level
+            VStack(alignment: .leading) {
+                
+                if let nextJob = outpost.getNextJob() {
+                    
+                    Text("Next")
+                        .font(.title2)
+                        .foregroundColor(.orange)
+                        .padding(.vertical, 6)
+                    
+                    Text(" \(outpost.level + 1) ").font(.title)
+                        .padding(6)
+                        .background(Color.black.opacity(0.5))
+                        .cornerRadius(4)
+                        .overlay(
+                            levelShape
+                                .inset(by: 1.5)
+                                .stroke(Color.white.opacity(0.2), lineWidth: 2)
+                        )
+                    Text("Needs \(nextJob.maxScore())").foregroundColor(.gray)
+                    
+                    // Production
+                    let prod = outpost.type.productionForCollection(level: outpost.level + 1)
+                    Text(prod.description)
+                    
+                    
+                } else {
+                    
+                    // No Upgrades
+                    Text("maxed").font(.title)
+                        .foregroundColor(.gray)
+                        .padding(6)
+                        .background(Color.black.opacity(0.5))
+                        .cornerRadius(4)
+                        .overlay(
+                            levelShape
+                                .inset(by: 1.5)
+                                .stroke(Color.white.opacity(0.2), lineWidth: 2)
+                        )
+                    Text("No upgrades").foregroundColor(.gray)
+                }
+            }
+            .padding(8)
+            .transition(.move(edge: .leading).combined(with: .opacity))
+        }
+        
+    }
+}
+
 struct OutpostInfoView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             OutpostInfoView(controller: OutpostController(random: true))
                 .frame(height:450)
+            
         }
+        
+        OutpostLevelView(outpost: .constant(DBOutpost.example()))
         
     }
 }

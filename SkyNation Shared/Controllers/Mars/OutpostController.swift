@@ -23,6 +23,7 @@ enum OutpostViewTab:String, Codable, CaseIterable {
 
 class OutpostController:ObservableObject {
     
+    
     var builder:MarsBuilder = MarsBuilder.shared
     
     // Tab
@@ -193,6 +194,7 @@ class OutpostController:ObservableObject {
     }
     
     /// Updates the other variables, dependent on OutpostData
+    
     private func didUpdateOutpostData(newData:Outpost) {
         
         print("Did update data function")
@@ -209,7 +211,11 @@ class OutpostController:ObservableObject {
         
         self.isDownloaded = true
         
+        self.dbOutpost.level = newData.level
+        self.dbOutpost.state = newData.state
+        
     }
+    
     
     /// Assembles the list of contributions.
     private func getContributionScoreList(opData:Outpost) -> [ContributionScore] {
@@ -425,6 +431,13 @@ class OutpostController:ObservableObject {
                     
                     self.outpostData = newOutpost
                     self.outpostUpgradeMessage = "Outpost Upgraded"
+                    
+                    // TODO: Needs to update dbOutpost as well.
+                    // or at least update properties.
+                    // the correct way would be to fetch GuildMap again.
+                    // but for now lets just update the dboutpost properties
+                    self.didUpdateOutpostData(newData: newOutpost)
+                    
                 }
             } else {
                 
