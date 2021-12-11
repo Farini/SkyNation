@@ -10,28 +10,36 @@ import SceneKit
 
 struct OutpostSceneView: View {
     
-    var posdex:Posdex = Posdex.biosphere1
+    var posdex:Posdex
     var outpostScene:OutpostScene?
     
-    init(dbOutpost:DBOutpost? = nil) {
+    init(dbOutpost:DBOutpost?) {
         if let dbOutpost = dbOutpost {
+            self.posdex = Posdex(rawValue:dbOutpost.posdex)!
             self.outpostScene = OutpostSceneView.loadInfo(dbOutpost: dbOutpost)
         } else {
-            let outpost = DBOutpost(gid: UUID(), type: .Biosphere, posdex: posdex)
+            let outpost = DBOutpost(busy: false, type: .Antenna, level: 0, posdex: .antenna)
+            
+            self.posdex = .antenna
             self.outpostScene = OutpostSceneView.loadInfo(dbOutpost: outpost)
         }
     }
     
     var body: some View {
-        if let opScene = outpostScene {
-            SceneView(scene: opScene.scene, pointOfView: opScene.camera, options: .allowsCameraControl, preferredFramesPerSecond: 45, antialiasingMode: SCNAntialiasingMode.multisampling8X, delegate: nil, technique: nil)
-        } else {
-            VStack {
-                Spacer()
-                Text("No Scene for this outpost").font(.title)
-                Spacer()
+//        VStack {
+            if let opScene = outpostScene {
+                
+                SceneView(scene: opScene.scene, pointOfView: opScene.camera, options: .allowsCameraControl, preferredFramesPerSecond: 45, antialiasingMode: SCNAntialiasingMode.multisampling8X, delegate: nil, technique: nil)
+                    .frame(minWidth: 400, maxWidth: 1200, minHeight: 300, maxHeight: 1200)
+                
+            } else {
+                VStack {
+                    Spacer()
+                    Text("This outpost doesn't have a scene.").font(.title)
+                    Spacer()
+                }
             }
-        }
+//        }
     }
     
     static func loadInfo(dbOutpost:DBOutpost) -> OutpostScene? {
@@ -42,11 +50,12 @@ struct OutpostSceneView: View {
         
         switch dbOutpost.type {
                 
-            
             case .Water:
                 sceneName = MiningNode.originScene
-                model = MiningNode(posdex: Posdex(rawValue: dbOutpost.posdex)!, outpost: dbOutpost)
-            
+                let water = MiningNode(posdex: Posdex(rawValue: dbOutpost.posdex)!, outpost: dbOutpost)
+                camNode = water.cameraNodes.first
+                model = water
+                
             case .Energy:
                 sceneName = PowerPlantNode.originScene
                 let powerPlant = PowerPlantNode(posdex: Posdex(rawValue: dbOutpost.posdex)!, outpost: dbOutpost)
@@ -55,20 +64,27 @@ struct OutpostSceneView: View {
                 
             case .Biosphere:
                 sceneName = BiosphereNode.originScene
-                model = BiosphereNode(posdex: Posdex(rawValue: dbOutpost.posdex)!, outpost: dbOutpost)
+                let biosphere = BiosphereNode(posdex: Posdex(rawValue: dbOutpost.posdex)!, outpost: dbOutpost)
+                camNode = biosphere.cameraNodes.first
+                model = biosphere
                 
-            
             case .Observatory:
                 sceneName = ObservatoryNode.originScene
-                model = ObservatoryNode(posdex: Posdex(rawValue: dbOutpost.posdex)!, outpost: dbOutpost)
+                let obs = ObservatoryNode(posdex: Posdex(rawValue: dbOutpost.posdex)!, outpost: dbOutpost)
+                model = obs
+                camNode = obs.cameraNodes.first
                 
             case .Antenna:
-//                sceneName = Antenna3DNode.originScene
-//                model = Antenna3DNode(posdex: Posdex(rawValue: dbOutpost.posdex)!, outpost: dbOutpost)
-                return nil
+                sceneName = MarsAntennaNode.originScene
+                let antenna = MarsAntennaNode(posdex: Posdex(rawValue: dbOutpost.posdex)!, outpost: dbOutpost)
+                model = antenna
+                camNode = antenna.cameraNodes.first
+                
             case .Launchpad:
                 sceneName = LandingPadNode.originScene
-                model = LandingPadNode(posdex: Posdex(rawValue: dbOutpost.posdex)!, outpost: dbOutpost)
+                let pad = LandingPadNode(posdex: Posdex(rawValue: dbOutpost.posdex)!, outpost: dbOutpost)
+                model = pad
+                camNode = pad.cameraNodes.first
                 
             case .Arena:
                 return nil
@@ -81,8 +97,6 @@ struct OutpostSceneView: View {
                 
             case .Titanium:
                 return nil
-                
-            
         }
         
         if let sceneName = sceneName,
@@ -111,6 +125,6 @@ struct OutpostScene {
 
 struct OutpostSceneView_Previews: PreviewProvider {
     static var previews: some View {
-        OutpostSceneView()
+        OutpostSceneView(dbOutpost: nil)
     }
 }

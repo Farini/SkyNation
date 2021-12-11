@@ -637,7 +637,7 @@ class SKNS {
         request.httpMethod = HTTPMethod.POST.rawValue
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.setValue("\(purchase.receipt)", forHTTPHeaderField: "receipt")
-        request.setValue("\(purchase.date)", forHTTPHeaderField: "dop")
+        request.setValue("\(purchase.date.timeIntervalSince1970)", forHTTPHeaderField: "dop")
         request.setValue("\(purchase.storeProduct.rawValue)", forHTTPHeaderField: "ptype")
         
         let task = session.dataTask(with: request) { (data, response, error) in

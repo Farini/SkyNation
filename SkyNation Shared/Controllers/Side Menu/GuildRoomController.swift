@@ -22,6 +22,7 @@ class GuildRoomController:ObservableObject {
     // Election
     @Published var electionState:GuildElectionState = .noElection
     @Published var electionData:GuildElectionData?
+    @Published var electionMessage:String? = nil
     
     @Published var castedVotes:Int = 0
     
@@ -212,7 +213,15 @@ class GuildRoomController:ObservableObject {
         SKNS.voteOnElection(candidate: citizen) { newElection, error in
             if let election = newElection {
                 DispatchQueue.main.async {
+                    self.electionData?.election = election
                     self.electionState = .voting(election: election)
+                    self.electionMessage = "Voted for \(citizen.name)"
+                }
+            } else {
+                if let error = error {
+                    DispatchQueue.main.async {
+                        self.electionMessage = error.localizedDescription
+                    }
                 }
             }
         }
@@ -395,28 +404,24 @@ class GuildRoomController:ObservableObject {
         }
         
         print("Mission status 1: \(gMission.status.rawValue), \(gMission.currentTask)")
-        
-        // gMission.startWorking(pid: coopID)
         gMission.makeProgress(pid: coopID)
         
         print("Mission status 2: \(gMission.status.rawValue), \(gMission.currentTask)")
-        
         SKNS.cooperateMission(upMission: gMission) { newMission, error in
             
-                if let newMission = newMission {
-                    
-                    DispatchQueue.main.async {
-                        print("new mission...")
-                        // got mission
-                        self.mission = newMission
-                        self.guildMap?.mission = newMission
-                    }
-                } else if let error = error {
-                        DispatchQueue.main.async {
-                            // deal with error
-                            print("Error: \(error.localizedDescription)")
-                            self.missionErrorMessage = error.localizedDescription
-                    
+            if let newMission = newMission {
+                
+                DispatchQueue.main.async {
+                    print("new mission...")
+                    // got mission
+                    self.mission = newMission
+                    self.guildMap?.mission = newMission
+                }
+            } else if let error = error {
+                DispatchQueue.main.async {
+                    // deal with error
+                    print("Error: \(error.localizedDescription)")
+                    self.missionErrorMessage = error.localizedDescription
                 }
             }
         }

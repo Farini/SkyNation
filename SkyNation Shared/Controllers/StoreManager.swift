@@ -248,8 +248,10 @@ class StoreController: ObservableObject, StoreManagerDelegate {
     func handlePurchased(_ transaction: SKPaymentTransaction) {
         
         let player = LocalDatabase.shared.player
-        self.errorMessage = ""
-        self.alertMessage = nil
+        DispatchQueue.main.async {
+            self.errorMessage = ""
+            self.alertMessage = nil
+        }
         
         if let gProduct:GameProduct = gameProducts.first(where: { $0.id == transaction.payment.productIdentifier }) {
             
@@ -290,7 +292,9 @@ class StoreController: ObservableObject, StoreManagerDelegate {
                 purchased.append(transaction)
                 // Finish the successful transaction.
                 SKPaymentQueue.default().finishTransaction(transaction)
-                self.alertMessage = "Purchase registered"
+                DispatchQueue.main.async {
+                    self.alertMessage = "Purchase registered"
+                }
                 
             } catch {
                 print("‼️ Could not save player.: \(error.localizedDescription)")
@@ -337,11 +341,15 @@ class StoreController: ObservableObject, StoreManagerDelegate {
             }
             
             if self.errorMessage.isEmpty {
+                
                 // Register in server
                 SKNS.registerPurchase(purchase: purch) { gameTokens, errorString in
-                    print("Registering purchase response. \nTokens \(gameTokens.count) \nError:\(errorString ?? "n/a")\n")
-                    self.alertMessage = "Purchase registered"
+                    DispatchQueue.main.async {
+                        print("Registering purchase response. \nTokens \(gameTokens.count) \nError:\(errorString ?? "n/a")\n")
+                        self.alertMessage = "Purchase registered"
+                    }
                 }
+                
                 // updates
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     self.step = .receipt

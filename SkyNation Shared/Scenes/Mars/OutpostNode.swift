@@ -8,12 +8,20 @@
 import Foundation
 import SceneKit
 
+/// Global Representation of What an Outpost (node) should have
 class OutpostNode:SCNNode {
     
+    /// The position index (location) of the Node in the Scene
     var posdex:Posdex
     
     /// Outposts are required
     var outpost:DBOutpost
+    
+    /// Camera Handles used to move the camera
+    var camNodes:[SCNNode] = []
+    
+    /// Actual Camera
+    var nodeCamera:SCNCamera?
     
     init(posdex:Posdex, outpost:DBOutpost) {
         self.posdex = posdex
@@ -56,12 +64,46 @@ class OutpostNode:SCNNode {
         // load the city, check 'op_collected'
     }
     
+    // Functions:
+    // 1. Load Scene (For Outpost View)
+    // 2. Load Scene (For Game Controller)
+    // 3. Get Cameras + Control
+    // 4. Load Levels
+    // 5. Animate
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-class MarsAntennaNode:SCNNode {
+class AnotherNode:OutpostNode {
+    
+//    override init(posdex: Posdex, outpost: DBOutpost) {
+//        super.init(posdex: posdex, outpost: outpost)
+//    }
+//
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
+/**
+ Outpost Node standarts.
+ Every Outpost node should have this
+ */
+protocol OutpostNodeProtocol {
+    var posdex:Posdex { get set }
+    var outpost:DBOutpost { get set }
+    
+    var cameraNodes:[SCNNode] { get set }
+    var lightNodes:[SCNNode] { get set }
+    
+    func animate()
+}
+
+
+class MarsAntennaNode:SCNNode, OutpostNodeProtocol {
     
     static let originScene:String = "Art.scnassets/Mars/Outposts/OPAntenna.scn"
     
@@ -122,6 +164,15 @@ class MarsAntennaNode:SCNNode {
                 self.cameraNodes.append(node)
             }
             
+            if node.name == "CamPov" {
+                if let cam = node.childNodes.first {
+                    self.cameraNodes.append(cam)
+                    //                    if let camera = cam.camera {
+                    //                        self.ca
+                    //                    }
+                }
+            }
+            
             // Look for lights
             if let childLight = node.childNodes.filter({ $0.light != nil }).first {
                 // Attention! For now this node is hidden, but at night, we can turn the light on!
@@ -134,6 +185,7 @@ class MarsAntennaNode:SCNNode {
         
         
         self.scale = SCNVector3(0.5, 0.5, 0.5)
+        self.prepareForLevel(lvl: outpost.level)
     }
     
     required init?(coder: NSCoder) {
@@ -162,6 +214,9 @@ class MarsAntennaNode:SCNNode {
     }
     
     // MARK: - Animations
+    func animate() {
+        self.performAnimationLoop()
+    }
     
     /// Runs this Outpost's Animations
     func performAnimationLoop() {
@@ -356,6 +411,7 @@ class MiningNode:SCNNode {
         // MARK: - Children
         
         for baseChild in baseNode.childNodes {
+            
             let node = baseChild.clone()
             self.addChildNode(node)
             
@@ -363,6 +419,15 @@ class MiningNode:SCNNode {
             if let cam = node.camera {
                 print("Camera: \(cam.description)")
                 self.cameraNodes.append(node)
+            }
+            
+            if node.name == "CamPov" {
+                if let cam = node.childNodes.first {
+                    self.cameraNodes.append(cam)
+//                    if let camera = cam.camera {
+//                        self.ca
+//                    }
+                }
             }
             
             // Look for lights

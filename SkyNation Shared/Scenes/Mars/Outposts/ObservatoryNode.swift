@@ -61,10 +61,18 @@ class ObservatoryNode:SCNNode {
             let node = baseChild.clone()
             self.addChildNode(node)
             
+            
+            
             // Look for cameras
             if let cam = node.camera {
                 print("Camera: \(cam.description)")
                 self.cameraNodes.append(node)
+            } else {
+                if node.name == "CamPov" {
+                    if let camNode = node.childNodes.first {
+                        self.cameraNodes.append(camNode)
+                    }
+                }
             }
             
             // Look for lights

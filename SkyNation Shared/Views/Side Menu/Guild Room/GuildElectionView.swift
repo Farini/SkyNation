@@ -55,9 +55,8 @@ struct GuildElectionView: View {
                             
                             
                             // President
-//                            if let presidentID = controller.president {
                                 // Crown and Name
-                                if let presidentContent = controller.president {
+                            if let presidentContent:PlayerContent = controller.president {
                                     Label(presidentContent.name, systemImage:"crown.fill")
                                         .foregroundColor(.red)
                                         .padding(4)
@@ -79,12 +78,7 @@ struct GuildElectionView: View {
                                         .background(Color.black.opacity(0.5))
                                         .cornerRadius(4)
                                 }
-                                
-                                
-//                            } else {
-//
-//
-//                            }
+      
                         }
                         .padding(.horizontal, 8)
                         .frame(minWidth:220)
@@ -139,6 +133,11 @@ struct GuildElectionView: View {
                                     }
                                     
                                 }
+                            }
+                            
+                            if let votingMessage = controller.electionMessage {
+                                Text(votingMessage)
+                                    .foregroundColor(votingMessage.contains("Voted for") == true ? Color.green:Color.red)
                             }
                             
                             let remainingVotes:Int = voteLimit - controller.castedVotes

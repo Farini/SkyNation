@@ -197,6 +197,23 @@ enum OutpostType:String, CaseIterable, Codable {
         }
     }
     
+    /// A String representing this outpost, for display in the UI
+    var displayName:String {
+        switch self {
+            case .HQ: return "Headquarters"
+            case .Water: return "Water Well"
+            case .Silica: return "Silica Mine"
+            case .Energy: return "Power Plant"
+            case .Biosphere: return "Biosphere"
+            case .Titanium: return "Titanium Mine"
+            case .Observatory: return "Observatory"
+            case .Antenna: return "Antenna"
+            case .Launchpad: return "Launch Pad"
+            case .Arena: return "Arena - A Sports & Entertainment Center on Mars."
+            default: return "Unknown Outpost"
+        }
+    }
+    
     /// Explains what the outpost does
     var explanation:String {
         switch self {
@@ -207,11 +224,11 @@ enum OutpostType:String, CaseIterable, Codable {
             case .Biosphere: return "Responsible for producing food from plants and animals."
             case .Titanium: return "Extracts Titanium from the soil."
             case .Observatory: return "Enables scientific experiments."
-            case .Antenna: return "Communication."
+            case .Antenna: return "Enables Communication, in and outer space."
             case .Launchpad: return "Receives Space Vehicles."
             case .Arena: return "Gives entertainment to people."
             case .ETEC: return "Entertainment center provides entertainment."
-            //            default: return ""
+//            default: return "Unknown Outpost"
         }
     }
     

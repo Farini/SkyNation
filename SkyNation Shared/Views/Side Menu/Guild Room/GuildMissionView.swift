@@ -19,6 +19,7 @@ struct GuildMissionView: View {
             Text("Guild Mission").font(GameFont.section.makeFont())
                 .padding(.top)
             
+            
             Divider()
             
             VStack(alignment:.leading) {
@@ -117,10 +118,15 @@ struct GuildMissionView: View {
             switch mission.status {
                 case .notStarted:
                     Button("Start") {
-                        print("Start")
-                        print("Register start of task")
-                        print("add token to workers")
+                        print("Start Mission \(mission.mission.missionTitle)")
                         controller.cooperateMission(gMission: mission)
+                        print("Going to Autolopp in 2 seconds...")
+                        self.progress = 0.0
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                            print("Autoloop now")
+                            self.autoLoop()
+                        }
                     }
                     .buttonStyle(GameButtonStyle())
                 case .running:
@@ -137,6 +143,7 @@ struct GuildMissionView: View {
                         }
                     }
                     .padding(.top)
+                    .transition(.move(edge: .leading).combined(with: .opacity))
                     
                     if mission.workers.contains(where: { $0 == LocalDatabase.shared.player.playerID ?? UUID() }) {
                         // Already Cooperating. Token Button?
@@ -146,6 +153,8 @@ struct GuildMissionView: View {
                             print("add token to workers")
                         }
                         .buttonStyle(GameButtonStyle())
+                        .transition(.move(edge: .leading).combined(with: .opacity))
+                        
                     } else {
                         Button("Cooperate") {
                             controller.cooperateMission(gMission: mission)
@@ -153,7 +162,9 @@ struct GuildMissionView: View {
                             print("Add my ID to workers")
                         }
                         .buttonStyle(GameButtonStyle())
+                        .transition(.move(edge: .leading).combined(with: .opacity))
                     }
+                    
                     
                 case .finished:
                     

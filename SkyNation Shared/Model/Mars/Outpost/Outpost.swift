@@ -341,12 +341,13 @@ struct DBOutpost:Codable {
     var posdex:Int
     var state:OutpostState
     
+    /// Gets the job to perform to level up
     func getNextJob() -> OutpostJob? {
         
-        guard let pdex = Posdex(rawValue: self.posdex) else { return nil }
+        guard let pDex:Posdex = Posdex(rawValue: posdex) else { return nil }
         
-        switch pdex {
-            
+        switch pDex {
+                
             case .hq:
                 switch level {
                     case 0: return OutpostJob(wantedIngredients: [.Iron:15, .Aluminium:200, .Polimer:20, .Circuitboard:12], wantedSkills: [.SystemOS:3, .Datacomm:2, .Handy:8])
@@ -381,11 +382,16 @@ struct DBOutpost:Codable {
                 // Energy
             case .power1, .power2:
                 switch level {
-                    case 0: return OutpostJob(wantedIngredients: [.Polimer:20, .SolarCell:60, .Circuitboard:4], wantedSkills: [.Electric:3, .Material:1, .Handy:3])
-                    case 1: return OutpostJob(wantedIngredients: [.Polimer:60, .Aluminium:35, .SolarCell:320, .Circuitboard:18, .Sensor:5], wantedSkills: [.Electric:8, .Material:3, .Handy:9])
-                    case 2: return OutpostJob(wantedIngredients: [.Polimer:150, .Aluminium:65, .SolarCell:550, .Circuitboard:22, .Sensor:8], wantedSkills: [.Electric:21, .Material:14, .Handy:30, .Mechanic:8])
-                    case 3: return OutpostJob(wantedIngredients: [.Polimer:680, .Aluminium:750, .SolarCell:2500, .Circuitboard:64, .Sensor:128], wantedSkills: [.Electric:32, .Material:24, .Handy:32, .Mechanic:18, .SystemOS:8])
-                    case 4: return OutpostJob(wantedIngredients: [.Polimer:1200, .Aluminium:600, .SolarCell:4000, .Circuitboard:128, .Sensor:256], wantedSkills: [.Electric:40, .Material:30, .Handy:50, .Mechanic:15, .Datacomm:8, .SystemOS:12])
+                    case 0: return OutpostJob(wantedIngredients: [.Polimer:20, .SolarCell:60, .Circuitboard:4],
+                                              wantedSkills: [.Electric:3, .Material:1, .Handy:3])
+                    case 1: return OutpostJob(wantedIngredients: [.Polimer:60, .Aluminium:35, .SolarCell:92, .Circuitboard:4, .Sensor:5],
+                                              wantedSkills: [.Electric:2, .Material:3, .Handy:3])
+                    case 2: return OutpostJob(wantedIngredients: [.Polimer:150, .Aluminium:65, .SolarCell:550, .Circuitboard:22, .Sensor:8],
+                                              wantedSkills: [.Electric:21, .Material:14, .Handy:30, .Mechanic:8])
+                    case 3: return OutpostJob(wantedIngredients: [.Polimer:680, .Aluminium:750, .SolarCell:2500, .Circuitboard:64, .Sensor:128],
+                                              wantedSkills: [.Electric:32, .Material:24, .Handy:32, .Mechanic:18, .SystemOS:8])
+                    case 4: return OutpostJob(wantedIngredients: [.Polimer:1200, .Aluminium:600, .SolarCell:4000, .Circuitboard:128, .Sensor:256],
+                                              wantedSkills: [.Electric:40, .Material:30, .Handy:50, .Mechanic:15, .Datacomm:8, .SystemOS:12])
                     default: return nil
                 }
                 
@@ -431,7 +437,6 @@ struct DBOutpost:Codable {
                 
             default: return nil
         }
-        
     }
     
     /// Random Data
@@ -452,5 +457,20 @@ struct DBOutpost:Codable {
         self.accounting = Date().addingTimeInterval(Double.random(in: 20...652) * -1)
         self.posdex = posdex.rawValue
         self.state = .collecting
+    }
+    
+    init(busy:Bool, type:OutpostType, level:Int? = 0, posdex:Posdex?) {
+        self.id = UUID()
+        self.model = "model"
+        self.guild = ["id":UUID()]
+        self.type = type
+        self.level = level ?? 1
+        self.accounting = Date().addingTimeInterval(Double.random(in: 20...652) * -1)
+        self.posdex = posdex?.rawValue ?? type.validPosDexes.first?.rawValue ?? 0
+        if busy == true {
+            self.state = .cooldown
+        } else {
+            self.state = .collecting
+        }
     }
 }

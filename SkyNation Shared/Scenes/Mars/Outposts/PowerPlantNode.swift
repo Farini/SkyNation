@@ -74,6 +74,12 @@ class PowerPlantNode:SCNNode {
                 self.cameraNodes.append(node)
             }
             
+//            if node.name == "Campovs" {
+//                if let handle = node.childNodes.first {
+//                    self.cameraNodes.append(handle)
+//                }
+//            }
+            
             // Look for lights
             if let childLight = node.childNodes.filter({ $0.light != nil }).first {
                 // Attention! For now this node is hidden, but at night, we can turn the light on!
@@ -114,7 +120,7 @@ class PowerPlantNode:SCNNode {
             case 0:
                 // Powerplant - Only this child will stay
                 for child in childNodes {
-                    if child.name != "Floor" {
+                    if child.name != "PowerPlaceholder" {
                         child.removeFromParentNode()
                     }
                 }
@@ -132,46 +138,35 @@ class PowerPlantNode:SCNNode {
                     centerPL3.removeFromParentNode()
                 }
                 
-                let stays = ["Panel1", "Panel2", "Panel3", "Panel4", "Cable12", "Cable11", "Cable9", "Cable14", "PowerPlant", "Cable12", "Cable11", "Cable9", "Cable14", "Floor", "Panels"]
+                let stays:Set<String> = ["Panel1", "Panel2", "Panel3", "Panel4", "Cable12", "Cable11", "Cable9", "Cable14", "PowerPlant", "Cable12", "Cable11", "Cable9", "Cable14", "Floor", "Panels"]
+                
                 for cNode in stack {
-                    if !stays.contains(cNode.name ?? "zzz") {
+                    if stays.contains(cNode.name ?? "zzz") == false {
                         cNode.removeFromParentNode()
                     }
                 }
-                
-                
                 
             case 2:
                 
                 if let centerPL3 = childNode(withName: "CenterPL3", recursively: true) {
                     centerPL3.removeFromParentNode()
                 }
-                
+                /*
                 let stays = ["Panel1", "Panel2", "Panel3", "Panel5", "Panel6", "Panel7", "Panel8", "Panel4", "Powerplant", "Cable12", "Cable11", "Cable9", "Cable14", "Cable4", "Cable5", "Cable19", "Cable18", "Floor", "Panels"]
-                
-                //                let stayingPanels:[String] = ["Panel1", "Panel2", "Panel3", "Panel5", "Panel6", "Panel7", "Panel8", "Panel4", "Powerplant"]
-                //                let stayingCables:[String] = ["Cable12", "Cable11", "Cable9", "Cable14", "Cable4", "Cable5", "Cable19", "Cable18"]
+                */
                 
                 for cNode in stack {
-                    if !stays.contains(cNode.name ?? "zzz") {
+                    if cNode.name?.contains("Panel") == true {
+                        
+                    } else if cNode.name?.contains("Cable") == true {
+                        
+                    } else if cNode.name ?? "-" == "Floor" {
+                        print("Adding Floor")
+                    } else {
                         cNode.removeFromParentNode()
                     }
                 }
                 
-            //                if let panels = childNode(withName: "Panels", recursively: false) {
-            //                    for child in panels.childNodes {
-            //                        if !stayingPanels.contains(child.name ?? "") {
-            //                            child.removeFromParentNode()
-            //                        }
-            //                    }
-            //                }
-            //                if let cables = childNode(withName: "Wires", recursively: false) {
-            //                    for child in cables.childNodes {
-            //                        if !stayingCables.contains(child.name ?? "") {
-            //                            child.removeFromParentNode()
-            //                        }
-            //                    }
-            //                }
             
             case 3:
                 
@@ -179,22 +174,17 @@ class PowerPlantNode:SCNNode {
                     centerPL1.removeFromParentNode()
                 }
                 
-                let deleting:[String] = ["MainReflector", "Reflector2", "Reflector3", "Reflector4"]
-                
+                let deleting:Set<String> = ["MainReflector", "Reflector2", "Reflector3", "Reflector4"]
                 
                 for cNode in stack {
                     if deleting.contains(cNode.name ?? "zzz") {
                         cNode.removeFromParentNode()
                     }
                 }
-            //                for childName in deleting {
-            //                    if let del = self.childNode(withName: childName, recursively: true) {
-            //                        del.removeFromParentNode()
-            //                    }
-            //                }
+                
             case 4:
                 
-                let deleting:[String] = ["MainReflector"]
+                let deleting:Set<String> = ["MainReflector"]
                 
                 if let centerPL1 = childNode(withName: "CenterPL1", recursively: true) {
                     centerPL1.removeFromParentNode()
@@ -205,12 +195,6 @@ class PowerPlantNode:SCNNode {
                         cNode.removeFromParentNode()
                     }
                 }
-                
-            //                for childName in deleting {
-            //                    if let del = self.childNode(withName: childName, recursively: true) {
-            //                        del.removeFromParentNode()
-            //                    }
-            //                }
             
             case 5:
                 

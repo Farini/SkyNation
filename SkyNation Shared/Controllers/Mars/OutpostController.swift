@@ -7,6 +7,9 @@
 
 import Foundation
 
+/**
+ A Tab of the Outpost Views.
+ */
 enum OutpostViewTab:String, Codable, CaseIterable {
     
     case info // String? or Deprecate
@@ -194,7 +197,6 @@ class OutpostController:ObservableObject {
     }
     
     /// Updates the other variables, dependent on OutpostData
-    
     private func didUpdateOutpostData(newData:Outpost) {
         
         print("Did update data function")
@@ -211,11 +213,14 @@ class OutpostController:ObservableObject {
         
         self.isDownloaded = true
         
-        self.dbOutpost.level = newData.level
+        if newData.level > dbOutpost.level {
+            dbOutpost.level = newData.level
+        }
+//        self.dbOutpost.level = newData.level
+        
         self.dbOutpost.state = newData.state
         
     }
-    
     
     /// Assembles the list of contributions.
     private func getContributionScoreList(opData:Outpost) -> [ContributionScore] {
@@ -437,7 +442,7 @@ class OutpostController:ObservableObject {
                     // the correct way would be to fetch GuildMap again.
                     // but for now lets just update the dboutpost properties
                     self.didUpdateOutpostData(newData: newOutpost)
-                    
+                    self.postUpgradeGuildFetch()
                 }
             } else {
                 

@@ -73,10 +73,10 @@ class MarsBuilder {
                         }
                         self.cities = guild.cities
                         
-                        for outpost:DBOutpost in guild.outposts {
-                            print("OutPost: \(outpost.type)")
-                        }
-                        self.outposts = guild.outposts
+//                        for outpost:DBOutpost in guild.outposts {
+//                            print("OutPost: \(outpost.type)")
+//                        }
+//                        self.outposts = guild.outposts
                         
                         for player:PlayerContent in guild.citizens {
                             print("Player Content: \(player.name)")
@@ -132,6 +132,7 @@ class MarsBuilder {
                 if let gMap = gMap {
                     print("Guild map request returned for guild \(gMap.name)")
                     self.guildMap = gMap
+                    self.outposts = gMap.outposts
                 } else {
                     print("Guild map request returned error: \(error?.localizedDescription ?? "n/a")")
                 }
@@ -176,7 +177,7 @@ class MarsBuilder {
             return nil
         }
         
-        for op:DBOutpost in outposts {
+        for op:DBOutpost in guildMap?.outposts ?? self.outposts {
             print("OP: Posdex: \(op.posdex)")
             if op.posdex == posdex.rawValue {
                 print("OP Level: \(op.level)")
@@ -303,7 +304,6 @@ extension MarsBuilder {
                 for model in models {
                     decoLayer.addChildNode(model)
                 }
-                // let unlock:[Posdex] = mission.unlockedPosdexes()
                 unlockedPosdexes = mission.unlockedPosdexes()
             }
         } else {
@@ -372,7 +372,7 @@ extension MarsBuilder {
                 
                 // Check New Nodes
                 
-                if let outpost = outposts.filter({ $0.posdex == pp.rawValue }).first {
+                if let outpost:DBOutpost = outposts.filter({ $0.posdex == pp.rawValue }).first {
                     
                     // Power Plants
                     let powerPlantsDexes:[Posdex] = [.power1, .power2, .power3, .power4]
@@ -409,6 +409,7 @@ extension MarsBuilder {
                     // Mining
                     let miningDexes:[Posdex] = [.mining1, .mining2, .mining3]
                     if miningDexes.contains(pp) {
+                        print("\n\n Mining! \(pp.sceneName)")
                         let newMining = MiningNode(posdex: pp, outpost: outpost)
                         newMining.position = child.position
                         newMining.eulerAngles = child.eulerAngles
@@ -420,6 +421,7 @@ extension MarsBuilder {
                     // Biosphere
                     let bioDexes:[Posdex] = [.biosphere1, .biosphere2]
                     if bioDexes.contains(pp) {
+                        print("\n\n Biosphere! \(pp.sceneName)")
                         let biosphere = BiosphereNode(posdex: pp, outpost: outpost)
                         biosphere.position = child.position
                         biosphere.eulerAngles = child.eulerAngles
@@ -442,10 +444,17 @@ extension MarsBuilder {
                     print("\(pp.sceneName) | \(outpost.type.rawValue), lvl:\(outpost.level)")
                     
                 } else {
+                    
+                    // TODO: Create DBOutpost in Server
+                    
                     print("Outpost (unbuilt) | \(pp.sceneName)")
+                    
+                    
+                    
                 }
             }
         }
+        print("--- Finished assembly of Outposts")
         
         // Camera + POVs
         let camParent = scene.rootNode.childNode(withName: "CamPovs", recursively: false)!
@@ -636,7 +645,7 @@ extension GuildMission {
      */
     func unlockedPosdexes() -> [Posdex] {
         
-        var unlocked:[Posdex] = [.city1, .city2, .launchPad, .power1, .power2]
+        var unlocked:[Posdex] = [.city1, .city2, .launchPad, .power1, .power2, .antenna]
         
         // example code. Needs updating
         // check if above certain part of mission, then add the posdex

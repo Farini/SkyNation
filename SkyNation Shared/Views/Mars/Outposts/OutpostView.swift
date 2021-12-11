@@ -27,8 +27,6 @@ struct OutpostView: View {
     // Contributors
     // Manage
     
-    // To add: Scene View ?
-    
     var header: some View {
         Group {
             HStack {
@@ -141,9 +139,6 @@ struct OutpostView: View {
                             .frame(minHeight:300)
                             
                         case .management:
-//                            Group {
-//                                Text("Manage")
-//                            }
                             OutpostSceneView(dbOutpost: controller.dbOutpost)
                         }
                     }

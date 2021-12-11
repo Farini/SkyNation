@@ -23,13 +23,6 @@ class BiosphereNode:SCNNode {
     
     // Biosphere
     // Scene: /Mars/Outposts/Biosphere2.scn
-    // [Parts]
-    // - Dome
-    // - Building
-    // SolarPanels x 9
-    // WallLVL x 5
-    // Tanks x 5
-    // Animals
     
     init(posdex:Posdex, outpost:DBOutpost) {
         
@@ -82,6 +75,11 @@ class BiosphereNode:SCNNode {
                     node.position.y = 0.005
                 } else {
                     node.position.y = 1.43
+                }
+            }
+            if node.name == "CamPov" {
+                if let camNode = node.childNodes.first {
+                    self.cameraNodes.append(camNode)
                 }
             }
             

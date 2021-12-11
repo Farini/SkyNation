@@ -21,7 +21,7 @@ struct OutpostInfoView: View {
             Group {
                 HStack {
                     Text("Info")
-                        .font(.title2)
+                        .font(GameFont.section.makeFont())
                         .foregroundColor(.orange)
                         .padding(.vertical, 6)
                     Spacer()
@@ -30,7 +30,7 @@ struct OutpostInfoView: View {
                 HStack {
                     // Outpost Type
                     VStack(alignment:.leading) {
-                        Text("\(controller.dbOutpost.type.rawValue)").font(.title3)
+                        Text("\(controller.dbOutpost.type.displayName)").font(.title3)
                         Text("\(controller.dbOutpost.type.explanation)").foregroundColor(.gray)
                     }
                     
@@ -60,13 +60,7 @@ struct OutpostInfoView: View {
                 case .collecting:
                     
                     HStack(spacing:20) {
-                        
-                        // levelView
-                        // Divider().frame(height:12)
                         OutpostLevelView(outpost: $controller.dbOutpost)
-                        
-                        Spacer()
-                        productionView
                     }
                     .padding(.horizontal)
                     
@@ -127,35 +121,33 @@ struct OutpostInfoView: View {
                         
                         Spacer()
                         
-                        // Cooldown label
-                        VStack {
-                            Text("Cooldown").font(.title3).foregroundColor(.red)
-                                .padding(6)
-                                .background(Color.black.opacity(0.5))
-                                .cornerRadius(4)
-                                .overlay(
-                                    levelShape
-                                        .inset(by: 1.5)
-                                        .stroke(Color.white.opacity(0.2), lineWidth: 2)
-                                )
-                            Text("Upgrading to \(controller.dbOutpost.level + 1)")
-                        }
+                        
                         
                         // Deadline + Update button
                         VStack {
-                            let deadline = controller.outpostData.dateUpgrade ?? Date.distantFuture
-                            Text("Date: \(GameFormatters.dateFormatter.string(from: deadline))")
-                            if Date().compare(deadline) == .orderedDescending {
+                            if self.recursiveTimeCount() == true {
+                                
+                                if remainingString == "Finished" {
+                                    Button("⇧ Update") {
+                                        controller.upgradeButtonTapped()
+                                    }
+                                    .buttonStyle(GameButtonStyle())
+                                    .disabled(!controller.outpostUpgradeMessage.isEmpty)
+                                } else {
+                                    Text("Remaining")
+                                    Text(remainingString)
+                                }
+                            } else {
+                                // not counting
+                                Text("Not Counting...")
                                 Button("⇧ Update") {
                                     controller.upgradeButtonTapped()
                                 }
                                 .buttonStyle(GameButtonStyle())
                                 .disabled(!controller.outpostUpgradeMessage.isEmpty)
                             }
+
                         }
-                        
-                        Spacer()
-                        productionView
                     }
                     .padding(.horizontal)
                     
@@ -198,7 +190,7 @@ struct OutpostInfoView: View {
                         }
                         
                         Spacer()
-                        productionView
+//                        productionView
                     }
                     .padding(.horizontal)
             }
@@ -218,28 +210,52 @@ struct OutpostInfoView: View {
     }
     
     
-    var productionView: some View {
-        // Production
-        VStack(alignment:.trailing) {
-            Text("Production").font(GameFont.mono.makeFont()) // .foregroundColor(.green)
-            Text(productionDisplay()).font(GameFont.mono.makeFont()).foregroundColor(.green)
-            
-            // Upgradable?
-            if let _ = controller.outpostData.getNextJob() {
-                Text("Upgradable to \(controller.dbOutpost.level + 1)").foregroundColor(.gray)
-                    .font(GameFont.mono.makeFont())
-                
-            }
-        }
-    }
+//    var productionView: some View {
+//        // Production
+//        VStack(alignment:.trailing) {
+//            Text("Production").font(GameFont.mono.makeFont()) // .foregroundColor(.green)
+//            Text(productionDisplay()).font(GameFont.mono.makeFont()).foregroundColor(.green)
+//
+//            // Upgradable?
+//            if let _ = controller.outpostData.getNextJob() {
+//                Text("Upgradable to \(controller.dbOutpost.level + 1)").foregroundColor(.gray)
+//                    .font(GameFont.mono.makeFont())
+//
+//            }
+//        }
+//    }
     
-    func productionDisplay() -> String {
+//    func productionDisplay() -> String {
+//
+//        let prod = controller.dbOutpost.type.baseProduce()
+//        if let produce = prod {
+//            return "\(produce.name) x \(produce.quantity)"
+//        } else {
+//            return "< No production >"
+//        }
+//    }
+    
+    @State private var remainingString:String = ""
+    
+    func recursiveTimeCount() -> Bool {
         
-        let prod = controller.dbOutpost.type.baseProduce()
-        if let produce = prod {
-            return "\(produce.name) x \(produce.quantity)"
+        if let deadline = controller.outpostData.dateUpgrade {
+            if Date().compare(deadline) == .orderedDescending {
+                // Finished
+                remainingString = "Finished"
+                return true
+                
+            } else {
+                // Loop
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    let delta = deadline.timeIntervalSinceNow
+                    remainingString = delta.stringFromTimeInterval()
+                    let _ = self.recursiveTimeCount()
+                }
+                return true
+            }
         } else {
-            return "< No production >"
+            return false
         }
     }
     
@@ -251,7 +267,13 @@ struct OutpostLevelView:View {
     
     let levelShape = RoundedRectangle(cornerRadius: 4, style: .continuous)
     
+    // States               Lvl         Arrow       Next
+    // case .collecting:    v           -           v
+    // case .cooldown:      v           v           v
+    // case .finished:      -           -           v
+    
     var body: some View {
+        
         // Level number
         HStack(spacing:24) {
             // This Level
@@ -282,7 +304,52 @@ struct OutpostLevelView:View {
             .padding(8)
             .transition(.move(edge: .leading).combined(with: .opacity))
             
-            Divider().frame(height:30)
+            switch outpost.state {
+                case .collecting: Divider().frame(height:30)
+                case .cooldown:
+                    VStack {
+                        Image(systemName: "arrowshape.zigzag.right")
+                            .font(.title)
+                            .foregroundColor(.red)
+                        Text("Upgrading")
+                        
+                        // Cooldown label
+                        VStack {
+                            Text("Cooldown").font(.title3).foregroundColor(.red)
+                                .padding(6)
+                                .background(Color.black.opacity(0.5))
+                                .cornerRadius(4)
+                                .overlay(
+                                    levelShape
+                                        .inset(by: 1.5)
+                                        .stroke(Color.white.opacity(0.2), lineWidth: 2)
+                                )
+                            
+                        }
+                    }
+                    
+                case .finished:
+                    VStack {
+                        Text("Finished")
+                        Button("Update") {
+                            print("Update (from controller)")
+                        }
+                        .buttonStyle(GameButtonStyle())
+                    }
+                case .maxed:
+                    // No Upgrades
+                    Text("maxed").font(.title)
+                        .foregroundColor(.gray)
+                        .padding(6)
+                        .background(Color.black.opacity(0.5))
+                        .cornerRadius(4)
+                        .overlay(
+                            levelShape
+                                .inset(by: 1.5)
+                                .stroke(Color.white.opacity(0.2), lineWidth: 2)
+                        )
+                    Text("No upgrades").foregroundColor(.gray)
+            }
             
             // Next Level
             VStack(alignment: .leading) {
@@ -328,20 +395,47 @@ struct OutpostLevelView:View {
             }
             .padding(8)
             .transition(.move(edge: .leading).combined(with: .opacity))
+            
+            Spacer()
+            
+            // Production
+            VStack(alignment:.trailing) {
+                Text("Production").font(GameFont.mono.makeFont()) // .foregroundColor(.green)
+                Text(productionDisplay()).font(GameFont.mono.makeFont()).foregroundColor(.green)
+                
+                // Upgradable?
+                if let _ = outpost.getNextJob() {
+                    Text("Upgradable to \(outpost.level + 1)").foregroundColor(.gray)
+                        .font(GameFont.mono.makeFont())
+                }
+                
+                Spacer()
+            }
+            .frame(maxHeight:120)
+            .padding(8)
         }
         
+    }
+    
+    func productionDisplay() -> String {
+        
+        let prod = outpost.type.baseProduce()
+        if let produce = prod {
+            return "\(produce.name) x \(produce.quantity)"
+        } else {
+            return "< No production >"
+        }
     }
 }
 
 struct OutpostInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        VStack {
-            OutpostInfoView(controller: OutpostController(random: true))
-                .frame(height:450)
-            
-        }
-        
+//        VStack {
+//            OutpostInfoView(controller: OutpostController(random: true))
+//                .frame(height:450)
+//        }
         OutpostLevelView(outpost: .constant(DBOutpost.example()))
+        OutpostLevelView(outpost: .constant(DBOutpost(busy: true, type: .Energy, level: 3, posdex: .power1)))
         
     }
 }

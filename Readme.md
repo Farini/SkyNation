@@ -150,40 +150,44 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Mars Scene - Unlock posdexes
 - [X] Mars Scene - Unlock cities
 - [X] Tutorial - GuildRoom (improvements)
+- [X] Outpost - Split the view in outpost states
+- [X] Outpost - Scene View - all outposts need a camera that can fly around it.
+- [X] Outpost - Cooldown mode - Activate a timer, use two level views with an arrow between
+- [X] Outpost - Test `.finished` state.
+- [X] Mars Scene - Delete [MarsRoads, Gate5, MarsMap, Duplicated Outposts]
+- [X] Mars Scene - Every Outpost Node needs a camera! (in coding) - Missing Mining
+- [X] Mars Scene - Delete Textures [...]
+- [X] Store receipt view
+- [X] Store - Register purchasesin SKN bug fix
+- [X] Outpost - Animations
+- [X] Outpost - Scenes (SceneView) still not showing
+- [X] Tutorial - Adjustments (padding)
+- [X] Tutorial - Mars City
+- [X] Tutorial - Outpost
+- [X] Guild Missions - fix weird mission view
+- [X] Guild Room - Update Vote after voting
+- [X] Guild Room - animations
 
-- [ ] Outpost - Upgrade must update the view (OutpostController), and be more careful with the ".finished" state, because that is how we get it when it's finished.
-- [ ] Outpost - Split the view in outpost states
-- [ ] Outpost - Alternative view per outpost type, and each outpost type split in outpost states
-- [ ] Outpost - Scene View - all outposts need a camera that can fly around it.
-- [ ] Outpost - Cooldown mode - Activate a timer, use two level views with an arrow between
-- [ ] Outpost - Animations
-
-- [ ] Mars Scene - Outpost placeholders (Level 0)
-- [ ] Mars Scene - Delete [MarsRoads, Gate5, MarsMap, Duplicated Outposts]
-- [ ] Mars Scene - Every Outpost Node needs a camera! (in coding)
-- [ ] Mars Scene - Delete Textures [...]
+- [ ] Mars Scene - Outpost placeholders (Level 0) - Missing Mining fix
 - [ ] Mars Scene - News
 
 - [ ] Guild Missions - unlock Outposts (Create DBOutpost in server)
 - [ ] Guild Room - Markdown Edit (Readme)
-- [ ] Guild Room - animations
 - [ ] Guild Substitution: `GuildMap` for `GuildFullContent`
 - [ ] Guild Views (from GuildMap object)
-- [ ] Guild Views - Banner (Icon, name, etc.)
+- [ ] Guild Views - Banner (Icon, name, etc.) + also use as table row?
 - [ ] Guild Views - FlipView (detailed)
 - [ ] ServerData.swift improvements - make most Guild requests there. Important to update
-
-- [ ] Tutorial - Adjustments (padding)
-- [ ] Tutorial - Mars City
-- [ ] Tutorial - Outpost
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
 
 - [ ] All Tests
-- [ ] Store receipt view
 - [ ] Election Results
+    - [X] Faripad Elected, but crashed!
+    - [ ] Setup Guild.governor instead.
 - [ ] Outpost Update
 - [ ] Leaving a Guild
+- [ ] Mining Scene Nodes (waiting to be unlocked)
 
 - [ ] New Warning Messages (from people selector)  - use everywhere that can throw an error.
 - [ ] Basic Views - Alert messages (orange)
@@ -209,8 +213,8 @@ Folders Done
 - [ ] iOS - Semi-black background Color
 - [ ] iOS - increase bloom in camera? - or find a way to make scene brighter.
 
-- [ ] Blender - Substitute Space Vehicles Solar Panels
-- [ ] Blender - XCode - Delete old solar panels
+- [X] Blender - Substitute Space Vehicles Solar Panels
+- [X] Blender - XCode - Delete old solar panels
 - [ ] Blender - EVehicle remove/remake UV maps
 - [ ] Blender - EDL Remake #5
 

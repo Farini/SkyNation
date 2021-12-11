@@ -187,23 +187,9 @@ struct GuildRoom: View {
                     // This is where the missions going to be?
                     ScrollView {
                         VStack {
-                            /*
-                            Text("Citizens")
-                                .font(GameFont.section.makeFont())
-                                .padding(.top, 8)
-                            
-                            Divider()
-                            ForEach(controller.citizens) { citizen in
-                                PlayerCardView(pCard: citizen.makePlayerCard())
-                            }
-                            Spacer()
-                            */
                             
                             if let _ = controller.guildMap {
-//                                Text("Guild Map")
-//                                Text(map.name)
-//                                Text("Color: \(map.color)")
-//                                Text("Icon: \(map.icon)")
+
                                 if let mission = controller.mission {
                                     // Text("map mission...").foregroundColor(.green)
                                     GuildMissionView(controller:controller, mission: mission, progress: 0.0)
@@ -219,11 +205,9 @@ struct GuildRoom: View {
                                     // Fetch map
                                     controller.getGuildMap()
                                 }
-                                
                             }
                         }
                     }
-                    
                     
                 case .president:
                     

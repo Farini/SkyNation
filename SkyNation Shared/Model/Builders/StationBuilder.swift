@@ -304,7 +304,7 @@ extension StationBuilder {
                 case .Solar:
                     if item.itemID != nil {
 //                        print("Solar Panel: \(item.posIndex) pos:\(pos), euler:\(eul)")
-                        let solarScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/SolarPanel.scn")
+                        let solarScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/SolarPanel2.scn")
                         if let solarPanel = solarScene?.rootNode.childNode(withName: "SolarPanel", recursively: true)?.clone() {
                             solarPanel.position = SCNVector3(pos.x, pos.y, pos.z)
                             solarPanel.eulerAngles = SCNVector3(eul.x, eul.y, eul.z)

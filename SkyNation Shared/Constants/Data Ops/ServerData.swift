@@ -272,6 +272,10 @@ class ServerManager {
             } else {
                 print("Request Outpost Data Response in...")
                 completion(outpost, error)
+//                if let outpost = outpost,
+//                   let serverData = self.serverData {
+//                    serverData.
+//                }
             }
         }
     }
@@ -434,6 +438,7 @@ class ServerData:Codable {
                 completion(outpost, nil)
                 // Update the fetched date
                 self.lastOutpostFetch = Date()
+                self.saveOutpost(outpost: outpost)
                 return
             }
             if let error = error {
@@ -446,6 +451,18 @@ class ServerData:Codable {
                 }
                 return
             }
+        }
+    }
+    
+    func saveOutpost(outpost:Outpost) {
+        if let opindex = self.outposts.firstIndex(where: { $0.id == outpost.id }) {
+            self.outposts.remove(at: opindex)
+        }
+        self.outposts.append(outpost)
+        do {
+            try LocalDatabase.shared.saveServerData(self)
+        } catch {
+            print("Error! Could not save new outpost data \(error.localizedDescription)")
         }
     }
     
