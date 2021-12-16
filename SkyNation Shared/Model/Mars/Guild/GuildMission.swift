@@ -22,17 +22,6 @@ import Foundation
 
 enum MissionNumber:Int, CaseIterable, Codable {
     
-    /* [Starting Point]
-     
-     Power plant 1,
-     Power plant 2 (Placeholder),
-     Basic LPad,
-     Antenna,
-     City1,
-     City2
-     
-    */
-    
     // start
     case arrival = 0
     
@@ -47,13 +36,15 @@ enum MissionNumber:Int, CaseIterable, Codable {
     case southTourRoad
     case upgradeLPad
     
+    case southBioRoad
+    case unlockWaterMining
+    case unlockBiosphere1
+    
     case westRoad
     case city5
     case city6
     
-    case southBioRoad
-    case unlockBiosphere1
-    case unlockWaterMining
+    
     
     case g5Road
     case g6Road

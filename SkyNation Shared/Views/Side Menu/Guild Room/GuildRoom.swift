@@ -33,6 +33,8 @@ struct GuildRoom: View {
     @State private var popTutorial:Bool = false
     @State private var selection:GuildRoomTab = .elections
     
+    @State var markdown:String = "Test"
+    
     // MARK: - Gradients
     private static let myGradient = Gradient(colors: [Color.red.opacity(0.6), Color.blue.opacity(0.7)])
     private static let unseGradient = Gradient(colors: [Color.red.opacity(0.3), Color.blue.opacity(0.3)])
@@ -183,8 +185,7 @@ struct GuildRoom: View {
                     
                 case .actions:
                     
-                    // Show Players (Citizens) for now
-                    // This is where the missions going to be?
+                    // Missions
                     ScrollView {
                         VStack {
                             
@@ -316,10 +317,7 @@ struct GuildRoom: View {
                     
                 case .chatDoc:
                     
-                    Spacer()
-                    Text("Documentation")
-                    Spacer()
-                    
+                    GuildMDView(controller: controller, myComments: "my comments", isPresident: true, isEditing: false)
             }
             
         }

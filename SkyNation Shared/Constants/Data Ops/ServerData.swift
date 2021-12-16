@@ -7,12 +7,6 @@
 
 import Foundation
 
-//enum ServerDatabaseStatus:String, Codable, CaseIterable {
-//    case offline
-//    case online
-//    case errata
-//}
-
 enum LoginStatus {
     
     /// The initial status
@@ -30,9 +24,7 @@ enum LoginStatus {
     /// Player was created. Now waiting for auth.
     case createdPlayerWaitingAuth(playerUpdate:PlayerUpdate)
     
-    
     case simulatingData(serverData:ServerData)
-    
 }
 
 class ServerManager {

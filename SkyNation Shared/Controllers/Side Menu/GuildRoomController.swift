@@ -43,6 +43,7 @@ class GuildRoomController:ObservableObject {
             
             self.guildChat = []
 //            self.requestChat()
+            
             self.getGuildInfo()
             self.getGuildMap()
             

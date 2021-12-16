@@ -171,8 +171,14 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Mars Scene - Outpost placeholders (Level 0) - Missing Mining fix
 - [ ] Mars Scene - News
 
-- [ ] Guild Missions - unlock Outposts (Create DBOutpost in server)
+- [ ] GameOptions - Tutorial should show tutorial
+
 - [ ] Guild Room - Markdown Edit (Readme)
+    - Use 'slow' chat?
+    - communication every hour? or less if antenna upgraded?
+
+- [ ] Guild Missions - unlock Outposts (Create DBOutpost in server)
+- [ ] Use SKNS.`createDBOutpost` and `presyfyGuild`
 - [ ] Guild Substitution: `GuildMap` for `GuildFullContent`
 - [ ] Guild Views (from GuildMap object)
 - [ ] Guild Views - Banner (Icon, name, etc.) + also use as table row?

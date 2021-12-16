@@ -340,13 +340,8 @@ struct GuildView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             let controller = GameSettingsController()
-//            let controller = GuildController(autologin: false)
             
             GuildSummaryView(guildSum: rGuild.makeSummary())
-            
-//            GuildView(controller: controller, guild: rGuild, style: .thumbnail)
-//                .frame(width: 250, height: 180)
-//                .previewDisplayName("Thumbnail")
             
             GuildView(controller: controller, guild: rGuild, style: .largeDescriptive)
                 .aspectRatio(0.75, contentMode: .fit)

@@ -1488,7 +1488,69 @@ class SKNS {
         
     }
     // 2. Modify
+    // new
+    static func presyfyGuild(guild:GuildMap, clearChat:Bool, player:SKNPlayer, completion:((GuildMap?, Error?) -> ())?) {
+        
+        var url = URL(string: "\(baseAddress)/guilds/player/presify")!
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.POST.rawValue
+        
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        // request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
+        if clearChat == true {
+            // clear chat
+            url.appendPathComponent("chat")
+            print("New url: \(url)")
+        }
+        
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        
+        guard let data = try? encoder.encode(guild) else { fatalError() }
+        
+        request.httpBody = data
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                DispatchQueue.main.async {
+                    print("Data returning")
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .secondsSince1970
+                    do {
+                        let upGuild = try decoder.decode(GuildMap.self, from: data)
+                        completion?(upGuild, nil)
+                        return
+                    } catch {
+                        
+                        if let gameError = try? decoder.decode(GameError.self, from: data) {
+                            print("Error decoding.: \(gameError.reason)")
+                            if gameError.reason == "Not the president" {
+                                print("not the president")
+                            }
+                            completion?(nil, error)
+                            
+                        } else {
+                            print("Error - Something else has happened")
+                            completion?(nil, error)
+                        }
+                    }
+                }
+            } else {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    /*
+    // old
     static func modifyGuild(guild:GuildFullContent, player:SKNPlayer, completion:((GuildFullContent?, Error?) -> ())?) {
+        
         
         let url = URL(string: "\(baseAddress)/guilds/player/modify/\(player.keyPass ?? "")")!
         
@@ -1537,6 +1599,8 @@ class SKNS {
         }
         task.resume()
     }
+     */
+    
     // 3. invite
     static func addToInvite(player:PlayerContent, completion:((Bool?, Error?) -> ())?) {
         
@@ -1648,6 +1712,41 @@ class SKNS {
     
     // MARK: - Outpost
     
+    /// Create a `DBOutpost` in server (from mission, or wherever)
+    static func createDBOutpost(entry:DBOutpost, completion:((DBOutpost?, Error?) -> ())?) {
+        
+        let url = URL(string: "\(baseAddress)/outposts/data/createop")!
+        
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.POST.rawValue
+        
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        // Prepare upload data
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        // let outpost = Outpost(dbOutpost: dbOutpost)
+        guard let data = try? encoder.encode(entry) else { fatalError() }
+        request.httpBody = data
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                if let dbOutpost = try? decoder.decode(DBOutpost.self, from: data) {
+                    completion?(dbOutpost, nil)
+                } else {
+                    completion?(nil, error)
+                }
+            } else {
+                completion?(nil, error)
+            }
+        }
+        task.resume()
+            
+    }
+    
     // request OutpostData
     static func requestOutpostData(dbOutpost:DBOutpost, completion:((Outpost?, Error?) -> ())?) {
         
@@ -1670,7 +1769,7 @@ class SKNS {
                         let outpost = try decoder.decode(Outpost.self, from: data)
                         completion?(outpost, nil)
                         return
-                    }catch{
+                    } catch {
 
                         if let gameError = try? decoder.decode(GameError.self, from: data) {
                             
