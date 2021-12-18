@@ -20,6 +20,8 @@ class StartingViewController: UIViewController {
         addStartingView()
         // Add Notification
         NotificationCenter.default.addObserver(self, selector: #selector(startGame(_:)), name: .startGame, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(presentGameCenter(_:)), name: .openGameCenter, object: nil)
     }
     
     func addStartingView() {
@@ -40,6 +42,16 @@ class StartingViewController: UIViewController {
     
     @objc func startGame(_ notification:Notification) {
         self.performSegue(withIdentifier: "startgame", sender: self)
+    }
+    
+    @objc func presentGameCenter(_ notification:Notification) {
+        // GameCenter passes its own view controller.
+        // present as sheet
+        if let viewController:UIViewController = notification.object as? UIViewController {
+            self.present(viewController, animated: true) {
+                print("Game Center open")
+            }
+        }
     }
     
     /*

@@ -7,19 +7,66 @@
 
 import SwiftUI
 
+/*
+ Simulated States:
+ 
+ 1. playerNoEntry
+ 2. playerNoGuild
+ 3. playerWithGuild - Displaying (my guild)
+ 4. playerWithGuild - Browsing
+ 
+ Modes:
+ 
+ -. Search mode (Searching Guild by name)
+ -. Browse mode (Browsing whatever Guilds there are)
+ -. Display mode (Showing my Guild)
+ -. Create mode (Creating new)
+ */
+
 struct GuildBrowser: View {
     
-    @State var guild:Guild = GuildBrowser.makeGuild()
+    /// Selected Guild?
     @State var guildMap:GuildMap?
     
+    /// All Guilds Fetched
     var guildList:[GuildSummary]
+    
+    // used for previews only
     var gMaps:[GuildMap]
+    
+    @State private var displaySearchField:Bool = false
+    @State private var searchString:String = ""
     
     init() {
         let maps = GuildBrowser.makeGMArray()
         self.gMaps = maps
         let summaries = GuildBrowser.makeGSArray(gMaps: maps)
         self.guildList = summaries
+        
+        // Get the player.
+        let player = LocalDatabase.shared.player
+        let entry = player.marsEntryPass()
+        if entry.result == true {
+            // has entry
+            if player.guildID == nil {
+                // no guild
+            } else {
+                // Check if player is in the citizens
+                // YES -> myGuild
+                // NO -> Kicked?
+            }
+        } else {
+            // no entry
+        }
+        // 1. Check if has entry
+        // 2. Check if has Guild
+        // 3. Make `GuildBrowserConditions`
+        
+        // Buttons      Leave       Join        Create      Search
+        // ---
+        // noEntry      disabled    disabled    disabled    disabled
+        // noguild      disabled    enabled     enabled     enabled
+        // guild        enabled     disabled    disabled    enabled
     }
     
     var body: some View {
@@ -28,6 +75,13 @@ struct GuildBrowser: View {
             HStack {
                 Text("Guild Browser").font(GameFont.section.makeFont())
                 Spacer()
+                
+                if displaySearchField == true {
+                    TextField("Search", text: $searchString)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(maxWidth:200)
+                }
+                
                 Button("Leave") {
                     print("Leave Guild. Player must have a valid guildID")
                 }
@@ -37,6 +91,25 @@ struct GuildBrowser: View {
                     print("Join Guild. Player must have a nil guildID")
                 }
                 .buttonStyle(GameButtonStyle())
+                
+                Button("Create") {
+                    print("Join Guild. Player must have a nil guildID")
+                }
+                .buttonStyle(GameButtonStyle())
+                
+                Button("Search") {
+                    print("Join Guild. Player must have a nil guildID")
+                    if displaySearchField == true && searchString.isEmpty == false {
+                        // controller.search...
+                        
+                    } else {
+                        // Show the search bar
+                        displaySearchField.toggle()
+                    }
+                }
+                .buttonStyle(GameButtonStyle())
+                
+                
             }
             .padding(.top, 6)
             .padding(.horizontal)
@@ -45,6 +118,12 @@ struct GuildBrowser: View {
             
             HStack {
                 List {
+                    
+                    VStack {
+                        PlayerGuildIndicator(guildConditions: .noGuild)
+                        Divider()
+                    }
+                    
                     ForEach(guildList, id:\.id) { gList in
                         HStack {
                             Image(systemName: GuildIcon(rawValue: gList.icon)!.imageName)
@@ -59,9 +138,9 @@ struct GuildBrowser: View {
                                 Text("\(gList.name)").foregroundColor(GuildColor(rawValue: gList.color)!.color)
                                     .font(GameFont.section.makeFont())
                                 HStack {
-                                    Text("👤 \(gList.citizens.count)")//.padding(2)
-                                    Text("🌆 \(gList.cities.count)")//.padding(2)
-                                    Text("⚙️ \(gList.outposts.count)")//.padding(2)
+                                    Text("👤 \(gList.citizens.count)")
+                                    Text("🌆 \(gList.cities.count)")
+                                    Text("⚙️ \(gList.outposts.count)")
                                     Spacer()
                                 }
                                 .font(GameFont.mono.makeFont())
@@ -128,8 +207,61 @@ struct GuildBrowser: View {
     }
 }
 
+enum GuildBrowserConditions {
+    case noEntry
+    case noGuild
+    case citizenOf(guild:GuildMap)
+}
+
+struct PlayerGuildIndicator: View {
+    
+    var guildConditions:GuildBrowserConditions = .noGuild
+    
+    var body: some View {
+        VStack(alignment:.leading) {
+            
+            Text("My Guild").font(GameFont.section.makeFont())
+            HStack {
+                // Image
+                switch guildConditions {
+                    case .noEntry:
+                        Image(systemName: "lock.circle")
+                            .font(.largeTitle)
+                            .foregroundColor(.gray)
+                        Text("No Entry").foregroundColor(.red)
+                        
+                    case .noGuild:
+                        Image(systemName: "shield")
+                            .font(.largeTitle)
+                            .foregroundColor(.gray)
+                        Text("No Guild").foregroundColor(.gray)
+                        
+                    case .citizenOf(let guild):
+                        Image(systemName: GuildIcon(rawValue: guild.icon)!.imageName)
+                        Text("Joined \(guild.name)")
+                }
+                Spacer()
+            }
+            
+            switch guildConditions {
+                case .noEntry:
+                    Text("Head to the store to buy some").foregroundColor(.orange)
+                case .noGuild:
+                    Text("Join a guild!").foregroundColor(.orange)
+                case .citizenOf(let guild):
+                    Text("Joined \(guild.name)")
+            }
+        }
+        .padding(.horizontal, 8)
+    }
+}
+
+
 struct GuildBrowser_Previews: PreviewProvider {
+    
     static var previews: some View {
         GuildBrowser()
+        
+        PlayerGuildIndicator()
     }
 }

@@ -1408,6 +1408,7 @@ class SKNS {
                     let decoder = JSONDecoder()
                     decoder.dateDecodingStrategy = .secondsSince1970
                     do {
+                        // Server's 'ElectionContent'
                         let election = try decoder.decode(Election.self, from: data)
                         completion?(election, nil)
                         return

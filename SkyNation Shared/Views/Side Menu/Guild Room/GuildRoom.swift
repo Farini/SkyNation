@@ -317,7 +317,7 @@ struct GuildRoom: View {
                     
                 case .chatDoc:
                     
-                    GuildMDView(controller: controller, myComments: "my comments", isPresident: true, isEditing: false)
+                    GuildMDView(controller: controller, myComments: "my comments",  isEditing: false)
             }
             
         }

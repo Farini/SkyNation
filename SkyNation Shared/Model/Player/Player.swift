@@ -33,10 +33,6 @@ class SKNPlayer:Codable, Identifiable {
     var guildID:UUID?           // id of the Guild
     var cityID:UUID?            // City ID
     
-    // var deliveryTokens:[UUID]   // Free deliveries
-    // var timeTokens:[UUID]       // Tokens to cut through time
-    // var purchases:[UUID]        // Purchases this player made
-    
     // Constructed
     var name:String
     var avatar:String
@@ -201,6 +197,9 @@ struct PlayerContent:Codable, Identifiable, Hashable {
     var localID:UUID            // id given by local machine
     var guildID:UUID?           // id of the Guild
     
+    /// GameCenter ID
+    var gcid:String?
+    
     var name:String
     var avatar:String
     var money:Int
@@ -222,6 +221,7 @@ struct PlayerContent:Codable, Identifiable, Hashable {
         self.experience = player.experience
         self.beganGame = player.beganGame
         self.lastSeen = player.lastSeen
+        self.gcid = player.gcid
     }
     
     /// Returns `LastSeen`
@@ -314,6 +314,9 @@ struct PlayerUpdate: Codable, Equatable {
     /// id of the Guild (Optional)
     var guildID:UUID?
     
+    /// GameCenter ID
+    var gcid:String?
+    
     var name:String
     var avatar:String
     var money:Int
@@ -344,6 +347,8 @@ struct PlayerUpdate: Codable, Equatable {
         self.money = player.money
         self.experience = player.experience
         self.beganGame = player.beganGame
+        
+        self.gcid = player.gcid
     }
 }
 

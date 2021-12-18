@@ -39,7 +39,7 @@ class GameCenterManager {
             
             if let viewController = viewController {
                 // Present the view controller so the player can sign in.
-                print("View Controller \(viewController.view)")
+                print("View Controller \(viewController)")
                 
                 // Open Game Center
                 NotificationCenter.default.post(name: .openGameCenter, object: viewController)

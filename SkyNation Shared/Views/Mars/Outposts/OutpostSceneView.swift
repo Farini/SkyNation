@@ -28,8 +28,13 @@ struct OutpostSceneView: View {
     var body: some View {
 //        VStack {
             if let opScene = outpostScene {
-                
-                SceneView(scene: opScene.scene, pointOfView: opScene.camera, options: .allowsCameraControl, preferredFramesPerSecond: 45, antialiasingMode: SCNAntialiasingMode.multisampling8X, delegate: nil, technique: nil)
+            
+#if os(macOS)
+                let aMode:SCNAntialiasingMode = .multisampling8X
+#else
+                let aMode:SCNAntialiasingMode = .multisampling4X
+#endif
+                SceneView(scene: opScene.scene, pointOfView: opScene.camera, options: .allowsCameraControl, preferredFramesPerSecond: 45, antialiasingMode: aMode, delegate: nil, technique: nil)
                     .frame(minWidth: 400, maxWidth: 1200, minHeight: 300, maxHeight: 1200)
                 
             } else {

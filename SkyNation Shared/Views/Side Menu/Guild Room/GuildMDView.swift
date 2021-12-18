@@ -14,7 +14,7 @@ struct GuildMDView: View {
     @State var markdown:String = defaultMarkdown
     @State var myComments:String = "my comments"
     
-    var isPresident:Bool = true
+//    var isPresident:Bool = false
     
     @State var isEditing:Bool = false
     
@@ -38,7 +38,7 @@ struct GuildMDView: View {
                         }
                         isEditing.toggle()
                     }
-                    .disabled(!isPresident)
+                    .disabled(!controller.iAmPresident())
 //                    .disabled(controller.player.id != controller.guildMap?.president ?? UUID())
                     .buttonStyle(GameButtonStyle())
                     // Markdown comments (citizens comments - the guild chat)

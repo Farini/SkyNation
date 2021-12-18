@@ -659,7 +659,7 @@ extension GuildMission {
         // Outposts
         // Water Mining
         if mission.rawValue > MissionNumber.unlockWaterMining.rawValue {
-            unlocked.append(.mining1)
+            unlocked.append(.mining2)
         }
         // Bio
         if mission.rawValue > MissionNumber.unlockBiosphere1.rawValue {

@@ -40,7 +40,12 @@ class GameViewController: NSViewController, NSWindowDelegate {
         self.gameView.allowsCameraControl = false
         
         // Show statistics such as fps and timing information
-        self.gameView.showsStatistics = true
+//        self.gameView.showsStatistics = true
+
+        // Image Quality
+        if GameSettings.shared.showLights == true {
+            self.gameView.antialiasingMode = .multisampling16X
+        }
         
         // Add a click gesture recognizer
         let clickGesture = NSClickGestureRecognizer(target: self, action: #selector(handleClick(_:)))

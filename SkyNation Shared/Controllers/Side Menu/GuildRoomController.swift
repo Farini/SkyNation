@@ -238,6 +238,22 @@ class GuildRoomController:ObservableObject {
         
         print("Voting for President -> \(citizen.name)")
         
+        // Clear UI from previous errors and messages.
+        self.electionMessage = ""
+        self.missionErrorMessage = ""
+        self.tokenMessage = ""
+        
+        if let election = self.electionData?.election {
+            let pid = player.playerID ?? UUID()
+            
+            let voteCount = election.casted[pid, default: 0]
+            if voteCount >= 3 {
+                self.electionMessage = "Max 3 votes per Guild citizen"
+                return
+            }
+        }
+        
+        // Post vote and update UI
         SKNS.voteOnElection(candidate: citizen) { newElection, error in
             if let election = newElection {
                 DispatchQueue.main.async {
@@ -253,18 +269,21 @@ class GuildRoomController:ObservableObject {
                 }
             }
         }
-        
-        //updateElectionData()
     }
     
     func iAmPresident() -> Bool {
-        
+        if let pid = LocalDatabase.shared.player.playerID,
+           let guildMap = guildMap {
+            return guildMap.president == pid
+        }
+        return false
+        /*
         if let pid = LocalDatabase.shared.player.playerID,
            let guild = guild {
             return guild.president == pid
         }
         return false
-        
+        */
     }
     
     // MARK: - President Functions

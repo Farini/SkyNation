@@ -177,16 +177,23 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Guild Views - FlipView (detailed)
 - [X] Mars Scene - Outpost placeholders (Level 0) - Missing Mining fix
 - [X] Set Playername to GameCenter's alias
+- [X] Mars Scene - Mining Producing Silica - supposed to be water
+- [X] Guild Room - Markdown - Disable Edit button, if not president
+- [X] Guild Election Weirdness (response from server)
+- [X] SKNPlayer - gcid
+- [X] Remove SceneKit Debug Bar from View
+- [X] Setup Graphics Options (multisampling)
 
 - [ ] Guild Substitution: `GuildMap` for `GuildFullContent` - Will have to sub guild in guild navigator view, which is being remade.
 - [ ] Finish new Guild Navigator
+- [ ] Proper ways to join a guild (joinlist, invites) -> One Request?
+- [X] Create DBOutposts - New method (only a few outposts)
 - [ ] ServerData.swift improvements - make most Guild requests there. Important to update
 
+- [ ] Guild Room - President accept joinlist -> move to invites.
 - [ ] GameOptions - Tutorial should show tutorial. Disable when close? Or remove.
 
 - [ ] Mars Scene - News
-- [ ] Mars Scene - Mining Producing Silica - supposed to be water
-- [ ] Guild Room - Markdown - Disable Edit button, if not president
 - [ ] Mars Scene - All Guild Vehicles arriving
 
 - [ ] City View - Hab - Remake with new Views
@@ -205,18 +212,22 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Game Center - Achievement art - Condensator
 - [ ] Game Center - Achievement art - Garage
 
-- [ ] SKNPlayer has gcid. Does the server have an equivalent?
-
 - [ ] Blender - Arena + levels
 - [ ] Blender - Hotel + levels
+
+- [ ] Screenshots Front, Beginning view
+- [ ] Screenshots Tech Tree
+- [ ] Screenshots Bio
+- [ ] Screenshots Garage
+- [ ] Screenshots Mars Horizon
+- [ ] Screenshots Mars City
+- [ ] Screenshots GuildRoom Election
 
 ### Tests
 
 - [X] Mining Scene Nodes (waiting to be unlocked)
 - [X] GuildRoom Markdown - and with quote
-- [ ] Election Results
-    - [X] Faripad Elected, but crashed!
-    - [ ] Setup Guild.governor instead.
+- [ ] Election Results - Guild governor
 - [ ] Outpost Update
 - [ ] Leaving a Guild
 
@@ -229,6 +240,8 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] iOS - Popover sizes
 - [ ] iOS - Semi-black background Color
 - [ ] iOS - increase bloom in camera? - or find a way to make scene brighter.
+- [ ] Game Center - iOS can't open GameCenter controller
+- [ ] Setup Graphics Options (multisampling on UIViewController's `view`)
 
 - [X] Blender - Substitute Space Vehicles Solar Panels
 - [X] Blender - XCode - Delete old solar panels

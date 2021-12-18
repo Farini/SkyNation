@@ -782,6 +782,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
         self.scene = builtScene
         
+        
         // Camera
         if let camera = scene.rootNode.childNode(withName: "Camera", recursively: false) as? GameCamera {
             self.cameraNode = camera
@@ -826,6 +827,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
         sceneRenderer.delegate = self
         sceneRenderer.scene = scene
+        
         
         playMusic()
         

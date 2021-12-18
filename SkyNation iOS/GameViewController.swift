@@ -8,6 +8,7 @@
 import UIKit
 import SceneKit
 import SwiftUI
+import GameKit
 
 class GameViewController: UIViewController {
     
@@ -54,6 +55,9 @@ class GameViewController: UIViewController {
         
         // Add Notification
         NotificationCenter.default.addObserver(self, selector: #selector(closeView(_:)), name: .closeView, object: nil)
+        
+        // Game Center Window management
+        NotificationCenter.default.addObserver(self, selector: #selector(presentGameCenter(_:)), name: .openGameCenter, object: nil)
     }
     
     @objc func closeView(_ notification:Notification) {
@@ -369,6 +373,21 @@ extension GameViewController:GameNavDelegate {
         
         newHost.didMove(toParent: self)
         self.openedView = newHost.view
+    }
+    
+    @objc func presentGameCenter(_ notification:Notification) {
+        // GameCenter passes its own view controller.
+        // present as sheet
+        print("Presenting gamecenter")
+        
+        if let viewController:UIViewController = notification.object as? UIViewController {
+            print("Notification has view controller")
+            self.present(viewController, animated: true) {
+                print("Game Center open")
+            }
+        } else {
+            print("Notification has [ NO ] view controller")
+        }
     }
     
 }
