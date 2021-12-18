@@ -60,6 +60,7 @@ struct GameSettingsView: View {
         
         VStack(alignment: .leading, spacing: nil) {
             
+            // Top header
             if (inGame) {
                 header
             }
@@ -78,7 +79,7 @@ struct GameSettingsView: View {
                     GameLoadingTab(controller: controller)
                     
                 case .EditingPlayer:
-                    // PlayerEditView(controller: controller)
+                    
                     PlayerEditorView(controller: controller)
                     
                 case .Server:
@@ -126,7 +127,7 @@ struct GameSettingsView: View {
             controller.viewState = .EditingPlayer
         } else {
             controller.loadGameData()
-            controller.checkServerStatus(attempts: 0)
+            controller.checkLoginStatus()
         }
     }
     

@@ -24,6 +24,8 @@ class StartingWindow: NSWindowController, NSWindowDelegate {
         // Add Notification
         NotificationCenter.default.addObserver(self, selector: #selector(startGame(_:)), name: .startGame, object: nil)
         
+        //static let openGameCenter = Notification.Name("OpenGameCenter")
+        NotificationCenter.default.addObserver(self, selector: #selector(presentGameCenter(_:)), name: .openGameCenter, object: nil)
     }
     
     @objc func startGame(_ notification:Notification) {
@@ -38,6 +40,15 @@ class StartingWindow: NSWindowController, NSWindowDelegate {
                 // Close this window
                 self.window?.close()
             }
+        }
+    }
+    
+    
+    @objc func presentGameCenter(_ notification:Notification) {
+        // GameCenter passes its own view controller.
+        // present as sheet
+        if let viewController:NSViewController = notification.object as? NSViewController {
+            self.window?.contentViewController?.presentAsSheet(viewController)
         }
     }
     

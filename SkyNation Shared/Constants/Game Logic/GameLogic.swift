@@ -23,6 +23,9 @@ extension Notification.Name {
     /// To go from Loading screen to Game
     static let startGame = Notification.Name("StartGame")
     
+    /// To Open the GameCenter (GameKit)
+    static let openGameCenter = Notification.Name("OpenGameCenter")
+    
     /// Change Module Properties (Name, Skin, Unbuild)
     static let changeModule = Notification.Name("ChangeModuleProperties")
     

@@ -7,6 +7,7 @@
 
 import SceneKit
 import SpriteKit
+import GameKit
 
 protocol GameNavDelegate {
     
@@ -914,6 +915,11 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         } else if station?.getPeople().count ?? 0 < 1 {
             newsLines.append("Tap on the Earth, to order items for your Space Station.")
         }
+        
+        GKAccessPoint.shared.location = .topTrailing
+        GKAccessPoint.shared.showHighlights = true
+        GKAccessPoint.shared.isActive = true
+        
         
         // Save if needed
         if hasChanges {

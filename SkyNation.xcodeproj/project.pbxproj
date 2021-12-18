@@ -729,6 +729,10 @@
 		85FE642F276AAB7C00FF93D5 /* GuildMDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FE642E276AAB7C00FF93D5 /* GuildMDView.swift */; };
 		85FE6430276AAB7C00FF93D5 /* GuildMDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FE642E276AAB7C00FF93D5 /* GuildMDView.swift */; };
 		85FE6431276AAB7C00FF93D5 /* GuildMDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FE642E276AAB7C00FF93D5 /* GuildMDView.swift */; };
+		85FE6434276CF1F100FF93D5 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85FE6433276CF1F100FF93D5 /* GameKit.framework */; };
+		85FE6436276D07C800FF93D5 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FE6435276D07C800FF93D5 /* GameCenterManager.swift */; };
+		85FE6437276D07C800FF93D5 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FE6435276D07C800FF93D5 /* GameCenterManager.swift */; };
+		85FE6438276D07C800FF93D5 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FE6435276D07C800FF93D5 /* GameCenterManager.swift */; };
 		85FEFB6826D2E23E007BA9D1 /* GameOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEFB6726D2E23E007BA9D1 /* GameOverlay.swift */; };
 		85FEFB6926D2E23E007BA9D1 /* GameOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEFB6726D2E23E007BA9D1 /* GameOverlay.swift */; };
 		85FEFB6A26D2E23E007BA9D1 /* GameOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEFB6726D2E23E007BA9D1 /* GameOverlay.swift */; };
@@ -979,6 +983,8 @@
 		85FE6426276A73FB00FF93D5 /* GuildBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildBrowser.swift; sourceTree = "<group>"; };
 		85FE642A276A81C500FF93D5 /* GuildCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildCardView.swift; sourceTree = "<group>"; };
 		85FE642E276AAB7C00FF93D5 /* GuildMDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildMDView.swift; sourceTree = "<group>"; };
+		85FE6433276CF1F100FF93D5 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		85FE6435276D07C800FF93D5 /* GameCenterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCenterManager.swift; sourceTree = "<group>"; };
 		85FEFB6726D2E23E007BA9D1 /* GameOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverlay.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1001,6 +1007,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85FE6434276CF1F100FF93D5 /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1181,6 +1188,7 @@
 				8536F2E0258D330300B509D2 /* SkyNation macOS */,
 				8536F307258D355C00B509D2 /* DataTests */,
 				8536F2BD258D330300B509D2 /* Products */,
+				85FE6432276CF1F100FF93D5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1614,6 +1622,7 @@
 				8536F32A258D412600B509D2 /* LocalDatabase.swift */,
 				85E6ECF725C9D92B00229E18 /* ServerAPI.swift */,
 				8517EE5125FE8C9C00C34C54 /* ServerData.swift */,
+				85FE6435276D07C800FF93D5 /* GameCenterManager.swift */,
 			);
 			path = "Data Ops";
 			sourceTree = "<group>";
@@ -1926,6 +1935,14 @@
 			path = "Guild Views";
 			sourceTree = "<group>";
 		};
+		85FE6432276CF1F100FF93D5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				85FE6433276CF1F100FF93D5 /* GameKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2190,6 +2207,7 @@
 				85B34B1C26FA21FD007178F5 /* ContributionRoundView.swift in Sources */,
 				8516AD7B273CD98700392C4F /* TokenXChangeView.swift in Sources */,
 				857DDEC725E4DCAD00E64752 /* Messages.swift in Sources */,
+				85FE6436276D07C800FF93D5 /* GameCenterManager.swift in Sources */,
 				8536F441258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				85E2C43226BE5753003315F2 /* Wallet.swift in Sources */,
 				8579750F259B9E70004C54D2 /* FlipView.swift in Sources */,
@@ -2375,6 +2393,7 @@
 				85487F4326CC691300EBC070 /* CityGateNode.swift in Sources */,
 				8516AD7C273CD98700392C4F /* TokenXChangeView.swift in Sources */,
 				85797510259B9E70004C54D2 /* FlipView.swift in Sources */,
+				85FE6437276D07C800FF93D5 /* GameCenterManager.swift in Sources */,
 				8569A34C25A3D9590057A518 /* AirComposition.swift in Sources */,
 				8536F39B258D475D00B509D2 /* TechTree.swift in Sources */,
 				8559201625959A4300CF5467 /* SideMenuNode.swift in Sources */,
@@ -2683,6 +2702,7 @@
 				85487F6426CD9CB100EBC070 /* GameErrors.swift in Sources */,
 				8536F2EC258D330300B509D2 /* GameController.swift in Sources */,
 				85E2C42426BD8A6E003315F2 /* StoreManager.swift in Sources */,
+				85FE6438276D07C800FF93D5 /* GameCenterManager.swift in Sources */,
 				8536F380258D475D00B509D2 /* Station.swift in Sources */,
 				85487F5F26CD9C1E00EBC070 /* GameLogic.swift in Sources */,
 				85A1D25E27497DEB00C2D163 /* ShopPromoInputView.swift in Sources */,

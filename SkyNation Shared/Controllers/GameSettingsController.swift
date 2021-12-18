@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GameKit
 
 /// The Main tab of the game (Shows up at the start)
 enum GameSettingsTab: String, CaseIterable {
@@ -115,7 +116,7 @@ class GameSettingsController:ObservableObject {
     @Published var savedChanges:Bool
     @Published var stationSceneLoaded:Bool = false
     
-    /// MARK: - Online Data
+    // MARK: - Online Data
     
     /// Keep track of updated player (login)
     @Published var updatedPlayer:PlayerUpdate?
@@ -129,6 +130,9 @@ class GameSettingsController:ObservableObject {
     /// The Guild this player has joined.
     @Published var myGuild:GuildFullContent?
     
+    /// The `GuildMap` object of the Guild this player has joined.
+    @Published var guildMap:GuildMap?
+    
     /// A list of things that are loaded
     @Published var loadedList:[String] = []
     
@@ -136,13 +140,14 @@ class GameSettingsController:ObservableObject {
     @Published var warningList:[String] = []
     
     // MARK: - Methods
-    
-    init() {
+    /*
+    init(preview:Bool) {
         
         // Player
         let player = LocalDatabase.shared.player
         self.player = player
         
+        // Check if player is new
         if player.name == "Test Player" && player.experience == 0 && abs(Date().timeIntervalSince(player.beganGame)) < 10 {
             // New Player
             playerName = player.name
@@ -174,6 +179,52 @@ class GameSettingsController:ObservableObject {
                 }
             }
         }
+    }
+    */
+    
+    init() {
+        
+        // Player
+        let player = LocalDatabase.shared.player
+        self.player = player
+        
+        if player.name == "Test Player" && player.experience == 0 && abs(Date().timeIntervalSince(player.beganGame)) < 10 {
+            
+            // New Player
+            playerName = player.name
+            playerID = player.localID
+            isNewPlayer = true
+            hasChanges = true
+            savedChanges = false
+            viewState = GameSettingsTab.EditingPlayer
+            
+        } else {
+            // Old Player
+            isNewPlayer = false
+            self.player = player
+            playerID = player.localID
+            playerName = player.name
+            hasChanges = false
+            savedChanges = true
+            viewState = GameSettingsTab.Loading
+            
+        }
+        
+        self.updateLoadedList()
+        
+        // Accounting
+        if let myCity:CityData = LocalDatabase.shared.cityData {
+            DispatchQueue(label: "Accounting").async {
+                myCity.accountingLoop(recursive: true) { messages in
+                    print("Mars Accounting Finished: \(messages.joined(separator: " ,"))")
+                }
+            }
+        }
+        
+        // Game Center
+        let gcm = GameCenterManager.shared
+        gcm.postPlayerExperience()
+
     }
     
     /// Updates the front list showing the loading status of Data
@@ -577,12 +628,12 @@ class GameSettingsController:ObservableObject {
         }
     }
     
-    /// Checks ServerManager for status - It takes a while to happen, so we can check on server status, because there it takes a while as well.
-    func checkServerStatus(attempts:Int = 0) {
+    /// Recursively checks Player login status.
+    func checkLoginStatus(attempts:Int = 0) {
         
         if attempts > 3 { return }
         print("Getting Server Status. Repeated \(attempts) times.")
-
+        
         let manager = ServerManager.shared
         
         switch manager.loginStatus {
@@ -602,7 +653,7 @@ class GameSettingsController:ObservableObject {
                 print("SERVER DATA NOT STARTED AFTER 3 SECONDS")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
                     if let self = self {
-                        self.checkServerStatus(attempts: attempts + 1)
+                        self.checkLoginStatus(attempts: attempts + 1)
                     } else {
                         return
                     }
@@ -611,7 +662,7 @@ class GameSettingsController:ObservableObject {
                 print("Waiting for Server to Finish login for \(newPlayer.name)")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
                     if let self = self {
-                        self.checkServerStatus(attempts: attempts + 1)
+                        self.checkLoginStatus(attempts: attempts + 1)
                     } else {
                         return
                     }
@@ -623,6 +674,7 @@ class GameSettingsController:ObservableObject {
             case .simulatingData(let serverData):
                 print("Simulating Data for player: \(serverData.player.name)")
         }
+        
     }
     
     /// Action from Button `Start Game`

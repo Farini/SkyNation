@@ -22,6 +22,9 @@ struct PlayerEditorView: View {
     
     @State private var editorStep:EditorStep = .Displaying
     
+    /// Look into game center to set the player's name
+    var gameCenterManager:GameCenterManager = GameCenterManager.shared
+    
     var body: some View {
         ScrollView {
             
@@ -29,7 +32,6 @@ struct PlayerEditorView: View {
                 
                 // Header
                 Text("Player")
-//                    .font(.title)
                     .modifier(GameTypography(.title))
                     .padding(.vertical)
                 
@@ -191,6 +193,17 @@ struct PlayerEditorView: View {
                 }
             }
             .padding(.horizontal)
+        }
+        .onAppear {
+            // Set the player name to their Game Center name, if possible
+            if controller.player.experience == 0 && controller.playerName == "Test Player" {
+                var pName = gameCenterManager.gcPlayer?.alias ?? "Test Player"
+                if pName.count > 12 {
+                    pName = String(pName.prefix(12))
+                }
+                controller.playerName = pName
+                
+            }
         }
     }
     

@@ -33,6 +33,9 @@ struct GuildMDView: View {
                     // Markdown updates
                     Button(isEditing ? "Update":"Edit") {
                         print("Update")
+                        if isEditing == true {
+                            controller.commitMarkdown(markdown: markdown)
+                        }
                         isEditing.toggle()
                     }
                     .disabled(!isPresident)
@@ -75,7 +78,7 @@ struct GuildMDView: View {
                         
                         ForEach(controller.guildChat) { chatMsg in
                             HStack {
-                                Text(chatMsg.name)
+                                Text(chatMsg.name).foregroundColor(.blue)
                                 Text(chatMsg.message)
                             }
                         }
@@ -96,7 +99,7 @@ struct GuildMDView: View {
                 HStack {
                     TextEditor(text: $myComments)
                     Button("Post") {
-                        
+                        controller.postMessage(text: myComments)
                     }
                     .buttonStyle(GameButtonStyle())
                 }

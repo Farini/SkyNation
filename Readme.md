@@ -57,7 +57,7 @@ The contributors to these projects shall have a **fair** share of the game, and 
  - [ ] ★★★★☆ Mars Scene
  - [ ] ★★★★☆ Mars City
  - [ ] ★★★☆☆ Mars Outposts
- - [ ] ★☆☆☆☆ Guild Missions
+ - [ ] ★★★☆☆ Guild Missions
  - [ ] ★★★★☆ Game Chats, Messages, Achievements
  - [ ] ★★★★☆ Game Store + Use of `GameToken`
  - [ ] ★★★★☆ Player(object) + settings + playability + Purchases
@@ -119,6 +119,8 @@ The contributors to these projects shall have a **fair** share of the game, and 
 ## 📝 Doing - Present
 If looking for things to do and don't know where to start, go to *Find Navigator* and search for **FIXME**, or **TODO**
 
+12/01/2021 - ?
+
 - [X] Blender - Split Scene into collections: Collection, Roads, Outposts, Gates
 - [X] Blender - Terrain remake -> Remake roads, and add paths
 - [X] Blender - Gate Placeholders
@@ -167,49 +169,58 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Guild Missions - fix weird mission view
 - [X] Guild Room - Update Vote after voting
 - [X] Guild Room - animations
+- [X] Guild Room - Markdown Edit (Readme)
+- [X] Use SKNS.`createDBOutpost` and `presyfyGuild`
+- [X] Guild Missions - unlock Outposts (Create DBOutpost in server)
+- [X] Guild Views (from GuildMap object)
+- [X] Guild Views - Banner (Icon, name, etc.) + also use as table row?
+- [X] Guild Views - FlipView (detailed)
+- [X] Mars Scene - Outpost placeholders (Level 0) - Missing Mining fix
+- [X] Set Playername to GameCenter's alias
 
-- [ ] Mars Scene - Outpost placeholders (Level 0) - Missing Mining fix
-- [ ] Mars Scene - News
-
-- [ ] GameOptions - Tutorial should show tutorial
-
-- [ ] Guild Room - Markdown Edit (Readme)
-    - Use 'slow' chat?
-    - communication every hour? or less if antenna upgraded?
-
-- [ ] Guild Missions - unlock Outposts (Create DBOutpost in server)
-- [ ] Use SKNS.`createDBOutpost` and `presyfyGuild`
-- [ ] Guild Substitution: `GuildMap` for `GuildFullContent`
-- [ ] Guild Views (from GuildMap object)
-- [ ] Guild Views - Banner (Icon, name, etc.) + also use as table row?
-- [ ] Guild Views - FlipView (detailed)
+- [ ] Guild Substitution: `GuildMap` for `GuildFullContent` - Will have to sub guild in guild navigator view, which is being remade.
+- [ ] Finish new Guild Navigator
 - [ ] ServerData.swift improvements - make most Guild requests there. Important to update
+
+- [ ] GameOptions - Tutorial should show tutorial. Disable when close? Or remove.
+
+- [ ] Mars Scene - News
+- [ ] Mars Scene - Mining Producing Silica - supposed to be water
+- [ ] Guild Room - Markdown - Disable Edit button, if not president
+- [ ] Mars Scene - All Guild Vehicles arriving
+
+- [ ] City View - Hab - Remake with new Views
+- [ ] City View - Lab - Remake with new Views
+- [ ] City View - Bio - Remake with new Views
+
+- [ ] Garage - Make sure charging 'propellants'
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
 
-- [ ] All Tests
+- [X] Game Center - Player Auth.
+- [X] Game Center - Leaderboards (Experience)
+- [ ] Game Center - Achievements (Recipes, Tech)
+- [ ] Game Center - Achievement art - Water Filter
+- [ ] Game Center - Achievement art - Air Scrubber
+- [ ] Game Center - Achievement art - Condensator
+- [ ] Game Center - Achievement art - Garage
+
+- [ ] SKNPlayer has gcid. Does the server have an equivalent?
+
+- [ ] Blender - Arena + levels
+- [ ] Blender - Hotel + levels
+
+### Tests
+
+- [X] Mining Scene Nodes (waiting to be unlocked)
+- [X] GuildRoom Markdown - and with quote
 - [ ] Election Results
     - [X] Faripad Elected, but crashed!
     - [ ] Setup Guild.governor instead.
 - [ ] Outpost Update
 - [ ] Leaving a Guild
-- [ ] Mining Scene Nodes (waiting to be unlocked)
 
-- [ ] New Warning Messages (from people selector)  - use everywhere that can throw an error.
-- [ ] Basic Views - Alert messages (orange)
-- [ ] Basic Views - Consistent Background Colors
-- [ ] UI Responsiveness - Add more feedback.
----------
-Folders Done
-- [X] Settings Folder
-- [X] Space Station Folder
-- [X] Side Menu: 11/11/2021
-- [ ] Mars
-    - [ ] Outpost View - Show State, and be more responsive
-    - [ ] City View - Hab - Remake with new Views
-    - [ ] City View - Lab - Remake with new Views
-    - [ ] City View - Bio - Remake with new Views
-
+### iOS
 
 - [ ] iOS - Views are too large
 - [ ] iOS - Font modifiers

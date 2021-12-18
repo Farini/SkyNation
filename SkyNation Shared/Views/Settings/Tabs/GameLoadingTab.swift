@@ -11,7 +11,8 @@ import SwiftUI
 
 struct GameLoadingTab: View {
     
-    var controller:GameSettingsController
+    @ObservedObject var controller:GameSettingsController
+    @State private var isExpanded:Bool = false
     
     var body: some View {
         VStack {
@@ -67,12 +68,33 @@ struct GameLoadingTab: View {
             
             Group {
                 
-                ForEach(controller.loadedList, id:\.self) { litem in
-                    Text(litem).foregroundColor(.gray)
+                if isExpanded {
+                    ForEach($controller.loadedList, id:\.self) { litem in
+                        Text(litem.wrappedValue)
+                            .foregroundColor(.gray)
+                            .transition(.move(edge: .top).combined(with: .opacity))
+                            .onTapGesture {
+                                withAnimation {
+                                    self.isExpanded.toggle()
+                                }
+                            }
+                    }
+                } else {
+                    if let last = controller.loadedList.last {
+                        Text(last)
+                            .foregroundColor(.gray)
+                            .transition(.move(edge: .top).combined(with: .opacity))
+                            .onTapGesture {
+                                withAnimation() {
+                                    self.isExpanded.toggle()
+                                }
+                            }
+                    }
                 }
                 
-                ForEach(controller.warningList, id:\.self) { litem in
-                    Text(litem).foregroundColor(.orange)
+                // Warning List
+                ForEach($controller.warningList, id:\.self) { litem in
+                    Text(litem.wrappedValue).foregroundColor(.orange)
                 }
                 
                 Spacer(minLength: 8)

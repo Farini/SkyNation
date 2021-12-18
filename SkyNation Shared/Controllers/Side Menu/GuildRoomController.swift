@@ -42,7 +42,7 @@ class GuildRoomController:ObservableObject {
         if GameSettings.onlineStatus == true {
             
             self.guildChat = []
-//            self.requestChat()
+            self.requestChat()
             
             self.getGuildInfo()
             self.getGuildMap()
@@ -170,6 +170,33 @@ class GuildRoomController:ObservableObject {
     /// Keeps track of how many characters user wrote
     func textCount() -> Int {
         return currentText.count
+    }
+    
+    /// When president finishes the MArkdown
+    func commitMarkdown(markdown:String) {
+        
+        // remove quotes
+        let unquoted = markdown.replacingOccurrences(of: "\"", with: "'")
+        print("Unquoted:::\n\(unquoted)")
+        
+        guard let guildMap = guildMap else {
+            return
+        }
+        
+        guildMap.markdown = markdown
+        
+        
+        SKNS.presyfyGuild(guild: guildMap, clearChat: false, player: LocalDatabase.shared.player) { newMap, error in
+            
+            if let newMap = newMap {
+                DispatchQueue.main.async {
+                    self.guildMap = newMap
+                }
+            } else {
+                // TODO: - Deal with error
+            }
+        }
+        
     }
     
     // MARK: - Election
@@ -414,9 +441,23 @@ class GuildRoomController:ObservableObject {
                 
                 DispatchQueue.main.async {
                     print("new mission...")
+                    
                     // got mission
                     self.mission = newMission
                     self.guildMap?.mission = newMission
+                    
+                    // Check if need to create dboutpost
+                    if let dbo:DBOutpost = self.checkNeedsOutpostCreation() {
+                        SKNS.createDBOutpost(entry: dbo) { newOutpost, newError in
+                            if let newOutpost = newOutpost {
+                                DispatchQueue.main.async {
+                                    self.guildMap?.outposts.append(newOutpost)
+                                }
+                            } else {
+                                print("No new outpost - \(error?.localizedDescription ?? "n/a")")
+                            }
+                        }
+                    }
                 }
             } else if let error = error {
                 DispatchQueue.main.async {
@@ -426,5 +467,56 @@ class GuildRoomController:ObservableObject {
                 }
             }
         }
+    }
+    
+    func checkNeedsOutpostCreation() -> DBOutpost? {
+        
+        guard let guildMap = guildMap else {
+            return nil
+        }
+        
+        var updatingOutpost:DBOutpost?
+        
+        let unlockedPosdexes = guildMap.mission?.unlockedPosdexes() ?? []
+        for unlocked in unlockedPosdexes {
+            if let dbo = guildMap.outposts.first(where: { $0.posdex == unlocked.rawValue }) {
+                // already has this outpost
+                print("Already has outpost: \(dbo.posdex) \(dbo.type) Lvl \(dbo.level)")
+            } else {
+                // needs to create
+                var opType:OutpostType?
+                switch unlocked {
+                    case .hq:
+                        opType = .HQ
+                    case .antenna:
+                        opType = .Antenna
+                    case .arena:
+                        opType = .Arena
+                    case .biosphere1, .biosphere2:
+                        opType = .Biosphere
+                    case .launchPad:
+                        opType = .Launchpad
+                    case .mining1:
+                        opType = .Water
+                    case .mining2:
+                        opType = .Silica
+                    case .mining3:
+                        opType = .Titanium
+                    case .observatory:
+                        opType = .Observatory
+                    case .power1, .power2, .power3, .power4:
+                        opType = .Energy
+                    case .hotel:
+                        opType = .HQ
+                    default: break
+                }
+                if let opType = opType {
+                    let newOP = DBOutpost(gid: guildMap.id, type: opType, posdex: unlocked)
+                    updatingOutpost = newOP
+                }
+            }
+        }
+        
+        return updatingOutpost
     }
 }
