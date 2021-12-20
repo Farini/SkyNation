@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/*
 struct ChatBubbleGuildTab: View {
     
     @ObservedObject var controller:ChatBubbleController
@@ -74,6 +75,7 @@ struct ChatBubbleGuildTab: View {
         }
     }
 }
+*/
 
 /*
 struct ChatBubbleGuildTab_Previews: PreviewProvider {

@@ -53,6 +53,7 @@ enum GuildElectionState {
     }
 }
 
+/*
 
 class ChatBubbleController:ObservableObject {
     
@@ -438,3 +439,5 @@ class ChatBubbleController:ObservableObject {
         }
     }
 }
+*/
+

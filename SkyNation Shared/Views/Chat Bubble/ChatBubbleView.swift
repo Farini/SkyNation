@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-
+/*
 struct ChatBubbleView: View {
     
     @ObservedObject var controller:ChatBubbleController
@@ -345,4 +345,6 @@ struct ChatBubbleView_Previews: PreviewProvider {
         ChatBubbleView()
     }
 }
+
+*/
 

@@ -21,7 +21,9 @@ class GuildRoomController:ObservableObject {
     
     // Election
     @Published var electionState:GuildElectionState = .noElection
-    @Published var electionData:GuildElectionData?
+//    @Published var electionData:GuildElectionData?
+    @Published var election:Election?
+    
     @Published var electionMessage:String? = nil
     
     @Published var castedVotes:Int = 0
@@ -207,20 +209,20 @@ class GuildRoomController:ObservableObject {
         
         SKNS.upRestartElection { newElection, error in
             DispatchQueue.main.async {
-                if let newElection:GuildElectionData = newElection {
+                if let newElection:Election = newElection {
                     print("Got election")
                     // Elections is here
-                    self.electionData = newElection
-                    switch newElection.electionStage {
+                    self.election = newElection
+                    switch newElection.getStage() {
                         case .finished:
                             self.electionState = .noElection
                         case .notStarted:
-                            self.electionState = .waiting(until: newElection.election.startDate())
+                            self.electionState = .waiting(until: newElection.start)
                         case .running:
-                            self.electionState = .voting(election: newElection.election)
+                            self.electionState = .voting(election: newElection)
                     }
                     
-                    let vtCount = newElection.election.casted[self.player.playerID ?? UUID(), default:0]
+                    let vtCount = newElection.casted[self.player.playerID ?? UUID(), default:0]
                     self.castedVotes = vtCount
                     
                 } else if let error = error {
@@ -243,7 +245,8 @@ class GuildRoomController:ObservableObject {
         self.missionErrorMessage = ""
         self.tokenMessage = ""
         
-        if let election = self.electionData?.election {
+        
+        if let election = self.election {
             let pid = player.playerID ?? UUID()
             
             let voteCount = election.casted[pid, default: 0]
@@ -257,7 +260,7 @@ class GuildRoomController:ObservableObject {
         SKNS.voteOnElection(candidate: citizen) { newElection, error in
             if let election = newElection {
                 DispatchQueue.main.async {
-                    self.electionData?.election = election
+                    self.election = election
                     self.electionState = .voting(election: election)
                     self.electionMessage = "Voted for \(citizen.name)"
                 }

@@ -29,19 +29,16 @@ struct GuildElectionView: View {
                     HStack(alignment:.top) {
                         // Election Info
                         VStack(alignment:.leading) {
+                            
                             Text("Election").font(GameFont.section.makeFont()).foregroundColor(.orange)
                             Divider()
                             
-                            // Text("My Guild: \(guild.name)")
-                            // Text("Election: \(GameFormatters.fullDateFormatter.string(from: guild.election))")
-                            // Text("Election State: \(controller.electionState.displayString)")
-                            
-                            if let eData:GuildElectionData = controller.electionData {
+                            if let eData:Election = controller.election {
                                 
-                                Text("Election: \(eData.electionStage.rawValue)")
+                                Text("Election: \(eData.getStage().rawValue)")
                                 
-                                Text("Start: \(GameFormatters.dateFormatter.string(from:eData.election.startDate()))")
-                                Text("Ending: \(GameFormatters.dateFormatter.string(from:eData.election.endDate()))")
+                                Text("Start: \(GameFormatters.dateFormatter.string(from:eData.start))")
+                                Text("Ending: \(GameFormatters.dateFormatter.string(from:eData.endDate()))")
                                 
                                 let elProg:Double = eData.progress()
                                 let stProg:String = "\(GameFormatters.numberFormatter.string(from: NSNumber(value: eData.progress() * 100.0)) ?? "") %"
@@ -111,7 +108,7 @@ struct GuildElectionView: View {
                                         
                                         
                                         // Count Votes
-                                        let voteCount:Int = controller.electionData?.election.voted[citizen.id] ?? 0
+                                        let voteCount:Int = controller.election?.voted[citizen.id] ?? 0
                                         
                                         Text("\(voteCount)")
                                             .font(GameFont.section.makeFont())

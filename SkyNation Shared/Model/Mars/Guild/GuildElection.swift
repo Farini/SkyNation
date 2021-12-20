@@ -24,23 +24,56 @@ struct Election:Codable {
     
     var createdAt:Date?
     
-    var start:Date?
+    var start:Date
     
     /// The date election should start
-    func startDate() -> Date {
-        let prestart = self.createdAt ?? Date.distantPast
-        let realStart = prestart.addingTimeInterval(60.0 * 60.0 * 24.0 * 7)
-        return realStart
-    }
+//    func startDate() -> Date {
+//        let prestart = self.createdAt ?? Date.distantPast
+//        let realStart = prestart.addingTimeInterval(60.0 * 60.0 * 24.0 * 7)
+//        return realStart
+//    }
     
     func endDate() -> Date {
-        return self.startDate().addingTimeInterval(60.0 * 60.0 * 24.0)
+        return self.start.addingTimeInterval(60.0 * 60.0 * 24.0)
     }
     
     func electionHasEnded() -> Bool {
-        let electionStarts = self.startDate()
+        let electionStarts = self.start //self.startDate()
         let electionEnds = electionStarts.addingTimeInterval(60.0 * 60.0 * 24.0)
         return Date().compare(electionEnds) != .orderedAscending
+    }
+    
+    /// Election progress comparing start, end and now.
+    func progress() -> Double {
+        
+        let start = start
+        let finish = endDate()
+        let dateNow = Date()
+        
+        if dateNow.compare(start) == .orderedAscending {
+            return 0
+        } else {
+            if dateNow.compare(finish) == .orderedAscending {
+                let totalInterval = finish.timeIntervalSince(start)
+                let partInterval = dateNow.timeIntervalSince(start)
+                return partInterval / totalInterval
+            } else {
+                return 1.0
+            }
+        }
+    }
+    
+    func getStage() -> GuildEventStage {
+        
+        let finish = self.endDate()
+        let dateNow = Date()
+        if dateNow.compare(start) == .orderedAscending {
+            return .notStarted
+        } else if dateNow.compare(finish) == .orderedAscending {
+            return .running
+        } else {
+            return .finished
+        }
     }
     
     
@@ -122,6 +155,7 @@ enum GuildEventStage:String, Codable, CaseIterable {
     
 }
 
+/*
 /// Contains president(PlayerContent), `Election` object and `GuildEventStage` of the election.
 struct GuildElectionData:Codable {
     
@@ -153,3 +187,5 @@ struct GuildElectionData:Codable {
         }
     }
 }
+*/
+

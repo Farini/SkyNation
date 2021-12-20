@@ -317,7 +317,8 @@ class ServerData:Codable {
     var guildVehicles:[SpaceVehicleTicket] = []
     
     // Election
-    var electionData:GuildElectionData?
+//    var electionData:GuildElectionData?
+    var election:Election?
     
     // Status
 //    var status:ServerDatabaseStatus = .offline

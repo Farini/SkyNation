@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="EKp-g1-hXz">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="EKp-g1-hXz">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19455"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -95,17 +95,7 @@
                                                 <action selector="openFinder:" target="YaZ-3s-s6T" id="DFq-J0-vwo"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Open App Support" id="beM-hf-OeJ">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem title="Open Server" id="sJg-9d-5RA">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="openServer:" target="YaZ-3s-s6T" id="gOr-AB-DaP"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="dUX-SB-quc"/>
-                                        <menuItem title="Close" keyEquivalent="w" id="xyv-n1-i5a"/>
                                         <menuItem title="Save…" keyEquivalent="s" id="rOm-Qa-ckg"/>
                                     </items>
                                 </menu>

@@ -190,6 +190,9 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Create DBOutposts - New method (only a few outposts)
 - [ ] ServerData.swift improvements - make most Guild requests there. Important to update
 
+- [X] Server sub ElectionContent for ElectionData
+- [X] call electionTurnCycle from server
+
 - [ ] Guild Room - President accept joinlist -> move to invites.
 - [ ] GameOptions - Tutorial should show tutorial. Disable when close? Or remove.
 
@@ -222,6 +225,12 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Screenshots Mars Horizon
 - [ ] Screenshots Mars City
 - [ ] Screenshots GuildRoom Election
+
+One of the following, with a 16:10 aspect ratio.
+1. 1280 x 800 pixels
+2. 1440 x 900 pixels
+3. 2560 x 1600 pixels
+4. 2880 x 1800 pixels
 
 ### Tests
 

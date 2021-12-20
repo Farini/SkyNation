@@ -149,10 +149,10 @@ struct GuildRoom: View {
                             .padding(.top, 6)
                             
                             Group {
-                                if let election = controller.electionData {
+                                if let election = controller.election {
                                     VStack {
-                                        Text("Election: \(election.electionStage.rawValue)")
-                                        Text("Election State: \(election.election.voted.count)")
+                                        Text("Election Stage: \(election.getStage().rawValue)")
+                                        Text("Votes: \(election.voted.count)")
                                     }
                                     .padding(.top, 6)
                                 }

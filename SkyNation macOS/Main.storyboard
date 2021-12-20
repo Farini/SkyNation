@@ -91,12 +91,6 @@
                                                 <action selector="openFinder:" target="fSw-3E-fBJ" id="boh-pQ-Suq"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Open App Support" id="CzB-fp-7gX">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="openAppSupport:" target="fSw-3E-fBJ" id="ifj-QF-00r"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
                                         <menuItem title="Close" keyEquivalent="w" id="DVo-aG-piG">
                                             <connections>

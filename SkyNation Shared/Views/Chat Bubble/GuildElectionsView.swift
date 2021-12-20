@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+/*
 struct GuildElectionsView:View {
     
     @ObservedObject var controller:ChatBubbleController
@@ -85,3 +85,5 @@ struct GuildElectionsView:View {
     }
     
 }
+*/
+

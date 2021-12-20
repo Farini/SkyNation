@@ -73,7 +73,14 @@ class MacMenu:NSObject, NSMenuDelegate {
     
     @IBAction func openFinder(_ sender: NSMenuItem) {
         
-        print("Getting finder (From MACMENU)")
+        print("Getting finder")
+        let username = NSUserName()
+        if username.contains("farini") == false {
+            print("Only farini can open this. You = \(username)")
+            return
+        }
+        
+        print("Ok, \(username). Here are the files.")
         
         if let dataPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             print("opening workspace")
@@ -95,9 +102,6 @@ class MacMenu:NSObject, NSMenuDelegate {
     
     
     @IBAction func openAppSupport(_ sender: NSMenuItem) {
-        
-        print("Getting finder")
-        
         if let dataPath = FileManager.default.urls(for: .applicationDirectory, in: .userDomainMask).first {
             
             NSWorkspace.shared.activateFileViewerSelecting([dataPath])

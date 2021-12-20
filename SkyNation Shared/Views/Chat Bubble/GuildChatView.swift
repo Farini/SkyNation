@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+/*
 struct GuildChatView: View {
     
     @ObservedObject var controller:ChatBubbleController
@@ -123,3 +123,5 @@ struct GuildChatView_Previews: PreviewProvider {
         return [m1, m2, m3, m4]
     }
 }
+*/
+
