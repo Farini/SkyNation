@@ -8,19 +8,14 @@
 import SwiftUI
 
 struct GuildCardView: View {
-    // @ObservedObject var controller:GameSettingsController
     
-//    var guildFull:GuildFullContent
     var guildSum:GuildSummary
     var guildMap:GuildMap
     
-    /// Presentation Style
-//    var style: GuildView.Style
-    
-    enum Style {
-        case largeSummary
-        case largeDescriptive
-    }
+//    enum Style {
+//        case largeSummary
+//        case largeDescriptive
+//    }
     var shape = RoundedRectangle(cornerRadius: 16, style: .continuous)
     
     private enum FaceSide {
@@ -32,11 +27,8 @@ struct GuildCardView: View {
     var flipAction: () -> Void = {}
     
     init(guildMap:GuildMap) {
-        // self.controller = controller
-//        self.guildFull = guild
         self.guildMap = guildMap
         self.guildSum = guildMap.makeSummary()
-//        self.style = style
     }
     
     var body: some View {
@@ -68,8 +60,6 @@ struct GuildCardView: View {
                         ScrollView {
                             VStack {
                                 Text("Citizens: \(guildSum.citizens.count)").font(.title2).foregroundColor(.green)
-//                                    .foregroundColor(style == .largeDescriptive ? Color.white:Color.yellow)
-//                                    .font(style == .largeSummary ? .title3:.body)
                                     .padding(.bottom, 4)
                                 
                                 ForEach(guildMap.citizens, id:\.self) { citizen in
@@ -94,18 +84,22 @@ struct GuildCardView: View {
                     case .outposts:
                         
                         Text("Outposts").font(.title2).foregroundColor(.blue)
-                        VStack {
-                            ForEach(guildMap.outposts, id:\.id) { outpost in
-                                Text("\(outpost.type.rawValue) \(outpost.level)")
+                        ScrollView {
+                            VStack {
+                                ForEach(guildMap.outposts, id:\.id) { outpost in
+                                    Text("\(outpost.type.rawValue) \(outpost.level)")
+                                }
+                                Text("Total level: \(guildMap.outposts.compactMap({ $0.level }).reduce(0, +))").foregroundColor(.orange)
                             }
-                            Text("Total level: \(guildMap.outposts.compactMap({ $0.level }).reduce(0, +))").foregroundColor(.orange)
                         }
                         
                     case .preferences:
                         
                         Text("Preferences").font(.title2).foregroundColor(.orange)
                         Image(systemName: guildSum.isOpen ? "lock.open":"lock")
-                        Text("Openness: \(guildSum.isOpen ? "Yes":"No")")
+                            .font(.largeTitle)
+                        Text("Open: \(guildSum.isOpen ? "Yes":"No")")
+                        Text(guildSum.isOpen ? "Guild is open for players to join.":"You must be invited to join this guild.").font(.footnote).foregroundColor(.gray)
                         
                         Text("📆 \(GameFormatters.dateFormatter.string(from: guildMap.election?.start ?? Date.distantFuture))")
                 }

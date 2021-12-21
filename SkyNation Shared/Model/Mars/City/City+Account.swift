@@ -504,7 +504,9 @@ extension CityData {
                     // reportLine += " +🍽"
                 } else {
                     healthDelta -= 4
-                    person.foodEaten.removeFirst()
+                    if person.foodEaten.isEmpty == false {
+                        person.foodEaten.removeFirst()
+                    }
                     // reportLine += " -🍽"
                 }
             } else {

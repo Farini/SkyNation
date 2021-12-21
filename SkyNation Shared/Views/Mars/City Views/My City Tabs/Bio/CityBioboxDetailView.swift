@@ -18,6 +18,9 @@ struct CityBioboxDetailView: View {
     @State private var geneticLoops:Int = 0
     let scene = SCNScene(named: "Art.scnassets/ParticleEmitters/DNAModel.scn")!
     
+    @State private var errorMessage:String?
+    @State private var successMessage:String?
+    
     var body: some View {
         
         VStack {
@@ -39,7 +42,6 @@ struct CityBioboxDetailView: View {
                         Text("Mode  \(bioBox.mode.rawValue)")
                             .font(.headline)
                             .foregroundColor(.blue)
-                        //                        .padding()
                         
                         Text("Energy: \(cityData.availableEnergy())")
                             .foregroundColor(.green)
@@ -64,14 +66,14 @@ struct CityBioboxDetailView: View {
                         Text(controller.bioboxModel?.fittestString ?? "")
                             .foregroundColor(.orange)
                         
-//                        if let error = controller.errorMessage {
-//                            Text(error)
-//                                .foregroundColor(.red)
-//                        }
-//                        if let positive = controller.positiveMessage {
-//                            Text(positive)
-//                                .foregroundColor(.green)
-//                        }
+                        if let error = errorMessage {
+                            Text(error)
+                                .foregroundColor(.red)
+                        }
+                        if let positive = successMessage {
+                            Text(positive)
+                                .foregroundColor(.green)
+                        }
                     }
                     
                     Divider()
@@ -118,6 +120,8 @@ struct CityBioboxDetailView: View {
     
     func multiplyPopulation(box:BioBox) {
         
+        clearMessages()
+        
         let multiplyEnergyCost:Int = 10
         
         let consume = cityData.consumeEnergyFromBatteries(amount: multiplyEnergyCost)
@@ -136,53 +140,70 @@ struct CityBioboxDetailView: View {
                 box.mode = .multiply
                 
                 // Update and Save
-//                self.availableEnergy = station.truss.getAvailableEnergy()
-//                self.didSelect(box: box)
-//                self.saveStation()
-//                positiveMessage = "Perfect DNA multiplied."
+                controller.saveCity()
+                self.successMessage = "box \(box.perfectDNA) multiplied. Now has \(box.population.count)"
+                
                 print("Perfect DNA Found! Updating box.")
                 return
             } else {
-//                errorMessage = "BioBox does not contain perfect DNA"
+                errorMessage = "BioBox does not contain perfect DNA"
             }
+        } else {
+            errorMessage = "Not enough energy"
         }
+    }
+    
+    func clearMessages() {
+        self.errorMessage = ""
+        self.successMessage = ""
     }
     
     func growPopulation(box:BioBox) {
         
-        // Check if population is over limit
-        let boxLimit = box.populationLimit
-        if box.population.count >= boxLimit {
-            print("Error: Population bigger than limit. Can't grow.")
-            return
-        }
+        clearMessages()
         
-        // Population shouldn't be empty
-        if box.population.count == 0 {
-            let newPopulation = DNAGenerator.populate(dnaChoice: DNAOption(rawValue:box.perfectDNA)!, popSize: 1)
-            box.population = newPopulation
-            return
-        }
+        let growEnergyCost:Int = 12
+        let consume = cityData.consumeEnergyFromBatteries(amount: growEnergyCost)
         
-        var newBorns:Int = 0
-        let pct = Double(box.population.count) / Double(box.populationLimit)
-        if pct < 0.25 {
-            // double population
-            newBorns = box.population.count * 2
-        } else if pct < 0.5 {
-            // 30%
-            newBorns = Int(Double(box.population.count) * 0.33)
-        } else if pct < 1.0 {
-            // add 2
-            newBorns = 2
-        }
-        
-        if cityData.consumeEnergyFromBatteries(amount: newBorns * 10) {
+        if consume {
+            
+            // Check if population is over limit
+            let boxLimit = box.populationLimit
+            if box.population.count >= boxLimit {
+                print("Error: Population bigger than limit. Can't grow.")
+                return
+            }
+            
+            // Population shouldn't be empty
+            if box.population.count == 0 {
+                let newPopulation = DNAGenerator.populate(dnaChoice: DNAOption(rawValue:box.perfectDNA)!, popSize: 1)
+                box.population = newPopulation
+                return
+            }
+            
+            var newBorns:Int = 0
+            let pct = Double(box.population.count) / Double(box.populationLimit)
+            if pct < 0.25 {
+                // double population
+                newBorns = box.population.count * 2
+            } else if pct < 0.5 {
+                // 30%
+                newBorns = Int(Double(box.population.count) * 0.33)
+            } else if pct < 1.0 {
+                // add 2
+                newBorns = 2
+            }
+            
+            
             let newPopulation = DNAGenerator.populate(dnaChoice: DNAOption(rawValue:box.perfectDNA)!, popSize: newBorns)
             box.population.append(contentsOf: newPopulation)
+            controller.saveCity()
+            self.successMessage = "Box grew. Now has \(box.population.count)"
+           
         } else {
-            // error
+            self.errorMessage = "Not enough energy"
         }
+        
         
 //        if station.truss.consumeEnergy(amount: newBorns * 10) {
 //            let newPopulation = DNAGenerator.populate(dnaChoice: self.dnaOption, popSize: newBorns)

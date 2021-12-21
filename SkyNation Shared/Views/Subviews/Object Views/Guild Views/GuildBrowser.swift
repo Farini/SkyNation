@@ -125,28 +125,7 @@ struct GuildBrowser: View {
                     }
                     
                     ForEach(guildList, id:\.id) { gList in
-                        HStack {
-                            Image(systemName: GuildIcon(rawValue: gList.icon)!.imageName)
-                                .font(.largeTitle)
-                                .foregroundColor(GuildColor(rawValue: gList.color)!.color)
-                                .padding(.vertical, 8)
-                                .padding(.horizontal, 6)
-                                .background(Color.black)
-                                .cornerRadius(6)
-                            
-                            VStack(alignment:.leading) {
-                                Text("\(gList.name)").foregroundColor(GuildColor(rawValue: gList.color)!.color)
-                                    .font(GameFont.section.makeFont())
-                                HStack {
-                                    Text("👤 \(gList.citizens.count)")
-                                    Text("🌆 \(gList.cities.count)")
-                                    Text("⚙️ \(gList.outposts.count)")
-                                    Spacer()
-                                }
-                                .font(GameFont.mono.makeFont())
-                            }
-                        }
-                        .background(self.guildMap?.id == gList.id ? Color.black:Color.clear)
+                        GuildRow(guild: gList, selected: guildMap?.id == gList.id)
                         .onTapGesture {
                             self.guildMap = gMaps.first(where: { $0.id == gList.id })
                         }
@@ -213,6 +192,37 @@ enum GuildBrowserConditions {
     case citizenOf(guild:GuildMap)
 }
 
+struct GuildRow:View {
+    
+    var guild:GuildSummary
+    var selected:Bool
+    
+    var body: some View {
+        HStack {
+            Image(systemName: GuildIcon(rawValue: guild.icon)!.imageName)
+                .font(.largeTitle)
+                .foregroundColor(GuildColor(rawValue: guild.color)!.color)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 6)
+                .background(Color.black)
+                .cornerRadius(6)
+            
+            VStack(alignment:.leading) {
+                Text("\(guild.name)").foregroundColor(GuildColor(rawValue: guild.color)!.color)
+                    .font(GameFont.section.makeFont())
+                HStack {
+                    Text("👤 \(guild.citizens.count)")
+                    Text("🌆 \(guild.cities.count)")
+                    Text("⚙️ \(guild.outposts.count)")
+                    Spacer()
+                }
+                .font(GameFont.mono.makeFont())
+            }
+        }
+        .background(selected ? Color.black:Color.clear)
+    }
+}
+
 struct PlayerGuildIndicator: View {
     
     var guildConditions:GuildBrowserConditions = .noGuild
@@ -238,6 +248,8 @@ struct PlayerGuildIndicator: View {
                         
                     case .citizenOf(let guild):
                         Image(systemName: GuildIcon(rawValue: guild.icon)!.imageName)
+                            .font(.largeTitle)
+                            .foregroundColor(GuildColor(rawValue: guild.color)!.color)
                         Text("Joined \(guild.name)")
                 }
                 Spacer()
@@ -245,7 +257,7 @@ struct PlayerGuildIndicator: View {
             
             switch guildConditions {
                 case .noEntry:
-                    Text("Head to the store to buy some").foregroundColor(.orange)
+                    Text("Head to the store 🛍").foregroundColor(.orange)
                 case .noGuild:
                     Text("Join a guild!").foregroundColor(.orange)
                 case .citizenOf(let guild):

@@ -1137,8 +1137,8 @@
 			isa = PBXGroup;
 			children = (
 				85351E7A26FED3C400EEE04C /* CityBioView.swift */,
-				85351E7E26FEE07500EEE04C /* CityBioBuilderView.swift */,
 				85351E8226FEEA6700EEE04C /* CityBioboxDetailView.swift */,
+				85351E7E26FEE07500EEE04C /* CityBioBuilderView.swift */,
 			);
 			path = Bio;
 			sourceTree = "<group>";

@@ -961,6 +961,15 @@ class LocalCityController:ObservableObject, BioController {
         return false
     }
     
+    func saveCity() {
+        do {
+            try LocalDatabase.shared.saveCity(cityData)
+            print("City saved")
+        } catch {
+            print("Error saving city: \(error.localizedDescription)")
+        }
+    }
+    
 }
 
 /// A Model used to check Outpost Collection by a `City`

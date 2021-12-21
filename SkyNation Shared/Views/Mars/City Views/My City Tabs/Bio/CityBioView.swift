@@ -31,17 +31,17 @@ struct CityBioView: View {
                         
                         Section(header: Text("Bio Boxes")) {
                             
-                            ForEach(controller.cityData.bioBoxes) { biobox in
-                                BioBoxRow(box: biobox)
+                            ForEach($controller.cityData.bioBoxes) { biobox in
+                                BioBoxRow(box: biobox.wrappedValue)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 4, style: .continuous)
                                             .inset(by: 0.5)
-                                            .stroke((biobox == selectedBiobox) == true ? Color.blue.opacity(0.9):Color.clear, lineWidth: 1)
+                                            .stroke((biobox.wrappedValue == selectedBiobox) == true ? Color.blue.opacity(0.9):Color.clear, lineWidth: 1)
                                     )
                                     .onTapGesture {
-                                        self.selectedBiobox = biobox
-                                        self.selection = .selected(box: biobox)
-                                        if let dna = DNAOption(rawValue: biobox.perfectDNA) {
+                                        self.selectedBiobox = biobox.wrappedValue
+                                        self.selection = .selected(box: biobox.wrappedValue)
+                                        if let dna = DNAOption(rawValue: biobox.wrappedValue.perfectDNA) {
                                             self.dnaChoice = dna
                                         }else{
                                             self.dnaChoice = .banana
@@ -53,6 +53,7 @@ struct CityBioView: View {
                     .frame(minWidth: 80, maxWidth: 150, alignment: .leading)
                     
                     switch selection {
+                            
                         case .notSelected:
                             // Default Detail
                             ScrollView([.vertical, .horizontal], showsIndicators: true) {
@@ -97,7 +98,7 @@ struct CityBioView: View {
                             HStack {
                                 
                                 ScrollView([.vertical], showsIndicators: true) {
-                                    CityBioboxDetailView(controller: controller, cityData: .constant(controller.cityData), bioBox: .constant(bioBox)) {
+                                    CityBioboxDetailView(controller: controller, cityData: $controller.cityData, bioBox: .constant(bioBox)) {
                                         self.selection = .notSelected
                                     }
                                 }

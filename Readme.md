@@ -8,6 +8,7 @@ Feel free to take a look at the *ToDo* list, make suggestions, etc.
 
 ![Screenshot1](https://drive.google.com/uc?export=view&id=1AjoeIrnVmOfZsoLK7KWuX3uWooEkEmtr)
 
+Website: https://cfarini.com/SKNS/web/
 
 # 📝 Projects
 SkyNation is broken down into 5 projects.
@@ -183,26 +184,27 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] SKNPlayer - gcid
 - [X] Remove SceneKit Debug Bar from View
 - [X] Setup Graphics Options (multisampling)
+- [X] City View - Hab - Remake with new Views
+- [X] City View - Lab - Remake with new Views
+- [X] City View - Bio - Remake with new Views
+- [X] Server sub ElectionContent for ElectionData
+- [X] call electionTurnCycle from server
+- [X] Create DBOutposts - New method (only a few outposts)
 
 - [ ] Guild Substitution: `GuildMap` for `GuildFullContent` - Will have to sub guild in guild navigator view, which is being remade.
 - [ ] Finish new Guild Navigator
 - [ ] Proper ways to join a guild (joinlist, invites) -> One Request?
-- [X] Create DBOutposts - New method (only a few outposts)
+
 - [ ] ServerData.swift improvements - make most Guild requests there. Important to update
 
-- [X] Server sub ElectionContent for ElectionData
-- [X] call electionTurnCycle from server
-
 - [ ] Guild Room - President accept joinlist -> move to invites.
+- [ ] Guild Room - Mission View with 3 Progress bars.
 - [ ] GameOptions - Tutorial should show tutorial. Disable when close? Or remove.
 
 - [ ] Mars Scene - News
 - [ ] Mars Scene - All Guild Vehicles arriving
 
-- [ ] City View - Hab - Remake with new Views
-- [ ] City View - Lab - Remake with new Views
-- [ ] City View - Bio - Remake with new Views
-
+- [ ] City View - Bio - "Evolve" not updating the list
 - [ ] Garage - Make sure charging 'propellants'
 
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
@@ -231,6 +233,8 @@ One of the following, with a 16:10 aspect ratio.
 2. 1440 x 900 pixels
 3. 2560 x 1600 pixels
 4. 2880 x 1800 pixels
+
+
 
 ### Tests
 

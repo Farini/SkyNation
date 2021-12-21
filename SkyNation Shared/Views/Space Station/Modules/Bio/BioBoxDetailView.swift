@@ -89,13 +89,13 @@ struct BioBoxDetailView:View {
                             print("Grow population")
                             controller.growPopulation(box:bioBox)
                         }
-                        .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                        .buttonStyle(GameButtonStyle())
                         .disabled(controller.growDisabledState(box: bioBox))
                         
                         Button("Evolve") {
                             controller.evolveBio(box:bioBox)
                         }
-                        .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                        .buttonStyle(GameButtonStyle())
                         .disabled(controller.evolveDisabledState(box:bioBox))
                         
                     case .evolve:
@@ -103,33 +103,33 @@ struct BioBoxDetailView:View {
                             print("Grow population")
                             controller.growPopulation(box:bioBox)
                         }
-                        .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                        .buttonStyle(GameButtonStyle())
                         .disabled(controller.growDisabledState(box: bioBox))
                         
                         Button("Evolve") {
                             controller.evolveBio(box:bioBox)
                         }
-                        .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                        .buttonStyle(GameButtonStyle())
                         .disabled(controller.evolveDisabledState(box:bioBox))
                         
                     case .multiply:
                         Button("Multiply") {
                             controller.multiply(box: bioBox)
                         }
-                        .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                        .buttonStyle(GameButtonStyle())
                         .disabled(controller.multiplyDisabledState(box: bioBox))
                         
                         Button("Shrink") {
                             controller.shrink(box: bioBox)
                         }
-                        .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                        .buttonStyle(GameButtonStyle())
                         .disabled(bioBox.population.count >= bioBox.populationLimit)
                         
                     case .serving:
                         Button("Multiply") {
                             controller.multiply(box: bioBox)
                         }
-                        .buttonStyle(NeumorphicButtonStyle(bgColor:.orange))
+                        .buttonStyle(GameButtonStyle())
                         .disabled(controller.multiplyDisabledState(box: bioBox))
                 }
             }

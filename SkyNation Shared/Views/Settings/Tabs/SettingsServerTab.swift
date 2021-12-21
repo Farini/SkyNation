@@ -24,6 +24,7 @@ struct SettingsServerTab:View {
                     Group {
                         VStack(alignment:.leading) {
                             
+                            // Server Version
                             HStack(alignment:.lastTextBaseline) {
                                 Text("Server").font(.title)
                                 Text("version: 1.0").foregroundColor(.gray)
