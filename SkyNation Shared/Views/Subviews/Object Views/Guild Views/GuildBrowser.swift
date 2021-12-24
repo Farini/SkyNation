@@ -25,25 +25,31 @@ import SwiftUI
 
 struct GuildBrowser: View {
     
-    /// Selected Guild?
+    @ObservedObject var controller:GameSettingsController
+    
+    /// Selected Guild
     @State var guildMap:GuildMap?
     
+    var player:SKNPlayer = LocalDatabase.shared.player
+    
     /// All Guilds Fetched
-    var guildList:[GuildSummary]
+//    var guildList:[GuildSummary]
     
     // used for previews only
-    var gMaps:[GuildMap]
+//    var gMaps:[GuildMap]
     
+    // Search
     @State private var displaySearchField:Bool = false
     @State private var searchString:String = ""
     
     init() {
-        let maps = GuildBrowser.makeGMArray()
-        self.gMaps = maps
-        let summaries = GuildBrowser.makeGSArray(gMaps: maps)
-        self.guildList = summaries
+//        let maps = GuildBrowser.makeGMArray()
+//        self.gMaps = maps
+//        let summaries = GuildBrowser.makeGSArray(gMaps: maps)
+//        self.guildList = summaries
         
         // Get the player.
+        /*
         let player = LocalDatabase.shared.player
         let entry = player.marsEntryPass()
         if entry.result == true {
@@ -58,6 +64,8 @@ struct GuildBrowser: View {
         } else {
             // no entry
         }
+        */
+        
         // 1. Check if has entry
         // 2. Check if has Guild
         // 3. Make `GuildBrowserConditions`
@@ -67,49 +75,102 @@ struct GuildBrowser: View {
         // noEntry      disabled    disabled    disabled    disabled
         // noguild      disabled    enabled     enabled     enabled
         // guild        enabled     disabled    disabled    enabled
+        
+        self.controller = GameSettingsController()
     }
     
     var body: some View {
         VStack {
             
+            // Top Bar
             HStack {
                 Text("Guild Browser").font(GameFont.section.makeFont())
                 Spacer()
                 
-                if displaySearchField == true {
+                if displaySearchField {
                     TextField("Search", text: $searchString)
                         .textFieldStyle(.roundedBorder)
                         .frame(maxWidth:200)
+                        .transition(.move(edge: .trailing))
                 }
                 
-                Button("Leave") {
-                    print("Leave Guild. Player must have a valid guildID")
-                }
-                .buttonStyle(GameButtonStyle())
-                
-                Button("Join") {
-                    print("Join Guild. Player must have a nil guildID")
-                }
-                .buttonStyle(GameButtonStyle())
-                
-                Button("Create") {
-                    print("Join Guild. Player must have a nil guildID")
-                }
-                .buttonStyle(GameButtonStyle())
-                
-                Button("Search") {
-                    print("Join Guild. Player must have a nil guildID")
-                    if displaySearchField == true && searchString.isEmpty == false {
-                        // controller.search...
+                switch controller.guildJoinState {
+                    case .noEntry:
+                        Text("No Entry").foregroundColor(.gray)
+                    case .noGuild:
                         
-                    } else {
-                        // Show the search bar
-                        displaySearchField.toggle()
-                    }
+                        Button("Create") {
+                            print("Join Guild. Player must have a nil guildID")
+                        }
+                        .buttonStyle(GameButtonStyle())
+                        
+                        Button("Join") {
+                            print("Join Guild. Player must have a nil guildID")
+                        }
+                        .buttonStyle(GameButtonStyle())
+                        
+                        Button("Search") {
+                            print("Join Guild. Player must have a nil guildID")
+                            if displaySearchField == true && searchString.isEmpty == false {
+                                // controller.search...
+                                
+                            } else {
+                                // Show the search bar
+                                withAnimation() {
+                                    self.displaySearchField.toggle()
+                                }
+                            }
+                        }
+                        .buttonStyle(GameButtonStyle())
+                    case .joined(let guild):
+                        Text("Joined \(guild.name)")
+                        Button("Leave") {
+                            print("Leave Guild. Player must have a valid guildID")
+                            
+                            // TODO: - Alert
+                            // controller.leaveGuild()
+                            
+                        }
+                        .buttonStyle(GameButtonStyle())
+                        Button("Search") {
+                            print("Join Guild. Player must have a nil guildID")
+                            if displaySearchField == true && searchString.isEmpty == false {
+                                // controller.search...
+                                
+                            } else {
+                                // Show the search bar
+                                withAnimation() {
+                                    self.displaySearchField.toggle()
+                                }
+                                
+                            }
+                        }
+                        .buttonStyle(GameButtonStyle())
+                        
+                    case .loading:
+                        Text("Loading...")
+                        
+                        Button("Search") {
+                            print("Join Guild. Player must have a nil guildID")
+                            if displaySearchField {
+                                if searchString.isEmpty == false {
+                                    // controller.search...
+                                } else {
+                                    // empty string
+                                    withAnimation() {
+                                        self.displaySearchField.toggle()
+                                    }
+                                }
+                            } else {
+                                withAnimation() {
+                                    self.displaySearchField.toggle()
+                                }
+                            }
+                        }
+                        .buttonStyle(GameButtonStyle())
+                    default:
+                        Text("Default")
                 }
-                .buttonStyle(GameButtonStyle())
-                
-                
             }
             .padding(.top, 6)
             .padding(.horizontal)
@@ -117,18 +178,36 @@ struct GuildBrowser: View {
             Divider()
             
             HStack {
+                
+                // List
                 List {
                     
+                    // Player Guild Indicator
                     VStack {
                         PlayerGuildIndicator(guildConditions: .noGuild)
                         Divider()
                     }
                     
-                    ForEach(guildList, id:\.id) { gList in
+                    // Fetched Guild Rows
+                    ForEach(controller.joinableGuilds, id:\.id) { gList in
                         GuildRow(guild: gList, selected: guildMap?.id == gList.id)
                         .onTapGesture {
+                            /*
+                            // this wont work anymore
                             self.guildMap = gMaps.first(where: { $0.id == gList.id })
+                            */
+                            
+                            // tell controller to fetch guild details
+                            // need to change return object to `GuildMap`
+                            // controller.fetchGuildDetails(guildSum: gList)
+//                            controller.fetchGuildMapDetails(from: gList)
                         }
+                    }
+                    if controller.joinableGuilds.isEmpty && controller.player.marsEntryPass().result == true {
+                        Button("Fetch list") {
+                            controller.fetchGuilds()
+                        }
+                        .buttonStyle(GameButtonStyle())
                     }
                 }
                 .frame(maxWidth:220)

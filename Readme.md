@@ -190,15 +190,25 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Server sub ElectionContent for ElectionData
 - [X] call electionTurnCycle from server
 - [X] Create DBOutposts - New method (only a few outposts)
+- [X] Mac Help Menu
 
 - [ ] Guild Substitution: `GuildMap` for `GuildFullContent` - Will have to sub guild in guild navigator view, which is being remade.
-- [ ] Finish new Guild Navigator
-- [ ] Proper ways to join a guild (joinlist, invites) -> One Request?
+
+- [ ] Guild Navigator - Use SKNS.browseGuildMap... to get `GuildMap` from `GuildSummary`
+- [ ] Guild Navigator - Use SKNS.browseInvitesFromGuilds... to get `[GuildSummary]`
+- [ ] Guild Navigator - Default Fetch - `browseguilds` vs `browseInvitesFromGuilds()`
+- [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
+
+- [ ] SKNSData - otherPlayers:`[PlayerContent]` - Invite list + joinlist
+- [ ] SKNSData - joinRequests:[UUID] = The requests sent to Guilds that are locked.
 
 - [ ] ServerData.swift improvements - make most Guild requests there. Important to update
 
 - [ ] Guild Room - President accept joinlist -> move to invites.
+- [ ] Guild Room - Fetch Players who's on the lists. (join + invite)
 - [ ] Guild Room - Mission View with 3 Progress bars.
+- [ ] Guild Room - Block chat for players that can't chat.
+
 - [ ] GameOptions - Tutorial should show tutorial. Disable when close? Or remove.
 
 - [ ] Mars Scene - News

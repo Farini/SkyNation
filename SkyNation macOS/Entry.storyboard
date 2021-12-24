@@ -252,7 +252,11 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Help" systemMenu="help" id="ZgR-xW-hvk">
                                     <items>
-                                        <menuItem title="GameTemplate Help" keyEquivalent="?" id="axh-ze-dBc"/>
+                                        <menuItem title="Open in Safari" keyEquivalent="?" id="axh-ze-dBc">
+                                            <connections>
+                                                <action selector="openHelp:" target="YaZ-3s-s6T" id="9rC-YZ-i52"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>

@@ -183,6 +183,7 @@ struct SettingsServerTab:View {
                             VStack {
                                 Text("Error \(error.localizedDescription)").foregroundColor(.red)
                                 Text(controller.guildJoinState.message)
+                                Spacer()
                             }
                     }
                 }
@@ -265,11 +266,6 @@ struct SettingsServerTab:View {
             }
         }
     }
-    
-    
-//    func closeviewaction() {
-//
-//    }
  }
  
 

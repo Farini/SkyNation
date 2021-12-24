@@ -844,7 +844,44 @@ class SKNS {
         task.resume()
     }
     
-    // New!
+    /// When browsing guilds, fetch details `GuildMap` object.
+    static func browseGuildMap(gSum:GuildSummary, completion:((GuildMap?, Error?) -> ())?) {
+        
+        let url = URL(string: "\(baseAddress)/guilds/browsemap/\(gSum.id)")!
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue // (Post): HTTPMethod.POST.rawValue // (Get): HTTPMethod.GET.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        // Set the playerID if there is one
+//        request.setValue(pid.uuidString, forHTTPHeaderField: "pid")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                do {
+                    let guildmap:GuildMap = try decoder.decode(GuildMap.self, from: data)
+                    DispatchQueue.main.async {
+                        print("Data returning")
+                        completion?(guildmap, nil)
+                    }
+                } catch {
+                    print("Not Guilds Object. Error:\(error.localizedDescription): \(data)")
+                    if let string = String(data: data, encoding: .utf8) {
+                        print("Not Guilds String: \(string)")
+                    }
+                }
+            } else if let error = error {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+    }
+    
     /// Equivalent to fetch player's guild
     static func buildGuildMap(completion:((GuildMap?, Error?) -> ())?) {
         

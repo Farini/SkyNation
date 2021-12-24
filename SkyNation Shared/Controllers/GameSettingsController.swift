@@ -125,7 +125,11 @@ class GameSettingsController:ObservableObject {
     @Published var guildJoinState:GuildJoinState = .loading
     @Published var joinableGuilds:[GuildSummary] = []
     @Published var selectedGuildObj:GuildFullContent?
+    
     private var otherFetchedGuilds:[GuildFullContent] = []
+    private var otherGuildMaps:[GuildMap] = []
+    // joinRequestsSent
+    // notifications if got accepted?
     
     /// The Guild this player has joined.
     @Published var myGuild:GuildFullContent?
@@ -313,8 +317,6 @@ class GameSettingsController:ObservableObject {
         self.viewState = .EditingPlayer
     }
     
-    // MARK: - Guild Tab + Online
-    
     func updateServerWith(player:SKNPlayer) {
         
         self.warningList = []
@@ -331,6 +333,8 @@ class GameSettingsController:ObservableObject {
             }
         }
     }
+    
+    // MARK: - Guild Tab + Online
     
     /// Entering Server Tab - Fetch Player's Guild, (or list), and Player status
     func enterServerTab() {
@@ -359,7 +363,7 @@ class GameSettingsController:ObservableObject {
         // Player has entry
         
         
-        // Server Tab stuff
+        // Check if has guild
         if let gid = player.guildID {
             
             print("Player GuildID: \(gid)")
@@ -370,6 +374,10 @@ class GameSettingsController:ObservableObject {
                 print("Already got my Guild.: \(myGuild.name) Returning")
                 return
             }
+            
+            /*
+             Check if guild has citizens, and that the player is one of them
+             */
             
             self.fetchMyGuild()
             
@@ -423,17 +431,18 @@ class GameSettingsController:ObservableObject {
         }
     }
     
+    
     /// Fetches all `Joinable` Guilds
     func fetchGuilds() {
         
         
-        SKNS.browseInvitesFromGuilds { guildArray, error in
-            if let guildArray = guildArray {
-                DispatchQueue.main.async {
-                    self.joinableGuilds.append(contentsOf: guildArray)
-                }
-            }
-        }
+//        SKNS.browseInvitesFromGuilds { guildArray, error in
+//            if let guildArray = guildArray {
+//                DispatchQueue.main.async {
+//                    self.joinableGuilds.append(contentsOf: guildArray)
+//                }
+//            }
+//        }
         
         SKNS.browseGuilds { (guilds, error) in
             if let array = guilds {
@@ -523,7 +532,15 @@ class GameSettingsController:ObservableObject {
                         self.guildJoinState = .noGuild
                     } catch {
                         print("Error: \(error.localizedDescription)")
+                        self.warningList.append(error.localizedDescription)
                     }
+                }
+            } else {
+                if let error = error {
+                    print("Error: \(error.localizedDescription)")
+                    self.warningList.append(error.localizedDescription)
+                } else {
+                    print("Unknown error.")
                 }
             }
         }
@@ -551,6 +568,35 @@ class GameSettingsController:ObservableObject {
             }
         }
     }
+    
+    func fetchGuildMapDetails(from guildSum:GuildSummary) {
+        
+        /*
+        if let fetched:GuildMap = otherGuildMaps.first(where: { $0.id == guildSum.id }) {
+            
+            // self.selectedGuildObj = fetched
+            // return
+            
+        } else {
+         
+            // also, go through serverData?
+         
+            SKNS.browseGuildMap(gSum: guildSum) { guildMap, error in
+                if let guildMap = guildMap {
+                    // set obj
+//                    DispatchQueue.main.async {
+//                        self.selectedGuildObj = fullGuild
+//                        self.otherFetchedGuilds.append(fullGuild)
+//                    }
+                } else {
+                    // deal with error
+                }
+            }
+            
+        }
+         */
+    }
+    
     
     /// Request to join a Guild
     func requestJoin(_ guild:GuildFullContent) {

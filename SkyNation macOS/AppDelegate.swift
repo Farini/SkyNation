@@ -88,6 +88,12 @@ class MacMenu:NSObject, NSMenuDelegate {
         }
     }
     
+    @IBAction func openHelp(_ sender: NSMenuItem) {
+        let url = URL(string: "https://cfarini.com/SKNS/tutorial/")!
+        NSWorkspace.shared.open(url)
+    }
+    
+    
     @IBAction func openServer(_ sender: NSMenuItem) {
         print("Temporarily disabled")
 //        let window = ClosableWindow(

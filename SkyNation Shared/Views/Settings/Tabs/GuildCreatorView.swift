@@ -15,7 +15,12 @@ struct GuildCreatorView: View {
     @State var isOpen:Bool = true
     
     /// Pass the guild being created, or cancel
-    var action:((GuildCreate?, Bool) -> ()) // = { _,_  in }
+    var action:((GuildCreate?, Bool) -> ())
+    
+    // TODO: Use Step View
+    /*
+     Add lock image to option
+     */
     
     private let shape = RoundedRectangle(cornerRadius: 8, style: .continuous)
     
