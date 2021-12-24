@@ -569,6 +569,52 @@ class SKNS {
         
     }
     
+    /// Search whitelist
+    static func searchGuildsWhitelist(completion:(([PlayerContent], Error?) -> ())?) {
+        
+        let url = URL(string: "\(baseAddress)/player/credentials/search/whitelist")!
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        // Set Credentials for authorization.
+        let basicCredential = "\(LocalDatabase.shared.player.playerID?.uuidString ?? UUID().uuidString):\(LocalDatabase.shared.player.keyPass ?? "XXX")".data(using: .utf8)!.base64EncodedString()
+        request.setValue("Basic \(basicCredential)", forHTTPHeaderField: "Authorization")
+        
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .secondsSince1970
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            
+            if let data = data {
+                
+                if let foundPlayers:[PlayerContent] = try? decoder.decode([PlayerContent].self, from: data) {
+                    
+                    print("Found \(foundPlayers.count) players.")
+                    DispatchQueue.main.async {
+                        completion?(foundPlayers, nil)
+                    }
+                    return
+                    
+                } else {
+                    
+                    print("Could not decode Fetched Players. Data: \(String(data:data, encoding:.utf8) ?? "n/a")")
+                    DispatchQueue.main.async {
+                        completion?([], error)
+                    }
+                    return
+                }
+            } else {
+                DispatchQueue.main.async {
+                    print("Did not get Data from Find Player Request. Error: \(error?.localizedDescription ?? "n/a")")
+                    completion?([], error)
+                }
+            }
+        }
+        task.resume()
+    }
+    
     // MARK: - Tokens + Purchase
     
     // Validate

@@ -352,6 +352,7 @@ class GuildRoomController:ObservableObject {
     
     func inviteToGuild(playerContent:PlayerContent) {
         self.tokenMessage = ""
+        
         SKNS.inviteToGuild(player: playerContent) { newPlayerContent, error in
             if let pp = newPlayerContent {
                 DispatchQueue.main.async {
@@ -359,6 +360,48 @@ class GuildRoomController:ObservableObject {
                 }
             } else if let error = error {
                 self.tokenMessage = "Error. \(error.localizedDescription)"
+            }
+        }
+    }
+    
+    private var hasFetchedWhitelist:Bool = false
+    
+    /// Fetches the Players that are in `invites` or in `joinlist`
+    func fetchGuildWhiteList() {
+        
+        guard let guildMap = guildMap else {
+            return
+        }
+        let expectPlayerCount:Int = guildMap.joinlist.count + guildMap.invites.count
+        guard expectPlayerCount > 0 else {
+            print("Guild whitelist is empty. Nothing to fetch.")
+            return
+        }
+        // if expectPlayerCount <= searchPlayerResult.count { return }
+        if self.hasFetchedWhitelist == true { return }
+        
+        let fetchedIDs:[UUID] = searchPlayerResult.compactMap({ $0.id })
+        
+        SKNS.searchGuildsWhitelist { fetchedPlayers, error in
+            
+            if !fetchedPlayers.isEmpty {
+                
+                DispatchQueue.main.async {
+                    let filtered:[PlayerContent] = fetchedPlayers.filter({ fetchedIDs.contains($0.id) == false })
+                    
+                    for fPlayer in fetchedPlayers {
+                        if self.searchPlayerResult.contains(fPlayer) {
+                            // skip
+                        } else {
+                            self.searchPlayerResult.append(contentsOf: filtered)
+                        }
+                    }
+                    
+                    // Stop whitelist from f=refreshing
+                    self.hasFetchedWhitelist = true
+                }
+            } else {
+                print("Returned empty array of players.")
             }
         }
     }

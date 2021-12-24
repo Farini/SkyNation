@@ -194,20 +194,26 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [ ] Guild Substitution: `GuildMap` for `GuildFullContent` - Will have to sub guild in guild navigator view, which is being remade.
 
-- [ ] Guild Navigator - Use SKNS.browseGuildMap... to get `GuildMap` from `GuildSummary`
-- [ ] Guild Navigator - Use SKNS.browseInvitesFromGuilds... to get `[GuildSummary]`
-- [ ] Guild Navigator - Default Fetch - `browseguilds` vs `browseInvitesFromGuilds()`
+- [X] Guild Navigator - Use SKNS.browseGuildMap... to get `GuildMap` from `GuildSummary`
+- [X] Guild Navigator - Use SKNS.browseInvitesFromGuilds... to get `[GuildSummary]`
+- [X] Guild Navigator - Default Fetch - `browseguilds` vs `browseInvitesFromGuilds()`
 - [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
+- [X] Guild Navigator - Integration into GameSettingsController
+- [ ] Guild Navigator - use GuildJoinState - `PlayerGuildState` (only 3)
+- [ ] Guild Navigator - New GuildJoin[View]State (creating, errors, loading, busy, etc.)
+- [ ] Guild Navigator - `requestJoin` must return a GuildMap
+- [ ] Guild Navigator - Guild Creator (with steps)
 
 - [ ] SKNSData - otherPlayers:`[PlayerContent]` - Invite list + joinlist
 - [ ] SKNSData - joinRequests:[UUID] = The requests sent to Guilds that are locked.
 
 - [ ] ServerData.swift improvements - make most Guild requests there. Important to update
 
-- [ ] Guild Room - President accept joinlist -> move to invites.
-- [ ] Guild Room - Fetch Players who's on the lists. (join + invite)
-- [ ] Guild Room - Mission View with 3 Progress bars.
-- [ ] Guild Room - Block chat for players that can't chat.
+- [X] Guild Room - President accept joinlist -> move to invites.
+- [X] Guild Room - Fetch Players who's on the lists. (join + invite)
+- [X] Guild Room - Mission View with 3 Progress bars.
+- [X] Guild Room - Block chat for players that can't chat.
+- [ ] Guild Room - President edit and save.
 
 - [ ] GameOptions - Tutorial should show tutorial. Disable when close? Or remove.
 

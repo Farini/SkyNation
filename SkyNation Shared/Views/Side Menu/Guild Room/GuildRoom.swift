@@ -217,6 +217,7 @@ struct GuildRoom: View {
                 case .search:
                     
                     Group {
+                        
                         let entryTokens:Int = controller.player.wallet.tokens.filter({ $0.origin == .Entry && $0.usedDate != nil }).count
                         
                         Text("Search")
@@ -239,11 +240,9 @@ struct GuildRoom: View {
                         let guildHasPresident:Bool = controller.guild?.president != nil
                         let inviteEnabled:Bool = guildHasPresident ? controller.iAmPresident():true
                         
-                        if controller.searchPlayerResult.isEmpty {
-//                            List(controller.citizens) { citizen in
-//                                Text("\(citizen.name) XP:\(citizen.experience)")
-//                            }
-                            List {
+                        List {
+                            Section(header:Text("Citizens").font(GameFont.section.makeFont())) {
+                                // Citizens
                                 ForEach(controller.citizens.indices) { index in
                                     let citizen = controller.citizens[index]
                                     HStack {
@@ -280,33 +279,49 @@ struct GuildRoom: View {
                                     .listRowBackground((index  % 2 == 0) ? Color.black : GameColors.darkGray)
                                 }
                             }
-                            .padding(.horizontal)
-                        } else {
-                            List(controller.searchPlayerResult) { sPlayer in
-                                VStack {
-                                    PlayerCardView(pCard: PlayerCard(playerContent: sPlayer))
-                                    HStack {
-                                        Button("🎁 Token") {
-                                            controller.giftToken(to: sPlayer)
+                            Section(header:Text("Other Players").font(GameFont.section.makeFont())) {
+                                // white list
+                                ForEach(controller.searchPlayerResult) { sPlayer in
+                                    VStack {
+                                        PlayerCardView(pCard: PlayerCard(playerContent: sPlayer))
+                                        HStack {
+                                            Button("🎁 Token") {
+                                                controller.giftToken(to: sPlayer)
+                                            }
+                                            .buttonStyle(GameButtonStyle())
+                                            .disabled(entryTokens < 1)
+                                            
+                                            if controller.guildMap?.joinlist.contains(sPlayer.id) == true && controller.iAmPresident() == true {
+                                                // player is in joinlist
+                                                Button("Accept") {
+                                                    print("Accept Player")
+                                                    controller.inviteToGuild(playerContent: sPlayer)
+                                                }
+                                                .buttonStyle(GameButtonStyle())
+                                                
+                                                Button("Delete") {
+                                                    print("Accept Player")
+                                                    controller.inviteToGuild(playerContent: sPlayer)
+                                                }
+                                                .buttonStyle(GameButtonStyle())
+                                                
+                                            } else {
+                                                Button("Invite") {
+                                                    print("Invite")
+                                                    controller.inviteToGuild(playerContent: sPlayer)
+                                                }
+                                                .buttonStyle(GameButtonStyle())
+                                                .disabled(!inviteEnabled)
+                                            }
                                         }
-                                        .buttonStyle(GameButtonStyle())
-                                        .disabled(entryTokens < 1)
-                                        
-                                        Button("Invite") {
-                                            print("Invite")
-                                            controller.inviteToGuild(playerContent: sPlayer)
-                                        }
-                                        .buttonStyle(GameButtonStyle())
-                                        .disabled(!inviteEnabled)
                                     }
+                                }
+                                
+                                if controller.searchPlayerResult.isEmpty {
+                                    Text("No other players been found").foregroundColor(.gray)
                                 }
                             }
                         }
-                        
-                        if controller.searchPlayerResult.isEmpty {
-                            Text("No Players been found").foregroundColor(.gray)
-                        }
-                        
                         
                         Text("You have \(entryTokens) Entry tokens. You may gift it to someone else.")
                         

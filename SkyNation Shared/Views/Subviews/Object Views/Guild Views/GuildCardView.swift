@@ -12,10 +12,6 @@ struct GuildCardView: View {
     var guildSum:GuildSummary
     var guildMap:GuildMap
     
-//    enum Style {
-//        case largeSummary
-//        case largeDescriptive
-//    }
     var shape = RoundedRectangle(cornerRadius: 16, style: .continuous)
     
     private enum FaceSide {
@@ -74,7 +70,7 @@ struct GuildCardView: View {
                         Text("Cities: \(guildSum.cities.count)")
                         
                         ForEach(guildMap.cities, id:\.self) { city in
-                            Text("\(city.name)") //\(String(city.id.uuidString.prefix(6)))")
+                            Text("\(city.name)")
                         }
                         
                         if guildMap.cities.isEmpty == true {
@@ -89,7 +85,12 @@ struct GuildCardView: View {
                                 ForEach(guildMap.outposts, id:\.id) { outpost in
                                     Text("\(outpost.type.rawValue) \(outpost.level)")
                                 }
-                                Text("Total level: \(guildMap.outposts.compactMap({ $0.level }).reduce(0, +))").foregroundColor(.orange)
+                                HStack {
+                                    Spacer()
+                                    Text("Total level: \(guildMap.outposts.compactMap({ $0.level }).reduce(0, +))").foregroundColor(.orange)
+                                    Spacer()
+                                }
+                                
                             }
                         }
                         
@@ -109,19 +110,7 @@ struct GuildCardView: View {
                 Divider()
                 
                 HStack {
-//                    if controller.guildJoinState.joinButton {
-//                        Button("Join") {
-//                            controller.requestJoin(self.guildFull)
-//                        }
-//                        .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
-//                    } else if controller.guildJoinState.leaveButton {
-                        Button("Button") {
-                            
-                        }
-                        .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
-//                    }
-                    
-                    Button("Flip") {
+                    Button("Next") {
                         self.flipToNext()
                     }
                     .buttonStyle(NeumorphicButtonStyle(bgColor: .green))

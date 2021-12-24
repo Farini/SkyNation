@@ -37,6 +37,18 @@ struct GuildMissionView: View {
                 }
                 .padding(.bottom, 6)
                 
+                // Another progress bar this one is missions
+                let mTotal = MissionNumber.allCases.count
+                let mCurrent = mission.mission.rawValue
+                let mProgress = Double(mCurrent) / Double(mTotal)
+                if mProgress < 1.0 {
+                    ProgressView("All missions progress", value: mProgress)
+                        .frame(width:200)
+                } else {
+                    Text("All done! Congrats!").foregroundColor(.green)
+                }
+                
+                
                 // Mission Status View
                 HStack(alignment:.top) {
                     
@@ -123,7 +135,7 @@ struct GuildMissionView: View {
                         print("Going to Autolopp in 2 seconds...")
                         self.progress = 0.0
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                             print("Autoloop now")
                             self.autoLoop()
                         }

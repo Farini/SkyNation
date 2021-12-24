@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import GameKit
 
 struct GuildMDView: View {
     
@@ -14,12 +15,9 @@ struct GuildMDView: View {
     @State var markdown:String = defaultMarkdown
     @State var myComments:String = "my comments"
     
-//    var isPresident:Bool = false
-    
     @State var isEditing:Bool = false
     
-    // must know if president
-    // must get chat
+    var gamecenter:GameCenterManager = GameCenterManager.shared
     
     var body: some View {
         VStack {
@@ -72,42 +70,52 @@ struct GuildMDView: View {
                     
                     Divider()
                     
-                    // Comments
-                    VStack(alignment:.leading) {
-                        Text("Comments")
-                        
-                        ForEach(controller.guildChat) { chatMsg in
-                            HStack {
-                                Text(chatMsg.name).foregroundColor(.blue)
-                                Text(chatMsg.message)
+                    if gamecenter.isChatEnabled == true {
+                        // Comments
+                        VStack(alignment:.leading) {
+                            Text("Comments")
+                            
+                            ForEach(controller.guildChat) { chatMsg in
+                                HStack {
+                                    Text(chatMsg.name).foregroundColor(.blue)
+                                    Text(chatMsg.message)
+                                }
                             }
-                        }
-                        // (no comments)
-                        if controller.guildChat.isEmpty {
-                            Text("No one commented yet").foregroundColor(.gray)
+                            // (no comments)
+                            if controller.guildChat.isEmpty {
+                                Text("No one commented yet").foregroundColor(.gray)
+                            }
+                            
+                            Spacer()
                         }
                         
                         Spacer()
+                    } else {
+                        VStack(alignment:.leading) {
+                            
+                            Text("Comments")
+                            Text("Chat is disabled on Game Center. Player can't chat.").foregroundColor(.gray)
+                            
+                        }
                     }
-                    
-                    Spacer()
                 }
             }
             
             if !isEditing {
-                Divider()
-                HStack {
-                    TextEditor(text: $myComments)
-                    Button("Post") {
-                        controller.postMessage(text: myComments)
+                if gamecenter.isChatEnabled == true {
+                    Divider()
+                    HStack {
+                        TextEditor(text: $myComments)
+                        Button("Post") {
+                            controller.postMessage(text: myComments)
+                        }
+                        .buttonStyle(GameButtonStyle())
                     }
-                    .buttonStyle(GameButtonStyle())
+                    .frame(height:50)
+                    .padding(.horizontal)
+                    .padding(.bottom, 6)
                 }
-                .frame(height:50)
-                .padding(.horizontal)
-                .padding(.bottom, 6)
             }
-            
         }
     }
     

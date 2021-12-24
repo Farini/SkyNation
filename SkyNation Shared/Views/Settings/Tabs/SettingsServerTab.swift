@@ -11,7 +11,9 @@ import SwiftUI
 struct SettingsServerTab:View {
  
     @ObservedObject var controller:GameSettingsController
- 
+    
+    /// Alert that user is leaving
+    @State private var leavingDialogue:Bool = false
     var body: some View {
         
         ScrollView {
@@ -91,10 +93,16 @@ struct SettingsServerTab:View {
                                     }
                                     // Leave
                                     Button("Leave") {
-                                        controller.leaveGuild()
+//                                        controller.leaveGuild()
+                                        leavingDialogue.toggle()
                                     }
                                     .buttonStyle(GameButtonStyle())
                                     .padding()
+                                    .alert(isPresented: $leavingDialogue) {
+                                        Alert(title: Text("Leaving Guild"), message: Text("Are you sure you want to leave this Guild?"), primaryButton: .destructive(Text("Yes")) {
+                                            controller.leaveGuild()
+                                        }, secondaryButton: .cancel())
+                                    }
                                     
                                 case .creating:
                                     Text("Creating new Guild")
@@ -160,7 +168,7 @@ struct SettingsServerTab:View {
                         case .leaving:
                             VStack {
                                 Text("Leaving Guild")
-                                Text("You are noe leaving the Guild.")
+                                Text("You are now leaving the Guild.")
                                 Text("Give us a minute to save your city")
                                 Text("So when you go to another Guild,")
                                 Text("Your city will still be working.")

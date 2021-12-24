@@ -13,7 +13,6 @@ import SwiftUI
  1. playerNoEntry
  2. playerNoGuild
  3. playerWithGuild - Displaying (my guild)
- 4. playerWithGuild - Browsing
  
  Modes:
  
@@ -21,50 +20,35 @@ import SwiftUI
  -. Browse mode (Browsing whatever Guilds there are)
  -. Display mode (Showing my Guild)
  -. Create mode (Creating new)
+ 
+ View States:
+ 
+ - loading
+ - loaded(state)
+ - creating + created
+ - busy? (updating, fetching...)
+ - error & success messages
+ 
+ The real Guild join state - PlayerGuildState
+ 
+ - noEntry
+ - noGuild
+ - joined(guild)
+ 
+ 
+ ------
+ make sure guild.inviteList < 4
  */
 
 struct GuildBrowser: View {
     
     @ObservedObject var controller:GameSettingsController
     
-    /// Selected Guild
-    @State var guildMap:GuildMap?
-    
-    var player:SKNPlayer = LocalDatabase.shared.player
-    
-    /// All Guilds Fetched
-//    var guildList:[GuildSummary]
-    
-    // used for previews only
-//    var gMaps:[GuildMap]
-    
     // Search
     @State private var displaySearchField:Bool = false
     @State private var searchString:String = ""
     
     init() {
-//        let maps = GuildBrowser.makeGMArray()
-//        self.gMaps = maps
-//        let summaries = GuildBrowser.makeGSArray(gMaps: maps)
-//        self.guildList = summaries
-        
-        // Get the player.
-        /*
-        let player = LocalDatabase.shared.player
-        let entry = player.marsEntryPass()
-        if entry.result == true {
-            // has entry
-            if player.guildID == nil {
-                // no guild
-            } else {
-                // Check if player is in the citizens
-                // YES -> myGuild
-                // NO -> Kicked?
-            }
-        } else {
-            // no entry
-        }
-        */
         
         // 1. Check if has entry
         // 2. Check if has Guild
@@ -76,7 +60,7 @@ struct GuildBrowser: View {
         // noguild      disabled    enabled     enabled     enabled
         // guild        enabled     disabled    disabled    enabled
         
-        self.controller = GameSettingsController()
+        self.controller = GameSettingsController(previewing: true)
     }
     
     var body: some View {
@@ -87,6 +71,7 @@ struct GuildBrowser: View {
                 Text("Guild Browser").font(GameFont.section.makeFont())
                 Spacer()
                 
+                // Search Field
                 if displaySearchField {
                     TextField("Search", text: $searchString)
                         .textFieldStyle(.roundedBorder)
@@ -94,6 +79,7 @@ struct GuildBrowser: View {
                         .transition(.move(edge: .trailing))
                 }
                 
+                // Buttons
                 switch controller.guildJoinState {
                     case .noEntry:
                         Text("No Entry").foregroundColor(.gray)
@@ -106,6 +92,12 @@ struct GuildBrowser: View {
                         
                         Button("Join") {
                             print("Join Guild. Player must have a nil guildID")
+                            
+                            // TODO: Need to transform GuildMap
+                            
+//                            if let guild = controller.selectedGuildMap {
+//                                controller.requestJoin(<#T##guild: GuildFullContent##GuildFullContent#>)
+//                            }
                         }
                         .buttonStyle(GameButtonStyle())
                         
@@ -184,25 +176,29 @@ struct GuildBrowser: View {
                     
                     // Player Guild Indicator
                     VStack {
-                        PlayerGuildIndicator(guildConditions: .noGuild)
+                        
+                        if let myGuild = controller.guildMap {
+                            PlayerGuildIndicator(guildConditions: .citizenOf(guild: myGuild))
+                        } else if controller.player.marsEntryPass().result == true {
+                            // no guild
+                            PlayerGuildIndicator(guildConditions: .noGuild)
+                        } else {
+                            // no entry
+                            PlayerGuildIndicator(guildConditions: .noEntry)
+                        }
+                        
                         Divider()
                     }
                     
                     // Fetched Guild Rows
                     ForEach(controller.joinableGuilds, id:\.id) { gList in
-                        GuildRow(guild: gList, selected: guildMap?.id == gList.id)
+                        GuildRow(guild: gList, selected: controller.selectedGuildMap?.id == gList.id)
                         .onTapGesture {
-                            /*
-                            // this wont work anymore
-                            self.guildMap = gMaps.first(where: { $0.id == gList.id })
-                            */
-                            
-                            // tell controller to fetch guild details
-                            // need to change return object to `GuildMap`
-                            // controller.fetchGuildDetails(guildSum: gList)
-//                            controller.fetchGuildMapDetails(from: gList)
+                            controller.fetchGuildMapDetails(from: gList)
                         }
                     }
+                    
+                    // Empty Guildlist
                     if controller.joinableGuilds.isEmpty && controller.player.marsEntryPass().result == true {
                         Button("Fetch list") {
                             controller.fetchGuilds()
@@ -215,7 +211,7 @@ struct GuildBrowser: View {
                 Divider()
                 
                 VStack {
-                    if let map = self.guildMap {
+                    if let map = controller.selectedGuildMap {
                         HStack {
                             Spacer()
                             GuildCardView(guildMap: map)
