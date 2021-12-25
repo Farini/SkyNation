@@ -63,13 +63,15 @@ struct SettingsServerTab:View {
                                         .buttonStyle(GameButtonStyle())
                                         
                                         Button("Create") {
-                                            controller.startCreatingGuild()
+                                            print("deprecated")
+//                                            controller.startCreatingGuild()
                                         }
                                         .buttonStyle(GameButtonStyle())
                                         
                                         if let selected = controller.selectedGuildObj {
                                             Button("Join \(selected.name)") {
-                                                controller.requestJoin(selected)
+                                                print("deprecated")
+//                                                controller.requestJoin(selected)
                                             }
                                             .buttonStyle(GameButtonStyle())
                                         }
@@ -216,7 +218,8 @@ struct SettingsServerTab:View {
                             ForEach(controller.joinableGuilds, id:\.id) { guild in
                                 GuildSummaryView(guildSum: guild)
                                     .onTapGesture {
-                                        controller.fetchGuildDetails(guildSum: guild)
+//                                        controller.fetchGuildDetails(guildSum: guild)
+                                        print("deprecated")
                                     }
                             }
                         }

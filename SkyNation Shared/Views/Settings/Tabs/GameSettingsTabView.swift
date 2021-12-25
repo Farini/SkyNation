@@ -32,12 +32,20 @@ struct GameSettingsTabView: View {
         ScrollView {
             VStack(alignment:.leading) {
                 
-                Text("📺 Graphics")
-                    .modifier(GameTypography(.title))
-                    .padding(.top)
+                Group {
+                    Text("📺 Graphics")
+                        .modifier(GameTypography(.title))
+                        .padding(.top)
+                    
+                    Toggle("Lighting boost", isOn:$showLights)
+                        .onChange(of: showLights) { _ in self.saveSettings() }
+                    
+                    Text("* Renders complex shadows and more textures.")
+                        .foregroundColor(.gray)
+                        .font(.footnote)
+//                        .frame(maxWidth:250)
+                }
                 
-                Toggle("Show Lights", isOn:$showLights)
-                    .onChange(of: showLights) { _ in self.saveSettings() }
                 
                 // Enhanced Shadows
                 // Enhanced Emitters
@@ -73,8 +81,8 @@ struct GameSettingsTabView: View {
                             .onChange(of: serveBiobox) { _ in self.saveSettings() }
                         
                         
-                        Toggle("Show Tutorial", isOn:$showTutorial)
-                            .onChange(of: showTutorial) { _ in self.saveSettings() }
+//                        Toggle("Show Tutorial", isOn:$showTutorial)
+//                            .onChange(of: showTutorial) { _ in self.saveSettings() }
                     }
                     Spacer()
                     VStack(alignment: .leading) {

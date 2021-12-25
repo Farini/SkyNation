@@ -83,7 +83,8 @@ struct GameSettingsView: View {
                     PlayerEditorView(controller: controller)
                     
                 case .Server:
-                    SettingsServerTab(controller:controller)
+                    // SettingsServerTab(controller:controller)
+                    GuildBrowser(controller: controller)
                     
                 case .Settings:
                     GameSettingsTabView()

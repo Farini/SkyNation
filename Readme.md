@@ -191,39 +191,40 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] call electionTurnCycle from server
 - [X] Create DBOutposts - New method (only a few outposts)
 - [X] Mac Help Menu
-
-- [ ] Guild Substitution: `GuildMap` for `GuildFullContent` - Will have to sub guild in guild navigator view, which is being remade.
-
-- [X] Guild Navigator - Use SKNS.browseGuildMap... to get `GuildMap` from `GuildSummary`
-- [X] Guild Navigator - Use SKNS.browseInvitesFromGuilds... to get `[GuildSummary]`
-- [X] Guild Navigator - Default Fetch - `browseguilds` vs `browseInvitesFromGuilds()`
-- [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
-- [X] Guild Navigator - Integration into GameSettingsController
-- [ ] Guild Navigator - use GuildJoinState - `PlayerGuildState` (only 3)
-- [ ] Guild Navigator - New GuildJoin[View]State (creating, errors, loading, busy, etc.)
-- [ ] Guild Navigator - `requestJoin` must return a GuildMap
-- [ ] Guild Navigator - Guild Creator (with steps)
-
-- [ ] SKNSData - otherPlayers:`[PlayerContent]` - Invite list + joinlist
-- [ ] SKNSData - joinRequests:[UUID] = The requests sent to Guilds that are locked.
-
-- [ ] ServerData.swift improvements - make most Guild requests there. Important to update
-
+- [X] GameOptions - Tutorial should show tutorial. Disable when close? Or remove.
 - [X] Guild Room - President accept joinlist -> move to invites.
 - [X] Guild Room - Fetch Players who's on the lists. (join + invite)
 - [X] Guild Room - Mission View with 3 Progress bars.
 - [X] Guild Room - Block chat for players that can't chat.
+- [X] Guild Navigator - Use SKNS.browseGuildMap... to get `GuildMap` from `GuildSummary`
+- [X] Guild Navigator - Use SKNS.browseInvitesFromGuilds... to get `[GuildSummary]`
+- [X] Guild Navigator - Default Fetch - `browseguilds` vs `browseInvitesFromGuilds()`
+- [X] Guild Navigator - Integration into GameSettingsController
+- [X] Guild Navigator - use GuildJoinState - `PlayerGuildState`
+- [X] Guild Navigator - `requestJoin` must give AND return a `GuildMap` + SKNS.joinGuildPetition + Server Backend.
+- [X] Guild Navigator - Guild Creator (with steps)
+
+- [ ] Guild Substitution: `GuildMap` for `GuildFullContent`
+- [X] Guild Navigator - New GuildJoin[View]State (creating, errors, loading, busy, etc.)
+- [ ] Guild Navigator - Guild Card View - add missions
+- [ ] Guild Navigator - Erase `GuildFullContent` from `GameSettingsController` + cleanup
+- [ ] Guild Navigator - Controller - Search Guild by name
+
+- [ ] SKNSData - otherPlayers:`[PlayerContent]` - Invite list + joinlist
+- [ ] SKNSData - joinRequests:[UUID] = The requests sent to Guilds that are locked.
+- [ ] ServerData.swift improvements - make most Guild requests there. Important to update
+
 - [ ] Guild Room - President edit and save.
 
-- [ ] GameOptions - Tutorial should show tutorial. Disable when close? Or remove.
-
-- [ ] Mars Scene - News
-- [ ] Mars Scene - All Guild Vehicles arriving
+### Optional Cut
 
 - [ ] City View - Bio - "Evolve" not updating the list
 - [ ] Garage - Make sure charging 'propellants'
-
+- [ ] Game Settings - Save camera?
 - [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
+- [ ] Mars Scene - All Guild Vehicles arriving
+- [ ] Mars Scene - News
+- [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
 
 - [X] Game Center - Player Auth.
 - [X] Game Center - Leaderboards (Experience)

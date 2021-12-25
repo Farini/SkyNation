@@ -32,6 +32,10 @@ struct GuildCreatorView: View {
                 
                 Divider()
                 
+                /*
+                StepperView(stepCounts: 5, current: 1, stepDescription: "Fist step")
+                */
+                
                 // Name
                 Group {
                     HStack {

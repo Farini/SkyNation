@@ -227,7 +227,7 @@ struct GuildView: View {
                 HStack {
                     if controller.guildJoinState.joinButton {
                         Button("Join") {
-                            controller.requestJoin(self.guildFull)
+//                            controller.requestJoin(self.guildFull)
                         }
                         .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
                     } else if controller.guildJoinState.leaveButton {
