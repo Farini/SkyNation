@@ -203,18 +203,23 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Guild Navigator - use GuildJoinState - `PlayerGuildState`
 - [X] Guild Navigator - `requestJoin` must give AND return a `GuildMap` + SKNS.joinGuildPetition + Server Backend.
 - [X] Guild Navigator - Guild Creator (with steps)
+- [X] Guild Navigator - New GuildJoin[View]State (creating, errors, loading, busy, etc.)
+- [X] Guild Navigator - Controller - Search Guild by name
+- [X] Guild Navigator - Erase `GuildFullContent` from `GameSettingsController` + cleanup
+- [X] Guild Room - President edit and save.
+- [X] Guild Navigator - Guild Card View - add missions
+- [X] SKNSData - otherPlayers:`[PlayerContent]` - Invite list + joinlist    .otherPlayers + .otherGuilds
+- [X] SKNSData - joinRequests:[UUID] = The requests sent to Guilds that are locked.
 
 - [ ] Guild Substitution: `GuildMap` for `GuildFullContent`
-- [X] Guild Navigator - New GuildJoin[View]State (creating, errors, loading, busy, etc.)
-- [ ] Guild Navigator - Guild Card View - add missions
-- [ ] Guild Navigator - Erase `GuildFullContent` from `GameSettingsController` + cleanup
-- [ ] Guild Navigator - Controller - Search Guild by name
 
-- [ ] SKNSData - otherPlayers:`[PlayerContent]` - Invite list + joinlist
-- [ ] SKNSData - joinRequests:[UUID] = The requests sent to Guilds that are locked.
-- [ ] ServerData.swift improvements - make most Guild requests there. Important to update
+### Tests
 
-- [ ] Guild Room - President edit and save.
+- [X] Mining Scene Nodes (waiting to be unlocked)
+- [X] GuildRoom Markdown - and with quote
+- [ ] Election Results - Guild governor
+- [ ] Outpost Update
+- [ ] Leaving a Guild
 
 ### Optional Cut
 
@@ -250,16 +255,6 @@ One of the following, with a 16:10 aspect ratio.
 2. 1440 x 900 pixels
 3. 2560 x 1600 pixels
 4. 2880 x 1800 pixels
-
-
-
-### Tests
-
-- [X] Mining Scene Nodes (waiting to be unlocked)
-- [X] GuildRoom Markdown - and with quote
-- [ ] Election Results - Guild governor
-- [ ] Outpost Update
-- [ ] Leaving a Guild
 
 ### iOS
 

@@ -272,6 +272,33 @@ class ServerManager {
         }
     }
     
+    /// Stores the Guild Details in Database.
+    func didBrowseAnotherGuild(gMap:GuildMap) {
+        
+        // Method to store fetched Guilds and Other Players.
+        
+        let addingPlayers:[PlayerContent] = gMap.citizens
+        
+        if let serverData = serverData {
+            
+            if let otherGuilds = serverData.otherGuilds {
+                let newGuilds = otherGuilds + [gMap]
+                serverData.otherGuilds = newGuilds
+                
+            } else {
+                serverData.otherGuilds = [gMap]
+                
+            }
+            
+            if let otherPlayers = serverData.otherPlayers {
+                let newPlayers = otherPlayers + addingPlayers
+                serverData.otherPlayers = newPlayers
+            } else {
+                serverData.otherPlayers = addingPlayers
+            }
+        }
+    }
+    
     // MARK: - Saving
     
     func saveServerData() {
@@ -299,9 +326,13 @@ class ServerData:Codable {
     var dbGuild:GuildSummary?
     var guildfc:GuildFullContent?
     var guildMap:GuildMap?
+    var otherGuilds:[GuildMap]?
     
     /// Other Players
     var partners:[PlayerContent] = []
+    var otherPlayers:[PlayerContent]?
+    
+    
     
     /// Guild's `DBCity` array
     var cities:[DBCity] = []
@@ -317,13 +348,12 @@ class ServerData:Codable {
     var guildVehicles:[SpaceVehicleTicket] = []
     
     // Election
-//    var electionData:GuildElectionData?
     var election:Election?
     
-    // Status
-//    var status:ServerDatabaseStatus = .offline
+    
+    
+    // Errors
     var errorMessage:String = ""
-    // create errorLog:[String]
     
     // MARK: - Player's Guild
     

@@ -103,7 +103,8 @@ struct GuildBrowser: View {
                                     if displaySearchField == true && searchString.isEmpty == false {
                                         // controller.search...
                                         print("Controller search hasn't been implemented yet.")
-                                        controller.fetchGuilds()
+//                                        controller.fetchGuilds()
+                                        controller.searchGuilds(string: self.searchString)
                                     } else {
                                         // Show the search bar
                                         withAnimation() {

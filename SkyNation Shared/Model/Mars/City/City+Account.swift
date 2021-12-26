@@ -293,7 +293,6 @@ extension CityData {
             if person.healthPhysical < 1 {
                 report.addProblem(string: "💀 \(person.name) is diying due to physical issues. Farewell!")
                 self.prepareDeath(of: person)
-                continue
             }
             
             // Aging Humans (Once a week)
@@ -677,7 +676,7 @@ extension CityData {
     /// When Accounting sees a person with health physycal < 1, this will kill them
     private func prepareDeath(of person:Person) {
         GameMessageBoard.shared.newAchievement(type: .experience, money: 0, message: "💀 \(person.name) has passed away!")
-        inhabitants.removeAll(where: { $0.id == person.id })
+        self.inhabitants.removeAll(where: { $0.id == person.id })
     }
     
     /// Accounts for BioBoxes Operations

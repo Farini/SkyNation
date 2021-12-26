@@ -569,7 +569,7 @@ class SKNS {
         
     }
     
-    /// Search whitelist
+    /// Search whitelist. Returns the `PlayerContent` array from joinlist and invites
     static func searchGuildsWhitelist(completion:(([PlayerContent], Error?) -> ())?) {
         
         let url = URL(string: "\(baseAddress)/player/credentials/search/whitelist")!
@@ -613,6 +613,46 @@ class SKNS {
             }
         }
         task.resume()
+    }
+    
+    static func searchGuildByName(string:String, completion:(([GuildSummary], Error?) -> ())?) {
+        guard string.count < 20,
+              string.count > 1 else {
+                  print("Invalid string to search")
+                  return
+              }
+        
+        let url = URL(string: "\(baseAddress)/guilds/search/\(string)")!
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                do {
+                    let guilds:[GuildSummary] = try decoder.decode([GuildSummary].self, from: data)
+                    DispatchQueue.main.async {
+                        print("Data returning")
+                        completion?(guilds, nil)
+                    }
+                } catch {
+                    print("Not Guilds Object. Error:\(error.localizedDescription): \(data)")
+                    if let string = String(data: data, encoding: .utf8) {
+                        print("Not Guilds String: \(string)")
+                    }
+                }
+            } else if let error = error {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?([], error)
+                }
+            }
+        }
+        task.resume()
+        
     }
     
     // MARK: - Tokens + Purchase

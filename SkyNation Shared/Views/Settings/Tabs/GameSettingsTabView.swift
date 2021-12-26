@@ -174,10 +174,11 @@ struct SettingsPlayerPreview: PreviewProvider {
                     Label("Game", systemImage:"gamecontroller")
                 }
             // Server
-            SettingsServerTab(controller:controller)
-                .tabItem {
-                    Label("Server", systemImage:"gamecontroller")
-                }
+            GuildBrowser(controller: controller)
+//            SettingsServerTab(controller:controller)
+//                .tabItem {
+//                    Label("Server", systemImage:"gamecontroller")
+//                }
             
             // Player
             PlayerEditorView(controller:controller)

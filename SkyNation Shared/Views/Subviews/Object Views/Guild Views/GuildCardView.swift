@@ -103,6 +103,10 @@ struct GuildCardView: View {
                         Text(guildSum.isOpen ? "Guild is open for players to join.":"You must be invited to join this guild.").font(.footnote).foregroundColor(.gray)
                         
                         Text("📆 \(GameFormatters.dateFormatter.string(from: guildMap.election?.start ?? Date.distantFuture))")
+                        
+                        if let mission = guildMap.mission {
+                            Text("\(mission.mission.missionTitle) of \(MissionNumber.allCases.count)")
+                        }
                 }
                 
                 Spacer()

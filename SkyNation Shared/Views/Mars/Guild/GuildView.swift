@@ -225,6 +225,7 @@ struct GuildView: View {
                 Divider()
                 
                 HStack {
+                    /*
                     if controller.guildJoinState.joinButton {
                         Button("Join") {
 //                            controller.requestJoin(self.guildFull)
@@ -236,6 +237,7 @@ struct GuildView: View {
                         }
                         .buttonStyle(NeumorphicButtonStyle(bgColor:.blue))
                     }
+                    */
                     
                     Button("Flip") {
                         self.flipToNext()

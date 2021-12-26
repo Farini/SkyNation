@@ -29,6 +29,7 @@
 		850761422776397F005D0DF5 /* GuildMakerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850761412776397F005D0DF5 /* GuildMakerForm.swift */; };
 		850761432776397F005D0DF5 /* GuildMakerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850761412776397F005D0DF5 /* GuildMakerForm.swift */; };
 		850761442776397F005D0DF5 /* GuildMakerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850761412776397F005D0DF5 /* GuildMakerForm.swift */; };
+		8507614627784483005D0DF5 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8507614527784483005D0DF5 /* GameKit.framework */; };
 		850A1B0F25ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */; };
 		850A1B1025ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */; };
 		850A1B1125ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */; };
@@ -759,6 +760,7 @@
 		8504A53A25C6875000739C58 /* Energy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Energy.swift; sourceTree = "<group>"; };
 		8504A54725C6884600739C58 /* Garage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Garage.swift; sourceTree = "<group>"; };
 		850761412776397F005D0DF5 /* GuildMakerForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildMakerForm.swift; sourceTree = "<group>"; };
+		8507614527784483005D0DF5 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.2.sdk/System/Library/Frameworks/GameKit.framework; sourceTree = DEVELOPER_DIR; };
 		850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Antenna3DNode.swift; sourceTree = "<group>"; };
 		85108372271B16D8004D6D00 /* NetResponseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetResponseView.swift; sourceTree = "<group>"; };
 		85108376271B2E63004D6D00 /* GameResponseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameResponseView.swift; sourceTree = "<group>"; };
@@ -997,6 +999,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8507614627784483005D0DF5 /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1943,6 +1946,7 @@
 		85FE6432276CF1F100FF93D5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8507614527784483005D0DF5 /* GameKit.framework */,
 				85FE6433276CF1F100FF93D5 /* GameKit.framework */,
 			);
 			name = Frameworks;

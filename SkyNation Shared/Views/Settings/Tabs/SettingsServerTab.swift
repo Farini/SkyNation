@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/*
 /// The `Server` tab of the App's Settings View
 struct SettingsServerTab:View {
  
@@ -319,3 +320,5 @@ struct GameTabs_Previews2: PreviewProvider {
         }
     }
 }
+*/
+

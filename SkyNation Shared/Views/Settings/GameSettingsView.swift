@@ -205,10 +205,11 @@ struct GameTabs_Previews: PreviewProvider {
             let controller = GameSettingsController()
             
             // Server
-            SettingsServerTab(controller:controller)
-                .tabItem {
-                    Text("Server")
-                }
+            
+//            SettingsServerTab(controller:controller)
+//                .tabItem {
+//                    Text("Server")
+//                }
             
             // Settings
             GameSettingsTabView()
