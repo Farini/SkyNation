@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AVFoundation
 
 enum LabSelectState {
     case NoSelection
@@ -37,6 +38,8 @@ class LabViewModel: ObservableObject {
     
     @Published var unlockedItems:[TechItems]    // Items that can be researched
     @Published var complete:[TechTree]          // Items that are complete
+    
+    var audioPlayer: AVAudioPlayer?
 
     // MARK: - Methods
     
@@ -328,6 +331,16 @@ class LabViewModel: ObservableObject {
                 // Save
                 do {
                     try LocalDatabase.shared.saveStation(station)
+                    // Play Sound
+                    if let path = Bundle.main.path(forResource: "SFXRiser", ofType: "m4a") {
+                        do {
+                            audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: path))
+                            audioPlayer?.numberOfLoops = 1
+                            audioPlayer?.play()
+                        } catch {
+                            print("ERROR")
+                        }
+                    }
                 } catch {
                     print("‼️ Could not save station.: \(error.localizedDescription)")
                 }
@@ -455,6 +468,17 @@ class LabViewModel: ObservableObject {
     }
     
     func collectRecipe(recipe:Recipe, from module:LabModule) -> Bool {
+        
+        // Play Sound
+        if let path = Bundle.main.path(forResource: "SFXRiser", ofType: "m4a") {
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: path))
+                audioPlayer?.numberOfLoops = 1
+                audioPlayer?.play()
+            } catch {
+                print("ERROR")
+            }
+        }
         
         switch recipe {
             

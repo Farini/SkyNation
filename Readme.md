@@ -117,7 +117,7 @@ The contributors to these projects shall have a **fair** share of the game, and 
 - ★ (1 Star) = 0.66%
 - To Do's: 402/437 = 92%
 
-## 📝 Doing - Present
+## 📝 To Do
 If looking for things to do and don't know where to start, go to *Find Navigator* and search for **FIXME**, or **TODO**
 
 12/01/2021 - ?
@@ -210,14 +210,18 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Guild Navigator - Guild Card View - add missions
 - [X] SKNSData - otherPlayers:`[PlayerContent]` - Invite list + joinlist    .otherPlayers + .otherGuilds
 - [X] SKNSData - joinRequests:[UUID] = The requests sent to Guilds that are locked.
+- [X] Sound - 1 more Sound FXs (Recipe Collecting) -> Look under Dektop -> Useful Assets -> Sounds
+- [X] Sound - 1 new melody (PlanetariumUtopia.mp3)
+- [X] Mars Scene - News
 
 - [ ] Guild Substitution: `GuildMap` for `GuildFullContent`
+- [ ] Election - Update Guild (in controller) after election does update
 
 ### Tests
 
 - [X] Mining Scene Nodes (waiting to be unlocked)
 - [X] GuildRoom Markdown - and with quote
-- [ ] Election Results - Guild governor
+- [X] Election Results - Guild governor - pending update of Guild.
 - [ ] Outpost Update
 - [ ] Leaving a Guild
 
@@ -226,9 +230,9 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] City View - Bio - "Evolve" not updating the list
 - [ ] Garage - Make sure charging 'propellants'
 - [ ] Game Settings - Save camera?
-- [ ] Sound - 2 more Sound FXs (Vehicle departing, News appearing, Lab Starting, Lab Running) -> Look under Dektop -> Useful Assets -> Sounds
+
 - [ ] Mars Scene - All Guild Vehicles arriving
-- [ ] Mars Scene - News
+
 - [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
 
 - [X] Game Center - Player Auth.

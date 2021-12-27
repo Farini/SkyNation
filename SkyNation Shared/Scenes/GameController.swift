@@ -414,7 +414,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 source.volume = 0.5
                 let action = SCNAction.playAudio(source, waitForCompletion: true)
                 scene.rootNode.runAction(action) {
-                    // print("Music Finished")
+                    // music finished
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                         self.playMusic()
                     }
@@ -859,69 +859,120 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     func prepareNews() {
         // NEWS
         var hasChanges:Bool = false
-        // Check Activities
         
-        if gameScene == .SpaceStation {
-            // Lab activities
-            if let labs = station?.labModules {
-                for lab in labs {
-                    print("*** Found lab: \(lab.id)")
-                    if let activity = lab.activity {
-                        print("*** Found Activity: \(activity.activityName)")
-                        if activity.dateEnds.compare(Date()) == .orderedAscending {
-                            let descriptor = "🔬 Completed Lab activity - Check Lab Modules."
-                            newsLines.append(descriptor)
-                        } else {
-                            let descriptor = "⏱ Lab: \(activity.activityName). \(Int(activity.dateEnds.timeIntervalSince(Date()))) s"
-                            newsLines.append(descriptor)
+        // Check Scenes for News
+        switch gameScene {
+                
+            case .SpaceStation:
+                
+                // Beginners Guide
+                if self.station?.habModules.count ?? 0 < 1 {
+                    newsLines.append("Tap on a Module (see hand) and create your first Hab Module.")
+                } else if self.station?.labModules.count ?? 0 < 1 {
+                    newsLines.append("Tap on a Module (see hand) and create your first Lab Module.")
+                } else if station?.getPeople().count ?? 0 < 1 {
+                    newsLines.append("Tap on the Earth, to order items for your Space Station.")
+                }
+                
+                // Lab activities
+                if let labs = station?.labModules {
+                    for lab in labs {
+                        print("*** Found lab: \(lab.id)")
+                        if let activity = lab.activity {
+                            print("*** Found Activity: \(activity.activityName)")
+                            if activity.dateEnds.compare(Date()) == .orderedAscending {
+                                let descriptor = "🔬 Completed Lab activity - Check Lab Modules."
+                                newsLines.append(descriptor)
+                            } else {
+                                let descriptor = "⏱ Lab: \(activity.activityName). \(Int(activity.dateEnds.timeIntervalSince(Date()))) s"
+                                newsLines.append(descriptor)
+                            }
                         }
                     }
                 }
-            }
-            // Hab Activities
-            if let habs = station?.habModules {
-                let people = habs.flatMap({$0.inhabitants})
-                for person in people {
-                    if let activity = person.activity {
-                        if activity.dateEnds.compare(Date()) == .orderedAscending {
-                            let moji = person.gender == "male" ? "🙋‍♂️":"🙋‍♀️"
-                            let descriptor = "\(moji) \(person.name) completed activity \(activity.activityName)."
-                            newsLines.append(descriptor)
-                            person.clearActivity()
-                            hasChanges = true
+                
+                // Hab Activities
+                if let habs = station?.habModules {
+                    let people = habs.flatMap({$0.inhabitants})
+                    for person in people {
+                        if let activity = person.activity {
+                            if activity.dateEnds.compare(Date()) == .orderedAscending {
+                                let moji = person.gender == "male" ? "🙋‍♂️":"🙋‍♀️"
+                                let descriptor = "\(moji) \(person.name) completed activity \(activity.activityName)."
+                                newsLines.append(descriptor)
+                                person.clearActivity()
+                                hasChanges = true
+                            }
                         }
                     }
                 }
-            }
-            
-            if station?.truss.getAvailableWater() ?? 0 < 20 {
-                newsLines.append("💧 Water running low")
-            }
-            
-            let totalO2 = station?.truss.tanks.filter({ $0.type == .o2 }).compactMap({ $0.current }).reduce(0, +) ?? 0
-            if totalO2 < 20 {
-                newsLines.append("⚠️ Oxygen running low")
-            }
-            
-            let qt:[AirQuality] = [.Lethal, .Bad]
-            if qt.contains(station?.air.airQuality() ?? .Good) {
-                newsLines.append("⚠️ Air quality is bad.")
-            }
+                
+                // Water
+                if station?.truss.getAvailableWater() ?? 0 < 20 {
+                    newsLines.append("💧 Water running low")
+                }
+                
+                // Oxygen
+                let totalO2 = station?.truss.tanks.filter({ $0.type == .o2 }).compactMap({ $0.current }).reduce(0, +) ?? 0
+                if totalO2 < 20 {
+                    newsLines.append("⚠️ Oxygen running low")
+                }
+                
+                // Air Quality
+                let qt:[AirQuality] = [.Lethal, .Bad]
+                if qt.contains(station?.air.airQuality() ?? .Good) {
+                    newsLines.append("⚠️ Air quality is bad.")
+                }
+                
+            case .MarsColony:
+                
+                let builder = MarsBuilder.shared
+                let gMap = builder.guildMap
+                if let city = LocalDatabase.shared.cityData {
+                    if gMap?.cities.contains(where: { $0.id == city.id }) == true {
+                        // Lab activities
+                        if let activity = city.labActivity {
+                            print("*** Found Activity: \(activity.activityName)")
+                            if activity.dateEnds.compare(Date()) == .orderedAscending {
+                                let descriptor = "🔬 Completed Lab activity - Check Lab Modules."
+                                newsLines.append(descriptor)
+                            } else {
+                                let descriptor = "⏱ Lab: \(activity.activityName). \(Int(activity.dateEnds.timeIntervalSince(Date()))) s"
+                                newsLines.append(descriptor)
+                            }
+                        }
+                        
+                        // Hab Activities
+                        for person in city.inhabitants {
+                            if let activity = person.activity {
+                                if activity.dateEnds.compare(Date()) == .orderedAscending {
+                                    let moji = person.gender == "male" ? "🙋‍♂️":"🙋‍♀️"
+                                    let descriptor = "\(moji) \(person.name) completed activity \(activity.activityName)."
+                                    newsLines.append(descriptor)
+                                    person.clearActivity()
+                                }
+                            }
+                        }
+                        
+                        // Air Quality
+                        let qt:[AirQuality] = [.Lethal, .Bad]
+                        if qt.contains(city.air.airQuality()) {
+                            newsLines.append("⚠️ Air quality is bad.")
+                        }
+                        
+                        // Energy
+                        let energy = city.batteries.compactMap({ $0.current }).reduce(0, +)
+                        if energy < 10 {
+                            newsLines.append("⚡️ City is low on energy: \(energy) kW")
+                        }
+                    }
+                }
         }
         
-        // Beginners Guide
-        if self.station?.habModules.count ?? 0 < 1 {
-            newsLines.append("Tap on a Module (see hand) and create your first Hab Module.")
-        } else if self.station?.labModules.count ?? 0 < 1 {
-            newsLines.append("Tap on a Module (see hand) and create your first Lab Module.")
-        } else if station?.getPeople().count ?? 0 < 1 {
-            newsLines.append("Tap on the Earth, to order items for your Space Station.")
-        }
-        
+        // GameKit's Badge
         GKAccessPoint.shared.location = .topTrailing
         GKAccessPoint.shared.showHighlights = true
         GKAccessPoint.shared.isActive = true
-        
         
         // Save if needed
         if hasChanges {

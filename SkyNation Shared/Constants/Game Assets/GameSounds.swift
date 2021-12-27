@@ -20,10 +20,13 @@ enum Soundtrack:String, CaseIterable {
     case Indreams
     case MainTheme
     
+    case PlanetariumUtopia
+    
     var fileName:String {
         switch self {
             case .SKN_T1, .SKN_T2, .SKN_T3: return "\(self.rawValue).m4a"
             case .Adventure, .Indreams, .MainTheme: return "\(self.rawValue).mp3"
+            case .PlanetariumUtopia: return "PlanetariumUtopia.mp3"
         }
     }
 }
@@ -32,11 +35,13 @@ enum Soundtrack:String, CaseIterable {
 enum SoundFX:String, CaseIterable {
     case Selected
     case Close
+    case Riser
     
     var soundName:String {
         switch self {
             case .Selected: return "SFXSelected.wav"
-            case .Close: return "SFXClose.way"
+            case .Close: return "SFXClose.wav"
+            case .Riser: return "SFXRiser.m4a"
         }
     }
 }

@@ -8,7 +8,6 @@
 import Foundation
 import GameKit
 
-
 /// Takes care of everything Game Center related
 class GameCenterManager {
     
@@ -24,15 +23,8 @@ class GameCenterManager {
     
     var lastExperience:Date?
     
-    /*
-        get local player
-        check restrictions
-        post score (experience)
-        assign gcid?
-     */
-    
+    /// Initializes GameCenter
     private init() {
-        // Get local player
         
         // Game Center
         GKLocalPlayer.local.authenticateHandler = { viewController, error in
@@ -142,5 +134,80 @@ class GameCenterManager {
                 print("Went through (Experience)")
             }
         }
+    }
+    
+    func accomplishmentsLoop() {
+        
+        // Station
+        let station = LocalDatabase.shared.station
+        
+        let peripherals = station.peripherals
+        let beginPeripherals = 3
+        let builtPeripherals:Int = peripherals.count - beginPeripherals
+        print("Player has built \(builtPeripherals) peripherals")
+        
+        // Recipes:
+        // 1. Scrubber
+        // 2. Water Filter
+        // 3. Methanizer
+        // 4. Condensator
+        if station.unlockedRecipes.contains(.ScrubberCO2) {
+            print("Has made first scrubber")
+        }
+        if station.unlockedRecipes.contains(.WaterFilter) {
+            print("Has made first Water Filter")
+        }
+        if station.unlockedRecipes.contains(.Methanizer) {
+            print("Has made first methanizer")
+        }
+        if station.unlockedRecipes.contains(.Condensator) {
+            print("Has made first condensator")
+        }
+        
+        // Tech
+        // 1. Garage
+        if station.unlockedTechItems.contains(.garage) {
+            print("Has made garage")
+        }
+        // 2. Methanizer
+        if station.unlockedTechItems.contains(.recipeMethane) {
+            print("Has made methanizer")
+        }
+        // 3. Ma Antenna
+        if station.unlockedTechItems.contains(.AU1) && station.unlockedTechItems.contains(.AU2) && station.unlockedTechItems.contains(.AU3) && station.unlockedTechItems.contains(.AU4) {
+            print("Has upgraded antenna 4 times")
+        }
+        // 4. Roboarm
+        if station.unlockedTechItems.contains(.Roboarm) {
+            print("Has made roboarm")
+        }
+        // 5. Cuppola
+        if station.unlockedTechItems.contains(.Cuppola) {
+            print("Has made cuppola")
+        }
+        // 6. BioSolids
+        if station.unlockedTechItems.contains(.recipeBioSolidifier) {
+            print("Has made bio solidifier tech")
+        }
+        // 7. Airlock
+        if station.unlockedTechItems.contains(.Airlock) {
+            print("Has made airlock")
+        }
+        // 8. Finished Tech
+        if station.unlockedTechItems.count == TechItems.allCases.count {
+            print("Has finished all station tech!")
+        }
+        
+        // Mars (City)
+        
+        // Tech:
+        // 1. Max Hab
+        // 2. Max Bio
+        // 3.
+        
+        // Mars (Guild)
+        
+        // 1. Missions
+        
     }
 }

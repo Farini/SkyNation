@@ -30,6 +30,14 @@
 		850761432776397F005D0DF5 /* GuildMakerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850761412776397F005D0DF5 /* GuildMakerForm.swift */; };
 		850761442776397F005D0DF5 /* GuildMakerForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850761412776397F005D0DF5 /* GuildMakerForm.swift */; };
 		8507614627784483005D0DF5 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8507614527784483005D0DF5 /* GameKit.framework */; };
+		850761482778E634005D0DF5 /* PlanetariumUtopia.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 850761472778E634005D0DF5 /* PlanetariumUtopia.mp3 */; };
+		850761492778E634005D0DF5 /* PlanetariumUtopia.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 850761472778E634005D0DF5 /* PlanetariumUtopia.mp3 */; };
+		8507614A2778E634005D0DF5 /* PlanetariumUtopia.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 850761472778E634005D0DF5 /* PlanetariumUtopia.mp3 */; };
+		8507614B2778E634005D0DF5 /* PlanetariumUtopia.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 850761472778E634005D0DF5 /* PlanetariumUtopia.mp3 */; };
+		8507614D2778E67A005D0DF5 /* SFXRiser.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8507614C2778E67A005D0DF5 /* SFXRiser.m4a */; };
+		8507614E2778E67A005D0DF5 /* SFXRiser.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8507614C2778E67A005D0DF5 /* SFXRiser.m4a */; };
+		8507614F2778E67A005D0DF5 /* SFXRiser.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8507614C2778E67A005D0DF5 /* SFXRiser.m4a */; };
+		850761502778E67A005D0DF5 /* SFXRiser.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8507614C2778E67A005D0DF5 /* SFXRiser.m4a */; };
 		850A1B0F25ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */; };
 		850A1B1025ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */; };
 		850A1B1125ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */; };
@@ -761,6 +769,8 @@
 		8504A54725C6884600739C58 /* Garage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Garage.swift; sourceTree = "<group>"; };
 		850761412776397F005D0DF5 /* GuildMakerForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildMakerForm.swift; sourceTree = "<group>"; };
 		8507614527784483005D0DF5 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.2.sdk/System/Library/Frameworks/GameKit.framework; sourceTree = DEVELOPER_DIR; };
+		850761472778E634005D0DF5 /* PlanetariumUtopia.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = PlanetariumUtopia.mp3; sourceTree = "<group>"; };
+		8507614C2778E67A005D0DF5 /* SFXRiser.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = SFXRiser.m4a; sourceTree = "<group>"; };
 		850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Antenna3DNode.swift; sourceTree = "<group>"; };
 		85108372271B16D8004D6D00 /* NetResponseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetResponseView.swift; sourceTree = "<group>"; };
 		85108376271B2E63004D6D00 /* GameResponseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameResponseView.swift; sourceTree = "<group>"; };
@@ -1115,6 +1125,7 @@
 			children = (
 				856A64AC272892D20075CC04 /* Music */,
 				85D3BB2626AF244400B6AA36 /* SFXClose.wav */,
+				8507614C2778E67A005D0DF5 /* SFXRiser.m4a */,
 				85D3BB2726AF244400B6AA36 /* SFXSelected.wav */,
 			);
 			path = Sounds;
@@ -1678,6 +1689,7 @@
 				856A64AF272892F80075CC04 /* Adventure.mp3 */,
 				856A64AD272892F80075CC04 /* Indreams.mp3 */,
 				856A64AE272892F80075CC04 /* MainTheme.mp3 */,
+				850761472778E634005D0DF5 /* PlanetariumUtopia.mp3 */,
 			);
 			path = Music;
 			sourceTree = "<group>";
@@ -2087,6 +2099,7 @@
 				856A64BB27289D8F0075CC04 /* Ailerons-Typeface.otf in Resources */,
 				856A64B0272892F80075CC04 /* Indreams.mp3 in Resources */,
 				8569A304259F7F990057A518 /* dissolve.fragment.txt in Resources */,
+				850761482778E634005D0DF5 /* PlanetariumUtopia.mp3 in Resources */,
 				8569A31C259F81110057A518 /* InterlaceShader.fsh in Resources */,
 				8569A331259F81110057A518 /* HealthShader.fsh in Resources */,
 				8569A328259F81110057A518 /* HexagonShader.fsh in Resources */,
@@ -2105,6 +2118,7 @@
 				8536F47D258D481700B509D2 /* MapIndicators.sks in Resources */,
 				8536F491258D481700B509D2 /* Assets.xcassets in Resources */,
 				8536F2ED258D330300B509D2 /* Art.scnassets in Resources */,
+				8507614D2778E67A005D0DF5 /* SFXRiser.m4a in Resources */,
 				856A64B3272892F80075CC04 /* MainTheme.mp3 in Resources */,
 				8569A325259F81110057A518 /* RadarShader.fsh in Resources */,
 			);
@@ -2127,6 +2141,7 @@
 				856A64BC27289D8F0075CC04 /* Ailerons-Typeface.otf in Resources */,
 				856A64B1272892F80075CC04 /* Indreams.mp3 in Resources */,
 				8569A305259F7F990057A518 /* dissolve.fragment.txt in Resources */,
+				850761492778E634005D0DF5 /* PlanetariumUtopia.mp3 in Resources */,
 				8569A31D259F81110057A518 /* InterlaceShader.fsh in Resources */,
 				8569A332259F81110057A518 /* HealthShader.fsh in Resources */,
 				8569A329259F81110057A518 /* HexagonShader.fsh in Resources */,
@@ -2145,6 +2160,7 @@
 				8536F47E258D481700B509D2 /* MapIndicators.sks in Resources */,
 				8536F492258D481700B509D2 /* Assets.xcassets in Resources */,
 				8536F2EE258D330300B509D2 /* Art.scnassets in Resources */,
+				8507614E2778E67A005D0DF5 /* SFXRiser.m4a in Resources */,
 				856A64B4272892F80075CC04 /* MainTheme.mp3 in Resources */,
 				8569A326259F81110057A518 /* RadarShader.fsh in Resources */,
 			);
@@ -2167,6 +2183,7 @@
 				856A64BD27289D8F0075CC04 /* Ailerons-Typeface.otf in Resources */,
 				856A64B2272892F80075CC04 /* Indreams.mp3 in Resources */,
 				8569A31B259F81110057A518 /* CutionStripesColored.fsh in Resources */,
+				8507614A2778E634005D0DF5 /* PlanetariumUtopia.mp3 in Resources */,
 				857D9A1925BF42CB00626884 /* Entry.storyboard in Resources */,
 				8536F47F258D481700B509D2 /* MapIndicators.sks in Resources */,
 				8569A339259F81110057A518 /* RectanglesMoving.fsh in Resources */,
@@ -2185,6 +2202,7 @@
 				8536F473258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F493258D481700B509D2 /* Assets.xcassets in Resources */,
 				8569A333259F81110057A518 /* HealthShader.fsh in Resources */,
+				8507614F2778E67A005D0DF5 /* SFXRiser.m4a in Resources */,
 				856A64B5272892F80075CC04 /* MainTheme.mp3 in Resources */,
 				8536F48B258D481700B509D2 /* GameOverlay.sks in Resources */,
 			);
@@ -2197,10 +2215,12 @@
 				85A59EA3270CB6C90049AFC1 /* PlayerCardLayout.sks in Resources */,
 				8536F48C258D481700B509D2 /* GameOverlay.sks in Resources */,
 				8536F474258D481700B509D2 /* CamControl.sks in Resources */,
+				850761502778E67A005D0DF5 /* SFXRiser.m4a in Resources */,
 				8536F480258D481700B509D2 /* MapIndicators.sks in Resources */,
 				85E2C42026BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
 				8536F498258D481700B509D2 /* SparkEmitter.sks in Resources */,
 				8536F494258D481700B509D2 /* Assets.xcassets in Resources */,
+				8507614B2778E634005D0DF5 /* PlanetariumUtopia.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
