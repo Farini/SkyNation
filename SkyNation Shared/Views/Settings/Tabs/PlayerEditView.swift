@@ -32,7 +32,7 @@ struct PlayerEditorView: View {
                 
                 // Header
                 Text("Player")
-                    .modifier(GameTypography(.title))
+                    .font(GameFont.title.makeFont())
                     .padding(.vertical)
                 
                 Divider()

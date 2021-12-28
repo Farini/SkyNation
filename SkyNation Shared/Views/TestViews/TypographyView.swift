@@ -333,6 +333,11 @@ struct GameColorsView: View {
                     .foregroundColor(Color("DarkGray"))
                     .frame(minWidth: 20, maxWidth: 150, minHeight: 40, maxHeight: 50, alignment: .center)
                     .cornerRadius(8)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .inset(by: 0.5)
+                            .stroke(Color(white: 0.24, opacity: 1.0), lineWidth: 2)
+                    )
                     
             }
             .padding()

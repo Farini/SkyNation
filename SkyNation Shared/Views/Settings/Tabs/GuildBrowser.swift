@@ -161,6 +161,7 @@ struct GuildBrowser: View {
                                 
                                 if let myGuild = controller.guildMap {
                                     PlayerGuildIndicator(guildConditions: .citizenOf(guild: myGuild))
+                                        .modifier(GameSelectionModifier(isSelected: controller.selectedGuildMap?.id == myGuild.id))
                                 } else if controller.player.marsEntryPass().result == true {
                                     // no guild
                                     PlayerGuildIndicator(guildConditions: .noGuild)
@@ -169,12 +170,16 @@ struct GuildBrowser: View {
                                     PlayerGuildIndicator(guildConditions: .noEntry)
                                 }
                                 
-                                Divider()
+                                
                             }
+                            
+                            
+                            Divider()
                             
                             // Fetched Guild Rows
                             ForEach(controller.joinableGuilds, id:\.id) { gList in
                                 GuildRow(guild: gList, selected: controller.selectedGuildMap?.id == gList.id)
+                                    .modifier(GameSelectionModifier(isSelected: controller.selectedGuildMap?.id == gList.id))
                                     .onTapGesture {
                                         controller.fetchGuildMapDetails(from: gList)
                                     }
@@ -245,6 +250,8 @@ enum GuildBrowserConditions {
 struct GuildRow:View {
     
     var guild:GuildSummary
+    
+    // Deprecate this.
     var selected:Bool
     
     var body: some View {
@@ -269,7 +276,7 @@ struct GuildRow:View {
                 .font(GameFont.mono.makeFont())
             }
         }
-        .background(selected ? Color.black:Color.clear)
+        //.background(selected ? Color.black:Color.clear)
     }
 }
 

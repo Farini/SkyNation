@@ -176,7 +176,7 @@ struct OutpostSectionView: View {
             Group {
                 HStack {
                     Text("Required \(rssName)")
-                        .modifier(GameTypography.init(GameFont.title))
+                        .font(GameFont.title.makeFont())
                         .foregroundColor(.gray)
                     Spacer()
                 }
@@ -253,7 +253,7 @@ struct OutpostSectionView: View {
             Group {
                 HStack {
                     Text("Available \(rssName)")
-                        .modifier(GameTypography(.title))
+                        .font(GameFont.title.makeFont())
                         .foregroundColor(.gray)
                     Spacer()
                 }

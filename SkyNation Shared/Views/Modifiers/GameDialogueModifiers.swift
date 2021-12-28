@@ -8,42 +8,29 @@
 import Foundation
 import SwiftUI
 
-struct GameViewMod: ViewModifier {
+
+/// Applies a default selection state. With a dark gray border (unselected) and blue border when selected.
+/// Default Padding and corner radius is `8.0`
+struct GameSelectionModifier: ViewModifier {
+    
+    var isSelected:Bool = false
+    var padding:Double = 8.0
+    var radius:Double = 8.0
+    
+    private let unselectedColor:Color = Color(white: 0.24, opacity: 1.0)
+    private let selectedColor:Color = .blue
     
     func body(content: Content) -> some View {
-        
-        #if os(macOS)
-        content
-            .frame(minWidth: 500, idealWidth: 600, maxWidth: 700, minHeight: 300, maxHeight: 500)
-        #else
-        content
-            .frame(minWidth: 400, idealWidth: 500, maxWidth: 600, minHeight: 300, maxHeight: 500)
-        #endif
-    }
-}
-
-
-struct GameTypography: ViewModifier {
-    
-    var gFont:GameFont
-    
-    init(_ gFont:GameFont) {
-        self.gFont = gFont
-    }
-    
-    func body(content: Content) -> some View {
-        
-        #if os(macOS)
-        content
-            .font(makeFont())
-        #else
-        content
-            .font(makeFont())
-        #endif
-    }
-    
-    func makeFont() -> Font {
-        return gFont.makeFont()
+        ZStack(alignment: .bottomTrailing) {
+            content
+                .padding(padding)
+                .cornerRadius(radius)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .inset(by: 0.5)
+                        .stroke(isSelected ? selectedColor:unselectedColor, lineWidth: 2)
+                )
+        }
     }
 }
 
@@ -68,7 +55,6 @@ struct GameTabModifier: ViewModifier {
                 .clipped()
                 .border(isSelected ? Color.blue:Color.clear, width: 1)
                 .cornerRadius(6)
-            //  .help(controller.selectedTab.rawValue)
         }
     }
     
@@ -101,7 +87,7 @@ struct Badged: ViewModifier {
     }
 }
 
-/// The Game's Degault Background Color
+/// The Game's Default Background Color
 struct GColored: ViewModifier {
     
     func body(content: Content) -> some View {

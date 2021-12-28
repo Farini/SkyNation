@@ -216,6 +216,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [ ] Guild Substitution: `GuildMap` for `GuildFullContent`
 - [ ] Election - Update Guild (in controller) after election does update
+- [ ] Receive Gifts
 
 ### Tests
 

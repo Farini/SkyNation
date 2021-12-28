@@ -34,7 +34,7 @@ struct GameSettingsTabView: View {
                 
                 Group {
                     Text("📺 Graphics")
-                        .modifier(GameTypography(.title))
+                        .font(GameFont.title.makeFont())
                         .padding(.top)
                     
                     Toggle("Lighting boost", isOn:$showLights)
@@ -56,7 +56,7 @@ struct GameSettingsTabView: View {
                 HStack(alignment:.top, spacing:12) {
                     VStack(alignment: .leading) {
                         Text("🎮 Gameplay")//.font(.title)
-                            .modifier(GameTypography(.title))
+                            .font(GameFont.title.makeFont())
                         
                         Toggle("Clear empty tanks", isOn:$clearTanks)
                         // Explanation
@@ -87,7 +87,7 @@ struct GameSettingsTabView: View {
                     Spacer()
                     VStack(alignment: .leading) {
                         Text("🔉 Sounds")//.font(.title)
-                            .modifier(GameTypography(.title))
+                            .font(GameFont.title.makeFont())
                         
                         Toggle("Sound Track (music)", isOn:$musicOn)
                             .onChange(of: musicOn) { _ in self.saveSettings() }
@@ -109,7 +109,7 @@ struct GameSettingsTabView: View {
                 Divider()
                 Group {
                     Text("💾 Data")//.font(.title)
-                        .modifier(GameTypography(.title))
+                        .font(GameFont.title.makeFont())
                     
                     Toggle("Auto Start", isOn:$autoStart)
                 }
