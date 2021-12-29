@@ -366,12 +366,16 @@ class StoreController: ObservableObject, StoreManagerDelegate {
         
         if let error = transaction.error {
             print("Failed Transaction: \(error.localizedDescription)")
-            self.errorMessage = "Transaction failed. Reason: \(error.localizedDescription)"
+            DispatchQueue.main.async {
+                self.errorMessage = "Transaction failed. Reason: \(error.localizedDescription)"
+            }
         }
         
         // Do not send any notifications when the user cancels the purchase.
         if (transaction.error as? SKError)?.code != .paymentCancelled {
-            self.errorMessage = "Payment Cancelled"
+            DispatchQueue.main.async {
+                self.errorMessage = "Payment Cancelled"
+            }
         }
         
         // Finish the failed transaction.

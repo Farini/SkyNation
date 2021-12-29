@@ -213,6 +213,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Sound - 1 more Sound FXs (Recipe Collecting) -> Look under Dektop -> Useful Assets -> Sounds
 - [X] Sound - 1 new melody (PlanetariumUtopia.mp3)
 - [X] Mars Scene - News
+- [X] Remove Promocode
 
 - [ ] Guild Substitution: `GuildMap` for `GuildFullContent`
 - [ ] Election - Update Guild (in controller) after election does update

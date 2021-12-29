@@ -26,10 +26,7 @@ struct GameShoppingView: View {
             HStack() {
                 
                 VStack(alignment:.leading) {
-                    Text("⚙️ Shopping")
-                        .font(GameFont.title.makeFont())
-                    Text("Details")
-                        .foregroundColor(.gray)
+                    Label("Shopping", systemImage: "cart").font(GameFont.title.makeFont())
                 }
                 
                 Spacer()
@@ -90,17 +87,19 @@ struct GameShoppingView: View {
                             Spacer()
                             Divider()
                             
+                            /*
                             // Promo Code
                             Button("Promo Code") {
                                 controller.step = .promocode
                             }
                             .buttonStyle(GameButtonStyle())
                             .padding(.bottom)
-                            
+                            */
                         }
                         
                     case .kit(let product):
-                        HStack {
+                        VStack {
+                            Text("Select a bonus kit")
                             GeometryReader { geometry in
                                 LazyVGrid(
                                     columns: [GridItem(.fixed(geometry.size.width / 2), spacing:1), GridItem(.fixed(geometry.size.width / 2), spacing:1)],
@@ -111,6 +110,10 @@ struct GameShoppingView: View {
                                     ForEach(Purchase.Kit.allCases, id:\.self) { kit in
                                         KitCardView(kit: kit, product: product.type) {
                                             controller.didSelectKit(kit)
+                                        }
+                                        .modifier(GameSelectionModifier(isSelected: kit == controller.selectedKit))
+                                        .onTapGesture {
+                                            controller.selectedKit = kit
                                         }
                                     }
                                 }
@@ -288,19 +291,50 @@ struct KitCardView:View {
     ]
     
     var body: some View {
-        VStack {
+        
+        VStack(alignment:.leading) {
             
-            Label(kit.displayName, systemImage: kit.imageName)
-                .font(GameFont.section.makeFont())
-                .padding(6)
-                .background(Color.black.opacity(0.5))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.clear)
-                )
+            HStack {
+                Label(kit.displayName, systemImage: kit.imageName)
+                    .font(GameFont.section.makeFont())
+                    .padding(6)
+                Spacer()
+                
+                Button("Get it") {
+                    action()
+                }
+                .buttonStyle(GameButtonStyle())
+                .padding(.bottom, 6)
+            }
             
             Divider()
             
+            // Tanks
+            HStack(spacing:8) {
+                GameImages.imageForTank()
+                    .resizable()
+                    .frame(width: 20, height: 20, alignment: .center)
+                ForEach(kit.tanks.sorted(by: {$0.value > $1.value}), id:\.key) { k, v in
+                    Text("\(k.rawValue.uppercased()): \(v * product.rawValue)")
+                }
+                if kit.tanks.isEmpty {
+                    Text("---").foregroundColor(.gray)
+                }
+            }
+            .padding(.horizontal)
+            
+            // Boxes
+            HStack(spacing:8) {
+                GameImages.boxImage
+                    .resizable()
+                    .frame(width:16, height: 16, alignment: .center)
+                ForEach(kit.boxes.sorted(by: { $0.value > $1.value }), id:\.key) { k, v in
+                    Text("\(k.rawValue): \(v * product.rawValue)")
+                }
+            }
+            .padding(.horizontal)
+            
+            /*
             LazyVGrid(
                 columns: columns,
                 alignment: .center,
@@ -331,15 +365,12 @@ struct KitCardView:View {
                 
                 
             }
-            Spacer()
-            Divider()
-            Button("Get it") {
-                action()
-            }
-            .buttonStyle(GameButtonStyle())
-            .padding(.bottom, 6)
+             */
+//            Spacer()
+//            Divider()
+            
         }
-        .frame(minWidth:220, maxWidth:240, minHeight:220, maxHeight:240)
+        .frame(minWidth:220, maxWidth:240, minHeight:150, maxHeight:180)
     }
 }
 

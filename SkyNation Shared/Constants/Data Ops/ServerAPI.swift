@@ -158,7 +158,7 @@ class SKNS {
                 } else {
                     
                     // Check if error is that User lost password.
-                    if let gameError = try? decoder.decode(GameError.self, from: data) {
+                    if let gameError:GameError = try? decoder.decode(GameError.self, from: data) {
                         // game error
                         print("\n\n *** Login Failed. Game Error: \(gameError) ***")
                         

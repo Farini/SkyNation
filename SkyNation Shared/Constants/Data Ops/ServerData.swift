@@ -84,6 +84,7 @@ class ServerManager {
             fatalError("‼️ Local Player doesn't have a pass, or pid. (See below)\n Pass:\(player.keyPass ?? "none"), PID:\(player.playerID?.uuidString ?? "none")")
         }
         
+        
         SKNS.authorizeLogin(localPlayer: player, pid: pid, pass: pass) { playerUpdate, error in
             
             if let playerUpdate = playerUpdate {
