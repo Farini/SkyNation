@@ -48,8 +48,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillBecomeActive(_ notification: Notification) {
         if let screen = NSScreen.main {
             let rect = screen.frame
-//            let height = rect.size.height
-//            let width = rect.size.width
             print("📺 Screen size: \(rect.size)")
         }
     }

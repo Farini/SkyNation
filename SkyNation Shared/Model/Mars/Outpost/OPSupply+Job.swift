@@ -92,33 +92,6 @@ class OutpostSupply:Codable {
     }
     
     // MARK: - Contributions
-    /*
-    func contribute(with box:StorageBox, player:SKNPlayer) {
-        ingredients.append(box)
-        guard let pid = player.serverID else { return }
-        var pScore:Int = players[pid, default:0]
-        pScore += 1
-        players[pid] = pScore
-    }
-    
-    func contribute(with person:Person, player:SKNPlayer) {
-        skills.append(person)
-        guard let pid = player.serverID else { return }
-        var pScore:Int = players[pid, default:0]
-        pScore += 1
-        players[pid] = pScore
-        
-        // FIXME: - Make person busy and Save City (with person)
-    }
-    
-    func mergeWith(supply:OutpostSupply) {
-        self.ingredients.append(contentsOf: supply.ingredients)
-        self.tanks.append(contentsOf: supply.tanks)
-        self.skills.append(contentsOf: supply.skills)
-        self.peripherals.append(contentsOf: supply.peripherals)
-        self.bioBoxes.append(contentsOf: supply.bioBoxes)
-    }
-    */
     
     /// Returns the count of all resources
     func supplyScore() -> Int {

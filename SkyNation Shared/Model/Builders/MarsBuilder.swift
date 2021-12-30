@@ -26,7 +26,7 @@ class MarsBuilder {
     /// Vehicles stationed in Guild
     var guildGarage:[SpaceVehicleTicket] = []
     
-    var guild:GuildFullContent?
+//    var guild:GuildFullContent?
     
     // New: 11/29/2021
     var guildMap:GuildMap?
@@ -124,6 +124,7 @@ class MarsBuilder {
     }
      */
     
+    /// Populates the data. Use `randomize` to populate randomly (create a example/sample)
     func fetchGuildMap(randomized:Bool = false) {
         
         print("Requesting Guild Map for scene.")
@@ -133,6 +134,7 @@ class MarsBuilder {
                 if let gMap = gMap {
                     print("Guild map request returned for guild \(gMap.name)")
                     self.guildMap = gMap
+                    self.cities = gMap.cities
                     self.outposts = gMap.outposts
                 } else {
                     print("Guild map request returned error: \(error?.localizedDescription ?? "n/a")")

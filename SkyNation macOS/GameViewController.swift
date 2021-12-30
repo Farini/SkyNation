@@ -70,6 +70,11 @@ class GameViewController: NSViewController, NSWindowDelegate {
         openedView = nil
     }
     
+//    func windowWillClose(_ notification: Notification) {
+//        print("--- Closing Window ---")
+//        NSApp.terminate(self)
+//    }
+    
     // MARK: - Control
     
     @objc func handleClick(_ gestureRecognizer: NSGestureRecognizer) {

@@ -987,6 +987,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         }
     }
     
+    /// Hand, Finger Tutorial
     func checkBeginnersHandTutorial() {
         
         guard let station = station else {
@@ -1068,6 +1069,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             newsLines.append("Tap on a Module to create your first 🔬 Lab")
             
         } else {
+            
             let pplCount = station.habModules.flatMap({ $0.inhabitants }).count
             if pplCount == 0 {
                 // Earth Order Tutorial
@@ -1089,6 +1091,14 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         newsLines.append("Tap on the Earth, to order items for your Space Station.")
                     }
                 }
+            } else {
+                // Remove Finger
+                print("Removing Finger")
+                if let oldHand = gameOverlay.scene.childNode(withName: "TapHand") as? SKSpriteNode {
+                    oldHand.isHidden = true
+                    oldHand.removeFromParent()
+                    return
+                }
             }
         }
 
@@ -1104,15 +1114,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         } else {
             print("Already animating")
         }
-        
-        // Load Hand
-        // Hand Animation
-//        let atlas = SKTextureAtlas(named: "HandFrames")
-//        var handTextures:[SKTexture] = []
-//        for idx in 1...15 {
-//            handTextures.append(atlas.textureNamed("HandTap\(idx).png"))
-//        }
-        
     }
     
     /// Debugs - Prints information about the scene

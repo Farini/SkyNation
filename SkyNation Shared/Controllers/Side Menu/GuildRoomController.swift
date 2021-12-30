@@ -46,8 +46,7 @@ class GuildRoomController:ObservableObject {
             
             self.guildChat = []
             self.requestChat()
-//            self.getGuildInfo()
-            self.getGuildMap()
+            self.getGuildMap(immediate: false)
             
         } else {
             self.guildChat = []
@@ -79,22 +78,25 @@ class GuildRoomController:ObservableObject {
                 }
             }
         }
-        
-        
     }
     */
     
     /// Gets the main `GuildMap` object
-    func getGuildMap() {
+    func getGuildMap(immediate:Bool) {
         
         print("Getting GuildMap")
         
-        serverManager.requestGuildMap { gMap, error in
-            
+        // Make sure player has credentials, etc.
+        guard player.guildID != nil && player.playerID != nil && player.marsEntryPass().result == true else {
+            self.missionErrorMessage = "Could not get Guild map. Invalid Player."
+            return
+        }
+        
+        serverManager.requestGuildMap(force:immediate, maxDelay: 10) { gMap, error in
             
             if let map = gMap {
                 
-                print("Got Map for Guild \(map.name)")
+                print("\n\n -- Got Map for Guild \(map.name)")
                 DispatchQueue.main.async {
                     
                     // President
@@ -110,7 +112,11 @@ class GuildRoomController:ObservableObject {
                         print("Map has no president ID")
                     }
                     
+                    // Guild Map
                     self.guildMap = map
+                    
+                    // Citizens
+                    self.citizens = map.citizens
                     
                     // Mission
                     if let mapMission = map.mission {
@@ -121,8 +127,10 @@ class GuildRoomController:ObservableObject {
                     
                     // Election
                     if let mapElection = map.election {
+                        print("Previous Election. Stage: \(mapElection.getStage().rawValue)")
                         self.election = mapElection
                     } else {
+                        print("No Previous Election.")
                         self.updateElectionData()
                     }
                     
@@ -269,12 +277,13 @@ class GuildRoomController:ObservableObject {
     
     func updateElectionData() {
         
-        print("Update Election Data")
+        print("\n\n --- Update Election Data")
+        let oldElection = self.election
         
         SKNS.upRestartElection { newElection, error in
             DispatchQueue.main.async {
                 if let newElection:Election = newElection {
-                    print("Got election")
+                    print("Got election. Stage: \(newElection.getStage().rawValue)")
                     // Elections is here
                     self.election = newElection
                     switch newElection.getStage() {
@@ -288,6 +297,10 @@ class GuildRoomController:ObservableObject {
                     
                     let vtCount = newElection.casted[self.player.playerID ?? UUID(), default:0]
                     self.castedVotes = vtCount
+                    
+                    if let oldElection = oldElection, oldElection.getStage() != newElection.getStage() {
+                        self.getGuildMap(immediate: true)
+                    }
                     
                     
                 } else if let error = error {
@@ -313,6 +326,11 @@ class GuildRoomController:ObservableObject {
         
         if let election = self.election {
             let pid = player.playerID ?? UUID()
+            
+            if election.getStage() == .notStarted {
+                self.electionMessage = "Election hasn't started. Votes won't count."
+                return
+            }
             
             let voteCount = election.casted[pid, default: 0]
             if voteCount >= 3 {
@@ -354,10 +372,6 @@ class GuildRoomController:ObservableObject {
         
         print("Kicking player out \(kicked.name)")
         
-//        guard let fullContent = self.guild else {
-//            print("Guild full Content couldn't be found. returning.")
-//            return
-//        }
         guard let gMap = self.guildMap else {
             print("GuildMap couldn't be found. returning.")
             return
@@ -371,8 +385,11 @@ class GuildRoomController:ObservableObject {
             if let success = success {
                 if success == true {
                     print("Successfully kicked player out. Update all lists")
-                    self.getGuildMap()
                     
+                    // Soft Update (instead of re-fetching model)
+                    
+//                    self.getGuildMap(immmediate: true)
+                    self.citizens.removeAll(where: { $0.id == kicked.id })
                 }
             }
         }

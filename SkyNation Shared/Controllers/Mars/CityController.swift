@@ -219,17 +219,6 @@ class CityController:ObservableObject {
                     }
                 }
                 
-                // let res = LocalDatabase.shared.savePlayer(player: player)
-                
-                // print("Claim city results Saved. Player:\(res)")
-                
-                // Get Vehicles from 'Travelling.josn'
-                
-                // Reload GuildFullContent
-                //                ServerManager.shared.inquireFullGuild { fullGuild, error in
-                //
-                //                }
-                
             } else {
 //                print("No City. Error: \(error?.localizedDescription ?? "n/a")")
                 self.warnings = ["Error claiming city: \(error?.localizedDescription ?? "n/a")"]
@@ -303,7 +292,6 @@ class CityController:ObservableObject {
                     // Achievement
                     // GameMessageBoard.shared.newAchievement(type: .vehicleLanding(vehicle: vehicle), money: 100, message: nil)
                     
-                    // FIXME: - Create Scene Notification
                     // Let the scene know that there is a new vehicle arriving
                 }
             }

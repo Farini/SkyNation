@@ -122,7 +122,7 @@ The contributors to these projects shall have a **fair** share of the game, and 
 - To Do's: 528/553 = 95.47%
 
 
-## 📝 To Do
+## 📝 To Do list
 If looking for things to do and don't know where to start, go to *Find Navigator* and search for **FIXME**, or **TODO**
 
 12/29/2021 - 
@@ -131,20 +131,21 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Guild Substitution: `GuildMap` for `GuildFullContent`
 - [X] Player Flags
 - [X] Guild Flags
-
-- [ ] Election - Update Guild (in controller) after election does update
-- [ ] Guild Room - Election not showing details?
-
-- [ ] Receive Gifts
-- [ ] Player Login Updates - See `ServerData.swift`
-- [ ] Scenes - Use GuildFlags to show new items.
-
-- [ ] Tutorial - Place finger in middle.
-- [ ] Tutorial - remove finger
-- [ ] Tutorial - move new finger
-- [ ] macOS - app not quitting
+- [X] ServerData fixes
+- [X] Tutorial - Place finger in middle of module.
+- [X] Tutorial - remove finger
+- [X] Tutorial - move new finger
+- [X] City Disappeared!
+- [X] Player Login Updates with Flags - See `ServerData.swift` - missing full review of errors and consequences.
+- [X] Guild Room - Fix & Improve elections (not showing + wrong messages)
+- [X] Election - Update Guild (in controller) after election does update
 
 - [ ] App macOS v 1.1 (New Player Login)
+
+- [ ] macOS - app not quitting
+
+- [ ] Scenes - Use GuildFlags to show new items.
+- [ ] Receive Gifts
 
 ### Tests
 
@@ -154,6 +155,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Outpost Update
 - [ ] Leaving a Guild
 - [ ] Create Player
+- [ ] Tutorial finger
 
 ### Optional Cut
 

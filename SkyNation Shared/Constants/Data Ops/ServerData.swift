@@ -95,11 +95,21 @@ class ServerManager {
          4. City ID
          */
         
+        // New Method
+        
         if let pid = player.playerID,
            let pass = player.keyPass,
-           let server = ServerManager.loadServerData() {
-                print("Player can login pid:\(pid), pass:\(pass)")
-            self.loginWithData(sd: server)
+           let server = ServerManager.loadServerData(),
+           pass.isEmpty == false {
+            print("Player can login pid:\(pid), pass:\(pass)")
+            if GameSettings.onlineStatus == true {
+                // Perform Login
+                self.loginWithData(sd: server)
+            } else {
+                // Simulate
+                print("Simulating Info !")
+                self.loginStatus = .simulatingData(serverData: server)
+            }
         } else {
             // Player can't login. Needs to create
             self.loginFirstPlayer(player: player)
@@ -107,7 +117,8 @@ class ServerManager {
         self.serverData = ServerManager.loadServerData() ?? ServerData(player: player)
         
         
-        
+        /*
+        // Old Method
         if let sd:ServerData = ServerManager.loadServerData() {
             
             // Local Server data stored
@@ -124,9 +135,9 @@ class ServerManager {
         } else {
             
             // No Server Data Stored
-            
             self.loginFirstPlayer(player: player)
         }
+        */
     }
     
     private static func loadServerData() -> ServerData? {

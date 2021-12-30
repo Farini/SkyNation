@@ -204,8 +204,9 @@ struct GuildRoom: View {
                             } else {
                                 Button("Fetch map") {
                                     // Fetch map
-                                    controller.getGuildMap()
+                                    controller.getGuildMap(immediate: true)
                                 }
+                                .buttonStyle(GameButtonStyle())
                             }
                         }
                     }

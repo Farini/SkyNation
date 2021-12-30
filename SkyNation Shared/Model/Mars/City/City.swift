@@ -614,10 +614,6 @@ extension CityData {
     /// Main Accounting function
     private func accountingCycle(startDate:Date) -> Date {
         
-       
-        
-        // FIXME: - Collect Energy
-        
         var energyCollection:Int = 5
         if let sknsData = LocalDatabase.shared.serverData {
             // get power sources
