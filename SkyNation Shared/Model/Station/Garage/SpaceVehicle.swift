@@ -429,7 +429,7 @@ struct SpaceVehiclePost:Codable {
 }
 
 /// When Posting `SpaceVehiclePost`, this is the response. Link to Vehicle immediately. This is also the object that the server has
-struct SpaceVehicleTicket:Codable {
+struct SpaceVehicleTicket:Codable, Identifiable, Hashable {
     
     /// The ID, given by the server
     var id:UUID

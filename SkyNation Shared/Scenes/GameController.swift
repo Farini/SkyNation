@@ -168,22 +168,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     }
                 }
                 
-//                for mod in modules {
-//                    if mod.id.uuidString == modName {
-//                        if let lab = station?.lookupModule(id: mod.id) as? LabModule {
-//                            print("Lab: \(lab.name)")
-//                            gameNavDelegate?.didSelectLab(module: lab)
-//                        }else if let hab = station?.lookupModule(id: mod.id) as? HabModule {
-//                            gameNavDelegate?.didSelectHab(module: hab)
-//                        }else if let bio = station?.lookupModule(id: mod.id) as? BioModule {
-//                            gameNavDelegate?.didSelectBio(module: bio)
-//                        }else if let lab = station?.lookupModule(id: mod.id) as? Module {
-//                            print("It is indeed a crude module: [\(lab.type)]")
-//                            gameNavDelegate?.didChooseModule(name: modName)
-//                        }
-//                    }
-//                }
-                
                 if modName == "Truss" || "Truss" == result.node.parent?.name {
                     gameNavDelegate?.didSelectTruss(station: self.station!)
                     break
@@ -300,12 +284,12 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 return
             }
             if sprite.name == "settings" {
-                print("⚙️ HIT SETTINGS NODE")
+                // print("⚙️ HIT SETTINGS NODE")
                 gameNavDelegate?.didSelectSettings()
                 return
             }
             if sprite.name == "ShopButton" {
-                print("⚙️ Lets go shopping")
+                // print("⚙️ Lets go shopping")
                 gameNavDelegate?.didSelectShopping()
                 return
             }
@@ -424,6 +408,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     }
     
     // MARK: - Updates
+    
     var shouldUpdateScene:Bool = false
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
@@ -445,7 +430,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         station?.accountingLoop(recursive: false) { (messages) in
                             
                             DispatchQueue.main.async {
-                                print("\(messages.first ?? "n/a")")
+//                                print("\(messages.first ?? "n/a")")
                                 
                                 // Update Player Card
                                 self.gameOverlay.updatePlayerCard()
@@ -471,12 +456,25 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                             print("⏱ My City Update: \(rounded)")
                             
                             myCity.accountingLoop(recursive: false) { messages in
-                                print("\(messages.first ?? "n/a")")
+                                
+//                                print("\(messages.first ?? "n/a")")
+                                DispatchQueue.main.async {
+                                    
+                                    // Update Player Card
+                                    self.gameOverlay.updatePlayerCard()
+                                    
+                                    // News
+                                    if self.newsLines.isEmpty == false {
+                                        print("*** NEWS ***  (\(self.newsLines.count))")
+                                        if let currentNews = self.newsLines.first {
+                                            self.gameOverlay.generateNews(string: currentNews)
+                                            self.newsLines.removeFirst()
+                                        }
+                                    }
+                                }
                             }
-                            gameOverlay.updatePlayerCard()
                         }
                         
-                        // print("Update Mars Colony Scene")
                         return
                 }
             }
@@ -651,9 +649,10 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 guard enter == true else {
                     print("No Entry")
                     
-                    let line1 = "⚠️ Need and entry ticket to Mars"
+                    let line1 = "⚠️ Player needs an entry ticket to Mars"
                     let line2 = "🛒 Head to the store and purchase any product."
-                    let line3 = "Or type a coupon password in the store."
+                    let line3 = "---"
+                    
                     let lines:[String] = [line1, line2, line3]
                     var newsDelay = 1.0
                     for line in lines {
@@ -672,7 +671,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 guard mBuilder.hasNoGuild == false else {
                     print("No Entry")
                     
-                    let line1 = "⚠️ You have no Guild."
+                    let line1 = "⚠️ Player has no Guild."
                     let line2 = "This could happen if you haven't joined a guild"
                     let line3 = "Or because you were booted 👢"
                     let lines:[String] = [line1, line2, line3]
@@ -990,10 +989,17 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     func checkBeginnersHandTutorial() {
         
-        guard let station = station,
-              let moduleA = station.modules.first else {
+        guard let station = station else {
             return
         }
+        
+        let occupiedIDs:[UUID] = station.habModules.compactMap({ $0.id }) + station.labModules.compactMap({ $0.id }) + station.bioModules.compactMap({ $0.id })
+    
+        guard let moduleA = station.modules.first(where: { occupiedIDs.contains($0.id) == false }) else {
+            print("All modules are occupied")
+            return
+        }
+        
         if LocalDatabase.shared.player.experience > 10 {
             if GameSettings.shared.showTutorial == false {
                 return
@@ -1026,7 +1032,15 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             guard let node3 = scene.rootNode.childNode(withName: moduleA.id.uuidString, recursively: true) else {
                 fatalError("No such name")
             }
-            let spriteLocation = self.sceneRenderer.projectPoint(node3.position)
+            var objCenter:SCNVector3 = node3.position
+            if let geo = node3.geometry {
+                let bbox = geo.boundingBox
+                let mx = (bbox.min.x + bbox.max.x) / 2
+                let my = (bbox.min.y + bbox.max.y) / 2
+                let mz = (bbox.min.z + bbox.max.z) / 2
+                objCenter = SCNVector3(x: mx, y: my, z: mz)
+            }
+            let spriteLocation = self.sceneRenderer.projectPoint(objCenter)
             print("Sprite Location: \(spriteLocation)")
 #if os(macOS)
             handSprite.position = CGPoint(x: Double(spriteLocation.x), y: Double(-spriteLocation.y * 2.0))

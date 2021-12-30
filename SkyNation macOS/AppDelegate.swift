@@ -13,6 +13,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        
+        NSApp.appearance = NSAppearance(named: .darkAqua)
+        
         print("App finished launch")
         if let screen = NSScreen.main {
             let rect = screen.frame
@@ -35,12 +38,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             window.contentView = NSHostingView(rootView: GameSettingsView())
             window.makeKeyAndOrderFront(nil)
         }
-        
-//        if let player:SKNPlayer = LocalDatabase.shared.player {
-//            print("There is a player \(player.name)")
-//        } else {
-//
-//        }
         
         // Maximize the window
         // if let screen = NSScreen.mainScreen() {

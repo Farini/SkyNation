@@ -237,7 +237,7 @@ struct GuildRoom: View {
                         }
                         .padding(.horizontal)
                         
-                        let guildHasPresident:Bool = controller.guild?.president != nil
+                        let guildHasPresident:Bool = controller.guildMap?.president != nil
                         let inviteEnabled:Bool = guildHasPresident ? controller.iAmPresident():true
                         
                         List {

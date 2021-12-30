@@ -259,7 +259,7 @@ struct Purchase:Codable, Identifiable, Hashable {
         
         var entryTokensAmount:Int = 1
         var entryTokens:[GameToken] = []
-        let entryID = LocalDatabase.shared.player.serverID ?? UUID()
+        let entryID = LocalDatabase.shared.player.playerID ?? UUID()
         
         switch storeProduct {
             case .five:

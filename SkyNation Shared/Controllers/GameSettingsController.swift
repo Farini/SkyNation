@@ -254,7 +254,7 @@ class GameSettingsController:ObservableObject {
             
             items.append("★ Loaded Player \(player.name)")
             
-            if let pid = player.serverID {
+            if let pid = player.playerID {
                 
                 items.append("Player ID: \(pid.uuidString)")
                 

@@ -464,6 +464,27 @@ class OutpostController:ObservableObject {
         let outpostID:UUID = self.outpostData.id
         
         // needs to fetch new DBOutpost after upgrades
+        ServerManager.shared.requestGuildMap { gMap, error in
+            
+            if let gMap:GuildMap = gMap,
+               let dbo = gMap.outposts.first(where: { $0.id == outpostID }) {
+                DispatchQueue.main.async {
+                    self.dbOutpost = dbo
+                }
+                return
+            } else {
+                // Error: Could not get new Outpost
+                if let error = error {
+                    DispatchQueue.main.async {
+                        self.serverError = "Error. Could not get outpost updates. \(error.localizedDescription)"
+                        self.outpostUpgradeMessage = "Error. Could not get outpost updates. \(error.localizedDescription)"
+                    }
+                }
+            }
+        }
+        
+        /*
+        // needs to fetch new DBOutpost after upgrades
         ServerManager.shared.inquireFullGuild(force: true) { fullGuild, error in
             if let guild:GuildFullContent = fullGuild {
                 let dbo = guild.outposts.first(where: { $0.id == outpostID })!
@@ -471,6 +492,7 @@ class OutpostController:ObservableObject {
                 
             }
         }
+        */
     }
     
     /// Delivery success.:

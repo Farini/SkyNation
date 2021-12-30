@@ -567,3 +567,99 @@ Animations
 - [X] LSSView - (Peripherals) No Selection (Fix all peripherals, Power off all peripherals)
 - [X] Person Detail View - Skill Table
 - [X] Model - Guild Missions
+
+[12/01/2021 - 12/29/2021] 
+- [X] Blender - Split Scene into collections: Collection, Roads, Outposts, Gates
+- [X] Blender - Terrain remake -> Remake roads, and add paths
+- [X] Blender - Gate Placeholders
+- [X] Blender - Terrain remake -> Surroundings - Fix and merge terrains into one Mesh
+- [X] Blender - Terrain remake -> Export New Terrain
+- [X] Blender - Build and export Gate with Gate Placeholder
+- [X] Blender - Build and export roads
+- [X] Blender - Build and export roads paths
+- [X] Blender - Substitute Outposts Solar Panels
+- [X] Blender - Build and export new outposts
+- [X] import gate to Xcode
+- [X] import GuildMap to Xcode
+- [X] Blender - Add Solar Panel material
+- [X] Blender - Export Elevator (Decor)
+- [X] Blender - Make Outposts Placeholders
+- [X] Blender - Export Gate Placeholders
+- [X] Mars Scene - use extension GuildMission in MarsBuilder.swift 
+- [X] Mars Scene - Unlock roads
+- [X] Mars Scene - City Gate - Use Placeholders
+- [X] Mars Scene - Add Elevator (mission)
+- [X] Mars Scene - Import new Road Paths (Copy)
+- [X] Mars Scene - Animate Elevator
+- [X] Guild Room - Invite should work for everyone
+- [X] Guild Room - Test Election Results
+- [X] Guild Room - President functions (Kickout, Modify Guild)
+- [X] Guild Room - Guild Missions
+- [X] Guild Missions - Add ALL roads, outpost Unlocks, and missions .production
+- [X] Mars Scene - Implement Guild Missions
+- [X] Mars Scene - Unlock posdexes
+- [X] Mars Scene - Unlock cities
+- [X] Tutorial - GuildRoom (improvements)
+- [X] Outpost - Split the view in outpost states
+- [X] Outpost - Scene View - all outposts need a camera that can fly around it.
+- [X] Outpost - Cooldown mode - Activate a timer, use two level views with an arrow between
+- [X] Outpost - Test `.finished` state.
+- [X] Mars Scene - Delete [MarsRoads, Gate5, MarsMap, Duplicated Outposts]
+- [X] Mars Scene - Every Outpost Node needs a camera! (in coding) - Missing Mining
+- [X] Mars Scene - Delete Textures [...]
+- [X] Store receipt view
+- [X] Store - Register purchasesin SKN bug fix
+- [X] Outpost - Animations
+- [X] Outpost - Scenes (SceneView) still not showing
+- [X] Tutorial - Adjustments (padding)
+- [X] Tutorial - Mars City
+- [X] Tutorial - Outpost
+- [X] Guild Missions - fix weird mission view
+- [X] Guild Room - Update Vote after voting
+- [X] Guild Room - animations
+- [X] Guild Room - Markdown Edit (Readme)
+- [X] Use SKNS.`createDBOutpost` and `presyfyGuild`
+- [X] Guild Missions - unlock Outposts (Create DBOutpost in server)
+- [X] Guild Views (from GuildMap object)
+- [X] Guild Views - Banner (Icon, name, etc.) + also use as table row?
+- [X] Guild Views - FlipView (detailed)
+- [X] Mars Scene - Outpost placeholders (Level 0) - Missing Mining fix
+- [X] Set Playername to GameCenter's alias
+- [X] Mars Scene - Mining Producing Silica - supposed to be water
+- [X] Guild Room - Markdown - Disable Edit button, if not president
+- [X] Guild Election Weirdness (response from server)
+- [X] SKNPlayer - gcid
+- [X] Remove SceneKit Debug Bar from View
+- [X] Setup Graphics Options (multisampling)
+- [X] City View - Hab - Remake with new Views
+- [X] City View - Lab - Remake with new Views
+- [X] City View - Bio - Remake with new Views
+- [X] Server sub ElectionContent for ElectionData
+- [X] call electionTurnCycle from server
+- [X] Create DBOutposts - New method (only a few outposts)
+- [X] Mac Help Menu
+- [X] GameOptions - Tutorial should show tutorial. Disable when close? Or remove.
+- [X] Guild Room - President accept joinlist -> move to invites.
+- [X] Guild Room - Fetch Players who's on the lists. (join + invite)
+- [X] Guild Room - Mission View with 3 Progress bars.
+- [X] Guild Room - Block chat for players that can't chat.
+- [X] Guild Navigator - Use SKNS.browseGuildMap... to get `GuildMap` from `GuildSummary`
+- [X] Guild Navigator - Use SKNS.browseInvitesFromGuilds... to get `[GuildSummary]`
+- [X] Guild Navigator - Default Fetch - `browseguilds` vs `browseInvitesFromGuilds()`
+- [X] Guild Navigator - Integration into GameSettingsController
+- [X] Guild Navigator - use GuildJoinState - `PlayerGuildState`
+- [X] Guild Navigator - `requestJoin` must give AND return a `GuildMap` + SKNS.joinGuildPetition + Server Backend.
+- [X] Guild Navigator - Guild Creator (with steps)
+- [X] Guild Navigator - New GuildJoin[View]State (creating, errors, loading, busy, etc.)
+- [X] Guild Navigator - Controller - Search Guild by name
+- [X] Guild Navigator - Erase `GuildFullContent` from `GameSettingsController` + cleanup
+- [X] Guild Room - President edit and save.
+- [X] Guild Navigator - Guild Card View - add missions
+- [X] SKNSData - otherPlayers:`[PlayerContent]` - Invite list + joinlist    .otherPlayers + .otherGuilds
+- [X] SKNSData - joinRequests:[UUID] = The requests sent to Guilds that are locked.
+- [X] Sound - 1 more Sound FXs (Recipe Collecting) -> Look under Dektop -> Useful Assets -> Sounds
+- [X] Sound - 1 new melody (PlanetariumUtopia.mp3)
+- [X] Mars Scene - News
+- [X] Remove Promocode
+
+## 12/29/2021 - macOS v1 APPROVED IN STORE !!! ✅

@@ -150,7 +150,7 @@ struct GuildMakerForm: View {
                 
                 HStack {
                     Button("Confirm") {
-                        let gCreate = GuildCreate(name: name, icon: icon, color: color, president: LocalDatabase.shared.player.serverID ?? UUID(), isOpen: isOpen, invites: [])
+                        let gCreate = GuildCreate(name: name, icon: icon, color: color, president: LocalDatabase.shared.player.playerID ?? UUID(), isOpen: isOpen, invites: [])
                         self.action(gCreate)
                     }
                     .buttonStyle(GameButtonStyle())

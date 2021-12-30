@@ -157,7 +157,7 @@ struct Guild:Codable {
     }
     
     static func makeGuild(name:String, president:SKNPlayer?, citizens:[UUID] = [], makeCities:Int = 0) -> Guild {
-        let guild = Guild(id: UUID(), name: name, icon:GuildIcon.allCases.randomElement()!.rawValue, color:GuildColor.allCases.randomElement()!.rawValue, president: ["id":president?.serverID ?? nil], members: nil, citizens: citizens, isOpen: Bool.random(), election: Date(), terrain: "Terrain1", cities:nil, outposts: nil)
+        let guild = Guild(id: UUID(), name: name, icon:GuildIcon.allCases.randomElement()!.rawValue, color:GuildColor.allCases.randomElement()!.rawValue, president: ["id":president?.playerID ?? nil], members: nil, citizens: citizens, isOpen: Bool.random(), election: Date(), terrain: "Terrain1", cities:nil, outposts: nil)
         return guild
     }
     
@@ -450,6 +450,64 @@ final class GuildMap:Codable {
     func makeSummary() -> GuildSummary {
         let gSum = GuildSummary(id: self.id, name: self.name, isOpen: self.isOpen, citizens: self.citizens.compactMap({ $0.id }), cities: self.cities.compactMap({ $0.id }), outposts: self.outposts.compactMap({ $0.id }), icon: self.icon, color: self.color)
         return gSum
+    }
+    
+    /// Compares what is new
+    func compareFlags(newMap:GuildMap) -> [ServerManager.GuildFlag] {
+
+        var newFlags:[ServerManager.GuildFlag] = []
+
+        // messages
+        let myChat:Set<ChatMessage> = Set(self.chat ?? [])
+        if let newChat = newMap.chat {
+            for newPost in newChat {
+                if myChat.contains(where: { $0.id == newPost.id }) == false {
+                    newFlags.append(.messages)
+                }
+            }
+        }
+        
+        // election
+        if let newElection = newMap.election {
+            if newElection.getStage() == .running {
+                newFlags.append(.election)
+            }
+        }
+        // citizens
+        let oldCitizens = Set<PlayerContent>(self.citizens)
+        let newCitizens = Set<PlayerContent>(newMap.citizens)
+        let addedCitizens = newCitizens.subtracting(oldCitizens)
+        let lostCitizens = oldCitizens.subtracting(newCitizens)
+        if addedCitizens.isEmpty == false || lostCitizens.isEmpty == false {
+            newFlags.append(.citizens)
+        }
+        
+        // vehicles
+        let oldVehicles = Set<SpaceVehicleTicket>(self.vehicles ?? [])
+        let newVehicles = Set<SpaceVehicleTicket>(newMap.vehicles ?? [])
+        let addedVehicles = newVehicles.subtracting(oldVehicles)
+        if addedVehicles.isEmpty == false {
+            newFlags.append(.vehicles)
+        }
+        
+        // missions
+        if let newMission = newMap.mission {
+            if let oldMission = self.mission {
+                if newMission.mission != oldMission.mission {
+                    // Different mission entirely
+                    newFlags.append(.missions)
+                } else {
+                    let oldPage = oldMission.pageOf().page
+                    let newPage = newMission.pageOf().page
+                    // Different page (task)
+                    if oldPage != newPage {
+                        newFlags.append(.missions)
+                    }
+                }
+            }
+        }
+        
+        return newFlags
     }
     
     /*

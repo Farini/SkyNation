@@ -23,7 +23,7 @@ struct GuildElectionView: View {
                 
                 Divider()
                 
-                if let _:GuildFullContent = controller.guild {
+                if let _:GuildMap = controller.guildMap {
                     
                     // 2 Columns: Election Info vs Candidates
                     HStack(alignment:.top) {

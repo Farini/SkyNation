@@ -13,7 +13,7 @@ class GuildRoomController:ObservableObject {
     @Published var player:SKNPlayer
     
     // The Guild
-    @Published var guild:GuildFullContent?
+//    @Published var guild:GuildFullContent?
     @Published var citizens:[PlayerContent] = []
     @Published var president:PlayerContent?
     
@@ -34,6 +34,7 @@ class GuildRoomController:ObservableObject {
     @Published var currentText:String = ""
     
     private var serverManager = ServerManager.shared
+    @Published var guildFlags:[ServerManager.GuildFlag] = []
     
     init() {
         
@@ -45,8 +46,7 @@ class GuildRoomController:ObservableObject {
             
             self.guildChat = []
             self.requestChat()
-            
-            self.getGuildInfo()
+//            self.getGuildInfo()
             self.getGuildMap()
             
         } else {
@@ -54,8 +54,11 @@ class GuildRoomController:ObservableObject {
         }
     }
     
+    /*
     /// Retrieves Data about Guild
+    ///
     func getGuildInfo() {
+        
         
         self.serverManager.inquireFullGuild(force: false) { fullGuild, error in
             DispatchQueue.main.async {
@@ -76,30 +79,60 @@ class GuildRoomController:ObservableObject {
                 }
             }
         }
+        
+        
     }
+    */
     
-    // NEW - GuildMap
+    /// Gets the main `GuildMap` object
     func getGuildMap() {
         
-        SKNS.buildGuildMap { guildMap, error in
-            print("\n\n Guild Map...")
+        print("Getting GuildMap")
+        
+        serverManager.requestGuildMap { gMap, error in
             
-            if let map = guildMap {
-                print("Got Map for Guild: \(map.name)")
-                print(map.president?.uuidString ?? "no president")
+            
+            if let map = gMap {
                 
+                print("Got Map for Guild \(map.name)")
                 DispatchQueue.main.async {
                     
                     // President
                     if let pres = map.president {
                         if let presCitizen = map.citizens.first(where: { $0.id == pres}) {
                             self.president = presCitizen
+                            print("President: \(presCitizen.name)")
+                        } else {
+                            print("Could not find GuildMap's president for Guild (\(map.name))")
                         }
+                    } else {
+                        // no president
+                        print("Map has no president ID")
                     }
                     
                     self.guildMap = map
+                    
+                    // Mission
+                    if let mapMission = map.mission {
+                        self.mission = mapMission
+                    } else {
+                        self.fetchGuildMission()
+                    }
+                    
+                    // Election
+                    if let mapElection = map.election {
+                        self.election = mapElection
+                    } else {
+                        self.updateElectionData()
+                    }
+                    
+                    // Flags
+                    let guildFlags:[ServerManager.GuildFlag] = self.serverManager.guildFlags
+                    if !guildFlags.isEmpty {
+                        print("*** Guild Flags (Changes) = \(guildFlags.description)")
+                        self.guildFlags = guildFlags
+                    }
                 }
-                self.fetchGuildMission()
                 
             } else {
                 print("no guild map was found")
@@ -111,6 +144,37 @@ class GuildRoomController:ObservableObject {
                 }
             }
         }
+        
+//        SKNS.buildGuildMap { guildMap, error in
+//            print("\n\n Guild Map...")
+//
+//            if let map = guildMap {
+//                print("Got Map for Guild: \(map.name)")
+//                print(map.president?.uuidString ?? "no president")
+//
+//                DispatchQueue.main.async {
+//
+//                    // President
+//                    if let pres = map.president {
+//                        if let presCitizen = map.citizens.first(where: { $0.id == pres}) {
+//                            self.president = presCitizen
+//                        }
+//                    }
+//
+//                    self.guildMap = map
+//                }
+//                self.fetchGuildMission()
+//
+//            } else {
+//                print("no guild map was found")
+//
+//                if let error = error {
+//                    print("Error: \(error.localizedDescription)")
+//                } else {
+//                    print("no error either")
+//                }
+//            }
+//        }
     }
     
     // MARK: - Chat
@@ -225,6 +289,7 @@ class GuildRoomController:ObservableObject {
                     let vtCount = newElection.casted[self.player.playerID ?? UUID(), default:0]
                     self.castedVotes = vtCount
                     
+                    
                 } else if let error = error {
                     // Error
                     print("Got error: \(error.localizedDescription)")
@@ -274,19 +339,13 @@ class GuildRoomController:ObservableObject {
         }
     }
     
+    /// Simple check if this player is the president
     func iAmPresident() -> Bool {
         if let pid = LocalDatabase.shared.player.playerID,
            let guildMap = guildMap {
             return guildMap.president == pid
         }
         return false
-        /*
-        if let pid = LocalDatabase.shared.player.playerID,
-           let guild = guild {
-            return guild.president == pid
-        }
-        return false
-        */
     }
     
     // MARK: - President Functions
@@ -295,16 +354,20 @@ class GuildRoomController:ObservableObject {
         
         print("Kicking player out \(kicked.name)")
         
-        guard let fullContent = self.guild else {
-            print("Guild full Content couldn't be found. returning.")
+//        guard let fullContent = self.guild else {
+//            print("Guild full Content couldn't be found. returning.")
+//            return
+//        }
+        guard let gMap = self.guildMap else {
+            print("GuildMap couldn't be found. returning.")
             return
         }
-        guard let gcity = fullContent.cities.first(where: { $0.owner?.values.first == kicked.id }) else {
+        guard let gcity = gMap.cities.first(where: { $0.owner?.values.first == kicked.id }) else {
             print("There is no city. Needs a city to kick out.")
             return
         }
         
-        SKNS.kickPlayer(from: fullContent, city: gcity, booted: kicked) { success, error in
+        SKNS.kickPlayer(from: gMap, city: gcity, booted: kicked) { success, error in
             if let success = success {
                 if success == true {
                     print("Successfully kicked player out. Update all lists")
@@ -411,15 +474,6 @@ class GuildRoomController:ObservableObject {
     @Published var mission:GuildMission?
     @Published var missionErrorMessage:String?
     
-    
-    // Actions:
-    // Start Mission
-    // Cooperate
-    // Use Token
-    // Finish
-    
-    // Server Updates
-    
     // Fetch Guild Mission
     // Look for Guild Mission. Creates if doesn't exist in server.
     func fetchGuildMission() {
@@ -446,8 +500,6 @@ class GuildRoomController:ObservableObject {
     // on a request to update, it must be one of these cases:
     // next (task) vs (task + 1),
     // next (missionNumber) vs (missionNumber + 1)
-    //
-    
     func finishMission(gMission:GuildMission) {
         gMission.workers = []
         
@@ -470,8 +522,6 @@ class GuildRoomController:ObservableObject {
     // post request with GuildMission
     // count workers as a Set (eliminate duplicates)
     // (workers.count) must be workers.count + 1
-    //
-    
     func cooperateMission(gMission:GuildMission, token:Bool = false) {
         
         guard let pid = player.playerID else { return }

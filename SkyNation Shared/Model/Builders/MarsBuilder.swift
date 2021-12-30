@@ -41,7 +41,7 @@ class MarsBuilder {
     
     /**
         Populates the data. Use `randomize` to populate randomly (create a example/sample)
-     */
+     
     func getServerInfo() {
         
         if GameSettings.onlineStatus {
@@ -122,6 +122,7 @@ class MarsBuilder {
         }
         
     }
+     */
     
     func fetchGuildMap(randomized:Bool = false) {
         
@@ -236,7 +237,7 @@ class MarsBuilder {
         self.scene = scene
         
         // deprecate when ready.
-        getServerInfo()
+//        getServerInfo()
         
         // Get guildMap
         fetchGuildMap(randomized: false)

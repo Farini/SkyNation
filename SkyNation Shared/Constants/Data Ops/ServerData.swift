@@ -33,6 +33,25 @@ class ServerManager {
     
     var serverData:ServerData?
     
+    /// An Indicator of a change in variable, as a result from the server response
+    enum PlayerFlag {
+        case guildID    // new guildID
+        case password   // new password
+        case playerID   // new playerID (on create, update)?
+        case lastSeen   // for other players?
+    }
+    var playerFlags:[PlayerFlag] = []
+    
+    /// An Indicator that something is new
+    enum GuildFlag {
+        case messages   // new chat messages
+        case election   // election did change
+        case citizens   // new citizen / kicked out
+        case vehicles   // vehicles
+        case missions   // mission change (pid not in it)
+    }
+    var guildFlags:[GuildFlag] = []
+    
     /// Indicates if AuthorizedLogin happened and was successful
     var playerLogged:Bool // Initializes to false. Turns true when login success only.
     
@@ -42,6 +61,52 @@ class ServerManager {
         
         self.playerLogged = false
         self.loginStatus = .notStarted
+        
+        let player = LocalDatabase.shared.player
+        
+        // Improvements in Login:
+        
+        // Comb through Player's object
+            // Check PlayerID
+                // Check pass
+            // Log player in with player.playerID
+            // Create here if playerID doesn't exist
+            // Alternatively, wait to create in Player Update (view)
+        // Detect flags [PlayerXP && noPlayer], [guildID && no guild], [cityID && noCity]
+            // 1. [PlayerXP && noPlayer]: Just register new player (and mark with flag)
+            // 2. [guildID && no guild]: Show message -> A. Guild doesn't exist, B. Kicked out
+            // 3. [cityID && noCity] - Happens when player leaves a guild. Check if city should be "frozen"
+        // Design Login Object with flags, etc.
+        // Check for object updates (whats new?) - Player and GuildMap
+            // 1. Player has Gift
+            // 2. New Guild Messages
+            // 3. Guild Outpost Updates
+            // 4. Guild Mission Updates
+            // 5. New Election State?
+        
+        /*
+         Discussion: Substitute the above (new) for the following (old)....
+         1. Check player ID
+         2. Check pass
+         --- Create new player
+         --- Update old player
+         [Player Flags]
+         3. Check GuildID -> GuildID + Citizen check
+         4. City ID
+         */
+        
+        if let pid = player.playerID,
+           let pass = player.keyPass,
+           let server = ServerManager.loadServerData() {
+                print("Player can login pid:\(pid), pass:\(pass)")
+            self.loginWithData(sd: server)
+        } else {
+            // Player can't login. Needs to create
+            self.loginFirstPlayer(player: player)
+        }
+        self.serverData = ServerManager.loadServerData() ?? ServerData(player: player)
+        
+        
         
         if let sd:ServerData = ServerManager.loadServerData() {
             
@@ -59,7 +124,7 @@ class ServerManager {
         } else {
             
             // No Server Data Stored
-            let player = LocalDatabase.shared.player
+            
             self.loginFirstPlayer(player: player)
         }
     }
@@ -87,13 +152,34 @@ class ServerManager {
         
         SKNS.authorizeLogin(localPlayer: player, pid: pid, pass: pass) { playerUpdate, error in
             
-            if let playerUpdate = playerUpdate {
+            if let playerUpdate:PlayerUpdate = playerUpdate {
                 // success
                 print("Player authorized. Name:\(playerUpdate.name), \(playerUpdate.pass)")
                 
                 DispatchQueue.main.async {
-                    player.lastSeen = Date()
+//                    player.lastSeen = Date()
                     self.playerLogged = true
+                    
+                    // Flags
+                    do {
+                        let oldPlayer:PlayerUpdate = try PlayerUpdate.create(player: player)
+                        let pFlags = oldPlayer.compareFlags(newPlayer: playerUpdate)
+                        if !pFlags.isEmpty {
+                            print("\n\n\n PLAYER UPDATE FLAGS !!\n \(pFlags.description)\n\n")
+                            self.playerFlags = pFlags
+                            
+                            if pFlags.contains(.password) {
+                                player.keyPass = playerUpdate.pass
+                                do {
+                                    try LocalDatabase.shared.savePlayer(player)
+                                } catch {
+                                    print("Error saving player \(error.localizedDescription)")
+                                }
+                            }
+                        }
+                    } catch {
+                        // Could not create a PlayerUpdate Object
+                    }
                     
                     let newServerData = ServerData(localData: sd)
                     self.serverData = newServerData
@@ -115,28 +201,50 @@ class ServerManager {
         
         if let pid = player.playerID,
            let pass = player.keyPass {
-            // attempt login
-            // if fails, need a method to reset password
             
+            // Check if there is an auth already.
             SKNS.authorizeLogin(localPlayer: player, pid: pid, pass: pass) { playerUpdate, error in
                 
-                if let playerUpdate = playerUpdate {
+                if let playerUpdate:PlayerUpdate = playerUpdate {
                     // success
                     print("Player authorized. Name:\(playerUpdate.name), \(playerUpdate.pass)")
                     
                     DispatchQueue.main.async {
-                        player.lastSeen = Date()
+//                        player.lastSeen = Date()
+                        let delta = abs(player.lastSeen.timeIntervalSinceNow)
+                        if delta > 60 {
+                            player.lastSeen = Date()
+                        }
                         self.playerLogged = true
                         self.loginStatus = .playerAuthorized(playerUpdate: playerUpdate)
                         
+                        // Flags
+                        do {
+                            let oldPlayer = try PlayerUpdate.create(player: player)
+                            let pFlags = oldPlayer.compareFlags(newPlayer: playerUpdate)
+                            if !pFlags.isEmpty {
+                                print("\n\n\n PLAYER UPDATE FLAGS !!\n \(pFlags.description)\n\n")
+                                self.playerFlags = pFlags
+                                if pFlags.contains(.password) {
+                                    player.keyPass = playerUpdate.pass
+                                    do {
+                                        try LocalDatabase.shared.savePlayer(player)
+                                    } catch {
+                                        print("Error saving player \(error.localizedDescription)")
+                                    }
+                                }
+                            }
+                        } catch {
+                            // Could not create a PlayerUpdate Object
+                        }
+                        
+                        // Update var serverData
                         if self.serverData != nil {
                             self.serverData!.player = player
                         } else {
                             self.serverData = ServerData(player: player)
                         }
-                        
                     }
-                    
                 } else {
                     // failed
                     print("‼️ Authorize Login Failed. Error: \(error?.localizedDescription ?? "no error")")
@@ -154,12 +262,13 @@ class ServerManager {
                         // Save new Player
                         player.playerID = playerUpdate.id
                         player.keyPass = playerUpdate.pass
+                        
                         // Save
                         do {
                             try LocalDatabase.shared.savePlayer(player)
                             print("New Player created in database")
                         } catch {
-                            print("‼️ Could not save station.: \(error.localizedDescription)")
+                            print("‼️ Could not save player.: \(error.localizedDescription)")
                         }
                         
                         self.loginStatus = .createdPlayerWaitingAuth(playerUpdate: playerUpdate)
@@ -187,7 +296,7 @@ class ServerManager {
         }
     }
     
-    
+    /*
     /// Gets the Full Guild Content
     func inquireFullGuild(force:Bool, completion:@escaping(GuildFullContent?, Error?) -> ()) {
         
@@ -203,6 +312,7 @@ class ServerManager {
         }
         
     }
+    */
     
     
     /// max delay is in seconds
@@ -217,12 +327,24 @@ class ServerManager {
             return
         }
         
+        let oldGuildMap = serverData.guildMap
+        
         serverData.requestGuildMap(force, deadline: maxDelay) { guildMap, error in
+            
+            // Set the GuildFlags
+            if let newGuildMap = guildMap,
+            let oldGuildMap = oldGuildMap {
+                let guildFlags:[GuildFlag] = oldGuildMap.compareFlags(newMap: newGuildMap)
+                self.guildFlags = guildFlags
+            }
+            
+            // Completion
             completion(guildMap, error)
         }
         
     }
     
+    /*
     func notifyJoinedGuild(guildSum:GuildSummary) {
         guard let serverData:ServerData = serverData else {
             return
@@ -235,6 +357,7 @@ class ServerManager {
             }
         }
     }
+    */
     
     // Outpost Data
     func requestOutpostData(dbOutpost:DBOutpost, force:Bool, completion:@escaping((Outpost?, Error?) -> ())) {
@@ -333,8 +456,6 @@ class ServerData:Codable {
     var partners:[PlayerContent] = []
     var otherPlayers:[PlayerContent]?
     
-    
-    
     /// Guild's `DBCity` array
     var cities:[DBCity] = []
     
@@ -351,8 +472,6 @@ class ServerData:Codable {
     // Election
     var election:Election?
     
-    
-    
     // Errors
     var errorMessage:String = ""
     
@@ -361,6 +480,7 @@ class ServerData:Codable {
     /// Date Guild was last Fetched
     var lastGuildFetch:Date?
     
+    /*
     func requestPlayerGuild(force:Bool, completion:@escaping(GuildFullContent?, Error?) -> ()) {
         
         print("Requesting Player Guild from ServerData.")
@@ -403,6 +523,7 @@ class ServerData:Codable {
             completion(fullGuild, error)
         }
     }
+    */
     
     var lastMapFetch:Date?
     
@@ -440,6 +561,8 @@ class ServerData:Codable {
             }
         }
     }
+    
+    // Guildmap Flags (whats new)
     
     // MARK: - Outpost Data
     var lastOutpostFetch:Date?
@@ -544,7 +667,7 @@ class ServerData:Codable {
         return energyCollection
     }
     
-    
+    /// Prints Information about Server Data
     func reportStatus() {
         print("\n * SERVER DATABASE STATUS")
         
@@ -576,30 +699,15 @@ class ServerData:Codable {
     // MARK: - Initting methods
     
     init(player:SKNPlayer) {
-        
-        print("Server Data Initializing")
+        print("Server Data Initializing with player \(player.name)")
         self.player = player
-        
-//        if GameSettings.onlineStatus == false {
-//            print("Not Online. (Sandbox mode)")
-//        } else {
-//            print("Requesting Online Data...")
-//            self.performLogin()
-//        }
     }
     
     /// Data exists locally (old data)
     init(localData:ServerData) {
-        
         self.player = LocalDatabase.shared.player
-        
-//        self.lastLogin = localData.lastLogin
         self.lastGuildFetch = localData.lastGuildFetch
         self.lastFetchedVehicles = localData.lastFetchedVehicles
-        
-        
-        // when this is working, and removed other methods (right now server data is being loaded elsewhere)
-        // self.runUpdates()
     }
     
 }

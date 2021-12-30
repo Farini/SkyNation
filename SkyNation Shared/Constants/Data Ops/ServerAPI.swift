@@ -1467,7 +1467,7 @@ class SKNS {
         request.httpMethod = HTTPMethod.GET.rawValue
         
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        //        request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
+        // request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
         
         let task = session.dataTask(with: request) { (data, response, error) in
             if let data = data {
@@ -1561,7 +1561,7 @@ class SKNS {
     // President
     
     // 1. kickout
-    static func kickPlayer(from guild:GuildFullContent, city:DBCity, booted:PlayerContent, completion:((Bool?, Error?) -> ())?) {
+    static func kickPlayer(from guild:GuildMap, city:DBCity, booted:PlayerContent, completion:((Bool?, Error?) -> ())?) {
         
         let url = URL(string: "\(baseAddress)/guilds/kickout/\(guild.id)/\(city.id)")!
         

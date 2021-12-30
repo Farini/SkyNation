@@ -24,28 +24,54 @@ import Foundation
 /// **Private** information about the `Player`
 class SKNPlayer:Codable, Identifiable {
     
-    // IDs
-    var id:UUID
-    var localID:UUID            // id given by local machine
-    var serverID:UUID?          // an ID given by the server (SKNUser)
-    var playerID:UUID?          // an ID for the `DBPlayer` object
-    var gcid:String?            // an ID given by GameCenter
-    var guildID:UUID?           // id of the Guild
-    var cityID:UUID?            // City ID
+    // MARK: - IDs
     
-    // Constructed
+    /// generated locally
+    var id:UUID
+    
+    /// id given by local machine
+    var localID:UUID
+    
+    /// Deprecating... Do not use this
+    var serverID:UUID? = nil
+    
+    /// an ID for the `DBPlayer` object
+    var playerID:UUID?
+    
+    /// Game Center's ID
+    var gcid:String?
+    
+    /// Player's Guild ID
+    var guildID:UUID?
+    
+    /// Player's City ID
+    var cityID:UUID?
+    
+    // MARK: - Constructed
+    
+    /// Player name
     var name:String
+    
+    /// Chosen Avatar
     var avatar:String
+    
+    /// Sky Coins amount
     var money:Int
+    
+    /// Player's optional String
     var about:String
+    
+    /// Player's Experience
     var experience:Int
     
-    // Dates
+    /// Date player began playing
     var beganGame:Date
+    /// Date Player was last seen
     var lastSeen:Date
     
-    // Server Pass
+    /// Player's password(date).
     var datePass:Date?
+    /// Player's password(string).
     var keyPass:String?
     
     /// Items Purchased, Tokens and Freebies
@@ -78,7 +104,7 @@ class SKNPlayer:Codable, Identifiable {
         // Shop (Initial)
         self.wallet = Wallet(lid: lid)
         
-        self.serverID = nil
+//        self.serverID = nil
         self.guildID = nil
     }
     
@@ -302,7 +328,7 @@ struct PlayerCreate: Codable {
     }
 }
 
-/// Used when Updating a Player
+/// Used when Updating a Player, and receiving response from login.
 struct PlayerUpdate: Codable, Equatable {
     
     /// ID of `DBPlayer`
@@ -325,6 +351,21 @@ struct PlayerUpdate: Codable, Equatable {
     // Dates
     var beganGame:Date
     var pass:String
+    
+    /// Compares what is new
+    func compareFlags(newPlayer:PlayerUpdate) -> [ServerManager.PlayerFlag] {
+        var newFlags:[ServerManager.PlayerFlag] = []
+        if self.id != newPlayer.id {
+            newFlags.append(.playerID)
+        }
+        if self.pass != newPlayer.pass {
+            newFlags.append(.password)
+        }
+        if self.guildID != newPlayer.guildID {
+            newFlags.append(.guildID)
+        }
+        return newFlags
+    }
     
     /// Tries to create a player. It can fail if player has no `playerID`, or `pass`
     static func create(player:SKNPlayer) throws -> PlayerUpdate {

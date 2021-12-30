@@ -25,7 +25,7 @@ The contributors to these projects shall have a **fair** share of the game, and 
 - [X] Server Project SKNServer - A server for this game written in Vapor.
 - [X] Apple Store Product Registration
 - [X] TestFlight: https://testflight.apple.com/join/lGBrKxTQ
-- [ ] Product Version 1.0
+- [X] Product (macOS) Version 1.0 build 40 - 12/29/2021
 
 ### Methodology 
 **ToDo** Items are a part of a **Component** of the Game. Completing these items will ultimately generate one or more stars, that indicates the progress of that component. A Component will be fully complete when 5 stars are reached - in which case it means that no more work is required for that component.
@@ -62,12 +62,12 @@ The contributors to these projects shall have a **fair** share of the game, and 
  - [ ] ★★★★☆ Game Chats, Messages, Achievements
  - [ ] ★★★★☆ Game Store + Use of `GameToken`
  - [ ] ★★★★☆ Player(object) + settings + playability + Purchases
- - [ ] ★★☆☆☆ Tutorials
+ - [ ] ★★★☆☆ Tutorials
  
  ## Programming (Back End)
  
  - [ ] ★★★★☆ Player
- - [ ] ★★★☆☆ Guild
+ - [ ] ★★★★☆ Guild
  - [ ] ★★★☆☆ City + Outposts
  - [ ] ★★★☆☆ Guild Chat
  - [ ] ★★☆☆☆ Bonus - New Features
@@ -117,107 +117,34 @@ The contributors to these projects shall have a **fair** share of the game, and 
 - ★ (1 Star) = 0.66%
 - To Do's: 402/437 = 92%
 
+@ December 29, 2021
+- ★/☆: 118/160 = 73.75%
+- To Do's: 528/553 = 95.47%
+
+
 ## 📝 To Do
 If looking for things to do and don't know where to start, go to *Find Navigator* and search for **FIXME**, or **TODO**
 
-12/01/2021 - ?
+12/29/2021 - 
 
-- [X] Blender - Split Scene into collections: Collection, Roads, Outposts, Gates
-- [X] Blender - Terrain remake -> Remake roads, and add paths
-- [X] Blender - Gate Placeholders
-- [X] Blender - Terrain remake -> Surroundings - Fix and merge terrains into one Mesh
-- [X] Blender - Terrain remake -> Export New Terrain
-- [X] Blender - Build and export Gate with Gate Placeholder
-- [X] Blender - Build and export roads
-- [X] Blender - Build and export roads paths
-- [X] Blender - Substitute Outposts Solar Panels
-- [X] Blender - Build and export new outposts
-- [X] import gate to Xcode
-- [X] import GuildMap to Xcode
-- [X] Blender - Add Solar Panel material
-- [X] Blender - Export Elevator (Decor)
-- [X] Blender - Make Outposts Placeholders
-- [X] Blender - Export Gate Placeholders
-- [X] Mars Scene - use extension GuildMission in MarsBuilder.swift 
-- [X] Mars Scene - Unlock roads
-- [X] Mars Scene - City Gate - Use Placeholders
-- [X] Mars Scene - Add Elevator (mission)
-- [X] Mars Scene - Import new Road Paths (Copy)
-- [X] Mars Scene - Animate Elevator
-- [X] Guild Room - Invite should work for everyone
-- [X] Guild Room - Test Election Results
-- [X] Guild Room - President functions (Kickout, Modify Guild)
-- [X] Guild Room - Guild Missions
-- [X] Guild Missions - Add ALL roads, outpost Unlocks, and missions .production
-- [X] Mars Scene - Implement Guild Missions
-- [X] Mars Scene - Unlock posdexes
-- [X] Mars Scene - Unlock cities
-- [X] Tutorial - GuildRoom (improvements)
-- [X] Outpost - Split the view in outpost states
-- [X] Outpost - Scene View - all outposts need a camera that can fly around it.
-- [X] Outpost - Cooldown mode - Activate a timer, use two level views with an arrow between
-- [X] Outpost - Test `.finished` state.
-- [X] Mars Scene - Delete [MarsRoads, Gate5, MarsMap, Duplicated Outposts]
-- [X] Mars Scene - Every Outpost Node needs a camera! (in coding) - Missing Mining
-- [X] Mars Scene - Delete Textures [...]
-- [X] Store receipt view
-- [X] Store - Register purchasesin SKN bug fix
-- [X] Outpost - Animations
-- [X] Outpost - Scenes (SceneView) still not showing
-- [X] Tutorial - Adjustments (padding)
-- [X] Tutorial - Mars City
-- [X] Tutorial - Outpost
-- [X] Guild Missions - fix weird mission view
-- [X] Guild Room - Update Vote after voting
-- [X] Guild Room - animations
-- [X] Guild Room - Markdown Edit (Readme)
-- [X] Use SKNS.`createDBOutpost` and `presyfyGuild`
-- [X] Guild Missions - unlock Outposts (Create DBOutpost in server)
-- [X] Guild Views (from GuildMap object)
-- [X] Guild Views - Banner (Icon, name, etc.) + also use as table row?
-- [X] Guild Views - FlipView (detailed)
-- [X] Mars Scene - Outpost placeholders (Level 0) - Missing Mining fix
-- [X] Set Playername to GameCenter's alias
-- [X] Mars Scene - Mining Producing Silica - supposed to be water
-- [X] Guild Room - Markdown - Disable Edit button, if not president
-- [X] Guild Election Weirdness (response from server)
-- [X] SKNPlayer - gcid
-- [X] Remove SceneKit Debug Bar from View
-- [X] Setup Graphics Options (multisampling)
-- [X] City View - Hab - Remake with new Views
-- [X] City View - Lab - Remake with new Views
-- [X] City View - Bio - Remake with new Views
-- [X] Server sub ElectionContent for ElectionData
-- [X] call electionTurnCycle from server
-- [X] Create DBOutposts - New method (only a few outposts)
-- [X] Mac Help Menu
-- [X] GameOptions - Tutorial should show tutorial. Disable when close? Or remove.
-- [X] Guild Room - President accept joinlist -> move to invites.
-- [X] Guild Room - Fetch Players who's on the lists. (join + invite)
-- [X] Guild Room - Mission View with 3 Progress bars.
-- [X] Guild Room - Block chat for players that can't chat.
-- [X] Guild Navigator - Use SKNS.browseGuildMap... to get `GuildMap` from `GuildSummary`
-- [X] Guild Navigator - Use SKNS.browseInvitesFromGuilds... to get `[GuildSummary]`
-- [X] Guild Navigator - Default Fetch - `browseguilds` vs `browseInvitesFromGuilds()`
-- [X] Guild Navigator - Integration into GameSettingsController
-- [X] Guild Navigator - use GuildJoinState - `PlayerGuildState`
-- [X] Guild Navigator - `requestJoin` must give AND return a `GuildMap` + SKNS.joinGuildPetition + Server Backend.
-- [X] Guild Navigator - Guild Creator (with steps)
-- [X] Guild Navigator - New GuildJoin[View]State (creating, errors, loading, busy, etc.)
-- [X] Guild Navigator - Controller - Search Guild by name
-- [X] Guild Navigator - Erase `GuildFullContent` from `GameSettingsController` + cleanup
-- [X] Guild Room - President edit and save.
-- [X] Guild Navigator - Guild Card View - add missions
-- [X] SKNSData - otherPlayers:`[PlayerContent]` - Invite list + joinlist    .otherPlayers + .otherGuilds
-- [X] SKNSData - joinRequests:[UUID] = The requests sent to Guilds that are locked.
-- [X] Sound - 1 more Sound FXs (Recipe Collecting) -> Look under Dektop -> Useful Assets -> Sounds
-- [X] Sound - 1 new melody (PlanetariumUtopia.mp3)
-- [X] Mars Scene - News
-- [X] Remove Promocode
+- [X] macOS Force Dark Theme
+- [X] Guild Substitution: `GuildMap` for `GuildFullContent`
+- [X] Player Flags
+- [X] Guild Flags
 
-- [ ] Guild Substitution: `GuildMap` for `GuildFullContent`
 - [ ] Election - Update Guild (in controller) after election does update
+- [ ] Guild Room - Election not showing details?
+
 - [ ] Receive Gifts
+- [ ] Player Login Updates - See `ServerData.swift`
+- [ ] Scenes - Use GuildFlags to show new items.
+
+- [ ] Tutorial - Place finger in middle.
+- [ ] Tutorial - remove finger
+- [ ] Tutorial - move new finger
+- [ ] macOS - app not quitting
+
+- [ ] App macOS v 1.1 (New Player Login)
 
 ### Tests
 
@@ -226,8 +153,18 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Election Results - Guild governor - pending update of Guild.
 - [ ] Outpost Update
 - [ ] Leaving a Guild
+- [ ] Create Player
 
 ### Optional Cut
+
+- [ ] Completely eliminate `GuildFullContent`
+
+- [ ] Overlay Scene with Labels + Option in `GameSettings`
+- [ ] Player Update Flags (whats new)
+- [ ] Guild Update Flags (whats new)
+- [ ] Scene Update Flags (vehicles)
+
+- [ ] Look into APNS
 
 - [ ] City View - Bio - "Evolve" not updating the list
 - [ ] Garage - Make sure charging 'propellants'
@@ -247,6 +184,9 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [ ] Blender - Arena + levels
 - [ ] Blender - Hotel + levels
+
+
+### Screenshots
 
 - [ ] Screenshots Front, Beginning view
 - [ ] Screenshots Tech Tree
