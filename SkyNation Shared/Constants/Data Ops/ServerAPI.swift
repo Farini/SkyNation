@@ -37,6 +37,10 @@ class SKNS {
     
     // MARK: - Player, Login
     
+    /*
+     Create a new method that returns PlayerCreate instead.
+     */
+    
     /// Creates a new player is the Server Database.
     static func createNewPlayer(localPlayer:SKNPlayer, completion:((PlayerUpdate?, Error?) -> ())?) {
         

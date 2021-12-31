@@ -252,7 +252,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 if let camControl = sprite.parent as? CamControlNode {
                     
                     // Update the camcontrol.
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         camControl.updatePOV()
                     }
                 }
@@ -265,7 +265,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 if let camControl = sprite.parent as? CamControlNode {
                     
                     // Update the camcontrol.
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         camControl.updatePOV()
                     }
                 }
@@ -279,17 +279,15 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             // Buttons Underneath Player
             // Tutorial button
             if sprite.name == "tutorial" {
-                print("🎓 HIT TUTORIAL NODE")
+                print("🎓 TUTORIAL NODE")
                 self.gameOverlay.showTutorial()
                 return
             }
             if sprite.name == "settings" {
-                // print("⚙️ HIT SETTINGS NODE")
                 gameNavDelegate?.didSelectSettings()
                 return
             }
             if sprite.name == "ShopButton" {
-                // print("⚙️ Lets go shopping")
                 gameNavDelegate?.didSelectShopping()
                 return
             }
@@ -299,20 +297,43 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 gameNavDelegate?.openGameRoom()
                 return
             }
+            
+            // Guild Room
             if sprite.name == "ChatButton" {
-//                print("⚙️ Lets chat!")
                 gameNavDelegate?.didSelectMessages()
                 return
             }
             
+            // Mars
             if sprite.name == "MarsButton" {
-                
-                // print("⚙️ Lets go to Mars!")
-                
-                // Player should have GuildID
-                // Otherwise, load prospect guild selector, or prospect terrain selector?
-                
                 self.switchScene()
+                return
+            }
+            
+            // Tutorial Hand
+            if sprite.name == "TapHand" {
+                
+                // Tapped on hand. Open the first available module (not used)
+                guard let station = station else {
+                    return
+                }
+                let occupiedIDs:[UUID] = station.habModules.compactMap({ $0.id }) + station.labModules.compactMap({ $0.id }) + station.bioModules.compactMap({ $0.id })
+                guard let moduleA = station.modules.first(where: { occupiedIDs.contains($0.id) == false }) else {
+                    print("All modules are occupied")
+                    newsLines.append("All modules are occupied")
+                    return
+                }
+                if let _ = station.lookupModule(id: moduleA.id) as? Module {
+                    gameNavDelegate?.didChooseModule(name: moduleA.id.uuidString)
+                    sprite.isHidden = true
+                    sprite.removeFromParent()
+                    return
+                } else {
+                    newsLines.append("⚠️ Unable to locate a vacant module.")
+                    sprite.isHidden = true
+                    sprite.removeFromParent()
+                    return
+                }
             }
             
         } else {
@@ -1015,6 +1036,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         } else {
             let spriteTexture = SKTexture(imageNamed: "TapHand")
             let newHand = SKSpriteNode(texture: spriteTexture, color: .white, size: CGSize(width: 128, height: 128))
+            newHand.anchorPoint = CGPoint(x: 0.3, y: 0.8)
             newHand.name = "TapHand"
             newHand.zPosition = 99
             gameOverlay.scene.addChild(newHand)
@@ -1036,17 +1058,23 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             var objCenter:SCNVector3 = node3.position
             if let geo = node3.geometry {
                 let bbox = geo.boundingBox
-                let mx = (bbox.min.x + bbox.max.x) / 2
-                let my = (bbox.min.y + bbox.max.y) / 2
-                let mz = (bbox.min.z + bbox.max.z) / 2
+                let mx = ((bbox.max.x - bbox.min.x) / 2) + node3.position.x
+                let my = ((bbox.max.y - bbox.min.y) / 2) + node3.position.y
+                let mz = ((bbox.max.z - bbox.min.z) / 2) + node3.position.z
                 objCenter = SCNVector3(x: mx, y: my, z: mz)
             }
             let spriteLocation = self.sceneRenderer.projectPoint(objCenter)
             print("Sprite Location: \(spriteLocation)")
+            let sprite2dPoint = CGPoint(x: spriteLocation.x, y: spriteLocation.y - 64.0)
+            let p = self.gameOverlay.scene.convertPoint(fromView: sprite2dPoint)
+            print("Sprite inScene: \(p)")
+            print("Sprite Scene Size: \(gameOverlay.scene.size)")
+            
 #if os(macOS)
-            handSprite.position = CGPoint(x: Double(spriteLocation.x), y: Double(-spriteLocation.y * 2.0))
+//            handSprite.position = CGPoint(x: Double(spriteLocation.x), y: Double(-spriteLocation.y * 2.0))
+            handSprite.position = p //CGPoint(x: Double(spriteLocation.x), y: Double(-spriteLocation.y * 2.0))
 #else
-            handSprite.position = CGPoint(x: Double(spriteLocation.x), y: Double(-spriteLocation.y - 20.0))
+            handSprite.position = p // CGPoint(x: Double(spriteLocation.x), y: Double(-spriteLocation.y - 20.0))
 #endif
             
             // Beginners Guide
@@ -1059,12 +1087,24 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             guard let node3 = scene.rootNode.childNode(withName: moduleA.id.uuidString, recursively: true) else {
                 fatalError("No such name")
             }
-            let spriteLocation = self.sceneRenderer.projectPoint(node3.position)
+            var objCenter:SCNVector3 = node3.position
+            if let geo = node3.geometry {
+                let bbox = geo.boundingBox
+                let mx = ((bbox.max.x - bbox.min.x) / 2) + node3.position.x
+                let my = ((bbox.max.y - bbox.min.y) / 2) + node3.position.y
+                let mz = ((bbox.max.z - bbox.min.z) / 2) + node3.position.z
+                objCenter = SCNVector3(x: mx, y: my, z: mz)
+            }
+            let spriteLocation = self.sceneRenderer.projectPoint(objCenter)
             print("Sprite Location: \(spriteLocation)")
+            let sprite2dPoint = CGPoint(x: spriteLocation.x, y: spriteLocation.y - 64.0)
+            let p = self.gameOverlay.scene.convertPoint(fromView: sprite2dPoint)
+            print("Sprite inScene: \(p)")
+            print("Sprite Scene Size: \(gameOverlay.scene.size)")
 #if os(macOS)
-            handSprite.position = CGPoint(x: Double(spriteLocation.x), y: Double(-spriteLocation.y * 2.0))
+            handSprite.position = p // CGPoint(x: Double(spriteLocation.x), y: Double(-spriteLocation.y * 2.0))
 #else
-            handSprite.position = CGPoint(x: Double(spriteLocation.x), y: Double(-spriteLocation.y - 20.0))
+            handSprite.position = p // CGPoint(x: Double(spriteLocation.x), y: Double(-spriteLocation.y - 20.0))
 #endif
             newsLines.append("Tap on a Module to create your first 🔬 Lab")
             
@@ -1077,18 +1117,28 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 if people.isEmpty {
                     if let earth = scene.rootNode.childNode(withName: "Earth", recursively: true) as? EarthNode {
                         
-                        let earthLocation = self.sceneRenderer.projectPoint(earth.position)
-                        print("Earth Location: \(earthLocation)") // SCNVector3(x: 682.99927, y: 630.78296, z: 0.9976073)  SCNVector3(x: 682.99927, y: 586.4786, z: 0.99754316)
-                        print("Viewport Size: \(sceneRenderer.currentViewport.size)")
-                        let calc = -(sceneRenderer.currentViewport.size.height / 2.0) + 50 //+ CGFloat(earthLocation.y)
+                        var objCenter:SCNVector3 = earth.position
+                        if let geo = earth.childNodes.first(where: { $0.geometry != nil }) {
+                            print("Geo 🌎")
+                            let bbox = geo.boundingBox
+                            let mx = ((bbox.max.x - bbox.min.x) / 2) + geo.position.x
+                            let my = ((bbox.max.y - bbox.min.y) / 2) + geo.position.y
+                            let mz = ((bbox.max.z - bbox.min.z) / 2) + geo.position.z
+                            objCenter = SCNVector3(x: mx, y: my, z: mz)
+                        }else {
+                            print("Earth doesn't have geometry")
+                        }
+                        let earthLocation = self.sceneRenderer.projectPoint(objCenter)
+                        let sprite2dPoint = CGPoint(x: earthLocation.x, y: earthLocation.y)
+                        let p:CGPoint = self.gameOverlay.scene.convertPoint(fromView: sprite2dPoint)
                         
 #if os(macOS)
-                        handSprite.position = CGPoint(x: Double(earthLocation.x), y: Double(-earthLocation.y * 2.0))
+                        handSprite.position = p
 #else
-                        handSprite.position = CGPoint(x: Double(earthLocation.x), y: Double(calc)) //Double(-earthLocation.y - 20.0))
+                        handSprite.position = p //CGPoint(x: Double(earthLocation.x), y: Double(calc)) //Double(-earthLocation.y - 20.0))
 #endif
                         
-                        newsLines.append("Tap on the Earth, to order items for your Space Station.")
+                        newsLines.append("Tap on the Globe 🌎 to order items for your Space Station.")
                     }
                 }
             } else {

@@ -139,6 +139,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Player Login Updates with Flags - See `ServerData.swift` - missing full review of errors and consequences.
 - [X] Guild Room - Fix & Improve elections (not showing + wrong messages)
 - [X] Election - Update Guild (in controller) after election does update
+- [X] Nailed the Hand Tutorial !
 
 - [ ] App macOS v 1.1 (New Player Login)
 
@@ -152,10 +153,10 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Mining Scene Nodes (waiting to be unlocked)
 - [X] GuildRoom Markdown - and with quote
 - [X] Election Results - Guild governor - pending update of Guild.
+- [X] Tutorial finger
+- [X] Create Player
 - [ ] Outpost Update
 - [ ] Leaving a Guild
-- [ ] Create Player
-- [ ] Tutorial finger
 
 ### Optional Cut
 
