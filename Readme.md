@@ -161,6 +161,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 ### Optional Cut
 
 - [ ] Completely eliminate `GuildFullContent`
+- [ ] SKNS.postCreate(newGuildID:UUID.... sub `GuildMap`
 
 - [ ] Overlay Scene with Labels + Option in `GameSettings`
 - [ ] Player Update Flags (whats new)
@@ -168,6 +169,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Scene Update Flags (vehicles)
 
 - [ ] Look into APNS
+- [ ] Store - Build list of bonus (kits) depending on prev. purchases
 
 - [ ] City View - Bio - "Evolve" not updating the list
 - [ ] Garage - Make sure charging 'propellants'
@@ -187,7 +189,11 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [ ] Blender - Arena + levels
 - [ ] Blender - Hotel + levels
-
+- [ ] Blender - Cuppola 2.0
+- [ ] Blender - Airlock 2.0
+- [ ] Blender - Dock 2.0
+- [ ] Blender - New Module Skins
+- [ ] Blender - City Gate Skin
 
 ### Screenshots
 

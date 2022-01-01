@@ -20,6 +20,7 @@ class StartingWindow: NSWindowController, NSWindowDelegate {
         self.window!.contentView = NSHostingView(rootView: GameSettingsView())
         self.window!.makeKeyAndOrderFront(nil)
         window?.title = "SkyNation"
+        window?.delegate = self
         
         // Add Notification
         NotificationCenter.default.addObserver(self, selector: #selector(startGame(_:)), name: .startGame, object: nil)
@@ -39,6 +40,9 @@ class StartingWindow: NSWindowController, NSWindowDelegate {
                 
                 // Close this window
                 self.window?.close()
+                
+                // Delegate this window as well.
+                newWindow.delegate = self
             }
         }
     }
@@ -51,5 +55,17 @@ class StartingWindow: NSWindowController, NSWindowDelegate {
             self.window?.contentViewController?.presentAsSheet(viewController)
         }
     }
+    
+    /*
+    func windowWillClose(_ notification: Notification) {
+        if let window = notification.object as? NSWindow {
+            window.isReleasedWhenClosed = true
+            print("A Window from window call \(window.title)")
+        } else {
+            print("Another Window will close: \(window?.title ?? "n/a")")
+        }
+        
+    }
+    */
     
 }

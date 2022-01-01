@@ -18,7 +18,7 @@ class SKNS {
     /**
         Routes & Queries - Records
         // Queries should have *route, *date, *objectRetrieved, *errorType
-     */
+     
     
     /// Use this to have a reference for the queries we already performed
     enum Routes:String {
@@ -30,10 +30,15 @@ class SKNS {
     }
     
     /// Keep a record of the queries performed, so we don't keep repeating the same queries.
-    var queries:[Routes:Date] = [:] // Queries should have *route, *date, *objectRetrieved, *
+    var queries:[Routes:Date] = [:] // Queries should have *route, *date, *objectRetrieved, *Error
     
+    */
+    
+    /// Real Server's Address
     static let baseAddress = "https://cfarini.com/SKNS"
-//    static let baseAddress = "http://127.0.0.1:8080"
+    
+    /// Test Server's Address
+    static let testAddress = "http://127.0.0.1:8080"
     
     // MARK: - Player, Login
     
@@ -661,7 +666,7 @@ class SKNS {
     
     // MARK: - Tokens + Purchase
     
-    // Validate
+    // Validate - Redeem Entry Token
     static func validateTokenFromTextInput(text:String, completion:((GameToken?, String?) -> ())?) {
         
         guard let validID = UUID(uuidString: text) else {
@@ -892,6 +897,7 @@ class SKNS {
         task.resume()
     }
     
+    /// Fetches Guilds that have invites with the Player's ID
     static func browseInvitesFromGuilds(completion:(([GuildSummary]?, Error?) -> ())?) {
         
         let player = LocalDatabase.shared.player
@@ -1041,6 +1047,7 @@ class SKNS {
     }
     
     /// Gets the details (GuildFullContent) about a Guild
+    /// DEPRECATE
     static func fetchGuildDetails(gid:UUID, completion:((GuildFullContent?, Error?) -> ())?) {
         
         let player = LocalDatabase.shared.player
@@ -1160,6 +1167,7 @@ class SKNS {
     }
     
     /// Builds the Guild Outposts and setup after creating a new Guild
+    /// Sub with new method that returns `GuildMap`
     static func postCreate(newGuildID:UUID, completion:((GuildFullContent?, Error?) -> ())?) {
         
         let address = "\(baseAddress)/guilds/player/postcreate/\(newGuildID)"
@@ -1363,7 +1371,7 @@ class SKNS {
         task.resume()
     }
     
-    // Chat
+    // MARK: - Guild Chat
     
     static func readChat(guildID:UUID, completion:(([ChatMessage], Error?) -> ())?) {
         
@@ -1459,7 +1467,7 @@ class SKNS {
         
     }
     
-    // Election
+    // MARK: - Guild Election
     
     // update(restart)
     static func upRestartElection(completion:((Election?, Error?) -> ())?) {
@@ -1675,60 +1683,6 @@ class SKNS {
         task.resume()
     }
     
-    /*
-    // old
-    static func modifyGuild(guild:GuildFullContent, player:SKNPlayer, completion:((GuildFullContent?, Error?) -> ())?) {
-        
-        
-        let url = URL(string: "\(baseAddress)/guilds/player/modify/\(player.keyPass ?? "")")!
-        
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        request.httpMethod = HTTPMethod.POST.rawValue
-        
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        //        request.setValue(guildID.uuidString, forHTTPHeaderField: "gid")
-        
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .secondsSince1970
-        
-        guard let data = try? encoder.encode(guild) else { fatalError() }
-        
-        request.httpBody = data
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                DispatchQueue.main.async {
-                    print("Data returning")
-                    let decoder = JSONDecoder()
-                    decoder.dateDecodingStrategy = .secondsSince1970
-                    do {
-                        let upGuild = try decoder.decode(GuildFullContent.self, from: data)
-                        completion?(upGuild, nil)
-                        return
-                    }catch{
-                        
-                        if let gameError = try? decoder.decode(GameError.self, from: data) {
-                            print("Error decoding.: \(gameError.reason)")
-                            completion?(nil, error)
-                            
-                        } else {
-                            print("Error - Something else has happened")
-                            completion?(nil, error)
-                        }
-                    }
-                }
-            } else {
-                print("Error returning")
-                DispatchQueue.main.async {
-                    completion?(nil, error)
-                }
-            }
-        }
-        task.resume()
-    }
-     */
-    
     // 3. invite
     static func addToInvite(player:PlayerContent, completion:((Bool?, Error?) -> ())?) {
         
@@ -1840,7 +1794,7 @@ class SKNS {
     
     // MARK: - Outpost
     
-    /// Create a `DBOutpost` in server (from mission, or wherever)
+    /// Create a `DBOutpost` in server
     static func createDBOutpost(entry:DBOutpost, completion:((DBOutpost?, Error?) -> ())?) {
         
         let url = URL(string: "\(baseAddress)/outposts/data/createop")!
@@ -1875,7 +1829,7 @@ class SKNS {
             
     }
     
-    // request OutpostData
+    /// Gets an `OutpostData` from a `DBOutpost`
     static func requestOutpostData(dbOutpost:DBOutpost, completion:((Outpost?, Error?) -> ())?) {
         
         let url = URL(string: "\(baseAddress)/outposts/data/\(dbOutpost.id)")!
@@ -1937,7 +1891,7 @@ class SKNS {
         
     }
     
-    // create outpost data (1st time)
+    /// create outpost data (1st time)
     static func createOutpostData(dbOutpost:DBOutpost, completion:((Outpost?, Error?) -> ())?) {
         
         let url = URL(string: "\(baseAddress)/outposts/data")!
@@ -1988,9 +1942,7 @@ class SKNS {
         
     }
     
-    // update (upload) outpost data
-    
-    // contribute to outpost
+    /// Player contributes to Outpost
     static func outpostContribution(outpost:Outpost, newSupply:OutpostSupply, completion:((Outpost?, Error?) -> ())?) {
         
         let url = URL(string: "\(baseAddress)/outposts/data/contribute/\(outpost.id)")!
@@ -2067,6 +2019,7 @@ class SKNS {
         
     }
     
+    ///  Tells the server an `Outpost` might have updates
     static func applyForOutpostUpgrades(outpost:Outpost, upgrade:OutpostUpgradeResult, completion:((Outpost?, Error?) -> ())?) {
         // updates
         let url = URL(string: "\(baseAddress)/outposts/data/upgrade")!
@@ -2228,7 +2181,7 @@ class SKNS {
         task.resume()
     }
     
-    // Finish Mission
+    /// Finish Guild's mission
     static func finishMission(upMission:GuildMission, completion:((GuildMission?, Error?) -> ())?) {
         
         let url = URL(string: "\(baseAddress)/guilds/missions/finish/\(upMission.id ?? UUID())")!

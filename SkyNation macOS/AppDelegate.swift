@@ -30,7 +30,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if player.name == "Test Player" && player.experience == 0 && abs(Date().timeIntervalSince(player.beganGame)) < 10 {
             print("No Player")
             let window = ClosableWindow(
-                contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
+                contentRect: NSRect(x: 0, y: 0, width: 480, height: 500),
                 styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
                 backing: .buffered, defer: false)
             window.center()
@@ -108,5 +108,7 @@ class MacMenu:NSObject, NSMenuDelegate {
             NSWorkspace.shared.activateFileViewerSelecting([dataPath])
         }
     }
+    
+    
 }
 

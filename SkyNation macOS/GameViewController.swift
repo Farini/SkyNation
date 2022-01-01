@@ -53,11 +53,17 @@ class GameViewController: NSViewController, NSWindowDelegate {
         gestureRecognizers.append(clickGesture)
         self.gameView.gestureRecognizers = gestureRecognizers
         
+        
     }
     
     override func viewDidAppear() {
         // Add Notification
         NotificationCenter.default.addObserver(self, selector: #selector(closeView(_:)), name: .closeView, object: nil)
+    }
+    
+    override func viewWillDisappear() {
+        print("Closing this window will terminate the app.")
+        NSApp.terminate(self)
     }
     
     /// Close the currently presented  `View`

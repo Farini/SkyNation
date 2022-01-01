@@ -20,15 +20,19 @@ struct GameError:Codable {
     func isDecodingProblem() -> Bool {
         return reason.contains("Decoding") || reason.contains("decoding")
     }
+    
+    /// Tries to return an Error in the correct format.
+    func searchError() -> Error? {
+        if reason.contains("Not Found") {
+            return GuildMapError.notFound
+        } else if  reason.contains("Decoding") || reason.contains("decoding") {
+            return ServerDataError.remoteCoding
+        } else if reason.contains("auth") {
+            return ServerDataError.failedAuthorization
+        }
+        return nil
+    }
 }
-
-/*
- /// Ways in which a login can fail
- enum LogFail:Error {
- case noID
- case noPass
- }
- */
 
 /*
     Common Errors:
@@ -36,12 +40,13 @@ struct GameError:Codable {
     2. Not Authenticated
     3. Server Decoding
     4. Local Decoding
-    5. Saving Locally
+    5. Local Encoding
+    6. Saving Locally
  */
 
 // MARK: - Server Errors
 
-// See 'ServerData' file
+/// Error related to ServerData file.
 enum ServerDataError:Error, CustomStringConvertible, LocalizedError  {
     
     /// Also useful for when an OutpostData doesn't exist on server.
@@ -95,7 +100,7 @@ enum GuildMapError:Error, CustomStringConvertible, LocalizedError  {
             case .localPlayerNoServerID: return "Local Player doesn't have a server ID"
             case .localPlayerGuildless: return "Local Player doesn't have a Guild"
             case .playerNotInCitizens: return "Local Player not in citizens. It is possible that player got booted."
-            case .notFound: return "Request not found."
+            case .notFound: return "Could not find result for server request."
             case .failedAuthorization: return "Failed server authorization, or authentication. Please re-login."
             case .localCoding: return "Could not [decode|encode] object locally."
             case .remoteCoding: return "Server Could not [decode|encode] object."

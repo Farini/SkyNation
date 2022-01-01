@@ -28,6 +28,7 @@
                     </connections>
                 </windowController>
                 <customObject id="O9p-DB-TYS" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <customObject id="BB9-AP-Pbd" customClass="AppDelegate" customModule="SkyNation" customModuleProvider="target"/>
             </objects>
             <point key="canvasLocation" x="-773" y="-51"/>
         </scene>
@@ -37,7 +38,7 @@
                 <hostingController title="Loading..." showSeguePresentationStyle="single" id="QQ6-tE-KgG" sceneMemberID="viewController"/>
                 <customObject id="o9V-p5-NnT" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-585" y="570"/>
+            <point key="canvasLocation" x="-643" y="428"/>
         </scene>
         <!--Application-->
         <scene sceneID="K7B-1m-1wV">
@@ -45,30 +46,38 @@
                 <application id="9wb-19-qlG" sceneMemberID="viewController">
                     <menu key="mainMenu" title="Main Menu" systemMenu="main" id="qaL-Tn-caT">
                         <items>
-                            <menuItem title="macOS" id="anj-rY-JmT">
+                            <menuItem title="SkyNation" id="anj-rY-JmT">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="macOS" systemMenu="apple" id="7AM-Hw-IcT">
+                                <menu key="submenu" title="SkyNation" systemMenu="apple" id="7AM-Hw-IcT">
                                     <items>
-                                        <menuItem title="About GameTemplate" id="dS7-pZ-jDi">
+                                        <menuItem title="About SkyNation" id="dS7-pZ-jDi">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="orderFrontStandardAboutPanel:" target="9wb-19-qlG" id="NNb-tm-G6Y"/>
+                                            </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="ify-eW-7uS"/>
                                         <menuItem title="Preferences…" keyEquivalent="," id="yLW-2z-7bd"/>
                                         <menuItem isSeparatorItem="YES" id="yfi-R1-yBG"/>
-                                        <menuItem title="Services" id="kyy-fZ-lLd">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Services" systemMenu="services" id="njJ-iS-AqA"/>
+                                        <menuItem title="Hide SkyNation" keyEquivalent="h" id="4HH-bK-3gY">
+                                            <connections>
+                                                <action selector="hide:" target="9wb-19-qlG" id="dZB-xO-4Tg"/>
+                                            </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="lW7-ma-FRV"/>
-                                        <menuItem title="Hide GameTemplate" keyEquivalent="h" id="4HH-bK-3gY"/>
                                         <menuItem title="Hide Others" keyEquivalent="h" id="C0i-rf-LRn">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="hideOtherApplications:" target="9wb-19-qlG" id="N6H-gR-C2a"/>
+                                            </connections>
                                         </menuItem>
                                         <menuItem title="Show All" id="Xsn-eC-LXq">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="unhide:" target="9wb-19-qlG" id="zf2-nO-C9C"/>
+                                            </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="yjY-ag-eC8"/>
-                                        <menuItem title="Quit GameTemplate" keyEquivalent="q" id="nPf-AI-z0o"/>
+                                        <menuItem title="Quit SkyNation" keyEquivalent="q" id="nPf-AI-z0o"/>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -76,19 +85,7 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="File" id="cLU-ur-7hu">
                                     <items>
-                                        <menuItem title="New" keyEquivalent="n" id="KwC-xh-eem"/>
                                         <menuItem title="Open…" keyEquivalent="o" id="Fjy-dH-qXj"/>
-                                        <menuItem title="Open Recent" id="mOC-vQ-iCS">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Open Recent" systemMenu="recentDocuments" id="2Vb-Cg-jr8">
-                                                <items>
-                                                    <menuItem title="Clear Menu" id="MMq-d0-PQi">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                    </menuItem>
-                                                </items>
-                                            </menu>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="GJV-32-tfA"/>
                                         <menuItem title="Open Finder" id="2gU-4Q-1Zx">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -96,7 +93,11 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="dUX-SB-quc"/>
-                                        <menuItem title="Save…" keyEquivalent="s" id="rOm-Qa-ckg"/>
+                                        <menuItem title="Quit" keyEquivalent="q" id="keU-b3-eeU">
+                                            <connections>
+                                                <action selector="terminate:" target="9wb-19-qlG" id="DjV-O9-YI4"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -209,26 +210,6 @@
                                                     </menuItem>
                                                 </items>
                                             </menu>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                            <menuItem title="View" id="Jfn-Vq-Y8e">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="View" id="bJh-vX-qOc">
-                                    <items>
-                                        <menuItem title="Show Toolbar" keyEquivalent="t" id="bA3-tY-5bU">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                        </menuItem>
-                                        <menuItem title="Customize Toolbar…" id="vnp-EN-psb">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="5pE-if-JtK"/>
-                                        <menuItem title="Show Sidebar" keyEquivalent="s" id="HVd-vb-9aS">
-                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                        </menuItem>
-                                        <menuItem title="Enter Full Screen" keyEquivalent="f" id="MvN-7L-9zC">
-                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                         </menuItem>
                                     </items>
                                 </menu>
