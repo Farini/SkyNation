@@ -23,9 +23,7 @@ struct GameSettingsView: View {
         Group {
             HStack() {
                 VStack(alignment:.leading) {
-                    Text("⚙️ Settings").font(.largeTitle)
-                    Text("Details")
-                        .foregroundColor(.gray)
+                    Text("⚙️ Settings").font(GameFont.title.makeFont())
                 }
                 
                 Spacer()
@@ -116,7 +114,7 @@ struct GameSettingsView: View {
             }
         }
         .padding()
-        .frame(minWidth:600, idealWidth:800, maxWidth:.infinity, minHeight:450, maxHeight:.infinity)
+        .frame(minWidth:600, idealWidth:800, maxWidth:.infinity, minHeight:450, idealHeight:550, maxHeight:.infinity)
         .background(GameColors.darkGray)
         .onAppear() {
             viewDidAppear()

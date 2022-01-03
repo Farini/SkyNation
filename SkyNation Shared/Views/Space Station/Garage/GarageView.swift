@@ -421,7 +421,9 @@ struct GarageView: View {
                 }
             }
         }
+        .background(GameColors.darkGray)
         .frame(minWidth: 700, idealWidth: 800, maxWidth: 800, minHeight: 400, idealHeight: 500, maxHeight: 500, alignment:.top)
+        .cornerRadius(12)
     }
     
     func didSelectBuilding(vehicle:SpaceVehicle) {

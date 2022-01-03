@@ -47,17 +47,22 @@ class GameViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        
         let screenSize = self.view.bounds.size
         let width = screenSize.width
         let height = screenSize.height
+        
         print("\n iOS Screen Size")
         print("Width: \(width) Height: \(height)")
         
         // Add Notification
         NotificationCenter.default.addObserver(self, selector: #selector(closeView(_:)), name: .closeView, object: nil)
         
+        print("Adding GameViewController as observer of the skedadddles")
+        
         // Game Center Window management
         NotificationCenter.default.addObserver(self, selector: #selector(presentGameCenter(_:)), name: .openGameCenter, object: nil)
+        
     }
     
     @objc func closeView(_ notification:Notification) {
@@ -103,19 +108,31 @@ class GameViewController: UIViewController {
             openedView = nil
         }
     }
+    
+    @objc func presentGameCenter(_ notification:Notification) {
+        // GameCenter passes its own view controller.
+        // present as sheet
+        print("Presenting gamecenter")
+        
+        if let viewController:UIViewController = notification.object as? UIViewController {
+            print("Notification has view controller")
+            self.present(viewController, animated: true) {
+                print("Game Center open")
+            }
+        } else {
+            print("Notification has [ NO ] view controller")
+        }
+    }
 }
 
 // MARK: - Delegate
 
 extension GameViewController:GameNavDelegate {
     
-    
-    
     func openCityView(posdex: Posdex, city: DBCity?) {
         
         clearInterface()
         
-//        let newHost = UIHostingController(rootView:MarsCityCreatorView(posdex: posdex, city: city, controller: CityController()))
         let newHost = UIHostingController(rootView:MarsCityView(posdex: posdex))
         
         newHost.view.translatesAutoresizingMaskIntoConstraints = false
@@ -144,7 +161,6 @@ extension GameViewController:GameNavDelegate {
         newHost.didMove(toParent: self)
         self.openedView = newHost.view
     }
-    
     
     func didChooseModule(name: String) {
         print("Module View")
@@ -244,23 +260,6 @@ extension GameViewController:GameNavDelegate {
         self.openedView = newHost.view
     }
     
-//    func didSelectAir() {
-//        print("Air selected :)")
-//        clearInterface()
-//        let newHost = UIHostingController(rootView: LifeSupportView())
-//
-//        newHost.view.translatesAutoresizingMaskIntoConstraints = false
-//        view.addSubview(newHost.view)
-//        newHost.view.centerXAnchor.constraint(
-//            equalTo: view.centerXAnchor).isActive = true
-//        newHost.view.centerYAnchor.constraint(
-//            equalTo: view.centerYAnchor).isActive = true
-//
-//        newHost.didMove(toParent: self)
-//        self.openedView = newHost.view
-//
-//    }
-    
     /// LSS Control
     func didSelectLSS(scene: GameSceneType) {
         switch scene {
@@ -295,7 +294,6 @@ extension GameViewController:GameNavDelegate {
 //                self.presentAsSheet(controller)
         }
     }
-    
     
     func didSelectEarth() {
         print("Earth Order")
@@ -374,20 +372,4 @@ extension GameViewController:GameNavDelegate {
         newHost.didMove(toParent: self)
         self.openedView = newHost.view
     }
-    
-    @objc func presentGameCenter(_ notification:Notification) {
-        // GameCenter passes its own view controller.
-        // present as sheet
-        print("Presenting gamecenter")
-        
-        if let viewController:UIViewController = notification.object as? UIViewController {
-            print("Notification has view controller")
-            self.present(viewController, animated: true) {
-                print("Game Center open")
-            }
-        } else {
-            print("Notification has [ NO ] view controller")
-        }
-    }
-    
 }

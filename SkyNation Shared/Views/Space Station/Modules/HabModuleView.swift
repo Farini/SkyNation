@@ -98,8 +98,10 @@ struct HabModuleView: View {
                                     })
                                 
                             }
-                            .frame(minWidth: 100, maxWidth: 215, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
+                            .listStyle(.plain)
                             .background(GameColors.darkGray)
+                            .frame(minWidth: 100, maxWidth: 215, alignment: .leading)
+                            // .background(GameColors.darkGray)
                             
                             Divider()
                             // No Selection
@@ -133,12 +135,13 @@ struct HabModuleView: View {
                         
                         // Left List
                         List($controller.inhabitants) { person in
-//                            ActivityPersonCell(person: person, selected: person == controller.selectedPerson)
                             HabPersonRow(person: person, selected: selPerson == person.wrappedValue)
                                 .onTapGesture(count: 1, perform: {
                                     controller.didSelect(person: person.wrappedValue)
                                 })
                         }
+                        .listStyle(.plain)
+                        .background(GameColors.darkGray)
                         .frame(minWidth: 150, maxWidth: 230, maxHeight: .infinity, alignment: .leading)
                         
                         // Details go here
@@ -149,8 +152,9 @@ struct HabModuleView: View {
             }
             
         }
-        .frame(minWidth: 650, idealWidth: 750, maxWidth: 1000, minHeight: 350, idealHeight: 500, maxHeight: 900, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
         .background(GameColors.darkGray)
+        .frame(minWidth: 650, idealWidth: 750, maxWidth: 1000, minHeight: 350, idealHeight: 500, maxHeight: 900, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        .cornerRadius(12)
     }
     
     func workoutAction() {
@@ -211,8 +215,11 @@ struct HeaderView_Previews: PreviewProvider {
     static var previews: some View {
         if let module = LocalDatabase.shared.station.habModules.first {
             return HabModuleHeaderView(module: module) //ModuleHeaderView(hab:module)
+                .preferredColorScheme(.dark)
         } else {
-            return HabModuleHeaderView(module: HabModule.example)//ModuleHeaderView(hab: HabModule.example)
+            return HabModuleHeaderView(module: HabModule.example)
+                .preferredColorScheme(.dark)
+            //ModuleHeaderView(hab: HabModule.example)
         }
     }
 }
@@ -221,5 +228,6 @@ struct HabModuleView_Previews: PreviewProvider {
     static var previews: some View {
         let habModule = LocalDatabase.shared.station.habModules.first ?? HabModule(module: Module(id: UUID(), modex: .mod0))
         return HabModuleView(module: habModule)
+            .preferredColorScheme(.dark)
     }
 }

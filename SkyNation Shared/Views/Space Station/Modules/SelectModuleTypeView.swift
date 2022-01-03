@@ -236,6 +236,8 @@ struct SelectModuleTypeView: View {
                 }
         }
         .padding(.bottom, 10)
+        .background(GameColors.darkGray)
+        .cornerRadius(10)
         
     }
 }

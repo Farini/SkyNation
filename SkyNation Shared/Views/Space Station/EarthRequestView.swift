@@ -591,8 +591,9 @@ struct EarthRequestView: View {
             }
             .padding(.vertical)
         }
-        .frame(height: 550)
         .background(GameColors.darkGray)
+        .frame(minWidth: 660, idealWidth: 700, maxWidth: 900, minHeight: 500, idealHeight: 550, maxHeight: 600, alignment: .center)
+        .cornerRadius(10)
     }
     
     func confirmOrder() -> Bool {

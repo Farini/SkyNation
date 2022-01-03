@@ -81,6 +81,7 @@ struct GameResponseView: View {
     }
 }
 
+
 struct GameResponseView_Previews:PreviewProvider {
     static var previews: some View {
         VStack {
@@ -105,3 +106,7 @@ struct GameResponseView_Previews:PreviewProvider {
         }
     }
 }
+
+// Test with Buttons
+// Also, with `@Binding`
+// Also, use typography

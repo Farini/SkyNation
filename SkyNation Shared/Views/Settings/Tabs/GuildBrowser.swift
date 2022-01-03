@@ -198,22 +198,26 @@ struct GuildBrowser: View {
                         Divider()
                         
                         // Detail View
-                        VStack {
-                            
-                            Text(controller.guildNavError).foregroundColor(.red)
-                                .padding(8)
-                            
-                            HStack {
-                                Spacer()
-                                if let map = controller.selectedGuildMap {
-                                    GuildCardView(guildMap: map)
-                                } else {
-                                    if let map = controller.guildMap {
+                        ScrollView {
+                            VStack {
+                                
+                                Text(controller.guildNavError).foregroundColor(.red)
+                                    .padding(.horizontal, 8)
+                                
+                                HStack {
+                                    Spacer()
+                                    if let map = controller.selectedGuildMap {
                                         GuildCardView(guildMap: map)
                                     } else {
-                                        EmptyGuildView()
+                                        if let map = controller.guildMap {
+                                            GuildCardView(guildMap: map)
+                                        } else {
+                                            EmptyGuildView()
+                                        }
                                     }
+                                    Spacer()
                                 }
+                                
                                 Spacer()
                             }
                         }
@@ -230,7 +234,7 @@ struct GuildBrowser: View {
                     }
             }
         }
-        .frame(minHeight:480)
+        .frame(minHeight:480, idealHeight:550, maxHeight: .infinity)
         .onAppear() {
             viewDidAppear()
         }

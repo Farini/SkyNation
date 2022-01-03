@@ -89,3 +89,36 @@ class SceneDirector {
     
 }
 
+extension GameController {
+    
+    
+    /// Converts the position of a node in scene to the coordinates of the `GameOverlay`
+    func convertSceneToOverlay(node:SCNNode) -> CGPoint {
+        
+        // Get position of object
+        var objCenter:SCNVector3 = node.position
+        
+        // If has geometry, get the center. Otherwise just use the location
+        if let geometry = node.geometry {
+            let bbox = geometry.boundingBox
+            let mx = ((bbox.max.x - bbox.min.x) / 2) + node.position.x
+            let my = ((bbox.max.y - bbox.min.y) / 2) + node.position.y
+            let mz = ((bbox.max.z - bbox.min.z) / 2) + node.position.z
+            objCenter = SCNVector3(x: mx, y: my, z: mz)
+        }
+        let spriteLocation = self.sceneRenderer.projectPoint(objCenter)
+//        print("Sprite Location: \(spriteLocation)")
+        
+#if os(macOS)
+        let sprite2dPoint = CGPoint(x: spriteLocation.x, y: spriteLocation.y - 64.0)
+        let p = self.gameOverlay.scene.convertPoint(fromView: sprite2dPoint)
+        return p
+#else
+        let sprite2dPoint = CGPoint(x: Double(spriteLocation.x), y: Double(spriteLocation.y - 64.0))
+        let p = self.gameOverlay.scene.convertPoint(fromView: sprite2dPoint)
+        return p
+#endif
+        
+    }
+}
+

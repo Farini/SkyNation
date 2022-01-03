@@ -994,6 +994,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         GKAccessPoint.shared.showHighlights = true
         GKAccessPoint.shared.isActive = true
         
+        
         // Save if needed
         if hasChanges {
             if let station = self.station {
@@ -1055,31 +1056,13 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             guard let node3 = scene.rootNode.childNode(withName: moduleA.id.uuidString, recursively: true) else {
                 fatalError("No such name")
             }
-            var objCenter:SCNVector3 = node3.position
-            if let geo = node3.geometry {
-                let bbox = geo.boundingBox
-                let mx = ((bbox.max.x - bbox.min.x) / 2) + node3.position.x
-                let my = ((bbox.max.y - bbox.min.y) / 2) + node3.position.y
-                let mz = ((bbox.max.z - bbox.min.z) / 2) + node3.position.z
-                objCenter = SCNVector3(x: mx, y: my, z: mz)
-            }
-            let spriteLocation = self.sceneRenderer.projectPoint(objCenter)
-            print("Sprite Location: \(spriteLocation)")
-            let sprite2dPoint = CGPoint(x: spriteLocation.x, y: spriteLocation.y - 64.0)
-            let p = self.gameOverlay.scene.convertPoint(fromView: sprite2dPoint)
-            print("Sprite inScene: \(p)")
-            print("Sprite Scene Size: \(gameOverlay.scene.size)")
             
-#if os(macOS)
-//            handSprite.position = CGPoint(x: Double(spriteLocation.x), y: Double(-spriteLocation.y * 2.0))
-            handSprite.position = p //CGPoint(x: Double(spriteLocation.x), y: Double(-spriteLocation.y * 2.0))
-#else
-            handSprite.position = p // CGPoint(x: Double(spriteLocation.x), y: Double(-spriteLocation.y - 20.0))
-#endif
+            // GET THE POSITION
+            let handPosition = convertSceneToOverlay(node: node3)
+            handSprite.position = handPosition
             
             // Beginners Guide
             newsLines.append("Tap on a Module to create your first 🏠 Hab")
-            //newsLines.append("Then click, or tap on the Earth, to order items for your Space Station.")
             
             
         } else if labCount == 0 {
@@ -1087,25 +1070,11 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             guard let node3 = scene.rootNode.childNode(withName: moduleA.id.uuidString, recursively: true) else {
                 fatalError("No such name")
             }
-            var objCenter:SCNVector3 = node3.position
-            if let geo = node3.geometry {
-                let bbox = geo.boundingBox
-                let mx = ((bbox.max.x - bbox.min.x) / 2) + node3.position.x
-                let my = ((bbox.max.y - bbox.min.y) / 2) + node3.position.y
-                let mz = ((bbox.max.z - bbox.min.z) / 2) + node3.position.z
-                objCenter = SCNVector3(x: mx, y: my, z: mz)
-            }
-            let spriteLocation = self.sceneRenderer.projectPoint(objCenter)
-            print("Sprite Location: \(spriteLocation)")
-            let sprite2dPoint = CGPoint(x: spriteLocation.x, y: spriteLocation.y - 64.0)
-            let p = self.gameOverlay.scene.convertPoint(fromView: sprite2dPoint)
-            print("Sprite inScene: \(p)")
-            print("Sprite Scene Size: \(gameOverlay.scene.size)")
-#if os(macOS)
-            handSprite.position = p // CGPoint(x: Double(spriteLocation.x), y: Double(-spriteLocation.y * 2.0))
-#else
-            handSprite.position = p // CGPoint(x: Double(spriteLocation.x), y: Double(-spriteLocation.y - 20.0))
-#endif
+            
+            // GET THE POSITION
+            let handPosition = convertSceneToOverlay(node: node3)
+            handSprite.position = handPosition
+            
             newsLines.append("Tap on a Module to create your first 🔬 Lab")
             
         } else {
@@ -1117,26 +1086,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 if people.isEmpty {
                     if let earth = scene.rootNode.childNode(withName: "Earth", recursively: true) as? EarthNode {
                         
-                        var objCenter:SCNVector3 = earth.position
-                        if let geo = earth.childNodes.first(where: { $0.geometry != nil }) {
-                            print("Geo 🌎")
-                            let bbox = geo.boundingBox
-                            let mx = ((bbox.max.x - bbox.min.x) / 2) + geo.position.x
-                            let my = ((bbox.max.y - bbox.min.y) / 2) + geo.position.y
-                            let mz = ((bbox.max.z - bbox.min.z) / 2) + geo.position.z
-                            objCenter = SCNVector3(x: mx, y: my, z: mz)
-                        }else {
-                            print("Earth doesn't have geometry")
-                        }
-                        let earthLocation = self.sceneRenderer.projectPoint(objCenter)
-                        let sprite2dPoint = CGPoint(x: earthLocation.x, y: earthLocation.y)
-                        let p:CGPoint = self.gameOverlay.scene.convertPoint(fromView: sprite2dPoint)
-                        
-#if os(macOS)
-                        handSprite.position = p
-#else
-                        handSprite.position = p //CGPoint(x: Double(earthLocation.x), y: Double(calc)) //Double(-earthLocation.y - 20.0))
-#endif
+                        let earthPosition:CGPoint = convertSceneToOverlay(node: earth)
+                        handSprite.position = earthPosition
                         
                         newsLines.append("Tap on the Globe 🌎 to order items for your Space Station.")
                     }

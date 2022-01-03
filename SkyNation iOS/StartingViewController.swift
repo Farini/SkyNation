@@ -41,12 +41,19 @@ class StartingViewController: UIViewController {
     }
     
     @objc func startGame(_ notification:Notification) {
+        
+        print("*** Removing Self-observer")
+        NotificationCenter.default.removeObserver(self)
+        
         self.performSegue(withIdentifier: "startgame", sender: self)
+        
     }
     
     @objc func presentGameCenter(_ notification:Notification) {
         // GameCenter passes its own view controller.
         // present as sheet
+        print("Attempting to present GameCenter in Starting VC")
+        
         if let viewController:UIViewController = notification.object as? UIViewController {
             self.present(viewController, animated: true) {
                 print("Game Center open")

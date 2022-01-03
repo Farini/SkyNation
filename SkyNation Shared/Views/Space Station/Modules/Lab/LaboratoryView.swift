@@ -136,7 +136,7 @@ struct LaboratoryView: View {
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 26, height: 26)
                                 }
-                                .padding(.leading, 6)
+//                                .padding(.leading, 6)
                                 .padding(.vertical, 4)
                                 //.font(GameFont.mono.makeFont())
                                 Spacer()
@@ -163,6 +163,7 @@ struct LaboratoryView: View {
                             }
                         }
                     }
+                    .background(GameColors.darkGray)
                     
                     // Tech
                     Section(header: Text("Tech Tree").foregroundColor(.blue)) {
@@ -203,8 +204,12 @@ struct LaboratoryView: View {
                             
                         }
                     }
+                    .background(GameColors.darkGray)
                 }
-                .frame(width: 180, alignment: .leading)
+                .listStyle(.plain)
+                .background(GameColors.darkGray)
+                .frame(width: 200, alignment: .leading)
+                
                 
                 switch controller.selection {
                 case .NoSelection:
@@ -344,7 +349,10 @@ struct LaboratoryView: View {
                 }
             }
         }
+        .background(GameColors.darkGray)
         .frame(minWidth: 800, minHeight: 600, alignment: .center)
+        .cornerRadius(12)
+        
     }
 }
 

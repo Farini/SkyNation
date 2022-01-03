@@ -25,7 +25,7 @@ class StartingWindow: NSWindowController, NSWindowDelegate {
         // Add Notification
         NotificationCenter.default.addObserver(self, selector: #selector(startGame(_:)), name: .startGame, object: nil)
         
-        //static let openGameCenter = Notification.Name("OpenGameCenter")
+        // Game Center
         NotificationCenter.default.addObserver(self, selector: #selector(presentGameCenter(_:)), name: .openGameCenter, object: nil)
     }
     

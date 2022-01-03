@@ -263,11 +263,11 @@ struct Purchase:Codable, Identifiable, Hashable {
         
         switch storeProduct {
             case .five:
-                break
+                entryTokensAmount = 2
             case .ten:
                 entryTokensAmount = 2
             case .twenty:
-                entryTokensAmount = 3
+                entryTokensAmount = 2
         }
         
         // Add the Entry Tokens

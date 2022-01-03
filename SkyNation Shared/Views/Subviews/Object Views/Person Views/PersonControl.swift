@@ -132,7 +132,7 @@ struct HabPersonRow:View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 56, height: 56)
-                    .foregroundColor(person.isBusy() ? .blue:.orange)
+                    // .foregroundColor(person.isBusy() ? .blue:.orange)
             }
             
             // Name, Skills, Intelligence
@@ -171,7 +171,7 @@ struct HabPersonRow:View {
             
         }
         .frame(width: 185, height: 60, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-        .background(self.selected ? Color.green.opacity(0.25):Color.black.opacity(0.1))
+        .background(self.selected ? Color.green.opacity(0.25):Color.clear)
         .cornerRadius(8)
         .padding([.top, .bottom], 4)
     }

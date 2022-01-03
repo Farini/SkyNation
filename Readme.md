@@ -141,24 +141,15 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Election - Update Guild (in controller) after election does update
 - [X] Nailed the Hand Tutorial !
 
-- [ ] App macOS v 1.1 (New Player Login)
+- [X] App macOS v 1.1 (New Player Login)
 
-- [ ] macOS - app not quitting
+- [X] macOS - app not quitting
+- [X] Fixed bug with app store not giving an Entry for a $5 purchase.
+
 
 - [ ] Scenes - Use GuildFlags to show new items.
 - [ ] Receive Gifts
-
-### Tests
-
-- [X] Mining Scene Nodes (waiting to be unlocked)
-- [X] GuildRoom Markdown - and with quote
-- [X] Election Results - Guild governor - pending update of Guild.
-- [X] Tutorial finger
-- [X] Create Player
-- [ ] Outpost Update
-- [ ] Leaving a Guild
-
-### Optional Cut
+- [ ] Reduce water filter skills required
 
 - [ ] Completely eliminate `GuildFullContent`
 - [ ] SKNS.postCreate(newGuildID:UUID.... sub `GuildMap`
@@ -174,14 +165,25 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] City View - Bio - "Evolve" not updating the list
 - [ ] Garage - Make sure charging 'propellants'
 - [ ] Game Settings - Save camera?
+- [ ] Settings - ask before spend token
 
 - [ ] Mars Scene - All Guild Vehicles arriving
 
 - [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
 
+### Tests
+
+- [X] Mining Scene Nodes (waiting to be unlocked)
+- [X] GuildRoom Markdown - and with quote
+- [X] Election Results - Guild governor - pending update of Guild.
+- [X] Tutorial finger
+- [X] Create Player
+- [ ] Outpost Update
+- [ ] Leaving a Guild
+
 - [X] Game Center - Player Auth.
 - [X] Game Center - Leaderboards (Experience)
-- [ ] Game Center - Achievements (Recipes, Tech)
+- [ ] Game Center - 🏆 Achievements (Recipes, Tech)
 - [ ] Game Center - Achievement art - Water Filter
 - [ ] Game Center - Achievement art - Air Scrubber
 - [ ] Game Center - Achievement art - Condensator
@@ -195,33 +197,20 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Blender - New Module Skins
 - [ ] Blender - City Gate Skin
 
-### Screenshots
-
-- [ ] Screenshots Front, Beginning view
-- [ ] Screenshots Tech Tree
-- [ ] Screenshots Bio
-- [ ] Screenshots Garage
-- [ ] Screenshots Mars Horizon
-- [ ] Screenshots Mars City
-- [ ] Screenshots GuildRoom Election
-
-One of the following, with a 16:10 aspect ratio.
-1. 1280 x 800 pixels
-2. 1440 x 900 pixels
-3. 2560 x 1600 pixels
-4. 2880 x 1800 pixels
-
 ### iOS
 
+- [X] iOS Views - Corner Radius:12
 - [ ] iOS - Views are too large
 - [ ] iOS - Font modifiers
 - [ ] iOS - Window Sizes + View Sizes
-- [ ] iOS - Neumorphic Button smaller
+- [ ] iOS - GameButtonStyle smaller
 - [ ] iOS - Popover sizes
+- [ ] iOS - List View Backgrounds. See: https://peterfriese.dev/swiftui-listview-part3/
 - [ ] iOS - Semi-black background Color
 - [ ] iOS - increase bloom in camera? - or find a way to make scene brighter.
 - [ ] Game Center - iOS can't open GameCenter controller
 - [ ] Setup Graphics Options (multisampling on UIViewController's `view`)
+- [ ] Many Views need ScrollViews inside
 
 - [X] Blender - Substitute Space Vehicles Solar Panels
 - [X] Blender - XCode - Delete old solar panels
@@ -235,7 +224,6 @@ Features that are requested, but are not required to launch the game
 - [ ] Reskin Delivery Vehicle
 - [ ] Remodel Space Vehicle
 - [ ] Peripheral Upgrades
-- [ ] Activity name enum?
 - [ ] BioBox DNA enum
 - [ ] 2D Graphics - Custom SFFonts
 - [ ] 2D Graphics - Blender individual tanks
@@ -251,3 +239,20 @@ Features that are requested, but are not required to launch the game
 - [ ] Store - Save receipt in a file
 - [ ] Mars Scene - City Garage - Vehicle Validation (when arriving (orbit)) - needs a token, if not valid.
 - [ ] Mars Scene - City Garage - Delete Vehicle from Guild at end of `unload`
+
+### Screenshots
+
+- [ ] Screenshots Front, Beginning view
+- [ ] Screenshots Tech Tree
+- [ ] Screenshots Bio
+- [ ] Screenshots Garage
+- [ ] Screenshots Mars Horizon
+- [ ] Screenshots Mars City
+- [ ] Screenshots GuildRoom Election
+
+version: `macOS`
+One of the following, with a 16:10 aspect ratio.
+1. 1280 x 800 pixels
+2. 1440 x 900 pixels
+3. 2560 x 1600 pixels
+4. 2880 x 1800 pixels

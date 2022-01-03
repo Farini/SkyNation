@@ -26,6 +26,11 @@
 		<string>RobotoMono-VariableFont_wght.ttf</string>
 		<string>RobotoSlab-VariableFont_wght.ttf</string>
 	</array>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

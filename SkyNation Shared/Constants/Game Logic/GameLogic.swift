@@ -159,6 +159,7 @@ enum GameFile {
     }
 }
 
+
 struct GameWindow {
     
     /// Easiest way to close the current Dialogue

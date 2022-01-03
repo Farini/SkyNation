@@ -114,7 +114,9 @@ struct TrussLayoutView: View {
             }
             .padding()
         }
+        .background(GameColors.darkGray)
         .frame(minWidth: 400, maxWidth: 900, minHeight: 420, idealHeight: 500, maxHeight: 500, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        .cornerRadius(10)
         
     }
     
