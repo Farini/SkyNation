@@ -626,8 +626,8 @@ class LocalCityController:ObservableObject, BioController {
             return
         }
         
-        if let guild = sd.guildfc {
-            for dbOutpost in guild.outposts {
+        if let gmap = sd.guildMap {
+            for dbOutpost in gmap.outposts {
                 if !dbOutpost.type.productionForCollection(level: dbOutpost.level).isEmpty {
                     collectables.append("\(dbOutpost.type.rawValue): POS.: \(dbOutpost.posdex)")
                     let colModel = CityCollectOutpostModel(dbOutpost: dbOutpost, opCollect: self.cityData.opCollection ?? [:])

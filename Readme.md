@@ -146,15 +146,15 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] macOS - app not quitting
 - [X] Fixed bug with app store not giving an Entry for a $5 purchase.
 
-
-- [ ] Scenes - Use GuildFlags to show new items.
-- [ ] Receive Gifts
+- [X] Receive Gifts
 - [ ] Reduce water filter skills required
 
 - [ ] Completely eliminate `GuildFullContent`
 - [ ] SKNS.postCreate(newGuildID:UUID.... sub `GuildMap`
 
+- [ ] Scenes - Use GuildFlags to show new items.
 - [ ] Overlay Scene with Labels + Option in `GameSettings`
+- [ ] Overlay - with badges ([GuildFlags], [PlayerFlags], etc.)
 - [ ] Player Update Flags (whats new)
 - [ ] Guild Update Flags (whats new)
 - [ ] Scene Update Flags (vehicles)
@@ -171,6 +171,38 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
 
+### iOS
+
+- [X] iOS Views - Corner Radius:12
+- [X] iOS Views - Hab Module Selection
+- [ ] iOS - List View Backgrounds. See: https://peterfriese.dev/swiftui-listview-part3/
+
+Use the following
+
+``` swift
+.listRowBackground(GameColors.darkGray)
+```
+and
+
+``` swift
+.modifier(GameListModifier())
+```
+
+at the end of the List.
+
+- [ ] iOS - Button being pushed.
+- [ ] iOS - Garage - prepare for launch is unusable
+- [ ] iOS - Some Views are too large
+- [ ] iOS - Font modifiers
+- [ ] iOS - Window Sizes + View Sizes
+- [ ] iOS - GameButtonStyle smaller
+- [ ] iOS - Popover sizes
+- [ ] iOS - Semi-black background Color
+- [ ] iOS - increase bloom in camera? - or find a way to make scene brighter.
+- [ ] Game Center - iOS can't open GameCenter controller
+- [ ] Setup Graphics Options (multisampling on UIViewController's `view`)
+- [ ] Many Views need ScrollViews inside
+
 ### Tests
 
 - [X] Mining Scene Nodes (waiting to be unlocked)
@@ -180,6 +212,8 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Create Player
 - [ ] Outpost Update
 - [ ] Leaving a Guild
+
+### Other
 
 - [X] Game Center - Player Auth.
 - [X] Game Center - Leaderboards (Experience)
@@ -197,20 +231,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Blender - New Module Skins
 - [ ] Blender - City Gate Skin
 
-### iOS
-
-- [X] iOS Views - Corner Radius:12
-- [ ] iOS - Views are too large
-- [ ] iOS - Font modifiers
-- [ ] iOS - Window Sizes + View Sizes
-- [ ] iOS - GameButtonStyle smaller
-- [ ] iOS - Popover sizes
-- [ ] iOS - List View Backgrounds. See: https://peterfriese.dev/swiftui-listview-part3/
-- [ ] iOS - Semi-black background Color
-- [ ] iOS - increase bloom in camera? - or find a way to make scene brighter.
-- [ ] Game Center - iOS can't open GameCenter controller
-- [ ] Setup Graphics Options (multisampling on UIViewController's `view`)
-- [ ] Many Views need ScrollViews inside
+### Scene Models
 
 - [X] Blender - Substitute Space Vehicles Solar Panels
 - [X] Blender - XCode - Delete old solar panels

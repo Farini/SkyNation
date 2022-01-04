@@ -124,6 +124,7 @@ struct LaboratoryView: View {
                     
                     // Recipes
                     Section(header: Text("Recipes").foregroundColor(.yellow)) {
+                        
                         ForEach(controller.unlockedRecipes, id:\.self) { recipe in
                             HStack(alignment:.bottom) {
                                 
@@ -141,12 +142,13 @@ struct LaboratoryView: View {
                                 //.font(GameFont.mono.makeFont())
                                 Spacer()
                             }
-                            .background(Color.black.opacity(0.3))
+                            // .background(Color.black.opacity(0.3))
+                            
                             .overlay(RoundedRectangle(cornerSize: CGSize(width: 4, height: 4))
                                         .strokeBorder(style: StrokeStyle())
                                         .foregroundColor(recipe == selectedRecipe ? Color.blue:Color.clear)
                             )
-                            
+                            .listRowBackground(GameColors.darkGray)
                             .onTapGesture {
                                 
                                 switch controller.selection {
@@ -185,11 +187,13 @@ struct LaboratoryView: View {
                             }
                             .padding(.leading, 6)
                             .padding(.vertical, 4)
-                            .background(Color.black.opacity(0.3))
+//                            .background(Color.black.opacity(0.3))
+                            
                             .overlay(RoundedRectangle(cornerSize: CGSize(width: 4, height: 4))
                                         .strokeBorder(style: StrokeStyle())
                                         .foregroundColor(TechItems.allCases[idx] == selectedTech ? Color.blue:Color.clear)
                             )
+                            .listRowBackground(GameColors.darkGray)
                             
                             .onTapGesture {
                                 switch controller.selection {
@@ -206,9 +210,10 @@ struct LaboratoryView: View {
                     }
                     .background(GameColors.darkGray)
                 }
-                .listStyle(.plain)
-                .background(GameColors.darkGray)
-                .frame(width: 200, alignment: .leading)
+                .modifier(GameListModifier())
+//                .listStyle(.plain)
+//                .background(GameColors.darkGray)
+//                .frame(width: 200, alignment: .leading)
                 
                 
                 switch controller.selection {

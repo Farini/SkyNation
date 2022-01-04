@@ -224,10 +224,10 @@ struct GameButtonStyle:ButtonStyle {
                                     y: configuration.isPressed ? -3: -5)
                             .blendMode(.overlay)
                         RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .fill(Color("DarkGray"))
+                            .fill(configuration.isPressed ? Color.black:Color("DarkGray"))
                         
                         RoundedRectangle(cornerRadius: 8, style: .circular)
-                            .strokeBorder(configuration.isPressed ? Color.orange:Color.gray)
+                            .strokeBorder(configuration.isPressed ? Color.blue:Color.gray, lineWidth: 2.0)
                     }
                 )
                 .scaleEffect(configuration.isPressed ? 0.82: 1)

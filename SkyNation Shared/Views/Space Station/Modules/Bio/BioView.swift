@@ -133,6 +133,7 @@ struct BioView: View {
                                         .inset(by: 0.5)
                                         .stroke((box == controller.selectedBioBox) == true ? Color.blue.opacity(0.9):Color.clear, lineWidth: 1)
                                 )
+                                .listRowBackground(GameColors.darkGray)
                                 .onTapGesture {
                                     self.controller.didSelect(box: box)
                                     if let dna = DNAOption(rawValue: box.perfectDNA) {
@@ -144,6 +145,7 @@ struct BioView: View {
                         }
                     }
                     .frame(minWidth: 80, maxWidth: 150, alignment: .leading)
+                    .modifier(GameListModifier())
                     
                     switch controller.selection {
                         case .notSelected:

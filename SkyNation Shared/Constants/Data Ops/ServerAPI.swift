@@ -810,7 +810,7 @@ class SKNS {
         task.resume()
     }
     
-    // Claim Token
+    // Claim Gift Token
     static func requestGiftedToken(completion:((GameToken?, String?) -> ())?) {
         let address = "\(baseAddress)/token/gifts/claim"
         

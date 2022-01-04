@@ -58,12 +58,11 @@ struct GuildRoom: View {
                     Image(systemName: "questionmark.circle")
                         .font(.title2)
                 })
-                    .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
-                    .popover(isPresented: $popTutorial, arrowEdge: Edge.bottom, content: {
-                        // Easy Tutorial View
-                        TutorialView(tutType: .GuildRoom)
-                    })
-                
+                .buttonStyle(SmallCircleButtonStyle(backColor: .orange))
+                .popover(isPresented: $popTutorial, arrowEdge: Edge.bottom, content: {
+                    // Easy Tutorial View
+                    TutorialView(tutType: .GuildRoom)
+                })
                 
                 // Close
                 Button(action: {
@@ -72,11 +71,10 @@ struct GuildRoom: View {
                     Image(systemName: "xmark.circle")
                         .font(.title2)
                 })
-                    .buttonStyle(SmallCircleButtonStyle(backColor: .red))
-                    .padding(.trailing, 6)
+                .buttonStyle(SmallCircleButtonStyle(backColor: .red))
                 
             }
-            .padding([.top, .horizontal], 6)
+            .padding([.top, .horizontal], 8)
             Divider()
                 .offset(x: 0, y: -5)
             
@@ -338,6 +336,8 @@ struct GuildRoom: View {
             
         }
         .frame(minWidth:600, maxWidth:1000, minHeight:500, maxHeight:700)
+        .background(GameColors.darkGray)
+        .cornerRadius(10)
         
     }
 }

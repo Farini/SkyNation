@@ -100,13 +100,28 @@ struct ProgressBar: View {
                 Rectangle().frame(width: geometry.size.width , height: geometry.size.height)
                 .opacity(0.3)
                 .foregroundColor(.gray)
+                
                 // Front
-                Rectangle().frame(width: CGFloat(((min(self.value, self.maximum) - self.minimum) / (self.maximum - self.minimum))) * geometry.size.width, height: geometry.size.height)
+                Rectangle().frame(width: (frontWidth() * geometry.size.width), height: geometry.size.height)
                     .foregroundColor(self.color)
                 .animation(.easeOut)
                 
             }.cornerRadius(geometry.size.height / 2)
         }
+    }
+    
+    func frontWidth() -> CGFloat {
+
+        if self.maximum <= self.value {
+            return 1.0
+        } else if self.minimum >= self.value {
+            return 0.0
+        } else {
+            let totalDelta = self.maximum - self.minimum
+            let currentDelta = self.value - self.minimum
+            return CGFloat(currentDelta / totalDelta)
+        }
+        
     }
 }
 

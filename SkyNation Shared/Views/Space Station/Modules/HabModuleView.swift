@@ -90,18 +90,18 @@ struct HabModuleView: View {
                         HStack {
                             // Left List
                             List($controller.inhabitants) { person in
-                                
-//                                ActivityPersonCell(person: person, selected: person == controller.selectedPerson)
                                 HabPersonRow(person: person, selected: person.wrappedValue == controller.selectedPerson)
+                                    .listRowBackground(GameColors.darkGray)
                                     .onTapGesture(count: 1, perform: {
                                         controller.didSelect(person: person.wrappedValue)
                                     })
                                 
                             }
-                            .listStyle(.plain)
-                            .background(GameColors.darkGray)
-                            .frame(minWidth: 100, maxWidth: 215, alignment: .leading)
-                            // .background(GameColors.darkGray)
+                            .modifier(GameListModifier())
+//                            .listStyle(.plain)
+//                            .listRowBackground(GameColors.darkGray)
+//                            .frame(minWidth: 150, maxWidth: 215, alignment: .leading)
+//                            .background(GameColors.darkGray)
                             
                             Divider()
                             // No Selection
@@ -136,13 +136,16 @@ struct HabModuleView: View {
                         // Left List
                         List($controller.inhabitants) { person in
                             HabPersonRow(person: person, selected: selPerson == person.wrappedValue)
+                                .listRowBackground(GameColors.darkGray)
                                 .onTapGesture(count: 1, perform: {
                                     controller.didSelect(person: person.wrappedValue)
                                 })
                         }
-                        .listStyle(.plain)
-                        .background(GameColors.darkGray)
-                        .frame(minWidth: 150, maxWidth: 230, maxHeight: .infinity, alignment: .leading)
+                        .modifier(GameListModifier())
+//                        .listStyle(.plain)
+//                        .listRowBackground(GameColors.darkGray)
+//                        .frame(minWidth: 150, maxWidth: 215, alignment: .leading)
+//                        .background(GameColors.darkGray)
                         
                         // Details go here
                         ScrollView {

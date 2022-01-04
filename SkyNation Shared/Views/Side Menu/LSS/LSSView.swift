@@ -39,37 +39,40 @@ struct LSSView: View {
                         // Left View: List of Resources
                         List() {
                             // Tanks
-                            Section(header:
-                                        HStack {
-                                            Text("Tanks")
-                                            Spacer()
-                                /*
-                                            Button("⇣") {
-                                                
-//                                                switch controller.tankSorting {
+                            Section(header: listHeader(box: false)
+//                                        HStack {
+//                                            Text("Tanks")
+//                                            Spacer()
+//                                /*
+//                                            Button("⇣") {
 //
-//                                                    case .byEmptiness:
-//                                                        controller.tankSorting = .byType
-//                                                    case .byType:
-//                                                        controller.tankSorting = .byEmptiness
-//                                                }
-//                                                controller.updateAllData()
-                                                controller.reorderTanks()
-                                            }
-                                            .padding(.trailing, 6)
-                                 */
-                                        }) {
-                                            ForEach($controller.tanks, id:\.id) { tank in
+////                                                switch controller.tankSorting {
+////
+////                                                    case .byEmptiness:
+////                                                        controller.tankSorting = .byType
+////                                                    case .byType:
+////                                                        controller.tankSorting = .byEmptiness
+////                                                }
+////                                                controller.updateAllData()
+//                                                controller.reorderTanks()
+//                                            }
+//                                            .padding(.trailing, 6)
+//                                 */
+//                                        }
+                            ) {
+                                    ForEach($controller.tanks, id:\.id) { tank in
                                     
                                     switch type {
                                         case .Tank(let selTank):
                                             // Tank here
                                             TankRow(tank: tank, selected: selTank == tank.wrappedValue)
+                                                .listRowBackground(GameColors.darkGray)
                                                 .onTapGesture(count: 1, perform: {
                                                     controller.updateState(newState: .Resources(type: .Tank(tank: tank.wrappedValue)))
                                                 })
                                         default:
                                             TankRow(tank: tank, selected: false)
+                                                .listRowBackground(GameColors.darkGray)
                                                 .onTapGesture(count: 1, perform: {
                                                     controller.updateState(newState: .Resources(type: .Tank(tank: tank.wrappedValue)))
                                                 })
@@ -79,7 +82,7 @@ struct LSSView: View {
                             }
                             
                             // Ingredients - Boxes
-                            Section(header: Text("Ingredients")) {
+                            Section(header: listHeader(box: true)) {
                                 ForEach($controller.boxes) { storageBox in
                                     HStack {
                                         storageBox.wrappedValue.type.image()! //?? Image(systemName:"questionmark")
@@ -93,6 +96,7 @@ struct LSSView: View {
                                         }
                                         
                                     }
+                                    .listRowBackground(GameColors.darkGray)
                                     .onTapGesture(count: 1, perform: {
                                         // Select Box Here
 //                                        controller.didSelect(utility: storageBox)
@@ -102,6 +106,7 @@ struct LSSView: View {
                             }
                         }
                         .frame(minWidth:180, maxWidth:220, minHeight:200, maxHeight: .infinity)
+                        .modifier(GameListModifier())
                         
                         // Right View (Detail)
                         switch type {
@@ -146,11 +151,13 @@ struct LSSView: View {
                     HStack {
                         List($controller.peripherals) { peripheral in
                             PeripheralRowView(peripheral: peripheral, isSelected: mType.isSelected(peripheral: peripheral.wrappedValue))
+                                .listRowBackground(GameColors.darkGray)
                             .onTapGesture {
                                 controller.updateState(newState: .Machinery(type: .Machine(peripheral: peripheral.wrappedValue)))
                             }
                         }
                         .frame(minWidth:180, maxWidth:220, minHeight:200, maxHeight: .infinity)
+                        .modifier(GameListModifier())
                         
                         switch mType {
                             case .None:
@@ -206,6 +213,8 @@ struct LSSView: View {
             }
         }
         .frame(minWidth: 700, minHeight: 350, idealHeight:500, maxHeight: .infinity, alignment:.topLeading)
+        .background(GameColors.darkGray)
+        .cornerRadius(10)
     }
     
     var tabber: some View {
@@ -273,6 +282,14 @@ struct LSSView: View {
         }
     }
     
+    func listHeader(box:Bool) -> some View {
+        HStack {
+            Text(box == true ? "Boxes & Ingredients":"Tanks")
+                .font(GameFont.section.makeFont())
+                .foregroundColor(.blue)
+            Spacer()
+        }
+    }
     
     var noSelectionView: some View {
         // No Selection

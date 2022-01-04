@@ -58,6 +58,56 @@ class GameRoomController:ObservableObject {
         }
     }
     
+    // MARK: - Receive Gift
+    
+    /// Only need to fetch gifts once every time player hits the freebie button.
+    private var hasCheckedGifts:Bool = false
+    
+    /// The Token received as a gift.
+    @Published var receivedGift:GameToken?
+    
+    /// Indicates whether the alert with gift is showing
+    @Published var giftAlert:Bool = false
+    
+    private func checkReceivedGifts() {
+        
+        // Allow this to fetch only when getting freebies?
+        guard hasCheckedGifts == false else { return }
+        self.hasCheckedGifts = true
+        
+        SKNS.requestGiftedToken { giftedToken, errString in
+            if let giftedToken = giftedToken {
+                
+                let player = self.player
+                player.wallet.tokens.append(giftedToken)
+                
+                // add message receiving token
+                
+                do {
+                    try LocalDatabase.shared.savePlayer(player)
+                    DispatchQueue.main.async {
+                        self.player = player
+                        self.receivedGift = giftedToken
+                        self.giftAlert = true
+                    }
+                } catch {
+                    // Deal with error
+                    print("Error fetching gift \(error.localizedDescription)")
+                }
+                // Token in !!!
+                // Update some variable
+                // or show an alert
+            } else {
+                if let string = errString {
+                    print("Error in Gifts - \(string)")
+                } else {
+                    print("No gifted tokens")
+                }
+            }
+            
+        }
+    }
+    
     // MARK: - Freebies
     
     func updateFreebiesInfo() {
@@ -124,20 +174,14 @@ class GameRoomController:ObservableObject {
         // Save
         do {
             try LocalDatabase.shared.savePlayer(player)
+            
         } catch {
             print("‼️ Could not save station.: \(error.localizedDescription)")
         }
         
         self.updateFreebiesInfo()
         
-//        let delta = player.wallet.timeToGenerateNextFreebie()
-//        if delta > 0 {
-//            self.freebiesAvailable = false
-//        } else {
-//            self.freebiesAvailable = true
-//        }
-        
-        
+        self.checkReceivedGifts()
     }
     
     

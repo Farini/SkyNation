@@ -213,6 +213,10 @@ struct GameRoomView: View {
                             }
                             .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                             .disabled(!controller.freebiesAvailable)
+                            .alert(isPresented: $controller.giftAlert) {
+                                Alert(title: Text("Gift Received!"),
+                                      message: Text("Congrats, you have received a gift from another player. Token \(controller.receivedGift?.origin.rawValue ?? "n/a")"), dismissButton: .default(Text("OK")))
+                            }
                             
                         } else {
                             
@@ -259,6 +263,8 @@ struct GameRoomView: View {
             }
         }
         .frame(minWidth:700, maxWidth:1200, maxHeight:600)
+        .background(GameColors.darkGray)
+        .cornerRadius(12)
         
     }
     

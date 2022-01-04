@@ -86,6 +86,7 @@ struct GarageView: View {
                 }else{
                     ForEach(controller.buildingVehicles) { vehicle in
                         SpaceVehicleRow(vehicle:vehicle, selected:controller.selectedVehicle == vehicle)
+                            .listRowBackground(GameColors.darkGray)
                             .onTapGesture() {
                                 self.didSelectBuilding(vehicle: vehicle)
                             }
@@ -101,6 +102,7 @@ struct GarageView: View {
                 }else{
                     ForEach(controller.builtVehicles) { vehicle in
                         SpaceVehicleRow(vehicle:vehicle, selected:controller.selectedVehicle == vehicle)
+                            .listRowBackground(GameColors.darkGray)
                             .onTapGesture() {
                                 self.didSelectBuilt(vehicle: vehicle)
                             }
@@ -113,9 +115,11 @@ struct GarageView: View {
                 if controller.travellingVehicles.isEmpty {
                     Text("No vehicles")
                         .foregroundColor(.gray)
+                        .listRowBackground(GameColors.darkGray)
                 }else{
                     ForEach(controller.travellingVehicles) { vehicle in
                         SpaceVehicleRow(vehicle:vehicle, selected:controller.selectedVehicle == vehicle)
+                            .listRowBackground(GameColors.darkGray)
                             .onTapGesture() {
                                 self.didSelectTravelling(vehicle: vehicle)
                             }
@@ -123,6 +127,7 @@ struct GarageView: View {
                 }
             }
         }
+        .modifier(GameListModifier())
     }
     
     var body: some View {

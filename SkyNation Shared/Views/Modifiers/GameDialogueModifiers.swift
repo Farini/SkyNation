@@ -95,3 +95,26 @@ struct GColored: ViewModifier {
             .background(GameColors.darkGray)
     }
 }
+
+// MARK: - Lists & Rows
+
+
+/// List modifier that makes a seamless list in SwiftUI in all platforms.
+///
+/// - Discussion:
+///
+/// ```swift
+/// .listStyle(.plain)
+/// .listRowBackground(GameColors.darkGray)
+/// .frame(minWidth: 150, maxWidth: 215, alignment: .leading)
+/// .background(GameColors.darkGray)
+/// ```
+struct GameListModifier:ViewModifier {
+    func body(content: Content) -> some View {
+        return content
+            .listStyle(.plain)
+            .listRowBackground(GameColors.darkGray)
+            .frame(minWidth: 150, maxWidth: 215, alignment: .leading)
+            .background(GameColors.darkGray)
+    }
+}

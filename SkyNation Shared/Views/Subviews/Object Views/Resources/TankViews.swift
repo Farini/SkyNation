@@ -72,12 +72,12 @@ struct TankRow:View {
             .accentColor(.orange)
         }
         .padding(6)
-        .background(Color.black.opacity(0.5))
+//        .background(Color.black.opacity(0.5))
         .cornerRadius(6)
         .overlay(
             RoundedRectangle(cornerRadius: 6)
                 .stroke(lineWidth: 1.5)
-                .foregroundColor(selected ? Color.blue:Color.clear)
+                .foregroundColor(selected ? Color.blue:Color.init(white: 0.15))
         )
         .frame(minWidth: 50, maxWidth: 200, minHeight: 15, maxHeight: 40, alignment: .leading)
         
