@@ -74,10 +74,6 @@ enum PeripheralType:String, Codable, CaseIterable {
     
     case PowerGen
     
-    // AirTrapper - collect co2 from air
-    // GasGenerator - make energy
-    
-    
     // EVBot (E-Vehicle)
     
     

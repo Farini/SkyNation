@@ -10,21 +10,109 @@ import SpriteKit
 
 class SideMenuNode:SKNode {
     
-    // Side Warning Pattern
-    // LSS - Life Support Systems
-    // Camera - Cam control
-    // Lights - Light Control
-    // Chat &| Messages
-    // Mars - Mars
-    // Vehicles - Vehicles List
-    
+    /// Size of the Sprite that makes the button (actual size of the button is bigger)
     let buttonSize:CGSize = CGSize(width: 36, height: 36)
     
-    // The node where camera controls scales down to
+    let verticalPadding:CGFloat = 2
+    
+    /// The `SKNode` where camera controls scales down to when dismissing.
     var cameraPlaceholder:SKNode?
+    
+    enum SideMenuOption {
+        case lss
+        case camera
+        case home
+        case guild
+        case scene
+    }
+    
+    // Flags
+    // -----
+    // LSS
+    var flagLSS:Int = 0
+    var flagLSSLabel:SKLabelNode?
+    // GameRoom
+    var flagGameRoom:Int = 0
+    var flagGameRoomLabel:SKLabelNode?
+    // GuildRoom
+    var flagGuildRoom:Int = 0
+    var flagGuildRoomLabel:SKLabelNode?
     
     override init() {
         super.init()
+    }
+    
+    /// Updates the badges of `LSS`, `GameRoom` and `GuildRoom`
+    ///
+    /// The `GuildRoom` is not a full update, though.
+    func updateLSS(issues:[String]) {
+        
+        // Update LSS Flags
+        flagLSS = issues.count
+        if issues.isEmpty {
+            flagLSSLabel?.isHidden = true
+            flagLSSLabel?.children.first?.isHidden = true
+            flagLSSLabel?.text = "\(flagLSS)"
+        } else {
+            flagLSSLabel?.isHidden = false
+            flagLSSLabel?.children.first?.isHidden = false
+            flagLSSLabel?.text = "\(flagLSS)"
+        }
+        
+        // Update Game Room Flags
+        let player = LocalDatabase.shared.player
+        if player.wallet.timeToGenerateNextFreebie() == 0.0 {
+            flagGameRoom += 1
+            // update label
+        }
+        if flagGameRoom > 0 {
+            flagGameRoomLabel?.isHidden = false
+            flagGameRoomLabel?.children.first?.isHidden = false
+            flagGameRoomLabel?.text = "\(flagGameRoom)"
+        } else {
+            flagGameRoomLabel?.isHidden = true
+            flagGameRoomLabel?.children.first?.isHidden = true
+            flagGameRoomLabel?.text = "\(flagGameRoom)"
+        }
+        
+        if let sd = ServerManager.shared.serverData {
+            if sd.guildMap?.mission?.status == .running && sd.guildMap?.mission?.workers.contains(player.playerID ?? UUID()) == false {
+                flagGuildRoom += 1
+            }
+            if sd.election?.getStage() == .running && sd.election?.casted.keys.contains(player.playerID ?? UUID()) == false {
+                flagGuildRoom += 1
+            }
+        }
+        if flagGuildRoom > 0 {
+            flagGuildRoomLabel?.isHidden = false
+            flagGuildRoomLabel?.children.first?.isHidden = false
+            flagGuildRoomLabel?.text = "\(flagGuildRoom)"
+        } else {
+            flagGuildRoomLabel?.isHidden = true
+            flagGuildRoomLabel?.children.first?.isHidden = true
+            flagGuildRoomLabel?.text = "\(flagGuildRoom)"
+        }
+    }
+    
+    /// Dismisses the LSS badge
+    func clearLSSBadge() {
+        self.flagLSS = 0
+        self.updateLSS(issues: [])
+    }
+    
+    /// Dismisses the Guild badge
+    func clearGuildBadge() {
+        self.flagGuildRoom = 0
+        flagGuildRoomLabel?.text = "\(flagGuildRoom)"
+        flagGuildRoomLabel?.isHidden = true
+        flagGuildRoomLabel?.children.first?.isHidden = true
+    }
+    
+    func clearGameRoomBadge() {
+        self.flagGameRoom = 0
+        flagGameRoomLabel?.text = "\(flagGameRoom)"
+        flagGameRoomLabel?.isHidden = true
+        flagGameRoomLabel?.children.first?.isHidden = true
     }
     
     func setupMenu() {
@@ -36,7 +124,7 @@ class SideMenuNode:SKNode {
         pos.x = 20
         
         // Air Control
-        if let lssSprite:SKSpriteNode = makeButton("arrow.3.trianglepath") {
+        if let lssSprite:SKSpriteNode = makeButton(option: .lss) {//makeButton("arrow.3.trianglepath") {
             lssSprite.name = "Air Control"
             lssSprite.color = .white
             lssSprite.colorBlendFactor = 1.0
@@ -46,10 +134,10 @@ class SideMenuNode:SKNode {
             lssSprite.zPosition = 80
             addChild(lssSprite)
         }
-        pos.y -= 6
+        pos.y -= verticalPadding // pos.y -= 6
         
         // Camera
-        if let camSprite:SKSpriteNode = makeButton("camera.viewfinder") {
+        if let camSprite:SKSpriteNode = makeButton(option: .camera) {//makeButton("camera.viewfinder") {
             camSprite.name = "CameraIcon"
             camSprite.color = .white
             camSprite.colorBlendFactor = 1.0
@@ -59,7 +147,8 @@ class SideMenuNode:SKNode {
             camSprite.zPosition = 80
             addChild(camSprite)
         }
-        pos.y -= 6
+        pos.y -= verticalPadding
+        
         // Placeholder node
         let holder = SKNode()
         holder.name = "CameraPlaceholder"
@@ -72,7 +161,7 @@ class SideMenuNode:SKNode {
         // 2. Sub chat sprite for Guild Room
         
         // Lights
-        if let lightsSprite:SKSpriteNode = makeButton("house") {
+        if let lightsSprite:SKSpriteNode = makeButton(option: .home) { //makeButton("house") {
             lightsSprite.name = "GameRoomButton"
             lightsSprite.color = .white
             lightsSprite.colorBlendFactor = 1.0
@@ -82,23 +171,10 @@ class SideMenuNode:SKNode {
             lightsSprite.zPosition = 80
             addChild(lightsSprite)
         }
-        pos.y -= 6
-        
-        // Tutorial
-        if let tutorialSprite:SKSpriteNode = makeButton("questionmark.diamond") {
-            tutorialSprite.name = "tutorial"
-            tutorialSprite.color = .white
-            tutorialSprite.colorBlendFactor = 1.0
-            pos.y -= tutorialSprite.calculateAccumulatedFrame().size.height
-            tutorialSprite.anchorPoint = CGPoint.zero
-            tutorialSprite.position = pos
-            tutorialSprite.zPosition = 80
-            addChild(tutorialSprite)
-        }
-        pos.y -= 6
+        pos.y -= verticalPadding
         
         // Chat
-        if let chatSprite:SKSpriteNode = makeButton("shield") {
+        if let chatSprite:SKSpriteNode = makeButton(option: .guild) { //makeButton("shield") {
             chatSprite.name = "ChatButton"
             chatSprite.color = .white
             chatSprite.colorBlendFactor = 1.0
@@ -108,10 +184,10 @@ class SideMenuNode:SKNode {
             chatSprite.zPosition = 80
             addChild(chatSprite)
         }
-        pos.y -= 6
+        pos.y -= verticalPadding
         
         // Mars
-        if let marsSprite:SKSpriteNode = makeButton("circle.dashed.inset.fill") {
+        if let marsSprite:SKSpriteNode = makeButton(option: .scene) { //makeButton("circle.dashed.inset.fill") {
             marsSprite.name = "MarsButton"
             marsSprite.color = .white
             marsSprite.colorBlendFactor = 1.0
@@ -121,7 +197,7 @@ class SideMenuNode:SKNode {
             marsSprite.zPosition = 80
             addChild(marsSprite)
         }
-        pos.y -= 6
+        pos.y -= verticalPadding
         
         buildRuler()
     }
@@ -163,27 +239,131 @@ class SideMenuNode:SKNode {
         addChild(rulerShape)
     }
     
-    /// Makes a Sprite Node from an image name
-    func makeButton(_ imageName:String) -> SKSpriteNode? {
-        guard let image = GameImages.commonSystemImage(name: imageName)?.image(with: SCNColor.white) else {
+    /// Makes a button that is part of the `SideMenu`
+    ///
+    /// Helps to build the `GameOverlay`
+    ///
+    /// - parameters:
+    ///     - option: the `SideMenuOption` enum that contains that button info.
+    ///
+    /// - returns:
+    ///     The `SKSpriteNode` that represents the button.
+    ///
+    func makeButton(option:SideMenuOption) -> SKSpriteNode? {
+        
+        // Get the button image.
+        guard let image = GameImages.commonSystemImage(name: option.imageName)?.image(with: SCNColor.white) else {
             return nil
         }
-        #if os(macOS)
+#if os(macOS)
         image.isTemplate = true
         let texture = SKTexture(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: [:])!)
-        #else
-        let texture = SKTexture(image: image.maskWithColor(color: .white))// .cgImage!)
-//        let rect = CGRect(origin: .zero, size: texture.size())
-//        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
-//        UIColor.white.setFill()
-//        UIRectFill(rect)
-//        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-//        UIGraphicsEndImageContext()
-//        guard let cgImage = newImage?.cgImage else { return nil }
-//        texture = SKTexture(cgImage: cgImage)
-        #endif
+#else
+        let texture = SKTexture(image: image.maskWithColor(color: .white))
+#endif
+        // Sprite containing main image of the button
         let sprite:SKSpriteNode = SKSpriteNode(texture: texture, color: .white, size: buttonSize)
+        
+        // Additions
+        /*
+         Create a background, a label node (indicator), make the button larger, and add a badge. */
+        
+        var oldSize = sprite.calculateAccumulatedFrame().size
+        oldSize.width += 8
+        oldSize.height += 8
+        
+        // Background (Shape Node)
+        let spriteBack = SKShapeNode(rect: CGRect(origin: CGPoint.zero, size: oldSize), cornerRadius: 4.0) //SKShapeNode(rectOf: oldSize)
+        spriteBack.fillColor = .black.withAlphaComponent(0.5)
+        spriteBack.zPosition = sprite.zPosition - 1
+        
+        sprite.addChild(spriteBack)
+        spriteBack.position.x -= 4
+        spriteBack.position.y -= 4
+        
+        // Label (indicator)
+        if GameSettings.shared.showLabels == nil || GameSettings.shared.showLabels == true {
+            
+            let lblText:String = option.labelText
+            let lbl = SKLabelNode(text: lblText)
+            lbl.fontName = "Helvetica Neue Bold"
+            lbl.fontSize = 12
+            lbl.fontColor = .white
+            lbl.position.x += 43
+            lbl.position.y += 26
+            lbl.horizontalAlignmentMode = .left
+            
+            sprite.addChild(lbl)
+        }
+        
+        
+        // Badge
+        // [SKLabelNode, SKShapeNode]
+        /*
+         Go through the options.
+         LSS, Home, and Guild are the only ones that may have notifications
+         */
+        var notes:Int = 0
+        var shouldMake:Bool = false
+        
+        switch option {
+            case .lss:
+                // TODO: Get Data
+                notes = flagLSS
+                shouldMake = true
+            case .camera:
+                notes = 0
+            case .home:
+                // TODO: Get Data
+                notes = flagGameRoom
+                shouldMake = true
+            case .guild:
+                // TODO: Get Data
+                notes = flagGuildRoom
+                shouldMake = true
+            case .scene:
+                notes = 0
+        }
+        
+        if shouldMake == true {
+            
+            let badgeLabel = self.makeBadgeLabel()
+            badgeLabel.zPosition = 4
+            badgeLabel.text = "\(notes)"
+            
+            let badgeBack = SKShapeNode(circleOfRadius: badgeLabel.calculateAccumulatedFrame().size.height)
+            badgeBack.fillColor = .red.withAlphaComponent(0.75)
+            badgeBack.strokeColor = .clear
+            badgeBack.zPosition = -1
+            //badgeBack.addChild(badgeLabel)
+            badgeLabel.addChild(badgeBack)
+            
+            badgeLabel.position.x += 48
+            badgeLabel.position.y += 8
+            
+            if option == .lss {
+                self.flagLSSLabel = badgeLabel
+            } else if option == .home {
+                self.flagGameRoomLabel = badgeLabel
+            } else if option == .guild {
+                self.flagGuildRoomLabel = badgeLabel
+            }
+            
+            sprite.addChild(badgeLabel)
+        }
+        
         return sprite
+    }
+    
+    
+    func makeBadgeLabel() -> SKLabelNode {
+        let badgeLabel = SKLabelNode()
+        badgeLabel.fontName = "Helvetica Neue Bold"
+        badgeLabel.fontSize = 12
+        badgeLabel.fontColor = .white
+        badgeLabel.verticalAlignmentMode = .center
+        badgeLabel.horizontalAlignmentMode = .center
+        return badgeLabel
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -192,3 +372,28 @@ class SideMenuNode:SKNode {
 }
 
 
+extension SideMenuNode.SideMenuOption {
+    
+    /// Name for the Image of the button
+    var imageName:String {
+        switch self {
+            case .lss: return "arrow.3.trianglepath"
+            case .camera: return "camera.viewfinder"
+            case .home: return "house"
+            case .guild: return "shield"
+            case .scene: return "circle.dashed.inset.fill"
+        }
+    }
+    
+    /// The text that represents the button.
+    /// Will show when GameSettings have `hudLabels`
+    var labelText:String {
+        switch self {
+            case .lss: return "LSS"
+            case .camera: return "Camera"
+            case .home: return "Game room"
+            case .guild: return "Guild room"
+            case .scene: return "Switch scene"
+        }
+    }
+}

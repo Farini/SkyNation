@@ -114,6 +114,7 @@ class GameOverlay:NSObject, SKSceneDelegate {
         
         // Side menu
         let sideMenu = SideMenuNode()
+        
         sideMenu.setupMenu()
         sideMenu.position = mPos
         scene.addChild(sideMenu)
@@ -125,8 +126,6 @@ class GameOverlay:NSObject, SKSceneDelegate {
         // Vehicles
         self.updateTravellingVehiclesList()
         
-        // Unpause the scene
-//        scene.isPaused = false
     }
     
     private func updateTravellingVehiclesList() {

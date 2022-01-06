@@ -459,24 +459,6 @@ class Station:Codable {
     }
     */
     
-    /// Checks air for required vs supply
-//    func checkRequiredAir() -> Int {
-//
-//        let labs = labModules.count
-//        let habs = habModules.count
-//        let bios = bioModules.count
-//
-//        // Each Requires 75?
-//        let totalCount = labs + habs + bios
-//        let requiredAir = totalCount * GameLogic.airPerModule
-//        let suppliedAir = self.air.getVolume()
-//
-//        print("--- Air:")
-//        print("--- Required: \(requiredAir)")
-//        print("--- Supplied: \(suppliedAir)")
-//        return requiredAir
-//
-//    }
     
     /// Adds an amount of air to the Station air
     func addControlledAir(amount:Int) {
@@ -492,6 +474,48 @@ class Station:Codable {
         
         let airNeeded = GameLogic.airPerModule * moduleCount
         return airNeeded
+    }
+    
+    func reportLSSIssues() -> [String] {
+        
+        var lss:[String] = []
+        
+        let oxygen = truss.tanks.filter({ $0.type == .o2 }).compactMap({ $0.current }).reduce(0, +)
+        let water = truss.tanks.filter({ $0.type == .h2o }).compactMap({ $0.current }).reduce(0, +)
+        let foodCount = food.count
+        let headCount = self.getPeople().count
+        let airQuality = self.air.airQuality()
+        
+        if oxygen < headCount * 5 {
+            if oxygen == 0 {
+                lss.append("No oxygen ‼️")
+            } else {
+                lss.append("⚠️ low on oxygen")
+            }
+        }
+        if water < headCount * 10 {
+            if water == 0 {
+                lss.append("No water ‼️")
+            } else {
+                lss.append("💧 low on water")
+            }
+        }
+        if foodCount < headCount * 4 {
+            if foodCount == 0 {
+                lss.append("No food ‼️")
+            } else {
+                lss.append("⚠️ low on food")
+            }
+        }
+        
+        switch airQuality {
+            case .Medium: lss.append("⚠️ Air quality is medium")
+            case .Bad: lss.append("⚠️ ❗️Air quality is bad")
+            case .Lethal: lss.append("‼️ Air quality is lethal!")
+            default: print("Air quality ok")
+        }
+        
+        return lss
     }
     
     /// Returns the module associated with ID (Lab, Hab, Bio)
@@ -536,61 +560,6 @@ class Station:Codable {
         return module
     }
     
-    func collectRecipe(recipe:Recipe, lab:LabModule) -> Bool {
-        
-        for tmpLab in self.labModules {
-            if tmpLab.id == lab.id {
-                tmpLab.activity = nil
-            }
-        }
-        
-        switch recipe {
-            // Going to TRUSS
-            case .SolarPanel:
-            print("Solar")
-//            let panel = SolarPanel()
-            truss.addRecipeSolar(panel: SolarPanel())
-            
-            // Battery
-            case .Battery:
-            let battery = Battery(capacity: 100, current: 0)
-//            let result = truss.addRecipeBattery(battery: battery)
-                truss.batteries.append(battery)
-                
-//            print("Added Battery: \(result)")
-            return true
-            
-            case .StorageBox:
-            print("Another Storage box")
-            case .Radiator:
-            print("Radiator")
-            
-            // PERIPHERALS
-            case .Methanizer:
-            let m = PeripheralObject(peripheral: .Methanizer)
-            self.peripherals.append(m)
-            case .Electrolizer:
-            let l = PeripheralObject(peripheral: .Electrolizer)
-            self.peripherals.append(l)
-            case .ScrubberCO2:
-            let s = PeripheralObject(peripheral: .ScrubberCO2)
-            self.peripherals.append(s)
-            case .Condensator:
-            print("Go to LSS")
-            let c = PeripheralObject(peripheral: .Condensator)
-            self.peripherals.append(c)
-            
-            
-            case .Roboarm:
-            print("Roboarm")
-            case .Module, .Node:
-            print("Node and Module dont do anything here. (See Tech Tree)")
-            
-            default:
-            print("Another case")
-        }
-        return false
-    }
     
     // Peripherals
     
@@ -609,7 +578,6 @@ class Station:Codable {
     }
     
     // MARK: - Living, Rooms, and People
-    // DEPRECATE SOME OF THESE - WONT NEED ALL OF THEM
     
     /// Returns how many rooms available in the station
     func checkForRoomsAvailable() -> Int {
@@ -642,6 +610,7 @@ class Station:Codable {
         return false
     }
     
+    /// Everyone from all HabModules
     func getPeople() -> [Person] {
         var folks:[Person] = []
         for hab in habModules {
@@ -650,7 +619,7 @@ class Station:Codable {
         return folks
     }
     
-    /// Tries to remove a Person from the station. (Usually when loading a vahicle) - returns false if person cannot be found.
+    /// Tries to remove a Person from the station. (Usually when loading a vehicle) - returns false if person cannot be found.
     func removePerson(person:Person) -> Bool {
         for habMod in habModules {
             if habMod.inhabitants.contains(person) {

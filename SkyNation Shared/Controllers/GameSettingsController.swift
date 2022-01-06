@@ -440,15 +440,6 @@ class GameSettingsController:ObservableObject {
     /// Fetches all `Joinable` Guilds
     func fetchGuilds() {
         
-        
-//        SKNS.browseInvitesFromGuilds { guildArray, error in
-//            if let guildArray = guildArray {
-//                DispatchQueue.main.async {
-//                    self.joinableGuilds.append(contentsOf: guildArray)
-//                }
-//            }
-//        }
-        
         SKNS.browseGuilds { (guilds, error) in
             if let array = guilds {
                 print("Updating Guilds")
@@ -487,6 +478,7 @@ class GameSettingsController:ObservableObject {
         }
     }
     
+    /// Post Creation of Guild - Setup Outposts, Mission, etc.
     func didCreateGuild(guildCreate:GuildCreate) {
         
         self.joinableGuilds = []
@@ -497,17 +489,14 @@ class GameSettingsController:ObservableObject {
         SKNS.createGuild(creator: guildCreate) { guildSum, error in
             if let guildSum = guildSum {
                 print("\n\nGuild Sum In \(guildSum)")
-                SKNS.postCreate(newGuildID: guildSum.id) { newGuild, newError in
-                    print("Post Creating...")
-                    if let newGuild:GuildFullContent = newGuild {
-                        print("Post Create. New Guild \(newGuild.name)")
+                SKNS.postMapping(newGuildID: guildSum.id) { newGmap, newError in
+                    if let newGmap = newGmap {
                         DispatchQueue.main.async {
                             // Player created guild!
-                            self.player.guildID = newGuild.id
-//                            self.guildJoinState = .joined(guild: newGuild)
-//                            self.playerGuildState = .joined(guild: new)
-//                            self.selectedGuildObj = newGuild
-//                            print("Post Created Guild.")
+                            self.player.guildID = newGmap.id
+                            self.guildMap = newGmap
+                            self.playerGuildState = .joined(guild: newGmap)
+                            
                             // Save Player
                             do {
                                 try LocalDatabase.shared.savePlayer(self.player)
@@ -516,15 +505,23 @@ class GameSettingsController:ObservableObject {
                                 print("Could not save Player \(error.localizedDescription)")
                             }
                         }
+                        return
                     } else {
-                        print("Could not create guild (2nd). Returning token?")
-                        self.guildNavError = "Could not create guild."
+                        if let newError = newError {
+                            self.guildNavError = "Could not create guild. \(newError.localizedDescription)"
+                            return
+                        } else {
+                            self.guildNavError = "Could not create guild."
+                        }
                     }
                 }
             } else {
+                if let error = error {
+                    self.guildNavError = "Could not create guild. \(error.localizedDescription)"
+                    return
+                }
                 self.guildNavError = "Could not create guild."
             }
-            
         }
     }
     

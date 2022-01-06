@@ -55,7 +55,10 @@ class GameSettings:Codable {
     var soundFXOn:Bool
     var dialogueOn:Bool
     
-    // MARK: - Debugging
+    // MARK: - New
+    
+    // make sure to get this in decoding as well.
+    var showLabels:Bool?
     
     private init () {
         
@@ -73,6 +76,8 @@ class GameSettings:Codable {
         self.dialogueOn = true
         self.autoStartScene = false
         
+        // new
+        self.showLabels = true
     }
     
     static private func load() -> GameSettings {
@@ -85,6 +90,11 @@ class GameSettings:Codable {
     
     /// Saves the User `Settings`, or Preferences
     func save() {
+        // Update showLabels
+        if self.showLabels == nil {
+            self.showLabels = true
+        }
+        
         do {
             try LocalDatabase.shared.saveSettings(settings:self)
         } catch {

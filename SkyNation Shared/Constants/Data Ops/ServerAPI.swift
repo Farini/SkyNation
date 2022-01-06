@@ -1167,6 +1167,53 @@ class SKNS {
     }
     
     /// Builds the Guild Outposts and setup after creating a new Guild
+    ///
+    /// completion returns a `GuildMap` object.
+    static func postMapping(newGuildID:UUID, completion:((GuildMap?, Error?) -> ())?) {
+        
+        let address = "\(baseAddress)/guilds/player/postmapping/\(newGuildID)"
+        
+        guard let url = URL(string: address) else { return }
+        let session = URLSession.shared
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPMethod.GET.rawValue
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                DispatchQueue.main.async {
+                    print("Data returning")
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .secondsSince1970
+                    do {
+                        let guild = try decoder.decode(GuildMap.self, from: data)
+                        completion?(guild, nil)
+                        return
+                    } catch {
+                        
+                        if let gameError = try? decoder.decode(GameError.self, from: data) {
+                            print("Error decoding.: \(gameError.reason)")
+                            completion?(nil, error)
+                            
+                        } else {
+                            print("Error - Something else has happened")
+                            completion?(nil, error)
+                        }
+                    }
+                }
+                
+            } else {
+                print("Error returning")
+                DispatchQueue.main.async {
+                    completion?(nil, error)
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    /*
+    /// Builds the Guild Outposts and setup after creating a new Guild
     /// Sub with new method that returns `GuildMap`
     static func postCreate(newGuildID:UUID, completion:((GuildFullContent?, Error?) -> ())?) {
         
@@ -1210,6 +1257,8 @@ class SKNS {
         }
         task.resume()
     }
+    */
+    
     
     /// Creates a new Guild
     static func createGuild(creator:GuildCreate, completion:((GuildSummary?, Error?) -> ())?) {

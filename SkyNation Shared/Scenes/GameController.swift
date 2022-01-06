@@ -230,7 +230,12 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             if sprite.name == "Air Control" {
                 switch gameScene {
                     case .SpaceStation:
-                        gameNavDelegate?.didSelectLSS(scene: self.gameScene) //didSelectAir()
+                        
+                        // LSS
+                        gameNavDelegate?.didSelectLSS(scene: self.gameScene)
+                        // Clear Overlay Badge
+                        gameOverlay.sideMenuNode?.clearLSSBadge()
+                        
                     case .MarsColony:
                         if let city = mars?.didSelectAirButton() {
                             print("Show city status here. \(city.posdex)")
@@ -295,12 +300,14 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             // Side Menu Buttons
             if sprite.name == "GameRoomButton" {
                 gameNavDelegate?.openGameRoom()
+                gameOverlay.sideMenuNode?.clearGameRoomBadge()
                 return
             }
             
             // Guild Room
             if sprite.name == "ChatButton" {
                 gameNavDelegate?.didSelectMessages()
+                gameOverlay.sideMenuNode?.clearGuildBadge()
                 return
             }
             
@@ -802,7 +809,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
         self.scene = builtScene
         
-        
         // Camera
         if let camera = scene.rootNode.childNode(withName: "Camera", recursively: false) as? GameCamera {
             self.cameraNode = camera
@@ -835,11 +841,11 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         self.gameOverlay = stationOverlay
         
         super.init()
-        
         // After INIT
         
         self.modules = station?.modules ?? []
         
+        // News
         self.prepareNews()
         
         // Tell SceneDirector that scene is loaded
@@ -848,13 +854,10 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         sceneRenderer.delegate = self
         sceneRenderer.scene = scene
         
-        
         playMusic()
         
         // Fetch Mars Data?
         _ = MarsBuilder.shared
-        
-        
         
     }
     
@@ -885,64 +888,53 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 
             case .SpaceStation:
                 
+                guard let station = station else { return }
+                
                 // Beginners Guide
-                if self.station?.habModules.count ?? 0 < 1 {
+                if station.habModules.count < 1 {
                     newsLines.append("Tap on a Module (see hand) and create your first Hab Module.")
-                } else if self.station?.labModules.count ?? 0 < 1 {
+                } else if station.labModules.count < 1 {
                     newsLines.append("Tap on a Module (see hand) and create your first Lab Module.")
-                } else if station?.getPeople().count ?? 0 < 1 {
+                } else if station.getPeople().count < 1 {
                     newsLines.append("Tap on the Earth, to order items for your Space Station.")
                 }
                 
                 // Lab activities
-                if let labs = station?.labModules {
-                    for lab in labs {
-                        print("*** Found lab: \(lab.id)")
-                        if let activity = lab.activity {
-                            print("*** Found Activity: \(activity.activityName)")
-                            if activity.dateEnds.compare(Date()) == .orderedAscending {
-                                let descriptor = "🔬 Completed Lab activity - Check Lab Modules."
-                                newsLines.append(descriptor)
-                            } else {
-                                let descriptor = "⏱ Lab: \(activity.activityName). \(Int(activity.dateEnds.timeIntervalSince(Date()))) s"
-                                newsLines.append(descriptor)
-                            }
+                let labs = station.labModules
+                for lab in labs {
+                    print("*** Found lab: \(lab.id)")
+                    if let activity = lab.activity {
+                        print("*** Found Activity: \(activity.activityName)")
+                        if activity.dateEnds.compare(Date()) == .orderedAscending {
+                            let descriptor = "🔬 Completed Lab activity - Check Lab Modules."
+                            newsLines.append(descriptor)
+                        } else {
+                            let descriptor = "⏱ Lab: \(activity.activityName). \(Int(activity.dateEnds.timeIntervalSince(Date()))) s"
+                            newsLines.append(descriptor)
                         }
                     }
                 }
+                
                 
                 // Hab Activities
-                if let habs = station?.habModules {
-                    let people = habs.flatMap({$0.inhabitants})
-                    for person in people {
-                        if let activity = person.activity {
-                            if activity.dateEnds.compare(Date()) == .orderedAscending {
-                                let moji = person.gender == "male" ? "🙋‍♂️":"🙋‍♀️"
-                                let descriptor = "\(moji) \(person.name) completed activity \(activity.activityName)."
-                                newsLines.append(descriptor)
-                                person.clearActivity()
-                                hasChanges = true
-                            }
+                let habs = station.habModules
+                let people = habs.flatMap({$0.inhabitants})
+                for person in people {
+                    if let activity = person.activity {
+                        if activity.dateEnds.compare(Date()) == .orderedAscending {
+                            let moji = person.gender == "male" ? "🙋‍♂️":"🙋‍♀️"
+                            let descriptor = "\(moji) \(person.name) completed activity \(activity.activityName)."
+                            newsLines.append(descriptor)
+                            person.clearActivity()
+                            hasChanges = true
                         }
                     }
                 }
                 
-                // Water
-                if station?.truss.getAvailableWater() ?? 0 < 20 {
-                    newsLines.append("💧 Water running low")
-                }
-                
-                // Oxygen
-                let totalO2 = station?.truss.tanks.filter({ $0.type == .o2 }).compactMap({ $0.current }).reduce(0, +) ?? 0
-                if totalO2 < 20 {
-                    newsLines.append("⚠️ Oxygen running low")
-                }
-                
-                // Air Quality
-                let qt:[AirQuality] = [.Lethal, .Bad]
-                if qt.contains(station?.air.airQuality() ?? .Good) {
-                    newsLines.append("⚠️ Air quality is bad.")
-                }
+                // Other issues includes Water, Oxygen, Food, and Air Quality
+                let otherIssues = station.reportLSSIssues()
+                gameOverlay.sideMenuNode?.updateLSS(issues: otherIssues)
+                newsLines.append(contentsOf: otherIssues)
                 
             case .MarsColony:
                 

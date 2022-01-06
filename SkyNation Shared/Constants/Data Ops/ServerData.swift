@@ -488,53 +488,8 @@ class ServerData:Codable {
     
     // MARK: - Player's Guild
     
-    /// Date Guild was last Fetched
+    /// Date Guild was last Fetched - About to Deprecate
     var lastGuildFetch:Date?
-    
-    /*
-    func requestPlayerGuild(force:Bool, completion:@escaping(GuildFullContent?, Error?) -> ()) {
-        
-        print("Requesting Player Guild from ServerData.")
-        
-        // Check if needs update
-        let delay:TimeInterval = 60.0
-        if let log = lastGuildFetch,
-           Date().timeIntervalSince(log) < delay,
-           force == false {
-            completion(self.guildfc, nil)
-            return
-        }
-        
-        SKNS.requestPlayersGuild { fullGuild, error in
-            
-            if let fullGuild:GuildFullContent = fullGuild {
-                
-                self.guildfc = fullGuild
-                
-                let cities:[DBCity] = fullGuild.cities
-                self.cities = cities
-                
-                let citizens:[PlayerContent] = fullGuild.citizens
-                self.partners = citizens
-                
-                self.lastGuildFetch = Date()
-//                self.status = .online
-                
-                // Save
-                do {
-                    try LocalDatabase.shared.saveServerData(self)
-                } catch {
-                    print("‼️ Could not save Server Data.: \(error.localizedDescription)")
-                }
-                
-            } else if let error = error {
-                print("ERROR Requesting Guild: \(error.localizedDescription)")
-            }
-            
-            completion(fullGuild, error)
-        }
-    }
-    */
     
     var lastMapFetch:Date?
     
@@ -580,14 +535,14 @@ class ServerData:Codable {
     func requestOutpostData(dbOutpost:DBOutpost, force:Bool, completion:@escaping(Outpost?, Error?) -> ()) {
         
         // Check if needs update
-        let delay:TimeInterval = 60.0
-        if let log = lastOutpostFetch,
-           let object:Outpost = self.outposts.first(where: { $0.id == dbOutpost.id }),
-           Date().timeIntervalSince(log) < delay,
-           force == false {
-            completion(object, nil)
-            return
-        }
+//        let delay:TimeInterval = 60.0
+//        if let log = lastOutpostFetch,
+//           let object:Outpost = self.outposts.first(where: { $0.id == dbOutpost.id }),
+//           Date().timeIntervalSince(log) < delay,
+//           force == false {
+//            completion(object, nil)
+//            return
+//        }
         
         // Check server
         SKNS.requestOutpostData(dbOutpost: dbOutpost) { outpost, error in
@@ -717,8 +672,13 @@ class ServerData:Codable {
     /// Data exists locally (old data)
     init(localData:ServerData) {
         self.player = LocalDatabase.shared.player
-        self.lastGuildFetch = localData.lastGuildFetch
+//        self.lastGuildFetch = localData.lastGuildFetch
+        
+        // Deprecating (from old GuildFullContent)
+        self.lastGuildFetch = nil
+        
         self.lastFetchedVehicles = localData.lastFetchedVehicles
+        self.lastMapFetch = localData.lastMapFetch
     }
     
 }

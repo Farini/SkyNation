@@ -20,6 +20,7 @@ struct GameSettingsTabView: View {
     @State var serveBiobox:Bool = GameSettings.shared.serveBioBox
     @State var startingScene:GameSceneType = GameSettings.shared.startingScene
     @State var autoStart:Bool = GameSettings.shared.autoStartScene ?? false
+    @State var displayLabels:Bool = GameSettings.shared.showLabels ?? true
     
     @State var musicOn:Bool = GameSettings.shared.musicOn
     @State var soundFXOn:Bool = GameSettings.shared.soundFXOn
@@ -43,7 +44,13 @@ struct GameSettingsTabView: View {
                     Text("* Renders complex shadows and more textures.")
                         .foregroundColor(.gray)
                         .font(.footnote)
-//                        .frame(maxWidth:250)
+                    
+                    Toggle("Side Menu Labels", isOn:$displayLabels)
+                        .onChange(of: displayLabels) { _ in self.saveSettings() }
+                    
+                    Text("* Displays the labels next to the side menu.")
+                        .foregroundColor(.gray)
+                        .font(.footnote)
                 }
                 
                 
@@ -137,6 +144,7 @@ struct GameSettingsTabView: View {
         
         // Graphics
         settings.showLights = self.showLights
+        settings.showLabels = self.displayLabels
         
         // Logic preferences
         settings.clearEmptyTanks = self.clearTanks

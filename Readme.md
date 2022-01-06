@@ -145,31 +145,27 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [X] macOS - app not quitting
 - [X] Fixed bug with app store not giving an Entry for a $5 purchase.
-
 - [X] Receive Gifts
-- [ ] Reduce water filter skills required
+- [X] Reduce water filter skills required
+- [X] Overlay - HUD Labels
+- [X] Settings - HUD Labels
+- [X] Overlay HUD badges count.
+- [X] Overlay Scene with Labels + Badges & Display Option in `GameSettings`
+- [X] SKNS.postCreate(newGuildID:UUID.... sub `GuildMap`
+- [X] Method to 'dismiss' the badges on SideMenu
 
 - [ ] Completely eliminate `GuildFullContent`
-- [ ] SKNS.postCreate(newGuildID:UUID.... sub `GuildMap`
 
-- [ ] Scenes - Use GuildFlags to show new items.
-- [ ] Overlay Scene with Labels + Option in `GameSettings`
-- [ ] Overlay - with badges ([GuildFlags], [PlayerFlags], etc.)
-- [ ] Player Update Flags (whats new)
-- [ ] Guild Update Flags (whats new)
-- [ ] Scene Update Flags (vehicles)
+- [ ] ServerData - Use GuildFlags to show new items.
 
+- [ ] Settings - ask before spend token
+- [ ] Game Settings - Save camera?
+- [ ] Garage - Make sure charging 'propellants' - makes sure you have it, but doesn't charge
+- [ ] City View - Bio - "Evolve" not updating the list
+- [ ] Mars Scene - All Guild Vehicles arriving
+- [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
 - [ ] Look into APNS
 - [ ] Store - Build list of bonus (kits) depending on prev. purchases
-
-- [ ] City View - Bio - "Evolve" not updating the list
-- [ ] Garage - Make sure charging 'propellants'
-- [ ] Game Settings - Save camera?
-- [ ] Settings - ask before spend token
-
-- [ ] Mars Scene - All Guild Vehicles arriving
-
-- [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
 
 ### iOS
 
