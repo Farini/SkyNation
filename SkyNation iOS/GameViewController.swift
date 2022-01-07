@@ -62,7 +62,6 @@ class GameViewController: UIViewController {
         
         // Game Center Window management
         NotificationCenter.default.addObserver(self, selector: #selector(presentGameCenter(_:)), name: .openGameCenter, object: nil)
-        
     }
     
     @objc func closeView(_ notification:Notification) {

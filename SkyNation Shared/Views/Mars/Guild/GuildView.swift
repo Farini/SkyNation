@@ -102,7 +102,7 @@ struct EmptyGuildView: View {
                  Text("No Guild selected.").foregroundColor(.gray)
                      .padding(6)
             }
-            .frame(width: 220, height:300, alignment: .center)
+            .frame(width: 220, height:250, alignment: .center)
             .clipShape(shape)
             .accessibilityElement(children: .contain)
         }

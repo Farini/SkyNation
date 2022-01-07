@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import GameKit
+//import GameKit
 
 /// The Main tab of the game (Shows up at the start)
 enum GameSettingsTab: String, CaseIterable {
@@ -202,7 +202,7 @@ class GameSettingsController:ObservableObject {
         
         // Game Center
         let gcm = GameCenterManager.shared
-        gcm.postPlayerExperience()
+        print("GC: \(gcm)")
 
     }
     

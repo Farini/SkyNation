@@ -19,6 +19,12 @@ struct LabActivityView:View {
     
     @State private var animatingCollection:Bool = false
     
+    /// Shows the alert asking if wants to spend token
+    @State private var tokenAlert:Bool = false
+    
+    /// Once token is spent, no need to ask again.
+    @State private var hasSpent:Bool = false
+    
     init(activity:LabActivity, controller:LabViewModel, module:LabModule) {
         
         self.activity = activity
@@ -85,16 +91,21 @@ struct LabActivityView:View {
                     // Token
                     Button(action: {
                         print("Token")
-                        let result = controller.boostActivity()
-                        if result {
-                            print("Boost Success!")
+
+                        if hasSpent == false {
+                            if GameSettings.shared.askB4Spend == true || GameSettings.shared.askB4Spend == nil {
+                                tokenAlert.toggle()
+                            } else {
+                                confirmSpendToken()
+                            }
                         } else {
-                            print("Boost Failed")
+                            confirmSpendToken()
                         }
+                        
                     }, label:{
                         Text("Token")
                     })
-                    .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
+                    .buttonStyle(GameButtonStyle())
                     
                     // Cancel
                     Button(action: {
@@ -102,7 +113,13 @@ struct LabActivityView:View {
                     }, label:{
                         Text("Cancel")
                     })
-                    .buttonStyle(NeumorphicButtonStyle(bgColor: .blue))
+                    .buttonStyle(GameButtonStyle(labelColor: .red))
+                }
+                .alert(isPresented: $tokenAlert) {
+                    Alert(title: Text("Spend Token"), message: Text("Do you want to spend a token to reduce one hour of this activity?"), primaryButton: .default(Text("Yes")) {
+                        self.hasSpent = true
+                        self.confirmSpendToken()
+                    }, secondaryButton: .cancel())
                 }
             } else {
                 if !animatingCollection {
@@ -122,11 +139,11 @@ struct LabActivityView:View {
                         Button(action: {
                             
                             print("Collect activity")
-                            withAnimation (Animation.easeInOut(duration:  2.0)) {
+                            withAnimation (Animation.easeInOut(duration:  1.5)) {
                                 self.animatingCollection = true
                             }
                             
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                                 
                                 self.animatingCollection = false
                                 
@@ -171,6 +188,18 @@ struct LabActivityView:View {
         
         .onDisappear() {
             self.viewModel.stop()
+        }
+    }
+    
+    func confirmSpendToken() {
+        
+        self.hasSpent = true
+        
+        let result = controller.boostActivity()
+        if result {
+            print("Boost Success!")
+        } else {
+            print("Boost Failed")
         }
     }
     

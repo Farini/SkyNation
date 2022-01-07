@@ -1327,7 +1327,10 @@ class SKNS {
             return
         }
         
-        let url = URL(string: "\(baseAddress)/guilds/player/leave/\(guildID.uuidString)/\(cityID)")!
+        var url = URL(string: "\(baseAddress)/guilds/player/leave/\(guildID.uuidString)/\(cityID)")!
+        if cityID.isEmpty {
+            url = URL(string: "\(baseAddress)/guilds/player/leave/\(guildID.uuidString)")!
+        }
         
         print("⚠️ Player wants to leave a guild")
         

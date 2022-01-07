@@ -43,28 +43,6 @@ struct PersonRow: View {
     }
 }
 
-
-/*
-struct SkillsetView:View {
-    
-    var skillset:SkillSet
-    
-    var body: some View {
-        
-        HStack {
-            GameImages.imageForSkill(skill: skillset.skill)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 32, height: 32)
-            
-            Text("Skill: \(skillset.skill.rawValue)")
-            Text("x \(skillset.level)")
-        }
-        
-    }
-}
-*/
-
 /**
  The old Person Detail.
  This works in the SpaceStation
@@ -77,6 +55,12 @@ struct PersonDetail:View {
     @State var fireAlert:Bool = false
     
     @State private var warning:String?
+    
+    /// Shows the alert asking if wants to spend token
+    @State private var tokenAlert:Bool = false
+    
+    /// Once token is spent, no need to ask again.
+    @State private var hasSpent:Bool = false
     
     var body: some View {
         
@@ -129,8 +113,6 @@ struct PersonDetail:View {
             
             Divider()
             
-            
-            
             // Activity
             Group {
                 HStack {
@@ -157,20 +139,25 @@ struct PersonDetail:View {
                     HStack {
                         Spacer()
                         Button("Boost (-1 Token/hr)") {
-                            let player = LocalDatabase.shared.player
-                            if let token = player.requestToken() {
-                                let result = player.spendToken(token: token, save: true)
-                                if result == true {
-                                    let theDate = activity.dateEnds.addingTimeInterval(-3600)
-                                    activity.dateEnds = theDate
-                                    person.clearActivity()
-                                    controller.save()
-                                    controller.didSelect(person: person)
+                            
+                            if GameSettings.shared.askB4Spend == true || GameSettings.shared.askB4Spend == nil {
+                                if hasSpent == true {
+                                    self.boost(activity: activity)
+                                } else {
+                                    self.tokenAlert.toggle()
                                 }
+                            } else {
+                                self.boost(activity: activity)
                             }
                         }
-                        .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
+                        .buttonStyle(GameButtonStyle(labelColor: .orange))
                         Spacer()
+                    }
+                    .alert(isPresented: $tokenAlert) {
+                        Alert(title: Text("Spend Token"), message: Text("Do you want to spend a token to reduce one hour of this activity?"), primaryButton: .default(Text("Yes")) {
+                            self.hasSpent = true
+                            self.boost(activity: activity)
+                        }, secondaryButton: .cancel())
                     }
                 }
                 
@@ -220,8 +207,6 @@ struct PersonDetail:View {
                     }
                     
                 }
-                
-                
                 
                 HStack(spacing:12) {
                     FixedLevelBar(min: 0, max: 100, current: Double(person.happiness), title: "Happiness", color: .green)
@@ -290,6 +275,26 @@ struct PersonDetail:View {
         }
         .frame(minHeight: 700, idealHeight: 800, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
     }
+    
+    /// Reduce 1 hr of activity
+    func boost(activity:LabActivity) {
+        
+        let player = LocalDatabase.shared.player
+        if let token = player.requestToken() {
+            let result = player.spendToken(token: token, save: true)
+            if result == true {
+                let theDate = activity.dateEnds.addingTimeInterval(-3600)
+                activity.dateEnds = theDate
+                person.clearActivity()
+                controller.save()
+                controller.didSelect(person: person)
+            }
+        } else {
+            self.warning = "Can't spend token 😔"
+        }
+    }
+    
+    
 }
 
 
@@ -303,7 +308,16 @@ struct PersonDetailView:View {
     /// Callback function
     var action:((PersonActionCall) -> ()) = {_ in }
     
+    /// Shows the alert to fire the person
     @State private var fireAlert:Bool = false
+    
+    /// Shows the alert asking if wants to spend token
+    @State private var tokenAlert:Bool = false
+    
+    /// Once token is spent, no need to ask again.
+    @State private var hasSpent:Bool = false
+    
+    @State private var warning:String?
     
     var body: some View {
         
@@ -387,16 +401,21 @@ struct PersonDetailView:View {
                                     if !person.isBusy() {
                                         person.activity = nil
                                     }
-                                    //                                    controller.save()
-                                    //                                    controller.didSelect(person: person)
                                 }
                             }
-                            
                         }
                         .buttonStyle(NeumorphicButtonStyle(bgColor: .white))
                         Spacer()
                     }
+                    .alert(isPresented: $tokenAlert) {
+                        Alert(title: Text("Spend Token"), message: Text("Do you want to spend a token to reduce one hour of this activity?"), primaryButton: .default(Text("Yes")) {
+                            self.hasSpent = true
+                            self.boost(activity: activity)
+                        }, secondaryButton: .cancel())
+                    }
                 }
+                
+                
                 
                 //                ForEach(controller.issues, id:\.self) { issue in
                 //                    Text(issue)
@@ -407,10 +426,10 @@ struct PersonDetailView:View {
                 //                }
             }
             
-            Divider()
-            
             // Work Skills
             VStack {
+                
+                Divider()
                 
                 Text("Work Skills").font(.title2).foregroundColor(.blue)
                 
@@ -474,6 +493,10 @@ struct PersonDetailView:View {
                         .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 }
                 .padding(.bottom, 12)
+            }
+            
+            if let warning = warning {
+                Text(warning).foregroundColor(.red)
             }
             
             Divider()
@@ -540,6 +563,38 @@ struct PersonDetailView:View {
             }.padding()
         }
         .frame(minHeight: 550, idealHeight: 600, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+    }
+    
+    /// Reduce 1 hr of activity
+    func boost(activity:LabActivity) {
+        
+        let player = LocalDatabase.shared.player
+        if let token = player.requestToken() {
+            let result = player.spendToken(token: token, save: true)
+            if result == true {
+                let theDate = activity.dateEnds.addingTimeInterval(-3600)
+                activity.dateEnds = theDate
+                if !person.isBusy() {
+                    person.activity = nil
+                }
+            }
+        } else {
+            self.warning = "Could not boost activity."
+        }
+        
+//        let player = LocalDatabase.shared.player
+//        if let token = player.requestToken() {
+//            let result = player.spendToken(token: token, save: true)
+//            if result == true {
+//                let theDate = activity.dateEnds.addingTimeInterval(-3600)
+//                activity.dateEnds = theDate
+//                person.clearActivity()
+//                controller.save()
+//                controller.didSelect(person: person)
+//            }
+//        } else {
+//            self.warning = "Can't spend token 😔"
+//        }
     }
 }
 

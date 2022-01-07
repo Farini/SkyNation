@@ -23,6 +23,12 @@ struct BuildingBioBoxView: View {
     
     let minimumLimit:Int = 5
     
+    /// Shows the alert asking if wants to spend token
+    @State private var tokenAlert:Bool = false
+    
+    /// Once token is spent, no need to ask again.
+    @State private var hasSpent:Bool = false
+    
     var body: some View {
         
         VStack {
@@ -156,7 +162,6 @@ struct BuildingBioBoxView: View {
                     }
                     .foregroundColor(controller.availableEnergy >= productionEnergyCost ? .green:.red)
                     
-                    //                    Text("Time: ?")
                 }
                 .padding()
                 .background(Color.black)
@@ -189,6 +194,7 @@ struct BuildingBioBoxView: View {
             // Buttons (Confirm, Cancel)
             HStack {
                 
+                // Cancel - go back
                 Button(action: {
                     controller.cancelBoxSelection()
                 }) {
@@ -202,12 +208,14 @@ struct BuildingBioBoxView: View {
                 
                 Divider()
                 
+                // Token
                 Button(action: {
-                    let problems = controller.validadeTokenPayment(box: Int(sliderValue), tokens: Int(sliderValue/10.0) + 1)
-                    self.problems = problems
-                    if problems.isEmpty {
-                        self.confirmBioBox()
+                    if GameSettings.shared.askB4Spend == true || GameSettings.shared.askB4Spend == nil {
+                        self.tokenAlert.toggle()
+                    } else {
+                        self.confirmSpendToken()
                     }
+                    
                 }) {
                     HStack {
 #if os(macOS)
@@ -227,6 +235,13 @@ struct BuildingBioBoxView: View {
                 }
                 .buttonStyle(NeumorphicButtonStyle(bgColor: .gray))
                 .help("Use Token")
+                
+                .alert(isPresented: $tokenAlert) {
+                    Alert(title: Text("Spend Token"), message: Text("Do you want to spend a token to reduce one hour of this activity?"), primaryButton: .default(Text("Yes")) {
+                        self.hasSpent = true
+                        self.confirmSpendToken()
+                    }, secondaryButton: .cancel())
+                }
                     
                 Button("Create") {
                     let possibleProblems = controller.validateResources(box: Int(sliderValue))
@@ -245,6 +260,18 @@ struct BuildingBioBoxView: View {
             
         }
         .frame(minWidth:630, maxWidth:900, minHeight:630, maxHeight:.infinity)
+    }
+    
+    func confirmSpendToken() {
+        
+        self.hasSpent = true
+        
+        let problems = controller.validadeTokenPayment(box: Int(sliderValue), tokens: Int(sliderValue/10.0) + 1)
+        self.problems = problems
+        if problems.isEmpty {
+            self.confirmBioBox()
+        }
+        
     }
     
     func confirmBioBox() {

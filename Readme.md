@@ -153,19 +153,20 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Overlay Scene with Labels + Badges & Display Option in `GameSettings`
 - [X] SKNS.postCreate(newGuildID:UUID.... sub `GuildMap`
 - [X] Method to 'dismiss' the badges on SideMenu
+- [X] Guild View reframe
+- [X] Game Center - iOS can't open GameCenter controller
+- [X] Settings - ask before spend token
 
 - [ ] Completely eliminate `GuildFullContent`
 
-- [ ] ServerData - Use GuildFlags to show new items.
-
-- [ ] Settings - ask before spend token
-- [ ] Game Settings - Save camera?
-- [ ] Garage - Make sure charging 'propellants' - makes sure you have it, but doesn't charge
-- [ ] City View - Bio - "Evolve" not updating the list
 - [ ] Mars Scene - All Guild Vehicles arriving
+- [ ] Store - Build list of bonus (kits) depending on prev. purchases
+- [ ] ServerData - Use GuildFlags to show new items. in GuildRoom
+- [ ] City View - Bio - "Evolve" not updating the list
 - [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
 - [ ] Look into APNS
-- [ ] Store - Build list of bonus (kits) depending on prev. purchases
+- [ ] Game Settings - Save camera?
+- [ ] Leaving a Guild Problems. Needs to fix it. API not decoding correctly (but it happens in server. It crashes.)
 
 ### iOS
 
@@ -186,17 +187,14 @@ and
 
 at the end of the List.
 
-- [ ] iOS - Button being pushed.
-- [ ] iOS - Garage - prepare for launch is unusable
+- [X] iOS - Button being pushed.
+- [X] iOS - Garage - prepare for launch is unusable
 - [ ] iOS - Some Views are too large
-- [ ] iOS - Font modifiers
 - [ ] iOS - Window Sizes + View Sizes
-- [ ] iOS - GameButtonStyle smaller
 - [ ] iOS - Popover sizes
-- [ ] iOS - Semi-black background Color
 - [ ] iOS - increase bloom in camera? - or find a way to make scene brighter.
-- [ ] Game Center - iOS can't open GameCenter controller
-- [ ] Setup Graphics Options (multisampling on UIViewController's `view`)
+
+- [X] Setup Graphics Options (multisampling on UIViewController's `view`)
 - [ ] Many Views need ScrollViews inside
 
 ### Tests
@@ -207,7 +205,7 @@ at the end of the List.
 - [X] Tutorial finger
 - [X] Create Player
 - [ ] Outpost Update
-- [ ] Leaving a Guild
+- [ ] Leaving a Guild - Failing test
 
 ### Other
 

@@ -21,6 +21,7 @@ struct GameSettingsTabView: View {
     @State var startingScene:GameSceneType = GameSettings.shared.startingScene
     @State var autoStart:Bool = GameSettings.shared.autoStartScene ?? false
     @State var displayLabels:Bool = GameSettings.shared.showLabels ?? true
+    @State var askToken:Bool = GameSettings.shared.askB4Spend ?? true
     
     @State var musicOn:Bool = GameSettings.shared.musicOn
     @State var soundFXOn:Bool = GameSettings.shared.soundFXOn
@@ -33,25 +34,50 @@ struct GameSettingsTabView: View {
         ScrollView {
             VStack(alignment:.leading) {
                 
-                Group {
-                    Text("📺 Graphics")
-                        .font(GameFont.title.makeFont())
-                        .padding(.top)
+                HStack(alignment:.top, spacing:12) {
                     
-                    Toggle("Lighting boost", isOn:$showLights)
-                        .onChange(of: showLights) { _ in self.saveSettings() }
+                    VStack(alignment:.leading) {
+                        Text("📺 Graphics")
+                            .font(GameFont.title.makeFont())
+                            .padding(.top)
+                        
+                        Toggle("Lighting boost", isOn:$showLights)
+                            .onChange(of: showLights) { _ in self.saveSettings() }
+                        
+                        Text("* Renders complex shadows and more textures.")
+                            .foregroundColor(.gray)
+                            .font(.footnote)
+                        
+                        Toggle("Side Menu Labels", isOn:$displayLabels)
+                            .onChange(of: displayLabels) { _ in self.saveSettings() }
+                        
+                        Text("* Displays the labels next to the side menu.")
+                            .foregroundColor(.gray)
+                            .font(.footnote)
+                    }
                     
-                    Text("* Renders complex shadows and more textures.")
-                        .foregroundColor(.gray)
-                        .font(.footnote)
+                    Divider()
                     
-                    Toggle("Side Menu Labels", isOn:$displayLabels)
-                        .onChange(of: displayLabels) { _ in self.saveSettings() }
-                    
-                    Text("* Displays the labels next to the side menu.")
-                        .foregroundColor(.gray)
-                        .font(.footnote)
+                    VStack(alignment: .leading) {
+                        Text("🔉 Sounds")//.font(.title)
+                            .font(GameFont.title.makeFont())
+                        
+                        Toggle("Sound Track (music)", isOn:$musicOn)
+                            .onChange(of: musicOn) { _ in self.saveSettings() }
+                        
+                        Text("* Plays music during the game.")
+                            .foregroundColor(.gray)
+                            .font(.footnote)
+                        
+                        Toggle("Sound FX", isOn:$soundFXOn)
+                            .onChange(of: soundFXOn) { _ in self.saveSettings() }
+                        
+                        Text("* Plays Game Sound FX.")
+                            .foregroundColor(.gray)
+                            .font(.footnote)
+                    }
                 }
+                
                 
                 
                 // Enhanced Shadows
@@ -92,24 +118,7 @@ struct GameSettingsTabView: View {
 //                            .onChange(of: showTutorial) { _ in self.saveSettings() }
                     }
                     Spacer()
-                    VStack(alignment: .leading) {
-                        Text("🔉 Sounds")//.font(.title)
-                            .font(GameFont.title.makeFont())
-                        
-                        Toggle("Sound Track (music)", isOn:$musicOn)
-                            .onChange(of: musicOn) { _ in self.saveSettings() }
-                        Text("* Plays music during the game.")
-                            .foregroundColor(.gray)
-                            .font(.footnote)
-                            .frame(maxWidth:250)
-                        
-                        Toggle("Sound FX", isOn:$soundFXOn)
-                            .onChange(of: soundFXOn) { _ in self.saveSettings() }
-                        Text("* Plays Game Sound FX.")
-                            .foregroundColor(.gray)
-                            .font(.footnote)
-                            .frame(maxWidth:250)
-                    }
+                    
                     Spacer()
                 }
                 
@@ -119,6 +128,13 @@ struct GameSettingsTabView: View {
                         .font(GameFont.title.makeFont())
                     
                     Toggle("Auto Start", isOn:$autoStart)
+                    
+                    Toggle("Ask before token", isOn: $askToken)
+                    
+                    Text("* Shows a confirmation dialogue before spend the first token.")
+                        .font(.footnote)
+                        .foregroundColor(.gray)
+                    
                 }
                 
                 Divider()
@@ -141,6 +157,7 @@ struct GameSettingsTabView: View {
         
         // Data
         settings.autoStartScene = self.autoStart
+        settings.askB4Spend = self.askToken
         
         // Graphics
         settings.showLights = self.showLights

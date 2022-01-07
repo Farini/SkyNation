@@ -30,8 +30,9 @@ class GameCenterManager {
         GKLocalPlayer.local.authenticateHandler = { viewController, error in
             
             if let viewController = viewController {
+                
                 // Present the view controller so the player can sign in.
-                print("View Controller \(viewController)")
+                print("\n\nView Controller \(viewController) from GameCenter wants to be presented.")
                 
                 // Open Game Center
                 NotificationCenter.default.post(name: .openGameCenter, object: viewController)
@@ -110,7 +111,7 @@ class GameCenterManager {
         let gPlayer:SKNPlayer = LocalDatabase.shared.player
         
         // Make sure experience is more than 1
-        guard gPlayer.experience > 1 else {
+        guard gPlayer.experience > 0 else {
             print("\n\n Not enough experience to post")
             return }
         

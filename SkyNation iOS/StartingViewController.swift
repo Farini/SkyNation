@@ -12,18 +12,16 @@ class StartingViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
     
     override func viewDidAppear(_ animated: Bool) {
         addStartingView()
-        // Add Notification
+        // Add Notification observers
         NotificationCenter.default.addObserver(self, selector: #selector(startGame(_:)), name: .startGame, object: nil)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(presentGameCenter(_:)), name: .openGameCenter, object: nil)
     }
     
+    /// Add the First (Intro) View
     func addStartingView() {
         let startView = GameSettingsView()
         let controller = UIHostingController(rootView: startView)
@@ -40,15 +38,32 @@ class StartingViewController: UIViewController {
         ])
     }
     
+    /// Notification for game to Start (perform segue)
     @objc func startGame(_ notification:Notification) {
-        
-        print("*** Removing Self-observer")
+        // Remove Observer
         NotificationCenter.default.removeObserver(self)
-        
         self.performSegue(withIdentifier: "startgame", sender: self)
-        
     }
     
+    // MARK: - Game Center
+    
+    // Presentation from GameCenter should be re-routed
+    var gvc:GameViewController?
+    override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+        if let vc = viewControllerToPresent as? GameViewController {
+            self.gvc = vc
+            super.present(viewControllerToPresent, animated: flag, completion: completion)
+        } else {
+            // GameViewController is up, make that one present
+            if let gvc = gvc {
+                gvc.presentGameCenter(Notification(name: .openGameCenter, object: viewControllerToPresent, userInfo: nil))
+            } else {
+                super.present(viewControllerToPresent, animated: flag, completion: completion)
+            }
+        }
+    }
+    
+    /// Present game center to Login
     @objc func presentGameCenter(_ notification:Notification) {
         // GameCenter passes its own view controller.
         // present as sheet
@@ -61,15 +76,7 @@ class StartingViewController: UIViewController {
         }
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
+    // MARK: - View Settings
     
     override var shouldAutorotate: Bool {
         return true
@@ -82,5 +89,8 @@ class StartingViewController: UIViewController {
     override var prefersStatusBarHidden: Bool {
         return true
     }
+}
 
+extension StartingViewController {
+    
 }

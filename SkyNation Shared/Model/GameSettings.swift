@@ -60,6 +60,9 @@ class GameSettings:Codable {
     // make sure to get this in decoding as well.
     var showLabels:Bool?
     
+    /// Whether should always ask the user before spending token
+    var askB4Spend:Bool?
+    
     private init () {
         
         // Gameplay
@@ -78,6 +81,8 @@ class GameSettings:Codable {
         
         // new
         self.showLabels = true
+        self.askB4Spend = true
+        
     }
     
     static private func load() -> GameSettings {

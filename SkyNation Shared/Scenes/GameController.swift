@@ -982,6 +982,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         }
         
         // GameKit's Badge
+        
         GKAccessPoint.shared.location = .topTrailing
         GKAccessPoint.shared.showHighlights = true
         GKAccessPoint.shared.isActive = true

@@ -31,21 +31,31 @@ struct GuildCardView: View {
         
         VStack {
             
-            // Header (Icon + Name)
-            VStack {
-                Image(systemName: GuildIcon(rawValue: guildSum.icon)!.imageName)
-                    .font(.largeTitle)
-                    .foregroundColor(GuildColor(rawValue: guildSum.color)!.color)
-                    .padding(.bottom, 4)
+            ZStack(alignment: .trailing) {
+                // Header (Icon + Name)
+                VStack {
+                    Image(systemName: GuildIcon(rawValue: guildSum.icon)!.imageName)
+                        .font(.largeTitle)
+                        .foregroundColor(GuildColor(rawValue: guildSum.color)!.color)
+                        .padding(.bottom, 4)
+                    
+                    Text("\(guildSum.name)")
+                        .font(GameFont.section.makeFont())
+                        .foregroundColor(.yellow)
+                    
+                    Divider()
+                }
+                .frame(minWidth: 130, maxWidth: 180, minHeight: 72, maxHeight: 82, alignment: .center)
+                .padding(.top, 8)
                 
-                Text("\(guildSum.name)")
-                    .font(.title2)
-                    .foregroundColor(.yellow)
-                
-                Divider()
+                Button {
+                    self.flipToNext()
+                } label: {
+                    Image(systemName: "chevron.right.circle").font(.title3)
+                }
+                .buttonStyle(SmallCircleButtonStyle(backColor: .init(.sRGB, white: 0.15, opacity: 1.0)))
             }
-            .frame(minWidth: 100, maxWidth: 120, minHeight: 72, maxHeight: 82, alignment: .center)
-            .padding(.top, 8)
+            
             
             // Page
             VStack {
@@ -111,20 +121,29 @@ struct GuildCardView: View {
                 
                 Spacer()
                 
-                Divider()
+                // Divider()
                 
+                /*
                 HStack {
-                    Button("Next") {
+                    
+                    Button {
                         self.flipToNext()
+                    } label: {
+                        Image(systemName: "chevron.right.circle").font(.title3)
                     }
-                    .buttonStyle(NeumorphicButtonStyle(bgColor: .green))
+                    .buttonStyle(SmallCircleButtonStyle(backColor: .init(.sRGB, white: 0.15, opacity: 1.0)))
+
+//                    Button("Next") {
+//                        self.flipToNext()
+//                    }
+//                    .buttonStyle(NeumorphicButtonStyle(bgColor: .green))
                 }
                 .frame(height:32)
                 .padding(.bottom, 8)
-                
+                */
                 
             }
-            .frame(width: 220, height:300, alignment: .center)
+            .frame(width: 220, height:250, alignment: .center)
             .clipShape(shape)
             
             .accessibilityElement(children: .contain)
