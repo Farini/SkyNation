@@ -1149,7 +1149,7 @@ extension TechItems {
                     return garageObj
                 }
             case .Cuppola:
-                guard let cuppolaScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Cuppola.scn") else { return nil }
+                guard let cuppolaScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Cuppola2.scn") else { return nil }
                 if let cuppolaObject = cuppolaScene.rootNode.childNode(withName: "Cuppola", recursively: true)?.clone() {
                     let pos = Vector3D(x: 0, y: -2, z: -12)
                     cuppolaObject.position = SCNVector3(pos.x, pos.y, pos.z)
@@ -1164,12 +1164,20 @@ extension TechItems {
                 return robNode
                 
             case .Airlock:
-                guard let airlockScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Airlock.scn") else { return nil }
-                if let airlockObject = airlockScene.rootNode.childNode(withName: "Airlock", recursively: true)?.clone() {
-                    let pos = Vector3D(x: 0, y: 0, z: -12)
-                    airlockObject.position = SCNVector3(pos.x, pos.y, pos.z)
-                    return airlockObject
+                guard let airlockScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Airlock2.scn"),
+                let airlockObject = airlockScene.rootNode.childNode(withName: "Airlock", recursively: true)?.clone() else { return nil }
+                let pos = Vector3D(x: 0, y: 0, z: -12)
+                airlockObject.position = SCNVector3(pos.x, pos.y, pos.z)
+                
+                if let child = airlockObject.childNodes.first {
+                    let openDoor = SCNAction.rotate(by: GameLogic.radiansFrom(-90), around: SCNVector3(x: 0, y: 1, z: 0), duration: 2.5)
+                    let waiter = SCNAction.wait(duration: 8.5)
+                    let closeDoor = SCNAction.rotate(by: GameLogic.radiansFrom(90), around: SCNVector3(x: 0, y: 1, z: 0), duration: 2.5)
+                    let sequence = SCNAction.sequence([waiter, openDoor, waiter, closeDoor, waiter, waiter])
+                    let repeatable = SCNAction.repeatForever(sequence)
+                    child.runAction(repeatable)
                 }
+                return airlockObject
             case .GarageArm: return nil
                 
             default: return nil

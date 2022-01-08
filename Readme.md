@@ -156,6 +156,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Guild View reframe
 - [X] Game Center - iOS can't open GameCenter controller
 - [X] Settings - ask before spend token
+- [X] Animated Airlock
 
 - [ ] Completely eliminate `GuildFullContent`
 
@@ -197,6 +198,21 @@ at the end of the List.
 - [X] Setup Graphics Options (multisampling on UIViewController's `view`)
 - [ ] Many Views need ScrollViews inside
 
+### Scene Models
+
+- [X] Blender - Substitute Space Vehicles Solar Panels
+- [X] Blender - XCode - Delete old solar panels
+- [X] Blender - Cuppola 2.0
+- [X] Blender - Airlock 2.0
+
+- [ ] Blender - EVehicle remove/remake UV maps
+- [ ] Blender - EDL Remake #5
+- [ ] Blender - Arena + levels
+- [ ] Blender - Hotel + levels
+- [ ] Blender - Dock 2.0
+- [ ] Blender - New Module Skins
+- [ ] Blender - City Gate Skin
+
 ### Tests
 
 - [X] Mining Scene Nodes (waiting to be unlocked)
@@ -207,7 +223,7 @@ at the end of the List.
 - [ ] Outpost Update
 - [ ] Leaving a Guild - Failing test
 
-### Other
+### GameCenter
 
 - [X] Game Center - Player Auth.
 - [X] Game Center - Leaderboards (Experience)
@@ -216,21 +232,6 @@ at the end of the List.
 - [ ] Game Center - Achievement art - Air Scrubber
 - [ ] Game Center - Achievement art - Condensator
 - [ ] Game Center - Achievement art - Garage
-
-- [ ] Blender - Arena + levels
-- [ ] Blender - Hotel + levels
-- [ ] Blender - Cuppola 2.0
-- [ ] Blender - Airlock 2.0
-- [ ] Blender - Dock 2.0
-- [ ] Blender - New Module Skins
-- [ ] Blender - City Gate Skin
-
-### Scene Models
-
-- [X] Blender - Substitute Space Vehicles Solar Panels
-- [X] Blender - XCode - Delete old solar panels
-- [ ] Blender - EVehicle remove/remake UV maps
-- [ ] Blender - EDL Remake #5
 
 ## Wishlist + Questionable
 Features that are requested, but are not required to launch the game
@@ -255,7 +256,10 @@ Features that are requested, but are not required to launch the game
 - [ ] Mars Scene - City Garage - Vehicle Validation (when arriving (orbit)) - needs a token, if not valid.
 - [ ] Mars Scene - City Garage - Delete Vehicle from Guild at end of `unload`
 
-### Screenshots
+## Promoting
+Onde the app is released.
+
+### App Screenshots
 
 - [ ] Screenshots Front, Beginning view
 - [ ] Screenshots Tech Tree
