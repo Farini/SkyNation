@@ -205,12 +205,12 @@ at the end of the List.
 - [X] Blender - Cuppola 2.0
 - [X] Blender - Airlock 2.0
 
+- [ ] Blender - New Module Skins
 - [ ] Blender - EVehicle remove/remake UV maps
 - [ ] Blender - EDL Remake #5
 - [ ] Blender - Arena + levels
 - [ ] Blender - Hotel + levels
 - [ ] Blender - Dock 2.0
-- [ ] Blender - New Module Skins
 - [ ] Blender - City Gate Skin
 
 ### Tests

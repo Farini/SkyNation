@@ -85,12 +85,12 @@ enum ModuleSkin:String, Codable, CaseIterable {
 }
 
 /**
- A Class that Builds the Space `Station` Object to make a `SCNScene` */
+ A Class that Builds the Space `Station` Object to make a `SCNScene`
+    - Maybe it doesnt need to be `Codable`. Not being stored, anyways. */
 class StationBuilder:Codable {
     
     // Single Dimensional Array
     var buildList:[StationBuildItem]
-    var lights:[BuildableLight] = []
     
     // Camera
     var gameCamera:GameCamera?
@@ -174,22 +174,14 @@ class StationBuilder:Codable {
     
     private enum CodingKeys:String, CodingKey {
         case buildList
-        case lights
     }
     
     required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         buildList = try values.decode([StationBuildItem].self, forKey: .buildList)
-        lights = try values.decodeIfPresent([BuildableLight].self, forKey: .lights) ?? []
     }
     
     // MARK: - Items
-    
-    /// sets the lights to the buildable pieces array
-    func loadLights(lights:[BuildableLight]) {
-        print("Loading lights")
-        self.lights = lights
-    }
     
     /// Gets the Modules (for IDs)
     func getModules() -> [Module] {
@@ -393,18 +385,9 @@ extension StationBuilder {
             oldCam.removeFromParentNode()
         }
         
-        
         // Truss Camera
         let tCam = GamePOV(position: SCNVector3(x: 25, y: 20, z: 20), target:trussNode, name: "Truss", yRange: nil, zRange: nil, zoom: nil)
-        
         var camArray:[GamePOV] = []
-        
-        // Other Cameras
-//        if let dock = scene.rootNode.childNode(withName: "Dock", recursively: false) {
-//            let pos = SCNVector3(15, 10, 8)
-//            let cam = GamePOV(position: pos, target: dock, name: "Dock", yRange: nil, zRange: nil, zoom: nil)
-//            camArray.append(cam)
-//        }
         camArray.append(tCam)
         
         if let cuppola = scene.rootNode.childNode(withName: "Cuppola", recursively: false) {
@@ -473,7 +456,7 @@ class StationBuildItem:Codable {
     
 }
 
-
+/*
 /// A Struct that represents a `Light node` to be added to the scene
 struct BuildableLight:Codable {
     
@@ -490,3 +473,5 @@ struct BuildableLight:Codable {
     var intensty:Double
     
 }
+*/
+
