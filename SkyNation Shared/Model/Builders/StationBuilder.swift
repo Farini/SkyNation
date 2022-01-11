@@ -89,13 +89,35 @@ enum ModuleSkin:String, Codable, CaseIterable {
     - Maybe it doesnt need to be `Codable`. Not being stored, anyways. */
 class StationBuilder:Codable {
     
-    // Single Dimensional Array
+    /// Items involved in building the Space Station scene.
     var buildList:[StationBuildItem]
     
     // Camera
     var gameCamera:GameCamera?
     
+    /// The `Space Station` Scene that is built
     var scene:SCNScene?
+    
+    /*
+     var isNewGame:Bool
+     
+     var cameras:[GameCamera]
+     var currentCamera:GameCamera
+     
+     var news:[String]
+     
+     var scene:SCNScene!
+     static var originScene:SCNScene
+     
+     func rebuild?
+     
+     [ callbacks ] - protocol?
+     - display news
+     - update scene
+     - control scene animations?
+     - update Overlay
+     
+     */
     
     // MARK: - Initializers
     
@@ -455,23 +477,3 @@ class StationBuildItem:Codable {
     }
     
 }
-
-/*
-/// A Struct that represents a `Light node` to be added to the scene
-struct BuildableLight:Codable {
-    
-    var id:UUID
-    
-    var lightSwitch:Bool
-    var lightIndex:Int
-    
-    // Color
-    var red:Double
-    var green:Double
-    var blue:Double
-    
-    var intensty:Double
-    
-}
-*/
-

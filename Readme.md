@@ -160,6 +160,12 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [ ] Completely eliminate `GuildFullContent`
 
+- [ ] Game Settings (start) - Bring view to textfield, and make it active.
+Make it more obvious to the player that they should type a name.
+Discussion:
+Intro. Introduce player to game.
+
+
 - [ ] Mars Scene - All Guild Vehicles arriving
 - [ ] Store - Build list of bonus (kits) depending on prev. purchases
 - [ ] ServerData - Use GuildFlags to show new items. in GuildRoom
