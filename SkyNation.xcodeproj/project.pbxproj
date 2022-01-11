@@ -623,6 +623,10 @@
 		85BB67FB2750AC1600029477 /* GuildMissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB67FA2750AC1600029477 /* GuildMissionView.swift */; };
 		85BB67FC2750AC1600029477 /* GuildMissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB67FA2750AC1600029477 /* GuildMissionView.swift */; };
 		85BB67FD2750AC1600029477 /* GuildMissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BB67FA2750AC1600029477 /* GuildMissionView.swift */; };
+		85BC5AAA278D37F300F44A49 /* NewsObj.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85BC5AA9278D37F300F44A49 /* NewsObj.sks */; };
+		85BC5AAB278D37F300F44A49 /* NewsObj.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85BC5AA9278D37F300F44A49 /* NewsObj.sks */; };
+		85BC5AAC278D37F300F44A49 /* NewsObj.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85BC5AA9278D37F300F44A49 /* NewsObj.sks */; };
+		85BC5AAD278D37F300F44A49 /* NewsObj.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85BC5AA9278D37F300F44A49 /* NewsObj.sks */; };
 		85C081162754BEF100F52DEC /* GuildMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C081152754BEF100F52DEC /* GuildMission.swift */; };
 		85C081172754BEF100F52DEC /* GuildMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C081152754BEF100F52DEC /* GuildMission.swift */; };
 		85C081182754BEF100F52DEC /* GuildMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C081152754BEF100F52DEC /* GuildMission.swift */; };
@@ -949,6 +953,8 @@
 		85B34B1B26FA21FD007178F5 /* ContributionRoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContributionRoundView.swift; sourceTree = "<group>"; };
 		85B34B1F26FA929D007178F5 /* BioBoxViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BioBoxViews.swift; sourceTree = "<group>"; };
 		85BB67FA2750AC1600029477 /* GuildMissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildMissionView.swift; sourceTree = "<group>"; };
+		85BC5AA9278D37F300F44A49 /* NewsObj.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = NewsObj.sks; sourceTree = "<group>"; };
+		85BC5AAE278D5DC400F44A49 /* Typography.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Typography.md; sourceTree = "<group>"; };
 		85C081152754BEF100F52DEC /* GuildMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildMission.swift; sourceTree = "<group>"; };
 		85C3418425905A7500BF82F9 /* TutorialNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialNode.swift; sourceTree = "<group>"; };
 		85C3418D2591078700BF82F9 /* PlayerCardNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCardNode.swift; sourceTree = "<group>"; };
@@ -1445,6 +1451,7 @@
 		8536F3C5258D47D000B509D2 /* TestViews */ = {
 			isa = PBXGroup;
 			children = (
+				85BC5AAE278D5DC400F44A49 /* Typography.md */,
 				856A64A42727B5050075CC04 /* TypographyView.swift */,
 				8595661D277AC5D400188FE3 /* BoxedCells.swift */,
 				8536F3C6258D47D000B509D2 /* AnimationsTest.swift */,
@@ -1472,12 +1479,13 @@
 			children = (
 				85FEFB6726D2E23E007BA9D1 /* GameOverlay.swift */,
 				8536F467258D481700B509D2 /* GameOverlay.sks */,
+				8559201425959A4300CF5467 /* SideMenuNode.swift */,
 				8536F45E258D481700B509D2 /* CamControlNode.swift */,
 				8536F45F258D481700B509D2 /* CamControl.sks */,
 				85C3418425905A7500BF82F9 /* TutorialNode.swift */,
 				85C3418D2591078700BF82F9 /* PlayerCardNode.swift */,
-				8559201425959A4300CF5467 /* SideMenuNode.swift */,
 				85A59E9F270CB6C90049AFC1 /* PlayerCardLayout.sks */,
+				85BC5AA9278D37F300F44A49 /* NewsObj.sks */,
 			);
 			path = Overlays;
 			sourceTree = "<group>";
@@ -2072,6 +2080,7 @@
 				8569A331259F81110057A518 /* HealthShader.fsh in Resources */,
 				8569A328259F81110057A518 /* HexagonShader.fsh in Resources */,
 				8569A337259F81110057A518 /* RectanglesMoving.fsh in Resources */,
+				85BC5AAA278D37F300F44A49 /* NewsObj.sks in Resources */,
 				8595402F26197A18001D9040 /* SKN_T3.m4a in Resources */,
 				8569A334259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
 				85D3BB2B26AF244400B6AA36 /* SFXSelected.wav in Resources */,
@@ -2115,6 +2124,7 @@
 				8569A332259F81110057A518 /* HealthShader.fsh in Resources */,
 				8569A329259F81110057A518 /* HexagonShader.fsh in Resources */,
 				8569A338259F81110057A518 /* RectanglesMoving.fsh in Resources */,
+				85BC5AAB278D37F300F44A49 /* NewsObj.sks in Resources */,
 				8595403026197A18001D9040 /* SKN_T3.m4a in Resources */,
 				8569A335259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
 				85D3BB2C26AF244400B6AA36 /* SFXSelected.wav in Resources */,
@@ -2158,6 +2168,7 @@
 				8536F47F258D481700B509D2 /* MapIndicators.sks in Resources */,
 				8569A339259F81110057A518 /* RectanglesMoving.fsh in Resources */,
 				8536F2EF258D330300B509D2 /* Art.scnassets in Resources */,
+				85BC5AAC278D37F300F44A49 /* NewsObj.sks in Resources */,
 				8569A306259F7F990057A518 /* dissolve.fragment.txt in Resources */,
 				8595403126197A18001D9040 /* SKN_T3.m4a in Resources */,
 				8569A32D259F81110057A518 /* CautionStripes.fsh in Resources */,
@@ -2191,6 +2202,7 @@
 				85E2C42026BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
 				8536F498258D481700B509D2 /* SparkEmitter.sks in Resources */,
 				8536F494258D481700B509D2 /* Assets.xcassets in Resources */,
+				85BC5AAD278D37F300F44A49 /* NewsObj.sks in Resources */,
 				8507614B2778E634005D0DF5 /* PlanetariumUtopia.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

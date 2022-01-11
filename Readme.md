@@ -165,7 +165,7 @@ Make it more obvious to the player that they should type a name.
 Discussion:
 Intro. Introduce player to game.
 
-
+- [ ] ⚠️ Laboratory View taking forever to load !!
 - [ ] Mars Scene - All Guild Vehicles arriving
 - [ ] Store - Build list of bonus (kits) depending on prev. purchases
 - [ ] ServerData - Use GuildFlags to show new items. in GuildRoom
@@ -174,25 +174,15 @@ Intro. Introduce player to game.
 - [ ] Look into APNS
 - [ ] Game Settings - Save camera?
 - [ ] Leaving a Guild Problems. Needs to fix it. API not decoding correctly (but it happens in server. It crashes.)
+- [ ] animate camera to show nodes like Airlock, Cuppola, Antenna, etc.
+- [ ] Implement new Station Modules from Blender
 
 ### iOS
 
 - [X] iOS Views - Corner Radius:12
 - [X] iOS Views - Hab Module Selection
+- [ ] iOS Views - Mars Views (remake)
 - [ ] iOS - List View Backgrounds. See: https://peterfriese.dev/swiftui-listview-part3/
-
-Use the following
-
-``` swift
-.listRowBackground(GameColors.darkGray)
-```
-and
-
-``` swift
-.modifier(GameListModifier())
-```
-
-at the end of the List.
 
 - [X] iOS - Button being pushed.
 - [X] iOS - Garage - prepare for launch is unusable
@@ -228,6 +218,7 @@ at the end of the List.
 - [X] Create Player
 - [ ] Outpost Update
 - [ ] Leaving a Guild - Failing test
+- [ ] UI Test - `iPad Pro 9.7 inch`
 
 ### GameCenter
 
@@ -263,7 +254,7 @@ Features that are requested, but are not required to launch the game
 - [ ] Mars Scene - City Garage - Delete Vehicle from Guild at end of `unload`
 
 ## Promoting
-Onde the app is released.
+Once the app is released.
 
 ### App Screenshots
 

@@ -107,4 +107,29 @@ class Tank:Codable, Identifiable, Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
+    
+    // MARK: - Codable
+    /*
+     private enum CodingKeys:String, CodingKey {
+         case id
+         case type
+         case capacity
+         case current
+         case discardEmpty
+     }
+     
+     required init(from decoder: Decoder) throws {
+         let values = try decoder.container(keyedBy: CodingKeys.self)
+         self.id = try values.decode(UUID.self, forKey: .id)
+         self.type = try values.decode(TankType.self, forKey: .type)
+         self.capacity = try values.decode(Int.self, forKey: .capacity)
+         self.current = try values.decode(Int.self, forKey: .current)
+         if let discard = try? values.decodeIfPresent(Bool.self, forKey: .discardEmpty) {
+             self.discardEmpty = discard
+         } else {
+             self.discardEmpty = GameSettings.shared.clearEmptyTanks
+         }
+     }
+     */
+    
 }

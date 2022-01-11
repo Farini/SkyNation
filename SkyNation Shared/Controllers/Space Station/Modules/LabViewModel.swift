@@ -653,14 +653,12 @@ class LabViewModel: ObservableObject {
         self.station = station
         self.labModule = lab
         self.unlockedRecipes = station.unlockedRecipes
-        
-        // Good to load file from here
+       
+        // Tech Tree
         let tree = TechTree()
-        tree.accountForItems(items: station.unlockedTechItems)
-        
         self.techTree = tree
-        self.unlocked = tree.showUnlocked() ?? []
-        self.complete = tree.getCompletedItemsFrom(node: tree)
+        self.unlocked = []
+        self.complete = []
         
         self.unlockedItems = []
         
@@ -671,16 +669,17 @@ class LabViewModel: ObservableObject {
             self.selection = .NoSelection
         }
         
-        // People
-        availableStaff = station.getPeople()
-        print("Staff Count: \(station.getPeople().count)")
-        
         // After init
         
+        // People
+        availableStaff = station.getPeople()
+        
+        tree.accountForItems(items: station.unlockedTechItems)
+        self.unlocked = tree.showUnlocked() ?? []
+        self.complete = tree.getCompletedItemsFrom(node: tree)
+        
         // Unlocked Items (Can be researched)
-        for item in tree.showUnlocked() ?? [] {
-            self.unlockedItems.append(item.item)
-        }
+        self.unlockedItems = tree.showUnlocked()?.compactMap({ $0.item }) ?? []
         
         // Notification Observer
         NotificationCenter.default.addObserver(self, selector: #selector(changeModuleNotification(_:)), name: .changeModule, object: nil)

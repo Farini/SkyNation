@@ -30,6 +30,25 @@ class GameOverlay:NSObject, SKSceneDelegate {
     // Viewport
     var renderer:SCNSceneRenderer
     
+    // MARK: - Update Loop
+    
+    private var shouldUpdate:Bool = true
+    func update(_ currentTime: TimeInterval, for scene: SKScene) {
+        if Int(currentTime) % 10 == 0 {
+            if shouldUpdate == true {
+                if GameSettings.debugScene {
+                    print("Overlay scene update")
+                }
+                self.updateTravellingVehiclesList()
+                self.shouldUpdate = false
+            }
+        } else {
+            shouldUpdate = true
+        }
+    }
+    
+    // MARK: - Builds and Updates
+    
     init(renderer:SCNSceneRenderer, station:Station, camNode:GameCamera) {
         
         let overlay:SKScene = SKScene(fileNamed: "GameOverlay")!
@@ -58,24 +77,65 @@ class GameOverlay:NSObject, SKSceneDelegate {
         
     }
     
-    private var shouldUpdate:Bool = true
-    func update(_ currentTime: TimeInterval, for scene: SKScene) {
-        if Int(currentTime) % 10 == 0 {
-            if shouldUpdate == true {
-                if GameSettings.debugScene {
-                    print("Overlay scene update")
-                }
-                self.updateTravellingVehiclesList()
-                self.shouldUpdate = false
-            }
-        } else {
-            shouldUpdate = true
-        }
-    }
-    
     /// Updates the camera node for the new sccene
     func didChangeScene(camNode:GameCamera) {
         self.sceneCamera = camNode
+    }
+    
+    /// NEWS
+    func generateNews(string:String, warning:Bool = false) {
+        
+        // Center
+        var positionX = scene.size.width / 2
+        
+        // News Header
+//        guard let newsObj = SKScene(fileNamed: "NewsObj")?.children.first else { return }
+//        newsObj.removeFromParent()
+        
+        // News label
+        let label = SKLabelNode(text: "\(warning ? "⚠️ ":"")\(string)")
+        label.fontName = "Menlo"
+        label.fontSize = 22
+        label.fontColor = .white
+        label.horizontalAlignmentMode = .center
+        label.verticalAlignmentMode = .center
+        label.isUserInteractionEnabled = true
+        label.zPosition = 90
+        
+        var backSize = label.calculateAccumulatedFrame().size
+        backSize.width += 20
+        backSize.height += 12
+        
+        // Background
+        let backNode = SKShapeNode(rectOf: backSize, cornerRadius: 8)
+        backNode.position = CGPoint(x: backSize.width / 2 + 6, y: 0)
+        backNode.fillColor = SCNColor.black.withAlphaComponent(0.7)
+        backNode.strokeColor = SCNColor.gray
+        backNode.lineWidth = 2
+        
+        backNode.addChild(label)
+        
+        positionX -= backSize.width / 2
+        newsPlaceholder.position.x = positionX
+        newsPlaceholder.addChild(backNode)
+        
+        backNode.setScale(0.5)
+        
+        let scale = SKAction.scale(by: 2, duration: 0.3)
+        let waiter = SKAction.wait(forDuration: 2.25)
+        let fadeOut = SKAction.fadeAlpha(to: 0, duration: 0.8)
+        let moveUp = SKAction.move(by: CGVector(dx: 0, dy: backSize.height * 1.2), duration: 0.8)
+        moveUp.timingMode = .easeIn
+        
+        let exit = SKAction.group([fadeOut, moveUp])
+        
+        let sequel = SKAction.sequence([scale, waiter, exit])
+        
+        backNode.run(sequel) {
+            DispatchQueue.main.async {
+                backNode.removeFromParent()
+            }
+        }
     }
     
     /// Playercard has the name, virtual money, and tokens that belong to the player
@@ -127,6 +187,45 @@ class GameOverlay:NSObject, SKSceneDelegate {
         self.updateTravellingVehiclesList()
         
     }
+    
+    // MARK: - Camera Controls
+    
+    /// Makes Camera control appear/disappear
+    func toggleCamControl() {
+        
+        //        print("Toggle cam ccontrol")
+        
+        if let camNode:CamControlNode = scene.childNode(withName: "CamControl") as? CamControlNode {
+            print("UP cam ccontrol")
+            // Camera control is up. Remove
+            let disappear = SKAction.fadeOut(withDuration: 0.25)
+            let scaleDown = SKAction.scale(by: 0.2, duration: 0.5)
+            let sequel = SKAction.sequence([scaleDown, disappear])
+            let moveX = SKAction.moveBy(x: -camNode.position.x, y: 0, duration: 0.5)
+            let group = SKAction.group([sequel, moveX])
+            camNode.run(group, completion: camNode.removeFromParent)
+            
+        } else {
+            
+            // Create and show camera control
+            let node = CamControlNode(overlay: self, gCamera: sceneCamera)
+            
+            // Adjust Position
+            if let camPosition = sideMenuNode?.position {
+                print("Camera Placeholder Position: \(camPosition)")
+                var adjustedPos = camPosition
+                adjustedPos.x += 120
+                adjustedPos.y -= 120
+                node.position = adjustedPos
+                scene.addChild(node)
+            }
+            
+            // Adjust Slider
+            //            node.adjustSliderPosition(camera: sceneCamera)
+        }
+    }
+    
+    // MARK: - Travelling Vehicles
     
     private func updateTravellingVehiclesList() {
         
@@ -219,102 +318,11 @@ class GameOverlay:NSObject, SKSceneDelegate {
         // scene.addChild(vehicleLabel)
     }
     
-    /// Makes Camera control appear/disappear
-    func toggleCamControl() {
-        
-        //        print("Toggle cam ccontrol")
-        
-        if let camNode:CamControlNode = scene.childNode(withName: "CamControl") as? CamControlNode {
-            print("UP cam ccontrol")
-            // Camera control is up. Remove
-            let disappear = SKAction.fadeOut(withDuration: 0.25)
-            let scaleDown = SKAction.scale(by: 0.2, duration: 0.5)
-            let sequel = SKAction.sequence([scaleDown, disappear])
-            let moveX = SKAction.moveBy(x: -camNode.position.x, y: 0, duration: 0.5)
-            let group = SKAction.group([sequel, moveX])
-            camNode.run(group, completion: camNode.removeFromParent)
-            
-        } else {
-            
-            // Create and show camera control
-            let node = CamControlNode(overlay: self, gCamera: sceneCamera)
-            
-            // Adjust Position
-            if let camPosition = sideMenuNode?.position {
-                print("Camera Placeholder Position: \(camPosition)")
-                var adjustedPos = camPosition
-                adjustedPos.x += 120
-                adjustedPos.y -= 120
-                node.position = adjustedPos
-                scene.addChild(node)
-            }
-            
-            // Adjust Slider
-//            node.adjustSliderPosition(camera: sceneCamera)
-        }
-    }
     
-    /// Moves the camera in the Scene to a point in the `x` axis
-    func moveCamera(x:CGFloat?) {
-        // Find a good spot to make the camera @lookAt
-        // 0 = -300
-        // 1 = 75
-        
-        if let x = x {
-            print("Moving Camera to: \(x) | Position:\(sceneCamera.position.z)")
-            #if os(macOS)
-            //            sceneCamera.position.z = -300 + x * 375 //75 - (375 * x) //-300 * x  // ((x - 0.5) * 84.0) + 84.0
-            let destination = -300 + x * 375
-            sceneCamera.panCamera(to: Double(destination))
-            #else
-            let destination = -300 + x * 375
-            sceneCamera.panCamera(to: Double(destination))
-            #endif
-        }
-    }
     
-    func generateNews(string:String, warning:Bool = false) {
-        
-        // Center
-        var positionX = scene.size.width / 2
-        let label = SKLabelNode(text: "\(warning ? "⚠️ ":"")\(string)")
-        
-        // Name
-        label.fontName = "Menlo"
-        label.fontSize = 22
-        label.fontColor = .white
-        label.horizontalAlignmentMode = .center
-        label.verticalAlignmentMode = .center
-        label.isUserInteractionEnabled = true
-        label.zPosition = 90
-        
-        var backSize = label.calculateAccumulatedFrame().size
-        backSize.width += 20
-        backSize.height += 12
-        
-        // Background
-        let backNode = SKShapeNode(rectOf: backSize, cornerRadius: 8)
-        backNode.position = CGPoint(x: backSize.width / 2 + 6, y: 0)
-        backNode.fillColor = SCNColor.black.withAlphaComponent(0.7)
-        backNode.strokeColor = SCNColor.lightGray
-        backNode.addChild(label)
-        
-        positionX -= backSize.width / 2
-        newsPlaceholder.position.x = positionX
-        newsPlaceholder.addChild(backNode)
-        
-        let waiter = SKAction.wait(forDuration: 2.25)
-        let runner = SKAction.fadeAlpha(to: 0, duration: 0.75)
-        let sequel = SKAction.sequence([waiter, runner])
-        label.run(sequel) {
-//            print("Finished generating news")
-            DispatchQueue.main.async {
-                backNode.removeFromParent()
-            }
-//            backNode.removeFromParent()
-        }
-    }
+    // MARK: - Tutorial
     
+    /// Tutorial Toggle
     func showTutorial() {
         
         // Center
@@ -397,7 +405,7 @@ class GameOverlay:NSObject, SKSceneDelegate {
     }
     private var tutorialIndex:Int = 0
     
-    
+    /// Displays next page
     func proceedTutorial() {
         
         self.closeTutorial()
@@ -430,10 +438,10 @@ class GameOverlay:NSObject, SKSceneDelegate {
         }
     }
     
+    /// Hides the tutorial
     func closeTutorial() {
         self.newsPlaceholder.removeAllChildren()
     }
-    
     
 }
 

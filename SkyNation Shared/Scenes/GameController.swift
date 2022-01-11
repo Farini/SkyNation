@@ -97,119 +97,114 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         // Check 3D Scene
         let hitResults = self.sceneRenderer.hitTest(point, options: [:])
         
-        // MARS
-        if self.gameScene == .MarsColony {
-            for result in hitResults {
-                // Get the name of the node
-                if let modName = result.node.name {
-                    print("Mod Name: \(modName)")
-                    if let parent = result.node.parent {
-                        print("Mars Parent: \(parent.name ?? "n/a")")
-                        if parent.name == "Cities" || parent.parent?.name == "Cities" {
-                            print("Go to city: \(modName)")
-                            // get position
-//                            let posScene = result.node.position
-//                            let posvec = Vector3D(x: Double(posScene.x), y: Double(posScene.y), z: Double(posScene.z))
-                            for posdex in Posdex.allCases {
-                                if posdex.sceneName == modName || posdex.sceneName == parent.name {
-                                    print("Found City! Posdex:\(posdex.rawValue) \(posdex.sceneName)")
-                                    if let city = self.mars?.didTap(city: posdex) {
-                                        // Open City View
-                                        gameNavDelegate?.openCityView(posdex: posdex, city: city)
-                                        return
-                                    } else {
-                                        gameNavDelegate?.openCityView(posdex: posdex, city: nil)
-                                        return
+        switch gameScene {
+            case .SpaceStation:
+                // Station Scene
+                for result in hitResults {
+                    
+                    // Get the name of the node
+                    if let modName = result.node.name {
+                        print("Mod Name: \(modName)")
+                        
+                        if let mod = modules.filter({ $0.id.uuidString == modName }).first {
+                            if let lab = station?.lookupModule(id: mod.id) as? LabModule {
+                                gameNavDelegate?.didSelectLab(module: lab)
+                                return
+                            }else if let hab = station?.lookupModule(id: mod.id) as? HabModule {
+                                gameNavDelegate?.didSelectHab(module: hab)
+                                return
+                            }else if let bio = station?.lookupModule(id: mod.id) as? BioModule {
+                                gameNavDelegate?.didSelectBio(module: bio)
+                                return
+                            }else if let _ = station?.lookupModule(id: mod.id) as? Module {
+                                gameNavDelegate?.didChooseModule(name: modName)
+                                return
+                            }
+                        }
+                        
+                        if modName == "Truss" || "Truss" == result.node.parent?.name {
+                            gameNavDelegate?.didSelectTruss(station: self.station!)
+                            break
+                        }
+                        
+                        if modName == "Earth" || result.node.parent?.name == "Earth" {
+                            gameNavDelegate?.didSelectEarth()
+                            break
+                        }
+                        
+                        if modName == "Garage" {
+                            gameNavDelegate?.didSelectGarage(station: self.station!)
+                            break
+                        }
+                        
+                        if modName == "Ship" {
+                            gameNavDelegate?.didSelectEarth()
+                            break
+                        }
+                        
+                    }
+                    
+                    // get its material
+                    guard let material = result.node.geometry?.firstMaterial else {
+                        break
+                    }
+                    
+                    // highlight it
+                    SCNTransaction.begin()
+                    SCNTransaction.animationDuration = 0.5
+                    
+                    // on completion - unhighlight
+                    SCNTransaction.completionBlock = {
+                        SCNTransaction.begin()
+                        SCNTransaction.animationDuration = 0.5
+                        material.emission.contents = SCNColor.black
+                        SCNTransaction.commit()
+                    }
+                    
+                    material.emission.contents = SCNColor.blue
+                    
+                    SCNTransaction.commit()
+                }
+            case .MarsColony:
+                // Mars
+                for result in hitResults {
+                    // Get the name of the node
+                    if let modName = result.node.name {
+                        print("Mod Name: \(modName)")
+                        if let parent = result.node.parent {
+                            print("Mars Parent: \(parent.name ?? "n/a")")
+                            
+                            if parent.name == "Cities" || parent.parent?.name == "Cities" {
+                                print("Go to city: \(modName)")
+                                for posdex in Posdex.allCases {
+                                    if posdex.sceneName == modName || posdex.sceneName == parent.name {
+                                        print("Found City! Posdex:\(posdex.rawValue) \(posdex.sceneName)")
+                                        if let city = self.mars?.didTap(city: posdex) {
+                                            // Open City View
+                                            gameNavDelegate?.openCityView(posdex: posdex, city: city)
+                                            return
+                                        } else {
+                                            gameNavDelegate?.openCityView(posdex: posdex, city: nil)
+                                            return
+                                        }
                                     }
                                 }
-                            }
-//                            if let city = self.mars?.didTap(city: posde)
-//                            gameNavDelegate?.openCityView(position: posvec, name: modName)
-//                            print("pos: \(posvec)")
-                        } else if parent.name == "Outposts" || parent.parent?.name == "Outposts" || parent.parent?.parent?.name == "Outposts" {
-                            print("Go to outpost: \(modName)")
-                            for posdex in Posdex.allCases {
-                                if posdex.sceneName == modName || posdex.sceneName == parent.name {
-                                    print("Found Outpost! Posdex:\(posdex.rawValue) \(posdex.sceneName)")
-                                    if let outpost = self.mars?.didTap(on: posdex) {
-                                        gameNavDelegate?.openOutpostView(posdex: posdex, outpost: outpost)
-                                        return
+                            } else if parent.name == "Outposts" || parent.parent?.name == "Outposts" || parent.parent?.parent?.name == "Outposts" {
+                                print("Go to outpost: \(modName)")
+                                for posdex in Posdex.allCases {
+                                    if posdex.sceneName == modName || posdex.sceneName == parent.name {
+                                        print("Found Outpost! Posdex:\(posdex.rawValue) \(posdex.sceneName)")
+                                        if let outpost = self.mars?.didTap(on: posdex) {
+                                            gameNavDelegate?.openOutpostView(posdex: posdex, outpost: outpost)
+                                            return
+                                        }
+                                        
                                     }
-                                    
                                 }
                             }
                         }
                     }
                 }
-            }
-            return
-        }
-        
-        // Station Scene
-        for result in hitResults {
-            
-            // Get the name of the node
-            if let modName = result.node.name {
-                print("Mod Name: \(modName)")
-                
-                if let mod = modules.filter({ $0.id.uuidString == modName }).first {
-                    if let lab = station?.lookupModule(id: mod.id) as? LabModule {
-                        gameNavDelegate?.didSelectLab(module: lab)
-                        return
-                    }else if let hab = station?.lookupModule(id: mod.id) as? HabModule {
-                        gameNavDelegate?.didSelectHab(module: hab)
-                        return
-                    }else if let bio = station?.lookupModule(id: mod.id) as? BioModule {
-                        gameNavDelegate?.didSelectBio(module: bio)
-                        return
-                    }else if let _ = station?.lookupModule(id: mod.id) as? Module {
-                        gameNavDelegate?.didChooseModule(name: modName)
-                        return
-                    }
-                }
-                
-                if modName == "Truss" || "Truss" == result.node.parent?.name {
-                    gameNavDelegate?.didSelectTruss(station: self.station!)
-                    break
-                }
-                
-                if modName == "Earth" || result.node.parent?.name == "Earth" {
-                    gameNavDelegate?.didSelectEarth()
-                    break
-                }
-                
-                if modName == "Garage" {
-                    gameNavDelegate?.didSelectGarage(station: self.station!)
-                    break
-                }
-                
-                if modName == "Ship" {
-                    gameNavDelegate?.didSelectEarth()
-                    break
-                }
-                
-            }
-            
-            // get its material
-            guard let material = result.node.geometry?.firstMaterial else {
-                break
-            }
-            
-            // highlight it
-            SCNTransaction.begin()
-            SCNTransaction.animationDuration = 0.5
-            
-            // on completion - unhighlight
-            SCNTransaction.completionBlock = {
-                SCNTransaction.begin()
-                SCNTransaction.animationDuration = 0.5
-                material.emission.contents = SCNColor.black
-                SCNTransaction.commit()
-            }
-            
-            material.emission.contents = SCNColor.blue
-            
-            SCNTransaction.commit()
         }
         
     }
@@ -249,7 +244,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 return
             }
             
-            // Camera Rotations
+            // Camera + Control
             if sprite.name == "chevron.right.square" {
                 
                 self.moveToNextCamera()
@@ -263,7 +258,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 }
                 return
             }
-            
             if sprite.name == "chevron.backward.square" {
                 
                 self.moveToPreviousCamera()
@@ -276,13 +270,11 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 }
                 return
             }
-            
             if sprite.name == "CameraIcon" {
                 camToggle.toggle()
             }
             
             // Buttons Underneath Player
-            // Tutorial button
             if sprite.name == "tutorial" {
                 print("🎓 TUTORIAL NODE")
                 self.gameOverlay.showTutorial()
@@ -511,136 +503,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         }
     }
     
-    /// Brings the Earth, to order - Removes the Ship
-    func deliveryIsOver() {
-        
-        guard gameScene == .SpaceStation else { return }
-        
-        print("Animating ship out of scene")
-        
-        // Animate the ship out of the scene
-        if let ship = scene.rootNode.childNode(withName: "Ship", recursively: false) as? DeliveryVehicleNode {
-            
-            // Remove Delivery Vehicle
-            ship.beginExitAnimation()
-            
-            // Load Earth
-            let earth = EarthNode()
-            scene.rootNode.addChildNode(earth)
-            
-            earth.beginEntryAnimation()
-            
-            
-        } else {
-            print("ERROR - Could not find Delivery Vehicle, A.K.A. Ship")
-        }
-    }
-    
-    /// Removes the earth, add the Ship
-    func deliveryIsArriving() {
-        
-        guard gameScene == .SpaceStation else { return }
-        gameOverlay.generateNews(string: "📦 Delivery arriving...")
-        
-        // Remove the earth
-        if let earth = scene.rootNode.childNode(withName: "Earth", recursively: true) as? EarthNode {
-            
-            earth.beginExitAnimation()
-            print("Earth going, Ship arriving")
-            
-            
-            // Load Ship
-            var ship:DeliveryVehicleNode? = DeliveryVehicleNode()
-            ship?.position.z = -50
-            ship?.position.y = -50 // -17.829
-            scene.rootNode.addChildNode(ship!)
-            
-            #if os(macOS)
-            ship?.eulerAngles = SCNVector3(x:90.0 * (.pi/180.0), y:0, z:0)
-            #else
-            ship?.eulerAngles = SCNVector3(x:90.0 * (Float.pi/180.0), y:0, z:0)
-            #endif
-            
-            // Move
-            let move = SCNAction.move(by: SCNVector3(0, 30, 50), duration: 12.0)
-            move.timingMode = .easeInEaseOut
-            
-            // Kill Engines
-            let killWaiter = SCNAction.wait(duration: 6)
-            let killAction = SCNAction.run { shipNode in
-                print("Kill Waiter")
-                ship?.killEngines()
-            }
-            let killSequence = SCNAction.sequence([killWaiter, killAction])
-            
-            let rotate = SCNAction.rotateBy(x: -90.0 * (.pi/180.0), y: 0, z: 0, duration: 5.0)
-            let group = SCNAction.group([move, rotate, killSequence])
-            
-            ship?.runAction(group, completionHandler: {
-                print("Ship arrived at location")
-                for child in ship?.childNodes ?? [] {
-                    child.particleSystems?.first?.birthRate = 0
-                }
-            })
-            
-        } else {
-            print("ERROR - Could not the earth !!!")
-            
-            
-            
-        }
-    }
-    
-    /// Updates Which Solar Panels to show on the Truss, and Roboarm
-    func updateTrussLayout() {
-        
-        // Truss (Solar Panels)
-        print("Truss Layout Update:")
-        let trussNode = scene.rootNode.childNode(withName: "Truss", recursively: true)!
-        
-        // Delete Previous Solar Panels
-        for child in trussNode.childNodes {
-            if child.name == "SolarPanel" {
-                print("Removing old solar panel")
-                child.removeFromParentNode()
-            }
-        }
-        
-        for item in station?.truss.tComponents ?? [] {
-            print("Truss Component: \(item.posIndex)")
-            guard let pos = item.getPosition() else { continue }
-            guard let eul = item.getRotation() else { continue }
-            switch item.allowedType {
-                case .Solar:
-                    if item.itemID != nil {
-                        print("Solar Panel: \(item.posIndex) pos:\(pos), euler:\(eul)")
-                        let solarScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/SolarPanel2.scn")
-                        if let solarPanel = solarScene?.rootNode.childNode(withName: "SolarPanel", recursively: true)?.clone() {
-                            solarPanel.position = SCNVector3(pos.x, pos.y, pos.z)
-                            solarPanel.eulerAngles = SCNVector3(eul.x, eul.y, eul.z)
-                            solarPanel.scale = SCNVector3.init(x: 1.5, y: 2.4, z: 2.4)
-                            trussNode.addChildNode(solarPanel)
-                        }
-                    }
-                case .Radiator:
-                    print("Radiator slot: \(item.posIndex) pos:\(pos), euler:\(eul)")
-                    if item.itemID != nil {
-                        print("Radiator: \(item.posIndex) pos:\(pos), euler:\(eul)")
-                        let radiatorNode = RadiatorNode()
-                        radiatorNode.position = SCNVector3(pos.x, pos.y, pos.z)
-                        radiatorNode.eulerAngles = SCNVector3(eul.x, eul.y, eul.z)
-                        radiatorNode.scale = SCNVector3.init(x: 1.5, y: 1.5, z: 1.5)
-                        radiatorNode.setupAngles(new: nil)
-                        trussNode.addChildNode(radiatorNode)
-                    } else {
-                        continue
-                    }
-                case .RoboArm: continue
-                
-            }
-        }
-    }
-    
     // MARK: - Scene Transitions
     
     private func verifyMarsEntry(player:SKNPlayer) -> Bool {
@@ -861,23 +723,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
     }
     
-    /// Reloads the Station Scene with new tech items
-    func loadLastBuildItem() {
-        print("Loading last build item")
-        let builder = LocalDatabase.shared.reloadBuilder(newStation: self.station)
-        let lastTech = builder.buildList.last
-        if let theNode = lastTech?.loadFromScene() {
-            print("Found node to build last tech item: \(theNode.name ?? "n/a")")
-            if lastTech?.type == .Module {
-                if let lastModule = LocalDatabase.shared.station.modules.last {
-                    self.modules.append(lastModule)
-                    theNode.name = lastModule.id.uuidString
-                }
-            }
-            scene.rootNode.addChildNode(theNode)
-        }
-    }
-    
     /// Prepares Overlay's news and shows them one by one, every few seconds
     func prepareNews() {
         // NEWS
@@ -1037,7 +882,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             handSprite = newHand
         }
         guard let handSprite = handSprite else {
-            fatalError("Missing hand")
+            return // fatalError("Missing hand")
         }
         
         let habCount = station.habModules.count

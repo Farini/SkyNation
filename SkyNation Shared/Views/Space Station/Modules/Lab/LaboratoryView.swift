@@ -28,16 +28,15 @@ struct LaboratoryView: View {
     /// Track `tech`  Selection for indicator
     @State private var selectedTech:TechItems? = nil
     
-    var labModule:LabModule
+//    var labModule:LabModule
+    
+    private static let allTechItems:[TechItems] = TechItems.allCases
     
     init(module:LabModule) {
-        labModule = module
-        if let mod = module.activity {
-            print("Lab Activity: \(mod.activityName)")
-        }else{
-            print("No Activity")
-        }
-        self.controller = LabViewModel(lab: module) //.labModule = module
+        
+//        labModule = module
+        
+        self.controller = LabViewModel(lab: module)
         
         if LocalDatabase.shared.player.experience < 3 {
             self.infoRecipes = true
@@ -51,11 +50,11 @@ struct LaboratoryView: View {
                 
                 VStack(alignment:.leading) {
                     
-                    if labModule.name == "untitled" || labModule.name == "Untitled" {
+                    if controller.labModule.name == "untitled" || controller.labModule.name == "Untitled" {
                         Text("🔬 Lab Module")
                             .font(GameFont.title.makeFont())
                     } else {
-                        Text("🔬 \(labModule.name)")
+                        Text("🔬 \(controller.labModule.name)")
                             .font(GameFont.title.makeFont())
                     }
                 }
@@ -170,50 +169,41 @@ struct LaboratoryView: View {
                     // Tech
                     Section(header: Text("Tech Tree").foregroundColor(.blue)) {
                         
-                        ForEach(0..<TechItems.allCases.count) { idx in
-                            
+                        ForEach(LaboratoryView.allTechItems, id:\.self) { techItem in
                             VStack(alignment: .leading, spacing: nil) {
                                 HStack {
-                                    Text(TechItems.allCases[idx].shortName)
-                                        .foregroundColor(self.controller.unlockedItems.contains(TechItems.allCases[idx]) ? .orange:.gray)
+                                    Text(techItem.shortName)
+                                        .foregroundColor(controller.unlockedItems.contains(techItem) ? .orange:.gray)
                                     Spacer()
                                 }
                                 
-                                
-                                    
-                                Text(TechItems.allCases[idx].rawValue)
+                                Text(techItem.rawValue)
                                     .font(.caption)
                                     .foregroundColor(.gray)
                             }
                             .padding(.leading, 6)
                             .padding(.vertical, 4)
-//                            .background(Color.black.opacity(0.3))
-                            
+                            //                            .background(Color.black.opacity(0.3))
                             .overlay(RoundedRectangle(cornerSize: CGSize(width: 4, height: 4))
                                         .strokeBorder(style: StrokeStyle())
-                                        .foregroundColor(TechItems.allCases[idx] == selectedTech ? Color.blue:Color.clear)
+                                        .foregroundColor(techItem == selectedTech ? Color.blue:Color.clear)
                             )
                             .listRowBackground(GameColors.darkGray)
-                            
                             .onTapGesture {
                                 switch controller.selection {
                                     case .activity:
                                         print("Activity going on. Can't choose")
                                     default:
-                                        controller.selection = LabSelectState.techTree(name: TechItems.allCases[idx])
+                                        controller.selection = LabSelectState.techTree(name: techItem)
                                         self.selectedRecipe = nil
-                                        self.selectedTech = TechItems.allCases[idx]
+                                        self.selectedTech = techItem //TechItems.allCases[idx]
                                 }
                             }
-                            
                         }
                     }
                     .background(GameColors.darkGray)
                 }
                 .modifier(GameListModifier())
-//                .listStyle(.plain)
-//                .background(GameColors.darkGray)
-//                .frame(width: 200, alignment: .leading)
                 
                 
                 switch controller.selection {
@@ -349,8 +339,7 @@ struct LaboratoryView: View {
                     }
                     
                 case .activity:
-                    
-                    LabActivityView(activity: self.labModule.activity!, controller:self.controller, module: self.labModule)
+                    LabActivityView(activity: controller.labModule.activity!, controller:controller, module: controller.labModule)
                 }
             }
         }

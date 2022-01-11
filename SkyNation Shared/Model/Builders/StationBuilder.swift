@@ -8,82 +8,6 @@
 import Foundation
 import SceneKit
 
-/// The type of BuildItemfor the **SerialBuilder**
-enum BuildComponent:String, Codable, CaseIterable {
-    case Node
-    case Module
-    case Truss
-    case Peripheral
-}
-
-/// The indexes where `Module` objects can be placed
-enum ModuleIndex:String, Codable, CaseIterable {
-    
-    // mod0 is the one facing down, mod1 is the Front
-    case mod0, mod1, mod2, mod3, mod4, mod5, mod6, mod7, mod8, mod9, mod10 //, modGarage
-    
-    func position() -> Vector3D {
-        switch self {
-            case .mod0: return Vector3D(x: 0, y: -2, z: 0)
-            case .mod1: return Vector3D(x: 0, y: 0, z: 2)
-            case .mod2: return Vector3D(x: 0, y: 0, z: -10)
-            case .mod3: return Vector3D(x: 0, y: 0, z: -22)
-            case .mod4: return Vector3D(x: 0, y: 0, z: -34)
-            case .mod5: return Vector3D(x: 0, y: 0, z: -46)
-            case .mod6: return Vector3D(x: 0, y: -2, z: -12)
-            case .mod7: return Vector3D(x: 0, y: -2, z: 0) // Doesn't exist
-            case .mod8: return Vector3D(x: 0, y: -2, z: -36)
-            case .mod9: return Vector3D(x: 0, y: 2, z: -36)
-            case .mod10: return Vector3D(x: 0, y: -2, z: -24)
-            //            case .modGarage: return Vector3D(x: 0, y: 0, z: -46)
-        }
-    }
-    
-    func orientation() -> Orientation3D {
-        switch self {
-            case .mod0: return .Down
-            case .mod6: return .Down
-            case .mod8: return .Down
-            case .mod9: return .Up
-            case .mod10: return .Down
-                
-            default: return .Front
-        }
-    }
-}
-
-/// The Material (image) to go on the Module.
-enum ModuleSkin:String, Codable, CaseIterable {
-    
-    case ModuleBake
-    case diffuse1
-    case BioModule
-    case LabModule
-    case HabModule
-    
-    /// The name to display from the menu
-    var displayName:String {
-        switch self {
-            case .BioModule: return "Biology"
-            case .HabModule: return "Habitation"
-            case .LabModule: return "Laboratory"
-            case .ModuleBake: return "Do not touch"
-            case .diffuse1: return "Default"
-        }
-    }
-    
-    /// The name (path) of the UV to load
-    var uvMapName:String {
-        switch self {
-            case .BioModule: return "BioModule"
-            case .HabModule: return "HabModule"
-            case .LabModule: return "LabModule"
-            case .ModuleBake: return "ModuleBake4"
-            case .diffuse1: return "ModuleDif1"
-        }
-    }
-}
-
 /**
  A Class that Builds the Space `Station` Object to make a `SCNScene`
     - Maybe it doesnt need to be `Codable`. Not being stored, anyways. */
@@ -446,6 +370,158 @@ extension StationBuilder {
     
 }
 
+// MARK: - Animations from Space Station
+
+extension GameController {
+    
+    /// Brings the Earth, to order - Removes the Ship
+    func deliveryIsOver() {
+        
+        guard gameScene == .SpaceStation else { return }
+        
+        print("Animating ship out of scene")
+        
+        // Animate the ship out of the scene
+        if let ship = scene.rootNode.childNode(withName: "Ship", recursively: false) as? DeliveryVehicleNode {
+            
+            // Remove Delivery Vehicle
+            ship.beginExitAnimation()
+            
+            // Load Earth
+            let earth = EarthNode()
+            scene.rootNode.addChildNode(earth)
+            
+            earth.beginEntryAnimation()
+            
+            
+        } else {
+            print("ERROR - Could not find Delivery Vehicle, A.K.A. Ship")
+        }
+    }
+    
+    /// Removes the earth, add the Ship
+    func deliveryIsArriving() {
+        
+        guard gameScene == .SpaceStation else { return }
+        gameOverlay.generateNews(string: "📦 Delivery arriving...")
+        
+        // Remove the earth
+        if let earth = scene.rootNode.childNode(withName: "Earth", recursively: true) as? EarthNode {
+            
+            earth.beginExitAnimation()
+            print("Earth going, Ship arriving")
+            
+            
+            // Load Ship
+            var ship:DeliveryVehicleNode? = DeliveryVehicleNode()
+            ship?.position.z = -50
+            ship?.position.y = -50 // -17.829
+            scene.rootNode.addChildNode(ship!)
+            
+#if os(macOS)
+            ship?.eulerAngles = SCNVector3(x:90.0 * (.pi/180.0), y:0, z:0)
+#else
+            ship?.eulerAngles = SCNVector3(x:90.0 * (Float.pi/180.0), y:0, z:0)
+#endif
+            
+            // Move
+            let move = SCNAction.move(by: SCNVector3(0, 30, 50), duration: 12.0)
+            move.timingMode = .easeInEaseOut
+            
+            // Kill Engines
+            let killWaiter = SCNAction.wait(duration: 6)
+            let killAction = SCNAction.run { shipNode in
+                print("Kill Waiter")
+                ship?.killEngines()
+            }
+            let killSequence = SCNAction.sequence([killWaiter, killAction])
+            
+            let rotate = SCNAction.rotateBy(x: -90.0 * (.pi/180.0), y: 0, z: 0, duration: 5.0)
+            let group = SCNAction.group([move, rotate, killSequence])
+            
+            ship?.runAction(group, completionHandler: {
+                print("Ship arrived at location")
+                for child in ship?.childNodes ?? [] {
+                    child.particleSystems?.first?.birthRate = 0
+                }
+            })
+            
+        } else {
+            print("ERROR - Could not the earth !!!")
+            
+            
+            
+        }
+    }
+    
+    /// Updates Which Solar Panels to show on the Truss, and Roboarm
+    func updateTrussLayout() {
+        
+        // Truss (Solar Panels)
+        print("Truss Layout Update:")
+        let trussNode = scene.rootNode.childNode(withName: "Truss", recursively: true)!
+        
+        // Delete Previous Solar Panels
+        for child in trussNode.childNodes {
+            if child.name == "SolarPanel" {
+                print("Removing old solar panel")
+                child.removeFromParentNode()
+            }
+        }
+        
+        for item in station?.truss.tComponents ?? [] {
+            print("Truss Component: \(item.posIndex)")
+            guard let pos = item.getPosition() else { continue }
+            guard let eul = item.getRotation() else { continue }
+            switch item.allowedType {
+                case .Solar:
+                    if item.itemID != nil {
+                        print("Solar Panel: \(item.posIndex) pos:\(pos), euler:\(eul)")
+                        let solarScene = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/SolarPanel2.scn")
+                        if let solarPanel = solarScene?.rootNode.childNode(withName: "SolarPanel", recursively: true)?.clone() {
+                            solarPanel.position = SCNVector3(pos.x, pos.y, pos.z)
+                            solarPanel.eulerAngles = SCNVector3(eul.x, eul.y, eul.z)
+                            solarPanel.scale = SCNVector3.init(x: 1.5, y: 2.4, z: 2.4)
+                            trussNode.addChildNode(solarPanel)
+                        }
+                    }
+                case .Radiator:
+                    print("Radiator slot: \(item.posIndex) pos:\(pos), euler:\(eul)")
+                    if item.itemID != nil {
+                        print("Radiator: \(item.posIndex) pos:\(pos), euler:\(eul)")
+                        let radiatorNode = RadiatorNode()
+                        radiatorNode.position = SCNVector3(pos.x, pos.y, pos.z)
+                        radiatorNode.eulerAngles = SCNVector3(eul.x, eul.y, eul.z)
+                        radiatorNode.scale = SCNVector3.init(x: 1.5, y: 1.5, z: 1.5)
+                        radiatorNode.setupAngles(new: nil)
+                        trussNode.addChildNode(radiatorNode)
+                    } else {
+                        continue
+                    }
+                case .RoboArm: continue
+                    
+            }
+        }
+    }
+    
+    /// Reloads the Station Scene with new tech items
+    func loadLastBuildItem() {
+        print("Loading last build item")
+        let builder = LocalDatabase.shared.reloadBuilder(newStation: self.station)
+        let lastTech = builder.buildList.last
+        if let theNode = lastTech?.loadFromScene() {
+            print("Found node to build last tech item: \(theNode.name ?? "n/a")")
+            if lastTech?.type == .Module {
+                if let lastModule = LocalDatabase.shared.station.modules.last {
+                    self.modules.append(lastModule)
+                    theNode.name = lastModule.id.uuidString
+                }
+            }
+            scene.rootNode.addChildNode(theNode)
+        }
+    }
+}
+
 /**
  Build Item: Modules, Nodes, and main scene data. Part of the `StationBuilder` object */
 class StationBuildItem:Codable {
@@ -476,4 +552,82 @@ class StationBuildItem:Codable {
         self.modex = modex.rawValue
     }
     
+}
+
+// MARK: - Module + Builder Enums
+
+/// The type of BuildItemfor the **SerialBuilder**
+enum BuildComponent:String, Codable, CaseIterable {
+    case Node
+    case Module
+    case Truss
+    case Peripheral
+}
+
+/// The indexes where `Module` objects can be placed
+enum ModuleIndex:String, Codable, CaseIterable {
+    
+    // mod0 is the one facing down, mod1 is the Front
+    case mod0, mod1, mod2, mod3, mod4, mod5, mod6, mod7, mod8, mod9, mod10 //, modGarage
+    
+    func position() -> Vector3D {
+        switch self {
+            case .mod0: return Vector3D(x: 0, y: -2, z: 0)
+            case .mod1: return Vector3D(x: 0, y: 0, z: 2)
+            case .mod2: return Vector3D(x: 0, y: 0, z: -10)
+            case .mod3: return Vector3D(x: 0, y: 0, z: -22)
+            case .mod4: return Vector3D(x: 0, y: 0, z: -34)
+            case .mod5: return Vector3D(x: 0, y: 0, z: -46)
+            case .mod6: return Vector3D(x: 0, y: -2, z: -12)
+            case .mod7: return Vector3D(x: 0, y: -2, z: 0) // Doesn't exist
+            case .mod8: return Vector3D(x: 0, y: -2, z: -36)
+            case .mod9: return Vector3D(x: 0, y: 2, z: -36)
+            case .mod10: return Vector3D(x: 0, y: -2, z: -24)
+                //            case .modGarage: return Vector3D(x: 0, y: 0, z: -46)
+        }
+    }
+    
+    func orientation() -> Orientation3D {
+        switch self {
+            case .mod0: return .Down
+            case .mod6: return .Down
+            case .mod8: return .Down
+            case .mod9: return .Up
+            case .mod10: return .Down
+                
+            default: return .Front
+        }
+    }
+}
+
+/// The Material (image) to go on the Module.
+enum ModuleSkin:String, Codable, CaseIterable {
+    
+    case ModuleBake
+    case diffuse1
+    case BioModule
+    case LabModule
+    case HabModule
+    
+    /// The name to display from the menu
+    var displayName:String {
+        switch self {
+            case .BioModule: return "Biology"
+            case .HabModule: return "Habitation"
+            case .LabModule: return "Laboratory"
+            case .ModuleBake: return "Do not touch"
+            case .diffuse1: return "Default"
+        }
+    }
+    
+    /// The name (path) of the UV to load
+    var uvMapName:String {
+        switch self {
+            case .BioModule: return "BioModule"
+            case .HabModule: return "HabModule"
+            case .LabModule: return "LabModule"
+            case .ModuleBake: return "ModuleBake4"
+            case .diffuse1: return "ModuleDif1"
+        }
+    }
 }
