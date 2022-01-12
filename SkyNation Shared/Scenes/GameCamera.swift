@@ -94,6 +94,63 @@ class GameCamera:SCNNode {
         
     }
     
+    // MARK: - Moving
+    
+    /**
+     Temporarily stare at a node in the scene.
+     
+     - Discussion:
+     
+     1. Remove (and store) previous constraint.
+     2. Add new constraint
+     3. Adjust zoom to fit object
+     4. Wait a few seconds
+     5. remove new constraint
+     6. Add old constraint
+     7. Finish animation
+     */
+    func stareAt(node:SCNNode) {
+        
+        var objCenter = node.position
+        if let geometry = node.geometry {
+            let bbox = geometry.boundingBox
+            let mx = ((bbox.max.x - bbox.min.x) / 2) // + node.position.x
+            let my = ((bbox.max.y - bbox.min.y) / 2) // + node.position.y
+            let mz = ((bbox.max.z - bbox.min.z) / 2) // + node.position.z
+            objCenter = SCNVector3(x: mx, y: my, z: mz)
+        }
+        
+        
+        // 1. Remove (and store) previous constraint.
+        guard let oldConstraints = camNode.constraints else {
+            print("no constraints")
+            return
+        }
+        let oldZoom = camNode.camera?.fieldOfView ?? 35.0
+        
+        // 2. Add new constraint
+        let newConstraint = SCNLookAtConstraint(target: node)
+        newConstraint.targetOffset = objCenter
+        newConstraint.isGimbalLockEnabled = true
+        newConstraint.influenceFactor = 0.15
+        
+        SCNTransaction.begin()
+        SCNTransaction.animationDuration = 1.5
+        camNode.constraints = [newConstraint]
+        // 3. Adjust zoom to fit object
+        camNode.camera?.fieldOfView -= oldZoom / 2.0
+        SCNTransaction.commit()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+            SCNTransaction.begin()
+            SCNTransaction.animationDuration = 1.5
+            self.camNode.constraints = oldConstraints
+            self.camNode.camera?.fieldOfView += oldZoom / 2.0
+            SCNTransaction.commit()
+        }
+        
+    }
+    
     /// Moves the camera to the next Point Of View
     func moveToNextPOV() {
         
@@ -301,9 +358,6 @@ struct GamePOV:Identifiable, Equatable {
     
     /// The node the camera is looking at - also the anchor at wich the camera revolves around with yRange.
     var targetNode:SCNNode?
-    
-
-    
     
     /// The name to Display (select) - if nil, get the targetNode name, or vector
     var name:String

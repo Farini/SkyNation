@@ -627,6 +627,9 @@
 		85BC5AAB278D37F300F44A49 /* NewsObj.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85BC5AA9278D37F300F44A49 /* NewsObj.sks */; };
 		85BC5AAC278D37F300F44A49 /* NewsObj.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85BC5AA9278D37F300F44A49 /* NewsObj.sks */; };
 		85BC5AAD278D37F300F44A49 /* NewsObj.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85BC5AA9278D37F300F44A49 /* NewsObj.sks */; };
+		85BC5AB0278E07A200F44A49 /* LabPreloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BC5AAF278E07A200F44A49 /* LabPreloadView.swift */; };
+		85BC5AB1278E07A200F44A49 /* LabPreloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BC5AAF278E07A200F44A49 /* LabPreloadView.swift */; };
+		85BC5AB2278E07A200F44A49 /* LabPreloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BC5AAF278E07A200F44A49 /* LabPreloadView.swift */; };
 		85C081162754BEF100F52DEC /* GuildMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C081152754BEF100F52DEC /* GuildMission.swift */; };
 		85C081172754BEF100F52DEC /* GuildMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C081152754BEF100F52DEC /* GuildMission.swift */; };
 		85C081182754BEF100F52DEC /* GuildMission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C081152754BEF100F52DEC /* GuildMission.swift */; };
@@ -955,6 +958,7 @@
 		85BB67FA2750AC1600029477 /* GuildMissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildMissionView.swift; sourceTree = "<group>"; };
 		85BC5AA9278D37F300F44A49 /* NewsObj.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = NewsObj.sks; sourceTree = "<group>"; };
 		85BC5AAE278D5DC400F44A49 /* Typography.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Typography.md; sourceTree = "<group>"; };
+		85BC5AAF278E07A200F44A49 /* LabPreloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabPreloadView.swift; sourceTree = "<group>"; };
 		85C081152754BEF100F52DEC /* GuildMission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildMission.swift; sourceTree = "<group>"; };
 		85C3418425905A7500BF82F9 /* TutorialNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialNode.swift; sourceTree = "<group>"; };
 		85C3418D2591078700BF82F9 /* PlayerCardNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCardNode.swift; sourceTree = "<group>"; };
@@ -1430,6 +1434,7 @@
 				8536F3B5258D47CF00B509D2 /* TechnologyDetailViews.swift */,
 				8536F3B6258D47CF00B509D2 /* RecipeDetailViews.swift */,
 				8536F3B7258D47CF00B509D2 /* LabActivityView.swift */,
+				85BC5AAF278E07A200F44A49 /* LabPreloadView.swift */,
 			);
 			path = Lab;
 			sourceTree = "<group>";
@@ -2329,6 +2334,7 @@
 				85D3BB3026AFD28100B6AA36 /* BioBoxDetailView.swift in Sources */,
 				8536F38E258D475D00B509D2 /* LabModule.swift in Sources */,
 				85487F5726CD9B3D00EBC070 /* GameFonts.swift in Sources */,
+				85BC5AB0278E07A200F44A49 /* LabPreloadView.swift in Sources */,
 				8536F3DE258D47D000B509D2 /* LaboratoryView.swift in Sources */,
 				85CD46A725D1199A000D9C64 /* EarthNode.swift in Sources */,
 				85351E7726FE373000EEE04C /* CityOPCollectView.swift in Sources */,
@@ -2510,6 +2516,7 @@
 				857D9A3A25C0B69800626884 /* HabModuleController.swift in Sources */,
 				8517EE642605DC8800C34C54 /* CityController.swift in Sources */,
 				858D7C4825D4F0AD00A45CF9 /* GameCamera.swift in Sources */,
+				85BC5AB1278E07A200F44A49 /* LabPreloadView.swift in Sources */,
 				8536F393258D475D00B509D2 /* BioModule.swift in Sources */,
 				8536F3FF258D47D000B509D2 /* IngredientView.swift in Sources */,
 				85B34B1826F711C5007178F5 /* BiosphereNode.swift in Sources */,
@@ -2640,6 +2647,7 @@
 				8536F384258D475D00B509D2 /* Truss.swift in Sources */,
 				85351E8126FEE07500EEE04C /* CityBioBuilderView.swift in Sources */,
 				8517EE3625FC11EF00C34C54 /* Guild.swift in Sources */,
+				85BC5AB2278E07A200F44A49 /* LabPreloadView.swift in Sources */,
 				8516AD85274093DB00392C4F /* EngineStack.swift in Sources */,
 				85A658FC25E2251B008AA9BA /* PlayerEditView.swift in Sources */,
 				8536F3D8258D47D000B509D2 /* RecipeDetailViews.swift in Sources */,

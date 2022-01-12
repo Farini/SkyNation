@@ -11,7 +11,7 @@ import SceneKit
 /**
  A Class that Builds the Space `Station` Object to make a `SCNScene`
     - Maybe it doesnt need to be `Codable`. Not being stored, anyways. */
-class StationBuilder:Codable {
+class StationBuilder { //:Codable {
     
     /// Items involved in building the Space Station scene.
     var buildList:[StationBuildItem]
@@ -45,6 +45,7 @@ class StationBuilder:Codable {
     
     // MARK: - Initializers
     
+    
     // Initialize the array with node0, node1, .modf, .mod0, .mod1
     /// Initializes the scene for the first time.
     init() {
@@ -67,6 +68,7 @@ class StationBuilder:Codable {
         self.buildList = [node0, module0, node2, moduleFront, moduleBack]
         
     }
+    
     
     /// Initialize with a `Station`, if there is one
     init(station:Station) {
@@ -118,6 +120,7 @@ class StationBuilder:Codable {
     
     // MARK: - Codable
     
+    /*
     private enum CodingKeys:String, CodingKey {
         case buildList
     }
@@ -126,6 +129,7 @@ class StationBuilder:Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         buildList = try values.decode([StationBuildItem].self, forKey: .buildList)
     }
+    */
     
     // MARK: - Items
     
@@ -149,7 +153,7 @@ class StationBuilder:Codable {
     func build(station:Station) {
         
         self.prepareScene(station:station) { scene in
-            // Send notification "Finished Scene" to GameController
+            // Send notification "Finished Scene"
             // So it can present :)
             print("Station Builder has finished building")
             self.scene = scene
@@ -370,6 +374,87 @@ extension StationBuilder {
     
 }
 
+extension StationBuildItem {
+    
+    func loadFromScene() -> SCNNode? {
+        var nodeCount:Int = 1
+        switch type {
+            case .Node:
+                //                print("Load a node")
+                let nodeScene = SCNScene(named: "Art.scnassets/SpaceStation/Node2.scn")!
+                if let nodeObj = nodeScene.rootNode.childNode(withName: "Node2", recursively: false)?.clone() {
+                    nodeObj.name = "Node\(nodeCount)"
+                    nodeCount += 1
+                    let pos = position
+#if os(macOS)
+                    nodeObj.position = SCNVector3(x: CGFloat(pos.x), y: CGFloat(pos.y), z: CGFloat(pos.z))
+#else
+                    nodeObj.position = SCNVector3(pos.x, pos.y, pos.z) // (x:pos.x, y:pos.y, z:pos.z)
+#endif
+                    return nodeObj
+                }else{
+                    print("404 not found")
+                    return nil
+                }
+                
+            case .Module:
+                
+                let moduleScene = SCNScene(named: "Art.scnassets/SpaceStation/Module.scn")!
+                if let nodeObj = moduleScene.rootNode.childNode(withName: "Module", recursively: false)?.clone() {
+                    
+                    let uvMapName = "\(skin?.uvMapName ?? ModuleSkin.allCases.randomElement()!.uvMapName).png"
+                    
+                    // MATERIAL | SKIN
+                    
+                    var skinImage:SKNImage?
+                    if let bun = Bundle.main.url(forResource: "Art", withExtension: ".scnassets") {
+                        let pp = bun.appendingPathComponent("/UV Images/ModuleSkins/\(uvMapName)")
+                        if let image = SKNImage(contentsOfFile: pp.path) {
+                            //                            print("Found Image")
+                            skinImage = image
+                        } else {
+                            print("\n\t ⚠️ Error: Could not find Skin Image!")
+                        }
+                    } else {
+                        print("\n\t ⚠️ Error: Bundle for Skin not found !")
+                    }
+                    for material in nodeObj.geometry?.materials ?? [] {
+                        print("Material name:\(material.name ?? "n/a")")
+                        if let image = skinImage {
+                            material.diffuse.contents = image
+                        }
+                    }
+                    if let image = SKNImage(named: uvMapName) {
+                        nodeObj.geometry!.materials.first!.diffuse.contents = image
+                    }
+                    
+                    // Position
+                    let pos = position
+#if os(macOS)
+                    nodeObj.position = SCNVector3(x: CGFloat(pos.x), y: CGFloat(pos.y), z: CGFloat(pos.z))
+#else
+                    nodeObj.position = SCNVector3(pos.x, pos.y, pos.z)
+#endif
+                    // Change name to id
+                    nodeObj.name = id.uuidString
+                    
+                    let vec = rotation
+                    let sceneVec = SCNVector3(vec.x, vec.y, vec.z)
+                    nodeObj.eulerAngles = sceneVec
+                    
+                    return nodeObj
+                } else {
+                    print("Module not found ID:\(id) \(self.type) ")
+                    return nil
+                }
+            case .Peripheral, .Truss:
+                print("Deprecate ?")
+                return nil
+        }
+    }
+}
+
+
 // MARK: - Animations from Space Station
 
 extension GameController {
@@ -531,7 +616,7 @@ class StationBuildItem:Codable {
     var rotation:Vector3D
     var type:BuildComponent //(node, module)
     
-    var skin:ModuleSkin? //String?
+    var skin:ModuleSkin?
     var modex:String?
     
     /// To init from StationBuilder
@@ -556,7 +641,7 @@ class StationBuildItem:Codable {
 
 // MARK: - Module + Builder Enums
 
-/// The type of BuildItemfor the **SerialBuilder**
+/// The type of BuildItemfor the **StationBuilder**
 enum BuildComponent:String, Codable, CaseIterable {
     case Node
     case Module
@@ -564,70 +649,3 @@ enum BuildComponent:String, Codable, CaseIterable {
     case Peripheral
 }
 
-/// The indexes where `Module` objects can be placed
-enum ModuleIndex:String, Codable, CaseIterable {
-    
-    // mod0 is the one facing down, mod1 is the Front
-    case mod0, mod1, mod2, mod3, mod4, mod5, mod6, mod7, mod8, mod9, mod10 //, modGarage
-    
-    func position() -> Vector3D {
-        switch self {
-            case .mod0: return Vector3D(x: 0, y: -2, z: 0)
-            case .mod1: return Vector3D(x: 0, y: 0, z: 2)
-            case .mod2: return Vector3D(x: 0, y: 0, z: -10)
-            case .mod3: return Vector3D(x: 0, y: 0, z: -22)
-            case .mod4: return Vector3D(x: 0, y: 0, z: -34)
-            case .mod5: return Vector3D(x: 0, y: 0, z: -46)
-            case .mod6: return Vector3D(x: 0, y: -2, z: -12)
-            case .mod7: return Vector3D(x: 0, y: -2, z: 0) // Doesn't exist
-            case .mod8: return Vector3D(x: 0, y: -2, z: -36)
-            case .mod9: return Vector3D(x: 0, y: 2, z: -36)
-            case .mod10: return Vector3D(x: 0, y: -2, z: -24)
-                //            case .modGarage: return Vector3D(x: 0, y: 0, z: -46)
-        }
-    }
-    
-    func orientation() -> Orientation3D {
-        switch self {
-            case .mod0: return .Down
-            case .mod6: return .Down
-            case .mod8: return .Down
-            case .mod9: return .Up
-            case .mod10: return .Down
-                
-            default: return .Front
-        }
-    }
-}
-
-/// The Material (image) to go on the Module.
-enum ModuleSkin:String, Codable, CaseIterable {
-    
-    case ModuleBake
-    case diffuse1
-    case BioModule
-    case LabModule
-    case HabModule
-    
-    /// The name to display from the menu
-    var displayName:String {
-        switch self {
-            case .BioModule: return "Biology"
-            case .HabModule: return "Habitation"
-            case .LabModule: return "Laboratory"
-            case .ModuleBake: return "Do not touch"
-            case .diffuse1: return "Default"
-        }
-    }
-    
-    /// The name (path) of the UV to load
-    var uvMapName:String {
-        switch self {
-            case .BioModule: return "BioModule"
-            case .HabModule: return "HabModule"
-            case .LabModule: return "LabModule"
-            case .ModuleBake: return "ModuleBake4"
-            case .diffuse1: return "ModuleDif1"
-        }
-    }
-}

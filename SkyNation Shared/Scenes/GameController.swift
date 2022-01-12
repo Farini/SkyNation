@@ -142,6 +142,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                             break
                         }
                         
+                        cameraNode?.stareAt(node: result.node)
+                        
                     }
                     
                     // get its material
@@ -1032,82 +1034,3 @@ extension TechItems {
     }
 }
 
-extension StationBuildItem {
-    
-    func loadFromScene() -> SCNNode? {
-        var nodeCount:Int = 1
-        switch type {
-            case .Node:
-//                print("Load a node")
-                let nodeScene = SCNScene(named: "Art.scnassets/SpaceStation/Node.scn")!
-                if let nodeObj = nodeScene.rootNode.childNode(withName: "Node2", recursively: false)?.clone() {
-                    nodeObj.name = "Node\(nodeCount)"
-                    nodeCount += 1
-                    let pos = position
-                    #if os(macOS)
-                    nodeObj.position = SCNVector3(x: CGFloat(pos.x), y: CGFloat(pos.y), z: CGFloat(pos.z))
-                    #else
-                    nodeObj.position = SCNVector3(pos.x, pos.y, pos.z) // (x:pos.x, y:pos.y, z:pos.z)
-                    #endif
-                    return nodeObj
-                }else{
-                    print("404 not found")
-                    return nil
-                }
-                
-            case .Module:
-
-                let moduleScene = SCNScene(named: "Art.scnassets/SpaceStation/Module.scn")!
-                if let nodeObj = moduleScene.rootNode.childNode(withName: "Module", recursively: false)?.clone() {
-                    
-                    let uvMapName = "\(skin?.uvMapName ?? ModuleSkin.allCases.randomElement()!.uvMapName).png"
-                    
-                    // MATERIAL | SKIN
-                    
-                    var skinImage:SKNImage?
-                    if let bun = Bundle.main.url(forResource: "Art", withExtension: ".scnassets") {
-                        let pp = bun.appendingPathComponent("/UV Images/ModuleSkins/\(uvMapName)")
-                        if let image = SKNImage(contentsOfFile: pp.path) {
-//                            print("Found Image")
-                            skinImage = image
-                        } else {
-                            print("\n\t ⚠️ Error: Could not find Skin Image!")
-                        }
-                    } else {
-                        print("\n\t ⚠️ Error: Bundle for Skin not found !")
-                    }
-                    for material in nodeObj.geometry?.materials ?? [] {
-                        print("Material name:\(material.name ?? "n/a")")
-                        if let image = skinImage {
-                            material.diffuse.contents = image
-                        }
-                    }
-                    if let image = SKNImage(named: uvMapName) {
-                        nodeObj.geometry!.materials.first!.diffuse.contents = image
-                    }
-                    
-                    // Position
-                    let pos = position
-                    #if os(macOS)
-                    nodeObj.position = SCNVector3(x: CGFloat(pos.x), y: CGFloat(pos.y), z: CGFloat(pos.z))
-                    #else
-                    nodeObj.position = SCNVector3(pos.x, pos.y, pos.z)
-                    #endif
-                    // Change name to id
-                    nodeObj.name = id.uuidString
-                    
-                    let vec = rotation
-                    let sceneVec = SCNVector3(vec.x, vec.y, vec.z)
-                    nodeObj.eulerAngles = sceneVec
-                    
-                    return nodeObj
-                } else {
-                    print("Module not found ID:\(id) \(self.type) ")
-                    return nil
-                }
-            case .Peripheral, .Truss:
-                print("Deprecate ?")
-                return nil
-        }
-    }
-}

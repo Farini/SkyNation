@@ -157,6 +157,8 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Game Center - iOS can't open GameCenter controller
 - [X] Settings - ask before spend token
 - [X] Animated Airlock
+- [X] Game Camera - `stareAtNode()`
+- [X] Laboratory View preloading !!
 
 - [ ] Completely eliminate `GuildFullContent`
 
@@ -165,7 +167,7 @@ Make it more obvious to the player that they should type a name.
 Discussion:
 Intro. Introduce player to game.
 
-- [ ] ⚠️ Laboratory View taking forever to load !!
+
 - [ ] Mars Scene - All Guild Vehicles arriving
 - [ ] Store - Build list of bonus (kits) depending on prev. purchases
 - [ ] ServerData - Use GuildFlags to show new items. in GuildRoom

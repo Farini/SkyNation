@@ -28,13 +28,14 @@ struct LaboratoryView: View {
     /// Track `tech`  Selection for indicator
     @State private var selectedTech:TechItems? = nil
     
+    /// Preloading the tech tree
+    @State private var preloading:Bool = true
+    
 //    var labModule:LabModule
     
     private static let allTechItems:[TechItems] = TechItems.allCases
     
     init(module:LabModule) {
-        
-//        labModule = module
         
         self.controller = LabViewModel(lab: module)
         
@@ -208,125 +209,133 @@ struct LaboratoryView: View {
                 
                 switch controller.selection {
                 case .NoSelection:
-                    // Show Tech Tree
-                    ScrollView([.vertical, .horizontal], showsIndicators: true) {
-                        VStack(spacing:6) {
-                            
-                            if infoRecipes == true {
-                                Group {
-                                    HStack(alignment:.bottom) {
-                                        Label("Recipes", systemImage: "info.circle")
-                                            .foregroundColor(.yellow)
-                                            .padding(6)
-                                            .background(Color.black.opacity(0.5))
-                                            .cornerRadius(6)
-                                            .onTapGesture {
-                                                self.infoRecipes.toggle()
-                                            }
-                                        
-                                        Text("transform").foregroundColor(.gray)
-                                        Text("ingredients").foregroundColor(.blue)
-                                        Text("into")
-                                        Text("Peripherals").foregroundColor(.orange)
-                                        
-                                        Spacer()
-                                    }
-                                    
-                                    HStack {
-                                        Text("Peripherals").foregroundColor(.orange)
-                                        Text("recycle the Space Station's resources").foregroundColor(.gray)
-                                        Spacer()
-                                    }
-                                    
-                                    HStack {
-                                        Text("A well planned set of Peripherals can make a Space Station sustainable for a long time.")
-                                        Spacer()
-                                    }
-                                }
-                                .transition(.slide.combined(with:AnyTransition.opacity))
-                                
-                                Divider()
-                                
-                            } else {
-                                HStack {
-                                    Label("Recipes", systemImage: "info.circle")
-                                        .foregroundColor(.yellow)
-                                        .padding(6)
-                                        .background(Color.black.opacity(0.5))
-                                        .cornerRadius(6)
-                                        .onTapGesture {
-                                            self.infoRecipes.toggle()
-                                        }
-                                    
-                                    Spacer()
-                                }
-                                .transition(.move(edge:.leading).combined(with:AnyTransition.opacity))
-                            }
-                            
-                            if infoTech == true {
-                                Group {
-                                    HStack {
-                                        
-                                        Label("Tech Tree", systemImage: "info.circle")
-                                            .foregroundColor(.blue)
-                                            .padding(6)
-                                            .background(Color.black.opacity(0.5))
-                                            .cornerRadius(6)
-                                            .onTapGesture {
-                                                self.infoTech.toggle()
-                                            }
-                                        
-                                        Spacer()
-                                    }
-                                    HStack {
-                                        Text("Research on tech tree items lead to the expansion of the Space Station").foregroundColor(.gray)
-                                        Spacer()
-                                    }
-                                    
-                                    HStack {
-                                        Text("The items with a").foregroundColor(.gray)
-                                        Text("blue").foregroundColor(.blue)
-                                        Text("blue background indicate that you have comlpeted researching that tech.").foregroundColor(.gray)
-                                        Spacer()
-                                    }
-                                    
-                                    HStack {
-                                        Text("The items with a black background haven't been researched yet.").foregroundColor(.gray)
-                                        Spacer()
-                                    }
-                                    
-                                    HStack {
-                                        Text("One may only research items immediately below another research item.")
-                                        Spacer()
-                                    }
-                                }
-                                .transition(.slide.combined(with:AnyTransition.opacity))
-                                
-                            } else {
-                                HStack {
-                                    
-                                    Label("Tech Tree", systemImage: "info.circle")
-                                        .foregroundColor(.blue)
-                                        .padding(6)
-                                        .background(Color.black.opacity(0.5))
-                                        .cornerRadius(6)
-                                        .onTapGesture {
-                                            self.infoTech.toggle()
-                                        }
-                                    
-                                    Spacer()
-                                }
-                                .transition(.slide.combined(with:AnyTransition.opacity))
-                            }
                         
-                            Divider()
+                        if preloading {
                             
-                            DiagramContent(controller:controller)
+                            LabPreloadView()
                             
-                            Divider()
+                        } else {
+                            // Show Tech Tree
+                            ScrollView([.vertical, .horizontal], showsIndicators: true) {
+                                VStack(spacing:6) {
+                                    
+                                    if infoRecipes == true {
+                                        Group {
+                                            HStack(alignment:.bottom) {
+                                                Label("Recipes", systemImage: "info.circle")
+                                                    .foregroundColor(.yellow)
+                                                    .padding(6)
+                                                    .background(Color.black.opacity(0.5))
+                                                    .cornerRadius(6)
+                                                    .onTapGesture {
+                                                        self.infoRecipes.toggle()
+                                                    }
+                                                
+                                                Text("transform").foregroundColor(.gray)
+                                                Text("ingredients").foregroundColor(.blue)
+                                                Text("into")
+                                                Text("Peripherals").foregroundColor(.orange)
+                                                
+                                                Spacer()
+                                            }
+                                            
+                                            HStack {
+                                                Text("Peripherals").foregroundColor(.orange)
+                                                Text("recycle the Space Station's resources").foregroundColor(.gray)
+                                                Spacer()
+                                            }
+                                            
+                                            HStack {
+                                                Text("A well planned set of Peripherals can make a Space Station sustainable for a long time.")
+                                                Spacer()
+                                            }
+                                        }
+                                        .transition(.slide.combined(with:AnyTransition.opacity))
+                                        
+                                        Divider()
+                                        
+                                    } else {
+                                        HStack {
+                                            Label("Recipes", systemImage: "info.circle")
+                                                .foregroundColor(.yellow)
+                                                .padding(6)
+                                                .background(Color.black.opacity(0.5))
+                                                .cornerRadius(6)
+                                                .onTapGesture {
+                                                    self.infoRecipes.toggle()
+                                                }
+                                            
+                                            Spacer()
+                                        }
+                                        .transition(.move(edge:.leading).combined(with:AnyTransition.opacity))
+                                    }
+                                    
+                                    if infoTech == true {
+                                        Group {
+                                            HStack {
+                                                
+                                                Label("Tech Tree", systemImage: "info.circle")
+                                                    .foregroundColor(.blue)
+                                                    .padding(6)
+                                                    .background(Color.black.opacity(0.5))
+                                                    .cornerRadius(6)
+                                                    .onTapGesture {
+                                                        self.infoTech.toggle()
+                                                    }
+                                                
+                                                Spacer()
+                                            }
+                                            HStack {
+                                                Text("Research on tech tree items lead to the expansion of the Space Station").foregroundColor(.gray)
+                                                Spacer()
+                                            }
+                                            
+                                            HStack {
+                                                Text("The items with a").foregroundColor(.gray)
+                                                Text("blue").foregroundColor(.blue)
+                                                Text("blue background indicate that you have comlpeted researching that tech.").foregroundColor(.gray)
+                                                Spacer()
+                                            }
+                                            
+                                            HStack {
+                                                Text("The items with a black background haven't been researched yet.").foregroundColor(.gray)
+                                                Spacer()
+                                            }
+                                            
+                                            HStack {
+                                                Text("One may only research items immediately below another research item.")
+                                                Spacer()
+                                            }
+                                        }
+                                        .transition(.slide.combined(with:AnyTransition.opacity))
+                                        
+                                    } else {
+                                        HStack {
+                                            
+                                            Label("Tech Tree", systemImage: "info.circle")
+                                                .foregroundColor(.blue)
+                                                .padding(6)
+                                                .background(Color.black.opacity(0.5))
+                                                .cornerRadius(6)
+                                                .onTapGesture {
+                                                    self.infoTech.toggle()
+                                                }
+                                            
+                                            Spacer()
+                                        }
+                                        .transition(.slide.combined(with:AnyTransition.opacity))
+                                    }
+                                    
+                                    Divider()
+                                    
+                                    DiagramContent(controller:controller)
+                                    
+                                    Divider()
+                                }
+                                .padding()
+                            }
                         }
-                        .padding()
-                    }
+                    
                     
                 case .recipe(let name):
                     ScrollView {
@@ -346,7 +355,11 @@ struct LaboratoryView: View {
         .background(GameColors.darkGray)
         .frame(minWidth: 800, minHeight: 600, alignment: .center)
         .cornerRadius(12)
-        
+        .onAppear() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                self.preloading = false
+            }
+        }
     }
 }
 
