@@ -376,6 +376,7 @@ extension StationBuilder {
 
 extension StationBuildItem {
     
+    /// Gets the modules and nodes geometries and texture maps.
     func loadFromScene() -> SCNNode? {
         var nodeCount:Int = 1
         switch type {
@@ -399,6 +400,33 @@ extension StationBuildItem {
                 
             case .Module:
                 
+                /*
+                 Reconstruct
+                 Get the correct geometry
+                 There are 2 geometries. One for the old materials, and one for the new
+                 */
+                var model:SCNNode = skin?.getGeometryNode() ?? ModuleSkin.makeANode()
+                
+                // Position
+                let pos = position
+#if os(macOS)
+                model.position = SCNVector3(x: CGFloat(pos.x), y: CGFloat(pos.y), z: CGFloat(pos.z))
+#else
+                model.position = SCNVector3(pos.x, pos.y, pos.z)
+#endif
+                // Change name to id
+                model.name = id.uuidString
+                
+                // rotation
+                let vec = rotation
+                let sceneVec = SCNVector3(vec.x, vec.y, vec.z)
+                model.eulerAngles = sceneVec
+                
+                return model
+                    
+                
+                /*
+                // Geometry
                 let moduleScene = SCNScene(named: "Art.scnassets/SpaceStation/Module.scn")!
                 if let nodeObj = moduleScene.rootNode.childNode(withName: "Module", recursively: false)?.clone() {
                     
@@ -447,10 +475,144 @@ extension StationBuildItem {
                     print("Module not found ID:\(id) \(self.type) ")
                     return nil
                 }
+                */
+                
+                
             case .Peripheral, .Truss:
                 print("Deprecate ?")
                 return nil
         }
+    }
+}
+
+extension ModuleSkin {
+    
+    /// Makes a default node
+    static func makeANode() -> SCNNode {
+        
+        guard let moduleScene = SCNScene(named: "Art.scnassets/SpaceStation/Module.scn"),
+              let buildingNode:SCNNode = moduleScene.rootNode.childNode(withName: "ModuleB", recursively: false)?.clone() else {
+            fatalError()
+              }
+        
+        let random:ModuleSkin = ModuleSkin.BatteryMod
+        
+        // These materials are more complex
+        
+        let myMat = buildingNode.geometry?.materials.first(where: { $0.name == "Bingo" })
+        if let myMat = myMat {
+            if let folder = random.textureFolder {
+                
+                // Color
+                if let albedo = random.albedo {
+                    myMat.diffuse.contents = SKNImage(contentsOfFile: folder.appendingPathComponent(albedo).path)
+                } else {
+                    myMat.diffuse.contents = SCNColor.white
+                }
+                
+                if let ao = random.occlusion {
+                    myMat.ambientOcclusion.contents = SKNImage(contentsOfFile: folder.appendingPathComponent(ao).path)
+                } else {
+                    myMat.ambientOcclusion.contents = SCNColor.white
+                }
+                
+                if let metalic = random.metalic {
+                    myMat.metalness.contents = SKNImage(contentsOfFile: folder.appendingPathComponent(metalic).path)
+                } else {
+                    myMat.metalness.contents = 0.0
+                }
+                if let rough = random.roughness {
+                    myMat.roughness.contents = SKNImage(contentsOfFile: folder.appendingPathComponent(rough).path)
+                } else {
+                    myMat.roughness.contents = 0.5
+                }
+                if let normal = random.normal {
+                    myMat.normal.contents = SKNImage(contentsOfFile: folder.appendingPathComponent(normal).path)
+                } else {
+                    myMat.normal.contents = nil
+                }
+            }
+        }
+        
+        
+        return buildingNode
+    }
+    
+    /// Returns the correct geometry for this material
+    func getGeometryNode() -> SCNNode? {
+        
+        guard let moduleScene = SCNScene(named: "Art.scnassets/SpaceStation/Module.scn") else {
+            print("Something wrong with Module Scene.")
+            return nil
+        }
+        
+        // Start building node
+        var buildingNode:SCNNode?
+        var isSingleMaterial:Bool = true
+        
+        // Get the correct geometry
+        switch self {
+            case .ModuleBake, .diffuse1, .BioModule, .LabModule, .HabModule:
+                buildingNode = moduleScene.rootNode.childNode(withName: "Module", recursively: false)?.clone()
+            case .BatteryMod, .Capsule, .Drawing, .Panels, .SleekCables:
+                isSingleMaterial = false
+                buildingNode = moduleScene.rootNode.childNode(withName: "ModuleB", recursively: false)?.clone()
+        }
+        
+        guard let buildingNode:SCNNode = buildingNode else {
+            print("Could not get the main node")
+            return nil
+        }
+
+        
+        if isSingleMaterial == true {
+            // single material
+            if let folder = textureFolder,
+               let image = albedo {
+                let tmpPath = folder.appendingPathComponent(image).path
+                print("Path: \(tmpPath)")
+                
+                buildingNode.geometry?.materials.first?.diffuse.contents = SKNImage(contentsOfFile: folder.appendingPathComponent(image).path)
+                    
+            }
+        } else {
+            
+            // These materials are more complex
+            
+            let myMat = buildingNode.geometry?.materials.first(where: { $0.name == "Bingo" })
+            if let myMat = myMat {
+                if let folder = textureFolder {
+                    // Color
+                    if let albedo = albedo {
+                        myMat.diffuse.contents = SKNImage(contentsOfFile: folder.appendingPathComponent(albedo).path)
+                    } else {
+                        myMat.diffuse.contents = SCNColor.white
+                    }
+                    if let ao = occlusion {
+                        myMat.ambientOcclusion.contents = SKNImage(contentsOfFile: folder.appendingPathComponent(ao).path)
+                    } else {
+                        myMat.ambientOcclusion.contents = SCNColor.white
+                    }
+                    if let metalic = metalic {
+                        myMat.metalness.contents = SKNImage(contentsOfFile: folder.appendingPathComponent(metalic).path)
+                    } else {
+                        myMat.metalness.contents = 0.0
+                    }
+                    if let rough = roughness {
+                        myMat.roughness.contents = SKNImage(contentsOfFile: folder.appendingPathComponent(rough).path)
+                    } else {
+                        myMat.roughness.contents = 0.5
+                    }
+                    if let normal = normal {
+                        myMat.normal.contents = SKNImage(contentsOfFile: folder.appendingPathComponent(normal).path)
+                    } else {
+                        myMat.normal.contents = nil
+                    }
+                }
+            }
+        }
+        
+        return buildingNode
     }
 }
 

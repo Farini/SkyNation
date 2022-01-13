@@ -159,6 +159,8 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Animated Airlock
 - [X] Game Camera - `stareAtNode()`
 - [X] Laboratory View preloading !!
+- [X] animate camera to show nodes like Airlock, Cuppola, Antenna, etc.
+- [X] Implement new Station Modules from Blender
 
 - [ ] Completely eliminate `GuildFullContent`
 
@@ -176,8 +178,13 @@ Intro. Introduce player to game.
 - [ ] Look into APNS
 - [ ] Game Settings - Save camera?
 - [ ] Leaving a Guild Problems. Needs to fix it. API not decoding correctly (but it happens in server. It crashes.)
-- [ ] animate camera to show nodes like Airlock, Cuppola, Antenna, etc.
-- [ ] Implement new Station Modules from Blender
+- [ ] Intro?
+
+### Launching + Updates
+
+- [ ] Release macOS v 1.2
+- [ ] Test iPad mini (small screen)
+- [ ] Release iOS v 1.0
 
 ### iOS
 
