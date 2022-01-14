@@ -114,7 +114,7 @@ extension GameController {
         let p = self.gameOverlay.scene.convertPoint(fromView: sprite2dPoint)
         return p
 #else
-        let sprite2dPoint = CGPoint(x: Double(spriteLocation.x), y: Double(spriteLocation.y - 64.0))
+        let sprite2dPoint = CGPoint(x: Double(spriteLocation.x), y: Double(spriteLocation.y + 64.0))
         let p = self.gameOverlay.scene.convertPoint(fromView: sprite2dPoint)
         return p
 #endif

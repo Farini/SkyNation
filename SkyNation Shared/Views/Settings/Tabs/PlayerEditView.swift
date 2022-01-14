@@ -20,7 +20,7 @@ struct PlayerEditorView: View {
         case Confirming
     }
     
-    @State private var editorStep:EditorStep = .Displaying
+    @State private var editorStep:EditorStep = .TypingName
     
     /// Look into game center to set the player's name
     var gameCenterManager:GameCenterManager = GameCenterManager.shared

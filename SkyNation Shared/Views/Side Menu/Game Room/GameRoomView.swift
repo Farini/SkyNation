@@ -130,8 +130,17 @@ struct GameRoomView: View {
                                     controller.collectRewardFrom(message: rewardMessage)
                                 }
                             }
+                            
+                            if controller.achievements.isEmpty {
+                                Text("Achievements and other messages will appear here.").foregroundColor(.gray)
+                                    .padding(.vertical, 20)
+                                EmptyView()
+                            }
+                            
+                            Spacer()
                         }
                         .padding(.horizontal)
+                        .frame(minHeight:400)
                     }
                 case .freebie:
                     VStack {

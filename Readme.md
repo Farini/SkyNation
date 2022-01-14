@@ -161,24 +161,36 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Laboratory View preloading !!
 - [X] animate camera to show nodes like Airlock, Cuppola, Antenna, etc.
 - [X] Implement new Station Modules from Blender
+- [X] Milky Way background
+- [X] Game Settings (start) - Bring view to textfield, and make it active.
 
 - [ ] Completely eliminate `GuildFullContent`
 
-- [ ] Game Settings (start) - Bring view to textfield, and make it active.
-Make it more obvious to the player that they should type a name.
+- [ ] Launch iOS v 1.0 
+- [ ] Launch macOS v 1.2
+
+- [ ] Mars Scene - All Guild Vehicles arriving
+- [ ] ServerData - Use GuildFlags to show new items. in GuildRoom
+- [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
+- [ ] Look into APNS
+- [ ] Leaving a Guild Problems. Needs to fix it. API not decoding correctly (but it happens in server. It crashes.)
+
+- [ ] City View - Bio - "Evolve" not updating the list
+
+- [ ] Intro?
+- [ ] Store - Build list of bonus (kits) depending on prev. purchases
+- [ ] Store - needs visual improvements
+- [ ] Settings - Allow player to see guilds before first purchase
+- [ ] Game Settings - Save camera?
+
+- [ ] GameCenter Achievements
 Discussion:
 Intro. Introduce player to game.
 
+Greetings, [Player name]
+Your objective is to take over this space station and expand its capabilities.
+If you are so brave, send space vehicles to Mars and colonize the red planet.
 
-- [ ] Mars Scene - All Guild Vehicles arriving
-- [ ] Store - Build list of bonus (kits) depending on prev. purchases
-- [ ] ServerData - Use GuildFlags to show new items. in GuildRoom
-- [ ] City View - Bio - "Evolve" not updating the list
-- [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
-- [ ] Look into APNS
-- [ ] Game Settings - Save camera?
-- [ ] Leaving a Guild Problems. Needs to fix it. API not decoding correctly (but it happens in server. It crashes.)
-- [ ] Intro?
 
 ### Launching + Updates
 
@@ -190,18 +202,14 @@ Intro. Introduce player to game.
 
 - [X] iOS Views - Corner Radius:12
 - [X] iOS Views - Hab Module Selection
-- [ ] iOS Views - Mars Views (remake)
-- [ ] iOS - List View Backgrounds. See: https://peterfriese.dev/swiftui-listview-part3/
-
+- [X] iOS - List View Backgrounds. See: https://peterfriese.dev/swiftui-listview-part3/
 - [X] iOS - Button being pushed.
 - [X] iOS - Garage - prepare for launch is unusable
-- [ ] iOS - Some Views are too large
-- [ ] iOS - Window Sizes + View Sizes
-- [ ] iOS - Popover sizes
-- [ ] iOS - increase bloom in camera? - or find a way to make scene brighter.
-
+- [X] iOS - increase bloom in camera? - or find a way to make scene brighter.
 - [X] Setup Graphics Options (multisampling on UIViewController's `view`)
-- [ ] Many Views need ScrollViews inside
+
+- [ ] Views that need ScrollViews inside
+- [ ] iOS Views - Mars Views (remake)
 
 ### Scene Models
 
@@ -225,9 +233,9 @@ Intro. Introduce player to game.
 - [X] Election Results - Guild governor - pending update of Guild.
 - [X] Tutorial finger
 - [X] Create Player
+- [X] UI Test - `iPad Pro 9.7 inch`
 - [ ] Outpost Update
 - [ ] Leaving a Guild - Failing test
-- [ ] UI Test - `iPad Pro 9.7 inch`
 
 ### GameCenter
 
@@ -274,6 +282,9 @@ Once the app is released.
 - [ ] Screenshots Mars Horizon
 - [ ] Screenshots Mars City
 - [ ] Screenshots GuildRoom Election
+
+- [ ] Video - iPad
+- [ ] Video - macOS
 
 version: `macOS`
 One of the following, with a 16:10 aspect ratio.
