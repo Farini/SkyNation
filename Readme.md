@@ -26,6 +26,8 @@ The contributors to these projects shall have a **fair** share of the game, and 
 - [X] Apple Store Product Registration
 - [X] TestFlight: https://testflight.apple.com/join/lGBrKxTQ
 - [X] Product (macOS) Version 1.0 build 40 - 12/29/2021
+- [X] Product (iOS) Version 1.0 - 01/12/2022
+- [ ] Product (tvOS) Version 1.0
 
 ### Methodology 
 **ToDo** Items are a part of a **Component** of the Game. Completing these items will ultimately generate one or more stars, that indicates the progress of that component. A Component will be fully complete when 5 stars are reached - in which case it means that no more work is required for that component.
@@ -51,8 +53,8 @@ The contributors to these projects shall have a **fair** share of the game, and 
  - [ ] ★★★★★ Earth Order
  - [ ] ★★★★☆ Garage
  - [ ] ★★★★☆ Accounting System
- - [ ] ★★★★☆ Truss
- - [ ] ★★★★☆ Life Support Systems
+ - [ ] ★★★★★ Truss
+ - [ ] ★★★★★ Life Support Systems
  - [ ] ★★★★☆ Vehicles Travelling Views/Scenes
  
  - [ ] ★★★★☆ Mars Scene
@@ -164,15 +166,17 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Milky Way background
 - [X] Game Settings (start) - Bring view to textfield, and make it active.
 
+- [X] Launch iOS v 1.0 - Jan 14th, 2021
+
+
 - [ ] Completely eliminate `GuildFullContent`
 
-- [ ] Launch iOS v 1.0 
+
 - [ ] Launch macOS v 1.2
 
 - [ ] Mars Scene - All Guild Vehicles arriving
 - [ ] ServerData - Use GuildFlags to show new items. in GuildRoom
 - [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
-- [ ] Look into APNS
 - [ ] Leaving a Guild Problems. Needs to fix it. API not decoding correctly (but it happens in server. It crashes.)
 
 - [ ] City View - Bio - "Evolve" not updating the list
@@ -186,6 +190,12 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] GameCenter Achievements
 Discussion:
 Intro. Introduce player to game.
+Nodes:
+    - News
+    - Intro
+    - Warning
+    - Tutorial
+    - Tips 
 
 Greetings, [Player name]
 Your objective is to take over this space station and expand its capabilities.

@@ -12,8 +12,10 @@ float hex(vec2 p) {
 
 void main() {
     vec2 pos = gl_FragCoord.xy;
-    vec2 p = pos/20.0;
-    float  r = (1.0 -0.7)*0.5;
+    
+    vec2 p = pos/40.0;
+    
+    float r = (1.0 -0.7) * 0.5;
     
     vec3 color = smoothstep(0.0, r + 0.05, hex(p));
     

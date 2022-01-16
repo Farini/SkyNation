@@ -650,7 +650,8 @@ extension GameController {
     func deliveryIsArriving() {
         
         guard gameScene == .SpaceStation else { return }
-        gameOverlay.generateNews(string: "📦 Delivery arriving...")
+//        gameOverlay.generateNews(string: "📦 Delivery arriving...")
+        self.gameOverlay.addNews(data: NewsData(type: .Info, message: "📦 Delivery arriving...", date: nil))
         
         // Remove the earth
         if let earth = scene.rootNode.childNode(withName: "Earth", recursively: true) as? EarthNode {

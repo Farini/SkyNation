@@ -484,6 +484,21 @@
 		856A64C327289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 856A64C227289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf */; };
 		856A64C427289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 856A64C227289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf */; };
 		856A64C527289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 856A64C227289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf */; };
+		85713C61279201DC0034906E /* SpriteTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85713C60279201DC0034906E /* SpriteTestView.swift */; };
+		85713C62279201DC0034906E /* SpriteTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85713C60279201DC0034906E /* SpriteTestView.swift */; };
+		85713C63279201DC0034906E /* SpriteTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85713C60279201DC0034906E /* SpriteTestView.swift */; };
+		85713C65279211EA0034906E /* StrokeGrad.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 85713C64279211EA0034906E /* StrokeGrad.fsh */; };
+		85713C66279211EA0034906E /* StrokeGrad.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 85713C64279211EA0034906E /* StrokeGrad.fsh */; };
+		85713C67279211EA0034906E /* StrokeGrad.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 85713C64279211EA0034906E /* StrokeGrad.fsh */; };
+		85713C692793337D0034906E /* DashedBorder.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 85713C682793337D0034906E /* DashedBorder.fsh */; };
+		85713C6A2793337D0034906E /* DashedBorder.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 85713C682793337D0034906E /* DashedBorder.fsh */; };
+		85713C6B2793337D0034906E /* DashedBorder.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 85713C682793337D0034906E /* DashedBorder.fsh */; };
+		85713C6D27933AFF0034906E /* CheckerboardFill.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 85713C6C27933AFF0034906E /* CheckerboardFill.fsh */; };
+		85713C6E27933AFF0034906E /* CheckerboardFill.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 85713C6C27933AFF0034906E /* CheckerboardFill.fsh */; };
+		85713C6F27933B000034906E /* CheckerboardFill.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 85713C6C27933AFF0034906E /* CheckerboardFill.fsh */; };
+		85713C72279366450034906E /* NewsNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85713C71279366450034906E /* NewsNode.swift */; };
+		85713C73279366450034906E /* NewsNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85713C71279366450034906E /* NewsNode.swift */; };
+		85713C74279366450034906E /* NewsNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85713C71279366450034906E /* NewsNode.swift */; };
 		8579750F259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
 		85797510259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
 		85797511259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
@@ -912,6 +927,11 @@
 		856A64BA27289D8F0075CC04 /* Ailerons-Typeface.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ailerons-Typeface.otf"; sourceTree = "<group>"; };
 		856A64BE27289DB70075CC04 /* RobotoMono-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoMono-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		856A64C227289F390075CC04 /* RobotoSlab-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoSlab-VariableFont_wght.ttf"; sourceTree = "<group>"; };
+		85713C60279201DC0034906E /* SpriteTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteTestView.swift; sourceTree = "<group>"; };
+		85713C64279211EA0034906E /* StrokeGrad.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = StrokeGrad.fsh; sourceTree = "<group>"; };
+		85713C682793337D0034906E /* DashedBorder.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = DashedBorder.fsh; sourceTree = "<group>"; };
+		85713C6C27933AFF0034906E /* CheckerboardFill.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = CheckerboardFill.fsh; sourceTree = "<group>"; };
+		85713C71279366450034906E /* NewsNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsNode.swift; sourceTree = "<group>"; };
 		8579750E259B9E70004C54D2 /* FlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipView.swift; sourceTree = "<group>"; };
 		857A3562269607300020ADF2 /* Scene Assets.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "Scene Assets.md"; sourceTree = "<group>"; };
 		857A35642696AE500020ADF2 /* RSSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSView.swift; sourceTree = "<group>"; };
@@ -1459,10 +1479,11 @@
 				85BC5AAE278D5DC400F44A49 /* Typography.md */,
 				856A64A42727B5050075CC04 /* TypographyView.swift */,
 				8595661D277AC5D400188FE3 /* BoxedCells.swift */,
-				8536F3C6258D47D000B509D2 /* AnimationsTest.swift */,
 				8536F3C7258D47D000B509D2 /* Parafernalia.swift */,
-				85108372271B16D8004D6D00 /* NetResponseView.swift */,
 				859566212782B1E300188FE3 /* ShadesOfBlack.swift */,
+				85713C5F279201760034906E /* SK Overlays */,
+				8536F3C6258D47D000B509D2 /* AnimationsTest.swift */,
+				85108372271B16D8004D6D00 /* NetResponseView.swift */,
 			);
 			path = TestViews;
 			sourceTree = "<group>";
@@ -1489,8 +1510,8 @@
 				8536F45F258D481700B509D2 /* CamControl.sks */,
 				85C3418425905A7500BF82F9 /* TutorialNode.swift */,
 				85C3418D2591078700BF82F9 /* PlayerCardNode.swift */,
+				85713C70279366200034906E /* News Nodes */,
 				85A59E9F270CB6C90049AFC1 /* PlayerCardLayout.sks */,
-				85BC5AA9278D37F300F44A49 /* NewsObj.sks */,
 			);
 			path = Overlays;
 			sourceTree = "<group>";
@@ -1648,6 +1669,7 @@
 			isa = PBXGroup;
 			children = (
 				8569A314259F81110057A518 /* CautionStripes.fsh */,
+				85713C64279211EA0034906E /* StrokeGrad.fsh */,
 				8569A317259F81110057A518 /* CirclesMovingShader.fsh */,
 				8569A30E259F81110057A518 /* CutionStripesColored.fsh */,
 				8569A316259F81110057A518 /* HealthShader.fsh */,
@@ -1657,6 +1679,8 @@
 				8569A312259F81110057A518 /* RadarShader.fsh */,
 				8569A318259F81110057A518 /* RectanglesMoving.fsh */,
 				8569A310259F81110057A518 /* TransitionShader.fsh */,
+				85713C682793337D0034906E /* DashedBorder.fsh */,
+				85713C6C27933AFF0034906E /* CheckerboardFill.fsh */,
 			);
 			path = FSH;
 			sourceTree = "<group>";
@@ -1683,6 +1707,23 @@
 				856A64BA27289D8F0075CC04 /* Ailerons-Typeface.otf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		85713C5F279201760034906E /* SK Overlays */ = {
+			isa = PBXGroup;
+			children = (
+				85713C60279201DC0034906E /* SpriteTestView.swift */,
+			);
+			path = "SK Overlays";
+			sourceTree = "<group>";
+		};
+		85713C70279366200034906E /* News Nodes */ = {
+			isa = PBXGroup;
+			children = (
+				85713C71279366450034906E /* NewsNode.swift */,
+				85BC5AA9278D37F300F44A49 /* NewsObj.sks */,
+			);
+			path = "News Nodes";
 			sourceTree = "<group>";
 		};
 		857A35632696AE1F0020ADF2 /* RSS */ = {
@@ -2069,8 +2110,10 @@
 				8536F2C5258D330300B509D2 /* Main.storyboard in Resources */,
 				8536F2C8258D330300B509D2 /* LaunchScreen.storyboard in Resources */,
 				8569A32E259F81110057A518 /* MapShapeGradient.fsh in Resources */,
+				85713C692793337D0034906E /* DashedBorder.fsh in Resources */,
 				85D3BB2826AF244400B6AA36 /* SFXClose.wav in Resources */,
 				8536F2F0258D330300B509D2 /* Assets.xcassets in Resources */,
+				85713C65279211EA0034906E /* StrokeGrad.fsh in Resources */,
 				856A64B6272892F80075CC04 /* Adventure.mp3 in Resources */,
 				8536F471258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F495258D481700B509D2 /* SparkEmitter.sks in Resources */,
@@ -2087,6 +2130,7 @@
 				8569A337259F81110057A518 /* RectanglesMoving.fsh in Resources */,
 				85BC5AAA278D37F300F44A49 /* NewsObj.sks in Resources */,
 				8595402F26197A18001D9040 /* SKN_T3.m4a in Resources */,
+				85713C6D27933AFF0034906E /* CheckerboardFill.fsh in Resources */,
 				8569A334259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
 				85D3BB2B26AF244400B6AA36 /* SFXSelected.wav in Resources */,
 				8595402926197A18001D9040 /* SKN_T2.m4a in Resources */,
@@ -2113,8 +2157,10 @@
 				8536F2D6258D330300B509D2 /* Main.storyboard in Resources */,
 				8536F2D9258D330300B509D2 /* LaunchScreen.storyboard in Resources */,
 				8569A32F259F81110057A518 /* MapShapeGradient.fsh in Resources */,
+				85713C6A2793337D0034906E /* DashedBorder.fsh in Resources */,
 				85D3BB2926AF244400B6AA36 /* SFXClose.wav in Resources */,
 				8536F2F1258D330300B509D2 /* Assets.xcassets in Resources */,
+				85713C66279211EA0034906E /* StrokeGrad.fsh in Resources */,
 				856A64B7272892F80075CC04 /* Adventure.mp3 in Resources */,
 				8536F472258D481700B509D2 /* CamControl.sks in Resources */,
 				8536F496258D481700B509D2 /* SparkEmitter.sks in Resources */,
@@ -2131,6 +2177,7 @@
 				8569A338259F81110057A518 /* RectanglesMoving.fsh in Resources */,
 				85BC5AAB278D37F300F44A49 /* NewsObj.sks in Resources */,
 				8595403026197A18001D9040 /* SKN_T3.m4a in Resources */,
+				85713C6E27933AFF0034906E /* CheckerboardFill.fsh in Resources */,
 				8569A335259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
 				85D3BB2C26AF244400B6AA36 /* SFXSelected.wav in Resources */,
 				8595402A26197A18001D9040 /* SKN_T2.m4a in Resources */,
@@ -2157,8 +2204,10 @@
 				8569A32A259F81110057A518 /* HexagonShader.fsh in Resources */,
 				8569A31E259F81110057A518 /* InterlaceShader.fsh in Resources */,
 				85D3BB2A26AF244400B6AA36 /* SFXClose.wav in Resources */,
+				85713C6B2793337D0034906E /* DashedBorder.fsh in Resources */,
 				8569A321259F81110057A518 /* TransitionShader.fsh in Resources */,
 				8536F2F2258D330300B509D2 /* Assets.xcassets in Resources */,
+				85713C67279211EA0034906E /* StrokeGrad.fsh in Resources */,
 				856A64B8272892F80075CC04 /* Adventure.mp3 in Resources */,
 				8569A336259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
 				85E2C41F26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
@@ -2175,6 +2224,7 @@
 				8536F2EF258D330300B509D2 /* Art.scnassets in Resources */,
 				85BC5AAC278D37F300F44A49 /* NewsObj.sks in Resources */,
 				8569A306259F7F990057A518 /* dissolve.fragment.txt in Resources */,
+				85713C6F27933B000034906E /* CheckerboardFill.fsh in Resources */,
 				8595403126197A18001D9040 /* SKN_T3.m4a in Resources */,
 				8569A32D259F81110057A518 /* CautionStripes.fsh in Resources */,
 				85D3BB2D26AF244400B6AA36 /* SFXSelected.wav in Resources */,
@@ -2221,6 +2271,7 @@
 			files = (
 				8504A51425C5D3B800739C58 /* CautionStripes.swift in Sources */,
 				85B34B1C26FA21FD007178F5 /* ContributionRoundView.swift in Sources */,
+				85713C72279366450034906E /* NewsNode.swift in Sources */,
 				8516AD7B273CD98700392C4F /* TokenXChangeView.swift in Sources */,
 				857DDEC725E4DCAD00E64752 /* Messages.swift in Sources */,
 				85FE6436276D07C800FF93D5 /* GameCenterManager.swift in Sources */,
@@ -2316,6 +2367,7 @@
 				85487F4726CC7C7400EBC070 /* OutpostNode.swift in Sources */,
 				8536F3F6258D47D000B509D2 /* TankViews.swift in Sources */,
 				85D3BB1F26AC84CA00B6AA36 /* CityHabView.swift in Sources */,
+				85713C61279201DC0034906E /* SpriteTestView.swift in Sources */,
 				8536F445258D47EA00B509D2 /* LabViewModel.swift in Sources */,
 				85FE642B276A81C500FF93D5 /* GuildCardView.swift in Sources */,
 				85351E7B26FED3C400EEE04C /* CityBioView.swift in Sources */,
@@ -2403,6 +2455,7 @@
 			files = (
 				856081FD26EE952F00C2418E /* LSSView.swift in Sources */,
 				8536F442258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
+				85713C73279366450034906E /* NewsNode.swift in Sources */,
 				85487F4326CC691300EBC070 /* CityGateNode.swift in Sources */,
 				8516AD7C273CD98700392C4F /* TokenXChangeView.swift in Sources */,
 				85797510259B9E70004C54D2 /* FlipView.swift in Sources */,
@@ -2498,6 +2551,7 @@
 				859281FD25E9529C001233BE /* TutorialView.swift in Sources */,
 				8536F446258D47EA00B509D2 /* LabViewModel.swift in Sources */,
 				85351E8426FEEA6800EEE04C /* CityBioboxDetailView.swift in Sources */,
+				85713C62279201DC0034906E /* SpriteTestView.swift in Sources */,
 				8536F377258D475D00B509D2 /* Peripherals.swift in Sources */,
 				858D7C5525D60FA300A45CF9 /* GameButtons.swift in Sources */,
 				8517EE3525FC11EF00C34C54 /* Guild.swift in Sources */,
@@ -2615,6 +2669,7 @@
 				8592823825EC4DD3001233BE /* GuildController.swift in Sources */,
 				85CD46B225D20B42000D9C64 /* ModulePopView.swift in Sources */,
 				85351E8926FF644800EEE04C /* CityLabActivityView.swift in Sources */,
+				85713C74279366450034906E /* NewsNode.swift in Sources */,
 				85D3BAAC269DF75000B6AA36 /* MarsCityView.swift in Sources */,
 				8516AD79273B1E8500392C4F /* GuildElectionView.swift in Sources */,
 				85D3BB1926AB24F800B6AA36 /* GameDialogueModifiers.swift in Sources */,
@@ -2722,6 +2777,7 @@
 				8504A51F25C6845200739C58 /* StationBuilder.swift in Sources */,
 				8592824525EC74FD001233BE /* GuildView.swift in Sources */,
 				8592825225EED6EF001233BE /* SpaceVehicleNode.swift in Sources */,
+				85713C63279201DC0034906E /* SpriteTestView.swift in Sources */,
 				857A35672696AE500020ADF2 /* RSSView.swift in Sources */,
 				8536F3E4258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */,
 				85A6590825E4178F008AA9BA /* GameSettingsController.swift in Sources */,
@@ -3120,7 +3176,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cfarini.SkyNation;
 				PRODUCT_NAME = SkyNation;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3147,7 +3203,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cfarini.SkyNation;
 				PRODUCT_NAME = SkyNation;
 				PROVISIONING_PROFILE_SPECIFIER = "";

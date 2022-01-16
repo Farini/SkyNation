@@ -62,7 +62,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     var gameOverlay:GameOverlay
     
     /// The news (if any) to display sometime during the render
-    var newsLines:[String] = []
+//    var newsLines:[String] = []
     
     // Data
     var gameNavDelegate:GameNavDelegate?
@@ -239,7 +239,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                             gameNavDelegate?.didSelectLSS(scene: self.gameScene)
                             
                         } else {
-                            self.gameOverlay.generateNews(string: "You need to claim a city to view LSS report.")
+                            // self.gameOverlay.generateNews(string: "You need to claim a city to view LSS report.")
+                            self.gameOverlay.addNews(data: NewsData(type: .Info, message: "You need to claim a city to view LSS report.\nClick on a gate of an occupied city.\nThese gates have a darker color.\nThen click 'claim city'. You should be done.", date: nil))
                         }
                 }
                 
@@ -321,7 +322,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 let occupiedIDs:[UUID] = station.habModules.compactMap({ $0.id }) + station.labModules.compactMap({ $0.id }) + station.bioModules.compactMap({ $0.id })
                 guard let moduleA = station.modules.first(where: { occupiedIDs.contains($0.id) == false }) else {
                     print("All modules are occupied")
-                    newsLines.append("All modules are occupied")
+//                    newsLines.append("All modules are occupied")
+                    self.gameOverlay.addNews(data: NewsData(type: .Info, message: "all modules are occupied", date: nil))
                     return
                 }
                 if let _ = station.lookupModule(id: moduleA.id) as? Module {
@@ -330,7 +332,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     sprite.removeFromParent()
                     return
                 } else {
-                    newsLines.append("⚠️ Unable to locate a vacant module.")
+//                    newsLines.append("⚠️ Unable to locate a vacant module.")
+                    self.gameOverlay.addNews(data: NewsData(type: .Info, message: "⚠️ Unable to locate a vacant module.", date: nil))
                     sprite.isHidden = true
                     sprite.removeFromParent()
                     return
@@ -462,13 +465,14 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                                     self.checkBeginnersHandTutorial()
                                 }
                                 
-                                if self.newsLines.isEmpty == false {
-                                    print("*** NEWS ***  (\(self.newsLines.count))")
-                                    if let currentNews = self.newsLines.first {
-                                        self.gameOverlay.generateNews(string: currentNews)
-                                        self.newsLines.removeFirst()
-                                    }
-                                }
+//                                if self.newsLines.isEmpty == false {
+//
+//                                    print("*** NEWS ***  (\(self.newsLines.count))")
+//                                    if let currentNews = self.newsLines.first {
+//                                        self.gameOverlay.generateNews(string: currentNews)
+//                                        self.newsLines.removeFirst()
+//                                    }
+//                                }
                             }
                         }
                         
@@ -486,13 +490,13 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                                     self.gameOverlay.updatePlayerCard()
                                     
                                     // News
-                                    if self.newsLines.isEmpty == false {
-                                        print("*** NEWS ***  (\(self.newsLines.count))")
-                                        if let currentNews = self.newsLines.first {
-                                            self.gameOverlay.generateNews(string: currentNews)
-                                            self.newsLines.removeFirst()
-                                        }
-                                    }
+//                                    if self.newsLines.isEmpty == false {
+//                                        print("*** NEWS ***  (\(self.newsLines.count))")
+//                                        if let currentNews = self.newsLines.first {
+//                                            self.gameOverlay.generateNews(string: currentNews)
+//                                            self.newsLines.removeFirst()
+//                                        }
+//                                    }
                                 }
                             }
                         }
@@ -541,19 +545,16 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 guard enter == true else {
                     print("No Entry")
                     
-                    let line1 = "⚠️ Player needs an entry ticket to Mars"
-                    let line2 = "🛒 Head to the store and purchase any product."
-                    let line3 = "---"
+                    let line1 = "⚠️ Player needs an entry ticket to Mars\n🛒 Head to the store and purchase any product."
                     
-                    let lines:[String] = [line1, line2, line3]
-                    var newsDelay = 1.0
-                    for line in lines {
-                        let timeDelay = DispatchTime.now() + newsDelay
-                        DispatchQueue.main.asyncAfter(deadline: timeDelay) {
-                            self.gameOverlay.generateNews(string: line)
-                        }
-                        newsDelay += 5
+//                    let lines:[String] = [line1, line2, line3]
+//                    var newsDelay = 1.0
+                    let timeDelay = DispatchTime.now() + 0.75
+                    DispatchQueue.main.asyncAfter(deadline: timeDelay) {
+                        self.gameOverlay.addNews(data: NewsData(type: .Info, message: line1, date: nil))
                     }
+//                    newsDelay += 5
+                    
                     
                     return
                 }
@@ -563,18 +564,19 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 guard mBuilder.hasNoGuild == false else {
                     print("No Entry")
                     
-                    let line1 = "⚠️ Player has no Guild."
-                    let line2 = "This could happen if you haven't joined a guild"
-                    let line3 = "Or because you were booted 👢"
-                    let lines:[String] = [line1, line2, line3]
-                    var newsDelay = 1.0
-                    for line in lines {
-                        let timeDelay = DispatchTime.now() + newsDelay
+                    let line1 = "⚠️ Player has no Guild.\nThis could happen if you haven't joined a guild.\nOr because you were booted 👢."
+//                    let line2 = ""
+//                    let line3 = "Or because you were booted 👢"
+//                    let lines:[String] = [line1, line2, line3]
+//                    var newsDelay = 1.0
+//                    for line in lines {
+                        let timeDelay = DispatchTime.now() + 1.0
                         DispatchQueue.main.asyncAfter(deadline: timeDelay) {
-                            self.gameOverlay.generateNews(string: line)
+                            self.gameOverlay.addNews(data: NewsData(type: .Info, message: line1, date: nil))
+//                            self.gameOverlay.generateNews(string: line)
                         }
-                        newsDelay += 5
-                    }
+//                        newsDelay += 5
+//                    }
                     
                     return
                 }
@@ -739,11 +741,15 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 
                 // Beginners Guide
                 if station.habModules.count < 1 {
-                    newsLines.append("Tap on a Module (see hand) and create your first Hab Module.")
+                    self.gameOverlay.addNews(data: NewsData(type: .Intro, message: "Tap on a Module (see hand) and create your first Hab Module.", date: nil))
+//                    newsLines.append("Tap on a Module (see hand) and create your first Hab Module.")
                 } else if station.labModules.count < 1 {
-                    newsLines.append("Tap on a Module (see hand) and create your first Lab Module.")
+//                    newsLines.append("Tap on a Module (see hand) and create your first Lab Module.")
+                    self.gameOverlay.addNews(data: NewsData(type: .Intro, message: "Tap on a Module (see hand) and create your first Lab Module.", date: nil))
                 } else if station.getPeople().count < 1 {
-                    newsLines.append("Tap on the Earth, to order items for your Space Station.")
+                    
+//                    newsLines.append("Tap on the Earth, to order items for your Space Station.")
+                    self.gameOverlay.addNews(data: NewsData(type: .Intro, message: "Tap on the Earth, to order items for your Space Station.", date: nil))
                 }
                 
                 // Lab activities
@@ -754,10 +760,12 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         print("*** Found Activity: \(activity.activityName)")
                         if activity.dateEnds.compare(Date()) == .orderedAscending {
                             let descriptor = "🔬 Completed Lab activity - Check Lab Modules."
-                            newsLines.append(descriptor)
+                            self.gameOverlay.addNews(data: NewsData(type: .Intro, message: descriptor, date: nil))
+//                            newsLines.append(descriptor)
                         } else {
                             let descriptor = "⏱ Lab: \(activity.activityName). \(Int(activity.dateEnds.timeIntervalSince(Date()))) s"
-                            newsLines.append(descriptor)
+                            self.gameOverlay.addNews(data: NewsData(type: .Intro, message: descriptor, date: nil))
+//                            newsLines.append(descriptor)
                         }
                     }
                 }
@@ -771,7 +779,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         if activity.dateEnds.compare(Date()) == .orderedAscending {
                             let moji = person.gender == "male" ? "🙋‍♂️":"🙋‍♀️"
                             let descriptor = "\(moji) \(person.name) completed activity \(activity.activityName)."
-                            newsLines.append(descriptor)
+                            self.gameOverlay.addNews(data: NewsData(type: .Info, message: descriptor, date: nil))
+//                            newsLines.append(descriptor)
                             person.clearActivity()
                             hasChanges = true
                         }
@@ -781,7 +790,13 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 // Other issues includes Water, Oxygen, Food, and Air Quality
                 let otherIssues = station.reportLSSIssues()
                 gameOverlay.sideMenuNode?.updateLSS(issues: otherIssues)
-                newsLines.append(contentsOf: otherIssues)
+//                newsLines.append(contentsOf: otherIssues)
+                if !otherIssues.isEmpty {
+                    for oneshoe in otherIssues {
+                        self.gameOverlay.addNews(data: NewsData(type: .Intro, message: oneshoe, date: nil))
+                    }
+                }
+                
                 
             case .MarsColony:
                 
@@ -794,10 +809,12 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                             print("*** Found Activity: \(activity.activityName)")
                             if activity.dateEnds.compare(Date()) == .orderedAscending {
                                 let descriptor = "🔬 Completed Lab activity - Check Lab Modules."
-                                newsLines.append(descriptor)
+//                                newsLines.append(descriptor)
+                                self.gameOverlay.addNews(data: NewsData(type: .Info, message: descriptor, date: nil))
                             } else {
                                 let descriptor = "⏱ Lab: \(activity.activityName). \(Int(activity.dateEnds.timeIntervalSince(Date()))) s"
-                                newsLines.append(descriptor)
+                                self.gameOverlay.addNews(data: NewsData(type: .Info, message: descriptor, date: nil))
+//                                newsLines.append(descriptor)
                             }
                         }
                         
@@ -807,7 +824,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                                 if activity.dateEnds.compare(Date()) == .orderedAscending {
                                     let moji = person.gender == "male" ? "🙋‍♂️":"🙋‍♀️"
                                     let descriptor = "\(moji) \(person.name) completed activity \(activity.activityName)."
-                                    newsLines.append(descriptor)
+                                    self.gameOverlay.addNews(data: NewsData(type: .Info, message: descriptor, date: nil))
+//                                    newsLines.append(descriptor)
                                     person.clearActivity()
                                 }
                             }
@@ -816,13 +834,15 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         // Air Quality
                         let qt:[AirQuality] = [.Lethal, .Bad]
                         if qt.contains(city.air.airQuality()) {
-                            newsLines.append("⚠️ Air quality is bad.")
+//                            newsLines.append("⚠️ Air quality is bad.")
+                            self.gameOverlay.addNews(data: NewsData(type: .Intro, message: "⚠️ Air quality is bad.", date: nil))
                         }
                         
                         // Energy
                         let energy = city.batteries.compactMap({ $0.current }).reduce(0, +)
                         if energy < 10 {
-                            newsLines.append("⚡️ City is low on energy: \(energy) kW")
+//                            newsLines.append("⚡️ City is low on energy: \(energy) kW")
+                            self.gameOverlay.addNews(data: NewsData(type: .Intro, message: "⚡️ City is low on energy: \(energy) kW", date: nil))
                         }
                     }
                 }
@@ -902,7 +922,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             handSprite.position = handPosition
             
             // Beginners Guide
-            newsLines.append("Tap on a Module to create your first 🏠 Hab")
+//            newsLines.append("Tap on a Module to create your first 🏠 Hab")
+            self.gameOverlay.addNews(data: NewsData(type: .Info, message: "Tap on a Module to create your first 🏠 Hab", date: nil))
             
             
         } else if labCount == 0 {
@@ -915,7 +936,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             let handPosition = convertSceneToOverlay(node: node3)
             handSprite.position = handPosition
             
-            newsLines.append("Tap on a Module to create your first 🔬 Lab")
+//            newsLines.append("Tap on a Module to create your first 🔬 Lab")
+            self.gameOverlay.addNews(data: NewsData(type: .Info, message: "Tap on a Module to create your first 🔬 Lab", date: nil))
             
         } else {
             
@@ -929,7 +951,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         let earthPosition:CGPoint = convertSceneToOverlay(node: earth)
                         handSprite.position = earthPosition
                         
-                        newsLines.append("Tap on the Globe 🌎 to order items for your Space Station.")
+//                        newsLines.append("Tap on the Globe 🌎 to order items for your Space Station.")
+                        self.gameOverlay.addNews(data: NewsData(type: .Info, message: "Tap on the Globe 🌎 to order items for your Space Station.", date: nil))
                     }
                 }
             } else {

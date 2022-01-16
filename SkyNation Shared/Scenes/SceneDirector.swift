@@ -64,11 +64,15 @@ class SceneDirector {
         let moduleTechs:[TechItems] = [.module4, .module5, .module6, .module7, .module8, .module9, .module10]
         if moduleTechs.contains(tech) {
             gameController?.loadLastBuildItem()
-            controller.gameOverlay.generateNews(string: "Module Built: \(tech.shortName)")
+//            controller.gameOverlay.generateNews(string: "Module Built: \(tech.shortName)")
+            controller.gameOverlay.addNews(data: NewsData(type: .Info, message: "Module Built: \(tech.shortName)", date: nil))
+            
             return
         }
         
-        controller.gameOverlay.generateNews(string: "New Tech Collected: \(tech.shortName)")
+//        controller.gameOverlay.generateNews(string: "New Tech Collected: \(tech.shortName)")
+        controller.gameOverlay.addNews(data: NewsData(type: .Info, message: "New Tech Collected: \(tech.shortName)", date: nil))
+        
         if let model = model {
             switch tech {
                 case .Roboarm:
