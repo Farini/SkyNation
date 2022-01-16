@@ -16,7 +16,6 @@ class CamControlNode:SKNode {
     
     var nodeSize:CGSize
     
-//    var knob:SKNode
     var knobX:CGFloat = 0
     
     var gameCamera:GameCamera
@@ -28,12 +27,6 @@ class CamControlNode:SKNode {
         self.overlay = overlay
         guard let scene = SKScene(fileNamed: "CamControl") else { fatalError() }
         self.nodeSize = scene.size
-
-        // Knob
-//        let knob = SKShapeNode(circleOfRadius: 12)
-//        knob.name = "knob"
-//        knob.fillColor = .white
-//        self.knob = knob
         
         // Camera
         self.gameCamera = gCamera
@@ -54,21 +47,6 @@ class CamControlNode:SKNode {
         backShape.fillColor = SCNColor.black.withAlphaComponent(0.7)
         backShape.strokeColor = SCNColor.lightGray
         self.addChild(backShape)
-        
-        // Slider
-        /*
-        let sliderSize = CGSize(width: nodeSize.width * 0.9, height: 12)
-        let sliderBackground = SKShapeNode(rect: CGRect(origin: CGPoint(x: 0, y :0), size: sliderSize), cornerRadius: 4)
-        sliderBackground.position.x = nodeSize.width * 0.05
-        sliderBackground.position.y = -(nodeSize.height / 2) + 20
-        sliderBackground.fillColor = .darkGray
-        self.addChild(sliderBackground)
-        
-        // Knob
-        knob.position.y = sliderSize.height / 2
-//        knob.position.x = 0
-        sliderBackground.addChild(knob)
-        */
         
         // Camera Image
         let camSprite = makeSprite(name: "camera.viewfinder")
@@ -127,24 +105,11 @@ class CamControlNode:SKNode {
         self.povLabel?.text = text
     }
     
-    /// Puts the slider in the correct position in relation to where the camera is
-//    func adjustSliderPosition(camera:SCNNode) {
-//
-//        let poz = camera.position.z
-//
-//        #if os(macOS)
-//        knobX = ((poz - 75) / 375) //(1 - x1) * maxWidth //x1 * maxWidth + 1
-//        #else
-//        knobX = CGFloat(((poz - 75) / 375))
-//        #endif
-//        knob.position.x = knobX
-//    }
-    
     /// The position the camera needs to go to
     var camNormalizedPosition:CGFloat?
     
     
-    #if os(macOS)
+//    #if os(macOS)
 //    override func mouseDragged(with event: NSEvent) {
 //
 //        let deltaX = event.deltaX
@@ -165,15 +130,13 @@ class CamControlNode:SKNode {
 //        let normalizedPosition = 1 - knobX / maxWidth
 //        self.camNormalizedPosition = normalizedPosition
 //    }
-    
 //    override func mouseUp(with event: NSEvent) {
 //        if let normalizedPosition = camNormalizedPosition {
 //            overlay.moveCamera(x: normalizedPosition)
 //            self.camNormalizedPosition = nil
 //        }
 //    }
-    
-    #endif
+//    #endif
     
     
     /// Makes a Sprite from an image name

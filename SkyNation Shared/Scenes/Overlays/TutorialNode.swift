@@ -16,9 +16,6 @@ class TutorialNode:SKNode {
     var label:SKLabelNode
     fileprivate var backgroundShape:SKShapeNode
     
-    // Header
-    // Buttons
-    
     init(text:String) {
         // Label
         let lbl = TutorialNode.makeLabelNode(text: text)
@@ -74,19 +71,14 @@ class TutorialNode:SKNode {
         
         // Noise
         let noise = SKTexture(noiseWithSmoothness: 0.8, size: bgSize, grayscale: true)
-//        let backNoise = SKSpriteNode(texture: noise)
         let backNoise = SKShapeNode(circleOfRadius: noise.size().width / 4)
         backNoise.strokeColor = SKColor.clear
         backNoise.fillTexture = noise
-        
 #if os(macOS)
-        backNoise.fillColor = SKColor.init(calibratedRed: 0.3, green: 0.2, blue: 0.0, alpha: 0.35)
+        backNoise.fillColor = SKColor.init(calibratedRed: 0.3, green: 0.2, blue: 0.1, alpha: 0.35)
 #elseif os(iOS)
-        backNoise.fillColor = SKColor(red: 0.3, green: 0.2, blue: 0.0, alpha: 0.35)
+        backNoise.fillColor = SKColor(red: 0.3, green: 0.2, blue: 0.1, alpha: 0.35)
 #endif
-        
-        //backNoise.fillColor = SKColor.init(calibratedRed: 0.3, green: 0.2, blue: 0.0, alpha: 0.35)
-        //backNoise.colorBlendFactor = 1.0
         backNoise.blendMode = .alpha
         backNoise.zPosition = 0
         

@@ -149,6 +149,7 @@ class StationBuilder { //:Codable {
     
     // MARK: - Scene Building
     
+    /*
     /// Build Scene on Background, to present
     func build(station:Station) {
         
@@ -160,6 +161,7 @@ class StationBuilder { //:Codable {
         }
         
     }
+    */
     
 }
 
@@ -366,7 +368,7 @@ extension StationBuilder {
         self.gameCamera = newCamera
         
         scene.rootNode.addChildNode(newCamera)
-        
+        scene.isPaused = true
         
         // Complete
         completion(scene)

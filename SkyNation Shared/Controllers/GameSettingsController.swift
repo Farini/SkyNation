@@ -668,24 +668,54 @@ class GameSettingsController:ObservableObject {
                 for comment in comments {
                     print("COMMENTS: \(comment)")
                 }
+                
+            }
+        }
+        
+        DispatchQueue(label:"StationBuilder").async {
+            
+            builder.prepareScene(station: station) { loadedScene in
+                
+                builder.scene = loadedScene
+                
                 DispatchQueue.main.async {
-                    builder.prepareScene(station: station) { loadedScene in
-                        
-                        builder.scene = loadedScene
-                        self.stationSceneLoaded = true
-                        self.updateLoadedList()
-                        
-                        do {
-                            try LocalDatabase.shared.saveStation(station)
-                        } catch {
-                            print("Error saving Player.: \(error.localizedDescription)")
-                        }
-                        
+                    self.stationSceneLoaded = true
+                    self.updateLoadedList()
+                    do {
+                        try LocalDatabase.shared.saveStation(station)
                         print("⚠️ Game Data Loaded 🏆")
+                    } catch {
+                        print("Error saving Player.: \(error.localizedDescription)")
                     }
                 }
             }
         }
+        
+        
+        
+//        DispatchQueue(label: "Accounting").async {
+//            station.accountingLoop(recursive: true) { comments in
+//                for comment in comments {
+//                    print("COMMENTS: \(comment)")
+//                }
+//                DispatchQueue.main.async {
+//                    builder.prepareScene(station: station) { loadedScene in
+//
+//                        builder.scene = loadedScene
+//                        self.stationSceneLoaded = true
+//                        self.updateLoadedList()
+//
+//                        do {
+//                            try LocalDatabase.shared.saveStation(station)
+//                        } catch {
+//                            print("Error saving Player.: \(error.localizedDescription)")
+//                        }
+//
+//                        print("⚠️ Game Data Loaded 🏆")
+//                    }
+//                }
+//            }
+//        }
     }
     
     /// Recursively checks Player login status.

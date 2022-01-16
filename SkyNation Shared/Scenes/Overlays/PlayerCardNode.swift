@@ -32,16 +32,11 @@ class PlayerCardNode:SKNode {
         
         print("initting with player name: \(player.name)")
         
-//        let timeTokens = player.countTokens()
-//        let name = player.name
         let money = player.money
         self.player = player
         
         // Player Avatar
         let avatarTexture = SKTexture(imageNamed: player.avatar)
-
-        
-        
         
         // ---------------
         // LinePath
@@ -86,7 +81,6 @@ class PlayerCardNode:SKNode {
             self.nameLabel = SKLabelNode()
         }
         
-        
         // money sprite
         if let moneySprite = lineScene.childNode(withName: "SKCoinsprite") as? SKSpriteNode {
             moneySprite.size = CGSize(width: 20, height: 20)
@@ -96,7 +90,6 @@ class PlayerCardNode:SKNode {
         } else {
             self.moneySprite = SKSpriteNode()
         }
-        
         
         // money label
         if let moneylbl = lineScene.childNode(withName: "lblMoney") as? SKLabelNode {
@@ -148,7 +141,6 @@ class PlayerCardNode:SKNode {
         if let guild = LocalDatabase.shared.serverData?.guildfc {
             let gci = GuildIcon(rawValue: guild.icon)!
             let gimg = PlayerCardNode.makeButton(gci.imageName)?.texture //SKNImage(systemSymbolName: "\(gci.imageName)", accessibilityDescription: nil)!
-//            let guildSprite = SKTexture(image: gimg)
             if let guildImageSpot = lineScene.childNode(withName: "Guildimage") as? SKSpriteNode {
                 guildImageSpot.removeFromParent()
                 guildImageSpot.texture = gimg

@@ -31,4 +31,4 @@ at the end of the List.
 
 ### iOS
 
-
+All iOS Dialgue views should have a corner radius of 8.0

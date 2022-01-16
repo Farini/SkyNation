@@ -39,8 +39,7 @@ PROJECT SIZE: 572MB
 ## Credits
 
 ### Music:
-App: DM1
-App: GarageBand
+
 
 In Dreams by Scott Buckley | www.scottbuckley.com.au
 Music promoted by https://www.chosic.com/free-music/all/
@@ -57,58 +56,45 @@ Music promoted by https://www.chosic.com/free-music/all/
 Attribution 4.0 International (CC BY 4.0)
 https://creativecommons.org/licenses/by/4.0/
 
+Planetarium Utopia | Carlos Farini | https://www.cfarini.com
+SKN_T1, SKN_T2, SKN_T3 | Carlos Farini | https://www.cfarini.com
+Apps used: DM1, Garage Band
+
 ### Sound FX:
 App: DM1
 App: GarageBand
 
-### Programming - SwiftUI
-Code With Chris: https://www.youtube.com/channel/UC2D6eRvCeMtcF5OGHf1-trw
+## Thanks 🙏
 
+### Programming
+Thanks to all gurus out there. People that write articles, make tutorials, etc. This is a great community!
+Code With Chris: https://www.youtube.com/channel/UC2D6eRvCeMtcF5OGHf1-trw
+Swift With Majid: https://swiftwithmajid.com
+Hacking With Swift: https://www.hackingwithswift.com
 
 ### Server side
 Vapor: https://docs.vapor.codes/4.0/
-Tim (Swift Vapor Team)
+Tim (Swift Vapor Team): https://www.timc.dev
 
 ### Shaders (Programming)
 Shadertoy: https://www.shadertoy.com
 Inigo Quilez: https://iquilezles.org
 
 ### 2D Images
-NASA: Reference Images
-Naun Project: TheNaunProject.com
+NASA: https://nasa.gov Reference Images
+Naun Project: https://TheNaunProject.com
 Google: Reference Images
 
 ### Fonts
 Google Fonts: https://fonts.google.com
 
-
 ### 3D Models
 App: Blender https://blender.org
 Blender Guru: https://www.youtube.com/channel/UCOKHwx1VCdgnxwbjyb9Iu1g
 Josh Gambrell: https://www.youtube.com/channel/UCXfGjwohMgPm4Ng2e1FXySw
-
  
 PBX Texturing (Atlasses)
 Animations
-
-## Guild Missions
-
-- Namespaces
-    - GuildMap
-    - MarsMap
-
-- GuildMission - Equivalent to GameCenter's Achievements
-    - Update Roads
-    - Other Updates
-    - Unlock Outposts
-    - Rewards
-
-- GuildMapItem - Items posted in map scene
-    - road segments
-    - Guild E-Vehicle(s)
-    - Unlock Outposts
-
-
 
 ## 📝 Done Items - Past
 

@@ -17,33 +17,27 @@ class GameOverlay:NSObject, SKSceneDelegate {
     
     var playerName:String
     
-    // Placeholders
+    /// Position where the `PlayerCard` goes
     var playerCardHolder:SKNode
+    /// Position where the camera control goes
     var cameraPlaceholder:SKNode?
+    /// Position where the list of Travelling Vehicles go
     var orbitListHolder:SKNode
+    /// Position where the news should appear
     var newsPlaceholder:SKNode
+    /// The Game side menu
     var sideMenuNode:SideMenuNode?
     
-    // Camera
+    /// `GameCamera` object that is currently in use
     var sceneCamera:GameCamera
     
-    // Viewport
+    /// Viewport
     var renderer:SCNSceneRenderer
     
     // News
     
     /// The array that holds the `NewsData` objects
     var newsQueue:[NewsData] = []
-    
-    /// Boolean indicating whether there are news showing
-    func hasNewsShowing() -> Bool {
-        if let news = newsPlaceholder.childNode(withName: "News Node") as? NewsNode {
-            print("Showing news: \(news.newsText)")
-            return true
-        } else {
-            return false
-        }
-    }
     
     // MARK: - Update Loop
     
@@ -99,19 +93,23 @@ class GameOverlay:NSObject, SKSceneDelegate {
         self.sceneCamera = camNode
     }
     
+    // MARK: News
     
+    /// Adds a news object to the queue of news `newsQueue`
     func addNews(data:NewsData) {
         
         self.newsQueue.append(data)
         
         // if ready, skip the wait
         if hasNewsShowing() == false {
-            if let nextNews = newsQueue.first {
+            if let _ = newsQueue.first {
                 // self.generateNews(string: nextNews.message)
+                self.displayNextNews()
             }
         }
     }
     
+    /// Adds the `NewsNode` to the overlay scene. Displays the news.
     private func displayNextNews() {
         
         // Center
@@ -132,87 +130,19 @@ class GameOverlay:NSObject, SKSceneDelegate {
         } else {
             return
         }
-        
     }
     
-    /*
-    /// Generates the news
-    func generateNews(string:String, warning:Bool = false) {
-        
-        
-        if hasNewsShowing() == true {
-            // Try again in a few
-            print("Try again in a few")
-            return
+    /// Boolean indicating whether there are news showing
+    func hasNewsShowing() -> Bool {
+        if let news = newsPlaceholder.childNode(withName: "News Node") as? NewsNode {
+            print("Showing news: \(news.newsText)")
+            return true
+        } else {
+            return false
         }
-        
-        let sceneSize = scene.size
-        let positionX = sceneSize.width / 2
-        
-        newsPlaceholder.position.x = positionX
-        newsPlaceholder.position.y = (sceneSize.height / 4.0) * -1.0
-        
-        print("News Placeholder position: \(newsPlaceholder.position)")
-        
-        // News Header
-//        guard let newsObj = SKScene(fileNamed: "NewsObj")?.children.first else { return }
-//        newsObj.removeFromParent()
-        
-        let newsNode = NewsNode(type: .News, text: string)
-        
-        
-        newsPlaceholder.addChild(newsNode)
-        
-        
-        /*
-        // News label
-        let label = SKLabelNode(text: "\(warning ? "⚠️ ":"")\(string)")
-        label.fontName = "Menlo"
-        label.fontSize = 22
-        label.fontColor = .white
-        label.horizontalAlignmentMode = .center
-        label.verticalAlignmentMode = .center
-        label.isUserInteractionEnabled = true
-        label.zPosition = 90
-        
-        var backSize = label.calculateAccumulatedFrame().size
-        backSize.width += 20
-        backSize.height += 12
-        
-        // Background
-        let backNode = SKShapeNode(rectOf: backSize, cornerRadius: 8)
-        backNode.position = CGPoint(x: backSize.width / 2 + 6, y: 0)
-        backNode.fillColor = SCNColor.black.withAlphaComponent(0.7)
-        backNode.strokeColor = SCNColor.gray
-        backNode.lineWidth = 2
-        
-        backNode.addChild(label)
-        
-        positionX -= backSize.width / 2
-        newsPlaceholder.position.x = positionX
-        newsPlaceholder.addChild(backNode)
-        
-        backNode.setScale(0.5)
-        
-        let scale = SKAction.scale(by: 2, duration: 0.3)
-        let waiter = SKAction.wait(forDuration: 2.25)
-        let fadeOut = SKAction.fadeAlpha(to: 0, duration: 0.8)
-        let moveUp = SKAction.move(by: CGVector(dx: 0, dy: backSize.height * 1.2), duration: 0.8)
-        moveUp.timingMode = .easeIn
-        
-        let exit = SKAction.group([fadeOut, moveUp])
-        
-        let sequel = SKAction.sequence([scale, waiter, exit])
-        
-        backNode.run(sequel) {
-            DispatchQueue.main.async {
-                backNode.removeFromParent()
-            }
-        }
-         */
-        
     }
-    */
+    
+    // MARK: Player Card
     
     /// Playercard has the name, virtual money, and tokens that belong to the player
     func buildPlayerCard() {
@@ -393,7 +323,6 @@ class GameOverlay:NSObject, SKSceneDelegate {
         return vehicleLabel
         // scene.addChild(vehicleLabel)
     }
-    
     
     
     // MARK: - Tutorial

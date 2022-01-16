@@ -1505,13 +1505,13 @@
 			children = (
 				85FEFB6726D2E23E007BA9D1 /* GameOverlay.swift */,
 				8536F467258D481700B509D2 /* GameOverlay.sks */,
+				85A59E9F270CB6C90049AFC1 /* PlayerCardLayout.sks */,
+				85C3418D2591078700BF82F9 /* PlayerCardNode.swift */,
 				8559201425959A4300CF5467 /* SideMenuNode.swift */,
+				85713C70279366200034906E /* News Nodes */,
 				8536F45E258D481700B509D2 /* CamControlNode.swift */,
 				8536F45F258D481700B509D2 /* CamControl.sks */,
 				85C3418425905A7500BF82F9 /* TutorialNode.swift */,
-				85C3418D2591078700BF82F9 /* PlayerCardNode.swift */,
-				85713C70279366200034906E /* News Nodes */,
-				85A59E9F270CB6C90049AFC1 /* PlayerCardLayout.sks */,
 			);
 			path = Overlays;
 			sourceTree = "<group>";
@@ -3076,7 +3076,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = FXF7BJD3VH;
 				INFOPLIST_FILE = "SkyNation iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.7;
@@ -3084,6 +3084,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cfarini.SkyNation;
 				PRODUCT_NAME = SkyNation;
 				SDKROOT = iphoneos;
@@ -3098,7 +3099,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = FXF7BJD3VH;
 				INFOPLIST_FILE = "SkyNation iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.7;
@@ -3106,6 +3107,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cfarini.SkyNation;
 				PRODUCT_NAME = SkyNation;
 				SDKROOT = iphoneos;

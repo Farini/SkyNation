@@ -672,6 +672,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         //    sceneRenderer.debugOptions = [dbo2, dbo4]
         
         guard let builtScene = LocalDatabase.shared.stationBuilder.scene else { fatalError() }
+        builtScene.isPaused = false
         
         self.scene = builtScene
         
@@ -760,11 +761,11 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         print("*** Found Activity: \(activity.activityName)")
                         if activity.dateEnds.compare(Date()) == .orderedAscending {
                             let descriptor = "🔬 Completed Lab activity - Check Lab Modules."
-                            self.gameOverlay.addNews(data: NewsData(type: .Intro, message: descriptor, date: nil))
+                            self.gameOverlay.addNews(data: NewsData(type: .Info, message: descriptor, date: nil))
 //                            newsLines.append(descriptor)
                         } else {
                             let descriptor = "⏱ Lab: \(activity.activityName). \(Int(activity.dateEnds.timeIntervalSince(Date()))) s"
-                            self.gameOverlay.addNews(data: NewsData(type: .Intro, message: descriptor, date: nil))
+                            self.gameOverlay.addNews(data: NewsData(type: .Info, message: descriptor, date: nil))
 //                            newsLines.append(descriptor)
                         }
                     }
@@ -793,7 +794,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
 //                newsLines.append(contentsOf: otherIssues)
                 if !otherIssues.isEmpty {
                     for oneshoe in otherIssues {
-                        self.gameOverlay.addNews(data: NewsData(type: .Intro, message: oneshoe, date: nil))
+                        self.gameOverlay.addNews(data: NewsData(type: .Info, message: oneshoe, date: nil))
                     }
                 }
                 
