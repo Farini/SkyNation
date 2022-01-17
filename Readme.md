@@ -23,7 +23,7 @@ SkyNation is broken down into 3 projects.
 - [X] Apple Store Product Registration
 - [X] TestFlight: https://testflight.apple.com/join/lGBrKxTQ
 - [X] Product (macOS) Version 1.0 build 40 - 12/29/2021
-- [X] Product (iOS) Version 1.0 - 01/15/2022
+- [X] Product (iOS) Version 1.0 - 01/14/2022
 - [ ] Product (tvOS) Version 1.0
 
 ### Methodology 
@@ -129,9 +129,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Guild Room - Fix & Improve elections (not showing + wrong messages)
 - [X] Election - Update Guild (in controller) after election does update
 - [X] Nailed the Hand Tutorial !
-
-- [X] App macOS v 1.1 (New Player Login)
-
+- [X] 🏆 App macOS v 1.1 (New Player Login)
 - [X] macOS - app not quitting
 - [X] Fixed bug with app store not giving an Entry for a $5 purchase.
 - [X] Receive Gifts
@@ -152,8 +150,11 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Implement new Station Modules from Blender
 - [X] Milky Way background
 - [X] Game Settings (start) - Bring view to textfield, and make it active.
-
-- [X] Launch iOS v 1.0 - Jan 14th, 2021
+- [X] 🏆 Launch iOS v 1.0 - Jan 14th, 2021
+- [X] Fancy `NewsNode`
+- [X] Settings - Move start game button to center of the view.
+- [X] LSS - Remove (Let d) ??? + Instant Use -> Power use.
+- [X] Station Scene - Fix green glass
 
 - [ ] Completely eliminate `GuildFullContent`
 
@@ -264,14 +265,6 @@ Features that are requested, but are not required to launch the game
 Once the app is released.
 
 ### App Screenshots
-
-- [ ] Screenshots Front, Beginning view
-- [ ] Screenshots Tech Tree
-- [ ] Screenshots Bio
-- [ ] Screenshots Garage
-- [ ] Screenshots Mars Horizon
-- [ ] Screenshots Mars City
-- [ ] Screenshots GuildRoom Election
 
 - [ ] Video - iPad
 - [ ] Video - macOS

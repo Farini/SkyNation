@@ -33,6 +33,7 @@ enum GameSettingsTab: String, CaseIterable {
     }
 }
 
+/*
 /// A state to display about the status of the `Player` in relation to `Guild`
 enum GuildJoinState {
     
@@ -90,6 +91,7 @@ enum GuildJoinState {
         }
     }
 }
+*/
 
 /// The relationship of Player vs Guild
 enum PlayerGuildState {
@@ -147,7 +149,7 @@ class GameSettingsController:ObservableObject {
     /// Any errors in `GuildNavigator`should come up here
     @Published var guildNavError:String = ""
     
-    private var otherFetchedGuilds:[GuildFullContent] = []
+//    private var otherFetchedGuilds:[GuildFullContent] = []
     private var otherGuildMaps:[GuildMap] = []
     
     // joinRequestsSent
@@ -482,7 +484,6 @@ class GameSettingsController:ObservableObject {
     func didCreateGuild(guildCreate:GuildCreate) {
         
         self.joinableGuilds = []
-        self.otherFetchedGuilds = []
         
         // Create Guild. If server doesn't respond,
         // we need to give player back their token

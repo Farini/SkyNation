@@ -93,6 +93,7 @@ struct GameSettingsView: View {
             // Buttons Bar
             HStack {
                 if (!inGame) {
+                    Spacer()
                     Button(action: {
                         controller.startGame()
                     }) {
@@ -103,7 +104,7 @@ struct GameSettingsView: View {
                     }
                     .buttonStyle(GameButtonStyle())
                     .disabled(controller.startGameDisabled())
-                    
+                    Spacer()
                 } else {
                     Button("Save") {
                         controller.savePlayer()

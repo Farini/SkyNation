@@ -108,12 +108,6 @@ enum Posdex:Int, Codable, CaseIterable {
     }
 }
 
-enum GuildTerrainType:String, Codable, CaseIterable {
-    case Terrain1
-    case Terrain2
-    case Terrain3
-}
-
 /// Guild: "a medieval association of craftsmen or merchants, often having considerable power." - in Mars!
 struct Guild:Codable {
     
@@ -285,52 +279,19 @@ struct GuildCreate:Codable {
     
 }
 
-// MARK: - UI Variables stored on DB
 
-/// Enumeration of Icons possible for the Guild
-enum GuildIcon:String, Codable, CaseIterable, Equatable {
-    
-    case moon
-    case eclipse
-    case club
-    case spade
-    case diamond
-    case star
-    case sunDust
-    
-    var imageName:String {
-        switch self {
-            case .moon: return "moon"
-            case .eclipse: return "circlebadge.2"
-            case .club: return "suit.club"
-            case .spade: return "suit.spade"
-            case .diamond: return "suit.diamond"
-            case .star: return "star"
-            case .sunDust: return "sun.dust"
-        }
-    }
-}
+/** Representation of a Guild, with various data.
+ Content suitable for map.
+ 
+ > Guild: "a medieval association of craftsmen or merchants, often having considerable power." - in Mars!
 
-import SwiftUI
+ - Citizens are `PlayerContent` arrays
+ - Cities, Outposts
+ - GuildMission object
+ - Election
+ - `[ChatMessage]`
+ - `[SpaceVehicleTicket]`
 
-enum GuildColor:String, Codable, CaseIterable {
-    case red
-    case blue
-    case green
-    case gray
-    
-    var color:Color {
-        switch self {
-            case .red: return Color.red
-            case .blue: return Color.blue
-            case .green: return Color(.sRGB, red: 0.0, green: 1.0, blue: 0.1, opacity: 1.0)
-            case .gray: return Color.init(.sRGB, white: 0.75, opacity: 1.0)
-        }
-    }
-}
-
-/**
- Content suitable for map
  */
 final class GuildMap:Codable {
     
@@ -509,40 +470,4 @@ final class GuildMap:Codable {
         
         return newFlags
     }
-    
-    /*
-     Missing:
-     ✅ president   (set at init)
-     ✅ citizens    (set at init)
-     ✅ mission
-     ⚠️ chat
-     ⚠️ Vehicles
-     */
-    
-    /*
-    func addMission(mission:GuildMission) {
-        self.mission = mission
-    }
-    
-    // Upon Request...
-    
-    func addElection(election:Election) {
-        self.election = election
-    }
-    
-    func addChat(messages:[ChatMessage]) {
-        self.chat = messages
-    }
-    
-    func addVehicles(vehicles:[SpaceVehicleModel]) {
-        self.vehicles = vehicles
-    }
-    */
-    
-    /*
-     Notes:
-     Keeping the chat here allows you to increment the count of messages (client side)
-     This means we can send a notification when there is an unread message
-     */
-    
 }
