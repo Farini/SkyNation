@@ -155,6 +155,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Settings - Move start game button to center of the view.
 - [X] LSS - Remove (Let d) ??? + Instant Use -> Power use.
 - [X] Station Scene - Fix green glass
+- [X] GameCenter Achievements: **WaterFilter, Condensator, Airlock**
 
 - [ ] Completely eliminate `GuildFullContent`
 
@@ -208,10 +209,10 @@ and colonize the red planet.
 - [X] Blender - XCode - Delete old solar panels
 - [X] Blender - Cuppola 2.0
 - [X] Blender - Airlock 2.0
+- [X] Blender - New Module Skins
 
-- [ ] Blender - New Module Skins
-- [ ] Blender - EVehicle remove/remake UV maps
 - [ ] Blender - EDL Remake #5
+- [ ] Blender - EVehicle remove/remake UV maps
 - [ ] Blender - Arena + levels
 - [ ] Blender - Hotel + levels
 - [ ] Blender - Dock 2.0
@@ -227,16 +228,15 @@ and colonize the red planet.
 - [X] UI Test - `iPad Pro 9.7 inch`
 - [ ] Outpost Update
 - [ ] Leaving a Guild - Failing test
+- [ ] Election not updating
 
 ### GameCenter
 
 - [X] Game Center - Player Auth.
 - [X] Game Center - Leaderboards (Experience)
-- [ ] Game Center - 🏆 Achievements (Recipes, Tech)
-- [ ] Game Center - Achievement art - Water Filter
-- [ ] Game Center - Achievement art - Air Scrubber
-- [ ] Game Center - Achievement art - Condensator
-- [ ] Game Center - Achievement art - Garage
+- [X] Game Center - 🏆 Achievements (WaterFilter, Condensator, Airlock)
+- [ ] Game Center - Achievement - Air Scrubber
+- [ ] Game Center - Achievement - Garage
 
 ## Wishlist + Questionable
 Features that are requested, but are not required to launch the game
@@ -266,8 +266,8 @@ Once the app is released.
 
 ### App Screenshots
 
+- [X] Video - macOS
 - [ ] Video - iPad
-- [ ] Video - macOS
 
 version: `macOS`
 One of the following, with a 16:10 aspect ratio.

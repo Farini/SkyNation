@@ -81,8 +81,13 @@ class GameCenterManager {
             self.gcPlayer = GKLocalPlayer.local
             
             // Perform any other configurations as needed (for example, access point).
-            
-//            self.postPlayerExperience()
+            let sknPlayer = LocalDatabase.shared.player
+            if sknPlayer.experience > 0 {
+                // dispatch
+                DispatchQueue.init(label: "com.cfarini.reportAchievements").asyncAfter(deadline: .now() + 5.0, execute: {
+                    self.reportAchievements()
+                })
+            }
         }
     }
     
@@ -102,15 +107,19 @@ class GameCenterManager {
         }
     }
     
+    // MARK: - Leaderboards
+    
+    /// Update Player XP
     func postPlayerExperience() {
         
         // Make sure player objects are here, and authenticated
         guard let gcPlayer:GKLocalPlayer = gcPlayer, gcPlayer.isAuthenticated == true else {
             print("\n\n Player not authenticated in GameCenter")
-            return }
+            return
+        }
         let gPlayer:SKNPlayer = LocalDatabase.shared.player
         
-        // Make sure experience is more than 1
+        // Make sure experience is more than 0
         guard gPlayer.experience > 0 else {
             print("\n\n Not enough experience to post")
             return }
@@ -135,6 +144,113 @@ class GameCenterManager {
                 print("Went through (Experience)")
             }
         }
+    }
+    
+    // MARK: - Accomplishments
+    
+    /*
+     Two ways
+     1. Post Score
+     2. Fetch Score -> Update
+     */
+    
+    private enum AchievementID:String, CaseIterable {
+        
+        case waterFilter = "com.cfarini.build_a_water_filter"
+        case condensator = "com.cfarini.build_condensator"
+        case airlock = "com.cfarini.researchAirlock"
+        
+        func hasAchieved(station:Station) -> Bool {
+            switch self {
+                case .waterFilter:
+                    return station.peripherals.filter({ $0.peripheral == .WaterFilter }).first != nil
+                case .condensator:
+                    return station.peripherals.filter({ $0.peripheral == .Condensator }).first != nil
+                case .airlock:
+                    return station.unlockedTechItems.contains(TechItems.Airlock) == true
+            }
+        }
+    }
+    
+    func reportAchievements() {
+        
+        print("\nReporting GameCenter Achievements")
+        
+        let station = LocalDatabase.shared.station
+        
+        // Load the player's active achievements.
+        GKAchievement.loadAchievements(completionHandler: { (achievements: [GKAchievement]?, error: Error?) in
+            
+            // Put together an array of unvisited
+            var visited:[AchievementID] = []
+            
+            // The array of achievements to report
+            var newAchievements:[GKAchievement] = []
+            
+            for gkAchievement in achievements ?? [] {
+                let achieveID = gkAchievement.identifier
+                if let aid = AchievementID(rawValue: achieveID) {
+                    // Achievement Completed
+                    if gkAchievement.isCompleted {
+                        // Add one to array, so we don't visit this again
+                        visited.append(aid)
+                    } else {
+                        // Not Completed
+                        if aid.hasAchieved(station: station) == true {
+                            // Set achievement completed
+                            gkAchievement.percentComplete = 100.0
+                            newAchievements.append(gkAchievement)
+                        }
+                    }
+                } else {
+                    print("Weird achievement ID: \(gkAchievement.identifier)")
+                }
+            }
+            
+            let toVisit:Set<AchievementID> = Set(AchievementID.allCases).subtracting(Set(visited))
+            let visit:[AchievementID] = Array(toVisit)
+            
+            for visitor:AchievementID in visit {
+                if visitor.hasAchieved(station: station) == true {
+                    // Create new Achievement
+                    let newAchievement = GKAchievement(identifier: visitor.rawValue)
+                    newAchievement.percentComplete = 100.0
+                    newAchievements.append(newAchievement)
+                }
+            }
+            
+            if newAchievements.isEmpty == true {
+                return
+            } else {
+                GKAchievement.report(newAchievements) { reportError in
+                    if let reportError = reportError {
+                        // report error
+                        print("Report Error: \(reportError.localizedDescription)")
+                    }
+                }
+            }
+            
+            /*
+            
+            let achievementID = "101"
+            var achievement: GKAchievement? = nil
+            
+            // Find an existing achievement.
+            achievement = achievements?.first(where: { $0.identifier == achievementID})
+            
+            // Otherwise, create a new achievement.
+            if achievement == nil {
+                achievement = GKAchievement(identifier: achievementID)
+            }
+            
+            // Insert code to report the percentage.
+            
+            if error != nil {
+                // Handle the error that occurs.
+                print("Error: \(String(describing: error))")
+            }
+            */
+        })
     }
     
     func accomplishmentsLoop() {
