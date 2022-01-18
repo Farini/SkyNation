@@ -159,6 +159,8 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [ ] Completely eliminate `GuildFullContent`
 
+- [ ] Implement the new `NewsNode`
+
 - [ ] Launch macOS v 1.2
 
 - [ ] Mars Scene - All Guild Vehicles arriving

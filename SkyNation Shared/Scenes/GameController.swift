@@ -440,11 +440,10 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
         // Called before each frame is rendered
         let rounded = time.rounded()
-        if time < 5 { return }
+        if time < 9 { return }
         
-        if rounded.truncatingRemainder(dividingBy: 20) == 0 {
+        if rounded.truncatingRemainder(dividingBy: 15) == 0 {
             
-            // 97 is the largest prime before 100
             if shouldUpdateScene {
                 shouldUpdateScene = false
                 
@@ -455,7 +454,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         station?.accountingLoop(recursive: false) { (messages) in
                             
                             DispatchQueue.main.async {
-//                                print("\(messages.first ?? "n/a")")
                                 
                                 // Update Player Card
                                 self.gameOverlay.updatePlayerCard()
@@ -547,14 +545,10 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     
                     let line1 = "⚠️ Player needs an entry ticket to Mars\n🛒 Head to the store and purchase any product."
                     
-//                    let lines:[String] = [line1, line2, line3]
-//                    var newsDelay = 1.0
                     let timeDelay = DispatchTime.now() + 0.75
                     DispatchQueue.main.asyncAfter(deadline: timeDelay) {
                         self.gameOverlay.addNews(data: NewsData(type: .Info, message: line1, date: nil))
                     }
-//                    newsDelay += 5
-                    
                     
                     return
                 }
@@ -565,18 +559,11 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     print("No Entry")
                     
                     let line1 = "⚠️ Player has no Guild.\nThis could happen if you haven't joined a guild.\nOr because you were booted 👢."
-//                    let line2 = ""
-//                    let line3 = "Or because you were booted 👢"
-//                    let lines:[String] = [line1, line2, line3]
-//                    var newsDelay = 1.0
-//                    for line in lines {
-                        let timeDelay = DispatchTime.now() + 1.0
-                        DispatchQueue.main.asyncAfter(deadline: timeDelay) {
-                            self.gameOverlay.addNews(data: NewsData(type: .Info, message: line1, date: nil))
-//                            self.gameOverlay.generateNews(string: line)
-                        }
-//                        newsDelay += 5
-//                    }
+                    
+                    let timeDelay = DispatchTime.now() + 1.0
+                    DispatchQueue.main.asyncAfter(deadline: timeDelay) {
+                        self.gameOverlay.addNews(data: NewsData(type: .Info, message: line1, date: nil))
+                    }
                     
                     return
                 }
@@ -627,7 +614,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     }
                 }
                 
-            // Loading Space Station from Mars
+                // Loading Space Station from Mars
             case .MarsColony:
                 print("We are in Mars. Load Space Station")
                 guard let station = station else {
@@ -652,6 +639,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                     }
                 }
         }
+        
     }
     
     // MARK: - Initializer and Setup
@@ -677,30 +665,40 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         self.scene = builtScene
         
         // Camera
-        if let camera = scene.rootNode.childNode(withName: "Camera", recursively: false) as? GameCamera {
-            self.cameraNode = camera
-            renderer.pointOfView = camera.camNode
-            
-            let centralNode = SCNNode()
-            centralNode.position = SCNVector3(x: 0, y: -15, z: 0)
-            camera.camNode.look(at: centralNode.position)
-            
-            camera.position.z += 40
-            
-            let waiter = SCNAction.wait(duration: 3.0)
-            // let rotate = SCNAction.rotate(by: CGFloat(Double.pi / 8), around: SCNVector3(x: 0, y: 1, z: 0), duration: 2)
-            // rotate.timingMode = .easeOut
-            let move1 = SCNAction.move(by: SCNVector3(-1, 6, -20), duration: 0.75)
-            move1.timingMode = .easeIn
-            let move2 = SCNAction.move(by: SCNVector3(1, -6, -20), duration: 0.75)
-            move2.timingMode = .easeOut
-            
-            let sequence = SCNAction.sequence([waiter, move1, move2])
-            
-            camera.runAction(sequence) {
-                print("CamChild LOOK @ \(camera.eulerAngles)")
-            }
+        guard let camera = scene.rootNode.childNode(withName: "Camera", recursively: false) as? GameCamera else {
+            fatalError()
         }
+        self.cameraNode = camera
+        renderer.pointOfView = camera.camNode
+        
+        let centralNode = SCNNode()
+        centralNode.position = SCNVector3(x: 0, y: -15, z: 0)
+        camera.position.z += 40
+        camera.camNode.look(at: centralNode.position)
+        
+//        if let camera = scene.rootNode.childNode(withName: "Camera", recursively: false) as? GameCamera {
+//            self.cameraNode = camera
+//            renderer.pointOfView = camera.camNode
+//
+//            let centralNode = SCNNode()
+//            centralNode.position = SCNVector3(x: 0, y: -15, z: 0)
+//            camera.camNode.look(at: centralNode.position)
+//
+//            camera.position.z += 40
+//
+//            let waiter = SCNAction.wait(duration: 3.0)
+//
+//            let move1 = SCNAction.move(by: SCNVector3(-1, 6, -20), duration: 0.75)
+//            move1.timingMode = .easeIn
+//            let move2 = SCNAction.move(by: SCNVector3(1, -6, -20), duration: 0.75)
+//            move2.timingMode = .easeOut
+//
+//            let sequence = SCNAction.sequence([waiter, move1, move2])
+//
+//            camera.runAction(sequence) {
+//                print("CamChild LOOK @ \(camera.eulerAngles)")
+//            }
+//        }
         
         // Overlay
         let stationOverlay = GameOverlay(renderer: renderer, station: station!, camNode: self.cameraNode!)
@@ -710,10 +708,17 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         super.init()
         // After INIT
         
-        self.modules = station?.modules ?? []
+        // Animate camera now
         
-        // News
-        self.prepareNews()
+        let waiter = SCNAction.wait(duration: 3.0)
+        let move1 = SCNAction.move(by: SCNVector3(-1, 6, -20), duration: 0.75)
+        move1.timingMode = .easeIn
+        let move2 = SCNAction.move(by: SCNVector3(1, -6, -20), duration: 0.75)
+        move2.timingMode = .easeOut
+        let sequence = SCNAction.sequence([waiter, move1, move2])
+        camera.runAction(sequence)
+        
+        self.modules = station?.modules ?? []
         
         // Tell SceneDirector that scene is loaded
         SceneDirector.shared.controllerDidLoadScene(controller: self)
@@ -726,6 +731,12 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         // Fetch Mars Data?
         _ = MarsBuilder.shared
         
+        DispatchQueue.init(label: "NewsDelay").asyncAfter(deadline: .now() + 5.0) {
+            DispatchQueue.main.async {
+                // News
+                self.prepareNews()
+            }
+        }
     }
     
     /// Prepares Overlay's news and shows them one by one, every few seconds

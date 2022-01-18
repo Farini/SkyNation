@@ -114,15 +114,18 @@ class GameOverlay:NSObject, SKSceneDelegate {
         
         // Center
         let sceneSize = scene.size
-        let positionX = sceneSize.width / 2
+        let positionX = max(350.0, sceneSize.width / 2)
+        let positionY = min(-100.0, sceneSize.height * -0.25)
         
         if let nextNews = newsQueue.first {
             
             newsPlaceholder.position.x = positionX
-            newsPlaceholder.position.y = (sceneSize.height / 4.0) * -1.0
+            newsPlaceholder.position.y = positionY //(sceneSize.height / 4.0) * -1.0
             
             // self.generateNews(string: nextNews.message)
             let newsNode = NewsNode(type: nextNews.type, text: nextNews.message)
+            newsNode.position.x -= newsNode.calculateAccumulatedFrame().width / 2.0
+            
             newsQueue.removeFirst()
             
             newsPlaceholder.addChild(newsNode)

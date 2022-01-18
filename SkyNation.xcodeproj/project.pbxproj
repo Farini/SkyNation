@@ -514,6 +514,9 @@
 		85713C8627953E260034906E /* Guild+Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85713C8527953E260034906E /* Guild+Enums.swift */; };
 		85713C8727953E260034906E /* Guild+Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85713C8527953E260034906E /* Guild+Enums.swift */; };
 		85713C8827953E260034906E /* Guild+Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85713C8527953E260034906E /* Guild+Enums.swift */; };
+		85713C8A2796706E0034906E /* News2.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85713C892796706E0034906E /* News2.sks */; };
+		85713C8B2796706E0034906E /* News2.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85713C892796706E0034906E /* News2.sks */; };
+		85713C8C2796706E0034906E /* News2.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85713C892796706E0034906E /* News2.sks */; };
 		8579750F259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
 		85797510259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
 		85797511259B9E70004C54D2 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8579750E259B9E70004C54D2 /* FlipView.swift */; };
@@ -952,6 +955,7 @@
 		85713C7D279530640034906E /* LSSEnergy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSSEnergy.swift; sourceTree = "<group>"; };
 		85713C81279530A30034906E /* LSSReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSSReportView.swift; sourceTree = "<group>"; };
 		85713C8527953E260034906E /* Guild+Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Guild+Enums.swift"; sourceTree = "<group>"; };
+		85713C892796706E0034906E /* News2.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = News2.sks; sourceTree = "<group>"; };
 		8579750E259B9E70004C54D2 /* FlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipView.swift; sourceTree = "<group>"; };
 		857A3562269607300020ADF2 /* Scene Assets.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "Scene Assets.md"; sourceTree = "<group>"; };
 		857A35642696AE500020ADF2 /* RSSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSView.swift; sourceTree = "<group>"; };
@@ -1746,6 +1750,7 @@
 			children = (
 				85713C71279366450034906E /* NewsNode.swift */,
 				85BC5AA9278D37F300F44A49 /* NewsObj.sks */,
+				85713C892796706E0034906E /* News2.sks */,
 			);
 			path = "News Nodes";
 			sourceTree = "<group>";
@@ -2144,6 +2149,7 @@
 				8536F495258D481700B509D2 /* SparkEmitter.sks in Resources */,
 				850761522779AF21005D0DF5 /* SFXLanding.m4a in Resources */,
 				85E2C41D26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
+				85713C8A2796706E0034906E /* News2.sks in Resources */,
 				85A59EA0270CB6C90049AFC1 /* PlayerCardLayout.sks in Resources */,
 				856A64BB27289D8F0075CC04 /* Ailerons-Typeface.otf in Resources */,
 				856A64B0272892F80075CC04 /* Indreams.mp3 in Resources */,
@@ -2191,6 +2197,7 @@
 				8536F496258D481700B509D2 /* SparkEmitter.sks in Resources */,
 				850761532779AF21005D0DF5 /* SFXLanding.m4a in Resources */,
 				85E2C41E26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
+				85713C8B2796706E0034906E /* News2.sks in Resources */,
 				85A59EA1270CB6C90049AFC1 /* PlayerCardLayout.sks in Resources */,
 				856A64BC27289D8F0075CC04 /* Ailerons-Typeface.otf in Resources */,
 				856A64B1272892F80075CC04 /* Indreams.mp3 in Resources */,
@@ -2238,6 +2245,7 @@
 				85E2C41F26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
 				850761542779AF21005D0DF5 /* SFXLanding.m4a in Resources */,
 				85487F3F26CC65E000EBC070 /* Main.storyboard in Resources */,
+				85713C8C2796706E0034906E /* News2.sks in Resources */,
 				85A59EA2270CB6C90049AFC1 /* PlayerCardLayout.sks in Resources */,
 				856A64BD27289D8F0075CC04 /* Ailerons-Typeface.otf in Resources */,
 				856A64B2272892F80075CC04 /* Indreams.mp3 in Resources */,

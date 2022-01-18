@@ -39,6 +39,8 @@ public class NewsNode:SKNode {
     /// The type of news that defines which header node should be used.
     public var newsType:NewsType
     
+    public var dressShape:SKShapeNode?
+    
     var headShader = SKShader(fileNamed: "StrokeGrad")
     
     required init?(coder aDecoder: NSCoder) {
@@ -126,24 +128,19 @@ public class NewsNode:SKNode {
         // Header (News, Info, etc.)
         let headerName:String = type.rawValue
         guard let header:SKNode = scene.childNode(withName: headerName) else { fatalError() }
+        
         let headRecto:CGRect = header.calculateAccumulatedFrame()
-        
         header.removeFromParent()
-        header.position = CGPoint(x: 0.0, y: headRecto.size.height - 3)
-        self.header = header
+        header.position = CGPoint(x: headRecto.size.width / 2.0, y: headRecto.size.height - 3)
         
-        // Add Shape surrounding the News Label
-        let headShape = SKShapeNode(rect: header.calculateAccumulatedFrame(), cornerRadius: 6.0)
-        headShape.position.y -= headRecto.size.height - 1
-        headShape.lineWidth = 2.5
-        headShape.strokeShader = headShader
-        header.addChild(headShape)
+        self.header = header
         
         // Text
         guard let label = scene.childNode(withName: "NewsText") as? SKLabelNode else { fatalError() }
-        label.horizontalAlignmentMode = .center
+        label.horizontalAlignmentMode = .left
         label.removeFromParent()
         label.text = newsText
+        label.zPosition = 99
         
         // Text Padding
         var textRect = label.calculateAccumulatedFrame()
@@ -152,13 +149,24 @@ public class NewsNode:SKNode {
         textRect.origin.y -= 6
         textRect.origin.x -= 10
         
-        // Shape surrounding the text
-        let textHShape = SKShapeNode(rect: textRect, cornerRadius: 8)
-        textHShape.strokeColor = .gray
-        textHShape.lineWidth = 2.5
-        label.addChild(textHShape)
+        // Shape surrounding the whole thing
+        let path:CGMutablePath = CGMutablePath()
+        path.move(to: CGPoint.zero)
+        path.addLine(to: CGPoint(x: 0, y: headRecto.origin.y + headRecto.size.height))
+        path.addLine(to: CGPoint(x: headRecto.size.width, y: headRecto.origin.y + headRecto.size.height))
+        path.addLine(to: CGPoint(x: headRecto.size.width, y: 0))
+        path.addLine(to: CGPoint(x: textRect.size.width, y:0))
+        path.addLine(to: CGPoint(x: textRect.size.width, y:textRect.origin.y - textRect.size.height))
+        path.addLine(to: CGPoint(x:0, y:textRect.origin.y - textRect.size.height))
+        path.closeSubpath()
+        let shapeThing = SKShapeNode(path: path)
+        shapeThing.lineWidth = 2
+        shapeThing.fillColor = .black.withAlphaComponent(0.5)
+        shapeThing.zPosition = 0
+
         
         self.label = label
+        self.dressShape = shapeThing
         
         super.init()
         
@@ -166,6 +174,11 @@ public class NewsNode:SKNode {
         
         self.addChild(header)
         self.addChild(label)
+        
+        // new
+        self.addChild(shapeThing)
+        
+        
         self.label.isHidden = true
         
         self.enterTheScene()
@@ -178,6 +191,8 @@ public class NewsNode:SKNode {
         let waiter = SKAction.wait(forDuration: 0.5)
         
         self.run(waiter) {
+            
+            self.dressShape?.strokeShader = self.headShader
             
             self.label.isHidden = false
             self.label.typeNext(dex: 0, complete: self.newsText, time: 0.2)
