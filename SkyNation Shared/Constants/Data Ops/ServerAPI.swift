@@ -15,25 +15,6 @@ class SKNS {
         case UPDATE
     }
     
-    /**
-        Routes & Queries - Records
-        // Queries should have *route, *date, *objectRetrieved, *errorType
-     
-    
-    /// Use this to have a reference for the queries we already performed
-    enum Routes:String {
-        case login
-        case guildSummary
-        case guildContent
-        case cityData
-        case vehicleRegistration
-    }
-    
-    /// Keep a record of the queries performed, so we don't keep repeating the same queries.
-    var queries:[Routes:Date] = [:] // Queries should have *route, *date, *objectRetrieved, *Error
-    
-    */
-    
     /// Real Server's Address
     static let baseAddress = "https://cfarini.com/SKNS"
     
@@ -41,10 +22,6 @@ class SKNS {
     static let testAddress = "http://127.0.0.1:8080"
     
     // MARK: - Player, Login
-    
-    /*
-     Create a new method that returns PlayerCreate instead.
-     */
     
     /// Creates a new player is the Server Database.
     static func createNewPlayer(localPlayer:SKNPlayer, completion:((PlayerUpdate?, Error?) -> ())?) {
@@ -486,52 +463,6 @@ class SKNS {
         task.resume()
         
     }
-    
-    /*
-    /// Fetches a Guild with a PlayerLogin object
-    static func requestPlayersGuild(completion:((GuildFullContent?, Error?) -> ())?) {
-        
-        let localPlayer = LocalDatabase.shared.player
-        
-        // Build Request
-        let address = "\(baseAddress)/guilds/player/find/\(localPlayer.guildID ?? UUID())"
-        
-        guard let url = URL(string: address) else { return }
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        request.httpMethod = HTTPMethod.GET.rawValue
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            
-            if let data = data {
-                
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .secondsSince1970
-                
-                if let fetchedGuild:GuildFullContent = try? decoder.decode(GuildFullContent.self, from:data) {
-                    print("Fetched Guild: \(fetchedGuild.name)")
-                    DispatchQueue.main.async {
-                        completion?(fetchedGuild, nil)
-                    }
-                    return
-                } else {
-                    print("Could not decode Fetched Guild. Data: \(String(data:data, encoding:.utf8) ?? "n/a")")
-                    DispatchQueue.main.async {
-                        completion?(nil, error)
-                    }
-                    return
-                }
-            } else {
-                DispatchQueue.main.async {
-                    print("Did not get Data from Find Player Request. Error: \(error?.localizedDescription ?? "n/a")")
-                    completion?(nil, error)
-                }
-            }
-        }
-        task.resume()
-    }
-    */
     
     /// Search Player
     static func searchPlayerByName(name:String, completion:(([PlayerContent], Error?) -> ())?) {
@@ -1047,55 +978,6 @@ class SKNS {
         }
         task.resume()
     }
-    
-    /*
-    /// Gets the details (GuildFullContent) about a Guild
-    /// DEPRECATE
-    static func fetchGuildDetails(gid:UUID, completion:((GuildFullContent?, Error?) -> ())?) {
-        
-        let player = LocalDatabase.shared.player
-        
-        guard let pid = player.playerID else {
-            print("Something Wrong.")
-            completion?(nil, nil)
-            return
-        }
-        
-        let url = URL(string: "\(baseAddress)/guilds/find/\(gid)")!
-        let session = URLSession.shared
-        var request = URLRequest(url: url)
-        request.httpMethod = HTTPMethod.GET.rawValue
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        
-        // Set the playerID if there is one
-        request.setValue(pid.uuidString, forHTTPHeaderField: "pid")
-        
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .secondsSince1970
-                do {
-                    let guild:GuildFullContent = try decoder.decode(GuildFullContent.self, from: data)
-                    DispatchQueue.main.async {
-                        print("Data returning")
-                        completion?(guild, nil)
-                    }
-                } catch {
-                    print("Not Guilds Object. Error:\(error.localizedDescription): \(data)")
-                    if let string = String(data: data, encoding: .utf8) {
-                        print("Not Guilds String: \(string)")
-                    }
-                }
-            } else if let error = error {
-                print("Error returning")
-                DispatchQueue.main.async {
-                    completion?(nil, error)
-                }
-            }
-        }
-        task.resume()
-    }
-    */
     
     /// Tries to join a Guild
     static func joinGuildPetition(guildID:UUID, completion:((GuildSummary?, Error?) -> ())?) {

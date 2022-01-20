@@ -61,9 +61,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     /// Scene's SpriteKit Overlay
     var gameOverlay:GameOverlay
     
-    /// The news (if any) to display sometime during the render
-//    var newsLines:[String] = []
-    
     // Data
     var gameNavDelegate:GameNavDelegate?
     var modules:[Module] = []

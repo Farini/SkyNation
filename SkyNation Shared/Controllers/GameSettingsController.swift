@@ -33,66 +33,6 @@ enum GameSettingsTab: String, CaseIterable {
     }
 }
 
-/*
-/// A state to display about the status of the `Player` in relation to `Guild`
-enum GuildJoinState {
-    
-    /// Loading data from server
-    case loading    // OPT: none
-    
-    /// Player does NOT have an .Entry token
-    case noEntry    // OPT: none
-    
-    /// Player has no GuildID
-    case noGuild    // OPT: Browse, Create
-    
-    /// Joined
-    case joined(guild:GuildFullContent) // OPT: Leave Guild
-    
-    /// Player been kicked
-    case kickedOut  // OPT: Browse, Create
-    
-    /// Selecting which Guild to Join
-    case choosing   // OPT: Join, Create
-    
-    case leaving    // OPT: none
-    
-    case creating
-    
-    case error(error:Error) // OPT: try again?
-    
-    var message:String {
-        switch self {
-            case .loading: return "Loading..."
-            case .noGuild: return "You haven't joined a Guild. Choose one to join."
-            case .joined(let guild): return "Your Guild.: \(guild.name)"
-            case .choosing: return "Choose a Guild"
-            case .kickedOut: return "Oh no! It seems you were kicked out, or Guild does not exist anymore."
-            case .noEntry: return "You need an Entry Token to join a Guild"
-            case .leaving: return "Leaving Guild"
-            case .creating: return "Creating Guild"
-            case .error(let error): return "Error.: \(error.localizedDescription)"
-        }
-    }
-    
-    /// Whether should have a "Join" Button
-    var joinButton:Bool {
-        switch self {
-            case .choosing: return true
-            default: return false
-        }
-    }
-    
-    /// Whether should have a "Leave" button
-    var leaveButton:Bool {
-        switch self {
-            case .joined(_): return true
-            default:return false
-        }
-    }
-}
-*/
-
 /// The relationship of Player vs Guild
 enum PlayerGuildState {
     case noEntry
@@ -338,7 +278,7 @@ class GameSettingsController:ObservableObject {
         SKNS.updatePlayer { pUpdate, error in
             if let pUpdate = pUpdate {
                 self.updatedPlayer = pUpdate
-                
+                if pUpdate.pass != self.player.keyPass { self.player.keyPass = pUpdate.pass }
             } else {
                 // Deal with Error
                 if let error = error {
@@ -437,7 +377,6 @@ class GameSettingsController:ObservableObject {
             }
         }
     }
-    
     
     /// Fetches all `Joinable` Guilds
     func fetchGuilds() {

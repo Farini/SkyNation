@@ -156,12 +156,10 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] LSS - Remove (Let d) ??? + Instant Use -> Power use.
 - [X] Station Scene - Fix green glass
 - [X] GameCenter Achievements: **WaterFilter, Condensator, Airlock**
+- [X] Implement the new `NewsNode`
+- [X] Launch macOS v 1.2
 
 - [ ] Completely eliminate `GuildFullContent`
-
-- [ ] Implement the new `NewsNode`
-
-- [ ] Launch macOS v 1.2
 
 - [ ] Mars Scene - All Guild Vehicles arriving
 - [ ] ServerData - Use GuildFlags to show new items. in GuildRoom
@@ -185,12 +183,6 @@ Your objective is to take over this space station
 and expand its size and capabilities.
 If you are so brave, send space vehicles to Mars 
 and colonize the red planet.
-
-### Launching + Updates
-
-- [ ] Release macOS v 1.2
-- [ ] Test iPad mini (small screen)
-- [ ] Release iOS v 1.0
 
 ### iOS
 
