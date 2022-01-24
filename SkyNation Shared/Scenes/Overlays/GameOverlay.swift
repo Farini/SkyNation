@@ -38,6 +38,7 @@ class GameOverlay:NSObject, SKSceneDelegate {
     
     /// The array that holds the `NewsData` objects
     var newsQueue:[NewsData] = []
+    var newsBusy:Bool = false
     
     // MARK: - Update Loop
     
@@ -112,12 +113,19 @@ class GameOverlay:NSObject, SKSceneDelegate {
     /// Adds the `NewsNode` to the overlay scene. Displays the news.
     private func displayNextNews() {
         
+        if self.newsBusy == true || newsQueue.isEmpty {
+            print("Busy displaying the previous News")
+            return
+        }
+        
         // Center
         let sceneSize = scene.size
         let positionX = max(350.0, sceneSize.width / 2)
         let positionY = min(-100.0, sceneSize.height * -0.25)
         
         if let nextNews = newsQueue.first {
+            
+            self.newsBusy = true
             
             newsPlaceholder.position.x = positionX
             newsPlaceholder.position.y = positionY //(sceneSize.height / 4.0) * -1.0
@@ -129,6 +137,11 @@ class GameOverlay:NSObject, SKSceneDelegate {
             newsQueue.removeFirst()
             
             newsPlaceholder.addChild(newsNode)
+            
+            // Disappears in 10 s?
+            playerCardHolder.run(SKAction.wait(forDuration: 9)) {
+                self.newsBusy = false
+            }
             
         } else {
             return

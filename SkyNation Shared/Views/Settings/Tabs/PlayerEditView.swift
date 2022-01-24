@@ -66,11 +66,11 @@ struct PlayerEditorView: View {
                         
                         
                     case .TypingName:
+                        
                         // Name
-                        Text("Please type your name")
+                        Text("Type a name to represent you as a player. Make it short.")
                             .foregroundColor(.gray)
                             .padding(6)
-                        
                         
                         TextField("name", text: $controller.playerName)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())

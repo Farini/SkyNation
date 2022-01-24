@@ -161,6 +161,11 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 
 - [ ] Completely eliminate `GuildFullContent`
 
+- [X] News Overlapping eachother
+
+- [ ] Front View - Game Settings shown only at the game start
+
+
 - [ ] Mars Scene - All Guild Vehicles arriving
 - [ ] ServerData - Use GuildFlags to show new items. in GuildRoom
 - [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`

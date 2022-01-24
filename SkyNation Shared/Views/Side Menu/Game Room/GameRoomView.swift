@@ -149,8 +149,8 @@ struct GameRoomView: View {
                         
                         Divider()
                         
+                        // Freebies Stack
                         HStack {
-                            
                             ForEach(controller.freebiesArray, id:\.self) { string in
                                 
                                 if string == "money" {
@@ -203,8 +203,6 @@ struct GameRoomView: View {
                                 }
                             }
                         }
-                        //.transition(AnyTransition.modifier(active: SlidingDoorEffect(shift: 170), identity: SlidingDoorEffect(shift: 0)))
-                        
                         
                         Spacer()
                         
@@ -216,12 +214,15 @@ struct GameRoomView: View {
                                 .foregroundColor(.gray)
                                 .padding(6)
                             
+                            Divider()
+                            
                             // Available
                             Button("Get it!") {
                                 controller.retrieveFreebies()
                             }
                             .buttonStyle(NeumorphicButtonStyle(bgColor: .orange))
                             .disabled(!controller.freebiesAvailable)
+                            .padding(.bottom)
                             .alert(isPresented: $controller.giftAlert) {
                                 Alert(title: Text("Gift Received!"),
                                       message: Text("Congrats, you have received a gift from another player. Token \(controller.receivedGift?.origin.rawValue ?? "n/a")"), dismissButton: .default(Text("OK")))

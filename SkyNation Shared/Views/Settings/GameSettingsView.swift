@@ -131,6 +131,7 @@ struct GameSettingsView: View {
         }
     }
     
+    /*
     func generateBarcode(from uuid: UUID) -> Image? {
         let data = uuid.uuidString.prefix(8).data(using: String.Encoding.ascii)
         
@@ -171,6 +172,7 @@ struct GameSettingsView: View {
         
         return nil
     }
+    */
     
 }
 

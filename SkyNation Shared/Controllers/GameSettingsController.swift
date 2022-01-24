@@ -1,12 +1,7 @@
-//
 //  GameSettingsController.swift
-//  SkyNation
-//
-//  Created by Carlos Farini on 2/22/21.
-//
+//  SkyNation: Created by Carlos Farini on 2/22/21.
 
 import Foundation
-//import GameKit
 
 /// The Main tab of the game (Shows up at the start)
 enum GameSettingsTab: String, CaseIterable {
@@ -69,7 +64,6 @@ class GameSettingsController:ObservableObject {
     @Published var playerID:UUID
     @Published var isNewPlayer:Bool
     @Published var savedChanges:Bool
-    @Published var stationSceneLoaded:Bool = false
     
     // MARK: - Online Data
     
@@ -89,7 +83,6 @@ class GameSettingsController:ObservableObject {
     /// Any errors in `GuildNavigator`should come up here
     @Published var guildNavError:String = ""
     
-//    private var otherFetchedGuilds:[GuildFullContent] = []
     private var otherGuildMaps:[GuildMap] = []
     
     // joinRequestsSent
@@ -97,6 +90,8 @@ class GameSettingsController:ObservableObject {
     
     /// A list of things that are loaded
     @Published var loadedList:[String] = []
+//    @Published var stationSceneProgress:Double = 0.0
+    @Published var stationSceneLoaded:Bool = false
     
     /// A list of errors to display
     @Published var warningList:[String] = []
@@ -109,8 +104,7 @@ class GameSettingsController:ObservableObject {
         let player = LocalDatabase.shared.player
         self.player = player
         
-        if player.name == "Test Player" && player.experience == 0 && abs(Date().timeIntervalSince(player.beganGame)) < 10 {
-            
+        if player.isNewPlayer() {
             // New Player
             playerName = player.name
             playerID = player.localID
@@ -118,7 +112,6 @@ class GameSettingsController:ObservableObject {
             hasChanges = true
             savedChanges = false
             viewState = GameSettingsTab.EditingPlayer
-            
         } else {
             // Old Player
             isNewPlayer = false
@@ -128,7 +121,6 @@ class GameSettingsController:ObservableObject {
             hasChanges = false
             savedChanges = true
             viewState = GameSettingsTab.Loading
-            
         }
         
         self.updateLoadedList()
@@ -145,7 +137,11 @@ class GameSettingsController:ObservableObject {
         // Game Center
         let gcm = GameCenterManager.shared
         print("GC: \(gcm)")
-
+        
+        // Show Editing Mode for New Players
+        if isNewPlayer {
+            self.viewState = .EditingPlayer
+        }
     }
     
     /// Way around logging in. Retrieve all data from LocalDatabase.
@@ -271,6 +267,7 @@ class GameSettingsController:ObservableObject {
         self.viewState = .EditingPlayer
     }
     
+    /// Update Player in server
     func updateServerWith(player:SKNPlayer) {
         
         self.warningList = []
@@ -608,7 +605,6 @@ class GameSettingsController:ObservableObject {
                 for comment in comments {
                     print("COMMENTS: \(comment)")
                 }
-                
             }
         }
         
@@ -631,31 +627,6 @@ class GameSettingsController:ObservableObject {
             }
         }
         
-        
-        
-//        DispatchQueue(label: "Accounting").async {
-//            station.accountingLoop(recursive: true) { comments in
-//                for comment in comments {
-//                    print("COMMENTS: \(comment)")
-//                }
-//                DispatchQueue.main.async {
-//                    builder.prepareScene(station: station) { loadedScene in
-//
-//                        builder.scene = loadedScene
-//                        self.stationSceneLoaded = true
-//                        self.updateLoadedList()
-//
-//                        do {
-//                            try LocalDatabase.shared.saveStation(station)
-//                        } catch {
-//                            print("Error saving Player.: \(error.localizedDescription)")
-//                        }
-//
-//                        print("⚠️ Game Data Loaded 🏆")
-//                    }
-//                }
-//            }
-//        }
     }
     
     /// Recursively checks Player login status.
@@ -709,6 +680,12 @@ class GameSettingsController:ObservableObject {
     
     /// Action from Button `Start Game`
     func startGame() {
+        
+        guard stationSceneLoaded == true else {
+            self.warningList = ["Station not loaded"]
+            return
+        }
+        
         let note = Notification(name: .startGame)
         NotificationCenter.default.post(note)
     }
@@ -718,10 +695,11 @@ class GameSettingsController:ObservableObject {
         
         if isNewPlayer {
             print("New player. make sure to setup first")
+            
             if hasChanges {
                 print("Save Changes first")
-            }
-            if savedChanges {
+                return true
+            } else if savedChanges {
                 print("Changes are saved")
                 return false
             }

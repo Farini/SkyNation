@@ -108,6 +108,20 @@ class SKNPlayer:Codable, Identifiable {
         self.guildID = nil
     }
     
+    /// Returns whether player is new. experience, and name are checked.
+    ///
+    /// Note that `beganGame` is not checked here. This should be used to check if Player needs to edit (change name)
+    func isNewPlayer() -> Bool {
+        if experience < 1 {
+            if name == "Test Player" {
+                let delay = Date().timeIntervalSince(beganGame)
+                print("User started: \(delay.stringFromTimeInterval()) ago.")
+                return true
+            }
+        }
+        return false
+    }
+    
     func receiveFreebiesAndSave(currency:Int, newTokens:[UUID]) {
         self.money += currency
         guard newTokens.count <= 3 else { print("More than 3 tokens not allowed in a gift"); return }
