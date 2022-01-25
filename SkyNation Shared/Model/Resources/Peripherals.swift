@@ -157,6 +157,34 @@ enum PeripheralType:String, Codable, CaseIterable {
             default: return 0
         }
     }
+    
+    /// The image (if any) to show in a detail view
+    var detailImageName:String? {
+        switch self {
+            case .Condensator:  return "CondensatorDetail"
+            case .Electrolizer: return "ElectrolizerDetail"
+            case .Methanizer: return "MethanizerDetail"
+            case .ScrubberCO2: return "ScrubberDetail"
+            case .WaterFilter: return "WaterFilterDetail"
+            case .BioSolidifier: return "BioSolidifierDetail"
+                
+            default: return nil
+            /*
+            case .Radiator:
+            case .solarPanel:
+            case .battery:
+            case .storageBox:
+            case .storageTank:
+            case .Cuppola:
+            case .GarageArm:
+            case .Roboarm:
+            case .Garage:
+            case .Antenna:
+            case .AirTrap:
+            case .PowerGen:
+            */
+        }
+    }
 }
 
 /// An object that produces, or transforms `Ingredients`

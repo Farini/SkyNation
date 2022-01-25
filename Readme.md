@@ -157,37 +157,46 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Station Scene - Fix green glass
 - [X] GameCenter Achievements: **WaterFilter, Condensator, Airlock**
 - [X] Implement the new `NewsNode`
+
 - [X] Launch macOS v 1.2
+
+- [X] Intro - Before Hand Tutorial
+- [X] Report game Center experience when app going to background
+- [X] News Overlapping eachother
+- [X] LSS Peripheral Detail Views
 
 - [ ] Completely eliminate `GuildFullContent`
 
-- [X] News Overlapping eachother
+- [X] 👀 ★ Launch Scene improvements
+- [X] GameController - on touch(camera zoom), zoom in on the point of the touch, instead of center of geometry.
+- [ ] Garage - Check if asking for Token spending.
+- [ ] when clicking on a node that the camera will move, you should also display the news - (info, what the node is)
+- [ ] LabView - Tech with new Detail Views
 
 - [ ] Front View - Game Settings shown only at the game start
+- [ ] No need to check for state. `buttonDisabled()` Better model.
+- [ ] Allow player to see guilds before first purchase
+- [ ] Progress View for scene loading?
+- [ ] Astronomy Images?
+- [ ] Leaving a Guild Problems. Needs to fix it. API not decoding correctly (but it happens in server. It crashes.)
+- [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
 
+- [ ] ServerData - Use GuildFlags to show new items. in GuildRoom
+- [ ] Guild Room - Election not updating
 
 - [ ] Mars Scene - All Guild Vehicles arriving
-- [ ] ServerData - Use GuildFlags to show new items. in GuildRoom
-- [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
-- [ ] Leaving a Guild Problems. Needs to fix it. API not decoding correctly (but it happens in server. It crashes.)
-
 - [ ] City View - Bio - "Evolve" not updating the list
 
-- [ ] Intro?
 - [ ] Store - Build list of bonus (kits) depending on prev. purchases
 - [ ] Store - needs visual improvements
-- [ ] Settings - Allow player to see guilds before first purchase
 - [ ] Game Settings - Save camera?
 
-- [ ] GameCenter Achievements
-Discussion:
-Intro. Introduce player to game.
+### Game Recording Plan
 
-Greetings, commander `Player name`.
-Your objective is to take over this space station 
-and expand its size and capabilities.
-If you are so brave, send space vehicles to Mars 
-and colonize the red planet.
+1. Show Order
+2. Launch View Scene
+3. EDL scene
+4. Lab Activity
 
 ### iOS
 

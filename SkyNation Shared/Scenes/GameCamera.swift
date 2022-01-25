@@ -109,16 +109,10 @@ class GameCamera:SCNNode {
      6. Add old constraint
      7. Finish animation
      */
-    func stareAt(node:SCNNode) {
+    func stareAt(node:SCNNode, located:SCNVector3) {
         
-        var objCenter = node.position
-        if let geometry = node.geometry {
-            let bbox = geometry.boundingBox
-            let mx = ((bbox.max.x - bbox.min.x) / 2) // + node.position.x
-            let my = ((bbox.max.y - bbox.min.y) / 2) // + node.position.y
-            let mz = ((bbox.max.z - bbox.min.z) / 2) // + node.position.z
-            objCenter = SCNVector3(x: mx, y: my, z: mz)
-        }
+        let newNode = SCNNode()
+        newNode.position = located
         
         
         // 1. Remove (and store) previous constraint.
@@ -129,8 +123,7 @@ class GameCamera:SCNNode {
         let oldZoom = camNode.camera?.fieldOfView ?? 35.0
         
         // 2. Add new constraint
-        let newConstraint = SCNLookAtConstraint(target: node)
-        newConstraint.targetOffset = objCenter
+        let newConstraint = SCNLookAtConstraint(target: newNode)
         newConstraint.isGimbalLockEnabled = true
         newConstraint.influenceFactor = 0.15
         

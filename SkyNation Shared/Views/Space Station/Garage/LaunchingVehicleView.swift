@@ -145,107 +145,22 @@ struct PostLaunchVehicleView: View {
     // Shows the Vehicle launching, and later its status
     
     var body: some View {
-        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .bottom)) {
+        ZStack(alignment: Alignment(horizontal: .leading, vertical: .bottom)) {
             SceneView(scene: launchController.scene, pointOfView: nil, options: .allowsCameraControl, preferredFramesPerSecond: 30, antialiasingMode: .none, delegate: nil, technique: nil)
-            VStack {
-                Text("V: \(launchController.vehicle.name)")
+            VStack(alignment: .leading, spacing: 6) {
+                Text(launchController.infoString)
+                Text("Space Vehicle \(launchController.vehicle.name)")
                 Button("Close") {
                     garageController.cancelSelection()
                 }
                 .buttonStyle(GameButtonStyle())
             }
-            
             .padding(20)
-            .background(Color.black.luminanceToAlpha())
+            .background(Color.black.opacity(0.5))
             .cornerRadius(12)
         }
     }
 }
-
-/*
-struct PropulsionChecklistObject {
-    
-    var ch4:Int
-    var ch4Check:Bool = false
-    var o2:Int
-    var o2Check:Bool = false
-    var n2:Int
-    var n2Check:Bool = false
-    
-    init(vehicle:SpaceVehicle) {
-        let tanks = vehicle.tanks
-        
-        // Check best Propulsion tanks
-        let ch4Tanks = tanks.filter({ $0.type == .ch4 })
-        let o2Tanks = tanks.filter({ $0.type == .o2 })
-        let n2Tanks = tanks.filter({ $0.type == .n2 })
-        
-        ch4 = ch4Tanks.map({ $0.current }).reduce(0, +)
-        o2 = o2Tanks.map({ $0.current }).reduce(0, +)
-        n2 = n2Tanks.map({ $0.current }).reduce(0, +)
-        
-        // After init
-        switch vehicle.engine {
-            case .Hex6:
-                if ch4 > 80 { ch4Check = true }
-                if o2 > 40 { o2Check = true }
-                if n2 > 24 { n2Check = true }
-            case .T12:
-                if ch4 > 160 { ch4Check = true }
-                if o2 > 80 { o2Check = true }
-                if n2 > 24 { n2Check = true }
-            case .T18:
-                if ch4 > 180 { ch4Check = true }
-                if o2 > 100 { o2Check = true }
-                if n2 > 48 { n2Check = true }
-            case .T22:
-                if ch4 > 190 { ch4Check = true }
-                if o2 > 110 { o2Check = true }
-                if n2 > 72 { n2Check = true }
-        }
-    }
-}
-*/
-
-/*
-class VehicleLaunchControl:ObservableObject {
-    
-    @Published var vehicle:SpaceVehicle
-    
-    @Published var primaryWarnings:[String] = []
-    @Published var sencondWarnings:[String] = []
-    
-    @Published var propulsionCheck:PropulsionChecklistObject
-    
-    init(vehicle:SpaceVehicle) {
-        self.vehicle = vehicle
-        self.propulsionCheck = PropulsionChecklistObject(vehicle: vehicle)
-        updateWarnings()
-    }
-    
-    func updateWarnings() {
-        
-        let tanks = vehicle.tanks
-        
-        if tanks.isEmpty {
-            primaryWarnings.append("No Tanks were found")
-        } else {
-            // Check best Propulsion tanks
-            let ch4Tanks = tanks.filter({ $0.type == .ch4 })
-            let o2Tanks = tanks.filter({ $0.type == .o2 })
-            let n2Tanks = tanks.filter({ $0.type == .n2 })
-            
-            if ch4Tanks.isEmpty || o2Tanks.isEmpty {
-                primaryWarnings.append("No main propulsion")
-            }
-            if n2Tanks.isEmpty {
-                sencondWarnings.append("No Secondary propulsion")
-            }
-            
-        }
-    }
-}
-*/
 
 struct LaunchingVehicleView_Previews: PreviewProvider {
     

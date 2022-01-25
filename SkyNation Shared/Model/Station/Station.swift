@@ -35,7 +35,7 @@ class Station:Codable {
     
     var garage:Garage
     
-    // MARK: - Accounting
+    // MARK: - Accounting + Management
     
     /// Returns the number of loops (hours) the accounting needs, and the date it needs next
     func accountingTimeSheet() -> (loops:Int, date:Date) {
@@ -158,6 +158,8 @@ class Station:Codable {
         return lss
     }
     
+    // MARK: - Module Ops
+    
     /// Returns the module associated with ID (Lab, Hab, Bio)
     func lookupModule(id:UUID) -> Codable? {
         print("Looking up: \(id)")
@@ -198,6 +200,37 @@ class Station:Codable {
             fatalError()
         }
         return module
+    }
+    
+    
+    // TODO: Here
+    
+    /// This enum defines what intro tutorial should be shown.
+    enum IntroTutorialStage:String, CaseIterable {
+        case prologue
+        case intro
+        case habModules
+        case labModules
+        case hiring
+        case finished
+    }
+    
+    /// Defines should show `HandTutorial` - to display at the beginning
+    func shouldShowTutorial() -> IntroTutorialStage {
+        
+        if habModules.isEmpty == true {
+            return .habModules
+        } else if labModules.isEmpty == true {
+            return .labModules
+        } else {
+            // calculate if player ordered people
+            if self.getPeople().isEmpty == true {
+                // Order
+                return .hiring
+            } else {
+                return .finished
+            }
+        }
     }
     
     

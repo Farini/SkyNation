@@ -50,11 +50,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let rect = screen.frame
             print("📺 Screen size: \(rect.size)")
         }
+        
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
         print("App will terminate")
+        
+        // Report GameCenter Stuff
+//        GameCenterManager.shared.reportAchievements()
+        GameCenterManager.shared.postPlayerExperience()
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {

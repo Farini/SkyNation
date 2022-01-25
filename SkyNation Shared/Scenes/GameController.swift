@@ -60,6 +60,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     /// Scene's SpriteKit Overlay
     var gameOverlay:GameOverlay
+    var introStage:Station.IntroTutorialStage = .intro
     
     // Data
     var gameNavDelegate:GameNavDelegate?
@@ -139,7 +140,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                             break
                         }
                         
-                        cameraNode?.stareAt(node: result.node)
+                        let r = result.worldCoordinates
+                        cameraNode?.stareAt(node: result.node, located: r)
                         
                     }
                     
@@ -456,12 +458,10 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                                 self.gameOverlay.updatePlayerCard()
                                 
                                 // Tutorial hand
-                                if LocalDatabase.shared.player.experience < 1 {
-                                    self.checkBeginnersHandTutorial()
-                                }
+                                self.checkBeginnersHandTutorial()
                                 
+                                // News (Now on Overlay)
 //                                if self.newsLines.isEmpty == false {
-//
 //                                    print("*** NEWS ***  (\(self.newsLines.count))")
 //                                    if let currentNews = self.newsLines.first {
 //                                        self.gameOverlay.generateNews(string: currentNews)
@@ -673,37 +673,25 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         camera.position.z += 40
         camera.camNode.look(at: centralNode.position)
         
-//        if let camera = scene.rootNode.childNode(withName: "Camera", recursively: false) as? GameCamera {
-//            self.cameraNode = camera
-//            renderer.pointOfView = camera.camNode
-//
-//            let centralNode = SCNNode()
-//            centralNode.position = SCNVector3(x: 0, y: -15, z: 0)
-//            camera.camNode.look(at: centralNode.position)
-//
-//            camera.position.z += 40
-//
-//            let waiter = SCNAction.wait(duration: 3.0)
-//
-//            let move1 = SCNAction.move(by: SCNVector3(-1, 6, -20), duration: 0.75)
-//            move1.timingMode = .easeIn
-//            let move2 = SCNAction.move(by: SCNVector3(1, -6, -20), duration: 0.75)
-//            move2.timingMode = .easeOut
-//
-//            let sequence = SCNAction.sequence([waiter, move1, move2])
-//
-//            camera.runAction(sequence) {
-//                print("CamChild LOOK @ \(camera.eulerAngles)")
-//            }
-//        }
-        
         // Overlay
         let stationOverlay = GameOverlay(renderer: renderer, station: station!, camNode: self.cameraNode!)
         sceneRenderer.overlaySKScene = stationOverlay.scene
         self.gameOverlay = stationOverlay
         
+        // end init
         super.init()
-        // After INIT
+        
+        // post init details
+        
+        let tutStage:Station.IntroTutorialStage = dBase.station.shouldShowTutorial()
+        if tutStage == .habModules {
+            // set to start from beginning
+            self.introStage = .prologue
+        } else {
+            // set to start whatever this function returns
+            self.introStage = tutStage
+//            self.introStage = .prologue
+        }
         
         // Animate camera now
         
@@ -884,19 +872,46 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         guard let station = station else {
             return
         }
-        
         let occupiedIDs:[UUID] = station.habModules.compactMap({ $0.id }) + station.labModules.compactMap({ $0.id }) + station.bioModules.compactMap({ $0.id })
-    
-        guard let moduleA = station.modules.first(where: { occupiedIDs.contains($0.id) == false }) else {
-            print("All modules are occupied")
-            return
+        
+        // New Intro Stage Check
+        // first switch (without the Hand Sprite)
+         
+        switch introStage {
+            case .prologue:
+                print("prologue - first one")
+                // show news
+                let prologueString:String = """
+                Greetings, commander \(LocalDatabase.shared.player.name).
+                Your objective is to take over this space station
+                and expand its size and capabilities.
+                """
+                self.gameOverlay.addNews(data: NewsData(type: .Info, message: prologueString, date: nil))
+                self.introStage = .intro
+                return
+                
+            case .intro:
+                print("Show Intro")
+                // show news
+                let introString:String = """
+                If you are so brave, send space vehicles to Mars
+                and colonize the red planet. I just started on the job,
+                so I will try to help, but remember I am also a rookie.
+                """
+                self.gameOverlay.addNews(data: NewsData(type: .Info, message: introString, date: nil))
+                DispatchQueue.main.asyncAfter(deadline: .now() + 12) {
+                    self.introStage = station.shouldShowTutorial()
+                }
+                return
+            case .finished:
+                print("You finihed the tutorial!")
+                return
+                
+            default: break
+            
         }
         
-        if LocalDatabase.shared.player.experience > 10 {
-            if GameSettings.shared.showTutorial == false {
-                return
-            }
-        }
+        
         
         // Get the Hand Sprite
         var handSprite:SKSpriteNode?
@@ -913,9 +928,59 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             handSprite = newHand
         }
         guard let handSprite = handSprite else {
-            return // fatalError("Missing hand")
+            return
         }
         
+        // Find a vacant module
+        let vacantModule:Module? = station.modules.first(where: { occupiedIDs.contains($0.id) == false })
+        let vacantNode:SCNNode? = scene.rootNode.childNode(withName: vacantModule?.id.uuidString ?? "na", recursively: true)
+        
+        // switch again for the Hand Sprite
+        switch introStage {
+            case .habModules:
+                
+                print("Hab modules")
+                guard let vacantNode = vacantNode else {
+                    return
+                }
+                // get position
+                let handPosition = convertSceneToOverlay(node: vacantNode)
+                handSprite.position = handPosition
+                self.gameOverlay.addNews(data: NewsData(type: .Info, message: "Tap on a Module to create your first 🏠 Hab", date: nil))
+                // let the code through to animate hand
+                // print("👆 Making beginners hand")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    self.introStage = station.shouldShowTutorial()
+                }
+                
+            case .labModules:
+                print("Lab modules")
+                guard let vacantNode = vacantNode else {
+                    return
+                }
+                // get position
+                let handPosition = convertSceneToOverlay(node: vacantNode)
+                handSprite.position = handPosition
+                self.gameOverlay.addNews(data: NewsData(type: .Info, message: "Tap on a Module to create your first 🔬 Lab", date: nil))
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    self.introStage = station.shouldShowTutorial()
+                }
+            case .hiring:
+                print("Hiring")
+                self.gameOverlay.addNews(data: NewsData(type: .Info, message: "Tap on the Globe 🌎 to order items for your Space Station.", date: nil))
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    self.introStage = station.shouldShowTutorial()
+                }
+            default:
+                print("Other \(introStage) shouldn't happen.")
+                break
+        }
+        
+        
+        // ---------
+        // Old Method
+        // ---------
+        /*
         let habCount = station.habModules.count
         let labCount = station.labModules.count
         
@@ -974,7 +1039,8 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 }
             }
         }
-
+        */
+        
         print("👆 Making beginners hand")
         
         let scale1 = SKAction.scale(by: 0.85, duration: 0.6)

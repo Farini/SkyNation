@@ -10,6 +10,8 @@ import SwiftUI
 struct LSSMachineView:View {
     
     @ObservedObject var controller:LSSController
+    
+    /// The Peripheral selected.
     var peripheral:PeripheralObject
     
     var body: some View {
@@ -23,7 +25,9 @@ struct LSSMachineView:View {
                 Text("\(peripheral.peripheral.rawValue)")
                     .font(.title)
                 
-                if let _ = peripheral.getImage() {
+                if let detailImageName = peripheral.peripheral.detailImageName {
+                    Image(detailImageName)
+                } else if let _ = peripheral.getImage() {
                     peripheral.getImage()
                         .fixedSize()
                         .frame(width: 64, height: 64, alignment: .center)
@@ -117,7 +121,6 @@ struct LSSMachineView:View {
                 .padding()
             }
         }
-        
         .frame(minWidth: 400, maxWidth:.infinity)
     }
 }

@@ -131,11 +131,17 @@ class SpaceVehicleNode:SCNNode {
             es.birthRate = 0
             SCNTransaction.commit()
         }
+        
+        if let mainEmitter = rocketBooster.childNode(withName: "Emitter", recursively: true) {
+            if let particles = mainEmitter.particleSystems?.first {
+                particles.birthRate = 0
+            }
+        }
     }
     
     func move() {
         
-        let move = SCNAction.move(by: SCNVector3(150, 0, 0), duration: 30)
+        let move = SCNAction.move(by: SCNVector3(75, 0, 0), duration: 30) // let move = SCNAction.move(by: SCNVector3(150, 0, 0), duration: 30)
         move.timingMode = .easeInEaseOut
         
         let wait = SCNAction.wait(duration: 2.9)
@@ -146,9 +152,11 @@ class SpaceVehicleNode:SCNNode {
         }
     }
     
+    /// Opens the solar panels of the Vehicle. Animation takes about 5 seconds.
     func openSolarPanels() {
         if let sp1 = satellite.childNode(withName: "SP1-003", recursively: false) {
             let turn = SCNAction.rotate(by: CGFloat(GameLogic.radiansFrom(-90)), around: SCNVector3(0, 0, 1), duration: 2.5)
+            turn.timingMode = .easeIn
             sp1.runAction(turn)
             if let sp2 = sp1.childNodes.first {
                 let turn2 = SCNAction.rotate(by: CGFloat(GameLogic.radiansFrom(-180)), around: SCNVector3(0, 0, 1), duration: 2.5)
@@ -158,6 +166,7 @@ class SpaceVehicleNode:SCNNode {
         
         if let sp3 = satellite.childNode(withName: "SP1-001", recursively: false) {
             let turn = SCNAction.rotate(by: CGFloat(GameLogic.radiansFrom(90)), around: SCNVector3(0, 0, 1), duration: 2.5)
+            turn.timingMode = .easeIn
             sp3.runAction(turn)
             if let sp4 = sp3.childNodes.first {
                 let turn2 = SCNAction.rotate(by: CGFloat(GameLogic.radiansFrom(180)), around: SCNVector3(0, 0, 1), duration: 2.5)
