@@ -176,6 +176,25 @@ enum TechItems:String, Codable, CaseIterable, Identifiable {
             case .GarageArm: return [.Mechanic:2, .Material:1, .Datacomm:2, .Electric:1, .Handy:2]
         }
     }
+    
+    /// The name of the Detail image (if any)
+    var detailImageName:String? {
+        switch self {
+            
+            case .recipeScrubber: return PeripheralType.ScrubberCO2.detailImageName
+            case .recipeMethane: return PeripheralType.Methanizer.detailImageName
+            case .Cuppola: return PeripheralType.Cuppola.detailImageName
+            case .Roboarm: return PeripheralType.Roboarm.detailImageName
+            case .recipeWaterFilter: return PeripheralType.WaterFilter.detailImageName
+            case .recipeBioSolidifier: return PeripheralType.BioSolidifier.detailImageName
+            case .AU1, .AU2, .AU3, .AU4, .AntennaUp: return PeripheralType.Antenna.detailImageName
+            
+            // Manual
+            case .Airlock: return "AirlockDetail"
+                
+            default: return nil
+        }
+    }
 }
 
 // MARK: - TECH TREE

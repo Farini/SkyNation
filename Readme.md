@@ -35,51 +35,51 @@ Each Item gets a grade 1-5 (stars) that rerpresents how complete the item is.
  
 ## Programming (Front End)
  
- ★★★★☆ Module, Hab, Lab, Bio
- ★★★★★ Earth Order
- ★★★★☆ Garage
- ★★★★☆ Accounting System
- ★★★★★ Truss
- ★★★★★ Life Support Systems
- ★★★★☆ Vehicles Travelling Views/Scenes
+    ★★★★☆ Module, Hab, Lab, Bio
+    ★★★★★ Earth Order
+    ★★★★☆ Garage
+    ★★★★☆ Accounting System
+    ★★★★★ Truss
+    ★★★★★ Life Support Systems
+    ★★★★☆ Vehicles Travelling Views/Scenes
  
- ★★★★☆ Mars Scene
- ★★★★☆ Mars City
- ★★★☆☆ Mars Outposts
- ★★★☆☆ Guild Missions
- ★★★★☆ Game Chats, Messages, Achievements
- ★★★★☆ Game Store + Use of `GameToken`
- ★★★★☆ Player(object) + settings + playability + Purchases
- ★★★☆☆ Tutorials
+    ★★★★☆ Mars Scene
+    ★★★★☆ Mars City
+    ★★★☆☆ Mars Outposts
+    ★★★☆☆ Guild Missions
+    ★★★★☆ Game Chats, Messages, Achievements
+    ★★★★☆ Game Store + Use of `GameToken`
+    ★★★★☆ Player(object) + settings + playability + Purchases
+    ★★★☆☆ Tutorials
  
- ## Programming (Back End)
+## Programming (Back End)
  
- ★★★★☆ Player
- ★★★★☆ Guild
- ★★★☆☆ City + Outposts
- ★★★☆☆ Guild Chat
- ★★☆☆☆ Bonus - New Features
+    ★★★★☆ Player
+    ★★★★☆ Guild
+    ★★★☆☆ City + Outposts
+    ★★★☆☆ Guild Chat
+    ★★☆☆☆ Bonus - New Features
  
- ## Art Assets -  Graphics 2D
+## Art Assets -  Graphics 2D
  
- ★★★★☆ Humans + Skills
- ★★★★☆ Tanks, Containers, Ingredients, Peripherals
- ★★★★☆ Scenes Overlay (Camera, Vehicles list, etc.)
- ★★★★☆ Action Icons - Buy, Cancel, Cheat, Tokens, etc.
- ★★★★☆ Icons - App Icon
- ★★★☆☆ Typography
+    ★★★★☆ Humans + Skills
+    ★★★★☆ Tanks, Containers, Ingredients, Peripherals
+    ★★★★☆ Scenes Overlay (Camera, Vehicles list, etc.)
+    ★★★★☆ Action Icons - Buy, Cancel, Cheat, Tokens, etc.
+    ★★★★☆ Icons - App Icon
+    ★★★☆☆ Typography
  
- ## Art Assets -  Scenes 3D
+## Art Assets -  Scenes 3D
  
- ★★★★☆ Space Station
- ★★★★☆ Delivery Vehicle
- ★★★☆☆ Mars Colony
- ★★★★☆ Space Vehicle
+    ★★★★☆ Space Station
+    ★★★★☆ Delivery Vehicle
+    ★★★☆☆ Mars Colony
+    ★★★★☆ Space Vehicle
  
- ## Art Assets - Audio
+## Art Assets - Audio
  
- ★★☆☆☆ Sound Effects
- ★★★★☆ Music / Soudtrack
+    ★★☆☆☆ Sound Effects
+    ★★★★☆ Music / Soudtrack
  
 ----------
 
@@ -164,32 +164,43 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Report game Center experience when app going to background
 - [X] News Overlapping eachother
 - [X] LSS Peripheral Detail Views
-
-- [ ] Completely eliminate `GuildFullContent`
-
-- [X] 👀 ★ Launch Scene improvements
+- [X] 👀 Launch Scene improvements
 - [X] GameController - on touch(camera zoom), zoom in on the point of the touch, instead of center of geometry.
+- [X] GameController - display node info when zooming in
+- [X] LabView - Tech with new Detail Images
+- [X] Station Scene - Make the Earth bright again
+
 - [ ] Garage - Check if asking for Token spending.
-- [ ] when clicking on a node that the camera will move, you should also display the news - (info, what the node is)
-- [ ] LabView - Tech with new Detail Views
+- [ ] LabView substitute "Loading View" for something more useful
 
 - [ ] Front View - Game Settings shown only at the game start
 - [ ] No need to check for state. `buttonDisabled()` Better model.
 - [ ] Allow player to see guilds before first purchase
 - [ ] Progress View for scene loading?
 - [ ] Astronomy Images?
+- [ ] Astronomy Blog link?
 - [ ] Leaving a Guild Problems. Needs to fix it. API not decoding correctly (but it happens in server. It crashes.)
 - [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
 
+- [ ] Prepare Scene Objects https://developer.apple.com/documentation/scenekit/scnscenerenderer/1522798-prepare
+```swift
+sceneRenderer.prepare(objects:[Any], completionHandler: ((Bool) -> Void))
+object
+An SCNScene, SCNNode, SCNGeometry, or SCNMaterial instance.
+```
+- [X] ServerData - Set GuildFullContent to nil in any case. Prepare to deprecate
 - [ ] ServerData - Use GuildFlags to show new items. in GuildRoom
 - [ ] Guild Room - Election not updating
-
 - [ ] Mars Scene - All Guild Vehicles arriving
 - [ ] City View - Bio - "Evolve" not updating the list
+- [ ] City View - Foreign City not being shown
 
-- [ ] Store - Build list of bonus (kits) depending on prev. purchases
 - [ ] Store - needs visual improvements
+- [ ] Store - Build list of bonus (kits) depending on prev. purchases
+
 - [ ] Game Settings - Save camera?
+- [ ] Remove `GuildFullContent` from ServerData (mac v 1.3, iOS v 1.3)
+- [ ] Remove `GuildFullContent` object
 
 ### Game Recording Plan
 
@@ -234,6 +245,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Tutorial finger
 - [X] Create Player
 - [X] UI Test - `iPad Pro 9.7 inch`
+- [X] Space Station Building time: 0.916 seconds.
 - [ ] Outpost Update
 - [ ] Leaving a Guild - Failing test
 - [ ] Election not updating
@@ -260,7 +272,6 @@ Features that are requested, but are not required to launch the game
 - [ ] Mars Scene - City - Gate Color?
 - [ ] Mars Scene - City + Solar Panel(s)
 - [ ] Mars Scene - Gate Lights changing (Day/Night)
-- [ ] Station Scene - Make the Earth bright again?
 - [ ] Blender - Individual Tanks
 - [ ] Model - E-Vehicle/Bot
 - [ ] BioModule - DNA Animation remake

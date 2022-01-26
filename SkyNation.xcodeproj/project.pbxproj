@@ -718,6 +718,13 @@
 		85D3BB3426AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */; };
 		85D3BB3526AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */; };
 		85D3BB3626AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */; };
+		85DB9EF927A086B30019084E /* Guild+Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85713C8527953E260034906E /* Guild+Enums.swift */; };
+		85DB9EFA27A086B80019084E /* GuildElection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855F7C8F27665E700070E7AE /* GuildElection.swift */; };
+		85DB9EFB27A087180019084E /* NewsNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85713C71279366450034906E /* NewsNode.swift */; };
+		85DB9F6027A121B50019084E /* OutlineShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 85DB9F5F27A121B50019084E /* OutlineShader.metal */; };
+		85DB9F6127A121B50019084E /* OutlineShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 85DB9F5F27A121B50019084E /* OutlineShader.metal */; };
+		85DB9F6227A121B50019084E /* OutlineShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 85DB9F5F27A121B50019084E /* OutlineShader.metal */; };
+		85DB9F6327A121B50019084E /* OutlineShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 85DB9F5F27A121B50019084E /* OutlineShader.metal */; };
 		85E2C41926B9A960003315F2 /* GuildMakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C41726B9A960003315F2 /* GuildMakerView.swift */; };
 		85E2C41A26B9A960003315F2 /* GuildMakerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E2C41726B9A960003315F2 /* GuildMakerView.swift */; };
 		85E2C41B26BB635E003315F2 /* OutpostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85969835260E8FD400BF1860 /* OutpostController.swift */; };
@@ -1020,6 +1027,7 @@
 		85D3BB2726AF244400B6AA36 /* SFXSelected.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = SFXSelected.wav; sourceTree = "<group>"; };
 		85D3BB2F26AFD28100B6AA36 /* BioBoxDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BioBoxDetailView.swift; sourceTree = "<group>"; };
 		85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingBioBoxView.swift; sourceTree = "<group>"; };
+		85DB9F5F27A121B50019084E /* OutlineShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = OutlineShader.metal; sourceTree = "<group>"; };
 		85E2C41726B9A960003315F2 /* GuildMakerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuildMakerView.swift; sourceTree = "<group>"; };
 		85E2C41C26BCDEF0003315F2 /* SKNConsumable.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = SKNConsumable.storekit; sourceTree = "<group>"; };
 		85E2C42126BD8A6E003315F2 /* StoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
@@ -1687,6 +1695,7 @@
 		8569A302259F7F7A0057A518 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				85DB9F5E27A1212A0019084E /* Metal */,
 				8569A30D259F80F50057A518 /* FSH */,
 				8569A303259F7F990057A518 /* dissolve.fragment.txt */,
 			);
@@ -1973,6 +1982,14 @@
 				85D3BB3326AFD30400B6AA36 /* BuildingBioBoxView.swift */,
 			);
 			path = Bio;
+			sourceTree = "<group>";
+		};
+		85DB9F5E27A1212A0019084E /* Metal */ = {
+			isa = PBXGroup;
+			children = (
+				85DB9F5F27A121B50019084E /* OutlineShader.metal */,
+			);
+			path = Metal;
 			sourceTree = "<group>";
 		};
 		85E2C41626B9A930003315F2 /* Guild */ = {
@@ -2367,6 +2384,7 @@
 				8516AD77273B1E8500392C4F /* GuildElectionView.swift in Sources */,
 				8536F3A6258D475D00B509D2 /* Player.swift in Sources */,
 				85D3BB2326AC9C9800B6AA36 /* CityTechDiagram.swift in Sources */,
+				85DB9F6027A121B50019084E /* OutlineShader.metal in Sources */,
 				85108377271B2E63004D6D00 /* GameResponseView.swift in Sources */,
 				8516AD83274093DB00392C4F /* EngineStack.swift in Sources */,
 				85713C7E279530640034906E /* LSSEnergy.swift in Sources */,
@@ -2556,6 +2574,7 @@
 				8536F3FB258D47D000B509D2 /* PersonViews.swift in Sources */,
 				8516AD78273B1E8500392C4F /* GuildElectionView.swift in Sources */,
 				8536F39F258D475D00B509D2 /* TechTreeDisplay.swift in Sources */,
+				85DB9F6127A121B50019084E /* OutlineShader.metal in Sources */,
 				8536F44E258D47EA00B509D2 /* LifeSupportSystems.swift in Sources */,
 				85108378271B2E63004D6D00 /* GameResponseView.swift in Sources */,
 				85713C7F279530640034906E /* LSSEnergy.swift in Sources */,
@@ -2771,6 +2790,7 @@
 				85487F4926CC7C7400EBC070 /* OutpostNode.swift in Sources */,
 				8516AD672737AF0800392C4F /* GameRoomView.swift in Sources */,
 				8536F3F8258D47D000B509D2 /* TankViews.swift in Sources */,
+				85DB9F6227A121B50019084E /* OutlineShader.metal in Sources */,
 				8516AD75273905B400392C4F /* GuildRoomController.swift in Sources */,
 				85D3BB2126AC84CA00B6AA36 /* CityHabView.swift in Sources */,
 				8516AD6B2737B03500392C4F /* GuildRoom.swift in Sources */,
@@ -2875,11 +2895,13 @@
 				8536F3A9258D475D00B509D2 /* Player.swift in Sources */,
 				85E2C42526BD8A6E003315F2 /* StoreManager.swift in Sources */,
 				8536F365258D475D00B509D2 /* Person.swift in Sources */,
+				85DB9EFB27A087180019084E /* NewsNode.swift in Sources */,
 				85B34B1A26F711C5007178F5 /* BiosphereNode.swift in Sources */,
 				85351E8E2700D76000EEE04C /* LocalCityController.swift in Sources */,
 				8536F399258D475D00B509D2 /* Modules.swift in Sources */,
 				85A59ECC271351C70049AFC1 /* City+Account.swift in Sources */,
 				85487F0F26C0DF6000EBC070 /* OPSupply+Job.swift in Sources */,
+				85DB9F6327A121B50019084E /* OutlineShader.metal in Sources */,
 				8536F3A1258D475D00B509D2 /* TechTreeDisplay.swift in Sources */,
 				8592821525EA3287001233BE /* City.swift in Sources */,
 				85B34B1526F71164007178F5 /* PowerPlantNode.swift in Sources */,
@@ -2910,6 +2932,7 @@
 				8569A34E25A3D9590057A518 /* AirComposition.swift in Sources */,
 				85487F6026CD9C1E00EBC070 /* GameLogic.swift in Sources */,
 				858E81AC272B7AE500122F59 /* LaunchSceneController.swift in Sources */,
+				85DB9EFA27A086B80019084E /* GuildElection.swift in Sources */,
 				8517EE3725FC11EF00C34C54 /* Guild.swift in Sources */,
 				85351E99270784BE00EEE04C /* ChatBubbleController.swift in Sources */,
 				85A585EB26E443700020CCBF /* RoadsBuilder.swift in Sources */,
@@ -2923,6 +2946,7 @@
 				85487F5A26CD9B3D00EBC070 /* GameFonts.swift in Sources */,
 				857D9A3C25C0B69800626884 /* HabModuleController.swift in Sources */,
 				8536F401258D47D000B509D2 /* IngredientView.swift in Sources */,
+				85DB9EF927A086B30019084E /* Guild+Enums.swift in Sources */,
 				8536F43C258D47EA00B509D2 /* ModulesViewModel.swift in Sources */,
 				8536F448258D47EA00B509D2 /* LabViewModel.swift in Sources */,
 				8559201825959A4300CF5467 /* SideMenuNode.swift in Sources */,
@@ -3055,7 +3079,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3110,7 +3134,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -3275,7 +3299,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skynationgame.DataTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -3297,7 +3321,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skynationgame.DataTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

@@ -113,8 +113,17 @@ class GameOverlay:NSObject, SKSceneDelegate {
     /// Adds the `NewsNode` to the overlay scene. Displays the news.
     private func displayNextNews() {
         
-        if self.newsBusy == true || newsQueue.isEmpty == true { // self.newsBusy == true
-            print("Busy displaying the previous News")
+        if newsBusy == true {
+            print("Busy displaying the previous News. Next \(newsQueue.first?.message ?? "none")")
+            return
+        }
+        
+        // Empty News
+        if newsQueue.isEmpty == true {
+            if Bool.random() == true && Bool.random() == true {
+                print("No news to display.")
+                print("This is a good time to come up with something funny.")
+            }
             return
         }
         

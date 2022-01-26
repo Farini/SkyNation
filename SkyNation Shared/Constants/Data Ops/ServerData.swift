@@ -457,10 +457,15 @@ class ServerData:Codable {
     // Player
     var player:SKNPlayer
     
-    // Guild
+    /// My GuildSummary
     var dbGuild:GuildSummary?
+    
+    /// DEPRECATING -> for mac v1.3, iOS v. 1.3 -> Remove from CodingKeys and from here.
     var guildfc:GuildFullContent?
+    
+    /// The GuildMap containing most guild info
     var guildMap:GuildMap?
+    
     var otherGuilds:[GuildMap]?
     
     /// Other Players
@@ -488,10 +493,23 @@ class ServerData:Codable {
     
     // MARK: - Player's Guild
     
-    /// Date Guild was last Fetched - About to Deprecate
+    /// Date Guild was last Fetched - DEPRECATED
     var lastGuildFetch:Date?
     
+    /// Date that `GuildMap` has been fetched
     var lastMapFetch:Date?
+    
+    // DEPRECATE
+    var lastOutpostFetch:Date?
+    
+    /// Date that last fetched vehicles.
+    ///
+    /// This is the `Guild` vehicles
+    ///
+    /// > Tip: Deprecate this too if you can't decide.
+    ///
+    /// Not sure what to do next.
+    var lastFetchedVehicles:Date?
     
     func requestGuildMap(_ force:Bool = false, deadline:Int = 60, completion:@escaping(GuildMap?, Error?) -> ()) {
         
@@ -531,7 +549,7 @@ class ServerData:Codable {
     // Guildmap Flags (whats new)
     
     // MARK: - Outpost Data
-    var lastOutpostFetch:Date?
+    
     func requestOutpostData(dbOutpost:DBOutpost, force:Bool, completion:@escaping(Outpost?, Error?) -> ()) {
         
         // Check if needs update
@@ -580,7 +598,7 @@ class ServerData:Codable {
     }
     
     // Vehicles
-    var lastFetchedVehicles:Date?
+    
     func fetchGuildVehicles() {
         
         // Seconds until next fetch
@@ -662,7 +680,7 @@ class ServerData:Codable {
         }
     }
     
-    // MARK: - Initting methods
+    // MARK: - Initializers
     
     init(player:SKNPlayer) {
         print("Server Data Initializing with player \(player.name)")
@@ -681,5 +699,202 @@ class ServerData:Codable {
         self.lastMapFetch = localData.lastMapFetch
     }
     
+    /**
+     Decoding Initializer.
+     
+     Make Properties as lightly as possible.
+     If values don't exist, just assign nil, or if it is an array, an empty array.
+     */
+    required init(from decoder: Decoder) throws {
+        
+        // Container
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        
+        if let player = try? values.decodeIfPresent(SKNPlayer.self, forKey: .player) {
+            print("Decoding remote player from local file")
+            self.player = player
+        } else {
+            print("Decoding local player from local file")
+            self.player = LocalDatabase.shared.player
+        }
+        
+        if let dbGuild = try? values.decodeIfPresent(GuildSummary.self, forKey: .dbGuild) {
+            self.dbGuild = dbGuild
+        } else {
+            self.dbGuild = nil
+        }
+        
+        if let gfc = decoder.userInfo.keys.first(where: { $0.rawValue == "guildfc"}) {
+            print("User info for `GuildFullContent` is still here... \(gfc.rawValue) -> Deprecate!")
+        }
+        if let oldGFC = values.allKeys.first(where: { $0 == CodingKeys.guildfc }) {
+            print("Old guild Full Content is here. Key.: \(oldGFC.stringValue) -> Dreprecate it.")
+        }
+        self.guildfc = nil
+        
+        self.guildMap = try values.decodeIfPresent(GuildMap.self, forKey: .guildMap)
+        self.otherGuilds = try values.decodeIfPresent([GuildMap].self, forKey: .otherGuilds)
+        if let partners = try? values.decodeIfPresent([PlayerContent].self, forKey: .partners) {
+            self.partners = partners
+        } else {
+            self.partners = []
+        }
+        if let cities = try? values.decodeIfPresent([DBCity].self, forKey: .cities) {
+            self.cities = cities
+        } else {
+            self.cities = []
+        }
+        if let city = try? values.decodeIfPresent(CityData.self, forKey: .city) {
+            self.city = city
+        } else {
+            self.city = nil
+        }
+        if let ops = try? values.decodeIfPresent([Outpost].self, forKey: .outposts) {
+            self.outposts = ops
+        } else {
+            self.outposts = []
+        }
+        if let vehicles = try? values.decodeIfPresent([SpaceVehicle].self, forKey: .vehicles) {
+            self.vehicles = vehicles
+        } else {
+            self.vehicles = []
+        }
+        // Vehicles
+        if let iVehicles:[SpaceVehicle] = try? values.decodeIfPresent([SpaceVehicle].self, forKey: .vehicles) {
+            self.vehicles = iVehicles
+        } else {
+            self.vehicles = []
+        }
+        if let gvs:[SpaceVehicleTicket] = try? values.decodeIfPresent([SpaceVehicleTicket].self, forKey: .guildVehicles) {
+            self.guildVehicles = gvs
+        } else {
+            self.guildVehicles = []
+        }
+        
+        if let election = try? values.decodeIfPresent(Election.self, forKey: .election) {
+            self.election = election
+        } else {
+            self.election = nil
+        }
+        
+        self.errorMessage = ""
+        self.lastGuildFetch = nil // try values.decodeIfPresent(Date.self, forKey: .lastGuildFetch)
+        self.lastMapFetch = try values.decodeIfPresent(Date.self, forKey: .lastMapFetch)
+        self.lastOutpostFetch = nil
+        self.lastFetchedVehicles = try values.decodeIfPresent(Date.self, forKey: .lastFetchedVehicles)
+        
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        // Deprecating GFC
+        if let gfc = self.guildfc {
+            print("Guild Full Content here. \(gfc.name) DO NOT ENCODE.")
+            self.guildfc = nil
+        }
+        
+        // Update Cities
+        if let dbc = self.guildMap?.cities {
+            if self.cities.isEmpty {
+                self.cities = dbc
+            }
+        }
+        // Update Guild Vehicles
+        if let gv = self.guildMap?.vehicles {
+            if self.guildVehicles.isEmpty {
+                self.guildVehicles = gv
+            }
+        }
+        
+        // Player Required
+        try container.encode(player, forKey: .player)
+        
+        // MARK: - Guild Objects
+        
+        // Guild Summary
+        if let gs = self.dbGuild {
+            try container.encode(gs, forKey: .dbGuild)
+        }
+        // Guild Map
+        if let map = guildMap {
+            try container.encode(map, forKey: .guildMap)
+        }
+        if let otherGuilds = otherGuilds {
+            try container.encode(otherGuilds, forKey: .otherGuilds)
+        }
+        
+        // Cities + OP
+        try container.encode(cities, forKey: .cities)
+        if let city = city {
+            try container.encode(city, forKey: .city)
+        }
+        try container.encode(outposts, forKey: .outposts)
+        
+        // Players
+        try container.encode(partners, forKey: .partners)
+        if let otherPlayers = otherPlayers {
+            try container.encode(otherPlayers, forKey: .otherPartners)
+        }
+        
+        // Vehicles
+        try container.encode(vehicles, forKey: .vehicles)
+        try container.encode(guildVehicles, forKey: .guildVehicles)
+        
+        if let election = election {
+            try container.encode(election, forKey: .election)
+        }
+        
+        // MARK: - Others
+        
+        // Error
+        if !errorMessage.isEmpty {
+            print("Previous error message.: \n\t \(errorMessage) |-| ServerData doesn't save errors")
+        } else {
+            try container.encode(errorMessage, forKey: .errorMessage)
+        }
+        
+        // Dates
+        var lgf:Date?
+        if let lastMapFetch = lastMapFetch {
+            lgf = lastMapFetch
+        } else {
+            if let lastGuildFetch = lastGuildFetch {
+                lgf = lastGuildFetch
+            }
+        }
+        if let lgf = lgf {
+            try container.encode(lgf, forKey: .lastMapFetch)
+        }
+    }
+    
+    /// Coding Keys for this class
+    private enum CodingKeys:String, CodingKey {
+        case player
+        case dbGuild
+        case guildfc // Keep here for now. Remove next version?
+        case guildMap
+        case otherGuilds
+        case partners
+        case otherPartners
+        case cities
+        case city
+        case outposts
+        case vehicles
+        case guildVehicles
+        case election
+        case errorMessage
+        case lastGuildFetch
+        case lastMapFetch
+        case lastFetchedVehicles
+    }
 }
 
+// MARK: - Decoding
+
+//extension ServerData {
+//    
+//    // MARK: - Codable
+//    
+//}

@@ -142,7 +142,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         
                         let r = result.worldCoordinates
                         cameraNode?.stareAt(node: result.node, located: r)
-                        
+                        gameOverlay.addNews(data: NewsData(type: .Info, message: "Object: \(modName)", date: nil))
                     }
                     
                     // get its material
@@ -356,6 +356,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
     
     func hitNode3D(node:SCNNode) {
         
+        // sceneRenderer.prepare(<#T##objects: [Any]##[Any]#>, completionHandler: <#T##((Bool) -> Void)?##((Bool) -> Void)?##(Bool) -> Void#>)
     }
     
     // MARK: - Camera

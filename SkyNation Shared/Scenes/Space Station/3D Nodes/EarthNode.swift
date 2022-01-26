@@ -45,6 +45,7 @@ class EarthNode:SCNNode {
         let waiter = SCNAction.wait(duration: revealDuration)
         earth.runAction(waiter) {
             self.atmosphere.isHidden = false
+            self.material.shaderModifiers = nil
         }
     }
     

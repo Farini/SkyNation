@@ -146,7 +146,9 @@ struct PostLaunchVehicleView: View {
     
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .leading, vertical: .bottom)) {
+            
             SceneView(scene: launchController.scene, pointOfView: nil, options: .allowsCameraControl, preferredFramesPerSecond: 30, antialiasingMode: .none, delegate: nil, technique: nil)
+            
             VStack(alignment: .leading, spacing: 6) {
                 Text(launchController.infoString)
                 Text("Space Vehicle \(launchController.vehicle.name)")

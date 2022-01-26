@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import SceneKit
 
 class DataTests: XCTestCase {
 
@@ -330,13 +331,90 @@ class DataTests: XCTestCase {
         
     }
     
+    func testServerDataDecoding() throws {
+        
+        print("\n\n *** Testing ServerManager keys + encoding.")
+        let manager = ServerManager.shared
+        
+        let expectation = self.expectation(description: "Async calling ServerManager")
+        print("expectation/future created.")
+        
+        let waiter:Double = 8
+        
+        DispatchQueue.init(label: "TestSD").asyncAfter(deadline: .now() + 6.5) {
+            
+            DispatchQueue.main.async {
+                
+                if let sd = manager.serverData {
+                    print("Expectations returning...")
+                    
+                    // sd is here
+                    print("\n\n --- | Server Data | ---")
+                    print("+ Player \(sd.player.name)\n")
+                    
+                    print("+ Cities \(sd.cities.count)")
+                    print("+ Outposts \(sd.outposts.count)\n")
+                    // Vehicles
+                    print("+ Vehicles mine \(sd.vehicles.count)")
+                    print("+ Guild Vehicles \(sd.guildVehicles.count)\n")
+                    
+                    // Error
+                    let sveString = sd.errorMessage.isEmpty ? sd.errorMessage:"---"
+                    print("Error \(sveString)")
+                    // Error should always start as an empty string.
+                    if !sveString.isEmpty {
+                        print("⚠️ Error starting as not empty !!!")
+                    }
+                    XCTAssert(sveString.count == 0)
+                    
+                    // Partners
+                    let namesArray = sd.partners.compactMap({ $0.name }).joined(separator: ", ")
+                    print("Partners \(namesArray)\n")
+                    
+                    print("  > Testing Player...")
+                    // Check + Test vars
+                    // Player should never be nil
+                    XCTAssert(sd.player.name != "Test Player")
+                    XCTAssert(sd.player.name.count <= 12)
+                    
+                    
+                    print("Checking Player Tokens")
+                    let tokens = sd.player.countTokens()
+                    for tk in tokens {
+                        print("[T] \(tk.origin.rawValue), \(tk.usedDate != nil ? "Used":"Unused")")
+                    }
+                    if tokens.isEmpty {
+                        print("⚠️ Player doesn't have any token.")
+                    }
+                    XCTAssert(sd.player.countTokens().count > 0)
+                    
+                    if let myCity = sd.city {
+                        print("My City. Power Gen: \(myCity.powerGeneration())")
+                        XCTAssert(myCity.powerGeneration() > 1)
+                    } else {
+                        print("My City (LocalCity) not present in `ServerData`")
+                    }
+                    
+                    // Following variables are circumstantial.
+                    // XCTAssert(!sd.cities.isEmpty)
+                    // XCTAssert(!sd.outposts.isEmpty)
+                    // XCTAssert(sd.vehicles.isEmpty == false)
+                    
+                    expectation.fulfill()
+                }
+            }
+        }
+        
+        self.waitForExpectations(timeout: waiter)
+        print("\n *** Setup Done. Waiting for expectations...")
+    }
+    
     // MARK: - Accounting
     
     func testAccounting() throws {
         
-        print("\n --- Accounting Start ---")
+        print("\n --- Accounting Tests Start ---")
         
-//        GameSettings.shared.debugAccounting = true
         let station = LocalDatabase.shared.station
         
         // Part 1 (Validation)
@@ -548,10 +626,44 @@ class DataTests: XCTestCase {
     // MARK: - Performance
     
     func testPerformanceExample() throws {
+        
+        // Time that StationBuilder takes to build the Space Station
+        // --- --- ---
+        // Average Time: 0.916 | StationBuilder
+        // --- --- ---
+        
+        let station = LocalDatabase.shared.station
+        let builder = StationBuilder(station: station)
+        
         // This is an example of a performance test case.
         measure {
             // Put the code you want to measure the time of here.
-            
+            builder.prepareScene(station: station) { scene in
+                
+                var childStack:[SCNNode] = []
+                var visitQueue:[SCNNode] = [scene.rootNode]
+                
+                while visitQueue.isEmpty {
+                    if let next = visitQueue.first {
+                        
+                        // Don't add the root node to the child stack
+                        if next != scene.rootNode {
+                            childStack.append(contentsOf: next.childNodes)
+                        }
+                        
+                        visitQueue.append(contentsOf: next.childNodes)
+                    }
+                    visitQueue.removeFirst()
+                }
+                
+                var ct:Int = 0
+                for child in childStack {
+                    ct += 1
+                    print("Node \(ct) \t \(child.name ?? "n/a"), GEO:\(child.geometry?.elementCount ?? 0) Pos:\(child.position)")
+                }
+                
+                print("\n--- 🏁 FINISHED 🏁")
+            }
         }
     }
 

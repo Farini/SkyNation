@@ -37,7 +37,7 @@ struct TechnologyDetailView: View {
             // Head / Definitions
             Group {
                 
-                Text("Tech Research")
+                Text("Research")
                     .font(GameFont.title.makeFont())
                     .padding()
                 
@@ -45,8 +45,13 @@ struct TechnologyDetailView: View {
                     .font(.largeTitle)
                     .foregroundColor(.orange)
                 
-                Text("Tech \(tech.rawValue)")
-                    .foregroundColor(.gray)
+//                Text("Tech \(tech.shortName)")
+//                    .foregroundColor(.gray)
+                if let imName:String = tech.detailImageName {
+                    Image(imName)
+                        .resizable()
+                        .frame(width:128, height:128)
+                }
                 
                 // Description text
                 Text(tech.elaborate())
