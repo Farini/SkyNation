@@ -681,9 +681,9 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
         // end init
         super.init()
-        
         // post init details
         
+        // Intro Tutorial
         let tutStage:Station.IntroTutorialStage = dBase.station.shouldShowTutorial()
         if tutStage == .habModules {
             // set to start from beginning
@@ -691,11 +691,12 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         } else {
             // set to start whatever this function returns
             self.introStage = tutStage
-//            self.introStage = .prologue
+            
+            // uncomment below to view intro tutorial
+            // self.introStage = .prologue
         }
         
-        // Animate camera now
-        
+        // Animate camera
         let waiter = SCNAction.wait(duration: 3.0)
         let move1 = SCNAction.move(by: SCNVector3(-1, 6, -20), duration: 0.75)
         move1.timingMode = .easeIn
@@ -737,17 +738,10 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 
                 guard let station = station else { return }
                 
-                // Beginners Guide
-                if station.habModules.count < 1 {
-                    self.gameOverlay.addNews(data: NewsData(type: .Intro, message: "Tap on a Module (see hand) and create your first Hab Module.", date: nil))
-//                    newsLines.append("Tap on a Module (see hand) and create your first Hab Module.")
-                } else if station.labModules.count < 1 {
-//                    newsLines.append("Tap on a Module (see hand) and create your first Lab Module.")
-                    self.gameOverlay.addNews(data: NewsData(type: .Intro, message: "Tap on a Module (see hand) and create your first Lab Module.", date: nil))
-                } else if station.getPeople().count < 1 {
-                    
-//                    newsLines.append("Tap on the Earth, to order items for your Space Station.")
-                    self.gameOverlay.addNews(data: NewsData(type: .Intro, message: "Tap on the Earth, to order items for your Space Station.", date: nil))
+                // Prioritize Beginners Guide
+                if station.habModules.count < 1  {
+                    hasChanges = true
+                    break
                 }
                 
                 // Lab activities
@@ -854,7 +848,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         
         
         // Save if needed
-        if hasChanges {
+        if hasChanges == true {
             if let station = self.station {
                 print("Will save station")
                 // Save
@@ -911,8 +905,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
             default: break
             
         }
-        
-        
         
         // Get the Hand Sprite
         var handSprite:SKSpriteNode?
@@ -976,71 +968,6 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 print("Other \(introStage) shouldn't happen.")
                 break
         }
-        
-        
-        // ---------
-        // Old Method
-        // ---------
-        /*
-        let habCount = station.habModules.count
-        let labCount = station.labModules.count
-        
-        // Check 🏠 HAB Modules
-        if habCount == 0 {
-            // Hab Module Tutorial
-            guard let node3 = scene.rootNode.childNode(withName: moduleA.id.uuidString, recursively: true) else {
-                fatalError("No such name")
-            }
-            
-            // GET THE POSITION
-            let handPosition = convertSceneToOverlay(node: node3)
-            handSprite.position = handPosition
-            
-            // Beginners Guide
-//            newsLines.append("Tap on a Module to create your first 🏠 Hab")
-            self.gameOverlay.addNews(data: NewsData(type: .Info, message: "Tap on a Module to create your first 🏠 Hab", date: nil))
-            
-            
-        } else if labCount == 0 {
-            // Lab Module Tutorial
-            guard let node3 = scene.rootNode.childNode(withName: moduleA.id.uuidString, recursively: true) else {
-                fatalError("No such name")
-            }
-            
-            // GET THE POSITION
-            let handPosition = convertSceneToOverlay(node: node3)
-            handSprite.position = handPosition
-            
-//            newsLines.append("Tap on a Module to create your first 🔬 Lab")
-            self.gameOverlay.addNews(data: NewsData(type: .Info, message: "Tap on a Module to create your first 🔬 Lab", date: nil))
-            
-        } else {
-            
-            let pplCount = station.habModules.flatMap({ $0.inhabitants }).count
-            if pplCount == 0 {
-                // Earth Order Tutorial
-                let people = station.habModules.flatMap({ $0.inhabitants })
-                if people.isEmpty {
-                    if let earth = scene.rootNode.childNode(withName: "Earth", recursively: true) as? EarthNode {
-                        
-                        let earthPosition:CGPoint = convertSceneToOverlay(node: earth)
-                        handSprite.position = earthPosition
-                        
-//                        newsLines.append("Tap on the Globe 🌎 to order items for your Space Station.")
-                        self.gameOverlay.addNews(data: NewsData(type: .Info, message: "Tap on the Globe 🌎 to order items for your Space Station.", date: nil))
-                    }
-                }
-            } else {
-                // Remove Finger
-                print("Removing Finger")
-                if let oldHand = gameOverlay.scene.childNode(withName: "TapHand") as? SKSpriteNode {
-                    oldHand.isHidden = true
-                    oldHand.removeFromParent()
-                    return
-                }
-            }
-        }
-        */
         
         print("👆 Making beginners hand")
         

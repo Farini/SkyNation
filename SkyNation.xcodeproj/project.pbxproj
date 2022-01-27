@@ -46,6 +46,13 @@
 		850A1B1025ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */; };
 		850A1B1125ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */; };
 		850A1B1225ACD5DC00BDEF81 /* Antenna3DNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */; };
+		850BFCF827A25BA500458404 /* FrontView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850BFCF727A25BA500458404 /* FrontView.swift */; };
+		850BFCF927A25BA500458404 /* FrontView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850BFCF727A25BA500458404 /* FrontView.swift */; };
+		850BFCFA27A25BA500458404 /* FrontView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850BFCF727A25BA500458404 /* FrontView.swift */; };
+		850BFCFC27A25BBE00458404 /* FrontController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850BFCFB27A25BBE00458404 /* FrontController.swift */; };
+		850BFCFD27A25BBE00458404 /* FrontController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850BFCFB27A25BBE00458404 /* FrontController.swift */; };
+		850BFCFE27A25BBE00458404 /* FrontController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850BFCFB27A25BBE00458404 /* FrontController.swift */; };
+		850BFCFF27A25BBE00458404 /* FrontController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850BFCFB27A25BBE00458404 /* FrontController.swift */; };
 		85108373271B16D9004D6D00 /* NetResponseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85108372271B16D8004D6D00 /* NetResponseView.swift */; };
 		85108374271B16D9004D6D00 /* NetResponseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85108372271B16D8004D6D00 /* NetResponseView.swift */; };
 		85108375271B16D9004D6D00 /* NetResponseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85108372271B16D8004D6D00 /* NetResponseView.swift */; };
@@ -805,6 +812,8 @@
 		8507614C2778E67A005D0DF5 /* SFXRiser.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = SFXRiser.m4a; sourceTree = "<group>"; };
 		850761512779AF21005D0DF5 /* SFXLanding.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = SFXLanding.m4a; sourceTree = "<group>"; };
 		850A1B0E25ACD5DC00BDEF81 /* Antenna3DNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Antenna3DNode.swift; sourceTree = "<group>"; };
+		850BFCF727A25BA500458404 /* FrontView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontView.swift; sourceTree = "<group>"; };
+		850BFCFB27A25BBE00458404 /* FrontController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontController.swift; sourceTree = "<group>"; };
 		85108372271B16D8004D6D00 /* NetResponseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetResponseView.swift; sourceTree = "<group>"; };
 		85108376271B2E63004D6D00 /* GameResponseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameResponseView.swift; sourceTree = "<group>"; };
 		8510837B271B5293004D6D00 /* EDLSceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EDLSceneView.swift; sourceTree = "<group>"; };
@@ -1102,6 +1111,42 @@
 			path = "3D Nodes";
 			sourceTree = "<group>";
 		};
+		850BFCF327A1E3AE00458404 /* Camera Control */ = {
+			isa = PBXGroup;
+			children = (
+				8536F45E258D481700B509D2 /* CamControlNode.swift */,
+				8536F45F258D481700B509D2 /* CamControl.sks */,
+			);
+			path = "Camera Control";
+			sourceTree = "<group>";
+		};
+		850BFCF427A1E44F00458404 /* Effects */ = {
+			isa = PBXGroup;
+			children = (
+				85D3BB2626AF244400B6AA36 /* SFXClose.wav */,
+				8507614C2778E67A005D0DF5 /* SFXRiser.m4a */,
+				850761512779AF21005D0DF5 /* SFXLanding.m4a */,
+				85D3BB2726AF244400B6AA36 /* SFXSelected.wav */,
+			);
+			path = Effects;
+			sourceTree = "<group>";
+		};
+		850BFCF527A25B7B00458404 /* Front */ = {
+			isa = PBXGroup;
+			children = (
+				850BFCFB27A25BBE00458404 /* FrontController.swift */,
+			);
+			path = Front;
+			sourceTree = "<group>";
+		};
+		850BFCF627A25B8700458404 /* Front */ = {
+			isa = PBXGroup;
+			children = (
+				850BFCF727A25BA500458404 /* FrontView.swift */,
+			);
+			path = Front;
+			sourceTree = "<group>";
+		};
 		8510837A271B5255004D6D00 /* EDL */ = {
 			isa = PBXGroup;
 			children = (
@@ -1166,10 +1211,7 @@
 			isa = PBXGroup;
 			children = (
 				856A64AC272892D20075CC04 /* Music */,
-				85D3BB2626AF244400B6AA36 /* SFXClose.wav */,
-				8507614C2778E67A005D0DF5 /* SFXRiser.m4a */,
-				850761512779AF21005D0DF5 /* SFXLanding.m4a */,
-				85D3BB2726AF244400B6AA36 /* SFXSelected.wav */,
+				850BFCF427A1E44F00458404 /* Effects */,
 			);
 			path = Sounds;
 			sourceTree = "<group>";
@@ -1329,6 +1371,7 @@
 		8536F337258D419400B509D2 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				850BFCF527A25B7B00458404 /* Front */,
 				85A6590525E4178F008AA9BA /* GameSettingsController.swift */,
 				85E2C42126BD8A6E003315F2 /* StoreManager.swift */,
 				8516AD712739055100392C4F /* Space Station */,
@@ -1357,6 +1400,7 @@
 		8536F339258D41BA00B509D2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				850BFCF627A25B8700458404 /* Front */,
 				85A658F825E224C1008AA9BA /* Settings */,
 				8516AD612737AE8C00392C4F /* Side Menu */,
 				85487F1526C0E86D00EBC070 /* Space Station */,
@@ -1540,9 +1584,8 @@
 				85A59E9F270CB6C90049AFC1 /* PlayerCardLayout.sks */,
 				85C3418D2591078700BF82F9 /* PlayerCardNode.swift */,
 				8559201425959A4300CF5467 /* SideMenuNode.swift */,
+				850BFCF327A1E3AE00458404 /* Camera Control */,
 				85713C70279366200034906E /* News Nodes */,
-				8536F45E258D481700B509D2 /* CamControlNode.swift */,
-				8536F45F258D481700B509D2 /* CamControl.sks */,
 				85C3418425905A7500BF82F9 /* TutorialNode.swift */,
 			);
 			path = Overlays;
@@ -2333,6 +2376,7 @@
 				85969836260E8FD400BF1860 /* OutpostController.swift in Sources */,
 				85A585E826E443700020CCBF /* RoadsBuilder.swift in Sources */,
 				85B34B0D26F7042B007178F5 /* GameSettingsTabView.swift in Sources */,
+				850BFCF827A25BA500458404 /* FrontView.swift in Sources */,
 				85713C8627953E260034906E /* Guild+Enums.swift in Sources */,
 				85487F2926C6F47100EBC070 /* PlayerCardView.swift in Sources */,
 				8516AD6E2738CE8800392C4F /* GameRoomController.swift in Sources */,
@@ -2412,6 +2456,7 @@
 				8536F3A2258D475D00B509D2 /* SpaceVehicle.swift in Sources */,
 				85F6675F25AF7CAB00E5003B /* RoboarmNode.swift in Sources */,
 				85D3BB1B26AC771D00B6AA36 /* CityLabView.swift in Sources */,
+				850BFCFC27A25BBE00458404 /* FrontController.swift in Sources */,
 				8536F412258D47D000B509D2 /* Parafernalia.swift in Sources */,
 				8595661E277AC5D400188FE3 /* BoxedCells.swift in Sources */,
 				8504A53B25C6875000739C58 /* Energy.swift in Sources */,
@@ -2523,6 +2568,7 @@
 				8523338D25D76A9B004CB638 /* AirCompositionView.swift in Sources */,
 				8536F36F258D475D00B509D2 /* SceneHelpers.swift in Sources */,
 				8517EE4B25FC245D00C34C54 /* OutpostView.swift in Sources */,
+				850BFCF927A25BA500458404 /* FrontView.swift in Sources */,
 				85713C8727953E260034906E /* Guild+Enums.swift in Sources */,
 				8536F4A3258D484B00B509D2 /* SceneDirector.swift in Sources */,
 				8536F397258D475D00B509D2 /* Modules.swift in Sources */,
@@ -2602,6 +2648,7 @@
 				85487F5E26CD9C1E00EBC070 /* GameLogic.swift in Sources */,
 				85A658FB25E2251B008AA9BA /* PlayerEditView.swift in Sources */,
 				8536F413258D47D000B509D2 /* Parafernalia.swift in Sources */,
+				850BFCFD27A25BBE00458404 /* FrontController.swift in Sources */,
 				85487F4E26CD98E900EBC070 /* GameImages.swift in Sources */,
 				8595661F277AC5D400188FE3 /* BoxedCells.swift in Sources */,
 				8569A3DB25A799840057A518 /* LaunchingVehicleView.swift in Sources */,
@@ -2704,6 +2751,7 @@
 				85B34B1E26FA21FD007178F5 /* ContributionRoundView.swift in Sources */,
 				85E2C41A26B9A960003315F2 /* GuildMakerView.swift in Sources */,
 				857DDEC925E4DCAD00E64752 /* Messages.swift in Sources */,
+				850BFCFE27A25BBE00458404 /* FrontController.swift in Sources */,
 				85108375271B16D9004D6D00 /* NetResponseView.swift in Sources */,
 				8536F443258D47EA00B509D2 /* EarthRequestController.swift in Sources */,
 				85E2C43426BE5753003315F2 /* Wallet.swift in Sources */,
@@ -2723,6 +2771,7 @@
 				8536F370258D475D00B509D2 /* SceneHelpers.swift in Sources */,
 				8536F4A4258D484B00B509D2 /* SceneDirector.swift in Sources */,
 				8504A54A25C6884600739C58 /* Garage.swift in Sources */,
+				850BFCFA27A25BA500458404 /* FrontView.swift in Sources */,
 				8536F398258D475D00B509D2 /* Modules.swift in Sources */,
 				8536F3DC258D47D000B509D2 /* LabActivityView.swift in Sources */,
 				859D683C25DD91DB005DD42C /* GameShoppingView.swift in Sources */,
@@ -2958,6 +3007,7 @@
 				8536F379258D475D00B509D2 /* Peripherals.swift in Sources */,
 				8592823925EC4DD3001233BE /* GuildController.swift in Sources */,
 				8592828D25F176F4001233BE /* GameCamera.swift in Sources */,
+				850BFCFF27A25BBE00458404 /* FrontController.swift in Sources */,
 				85487F2626C63F9800EBC070 /* CityTech.swift in Sources */,
 				8536F371258D475D00B509D2 /* SceneHelpers.swift in Sources */,
 				8536F395258D475D00B509D2 /* BioModule.swift in Sources */,

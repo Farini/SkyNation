@@ -14,7 +14,8 @@ struct PlayerEditorView: View {
     @ObservedObject var controller:GameSettingsController
     
     enum EditorStep {
-        case Displaying
+        
+        case Displaying // to remove (no Displaying state)
         case TypingName
         case ChoosingAvatar
         case Confirming
@@ -91,10 +92,10 @@ struct PlayerEditorView: View {
                         
                         HStack {
                             
-                            Button("Cancel") {
-                                self.editorStep = .Displaying
-                            }
-                            .buttonStyle(GameButtonStyle())
+//                            Button("Cancel") {
+//                                self.editorStep = .Displaying
+//                            }
+//                            .buttonStyle(GameButtonStyle())
                             
                             Button("Continue") {
                                 print("ok")
@@ -167,7 +168,7 @@ struct PlayerEditorView: View {
                             Text("\(updated.name) updated.")
                                 .foregroundColor(.green)
                                 .padding()
-                        } else if let warning = controller.warningList.first {
+                        } else if let warning = controller.warningList.last {
                             Text(warning)
                                 .foregroundColor(.red)
                                 .padding()
@@ -187,6 +188,11 @@ struct PlayerEditorView: View {
                                 self.editorStep = .Displaying
                             }
                             .buttonStyle(GameButtonStyle())
+                            
+//                            Button("View Player") {
+//                                self.editorStep = .Displaying
+//                            }
+//                            .buttonStyle(GameButtonStyle())
                         }
                         .transition(.move(edge:.leading).combined(with:AnyTransition.opacity))
                         .animation(.spring(response: 0.5, dampingFraction: 0.75))

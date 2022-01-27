@@ -25,6 +25,27 @@ enum LoginStatus {
     case createdPlayerWaitingAuth(playerUpdate:PlayerUpdate)
     
     case simulatingData(serverData:ServerData)
+    
+    var isPendingUpdates:Bool {
+        switch self {
+            case .notStarted:
+                return true
+            case .serverError(_, _, _):
+                return true
+            case .playerUnauthorized(_):
+                return true
+            default: return false
+        }
+    }
+    
+    /// Whether its not started
+    var isWaitingLoad:Bool {
+        switch self {
+            case .notStarted:
+                return true
+            default: return false
+        }
+    }
 }
 
 class ServerManager {
@@ -144,6 +165,34 @@ class ServerManager {
         return LocalDatabase.shared.serverData
     }
     
+    /// Force create means to create a new player (after failed attempts)
+    func relogin(with player:SKNPlayer, forceCreate:Bool) {
+        
+        if forceCreate == true {
+            self.loginFirstPlayer(player: player)
+        } else {
+            if let pid = player.playerID,
+               let pass = player.keyPass,
+               let server = ServerManager.loadServerData(),
+               pass.isEmpty == false {
+                print("Player can login pid:\(pid), pass:\(pass)")
+                if GameSettings.onlineStatus == true {
+                    // Perform Login
+                    self.loginWithData(sd: server)
+                } else {
+                    // Simulate
+                    print("Simulating Info !")
+                    self.loginStatus = .simulatingData(serverData: server)
+                }
+            } else {
+                // Player can't login. Needs to create
+                self.loginFirstPlayer(player: player)
+            }
+        }
+        
+        
+    }
+    
     /// Performs Login with Authorization
     private func loginWithData(sd:ServerData) {
         
@@ -210,99 +259,43 @@ class ServerManager {
     /// Possibly first login, or login after losing data.
     private func loginFirstPlayer(player:SKNPlayer) {
         
-        if let pid = player.playerID,
-           let pass = player.keyPass {
-            
-            // Check if there is an auth already.
-            SKNS.authorizeLogin(localPlayer: player, pid: pid, pass: pass) { playerUpdate, error in
-                
-                if let playerUpdate:PlayerUpdate = playerUpdate {
-                    // success
-                    print("Player authorized. Name:\(playerUpdate.name), \(playerUpdate.pass)")
+        // create login
+        SKNS.createNewPlayer(localPlayer: player) { playerUpdate, error in
+            if let playerUpdate = playerUpdate {
+                DispatchQueue.main.async {
                     
-                    DispatchQueue.main.async {
-//                        player.lastSeen = Date()
-                        let delta = abs(player.lastSeen.timeIntervalSinceNow)
-                        if delta > 60 {
-                            player.lastSeen = Date()
-                        }
-                        self.playerLogged = true
-                        self.loginStatus = .playerAuthorized(playerUpdate: playerUpdate)
-                        
-                        // Flags
-                        do {
-                            let oldPlayer = try PlayerUpdate.create(player: player)
-                            let pFlags = oldPlayer.compareFlags(newPlayer: playerUpdate)
-                            if !pFlags.isEmpty {
-                                print("\n\n\n PLAYER UPDATE FLAGS !!\n \(pFlags.description)\n\n")
-                                self.playerFlags = pFlags
-                                if pFlags.contains(.password) {
-                                    player.keyPass = playerUpdate.pass
-                                    do {
-                                        try LocalDatabase.shared.savePlayer(player)
-                                    } catch {
-                                        print("Error saving player \(error.localizedDescription)")
-                                    }
-                                }
-                            }
-                        } catch {
-                            // Could not create a PlayerUpdate Object
-                        }
-                        
-                        // Update var serverData
-                        if self.serverData != nil {
-                            self.serverData!.player = player
-                        } else {
-                            self.serverData = ServerData(player: player)
-                        }
+                    // Save new Player
+                    player.playerID = playerUpdate.id
+                    player.keyPass = playerUpdate.pass
+                    
+                    // Save
+                    do {
+                        try LocalDatabase.shared.savePlayer(player)
+                        print("New Player created in database")
+                    } catch {
+                        print("‼️ Could not save player.: \(error.localizedDescription)")
                     }
-                } else {
-                    // failed
-                    print("‼️ Authorize Login Failed. Error: \(error?.localizedDescription ?? "no error")")
-                    self.loginStatus = .serverError(reason: "Error validating Login", error: error, sknsError: nil)
-                }
-            }
-            
-        } else {
-            
-            // create login
-            SKNS.createNewPlayer(localPlayer: player) { playerUpdate, error in
-                if let playerUpdate = playerUpdate {
-                    DispatchQueue.main.async {
-                        
-                        // Save new Player
-                        player.playerID = playerUpdate.id
-                        player.keyPass = playerUpdate.pass
-                        
-                        // Save
-                        do {
-                            try LocalDatabase.shared.savePlayer(player)
-                            print("New Player created in database")
-                        } catch {
-                            print("‼️ Could not save player.: \(error.localizedDescription)")
-                        }
-                        
-                        self.loginStatus = .createdPlayerWaitingAuth(playerUpdate: playerUpdate)
-                        
-                        var sData:ServerData? = self.serverData
-                        if let sData = sData {
-                            sData.player.playerID = playerUpdate.id
-                            sData.player.keyPass = playerUpdate.pass
-                            self.serverData = sData
-                            self.saveServerData()
-                        } else {
-                            sData = ServerData(player: player)
-                        }
-                        guard let sData = sData else { fatalError("Server Data Failed to create") }
-                        
-                        // Needs to validate login
-                        self.loginWithData(sd:sData)
-                        
+                    
+                    self.loginStatus = .createdPlayerWaitingAuth(playerUpdate: playerUpdate)
+                    
+                    var sData:ServerData? = self.serverData
+                    if let sData = sData {
+                        sData.player.playerID = playerUpdate.id
+                        sData.player.keyPass = playerUpdate.pass
+                        self.serverData = sData
+                        self.saveServerData()
+                    } else {
+                        sData = ServerData(player: player)
                     }
-                } else {
-                    // Deal with error
-                    self.loginStatus = .serverError(reason: "Could not create new player", error: error, sknsError: nil)
+                    guard let sData = sData else { fatalError("Server Data Failed to create") }
+                    
+                    // Needs to validate login
+                    self.loginWithData(sd:sData)
+                    
                 }
+            } else {
+                // Deal with error
+                self.loginStatus = .serverError(reason: "Could not create new player", error: error, sknsError: nil)
             }
         }
     }
@@ -890,11 +883,3 @@ class ServerData:Codable {
         case lastFetchedVehicles
     }
 }
-
-// MARK: - Decoding
-
-//extension ServerData {
-//    
-//    // MARK: - Codable
-//    
-//}

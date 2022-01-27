@@ -331,6 +331,8 @@ class PeripheralObject:Codable, Identifiable, Equatable {
 import SwiftUI
 
 extension PeripheralObject {
+    
+    /// Gets the image related to this `Peripheral`
     func getImage() -> Image? {
         switch self.peripheral {
 //            case .Airlock:

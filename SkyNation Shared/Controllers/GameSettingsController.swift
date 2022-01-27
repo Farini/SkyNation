@@ -127,7 +127,7 @@ class GameSettingsController:ObservableObject {
         
         // Accounting
         if let myCity:CityData = LocalDatabase.shared.cityData {
-            DispatchQueue(label: "Accounting").async {
+            DispatchQueue(label: "CityAccounting").async {
                 myCity.accountingLoop(recursive: true) { messages in
                     print("Mars Accounting Finished: \(messages.joined(separator: " ,"))")
                 }
@@ -250,11 +250,15 @@ class GameSettingsController:ObservableObject {
         player.name = playerName
         do {
             try LocalDatabase.shared.savePlayer(player)
+            self.hasChanges = false
+            self.savedChanges = true
         } catch {
             print("Error saving Player.: \(error.localizedDescription)")
+            self.warningList = ["Player not logged in. \(error.localizedDescription)"]
+            self.hasChanges = true
+            self.savedChanges = false
         }
-        self.hasChanges = false
-        self.savedChanges = true
+        
         self.updateLoadedList()
     }
     
@@ -600,7 +604,7 @@ class GameSettingsController:ObservableObject {
         let builder = LocalDatabase.shared.stationBuilder
         let station = LocalDatabase.shared.station
         
-        DispatchQueue(label: "Accounting").async {
+        DispatchQueue(label: "StationAccounting").async {
             station.accountingLoop(recursive: true) { comments in
                 for comment in comments {
                     print("COMMENTS: \(comment)")
@@ -626,7 +630,6 @@ class GameSettingsController:ObservableObject {
                 }
             }
         }
-        
     }
     
     /// Recursively checks Player login status.

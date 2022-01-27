@@ -28,15 +28,8 @@ struct GarageView: View {
                 
                 VStack(alignment:.leading) {
                     Text("🚀 Garage")
-//                        .font(.largeTitle)
                         .font(GameFont.title.makeFont())
                         .padding([.leading], 6)
-//                        .foregroundColor(.orange)
-                    
-//                    Text("ID: \(UUID().uuidString)")
-//                        .foregroundColor(.gray)
-//                        .font(.caption)
-//                        .padding(.leading, 6)
                 }
                 Spacer()
                 

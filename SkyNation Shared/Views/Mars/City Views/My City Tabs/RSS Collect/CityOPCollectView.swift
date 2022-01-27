@@ -82,10 +82,18 @@ struct CityOPCollectView_Previews: PreviewProvider {
 }
 
 extension Dictionary {
-    func makeString() -> String {
+    
+    /**
+     Builds a displayable string, with keys and values on each line from a dictionary.
+     - parameters:
+        - inline: when turned on, returns a one liner.
+     
+     By default, the inline argument is false. This means each `key` & `value` pair will have one line.
+     */
+    func makeString(inline:Bool = false) -> String {
         var result:String = ""
         for (key, value) in self {
-            result += "\(key):\(value)"
+            result += "\(key):\(value)\(inline ? "":"\n")"
         }
         return result
     }

@@ -123,7 +123,6 @@ struct GameLogic {
     - fileName: The name of the file to be fetched
     - fileType: The Codable Type for this file
 */
-
 enum GameFile {
     
     case player

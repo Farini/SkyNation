@@ -170,7 +170,6 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] LabView - Tech with new Detail Images
 - [X] Station Scene - Make the Earth bright again
 
-- [ ] Garage - Check if asking for Token spending.
 - [ ] LabView substitute "Loading View" for something more useful
 
 - [ ] Front View - Game Settings shown only at the game start
@@ -181,6 +180,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Astronomy Blog link?
 - [ ] Leaving a Guild Problems. Needs to fix it. API not decoding correctly (but it happens in server. It crashes.)
 - [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
+- [ ] Settings - Delete this game (start over)
 
 - [ ] Prepare Scene Objects https://developer.apple.com/documentation/scenekit/scnscenerenderer/1522798-prepare
 ```swift

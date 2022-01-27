@@ -524,7 +524,6 @@ extension LocalDatabase {
         bcf.countStyle = .file
         
         let dataSize = bcf.string(fromByteCount: Int64(data.count))
-        // print("💾 \(name) Size: \(dataSize)")
         var dataDesc:String = "💾 \(name), Size: \(dataSize)"
         
         let filePath = LocalDatabase.folder.appendingPathComponent(name)
