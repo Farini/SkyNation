@@ -181,6 +181,10 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Leaving a Guild Problems. Needs to fix it. API not decoding correctly (but it happens in server. It crashes.)
 - [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
 - [ ] Settings - Delete this game (start over)
+- [ ] Entry Shaders? StarNest.fsh, BusyCircuitry.fsh
+
+- [ ] News - Special FX can be achieved with the `BusyCircuitry` shader.
+- [ ] If accounting goes for too long, save the city (not currently saving, just accrueing time)
 
 - [ ] Prepare Scene Objects https://developer.apple.com/documentation/scenekit/scnscenerenderer/1522798-prepare
 ```swift
@@ -188,6 +192,7 @@ sceneRenderer.prepare(objects:[Any], completionHandler: ((Bool) -> Void))
 object
 An SCNScene, SCNNode, SCNGeometry, or SCNMaterial instance.
 ```
+
 - [X] ServerData - Set GuildFullContent to nil in any case. Prepare to deprecate
 - [ ] ServerData - Use GuildFlags to show new items. in GuildRoom
 - [ ] Guild Room - Election not updating
@@ -201,6 +206,8 @@ An SCNScene, SCNNode, SCNGeometry, or SCNMaterial instance.
 - [ ] Game Settings - Save camera?
 - [ ] Remove `GuildFullContent` from ServerData (mac v 1.3, iOS v 1.3)
 - [ ] Remove `GuildFullContent` object
+
+
 
 ### Game Recording Plan
 

@@ -186,7 +186,7 @@ extension StationBuilder {
         
         // 1. Modules + Nodes
         for buildPart in buildList {
-            print("Build: \(buildPart.type.rawValue)")
+            // print("Build: \(buildPart.type.rawValue)")
             if buildPart.position.x == 0 && buildPart.position.y == -12 && buildPart.position.z == 0 {
                 let dock = SCNScene(named: "Art.scnassets/SpaceStation/Accessories/Dock.scn")!
                 // Dock
@@ -572,9 +572,8 @@ extension ModuleSkin {
             if let folder = textureFolder,
                let image = albedo {
                 let tmpPath = folder.appendingPathComponent(image).path
-                print("Path: \(tmpPath)")
                 
-                buildingNode.geometry?.materials.first?.diffuse.contents = SKNImage(contentsOfFile: folder.appendingPathComponent(image).path)
+                buildingNode.geometry?.materials.first?.diffuse.contents = SKNImage(contentsOfFile: tmpPath)
                     
             }
         } else {

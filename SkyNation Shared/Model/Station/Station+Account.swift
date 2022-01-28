@@ -386,7 +386,7 @@ extension Station {
         let energyForModules = modulesCount * GameLogic.energyPerModule
         let emResult = truss.consumeEnergy(amount: energyForModules)
         if emResult == true {
-            print("Modules consumed energy")
+//            print("Modules consumed energy")
             report.addNote(string: "Modules consumed ⚡️ \(energyForModules)")
         }
         

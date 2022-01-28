@@ -10,7 +10,7 @@ import SceneKit
 import SpriteKit
 import SwiftUI
 
-class GameViewController: NSViewController, NSWindowDelegate {
+class GameViewController: NSViewController {
     
     @IBOutlet weak var sceneKitView: SCNView!
     
@@ -53,17 +53,19 @@ class GameViewController: NSViewController, NSWindowDelegate {
         gestureRecognizers.append(clickGesture)
         self.gameView.gestureRecognizers = gestureRecognizers
         
-        
     }
     
     override func viewDidAppear() {
+        
         // Add Notification
         NotificationCenter.default.addObserver(self, selector: #selector(closeView(_:)), name: .closeView, object: nil)
-    }
-    
-    override func viewWillDisappear() {
-        print("Closing this window will terminate the app.")
-        NSApp.terminate(self)
+        
+        // Window Delegate
+        if let wid = gameView.window {
+            // print("✅ DELEGATE")
+            wid.delegate = self
+        }
+        
     }
     
     /// Close the currently presented  `View`
@@ -75,11 +77,6 @@ class GameViewController: NSViewController, NSWindowDelegate {
         }
         openedView = nil
     }
-    
-//    func windowWillClose(_ notification: Notification) {
-//        print("--- Closing Window ---")
-//        NSApp.terminate(self)
-//    }
     
     // MARK: - Control
     
@@ -374,9 +371,27 @@ extension GameViewController: GameNavDelegate {
     }
     
 }
-#endif
 
-// Deprecate
+extension GameViewController: NSWindowDelegate {
+    
+    func windowWillBeginSheet(_ notification: Notification) {
+        print("BEGIN SHEET")
+    }
+    
+    func windowDidEndSheet(_ notification: Notification) {
+        print("END SHEET")
+    }
+    
+    func windowWillMiniaturize(_ notification: Notification) {
+        print("Miniature")
+    }
+    
+    func windowWillClose(_ notification: Notification) {
+        print("--- Closing Window ---")
+        NSApp.terminate(self)
+    }
+}
+
 class ClosableWindow:NSWindow {
     
     override func close() {
@@ -384,3 +399,5 @@ class ClosableWindow:NSWindow {
     }
     
 }
+
+#endif

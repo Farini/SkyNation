@@ -150,10 +150,18 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         break
                     }
                     
+                    /*
+                     // this isnt working well
+                    let outlineProgram = SCNProgram()
+                    outlineProgram.vertexFunctionName = "outline_vertex"
+                    outlineProgram.fragmentFunctionName = "outline_fragment"
+                    material.program = outlineProgram
+                    // material.cullMode = .front
+                    */
+                    
                     // highlight it
                     SCNTransaction.begin()
                     SCNTransaction.animationDuration = 0.5
-                    
                     // on completion - unhighlight
                     SCNTransaction.completionBlock = {
                         SCNTransaction.begin()
@@ -161,9 +169,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                         material.emission.contents = SCNColor.black
                         SCNTransaction.commit()
                     }
-                    
                     material.emission.contents = SCNColor.blue
-                    
                     SCNTransaction.commit()
                 }
             case .MarsColony:

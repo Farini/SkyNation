@@ -316,7 +316,7 @@ extension CityData {
         let energyForModules = modulesCount * GameLogic.energyPerModule
         let emResult = totalEnergy >= energyForModules //consumeEnergy(amount: energyForModules)
         if emResult == true {
-            print("Modules consumed energy")
+//            print("Modules consumed energy")
             totalEnergy -= energyForModules
             report.addNote(string: "Modules consumed ⚡️ \(energyForModules)")
         }
@@ -406,21 +406,6 @@ extension CityData {
         for bioBox in allBoxes {
             self.bioAccounting(bioBox, report: report)
         }
-        
-//        // Antenna & Money
-//        let antennaMoney = truss.moneyFromAntenna()
-//        print("\n 🤑 Antenna Money: \(antennaMoney)")
-//        let player = LocalDatabase.shared.player
-//        if habModules.compactMap({ $0.inhabitants }).count > 0 {
-//            player.money += antennaMoney
-//            print(" 💵 Player money: \(player.money)")
-//            report.addNote(string: "💵 \(player.money) (📡 + \(antennaMoney))")
-//
-//        } else {
-//            print("No people -> No money")
-//            report.addNote(string: "💵 No inhabitants, no money 🥺")
-//        }
-        
         
         // Finish
         self.accounting = report

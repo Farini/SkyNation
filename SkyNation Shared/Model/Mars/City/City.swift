@@ -187,9 +187,8 @@ class CityData:Codable, Identifiable {
         
         let suppliedAir = self.air.getVolume()
         
-        print("--- Air:")
-        print("--- Required: \(reqAir)")
-        print("--- Supplied: \(suppliedAir)")
+        print("City Air: Required:\(reqAir), Supplied:\(suppliedAir)")
+        
         return reqAir
         
     }

@@ -32,21 +32,18 @@ class StartingWindow: NSWindowController, NSWindowDelegate {
     @objc func startGame(_ notification:Notification) {
         
         let stb = NSStoryboard(name: "Main", bundle: Bundle.main)
-        if let newWindowController = stb.instantiateInitialController() as? NSWindowController {
-            
+        if let newWindowController = stb.instantiateInitialController() as? GameWindowController {
+
             if let newWindow = newWindowController.window {
+                
                 print("New Window here: \(newWindow.title)")
-                newWindow.makeKeyAndOrderFront(self)
+                newWindowController.showWindow(self)
                 
                 // Close this window
                 self.window?.close()
-                
-                // Delegate this window as well.
-                newWindow.delegate = self
             }
         }
     }
-    
     
     @objc func presentGameCenter(_ notification:Notification) {
         // GameCenter passes its own view controller.
@@ -56,16 +53,8 @@ class StartingWindow: NSWindowController, NSWindowDelegate {
         }
     }
     
-    /*
-    func windowWillClose(_ notification: Notification) {
-        if let window = notification.object as? NSWindow {
-            window.isReleasedWhenClosed = true
-            print("A Window from window call \(window.title)")
-        } else {
-            print("Another Window will close: \(window?.title ?? "n/a")")
-        }
-        
+    func windowDidMiniaturize(_ notification: Notification) {
+        print("mini")
     }
-    */
     
 }

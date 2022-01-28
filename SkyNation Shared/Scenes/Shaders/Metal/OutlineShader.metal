@@ -52,7 +52,7 @@ vertex VertexOut outline_vertex(VertexIn in                      [[stage_in]],
     
     VertexOut out;
     out.position = scn_node.modelViewProjectionTransform * float4(modelPosition, 1);
-    out.color = float4(1, 1, 0, 1);
+    out.color = float4(1, 0.85, 0, 0.5);
     out.normal = (scn_node.normalTransform * float4(in.normal, 1)).xyz;
     return out;
 }

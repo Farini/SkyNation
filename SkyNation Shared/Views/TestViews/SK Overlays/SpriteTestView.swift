@@ -24,7 +24,6 @@ and colonize the red planet.
         
         let newScene = SKScene(size: CGSize(width: 750, height: 400))
         newScene.anchorPoint = CGPoint(x: 0.05, y: 0.8)
-        
         self.scene = newScene
     }
     

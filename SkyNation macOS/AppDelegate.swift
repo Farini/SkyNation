@@ -38,11 +38,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             window.contentView = NSHostingView(rootView: GameSettingsView())
             window.makeKeyAndOrderFront(nil)
         }
-        
-        // Maximize the window
-        // if let screen = NSScreen.mainScreen() {
-        //  window.setFrame(screen.visibleFrame, display: true, animate: true)
-        // }
     }
     
     func applicationWillBecomeActive(_ notification: Notification) {
