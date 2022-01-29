@@ -106,6 +106,12 @@ struct GameImages {
         return SKNImage(named:"Helmet")!
     }
     
+    /// The name of the currency image, for `SwiftUI`
+    static var currencyImageName:String = "Currency"
+    
+    /// The name of the token image, for `SwiftUI`
+    static var tokenImageName:String = "Helmet"
+    
     /// Generates a Barcode in SwiftUI
     static func generateBarcode(from uuid: UUID) -> Image? {
         let data = uuid.uuidString.prefix(8).data(using: String.Encoding.ascii)

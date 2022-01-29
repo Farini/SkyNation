@@ -11,7 +11,7 @@ import SpriteKit
 struct EntryShaderTest: View {
     
     var scene:SKScene
-    let shader = SKShader(fileNamed: "BusyCircuitry.fsh")
+    let shader = SKShader(fileNamed: "StarNest.fsh")
     
     // Entry Shaders:
     // StarNest.fsh, BusyCircuitry.fsh
@@ -20,32 +20,6 @@ struct EntryShaderTest: View {
     var body: some View {
         ZStack {
             SpriteView(scene: scene, transition: .doorway(withDuration: 1), isPaused: false, preferredFramesPerSecond: 60)
-            
-            VStack {
-                Image("EntranceLogo")
-                Text("Welcome, Player")
-                HStack {
-                    Button("Start") {
-                        
-                    }
-                    .buttonStyle(GameButtonStyle())
-                    
-                    Button("Settings") {
-                        
-                    }
-                    .buttonStyle(GameButtonStyle())
-                    
-                    // Only show Guild here is player has MarsPass?
-                    Button("Guild") {
-                        
-                    }
-                    .buttonStyle(GameButtonStyle())
-                }
-                
-            }
-            .padding()
-            .background(Color.black.opacity(0.75))
-            .cornerRadius(10)
         }
         .onAppear {
             buildScene()

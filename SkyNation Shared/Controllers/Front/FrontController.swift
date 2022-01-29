@@ -23,7 +23,8 @@ class FrontController:ObservableObject {
     @Published var warningList:[String] = []
     @Published var loadedList:[String] = []
     
-    init() {
+    /// Pass false here to not login. It won't load the scene either.
+    init(simulating login:Bool = true, newPlayer:Bool) {
         
         let gPlayer = LocalDatabase.shared.player
         self.player = gPlayer //LocalDatabase.shared.player
@@ -67,6 +68,9 @@ class FrontController:ObservableObject {
             }
         }
         
+        // Option to not login every time
+        if login == false { return }
+        
         if shouldLogin == true {
             self.playerLogin()
         } else {
@@ -76,6 +80,10 @@ class FrontController:ObservableObject {
             // Must put the view state into "Editing"
             // ----------
         }
+        
+        self.player.lastSeen = Date()
+        
+        loadGameData()
     }
     
     // Player Actions
@@ -193,6 +201,7 @@ class FrontController:ObservableObject {
                 builder.scene = loadedScene
                 
                 DispatchQueue.main.async {
+                    
                     self.stationScene = loadedScene
                     self.loadedList.append("🎬 Space Station is loaded.")
                     print("🎬 Game Scene loaded")
