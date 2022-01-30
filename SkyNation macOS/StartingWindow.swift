@@ -17,7 +17,7 @@ class StartingWindow: NSWindowController, NSWindowDelegate {
         
         self.window!.center()
         self.window!.setFrameAutosaveName("SUI Window")
-        self.window!.contentView = NSHostingView(rootView: GameSettingsView())
+        self.window!.contentView = NSHostingView(rootView: FrontView(controller: FrontController())) // GameSettingsView()
         self.window!.makeKeyAndOrderFront(nil)
         window?.title = "SkyNation"
         window?.delegate = self
@@ -33,15 +33,21 @@ class StartingWindow: NSWindowController, NSWindowDelegate {
         
         let stb = NSStoryboard(name: "Main", bundle: Bundle.main)
         if let newWindowController = stb.instantiateInitialController() as? GameWindowController {
-
-            if let newWindow = newWindowController.window {
+            
+            let newWindow = newWindowController.window
+            if let gvc = newWindowController.contentViewController as? GameViewController {
+                print("GVC: \(gvc.description)")
+                newWindowController.showWindow(newWindow)
                 
-                print("New Window here: \(newWindow.title)")
-                newWindowController.showWindow(self)
-                
+            }
+//            if let newWindow = newWindowController.window {
+//
+//                print("New Window here: \(newWindow.title)")
+//                newWindowController.showWindow(self)
+//
                 // Close this window
                 self.window?.close()
-            }
+//            }
         }
     }
     

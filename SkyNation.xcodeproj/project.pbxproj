@@ -615,6 +615,8 @@
 		859D683A25DD91DB005DD42C /* GameShoppingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683925DD91DB005DD42C /* GameShoppingView.swift */; };
 		859D683B25DD91DB005DD42C /* GameShoppingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683925DD91DB005DD42C /* GameShoppingView.swift */; };
 		859D683C25DD91DB005DD42C /* GameShoppingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683925DD91DB005DD42C /* GameShoppingView.swift */; };
+		85A1AA5D27A64988007A0695 /* GameSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6590525E4178F008AA9BA /* GameSettingsController.swift */; };
+		85A1AA5E27A64A2F007A0695 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FE6435276D07C800FF93D5 /* GameCenterManager.swift */; };
 		85A1D25C27497DEB00C2D163 /* ShopPromoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */; };
 		85A1D25D27497DEB00C2D163 /* ShopPromoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */; };
 		85A1D25E27497DEB00C2D163 /* ShopPromoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */; };
@@ -3036,6 +3038,8 @@
 				85DB9EF927A086B30019084E /* Guild+Enums.swift in Sources */,
 				8536F43C258D47EA00B509D2 /* ModulesViewModel.swift in Sources */,
 				8536F448258D47EA00B509D2 /* LabViewModel.swift in Sources */,
+				85A1AA5E27A64A2F007A0695 /* GameCenterManager.swift in Sources */,
+				85A1AA5D27A64988007A0695 /* GameSettingsController.swift in Sources */,
 				8559201825959A4300CF5467 /* SideMenuNode.swift in Sources */,
 				85F6676225AF7CAB00E5003B /* RoboarmNode.swift in Sources */,
 				8536F440258D47EA00B509D2 /* GarageViewModel.swift in Sources */,

@@ -169,22 +169,24 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] GameController - display node info when zooming in
 - [X] LabView - Tech with new Detail Images
 - [X] Station Scene - Make the Earth bright again
+- [X] If accounting goes for too long, save the city (not currently saving, just accrueing time)
 
 - [ ] LabView substitute "Loading View" for something more useful
 
-- [ ] Front View - Game Settings shown only at the game start
-- [ ] No need to check for state. `buttonDisabled()` Better model.
-- [ ] Allow player to see guilds before first purchase
-- [ ] Progress View for scene loading?
-- [ ] Astronomy Images?
-- [ ] Astronomy Blog link?
-- [ ] Leaving a Guild Problems. Needs to fix it. API not decoding correctly (but it happens in server. It crashes.)
+- [X] Front View - Game Settings shown only at the game start
+- [X] Front View - design, typography, etc.
+- [X] Front View - Entry Shaders? StarNest.fsh, BusyCircuitry.fsh
+- [ ] Front View - Delete this game (start over)
+- [ ] Front View - Prepare A/B test Shaders vs Earth image
+
+- [ ] Store - needs visual improvements
+- [ ] Store - Build list of bonus (kits) depending on prev. purchases
+
 - [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
-- [ ] Settings - Delete this game (start over)
-- [ ] Entry Shaders? StarNest.fsh, BusyCircuitry.fsh
+- [ ] Allow player to see guilds before first purchase
+- [ ] Leaving a Guild Problems. Needs to fix it. API not decoding correctly (but it happens in server. It crashes.)
 
 - [ ] News - Special FX can be achieved with the `BusyCircuitry` shader.
-- [ ] If accounting goes for too long, save the city (not currently saving, just accrueing time)
 
 - [ ] Prepare Scene Objects https://developer.apple.com/documentation/scenekit/scnscenerenderer/1522798-prepare
 ```swift
@@ -200,14 +202,9 @@ An SCNScene, SCNNode, SCNGeometry, or SCNMaterial instance.
 - [ ] City View - Bio - "Evolve" not updating the list
 - [ ] City View - Foreign City not being shown
 
-- [ ] Store - needs visual improvements
-- [ ] Store - Build list of bonus (kits) depending on prev. purchases
-
 - [ ] Game Settings - Save camera?
 - [ ] Remove `GuildFullContent` from ServerData (mac v 1.3, iOS v 1.3)
 - [ ] Remove `GuildFullContent` object
-
-
 
 ### Game Recording Plan
 

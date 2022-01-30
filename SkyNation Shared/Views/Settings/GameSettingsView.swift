@@ -229,23 +229,6 @@ struct GameTabs_Previews: PreviewProvider {
 }
 
 
-// MARK: - Avatar
 
-class AvatarCard: Identifiable, Equatable {
-    
-    var id:UUID = UUID()
-    var name:String
-    var selected:Bool
-    
-    init(name:String) {
-        self.id = UUID()
-        self.selected = false
-        self.name = name
-    }
-    
-    static func == (lhs: AvatarCard, rhs: AvatarCard) -> Bool {
-        return lhs.id == rhs.id
-    }
-}
 
 

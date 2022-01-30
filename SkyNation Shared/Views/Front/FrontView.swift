@@ -18,7 +18,7 @@ struct FrontView: View {
         case playerEdit
         case settings
     }
-    @State var viewMode:ViewMode = .playerEdit
+    @State var viewMode:ViewMode = .loading
     
     @State var saturated:Double = 1.0
     
@@ -30,8 +30,8 @@ struct FrontView: View {
                 .aspectRatio(contentMode: .fill)
                 .saturation(0.5)
                 .brightness(0.01)
-            //                .hueRotation(Angle.init(degrees: 90))
-            //                .contrast(0.0)
+                //  .hueRotation(Angle.init(degrees: 90))
+                //  .contrast(0.0)
                 .frame(minWidth:900)
             
             // EntryShaderTest()
@@ -103,7 +103,10 @@ struct FrontView: View {
                             HStack {
                                 // Edit button
                                 Button {
-                                    print("Click me")
+                                    // print("Click me")
+                                    withAnimation() {
+                                        self.viewMode = .settings
+                                    }
                                 } label: {
                                     HStack {
                                         Image(systemName: "gear")
@@ -117,14 +120,21 @@ struct FrontView: View {
                                 // Start
                                 Button(action: {
                                     print("Start game")
+                                    // controller.star
+                                    guard let scene = controller.stationScene else {
+                                        print("Controller didn't load the scene.")
+                                        return
+                                    }
+                                    controller.startGame(scene: scene)
+                                    
                                 }, label: {
                                     HStack {
                                         Image(systemName: "play.circle")
                                         Text("Start")
                                     }
                                 })
-                                    .buttonStyle(GameButtonStyle())
-                                    .disabled($controller.stationScene.wrappedValue == nil)
+                                .buttonStyle(GameButtonStyle())
+                                .disabled($controller.stationScene.wrappedValue == nil)
                             }
                             
                     case .playerEdit:
@@ -145,7 +155,19 @@ struct FrontView: View {
                                         }
                                     }
                                     .buttonStyle(GameButtonStyle())
-                                    
+                                    if controller.playerName != controller.player.name {
+                                        Button("💾 Save") {
+                                            // print("save \(selectedAvatar.name)")
+                                            // make sure the player name is valid
+                                            if validatePlayername() == true {
+                                                controller.didEditPlayer(new: controller.playerName, avatar: selectedAvatar?.name ?? controller.player.avatar) { playerUpdate, error in
+                                                    
+                                                }
+                                            }
+                                        }
+                                        .buttonStyle(GameButtonStyle())
+                                        .transition(.slide.combined(with: .opacity))
+                                    }
                                     if let selectedAvatar = $selectedAvatar.wrappedValue {
                                         Button("💾 Save") {
                                             print("save \(selectedAvatar.name)")
@@ -248,11 +270,17 @@ struct FrontView: View {
         
         .onAppear{
             effect()
+            // Check if new player
             if controller.isNewPlayer == true {
+                // Change the view mode
                 self.viewMode = .playerEdit
                 controller.playerName = GameCenterManager.shared.gcPlayer?.alias ?? "Test User"
             }
         }
+    }
+    
+    func validatePlayername() -> Bool {
+        return NSRange(location: 3, length: 9).contains(controller.playerName.count)
     }
     
     func effect() {

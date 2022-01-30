@@ -18,6 +18,34 @@ class DataTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
     
+    func testSomethingRandom() {
+        
+        let namea = "123456789012"
+        let nameb = "1234567890123"
+        let namec = "12345678901"
+        let named = "1234567890"
+        let namee = "1234"
+        let namef = "123"
+        let nameg = "12"
+        let nameh = "❤️ℹ️"
+        let namei = "❤️ℹ️🏁🎂🎬"
+        
+        let nameArray = [namea, nameb, namec, named, namee, namef, nameg, nameh, namei]
+        
+        for name in nameArray {
+            if NSRange(location: 3, length: 9).contains(name.count) {
+                print("\(name) is valid")
+                XCTAssert(name.count < 12)
+                XCTAssert(name.count >= 3)
+            } else {
+                print("\(name) is BAD")
+                XCTAssert(name.count >= 12 || name.count < 3)
+                
+            }
+        }
+        
+    }
+    
     func testTokens() {
         
         let myPID:UUID = UUID()

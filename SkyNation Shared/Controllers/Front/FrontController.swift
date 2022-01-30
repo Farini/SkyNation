@@ -8,13 +8,32 @@
 import Foundation
 import SceneKit
 
+// MARK: - Avatar
+
+class AvatarCard: Identifiable, Equatable {
+    
+    var id:UUID = UUID()
+    var name:String
+    var selected:Bool
+    
+    init(name:String) {
+        self.id = UUID()
+        self.selected = false
+        self.name = name
+    }
+    
+    static func == (lhs: AvatarCard, rhs: AvatarCard) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
 class FrontController:ObservableObject {
     
     @Published var player:SKNPlayer
     @Published var playerName:String
     @Published var isNewPlayer:Bool
     
-    @Published var guildMAp:GuildMap?
+    @Published var guildMap:GuildMap?
     @Published var playerGuildState:PlayerGuildState
     
     @Published var stationScene:SCNScene?
@@ -24,7 +43,7 @@ class FrontController:ObservableObject {
     @Published var loadedList:[String] = []
     
     /// Pass false here to not login. It won't load the scene either.
-    init(simulating login:Bool = true, newPlayer:Bool) {
+    init(simulating login:Bool = true, newPlayer:Bool = false) {
         
         let gPlayer = LocalDatabase.shared.player
         self.player = gPlayer //LocalDatabase.shared.player
@@ -36,22 +55,26 @@ class FrontController:ObservableObject {
         if gPlayer.isNewPlayer() == true {
             isNewPlayer = true
             self.playerGuildState = .noEntry
-            
+            shouldLogin = false
         } else {
             // Old Player
             isNewPlayer = false
             shouldLogin = true
         }
         
-        // CityAccounting
-        if let myCity:CityData = LocalDatabase.shared.cityData {
-            DispatchQueue.global(qos: .background).async {
-                myCity.accountingLoop(recursive: true) { messages in
-                    print("Mars Accounting Finished: \(messages.joined(separator: " ,"))")
-                }
-            }
+        // --- Simulating options ---
+        // 1. New Player
+        if newPlayer == true {
+            self.isNewPlayer = true
         }
+        // 2. Option to not login every time
+        if login == false {
+            self.playerGuildState = .noEntry
+            return
+        }
+        // --- --- ---
         
+        // Login Status
         let manager = ServerManager.shared
         if let serverData = manager.serverData,
            let guildMap = serverData.guildMap,
@@ -62,28 +85,48 @@ class FrontController:ObservableObject {
             
         } else {
             if gPlayer.marsEntryPass().result == true {
+                // pass, no guild
                 self.playerGuildState = .noGuild
             } else {
+                // no pass
                 self.playerGuildState = .noEntry
             }
         }
         
-        // Option to not login every time
-        if login == false { return }
-        
         if shouldLogin == true {
             self.playerLogin()
         } else {
-            // ----------
-            // Important
-            //
+            /*
+            // Important!
             // Must put the view state into "Editing"
-            // ----------
+            // It seems the interface is already doing that
+            */
         }
         
         self.player.lastSeen = Date()
         
+        // Game Data
         loadGameData()
+        
+        // City Accounting
+        runCityAccounting()
+    }
+    
+    /// Runs the `CityData` accounting on a background thread.
+    func runCityAccounting() {
+        
+        if let myCity:CityData = LocalDatabase.shared.cityData {
+            DispatchQueue.global(qos: .background).async {
+                myCity.accountingLoop(recursive: true) { messages in
+                    do {
+                        try LocalDatabase.shared.saveCity(myCity)
+                        print("Mars Accounting Finished: \(messages.joined(separator: " ,"))")
+                    } catch {
+                        print("Error in Mars accounting... \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
     }
     
     // Player Actions
@@ -121,7 +164,6 @@ class FrontController:ObservableObject {
                 DispatchQueue.init(label: "login wait").asyncAfter(deadline: .now() + 3.0) { [weak self] in
                     if let self = self {
                         self.playerLogin(attempts: attempts + 1)
-                        self.loadedList.append("🏁 False start \(attempts)")
                         print("🏁 False start \(attempts)")
                     } else {
                         return
@@ -139,7 +181,7 @@ class FrontController:ObservableObject {
                 }
             case .playerUnauthorized(let player):
                 print("‼️ Player Unauthorized ‼️ \(player.name)")
-                self.warningList.append("ERROR: ‼️ Player Unauthorized ‼️")
+                self.warningList.append("ERROR: Player unauthorized ‼️")
                 if attempts > 2 {
                     // create another player
                     manager.relogin(with: player, forceCreate: true)
@@ -151,17 +193,77 @@ class FrontController:ObservableObject {
     }
     
     /// Now the Player edits first, and then login, avoiding the name "Test Player"
-    func didEditPlayer(new name:String, avatar:AvatarCard, completion:((PlayerUpdate?, Error?) -> ())?) {
+    func didEditPlayer(new name:String, avatar:String, completion:((PlayerUpdate?, Error?) -> ())?) {
         
         let player = self.player
         player.name = name
-        player.avatar = avatar.name
+        player.avatar = avatar
         
         // Save Locally
         guard ((try? LocalDatabase.shared.savePlayer(player)) != nil) else {
             completion?(nil, LocalDatabaseError.noFile)
             return
         }
+        
+        // FIXME: Solve this
+        
+        if let pid = player.playerID,
+           let pass = player.keyPass {
+            
+            print("Editing player ID:\(pid), \(pass)")
+            
+            // Updating
+            // if fails to update, needs to create.
+            SKNS.updatePlayer { pUpdate, error in
+                if let pUpdate = pUpdate {
+                    // save changes
+                    DispatchQueue.main.async {
+                        self.player.receiveUpdates(pupdate: pUpdate)
+                    }
+                } else {
+                    // Deal with Error
+                    if let error = error {
+                        self.warningList.append(error.localizedDescription)
+                        if let authError = error as? ServerDataError {
+                            switch authError {
+                                case .failedAuthorization, .notFound:
+                                    // needs to create, or reset pass
+                                    SKNS.requestNewPass { newPlayerUp, newError in
+                                        if let newPlayerUp = newPlayerUp {
+                                            self.player.receiveUpdates(pupdate: newPlayerUp)
+                                        }
+                                    }
+                                default: self.warningList = ["Something is wrong."]
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            // Creating
+            // after creating, needs to login again.
+            SKNS.createNewPlayer(localPlayer: player) { pupdate, error in
+                if let pupdate = pupdate {
+                    DispatchQueue.main.async {
+                        self.player.receiveUpdates(pupdate: pupdate)
+                    }
+                } else {
+                    if let error = error {
+                        DispatchQueue.main.async {
+                            self.warningList = [error.localizedDescription]
+                        }
+                    }
+                }
+            }
+        }
+        /**
+        Check if new player?
+        Decide if we are creating a player, or updating one
+        If we are creating, we need to circle back and login again.
+        if we are updating, we can do one of the following:
+            a. Use `ServerManager`
+            b. Use `SKNS` directly
+        */
         
         // Update Server
         let manager = ServerManager.shared
@@ -217,16 +319,24 @@ class FrontController:ObservableObject {
         
     }
     
+    /// Takes the Player to the Game
     func startGame(scene:SCNScene) {
         
-        // Check if new player
-        if self.isNewPlayer == true || self.player.isNewPlayer() == true {
-            // needs to run tutorial
-            
-        } else {
-            
-        }
+        
+        let note = Notification(name: .startGame)
+        NotificationCenter.default.post(note)
+        
+//        // Check if new player
+//        if self.isNewPlayer == true || self.player.isNewPlayer() == true {
+//
+//            // needs to run tutorial
+//
+//             let note = Notification(name: .startGame)
+//             NotificationCenter.default.post(note)
+//
+//        } else {
+//
+//        }
     }
-    
     
 }

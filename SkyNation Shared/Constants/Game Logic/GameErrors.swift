@@ -9,6 +9,7 @@ import Foundation
 
 /// The default `error` response from server, when not requested object.
 struct GameError:Codable {
+    
     var error:Bool
     var reason:String
     
@@ -28,6 +29,20 @@ struct GameError:Codable {
         } else if  reason.contains("Decoding") || reason.contains("decoding") {
             return ServerDataError.remoteCoding
         } else if reason.contains("auth") {
+            return ServerDataError.failedAuthorization
+        }
+        return nil
+    }
+    
+    /// The Error in the `ServerDataError` object
+    func sdError() -> ServerDataError? {
+        if isDecodingProblem() == true {
+            return .remoteCoding
+        }
+        if isNotFound() {
+            return .notFound
+        }
+        if reason.contains("auth") {
             return ServerDataError.failedAuthorization
         }
         return nil
@@ -61,6 +76,9 @@ enum ServerDataError:Error, CustomStringConvertible, LocalizedError  {
     case localCoding
     case remoteCoding
     
+    /// not found
+    case notFound
+    
     // MARK: - Descriptions
     
     var description: String {
@@ -70,6 +88,7 @@ enum ServerDataError:Error, CustomStringConvertible, LocalizedError  {
             case .failedAuthorization: return "Failed server authorization."
             case .localCoding: return "Could not [decode|encode] object locally."
             case .remoteCoding: return "Server Could not [decode|encode] object."
+            case .notFound: return "The object could not be found in server."
         }
     }
     

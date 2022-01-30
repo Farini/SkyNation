@@ -44,7 +44,7 @@ public class NewsNode:SKNode {
     var headShader = SKShader(fileNamed: "StrokeGrad")
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("not it")
+        fatalError()
     }
     
     public init(news:String) {
@@ -84,7 +84,7 @@ public class NewsNode:SKNode {
         textRect.size.height += 12
         textRect.size.width += 20
         textRect.origin.y -= 6
-        textRect.origin.x -= 10
+        textRect.origin.x += 10
         
         // Shape surrounding the text
         let textHShape = SKShapeNode(rect: textRect, cornerRadius: 8)
@@ -147,7 +147,7 @@ public class NewsNode:SKNode {
         textRect.size.height += 12
         textRect.size.width += 20
         textRect.origin.y -= 6
-        textRect.origin.x -= 10
+        // textRect.origin.x -= 10
         
         // Shape surrounding the whole thing
         let path:CGMutablePath = CGMutablePath()

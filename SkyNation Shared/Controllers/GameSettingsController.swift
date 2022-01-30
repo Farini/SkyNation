@@ -90,7 +90,6 @@ class GameSettingsController:ObservableObject {
     
     /// A list of things that are loaded
     @Published var loadedList:[String] = []
-//    @Published var stationSceneProgress:Double = 0.0
     @Published var stationSceneLoaded:Bool = false
     
     /// A list of errors to display

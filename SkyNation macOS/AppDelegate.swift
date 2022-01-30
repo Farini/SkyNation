@@ -25,6 +25,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             print("Screen width:\(width) x height:\(height)")
         }
         
+        /*
         // Check Database
         let player = LocalDatabase.shared.player
         if player.name == "Test Player" && player.experience == 0 && abs(Date().timeIntervalSince(player.beganGame)) < 10 {
@@ -35,9 +36,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 backing: .buffered, defer: false)
             window.center()
             window.setFrameAutosaveName("SUI Window")
-            window.contentView = NSHostingView(rootView: GameSettingsView())
+            window.contentView = NSHostingView(rootView: FrontView(controller: FrontController())) // NSHostingView(rootView: GameSettingsView())
             window.makeKeyAndOrderFront(nil)
         }
+         */
     }
     
     func applicationWillBecomeActive(_ notification: Notification) {

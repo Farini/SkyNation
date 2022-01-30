@@ -228,6 +228,17 @@ class SKNPlayer:Codable, Identifiable {
         return PlayerContent(player: self)
     }
     
+    /// Receives updates from the `PlayerUpdate` object.
+    func receiveUpdates(pupdate:PlayerUpdate) {
+        self.playerID = pupdate.id
+        if pupdate.pass != self.keyPass {
+            print("⚠️ Updating pass ❗️\(pupdate.pass)")
+        }
+        self.keyPass = pupdate.pass
+        
+        self.guildID = pupdate.guildID
+        self.lastSeen = Date()
+    }
 }
 
 /** The Content used to **update**  a `DBPlayer` */

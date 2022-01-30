@@ -46,6 +46,7 @@ enum LoginStatus {
             default: return false
         }
     }
+    
 }
 
 class ServerManager {
@@ -116,7 +117,6 @@ class ServerManager {
          4. City ID
          */
         
-        // New Method
         
         if let pid = player.playerID,
            let pass = player.keyPass,
@@ -137,28 +137,6 @@ class ServerManager {
         }
         self.serverData = ServerManager.loadServerData() ?? ServerData(player: player)
         
-        
-        /*
-        // Old Method
-        if let sd:ServerData = ServerManager.loadServerData() {
-            
-            // Local Server data stored
-            self.serverData = sd
-            
-            if GameSettings.onlineStatus == true {
-                // Validate Login
-                self.loginWithData(sd: sd)
-            } else {
-                // Simulate Data
-                self.loginStatus = .simulatingData(serverData: sd)
-            }
-            
-        } else {
-            
-            // No Server Data Stored
-            self.loginFirstPlayer(player: player)
-        }
-        */
     }
     
     private static func loadServerData() -> ServerData? {
@@ -189,8 +167,6 @@ class ServerManager {
                 self.loginFirstPlayer(player: player)
             }
         }
-        
-        
     }
     
     /// Performs Login with Authorization
@@ -301,22 +277,92 @@ class ServerManager {
     }
     
     /*
-    /// Gets the Full Guild Content
-    func inquireFullGuild(force:Bool, completion:@escaping(GuildFullContent?, Error?) -> ()) {
+     Change it back to the system below, where you get responses, and reasons
+     */
+    
+    func login(player:SKNPlayer, force:Bool = false, completion:@escaping(PlayerUpdate?, Error?) -> ()) {
         
-        guard let serverData:ServerData = serverData else {
-            completion(nil, ServerDataError.noServerDataFile)
-            return
+        if !force {
+            // don't force. check local data first.
+            // complete if found
         }
         
-        serverData.requestPlayerGuild(force: force) { fullGuild, error in
-            DispatchQueue.main.async {
-                completion(fullGuild, error)
+        // login only
+        guard let pid = player.playerID,
+              let pass = player.keyPass else {
+                  print("No ID, and Pass")
+                  return
+              }
+        
+        SKNS.authorizeLogin(localPlayer: player, pid: pid, pass: pass) { playerUpdate, error in
+            if let playerUpdate = playerUpdate {
+                print("Player logged in \(playerUpdate.name)")
+                self.serverData?.player.lastSeen = Date()
+                self.loginStatus = .playerAuthorized(playerUpdate: playerUpdate)
+            } else {
+                self.loginStatus = .serverError(reason: "unknown", error: error, sknsError: error as? ServerDataError)
             }
+            completion(playerUpdate, error)
         }
-        
+    }
+    
+    // create player is forced anyways
+    func createPlayer(_ player:SKNPlayer, completion:@escaping(PlayerUpdate?, Error?) -> ()) {
+        SKNS.createNewPlayer(localPlayer: player) { playerUpdate, error in
+            if let playerUpdate = playerUpdate,
+               let serverData = self.serverData {
+                // Update keys
+                serverData.player.receiveUpdates(pupdate: playerUpdate)
+                self.saveServerData()
+                completion(playerUpdate, nil)
+                return
+            }
+            completion(playerUpdate, error)
+        }
+    }
+    
+    // update player is forced anyways
+    func updatePlayer(_ player:SKNPlayer, completion:@escaping(PlayerUpdate?, Error?) -> ()) {
+        SKNS.updatePlayer { playerUpdate, error in
+            if let playerUpdate = playerUpdate,
+               let serverData = self.serverData {
+                // Update keys
+                serverData.player.receiveUpdates(pupdate: playerUpdate)
+                self.saveServerData()
+                completion(playerUpdate, nil)
+                return
+            }
+            completion(playerUpdate, error)
+        }
+    }
+    
+    /*
+    func resolveBadPlayer(_ player:SKNPlayer, completion:@escaping(PlayerUpdate?, Error?) -> ()) {
+        // first we must see what the problem is.
+        switch self.loginStatus {
+                
+            case .notStarted:
+                login(player: player, completion: { p, e in
+                    completion(p, e)
+                })
+                
+            case .serverError(reason: let reason, error: let error, sknsError: let sknsError):
+                print("Dig through")
+            case .playerAuthorized(playerUpdate: let playerUpdate):
+                completion(playerUpdate, nil)
+            case .playerUnauthorized(_):
+                SKNS.requestNewPass { p, e in
+                    completion(p, e)
+                }
+            case .createdPlayerWaitingAuth(_):
+                completion(nil, nil)
+            case .simulatingData(serverData: let serverData):
+                completion(nil, nil)
+        }
     }
     */
+    
+    // --- End of change
     
     
     /// max delay is in seconds
@@ -347,21 +393,6 @@ class ServerManager {
         }
         
     }
-    
-    /*
-    func notifyJoinedGuild(guildSum:GuildSummary) {
-        guard let serverData:ServerData = serverData else {
-            return
-        }
-        serverData.requestPlayerGuild(force: true) { fullGuild, error in
-            if let fullGuild = fullGuild {
-                print("Joined Guild Success \(fullGuild.name)")
-            } else {
-                print("‼️ Error notifying join Guild: \(error?.localizedDescription ?? "n/a")")
-            }
-        }
-    }
-    */
     
     // Outpost Data
     func requestOutpostData(dbOutpost:DBOutpost, force:Bool, completion:@escaping((Outpost?, Error?) -> ())) {
