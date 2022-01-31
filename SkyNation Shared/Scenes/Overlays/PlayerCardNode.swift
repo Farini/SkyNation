@@ -26,7 +26,7 @@ class PlayerCardNode:SKNode {
     
     var player:SKNPlayer
     
-    private let margin:Double = 6.0
+    private let margin:Double = 6.0 //6.0
     
     init(player:SKNPlayer) {
         
@@ -41,13 +41,13 @@ class PlayerCardNode:SKNode {
         // ---------------
         // LinePath
         
-        print("-- layout")
+//        print("-- layout")
         let lineScene = SKScene(fileNamed: "PlayerCardLayout")!
-        print("++ layout")
+//        print("++ layout")
         let hud = lineScene.childNode(withName: "HUDLine")!
         let path = CGMutablePath()
         path.move(to: hud.children.first!.position)
-        print("+++ layout")
+//        print("+++ layout")
         for hChild in hud.children {
             path.addLine(to: hChild.position)
         }

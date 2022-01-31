@@ -17,6 +17,7 @@ struct GameShoppingView: View {
     
     @ObservedObject var controller:StoreController
     
+    
     @State var promoCode:String = ""
     @State private var isValidatingToken:Bool = false
     @State private var validationMessage:String?
@@ -75,7 +76,8 @@ struct GameShoppingView: View {
                                 }
                                 
                             } else {
-                                HStack {
+                                HStack(spacing:12) {
+                                    
                                     ForEach(controller.gameProducts, id:\.self) { gameProduct in
                                         PackageCardView(productType: gameProduct.type) {
                                             controller.didSelectProduct(gameProduct)
@@ -98,8 +100,19 @@ struct GameShoppingView: View {
                         }
                         
                     case .kit(let product):
+                        
                         VStack {
-                            Text("Select a bonus kit")
+                            // Header
+                            HStack {
+                                Text("Product: \(product.displayName)")
+                                    .font(GameFont.section.makeFont())
+                                    .foregroundColor(.gray)
+                                
+                                Text("Select a bonus kit")
+                                Spacer()
+                            }
+                            .padding(.horizontal)
+                            
                             GeometryReader { geometry in
                                 LazyVGrid(
                                     columns: [GridItem(.fixed(geometry.size.width / 2), spacing:1), GridItem(.fixed(geometry.size.width / 2), spacing:1)],
@@ -118,27 +131,32 @@ struct GameShoppingView: View {
                                     }
                                 }
                             }
+                            
+                            Spacer()
                         }
                         
                     case .buying(let product):
                         
-                        if let message = controller.alertMessage {
-                            Text(message).foregroundColor(.orange)
-                                .transition(.slide)
-                        }
-                        
-                        if !controller.errorMessage.isEmpty {
-                            Text(controller.errorMessage).foregroundColor(.red)
-                                .transition(.slide)
-                        }
-                        
-                        PurchasingView(product: product, productType: product.type, kit: controller.selectedKit) { didBuy in
-                            if didBuy == true {
-                                controller.confirmPurchase()
-                            } else {
-                                controller.cancelPurchase()
+                        VStack {
+                            if let message = controller.alertMessage {
+                                Text(message).foregroundColor(.orange)
+                                    .transition(.slide)
+                            }
+                            
+                            if !controller.errorMessage.isEmpty {
+                                Text(controller.errorMessage).foregroundColor(.red)
+                                    .transition(.slide)
+                            }
+                            
+                            PurchasingView(product: product, productType: product.type, kit: controller.selectedKit) { didBuy in
+                                if didBuy == true {
+                                    controller.confirmPurchase()
+                                } else {
+                                    controller.cancelPurchase()
+                                }
                             }
                         }
+                        
 
                     case .receipt:
                         VStack {
@@ -209,34 +227,34 @@ struct PackageCardView:View {
             HStack {
                 tokenImage()
                     .resizable()
-                    .frame(width: 28, height: 28, alignment: .center)
+                    .frame(width: 26, height: 26, alignment: .center)
                 
                 Text("x\(productType.tokenAmount) ")
                     .font(GameFont.section.makeFont())
                 Spacer()
             }
-            .padding(.leading, 8)
+            .padding(.leading)
             
             HStack {
                 currencyImage()
                     .resizable()
-                    .frame(width: 28, height: 28, alignment: .center)
+                    .frame(width: 26, height: 26, alignment: .center)
                 
                 Text("\(GameFormatters.currency.string(from: NSNumber(value:productType.moneyAmount))!)")
                     .font(GameFont.section.makeFont())
                 Spacer()
             }
-            .padding(.leading, 8)
+            .padding(.leading)
             
             HStack {
                 Image(systemName: "arrow.right.to.line.circle")
                     .resizable()
-                    .frame(width: 28, height: 28, alignment: .center)
+                    .frame(width: 26, height: 26, alignment: .center)
                     .font(Font.system(size: 16, weight: .light, design: .default))
                 Text("2 Entry Tokens")
                 Spacer()
             }
-            .padding(.leading, 8)
+            .padding(.leading)
             
             Divider()
             
@@ -254,8 +272,11 @@ struct PackageCardView:View {
             .padding([.bottom], 8)
             
         }
-        .frame(width:200)
-        .background(LinearGradient(colors: [Color.black.opacity(0.1), Color.black.opacity(0.4), Color.black.opacity(0.2)], startPoint: .topLeading, endPoint: .bottomTrailing))
+        .frame(width:185)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(lineWidth: 2))
+        // .background(LinearGradient(colors: [Color.black.opacity(0.1), Color.black.opacity(0.4), Color.black.opacity(0.2)], startPoint: .topLeading, endPoint: .bottomTrailing))
         .cornerRadius(8)
         
         
@@ -297,14 +318,13 @@ struct KitCardView:View {
             HStack {
                 Label(kit.displayName, systemImage: kit.imageName)
                     .font(GameFont.section.makeFont())
-                    .padding(6)
                 Spacer()
-                
                 Button("Get it") {
                     action()
                 }
                 .buttonStyle(GameButtonStyle())
-                .padding(.bottom, 6)
+                //.padding(.bottom, 6)
+                
             }
             
             Divider()
@@ -318,59 +338,36 @@ struct KitCardView:View {
                     Text("\(k.rawValue.uppercased()): \(v * product.rawValue)")
                 }
                 if kit.tanks.isEmpty {
-                    Text("---").foregroundColor(.gray)
+                    Text("No tanks").foregroundColor(.gray)
                 }
             }
-            .padding(.horizontal)
+            
             
             // Boxes
-            HStack(spacing:8) {
+            HStack(spacing:4) {
                 GameImages.boxImage
                     .resizable()
                     .frame(width:16, height: 16, alignment: .center)
                 ForEach(kit.boxes.sorted(by: { $0.value > $1.value }), id:\.key) { k, v in
-                    Text("\(k.rawValue): \(v * product.rawValue)")
+                    ZStack {
+                        (k.image() ?? Image(systemName: "questionmark"))
+                            .resizable()
+                            .frame(width: 42, height: 42)
+                        Text("\(v * product.rawValue)")
+                            .padding(2)
+                            .foregroundColor(.orange)
+                            .background(Color.black.opacity(0.5))
+                            .offset(x: 0, y: +10)
+                    }
+                    
+                }
+                if kit.boxes.isEmpty {
+                    Text("No boxes").foregroundColor(.gray)
                 }
             }
-            .padding(.horizontal)
-            
-            /*
-            LazyVGrid(
-                columns: columns,
-                alignment: .center,
-                spacing: 12,
-                pinnedViews: []
-            ) {
-                Section(header: Text("Bonus")) {
-                    ForEach(kit.tanks.sorted(by: {$0.value > $1.value}), id:\.key) { k, v in
-                        HStack {
-                            GameImages.imageForTank()
-                                .resizable()
-                                .frame(width: 20, height: 20, alignment: .center)
-                            Spacer()
-                            Text("\(k.rawValue.uppercased()): \(v * product.rawValue)")
-                        }
-                        .padding(.horizontal, 8)
-                    }
-                    ForEach(kit.boxes.sorted(by: { $0.value > $1.value }), id:\.key) { k, v in
-                        HStack {
-                            GameImages.boxImage
-                                .resizable()
-                                .frame(width:16, height: 16, alignment: .center)
-                            
-                            Text("\(k.rawValue): \(v * product.rawValue)")
-                        }
-                    }
-                }
-                
-                
-            }
-             */
-//            Spacer()
-//            Divider()
-            
         }
-        .frame(minWidth:220, maxWidth:240, minHeight:150, maxHeight:180)
+        .padding(.horizontal)
+        .frame(minWidth:220, maxWidth:240, minHeight:120, maxHeight:160)
     }
 }
 
@@ -415,10 +412,9 @@ struct PurchasingView:View {
                     .font(GameFont.section.makeFont())
                 
                 if let product = product {
-                    Text("Product ID: \(product.id)")
+//                    Text("Product ID: \(product.id)")
                     Text("Product Price: \(product.priceString)").foregroundColor(.orange)
-                    Text("Tokens: \(product.type.tokenAmount)").foregroundColor(.orange)
-                    Text("Sky Coins: \(product.type.moneyAmount)").foregroundColor(.orange)
+                    
                     
                 } else {
                     Text("Fake Product. PREVIEW MODE").foregroundColor(.red)
@@ -429,12 +425,23 @@ struct PurchasingView:View {
                 
                 Divider()
                 
+                Text("Rewards")
+                    .font(GameFont.section.makeFont())
+                    .foregroundColor(GameColors.airBlue)
+                
+                if let product = product {
+                    Text("Tokens: \(product.type.tokenAmount)").foregroundColor(.orange)
+                    Text("Sky Coins: \(product.type.moneyAmount)").foregroundColor(.orange)
+                }
+                
                 if let kit = kit {
                     Text("Bonus").font(GameFont.section.makeFont()).foregroundColor(.green)
-                    Text("Tanks \(Array(kit.tanks.map({ $0.key.rawValue })).joined(separator:", "))")
-                        .foregroundColor(.gray)
-                    Text("Ingredients \(Array(kit.boxes.map({ $0.key.rawValue })).joined(separator:", "))")
-                        .foregroundColor(.gray)
+
+                    Text("Tanks").foregroundColor(.blue)
+                    Text("\(iterateTanks(kit))")
+
+                    Text("Boxes").foregroundColor(.blue)
+                    Text("\(iterateBoxes(kit))")
                 }
             }
             
@@ -444,7 +451,7 @@ struct PurchasingView:View {
             HStack {
                 
                 Button {
-                    buyAction(true)
+                    buyAction(false)
                 } label: {
                     Label("Cancel", systemImage: "nosign")
                 }
@@ -471,6 +478,26 @@ struct PurchasingView:View {
         DispatchQueue.main.async {
             self.isSpinningWheel.toggle()
         }
+    }
+    
+    func iterateTanks(_ kit:Purchase.Kit) -> String {
+        var string = ""
+        for (k, v) in kit.tanks {
+            string += "\(k.name) x \(v) \t"
+        }
+        return string
+    }
+    
+    func iterateBoxes(_ kit:Purchase.Kit) -> String {
+        var string = ""
+        for (k, v) in kit.boxes {
+            string += "\(k.rawValue) x \(v) \t"
+        }
+        return string
+    }
+    
+    func makeThis(type:TankType, val:Int) -> String {
+        return String("\(type.name) x \(val)")
     }
 }
 

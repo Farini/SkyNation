@@ -51,8 +51,6 @@ struct FrontView: View {
                                     Image(controller.player.avatar)
                                         .resizable()
                                         .frame(width: 96, height: 96, alignment: .center)
-                                    
-                                    
                                 }
                                 
                                 // Player Name, info, online
@@ -114,6 +112,7 @@ struct FrontView: View {
                                     }
                                 }
                                 .buttonStyle(GameButtonStyle())
+                                .transition(.slide.combined(with: .opacity))
                                 
                                 Divider().frame(height:20)
                                 
@@ -135,19 +134,21 @@ struct FrontView: View {
                                 })
                                 .buttonStyle(GameButtonStyle())
                                 .disabled($controller.stationScene.wrappedValue == nil)
+                                .transition(.slide.combined(with: .opacity))
                             }
                             
                     case .playerEdit:
                         
                         ScrollView {
                             VStack {
+                                // Header
                                 HStack {
                                     Text("Edit Player").font(GameFont.title.makeFont())
                                     Divider().frame(height:20)
                                     Button {
-                                        print("settings")
-                                        self.viewMode = .settings
-                                        
+                                        withAnimation() {
+                                            self.viewMode = .settings
+                                        }
                                     } label: {
                                         HStack {
                                             Image(systemName: "gear")
@@ -161,26 +162,54 @@ struct FrontView: View {
                                             // make sure the player name is valid
                                             if validatePlayername() == true {
                                                 controller.didEditPlayer(new: controller.playerName, avatar: selectedAvatar?.name ?? controller.player.avatar) { playerUpdate, error in
-                                                    
+                                                    // ----------------
+                                                    // Deal with error?
+                                                    // ----------------
                                                 }
                                             }
                                         }
                                         .buttonStyle(GameButtonStyle())
                                         .transition(.slide.combined(with: .opacity))
-                                    }
-                                    if let selectedAvatar = $selectedAvatar.wrappedValue {
+                                    } else if let selectedAvatar = $selectedAvatar.wrappedValue {
                                         Button("💾 Save") {
                                             print("save \(selectedAvatar.name)")
+                                            // no modifications in name
+                                            controller.didEditPlayer(new: controller.playerName, avatar: selectedAvatar.name) { playerUpdate, error in
+                                                // ----------------
+                                                // Deal with error?
+                                                // ----------------
+                                            }
                                         }
                                         .buttonStyle(GameButtonStyle())
                                         .transition(.slide.combined(with: .opacity))
+                                    } else {
+                                        if let scene = controller.stationScene {
+                                            Button(action: {
+                                                controller.startGame(scene: scene)
+                                            }, label: {
+                                                HStack {
+                                                    Image(systemName: "play.circle")
+                                                    Text("Start")
+                                                }
+                                            })
+                                            .buttonStyle(GameButtonStyle())
+                                            .transition(.slide.combined(with: .opacity))
+                                        }
+                                       
                                     }
                                 }
                                 Divider()
                                 
+                                // Warnings
+                                if !controller.warningList.isEmpty {
+                                    Text("\(controller.warningList.joined(separator: ", "))").foregroundColor(.red)
+                                }
+                                
                                 // Name Group
                                 Group {
                                     Text("Player name").font(GameFont.section.makeFont())
+                                        .padding(.top, 4)
+                                    
                                     HStack {
                                         TextField("Name", text:$controller.playerName)
                                             .frame(width:150)
@@ -197,6 +226,7 @@ struct FrontView: View {
                                         Text("\(controller.playerName.count) of max 12 characters")
                                             .foregroundColor(controller.playerName.count == 12 ? .red:.gray)
                                     }
+                                    
                                 }
                                 
                                 // Avatar Group
@@ -217,20 +247,14 @@ struct FrontView: View {
                                             .background(controller.player.avatar == avtCard.name ? Color.red:Color.white.opacity(0.05))
                                             .cornerRadius(8)
                                             .onTapGesture {
-//                                                self.highlightCard(avtCard)
                                                 self.selectedAvatar = avtCard
                                                 controller.player.avatar = avtCard.name
                                             }
                                         }
                                     })
                                         .frame(minHeight:140)
-                                        //.background(LinearGradient(gradient: Gradient(colors: [Color.red.opacity(0.1), Color.blue.opacity(0.1)]), startPoint: .topLeading, endPoint: .bottomTrailing))
                                 }
-                                
-                                
-                                
                                 Spacer()
-                                
                             }
                         }
                         .frame(minWidth: 600, maxWidth: 900, minHeight: 450, maxHeight: 600)
@@ -240,10 +264,12 @@ struct FrontView: View {
                         HStack {
                             Text("Game Settings").font(GameFont.title.makeFont())
                             Divider().frame(height:20)
+                            
+                            // Player Edit
                             Button {
-                                print("settings")
-                                self.viewMode = .playerEdit
-                                
+                                withAnimation() {
+                                    self.viewMode = .playerEdit
+                                }
                             } label: {
                                 HStack {
                                     Image(systemName: "gear")
@@ -251,8 +277,24 @@ struct FrontView: View {
                                 }
                             }
                             .buttonStyle(GameButtonStyle())
+                            
+                            // Start
+                            if let scene = controller.stationScene {
+                                Button(action: {
+                                    controller.startGame(scene: scene)
+                                }, label: {
+                                    HStack {
+                                        Image(systemName: "play.circle")
+                                        Text("Start")
+                                    }
+                                })
+                                .buttonStyle(GameButtonStyle())
+                                .transition(.slide.combined(with: .opacity))
+                            }
                         }
-                        .padding()
+                        .padding(.horizontal)
+                        
+                        Divider().frame(width:600)
                         
                         ScrollView {
                             VStack {
@@ -274,7 +316,7 @@ struct FrontView: View {
             if controller.isNewPlayer == true {
                 // Change the view mode
                 self.viewMode = .playerEdit
-                controller.playerName = GameCenterManager.shared.gcPlayer?.alias ?? "Test User"
+                controller.playerName = GameCenterManager.shared.gcPlayer?.alias ?? "Test Player"
             }
         }
     }

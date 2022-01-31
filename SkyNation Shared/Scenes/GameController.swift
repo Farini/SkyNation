@@ -905,7 +905,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 }
                 return
             case .finished:
-                print("You finihed the tutorial!")
+                // print("You finihed the tutorial!")
                 return
                 
             default: break

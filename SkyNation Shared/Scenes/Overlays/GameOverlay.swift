@@ -176,6 +176,10 @@ class GameOverlay:NSObject, SKSceneDelegate {
         let playerCard = PlayerCardNode(player: player)
         playerCard.name = "playercard"
         
+        // Adjust position, so its not on the edge of the screen
+        playerCard.position.x += 12.0
+        playerCard.position.y -= 10.0
+        
         scene.addChild(playerCard)
         
         buildMenu()

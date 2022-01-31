@@ -68,9 +68,15 @@ class LaunchSceneController:ObservableObject {
         let scaleAction = SCNAction.scale(to: 25.0, duration: 1.2)
         if let earthling = earth.childNode(withName: "Earth", recursively: false) {
             earthling.runAction(scaleAction)
+            
+#if os(macOS)
             earth.eulerAngles = SCNVector3(x: GameLogic.radiansFrom(-22.5), y: 0, z: 0)
+#elseif os(iOS)
+            earth.eulerAngles = SCNVector3(x: Float(GameLogic.radiansFrom(-22.5)), y: 0, z: 0)
+#endif
         }
         
+
 //        earth.runAction(scaleAction)
     }
     
@@ -179,8 +185,12 @@ class LaunchSceneController:ObservableObject {
         let fPosZ = 10.0
         let fPosY = 8.0
         
+        // let theMove = SCNAction.move(to: SCNVector3(x: fPosX, y: fPosY, z: fPosZ), duration: 5.5)
+#if os(macOS)
         let theMove = SCNAction.move(to: SCNVector3(x: fPosX, y: fPosY, z: fPosZ), duration: 5.5)
-        
+#elseif os(iOS)
+        let theMove = SCNAction.move(to: SCNVector3(x: Float(fPosX), y: Float(fPosY), z: Float(fPosZ)), duration: 5.5)
+#endif
         return theMove
     }
     

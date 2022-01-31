@@ -1334,11 +1334,11 @@
 			isa = PBXGroup;
 			children = (
 				8536F2BF258D330300B509D2 /* AppDelegate.swift */,
+				857D9A2825C0820200626884 /* StartingViewController.swift */,
 				8536F2C1258D330300B509D2 /* GameViewController.swift */,
 				8536F2C3258D330300B509D2 /* Main.storyboard */,
 				8536F2C6258D330300B509D2 /* LaunchScreen.storyboard */,
 				8536F2C9258D330300B509D2 /* Info.plist */,
-				857D9A2825C0820200626884 /* StartingViewController.swift */,
 			);
 			path = "SkyNation iOS";
 			sourceTree = "<group>";

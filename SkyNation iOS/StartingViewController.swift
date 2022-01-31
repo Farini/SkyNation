@@ -23,7 +23,7 @@ class StartingViewController: UIViewController {
     
     /// Add the First (Intro) View
     func addStartingView() {
-        let startView = GameSettingsView()
+        let startView = FrontView(controller: FrontController())
         let controller = UIHostingController(rootView: startView)
         addChild(controller)
         controller.view.translatesAutoresizingMaskIntoConstraints = false

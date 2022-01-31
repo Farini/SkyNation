@@ -157,6 +157,11 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Station Scene - Fix green glass
 - [X] GameCenter Achievements: **WaterFilter, Condensator, Airlock**
 - [X] Implement the new `NewsNode`
+- [X] Blender - Substitute Space Vehicles Solar Panels
+- [X] Blender - XCode - Delete old solar panels
+- [X] Blender - Cuppola 2.0
+- [X] Blender - Airlock 2.0
+- [X] Blender - New Module Skins
 
 - [X] Launch macOS v 1.2
 
@@ -170,17 +175,29 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] LabView - Tech with new Detail Images
 - [X] Station Scene - Make the Earth bright again
 - [X] If accounting goes for too long, save the city (not currently saving, just accrueing time)
-
-- [ ] LabView substitute "Loading View" for something more useful
-
+- [X] Store - needs visual improvements
 - [X] Front View - Game Settings shown only at the game start
 - [X] Front View - design, typography, etc.
 - [X] Front View - Entry Shaders? StarNest.fsh, BusyCircuitry.fsh
-- [ ] Front View - Delete this game (start over)
+- [X] Front View - Save
+- [X] Front View - iOS test
+- [X] ServerData - Set GuildFullContent to nil in any case. Prepare to deprecate
+
+- [ ] LabView substitute "Loading View" for something more useful
+- [ ] Tutorial Sequence(hand) - Add character?
+
+- [ ] Settings View - Fix Guild Browser
+- [ ] Settings View - General fixes (no login, fetch guild, etc.)
+
 - [ ] Front View - Prepare A/B test Shaders vs Earth image
 
-- [ ] Store - needs visual improvements
+- [ ] Videos - iOS + macOS
+- [ ] Launch iOS v1.2 + mac v1.3?
+
+- [ ] Front View - (Settings) Delete this game (start over)
+
 - [ ] Store - Build list of bonus (kits) depending on prev. purchases
+- [ ] Store - more visual improvements
 
 - [ ] Guild Navigator - `addToJoinList` vs `acceptGuildInvitation` vs `joinUnlockedGuild`
 - [ ] Allow player to see guilds before first purchase
@@ -195,7 +212,7 @@ object
 An SCNScene, SCNNode, SCNGeometry, or SCNMaterial instance.
 ```
 
-- [X] ServerData - Set GuildFullContent to nil in any case. Prepare to deprecate
+
 - [ ] ServerData - Use GuildFlags to show new items. in GuildRoom
 - [ ] Guild Room - Election not updating
 - [ ] Mars Scene - All Guild Vehicles arriving
@@ -216,51 +233,35 @@ An SCNScene, SCNNode, SCNGeometry, or SCNMaterial instance.
 ### iOS
 
 - [X] iOS Views - Corner Radius:12
-- [X] iOS Views - Hab Module Selection
 - [X] iOS - List View Backgrounds. See: https://peterfriese.dev/swiftui-listview-part3/
-- [X] iOS - Button being pushed.
-- [X] iOS - Garage - prepare for launch is unusable
-- [X] iOS - increase bloom in camera? - or find a way to make scene brighter.
-- [X] Setup Graphics Options (multisampling on UIViewController's `view`)
-
 - [ ] Views that need ScrollViews inside
 - [ ] iOS Views - Mars Views (remake)
 
 ### Scene Models
 
-- [X] Blender - Substitute Space Vehicles Solar Panels
-- [X] Blender - XCode - Delete old solar panels
-- [X] Blender - Cuppola 2.0
-- [X] Blender - Airlock 2.0
-- [X] Blender - New Module Skins
-
 - [ ] Blender - EDL Remake #5
 - [ ] Blender - EVehicle remove/remake UV maps
 - [ ] Blender - Arena + levels
 - [ ] Blender - Hotel + levels
-- [ ] Blender - Dock 2.0
+- [ ] Blender - Dock 3.0
 - [ ] Blender - City Gate Skin
 
 ### Tests
 
-- [X] Mining Scene Nodes (waiting to be unlocked)
-- [X] GuildRoom Markdown - and with quote
-- [X] Election Results - Guild governor - pending update of Guild.
-- [X] Tutorial finger
-- [X] Create Player
-- [X] UI Test - `iPad Pro 9.7 inch`
-- [X] Space Station Building time: 0.916 seconds.
+- [ ] Election Results
+- [ ] Tutorial Intro
+- [ ] Create Player
 - [ ] Outpost Update
 - [ ] Leaving a Guild - Failing test
 - [ ] Election not updating
+- [X] UI Test - `iPad Pro 9.7 inch`
+- [X] Space Station Building time: 0.916 seconds.
 
 ### GameCenter
 
-- [X] Game Center - Player Auth.
-- [X] Game Center - Leaderboards (Experience)
-- [X] Game Center - 🏆 Achievements (WaterFilter, Condensator, Airlock)
 - [ ] Game Center - Achievement - Air Scrubber
 - [ ] Game Center - Achievement - Garage
+- [ ] Game Center - Achievement - Vehicle Launch
 
 ## Wishlist + Questionable
 Features that are requested, but are not required to launch the game

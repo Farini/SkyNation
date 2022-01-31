@@ -156,6 +156,7 @@ class StoreController: ObservableObject, StoreManagerDelegate {
         self.buyGameProduct(product)
     }
     
+    /// Goes back to `.product` choice
     func cancelPurchase() {
         self.step = .product
     }
@@ -168,6 +169,7 @@ class StoreController: ObservableObject, StoreManagerDelegate {
         SKPaymentQueue.default().restoreCompletedTransactions()
     }
     
+    /// Attempt to get a receipt from the store.
     func getReceipt() -> String {
         
         // Get the receipt if it's available
