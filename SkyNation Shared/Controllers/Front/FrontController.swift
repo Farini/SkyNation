@@ -105,6 +105,10 @@ class FrontController:ObservableObject {
         
         self.player.lastSeen = Date()
         
+        // Game Center
+        let gcm = GameCenterManager.shared
+        print("GC: \(gcm)")
+        
         // Game Data
         loadGameData()
         
@@ -197,6 +201,8 @@ class FrontController:ObservableObject {
         
         let player = self.player
         player.name = name
+        self.playerName = name
+        
         player.avatar = avatar
         
         // Save Locally
@@ -246,6 +252,19 @@ class FrontController:ObservableObject {
                 if let pupdate = pupdate {
                     DispatchQueue.main.async {
                         self.player.receiveUpdates(pupdate: pupdate)
+                        if let pid = player.playerID,
+                           let pass = player.keyPass {
+                            SKNS.authorizeLogin(localPlayer: self.player, pid: pid, pass: pass) { newPlayer, error in
+                                if let newPlayer = newPlayer {
+                                    print("Success new player")
+                                    self.player.receiveUpdates(pupdate: newPlayer)
+                                    try? LocalDatabase.shared.savePlayer(self.player)
+                                    print("Player created success.")
+                                    
+                                }
+                            }
+                        }
+                        
                     }
                 } else {
                     if let error = error {

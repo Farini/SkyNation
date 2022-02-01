@@ -48,10 +48,14 @@ struct LabPreloadView: View {
             ProgressView("Tech tree")
                 .padding()
             
-            // Label with Time
-            Text("\(timeString()) s")
-                .foregroundColor(.gray)
-                    
+            Text("Recipes: Build Peripherals (machines) that can renew some resources.")
+                .padding(4)
+                .foregroundColor(.yellow)
+            
+            Text("Research: Explore the tech tree, and expand your Space Station")
+                .padding(4)
+                .foregroundColor(.blue)
+            
             Spacer()
         }
         .onAppear {
@@ -68,17 +72,6 @@ struct LabPreloadView: View {
         nf.minimumFractionDigits = 2
         return nf.string(from: NSNumber(value: elapsed)) ?? "--"
     }
-    /*
-    func update() {
-        self.elapsed = Date().timeIntervalSince(start)
-        if elapsed < 8 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                self.update()
-            }
-        }
-    }
-    */
-    
 }
 
 struct LabPreloadView_Previews: PreviewProvider {

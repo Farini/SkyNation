@@ -106,11 +106,14 @@ Sound FX:
 """
     let assets3D:String = """
 ### 3D Models
+
+    Akari Character
+    YanSculpts: https://www.youtube.com/c/yansculpts/videos
+
     App: Blender https://blender.org
     Blender Guru: https://www.youtube.com/channel/UCOKHwx1VCdgnxwbjyb9Iu1g
     Josh Gambrell: https://www.youtube.com/channel/UCXfGjwohMgPm4Ng2e1FXySw
-     
-     
+
     PBX Texturing (Atlasses)
     Decal Machine & Mesh Machine
     https://machin3.io

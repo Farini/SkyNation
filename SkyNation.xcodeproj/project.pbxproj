@@ -617,6 +617,12 @@
 		859D683C25DD91DB005DD42C /* GameShoppingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859D683925DD91DB005DD42C /* GameShoppingView.swift */; };
 		85A1AA5D27A64988007A0695 /* GameSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A6590525E4178F008AA9BA /* GameSettingsController.swift */; };
 		85A1AA5E27A64A2F007A0695 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FE6435276D07C800FF93D5 /* GameCenterManager.swift */; };
+		85A1AA6027A85561007A0695 /* AkariNewsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1AA5F27A85561007A0695 /* AkariNewsTest.swift */; };
+		85A1AA6127A85561007A0695 /* AkariNewsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1AA5F27A85561007A0695 /* AkariNewsTest.swift */; };
+		85A1AA6227A85561007A0695 /* AkariNewsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1AA5F27A85561007A0695 /* AkariNewsTest.swift */; };
+		85A1AA6427A85593007A0695 /* AkariNews.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85A1AA6327A85593007A0695 /* AkariNews.sks */; };
+		85A1AA6527A85593007A0695 /* AkariNews.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85A1AA6327A85593007A0695 /* AkariNews.sks */; };
+		85A1AA6627A85593007A0695 /* AkariNews.sks in Resources */ = {isa = PBXBuildFile; fileRef = 85A1AA6327A85593007A0695 /* AkariNews.sks */; };
 		85A1D25C27497DEB00C2D163 /* ShopPromoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */; };
 		85A1D25D27497DEB00C2D163 /* ShopPromoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */; };
 		85A1D25E27497DEB00C2D163 /* ShopPromoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */; };
@@ -1018,6 +1024,8 @@
 		85969835260E8FD400BF1860 /* OutpostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutpostController.swift; sourceTree = "<group>"; };
 		8597BBA925BF40AB00C705A0 /* StartingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingWindow.swift; sourceTree = "<group>"; };
 		859D683925DD91DB005DD42C /* GameShoppingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameShoppingView.swift; sourceTree = "<group>"; };
+		85A1AA5F27A85561007A0695 /* AkariNewsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AkariNewsTest.swift; sourceTree = "<group>"; };
+		85A1AA6327A85593007A0695 /* AkariNews.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = AkariNews.sks; sourceTree = "<group>"; };
 		85A1D25B27497DEB00C2D163 /* ShopPromoInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopPromoInputView.swift; sourceTree = "<group>"; };
 		85A1D260274AC9BF00C2D163 /* PersonSmallViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonSmallViews.swift; sourceTree = "<group>"; };
 		85A585E726E443700020CCBF /* RoadsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoadsBuilder.swift; sourceTree = "<group>"; };
@@ -1609,6 +1617,7 @@
 				850BFCF327A1E3AE00458404 /* Camera Control */,
 				85713C70279366200034906E /* News Nodes */,
 				85C3418425905A7500BF82F9 /* TutorialNode.swift */,
+				85A1AA6327A85593007A0695 /* AkariNews.sks */,
 			);
 			path = Overlays;
 			sourceTree = "<group>";
@@ -1819,6 +1828,7 @@
 			children = (
 				85713C60279201DC0034906E /* SpriteTestView.swift */,
 				85C959AF27A45D52009B9D82 /* EntryShaderTest.swift */,
+				85A1AA5F27A85561007A0695 /* AkariNewsTest.swift */,
 			);
 			path = "SK Overlays";
 			sourceTree = "<group>";
@@ -2233,6 +2243,7 @@
 				85713C65279211EA0034906E /* StrokeGrad.fsh in Resources */,
 				856A64B6272892F80075CC04 /* Adventure.mp3 in Resources */,
 				8536F471258D481700B509D2 /* CamControl.sks in Resources */,
+				85A1AA6427A85593007A0695 /* AkariNews.sks in Resources */,
 				8536F495258D481700B509D2 /* SparkEmitter.sks in Resources */,
 				850761522779AF21005D0DF5 /* SFXLanding.m4a in Resources */,
 				85E2C41D26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
@@ -2284,6 +2295,7 @@
 				85713C66279211EA0034906E /* StrokeGrad.fsh in Resources */,
 				856A64B7272892F80075CC04 /* Adventure.mp3 in Resources */,
 				8536F472258D481700B509D2 /* CamControl.sks in Resources */,
+				85A1AA6527A85593007A0695 /* AkariNews.sks in Resources */,
 				8536F496258D481700B509D2 /* SparkEmitter.sks in Resources */,
 				850761532779AF21005D0DF5 /* SFXLanding.m4a in Resources */,
 				85E2C41E26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
@@ -2335,6 +2347,7 @@
 				85713C67279211EA0034906E /* StrokeGrad.fsh in Resources */,
 				856A64B8272892F80075CC04 /* Adventure.mp3 in Resources */,
 				8569A336259F81110057A518 /* CirclesMovingShader.fsh in Resources */,
+				85A1AA6627A85593007A0695 /* AkariNews.sks in Resources */,
 				85E2C41F26BCDEF0003315F2 /* SKNConsumable.storekit in Resources */,
 				850761542779AF21005D0DF5 /* SFXLanding.m4a in Resources */,
 				85487F3F26CC65E000EBC070 /* Main.storyboard in Resources */,
@@ -2497,6 +2510,7 @@
 				8504A53B25C6875000739C58 /* Energy.swift in Sources */,
 				85D3BB3426AFD30400B6AA36 /* BuildingBioBoxView.swift in Sources */,
 				8569A3DA25A799840057A518 /* LaunchingVehicleView.swift in Sources */,
+				85A1AA6027A85561007A0695 /* AkariNewsTest.swift in Sources */,
 				8536F3E6258D47D000B509D2 /* HabModuleView.swift in Sources */,
 				8517EE632605DC8800C34C54 /* CityController.swift in Sources */,
 				85487F4726CC7C7400EBC070 /* OutpostNode.swift in Sources */,
@@ -2690,6 +2704,7 @@
 				8569A3DB25A799840057A518 /* LaunchingVehicleView.swift in Sources */,
 				8536F3E7258D47D000B509D2 /* HabModuleView.swift in Sources */,
 				8536F3F7258D47D000B509D2 /* TankViews.swift in Sources */,
+				85A1AA6127A85561007A0695 /* AkariNewsTest.swift in Sources */,
 				85D3BB3126AFD28100B6AA36 /* BioBoxDetailView.swift in Sources */,
 				85487F3C26CC32F900EBC070 /* CityLabTechView.swift in Sources */,
 				859281FD25E9529C001233BE /* TutorialView.swift in Sources */,
@@ -2932,6 +2947,7 @@
 				8592824525EC74FD001233BE /* GuildView.swift in Sources */,
 				8592825225EED6EF001233BE /* SpaceVehicleNode.swift in Sources */,
 				85713C63279201DC0034906E /* SpriteTestView.swift in Sources */,
+				85A1AA6227A85561007A0695 /* AkariNewsTest.swift in Sources */,
 				857A35672696AE500020ADF2 /* RSSView.swift in Sources */,
 				85713C8827953E260034906E /* Guild+Enums.swift in Sources */,
 				8536F3E4258D47D000B509D2 /* SelectModuleTypeView.swift in Sources */,
@@ -3333,7 +3349,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = FXF7BJD3VH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "SkyNation macOS/Info.plist";
@@ -3342,7 +3358,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cfarini.SkyNation;
 				PRODUCT_NAME = SkyNation;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3360,7 +3376,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = FXF7BJD3VH;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "SkyNation macOS/Info.plist";
@@ -3369,7 +3385,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cfarini.SkyNation;
 				PRODUCT_NAME = SkyNation;
 				PROVISIONING_PROFILE_SPECIFIER = "";

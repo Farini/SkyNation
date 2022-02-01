@@ -14,7 +14,7 @@ void main( void ) {
      */
     
     /// The normalised Position
-    float normPos = (v_path_distance / u_path_length) * timer;
+    float normPos = (v_path_distance / u_path_length) * abs(timer);
     // float normPos = (v_path_distance * timer / (u_path_length * (1 - abs(timer))));
     // float normalisedPosition = (v_path_distance * timer / (u_path_length * (1 - abs(timer))));
     

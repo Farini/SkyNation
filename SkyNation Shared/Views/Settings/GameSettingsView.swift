@@ -14,7 +14,7 @@ struct GameSettingsView: View {
     private var inGame:Bool = false
     
     init(inGame:Bool? = false) {
-        self.inGame = inGame!
+        self.inGame = true //inGame!
     }
     
     /// Header (only shows when `inGame` is on
@@ -63,7 +63,7 @@ struct GameSettingsView: View {
                 header
             }
             
-            let options = inGame ? [GameSettingsTab.EditingPlayer, GameSettingsTab.Server, GameSettingsTab.Settings]:GameSettingsTab.allCases
+            let options = [GameSettingsTab.EditingPlayer, GameSettingsTab.Server, GameSettingsTab.Settings]
             
             GameSettingsViewTabs(selection: $controller.viewState, options: options) { selectedTab in
                 controller.didSelectTab(newTab: selectedTab)
@@ -74,7 +74,8 @@ struct GameSettingsView: View {
             switch controller.viewState {
                 
                 case .Loading:
-                    GameLoadingTab(controller: controller)
+//                    GameLoadingTab(controller: controller)
+                    EmptyView()
                     
                 case .EditingPlayer:
                     
@@ -103,7 +104,7 @@ struct GameSettingsView: View {
                         }
                     }
                     .buttonStyle(GameButtonStyle())
-                    .disabled(controller.startGameDisabled())
+//                    .disabled(controller.startGameDisabled())
                     Spacer()
                 } else {
                     Button("Save") {

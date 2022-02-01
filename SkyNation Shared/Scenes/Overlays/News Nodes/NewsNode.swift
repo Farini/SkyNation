@@ -132,6 +132,7 @@ public class NewsNode:SKNode {
         let headRecto:CGRect = header.calculateAccumulatedFrame()
         header.removeFromParent()
         header.position = CGPoint(x: headRecto.size.width / 2.0, y: headRecto.size.height - 3)
+        header.zPosition = 99
         
         self.header = header
         
@@ -174,15 +175,11 @@ public class NewsNode:SKNode {
         
         self.addChild(header)
         self.addChild(label)
-        
-        // new
         self.addChild(shapeThing)
-        
-        
+
         self.label.isHidden = true
         
         self.enterTheScene()
-        
     }
     
     /// Animates the Entrance of this node.
@@ -220,6 +217,8 @@ public class NewsNode:SKNode {
     /// Animates itself out of the scene, and removes itself from parent.
     func animateExit() {
         
+        
+        
         let moveDown = SKAction.move(by: CGVector(dx: 0, dy: -15), duration: 0.85)
         moveDown.timingMode = .easeIn
         let stayDown = SKAction.wait(forDuration: 0.25)
@@ -232,11 +231,177 @@ public class NewsNode:SKNode {
         
         let sequence = SKAction.sequence([moveDown, stayDown, release])
         self.run(sequence) {
+            NotificationCenter.default.post(name: .newsNodeExiting, object: self)
             self.removeFromParent()
         }
         
     }
 }
+
+class AkariNewsNode:SKNode {
+    
+    /// The Header Sprite
+    public var header:SKNode
+    public var akari:SKSpriteNode
+    public var newsLabel:SKLabelNode
+    public var shape:SKShapeNode
+    
+    public var type:NewsType
+    public var string:String
+    public var headShader = SKShader(fileNamed: "StrokeGrad")
+    
+    init(type:NewsType, string:String) {
+        
+        self.type = type
+        self.string = string
+        
+        guard let origin = SKScene(fileNamed: "AkariNews"),
+              let akari = origin.childNode(withName: "Akari") as? SKSpriteNode else {
+                  fatalError()
+              }
+        
+        // Girl Akari Sprite
+        self.akari = akari
+        akari.removeFromParent()
+        akari.zPosition = 90
+        
+        // Header (News, Info, etc.)
+        
+        // if cant load the previous, load this one (not recommended)
+        guard let header = origin.childNode(withName: "Headers") as? SKLabelNode else {
+            fatalError()
+        }
+        header.text = type.rawValue
+        header.removeFromParent()
+        header.zPosition = 98
+        self.header = header
+        
+        
+        // Text
+        guard let text = origin.childNode(withName: "Text") as? SKLabelNode else { fatalError() }
+        self.newsLabel = text
+        print("Text: \(text)")
+        text.removeFromParent()
+        text.zPosition = 99
+        
+        // Horizontal rule
+        let hr = origin.childNode(withName: "HR") as? SKSpriteNode
+        hr?.removeFromParent()
+        hr?.zPosition = 80
+            
+        // Shape
+        guard let lPath = origin.childNode(withName: "LPath") else { fatalError() }
+        
+        let path = CGMutablePath()
+        path.move(to: lPath.children.first!.position)
+        
+        let array = lPath.children
+        for item in array {
+            path.addLine(to: item.position)
+        }
+        path.closeSubpath()
+        
+        let pathNode = SKShapeNode(path: path)
+        pathNode.lineWidth = 3.0
+        pathNode.fillColor = .black
+        pathNode.strokeColor = .white
+        pathNode.position.x += lPath.position.x
+        pathNode.strokeColor = .gray
+        pathNode.zPosition = 0
+        self.shape = pathNode
+        
+        super.init()
+        
+        self.addChild(akari)
+        self.addChild(header)
+        self.addChild(text)
+        if let hr = hr {
+            self.addChild(hr)
+        }
+        self.addChild(pathNode)
+        
+        text.text = "---"
+        text.isHidden = true
+        
+        // Post setup
+        
+        let waiter = SKAction.wait(forDuration: 0.5)
+        
+        self.run(waiter) {
+            text.isHidden = false
+            
+            // pathNode.strokeShader = self.headShader
+            // self.run(sq)
+            self.newsLabel.text = ""
+            self.newsLabel.isHidden = false
+            
+            // self.newsLabel.typeNext(dex: 0, complete: self.string, time: 0.2)
+            self.animateEntrance()
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Animations
+    
+    /// Animates the Entrance of this node.
+    public func animateEntrance() {
+        
+        let waiter = SKAction.wait(forDuration: 0.5)
+        
+        self.run(waiter) {
+            
+            self.newsLabel.text = ""
+            
+            self.shape.strokeShader = self.headShader
+            
+            self.newsLabel.isHidden = false
+            self.newsLabel.typeNext(dex: 0, complete: self.string, time: 0.2)
+            
+            /*
+             // Shape surrounding the News Label
+             let highlight = self.header.calculateAccumulatedFrame()
+             let highShape = SKShapeNode(rect: highlight, cornerRadius: 6.0)
+             highShape.position.y -= highlight.size.height - 1
+             highShape.lineWidth = 2.5
+             highShape.strokeShader = SKShader(fileNamed: "StrokeGrad")
+             self.header.addChild(highShape)
+             */
+            
+            let exitDelay = Double(self.string.count) * 0.15 + 3.0
+            
+            let halfTime = SKAction.wait(forDuration: exitDelay)
+            
+            self.run(halfTime) {
+                self.animateExit()
+            }
+        }
+    }
+    
+    /// Animates itself out of the scene, and removes itself from parent.
+    func animateExit() {
+        
+        let moveDown = SKAction.move(by: CGVector(dx: 0, dy: -15), duration: 0.5)
+        moveDown.timingMode = .easeIn
+        let stayDown = SKAction.wait(forDuration: 0.15)
+        
+        let moveUp = SKAction.move(by: CGVector(dx: 0, dy: 120), duration: 0.5)
+        moveUp.timingMode = .easeOut
+        let fadeOut = SKAction.fadeOut(withDuration: 0.35)
+        fadeOut.timingMode = .easeOut
+        let release = SKAction.group([moveUp, fadeOut])
+        
+        let sequence = SKAction.sequence([moveDown, stayDown, release])
+        self.run(sequence) {
+            self.removeFromParent()
+            NotificationCenter.default.post(name: .newsNodeExiting, object: self)
+        }
+        
+    }
+}
+
 
 public extension SKLabelNode {
     
@@ -264,9 +429,15 @@ public extension SKLabelNode {
             if (character != " ") {
                 if Bool.random() == true {
                     if Bool.random() == true {
-                        delay = 0.1
+                        delay = 0.0
                     } else {
+                        delay = 0.1
+                    }
+                } else {
+                    if Bool.random() == true {
                         delay = time
+                    } else {
+                        delay = 0.0
                     }
                 }
             }

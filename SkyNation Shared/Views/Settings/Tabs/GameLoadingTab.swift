@@ -60,11 +60,11 @@ struct GameLoadingTab: View {
             Divider()
                 .padding(.bottom)
             
-            if controller.isNewPlayer {
-                Text("New Player")
-                    .foregroundColor(.orange)
-                    .font(.headline)
-            }
+//            if controller.isNewPlayer {
+//                Text("New Player")
+//                    .foregroundColor(.orange)
+//                    .font(.headline)
+//            }
             
             Group {
                 

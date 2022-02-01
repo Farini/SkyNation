@@ -87,6 +87,8 @@ class GameOverlay:NSObject, SKSceneDelegate {
         
         self.buildPlayerCard()
         
+        // Notification observer for News (exiting)
+        NotificationCenter.default.addObserver(self, selector: #selector(newsNotification(_:)), name: .newsNodeExiting, object: nil)
     }
     
     /// Updates the camera node for the new sccene
@@ -108,6 +110,15 @@ class GameOverlay:NSObject, SKSceneDelegate {
                 self.displayNextNews()
             }
         }
+    }
+    
+    @objc func newsNotification(_ notification:Notification) {
+        
+        // Remove Observer?
+        print("Notification: news going away.")
+        // NotificationCenter.default.removeObserver(self, name: .newsNodeExiting, object: nil)
+        self.displayNextNews()
+        
     }
     
     /// Adds the `NewsNode` to the overlay scene. Displays the news.
@@ -140,7 +151,9 @@ class GameOverlay:NSObject, SKSceneDelegate {
             newsPlaceholder.position.y = positionY //(sceneSize.height / 4.0) * -1.0
             
             // self.generateNews(string: nextNews.message)
-            let newsNode = NewsNode(type: nextNews.type, text: nextNews.message)
+            let newsNode = AkariNewsNode(type: nextNews.type, string: nextNews.message)
+            
+                // NewsNode(type: nextNews.type, text: nextNews.message)
             newsNode.position.x -= newsNode.calculateAccumulatedFrame().width / 2.0
             
             newsQueue.removeFirst()
@@ -475,6 +488,10 @@ class GameOverlay:NSObject, SKSceneDelegate {
     /// Hides the tutorial
     func closeTutorial() {
         self.newsPlaceholder.removeAllChildren()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
 }

@@ -896,7 +896,9 @@ class GameController: NSObject, SCNSceneRendererDelegate {
                 // show news
                 let introString:String = """
                 If you are so brave, send space vehicles to Mars
-                and colonize the red planet. I just started on the job,
+                and colonize the red planet.
+                My name is Akari. I was recently hired to assist you.
+                I just started on the job,
                 so I will try to help, but remember I am also a rookie.
                 """
                 self.gameOverlay.addNews(data: NewsData(type: .Info, message: introString, date: nil))

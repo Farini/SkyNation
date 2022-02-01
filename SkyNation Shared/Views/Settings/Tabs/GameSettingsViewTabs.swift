@@ -24,7 +24,7 @@ struct GameSettingsViewTabs: View {
             VStack {
                 HStack {
                     // Tabs
-                    ForEach(GameSettingsTab.allCases, id:\.self) { aTab in
+                    ForEach(options, id:\.self) { aTab in
                         Image(systemName: aTab.imageName)
                             .font(.largeTitle)
                             .padding(5)

@@ -158,6 +158,7 @@ struct FrontView: View {
                                     .buttonStyle(GameButtonStyle())
                                     if controller.playerName != controller.player.name {
                                         Button("💾 Save") {
+                                            self.selectedAvatar = nil
                                             // print("save \(selectedAvatar.name)")
                                             // make sure the player name is valid
                                             if validatePlayername() == true {
@@ -166,6 +167,8 @@ struct FrontView: View {
                                                     // Deal with error?
                                                     // ----------------
                                                 }
+                                            } else {
+                                                controller.warningList.append("invalid name")
                                             }
                                         }
                                         .buttonStyle(GameButtonStyle())
@@ -173,6 +176,8 @@ struct FrontView: View {
                                     } else if let selectedAvatar = $selectedAvatar.wrappedValue {
                                         Button("💾 Save") {
                                             print("save \(selectedAvatar.name)")
+                                            
+                                            self.selectedAvatar = nil
                                             // no modifications in name
                                             controller.didEditPlayer(new: controller.playerName, avatar: selectedAvatar.name) { playerUpdate, error in
                                                 // ----------------

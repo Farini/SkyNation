@@ -30,6 +30,8 @@ extension Notification.Name {
     /// Notifies Scene Overlay that Vehicle has been launched
 //    static let spaceVehicleLaunch = Notification.Name("DidLaunchSpaceVehicle")
     
+    static let newsNodeExiting = Notification.Name("NewsNodeExiting")
+    
 }
 
 /**

@@ -62,7 +62,7 @@ class GameSettingsController:ObservableObject {
     // Local DB + Player begins
     @Published var hasChanges:Bool
     @Published var playerID:UUID
-    @Published var isNewPlayer:Bool
+//    @Published var isNewPlayer:Bool
     @Published var savedChanges:Bool
     
     // MARK: - Online Data
@@ -102,7 +102,14 @@ class GameSettingsController:ObservableObject {
         // Player
         let player = LocalDatabase.shared.player
         self.player = player
+        playerID = player.localID
+        playerName = player.name
+        hasChanges = false
+        savedChanges = true
+        viewState = GameSettingsTab.Server
+        self.enterServerTab()
         
+        /*
         if player.isNewPlayer() {
             // New Player
             playerName = player.name
@@ -123,24 +130,25 @@ class GameSettingsController:ObservableObject {
         }
         
         self.updateLoadedList()
+        */
         
         // Accounting
-        if let myCity:CityData = LocalDatabase.shared.cityData {
-            DispatchQueue(label: "CityAccounting").async {
-                myCity.accountingLoop(recursive: true) { messages in
-                    print("Mars Accounting Finished: \(messages.joined(separator: " ,"))")
-                }
-            }
-        }
+//        if let myCity:CityData = LocalDatabase.shared.cityData {
+//            DispatchQueue(label: "CityAccounting").async {
+//                myCity.accountingLoop(recursive: true) { messages in
+//                    print("Mars Accounting Finished: \(messages.joined(separator: " ,"))")
+//                }
+//            }
+//        }
         
-        // Game Center
-        let gcm = GameCenterManager.shared
-        print("GC: \(gcm)")
+//        // Game Center
+//        let gcm = GameCenterManager.shared
+//        print("GC: \(gcm)")
         
         // Show Editing Mode for New Players
-        if isNewPlayer {
-            self.viewState = .EditingPlayer
-        }
+//        if isNewPlayer {
+//            self.viewState = .EditingPlayer
+//        }
     }
     
     /// Way around logging in. Retrieve all data from LocalDatabase.
@@ -150,7 +158,7 @@ class GameSettingsController:ObservableObject {
         let player = LocalDatabase.shared.player
         self.player = player
         // Old Player
-        isNewPlayer = false
+//        isNewPlayer = false
         playerID = player.localID
         playerName = player.name
         hasChanges = false
@@ -693,22 +701,22 @@ class GameSettingsController:ObservableObject {
     }
     
     /// Disabled state for the `StartGame` button
-    func startGameDisabled() -> Bool {
-        
-        if isNewPlayer {
-            print("New player. make sure to setup first")
-            
-            if hasChanges {
-                print("Save Changes first")
-                return true
-            } else if savedChanges {
-                print("Changes are saved")
-                return false
-            }
-            return true
-            
-        } else {
-            return false
-        }
-    }
+//    func startGameDisabled() -> Bool {
+//
+//        if isNewPlayer {
+//            print("New player. make sure to setup first")
+//
+//            if hasChanges {
+//                print("Save Changes first")
+//                return true
+//            } else if savedChanges {
+//                print("Changes are saved")
+//                return false
+//            }
+//            return true
+//
+//        } else {
+//            return false
+//        }
+//    }
 }

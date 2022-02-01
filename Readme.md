@@ -7,6 +7,7 @@ If you are a Blender artist, or can program in Swift any of the frameworks menti
 ![Screenshot1](https://drive.google.com/uc?export=view&id=1AjoeIrnVmOfZsoLK7KWuX3uWooEkEmtr)
 
 Website: https://cfarini.com/SKNS/web/
+Youtube Video: 
 
 # 📝 Projects
 SkyNation is broken down into 3 projects.
@@ -182,15 +183,15 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [X] Front View - Save
 - [X] Front View - iOS test
 - [X] ServerData - Set GuildFullContent to nil in any case. Prepare to deprecate
-
-- [ ] LabView substitute "Loading View" for something more useful
-- [ ] Tutorial Sequence(hand) - Add character?
+- [X] Akari News
+- [X] LabView substitute "Loading View" for something more useful
+- [X] Settings View - General fixes (no login, fetch guild, etc.)
 
 - [ ] Settings View - Fix Guild Browser
-- [ ] Settings View - General fixes (no login, fetch guild, etc.)
 
 - [ ] Front View - Prepare A/B test Shaders vs Earth image
 
+- [X] Videos - Youtube
 - [ ] Videos - iOS + macOS
 - [ ] Launch iOS v1.2 + mac v1.3?
 
