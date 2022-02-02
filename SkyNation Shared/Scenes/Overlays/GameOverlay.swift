@@ -112,13 +112,18 @@ class GameOverlay:NSObject, SKSceneDelegate {
         }
     }
     
+    /// Notification received when `NewsNode` is disappearing
     @objc func newsNotification(_ notification:Notification) {
         
         // Remove Observer?
-        print("Notification: news going away.")
-        // NotificationCenter.default.removeObserver(self, name: .newsNodeExiting, object: nil)
-        self.displayNextNews()
         
+        if let node = notification.object as? AkariNewsNode {
+            print("Notification: news going away >> \(node.string)")
+            self.newsBusy = false
+            self.displayNextNews()
+        } else {
+            print("⚠️ Another notification. (Unrequested)")
+        }
     }
     
     /// Adds the `NewsNode` to the overlay scene. Displays the news.
@@ -161,9 +166,9 @@ class GameOverlay:NSObject, SKSceneDelegate {
             newsPlaceholder.addChild(newsNode)
             
             // Disappears in 10 s?
-            playerCardHolder.run(SKAction.wait(forDuration: 9)) {
-                self.newsBusy = false
-            }
+//            playerCardHolder.run(SKAction.wait(forDuration: 9)) {
+//                self.newsBusy = false
+//            }
             
         } else {
             return
@@ -174,6 +179,10 @@ class GameOverlay:NSObject, SKSceneDelegate {
     func hasNewsShowing() -> Bool {
         if let news = newsPlaceholder.childNode(withName: "News Node") as? NewsNode {
             print("Showing news: \(news.newsText)")
+            return true
+        } else if let news = newsPlaceholder.childNode(withName: "News Node") as? AkariNewsNode {
+            // if news.isHidden == true { news.isHidden = false }
+            print("Showing Akari news: \(news.string)")
             return true
         } else {
             return false
@@ -397,37 +406,56 @@ class GameOverlay:NSObject, SKSceneDelegate {
         
     }
     
+#if os(macOS)
+    private let selectString:String = "Click"
+#elseif os(iOS)
+    private let selectString:String = "Tap"
+#endif
+    
     private var tutorialArray:[TutorialNode] {
         let tutorialNode = TutorialNode(text: """
-            🏠 Hab Module.
+            🏠 Hab Module
             
-            Tap, or click on a module to define its type.
-            There are 3 types of module.
+            Hab modules should be built right away.
+            \(selectString) on a module to define its type.
+            There are 3 types of module - Hab, Lab, and Bio.
             
-            The Hab Module will let you host astronauts
-            into your station.
+            The Hab Module is where the astronauts live.
             After creating your first hab module,
             it is convenient to hire your first astrnauts.
             
-            You can purchase things by clicking on the earth.
-            It will let you place an order of things and people
-            that you may need to upgrade your Space Station.
+            Astronauts also hae a set of actions they can
+            perform. Work out is one of them. It will help
+            by keeping the astronaut healthy, and possibly
+            healthier.
+            
+            To hire new astronauts, or purchase other things
+            needed by the Space Station, \(selectString) on
+            the earth.
             """)
         
         let tutorialNode2 = TutorialNode(text: """
-            🔬 Lab Module.
+            🔬 Lab Module
             
-            In the Lab Module, it is possible to make parts
-            (recipes) that are useful to upkeep the Space Station
-            and make more progress in the game.
+            In the Lab Module, one can make Peripherals
+            (recipes) that are useful to upkeep the Space
+            Station and make more progress in the game.
             
-            You may also work on the tech tree to expand
+            To do that, select a recipe, make sure the station
+            has the supplies needed, and that the astronauts
+            have enough skills to perform the task.
+            
+            Astronauts should not work for too long.
+            When too many tasks are scheduled for a particular
+            astronaut, their happiness will begin to fade away.
+            
+            One may also work on the tech tree to expand
             the station. This will enable to build the Garage,
             which can send Space Vehicles to Mars.
             """)
         
         let tutorialNode3 = TutorialNode(text: """
-            🧬 Bio Module.
+            🧬 Bio Module
             
             Everybody needs to eat. With a Bio Module
             your Space Station can make its own food.
@@ -435,12 +463,20 @@ class GameOverlay:NSObject, SKSceneDelegate {
             Careful, though. Astronauts get tired of eating
             the same food all the time. Make sure to create
             a variety, and the people will be happy.
+            
+            Bioboxes are made to reproduce DNA in vegetable
+            organisms. Onde the correct DNA is encountered,
+            it can be served as food for the astronauts.
+            
+            Another use of bioboxes is to produce food and
+            send that to Mars, so the colony in the red
+            planet can benefit from its produce.
             """)
         
         let tutorialNode4 = TutorialNode(text: """
-            🚀 Garage Module.
+            🚀 Garage Module
             
-            Build Space Vehicles to aid your city and your Guild
+            Build Space Vehicles to aid your city and Guild
             in Mars. They are responsible to transport ingredients,
             boxes, tanks, people, bio boxes, and machines.
             

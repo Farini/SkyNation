@@ -14,6 +14,8 @@ class TutorialNode:SKNode {
     
     /// The node with the text
     var label:SKLabelNode
+    
+    /// Shape surrounding the text
     fileprivate var backgroundShape:SKShapeNode
     
     init(text:String) {
@@ -63,7 +65,7 @@ class TutorialNode:SKNode {
         tOrigin.x += (label.calculateAccumulatedFrame().size.width) / 2
         tOrigin.y += (label.calculateAccumulatedFrame().size.height) / 2
         
-        backShape.fillColor = SKColor.black.withAlphaComponent(0.75)
+        backShape.fillColor = SKColor.black.withAlphaComponent(0.85)
         backShape.strokeColor = SKColor.orange
         backShape.lineWidth = 3.5
         
@@ -71,16 +73,25 @@ class TutorialNode:SKNode {
         
         // Noise
         let noise = SKTexture(noiseWithSmoothness: 0.8, size: bgSize, grayscale: true)
-        let backNoise = SKShapeNode(circleOfRadius: noise.size().width / 4)
+        let backNoise = SKShapeNode(rectOf: textBackSize, cornerRadius: 12.0) //SKShapeNode(circleOfRadius: noise.size().width / 4)
         backNoise.strokeColor = SKColor.clear
-        backNoise.fillTexture = noise
+//        backNoise.fillTexture = noise
+        
+        let shader = SKShader(fileNamed: "BusyCircuitry")
+        let uniforms = SKUniform(name: "u_resolution", vectorFloat2: vector_float2(Float(noise.size().width), Float(noise.size().height)))
+        // let unifirms = SKUniform(name: "u_resolution", float: GLKVector2(v:( noise.size().width, noise.size().height))) // u_resolution
+        shader.uniforms = [uniforms]
+        backNoise.fillShader = shader
+        backNoise.alpha = 0.2
+        /*
 #if os(macOS)
         backNoise.fillColor = SKColor.init(calibratedRed: 0.3, green: 0.2, blue: 0.1, alpha: 0.35)
 #elseif os(iOS)
         backNoise.fillColor = SKColor(red: 0.3, green: 0.2, blue: 0.1, alpha: 0.35)
 #endif
+        */
         backNoise.blendMode = .alpha
-        backNoise.zPosition = 0
+        backNoise.zPosition = -1
         
         backShape.addChild(backNoise)
         backShape.position = tOrigin
@@ -111,6 +122,7 @@ class TutorialNode:SKNode {
     
 }
 
+/// The button that closes the `TutorialNode` Overlay
 class TutorialCloseNode:SKNode {
     
     var label:SKLabelNode
@@ -177,8 +189,6 @@ class TutorialCloseNode:SKNode {
         print("Thumb Up! Close, or Next ?!?")
     }
 #endif
-    
-    
     
 }
 

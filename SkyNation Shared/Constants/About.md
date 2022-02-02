@@ -648,4 +648,71 @@ Animations
 - [X] Mars Scene - News
 - [X] Remove Promocode
 
-## 12/29/2021 - macOS v1 APPROVED IN STORE !!! ✅
+[12/29/2021 - 01/31/2022]
+- [X] macOS Force Dark Theme
+- [X] Guild Substitution: `GuildMap` for `GuildFullContent`
+- [X] Player Flags
+- [X] Guild Flags
+- [X] ServerData fixes
+- [X] Tutorial - Place finger in middle of module.
+- [X] Tutorial - remove finger
+- [X] Tutorial - move new finger
+- [X] City Disappeared!
+- [X] Player Login Updates with Flags - See `ServerData.swift` - missing full review of errors and consequences.
+- [X] Guild Room - Fix & Improve elections (not showing + wrong messages)
+- [X] Election - Update Guild (in controller) after election does update
+- [X] Nailed the Hand Tutorial !
+- [X] 🏆 App macOS v 1.1 (New Player Login)
+- [X] macOS - app not quitting
+- [X] Fixed bug with app store not giving an Entry for a $5 purchase.
+- [X] Receive Gifts
+- [X] Reduce water filter skills required
+- [X] Overlay - HUD Labels
+- [X] Settings - HUD Labels
+- [X] Overlay HUD badges count.
+- [X] Overlay Scene with Labels + Badges & Display Option in `GameSettings`
+- [X] SKNS.postCreate(newGuildID:UUID.... sub `GuildMap`
+- [X] Method to 'dismiss' the badges on SideMenu
+- [X] Guild View reframe
+- [X] Game Center - iOS can't open GameCenter controller
+- [X] Settings - ask before spend token
+- [X] Animated Airlock
+- [X] Game Camera - `stareAtNode()`
+- [X] Laboratory View preloading !!
+- [X] animate camera to show nodes like Airlock, Cuppola, Antenna, etc.
+- [X] Implement new Station Modules from Blender
+- [X] Milky Way background
+- [X] Game Settings (start) - Bring view to textfield, and make it active.
+- [X] 🏆 Launch iOS v 1.0 - Jan 14th, 2021
+- [X] Fancy `NewsNode`
+- [X] Settings - Move start game button to center of the view.
+- [X] LSS - Remove (Let d) ??? + Instant Use -> Power use.
+- [X] Station Scene - Fix green glass
+- [X] GameCenter Achievements: **WaterFilter, Condensator, Airlock**
+- [X] Implement the new `NewsNode`
+- [X] Blender - Substitute Space Vehicles Solar Panels
+- [X] Blender - XCode - Delete old solar panels
+- [X] Blender - Cuppola 2.0
+- [X] Blender - Airlock 2.0
+- [X] Blender - New Module Skins
+- [X] Launch macOS v 1.2
+- [X] Intro - Before Hand Tutorial
+- [X] Report game Center experience when app going to background
+- [X] News Overlapping eachother
+- [X] LSS Peripheral Detail Views
+- [X] 👀 Launch Scene improvements
+- [X] GameController - on touch(camera zoom), zoom in on the point of the touch, instead of center of geometry.
+- [X] GameController - display node info when zooming in
+- [X] LabView - Tech with new Detail Images
+- [X] Station Scene - Make the Earth bright again
+- [X] If accounting goes for too long, save the city (not currently saving, just accrueing time)
+- [X] Store - needs visual improvements
+- [X] Front View - Game Settings shown only at the game start
+- [X] Front View - design, typography, etc.
+- [X] Front View - Entry Shaders? StarNest.fsh, BusyCircuitry.fsh
+- [X] Front View - Save
+- [X] Front View - iOS test
+- [X] ServerData - Set GuildFullContent to nil in any case. Prepare to deprecate
+- [X] Akari News
+- [X] LabView substitute "Loading View" for something more useful
+- [X] Settings View - General fixes (no login, fetch guild, etc.)

@@ -664,7 +664,7 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         //    sceneRenderer.debugOptions = [dbo2, dbo4]
         
         guard let builtScene = LocalDatabase.shared.stationBuilder.scene else { fatalError() }
-        builtScene.isPaused = false
+//        builtScene.isPaused = false
         
         self.scene = builtScene
         
@@ -674,20 +674,28 @@ class GameController: NSObject, SCNSceneRendererDelegate {
         }
         self.cameraNode = camera
         renderer.pointOfView = camera.camNode
+        camera.position.z += 40
         
+        // Camera look at center
         let centralNode = SCNNode()
         centralNode.position = SCNVector3(x: 0, y: -15, z: 0)
-        camera.position.z += 40
-        camera.camNode.look(at: centralNode.position)
+//        camera.position.z += 40
+//        camera.camNode.look(at: centralNode.position)
         
         // Overlay
-        let stationOverlay = GameOverlay(renderer: renderer, station: station!, camNode: self.cameraNode!)
+        let stationOverlay = GameOverlay(renderer: renderer, station: station!, camNode: camera)
         sceneRenderer.overlaySKScene = stationOverlay.scene
         self.gameOverlay = stationOverlay
         
         // end init
         super.init()
         // post init details
+        
+        camera.camNode.look(at: centralNode.position)
+        builtScene.isPaused = false
+        
+        
+        
         
         // Intro Tutorial
         let tutStage:Station.IntroTutorialStage = dBase.station.shouldShowTutorial()

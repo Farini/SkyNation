@@ -312,6 +312,8 @@ class AkariNewsNode:SKNode {
         
         super.init()
         
+        self.name = "News Node"
+        
         self.addChild(akari)
         self.addChild(header)
         self.addChild(text)

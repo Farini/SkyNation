@@ -118,19 +118,6 @@ class StationBuilder { //:Codable {
         self.buildList = arrayOfNodes + arrayOfModules
     }
     
-    // MARK: - Codable
-    
-    /*
-    private enum CodingKeys:String, CodingKey {
-        case buildList
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        buildList = try values.decode([StationBuildItem].self, forKey: .buildList)
-    }
-    */
-    
     // MARK: - Items
     
     /// Gets the Modules (for IDs)
@@ -146,22 +133,6 @@ class StationBuilder { //:Codable {
         
         return array
     }
-    
-    // MARK: - Scene Building
-    
-    /*
-    /// Build Scene on Background, to present
-    func build(station:Station) {
-        
-        self.prepareScene(station:station) { scene in
-            // Send notification "Finished Scene"
-            // So it can present :)
-            print("Station Builder has finished building")
-            self.scene = scene
-        }
-        
-    }
-    */
     
 }
 
