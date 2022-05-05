@@ -123,7 +123,7 @@ If looking for things to do and don't know where to start, go to *Find Navigator
 - [ ] Settings View - Fix Guild Browser
 
 - [ ] Front View - Prepare A/B test Shaders vs Earth image
-- [ ] Front View - (Settings) Delete this game (start over)
+- [ ] Front View - Start over (delete)
 
 - [ ] Analytics: reportData(string:String)
 - [ ] Analytics - Report when build hab, lab, bio
@@ -206,7 +206,6 @@ Features that are requested, but are not required to launch the game
 - [ ] BioBox DNA enum
 - [ ] 2D Graphics - Custom SFFonts
 - [ ] 2D Graphics - Blender individual tanks
-- [ ] Mars Scene - Random Rocks
 - [ ] Mars Scene - City - Gate Color?
 - [ ] Mars Scene - City + Solar Panel(s)
 - [ ] Mars Scene - Gate Lights changing (Day/Night)
